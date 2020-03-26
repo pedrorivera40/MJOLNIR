@@ -51,6 +51,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API
   },
   /*
   ** vuetify module configuration
