@@ -1,0 +1,4 @@
+.vscode/settings.json
+OdinAPI/Pipfile
+OdinAPI/Pipfile.lock
+*.pyc
