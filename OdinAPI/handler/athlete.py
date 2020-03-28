@@ -54,17 +54,17 @@ class AthleteHandler:
             return jsonify(Error = "Problem inserting new athlete."),500
         return jsonify(Athlete = "Added new athlete with id:{}.".format(result)),201
 
-    def editAthlete(self,sID,aID,attributes):
+    def editAthlete(self,aID,attributes):
         dao = AthleteDAO()
-        result = dao.editAthlete(sID,aID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10])
+        result = dao.editAthlete(aID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10],attributes[11])
         if not result:
             return jsonify(Error = "Athlete not found with id:{}.".format(aID)),404
         mappedResult = self.mapAtheleteToDict(result)
         return jsonify(Athlete = mappedResult),201
     
-    def removeAthlete(self,sID,aID):
+    def removeAthlete(self,aID):
         dao = AthleteDAO()
-        result = dao.removeAthlete(sID,aID)
+        result = dao.removeAthlete(aID)
         if not result:
             return jsonify(Error = "Athlete not found with id:{} for the sport:{}.".format(sID,aID)),404
         return jsonify(Athlete = "Removed athlete with id:{}.".format(result)),201
