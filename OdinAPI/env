@@ -1,0 +1,4 @@
+DB_USER='postgres'
+DB_PASS='5458'
+DB_NAME='postgres'
+CLOUD_SQL_CONNECTION_NAME="/cloudsql/white-smile-272204:us-east1:mjolnir-test-realm"
