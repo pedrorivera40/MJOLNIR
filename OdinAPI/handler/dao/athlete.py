@@ -67,7 +67,7 @@ class AthleteDAO:
         self.commitChanges()
         return aID
 
-    def editAthlete(self,sID,aID,aBranch, aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink):
+    def editAthlete(self,aID,aBranch, aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID):
         cursor = self.conn.cursor()
         query = "update athlete "\
                 "set first_name = %s,"\
@@ -101,7 +101,7 @@ class AthleteDAO:
         return result
                 
     
-    def removeAthlete(self,sID,aID):
+    def removeAthlete(self,aID):
         cursor = self.conn.cursor()
         query = "update athlete "\
                 "set school_of_precedence = 'Simulating Removal in this column' "\

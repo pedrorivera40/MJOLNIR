@@ -2,7 +2,7 @@ from flask import Flask,request,jsonify
 from flask_cors import CORS
 import os
 import datetime
-from handler.dao.athlete import AthleteDAO
+from handler.athlete import AthleteHandler
 
 
 
@@ -16,11 +16,22 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 def hello():
     return jsonify("Hi, this is a route that will be eliminated xD")
 
-
-@app.route("/athletes/", methods = ['GET'])
-def athleteProfiles():
-    athlete = AthleteDAO()
-    return athlete.getAtheletes()
+#--------- Athlete Routes ---------#
+@app.route("/athletes/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
+def athleteByID(aid):
+    handler = AthleteHandler()
+    if request.method == 'GET':
+        return handler.getAthleteByID(aid)
+    elif request.method == 'POST':
+        json = request.json
+        return handler.addAthlete(json['sID'],json['attributes'])
+    elif request.method == 'PUT':
+        json = request.json
+        return handler.editAthlete(aid,json['attributes'])
+    elif request.method == 'DELETE':
+        json = request.json
+        return handler.removeAthlete(aid)
+        
 
 
 
