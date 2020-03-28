@@ -13,23 +13,30 @@ class AthleteDAO:
         self.conn = psycopg2.connect(connection_url)
 
 
-    def getAtheletes(self):
-        atheletes = []
-        cursor = self.conn.cursor()
-        cursor.execute(
-            "SELECT first_name, last_names, short_bio, number, sport_id, id from athlete;"
-        )
-        db_athletes = cursor.fetchall()
+    def getAtheletesBySport(self,sID,aBranch):
+        #TODO Still need to implement this function.
+        return None
+    
+    def getAthleteByID(self,aID):
+        #TODO Still need to implement this function.
+        return None
+    
+    def getAthleteByName(self,aFName,aMName,aLName):
+        #TODO Still need to implement this function.
+        return None
 
-        for row in db_athletes:
-            atheletes.append({
-                'first_name': row[0],               
-                'last_names' : row[1],
-                'short_bio': row[2],               
-                'number': row[3],                
-                'sport_id': row[4],
-                'id':row[5]
-            })
-        #print(db_athletes)
-        return jsonify(Athletes = atheletes),201
+    def addAthlete(self,sID, aBranch, aFName, aMname, aLname, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink):
+        #TODO Still need to implement this function.
+        return None
 
+    def editAthlete(self,sID,aID,aBranch, afName, aMname, aLname, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink):
+        #TODO Still need to implement this function.
+        return None
+    
+    def removeAthlete(self,sID,aID):
+        #TODO Still need to implement this function.
+        return None
+
+    def commitChanges(self):
+        #TODO Still need to implement this function.
+        return None
