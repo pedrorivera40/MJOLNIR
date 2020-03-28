@@ -1,9 +1,13 @@
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin'
 
 /*
     This file contains the Cloud Functions required for the development of Huella Deportiva Web.
     @author Pedro Luis Rivera Gomez - pedrorivera40
 */
+
+// Initialize app to use Admin Priviledges.
+admin.initializeApp(functions.config().firebase);
 
 // This function is written for learning purposes.
 // Its goal is to react to changes in a path of the Realtime Database, to simulate
@@ -11,7 +15,7 @@ import * as functions from 'firebase-functions';
 // In this case that is performed over the game_ended child inside the metadata
 // corresponding to a game. For details, refer to the NoSQL structure in the progress
 // report #1 for MJOLNIR.
-// export const sampleCloudFunction = functions.database.ref("/v1/{game_id}/game-metadata/game-ended")
+// export const sampleCloudFunction = functions.database.instance("mjolnir-pbp-v1").ref("/v1/{game_id}/game-metadata/game-ended")
 //     .onUpdate((change, context) => {
 //         // Read the game id for the change. It will be logged for quick testing purposes.
 //         // const gameId = context.params.game_id
@@ -32,11 +36,8 @@ import * as functions from 'firebase-functions';
 
 //     });
 
-enum EntryType {
-    TeamEntry,
-    AthleteEntry,
-}
 
+// TODO -> Add class documentation.
 class VoleyballStatsEntry {
 
     // Statistics of interest for volleyball.
@@ -53,7 +54,7 @@ class VoleyballStatsEntry {
     /**
      * Empty constructor for a VolleyballStatsEntry instance.
      */
-    constructor() { }
+    // constructor() { }
 
     // Instance variables mutator methods.
     // Used to add actions corresponding to events of a volleyball game that
@@ -126,28 +127,8 @@ class VoleyballStatsEntry {
 
 }
 
-// class VolleyballAthlete {
 
-//     // Instance variables.
-
-//     // Player ID - This allows the system to identify a volleyball athlete
-//     //             from the Odin API perspective after the sync request is sent.
-//     private athleteId: string;
-
-//     // Keeps track of a volleyball athlete statistics for the current game.
-//     private athleteStats: VoleyballStatsEntry;
-
-
-//     /**
-//      * Initializes a VolleyballAthlete instance given its athlete identifier.
-//      */
-//     constructor(athleteId: string) {
-//         this.athleteId = athleteId;
-//         this.athleteStats = new VoleyballStatsEntry();
-//     }
-// }
-
-
+// TODO -> Add function documentation.
 export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-metadata/game-ended")
     .onUpdate((change, context) => {
         // Read the game id (event_id).
@@ -177,12 +158,27 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
 
         // If the game is marked as over and is a volleyball game, start sync process.
 
+        // Following Volleyball Game Sync Cloud Function Flowchart.
+        // Refer to MJOLNIR's Progress Resport #1, figure F.1
 
+        // Initialize Variables.
+        let uprmPlayerStats: Map<string, VoleyballStatsEntry> = new Map();
+        // let uprmStats: VoleyballStatsEntry = new VoleyballStatsEntry();
 
+        // Retrieve UPRM roster from database and add them to uprmPlayerStats.
+        admin.database().ref("/v1/" + gameId + "/uprm-roster").once('value').then((snapshot) => {
+            //
+            snapshot.forEach((athleteSnap) => {
+                const athleteKey: string = <string>athleteSnap.key;
+                console.log(athleteKey);
+                uprmPlayerStats.set(athleteKey, new VoleyballStatsEntry());
+            });
+        }).catch(() => {
+            console.log("It's broken...");
+        });
 
-
+        console.log(uprmPlayerStats.keys);
 
         const answer = "No"
         return change.after.ref.update({ answer });
-
     });
