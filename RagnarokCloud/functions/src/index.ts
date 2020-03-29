@@ -130,21 +130,39 @@ class VoleyballStatsEntry {
 
 // TODO -> Add function documentation.
 export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-metadata/game-ended")
-    .onUpdate((change, context) => {
+    .onUpdate(async (change, context) => {
         // Read the game id (event_id).
         const gameId = context.params.game_id;
         console.log("Change detected on game-id=" + gameId);
 
         // Read the latest data corrsponding to the state.
-        const gameState = change.after.child("answer").val();
+        let gameState: string = "";
 
-        // Read the sport value.
-        const sport = change.after.child("sport").val();
-        console.log(sport);
+        try {
+            gameState = change.after.child("answer").val();
+        } catch (error) {
+            console.log("volleyballGameSync Error: " + error);
+            return null;
+        }
 
         // If the game is not over, ignore/return.
         if (gameState === "No") {
-            console.log("Game is not over!");
+            console.log("Game is not over! " + gameState);
+            return null;
+        }
+
+        // Read the sport value.
+        let sport: string = "";
+
+        // Attempt to obtain the sport value from game metadata.
+        try {
+            await admin.database().ref("/v1/" + gameId + "/game-metadata/sport").once('value').then((snapshot) => {
+                sport = snapshot.val();
+            }).catch(() => {
+                console.log("ERROR: could not retrieve sport from game metadata.");
+            });
+        } catch (error) {
+            console.log("volleyballGameSync Error: " + error);
             return null;
         }
 
@@ -152,7 +170,7 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
         //       it is important to validate that the sport is volleyball.
         //       This way, this function can work when other sports are added.
         if (sport !== "Voleibol") {
-            console.log("Not a volleyball game!");
+            console.log("Not a volleyball game! " + sport);
             return null;
         }
 
