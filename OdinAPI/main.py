@@ -2,12 +2,8 @@ from flask import Flask,request,jsonify
 from flask_cors import CORS
 import os
 import datetime
-<<<<<<< HEAD
-# from handler.dao.athlete import AthleteDAO
 from handler.user import UserHandler
-=======
 from handler.athlete import AthleteHandler
->>>>>>> 591ad7b2d3ad8a0d1bc781b6a2d152da9a5b43c1
 
 
 
