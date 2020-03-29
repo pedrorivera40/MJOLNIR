@@ -42,7 +42,7 @@ def allUsers():
 
         return handler.getAllDashUsers()
 
-@app.route("/users/<int:duid>", methods = ['GET'])
+@app.route("/users/<int:duid>", methods = ['GET','POST','PUT','DELETE'])
 def userByID(duid):
     if request.method == 'GET':
         handler = UserHandler()
@@ -50,11 +50,19 @@ def userByID(duid):
         return handler.getDashUserByID(duid)
 
 @app.route("/users/<string:username>", methods = ['GET'])
-def userByEmail(username):
+def userByUsername(username):
     if request.method == 'GET':
         handler = UserHandler()
 
         return handler.getDashUserByUsername(username)
+
+@app.route("/users/email/<string:email>", methods = ['GET'])
+def userByEmail(email):
+    print (email)
+    if request.method == 'GET':
+        handler = UserHandler()
+
+        return handler.getDashUserByEmail(email)
 
 
 #Launch app.

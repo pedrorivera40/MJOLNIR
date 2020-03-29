@@ -1,6 +1,7 @@
 from .config.sqlconfig import db_config
 from flask import jsonify
 import psycopg2
+import logging
 
 
 class UserDAO:
@@ -49,14 +50,11 @@ class UserDAO:
         """
         cursor = self.conn.cursor()
         query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
-                    where id = {};
-        """.format(duid)
-        cursor.execute(query,)
-        users = []
-        for row in cursor:
-            users.append(row)
-        
-        return users
+                    where id = %s;
+                """
+        cursor.execute(query,(duid,))
+        user = cursor.fetchone()
+        return user
         
     def getDashUserByUsername(self, username):
         """
@@ -74,14 +72,12 @@ class UserDAO:
         """
         cursor = self.conn.cursor()
         query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
-                    where username = '{}';
-                """.format(username)
-        cursor.execute(query,)
-        users = []
-        for row in cursor:
-            users.append(row)
+                    where username = %s;
+                """
+        cursor.execute(query,(username,))
+        user = cursor.fetchone()
         
-        return users
+        return user
 
     def getDashUserByEmail(self, email):
         """
@@ -97,9 +93,15 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the given email.
         """
-        return None
+        cursor = self.conn.cursor()
+        query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
+                    where email = %s;
+                """
+        cursor.execute(query,(email,))
+        users = cursor.fetchone()
+        return users
 
-    def addDashUser(self, firstName, lastName,email, password):
+    def addDashUser(self, username, firstName, lastName, email, password):
         """
         Adds a new Dashboard user with the provided information.
 
@@ -116,8 +118,21 @@ class UserDAO:
         Returns:
             A list containing the response to the database query
             containing the matching record for the new dashboard user.
-        """
-        return None
+        """ 
+        
+        cursor = self.conn.cursor()
+        # is_active and is_invalid are false by default because we want inactive, valid accounts upon creation.
+        query = """
+                insert into dashboard_user(username, full_name, email,password_hash, is_active, is_invalid)
+                values (%s,%s, %s,%s, FALSE, FALSE) 
+                returning id, username, email;
+                """
+        cursor.execute(query,(username,firstName, lastName, email, password,))
+        aID = cursor.fetchone()[0]
+        if not aID:
+            return aID
+        self.commitChanges()
+        return aID
 
     def updateDashUserPassword(self, duid, password):
         """

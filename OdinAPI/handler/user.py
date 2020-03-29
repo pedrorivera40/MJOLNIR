@@ -59,10 +59,7 @@ class UserHandler:
         if fetchedUser == None:
             return jsonify(Error="No user found in the system with that id."), 404
         
-        mappedUser = []
-        for user in fetchedUser:
-          mappedUser.append(self.mapUserToDict(user)) 
-        
+        mappedUser = self.mapUserToDict(fetchedUser)
         #TODO: Tell everyone that 201 is cor creates.
         return jsonify(Users=mappedUser),200 #200 == OK
         
@@ -83,12 +80,9 @@ class UserHandler:
         dao = UserDAO()
         fetchedUser = dao.getDashUserByUsername(username)
         if fetchedUser == None:
-            return jsonify(Error="No user found in the system with that id."), 404
+            return jsonify(Error="No user found in the system with that username."), 404
         
-        mappedUser = []
-        for user in fetchedUser:
-          mappedUser.append(self.mapUserToDict(user)) 
-        
+        mappedUser = self.mapUserToDict(fetchedUser)
         #TODO: Tell everyone that 201 is cor creates.
         return jsonify(Users=mappedUser),200 #200 == OK
 
@@ -106,7 +100,14 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the given email.
         """
-        return None
+        dao = UserDAO()
+        fetchedUser = dao.getDashUserByEmail(email)
+        if fetchedUser == None:
+            return jsonify(Error="No user found in the system with that email."), 404
+        
+        mappedUser = self.mapUserToDict(fetchedUser)
+        #TODO: Tell everyone that 201 is cor creates.
+        return jsonify(Users=mappedUser),200 #200 == OK
 
     def addDashUser(self, firstName, lastName,email, password):
         """
