@@ -2,6 +2,7 @@ from flask import Flask,request,jsonify
 from flask_cors import CORS
 import os
 import datetime
+from handler.user import UserHandler
 from handler.athlete import AthleteHandler
 
 
@@ -33,6 +34,13 @@ def athleteByID(aid):
         return handler.removeAthlete(aid)
         
 
+#--------- Dashboard User Routes ---------#
+@app.route("/users/", methods = ['GET'])
+def users():
+    if request.method == 'GET':
+        handler = UserHandler()
+
+        return handler.getAllDashUsers()
 
 
 #Launch app.
