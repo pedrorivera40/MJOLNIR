@@ -127,18 +127,60 @@ class VoleyballStatsEntry {
 
 }
 
-// TODO -> Support remaining game actions.
+// TODO -> Add documentation & TESTS.
 const updateVolleyballStats = function (actionType: string, playerStats:
     VoleyballStatsEntry, teamStats: VoleyballStatsEntry, player: string): void {
 
+    // Update player and team statistics based on the given action type.
     switch (actionType) {
+
+        case "KillPoint":
+            playerStats.kill();
+            teamStats.kill();
+            break;
+
+        case "AttackError":
+            playerStats.attackError();
+            teamStats.attackError();
+            break;
+
+        case "Assist":
+            playerStats.assist();
+            teamStats.assist();
+            break;
+
         case "Ace":
             playerStats.ace();
             teamStats.ace();
             break;
 
+        case "ServiceError":
+            playerStats.serviceError();
+            teamStats.serviceError();
+            break;
+
+        case "Dig":
+            playerStats.dig();
+            teamStats.dig();
+            break;
+
+        case "Block":
+            playerStats.block();
+            teamStats.block();
+            break;
+
+        case "BlockingError":
+            playerStats.blockingError();
+            teamStats.blockingError();
+            break;
+
+        case "ReceptionError":
+            playerStats.receptionError();
+            teamStats.receptionError();
+            break;
+
         default:
-            console.log("Other shit.");
+            console.log("volleyballGameSync Error: Non-statistics current action.");
             break;
     }
 
@@ -147,7 +189,7 @@ const updateVolleyballStats = function (actionType: string, playerStats:
 }
 
 
-// TODO -> Add function documentation.
+// TODO -> Add cloud function documentation.
 export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-metadata/game-ended")
     .onUpdate(async (change, context) => {
 
