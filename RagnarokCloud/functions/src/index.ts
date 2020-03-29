@@ -127,6 +127,13 @@ class VoleyballStatsEntry {
 
 }
 
+const updateVolleyballStats = function (actionType: string, playerStats: Map<string,
+    VoleyballStatsEntry>, teamStats: VoleyballStatsEntry): void {
+
+    return;
+
+}
+
 
 // TODO -> Add function documentation.
 export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-metadata/game-ended")
@@ -154,23 +161,20 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
         // Read the sport value.
         let sport: string = "";
 
-        // Attempt to obtain the sport value from game metadata.
-        try {
-            await admin.database().ref("/v1/" + gameId + "/game-metadata/sport").once('value').then((snapshot) => {
-                sport = snapshot.val();
-            }).catch(() => {
-                console.log("ERROR: could not retrieve sport from game metadata.");
-            });
-        } catch (error) {
-            console.log("volleyballGameSync Error: " + error);
+        // Obtain the sport value from game metadata.
+        await admin.database().ref("/v1/" + gameId + "/game-metadata/sport").once('value').then((snapshot) => {
+            sport = snapshot.val();
+        }).catch(() => {
+            console.log("volleyballGameSync Errpr: could not retrieve sport from game metadata.");
             return null;
-        }
+        });
+
 
         // Note: Even though for this phase only volleyball is implemented,
         //       it is important to validate that the sport is volleyball.
         //       This way, this function can work when other sports are added.
         if (sport !== "Voleibol") {
-            console.log("Not a volleyball game! " + sport);
+            console.log("volleyballGameSync Error: Not a volleyball game! (" + sport + ")");
             return null;
         }
 
@@ -181,21 +185,55 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
 
         // Initialize Variables.
         let uprmPlayerStats: Map<string, VoleyballStatsEntry> = new Map();
-        // let uprmStats: VoleyballStatsEntry = new VoleyballStatsEntry();
+        let uprmStats: VoleyballStatsEntry = new VoleyballStatsEntry();
 
-        // Retrieve UPRM roster from database and add them to uprmPlayerStats.
-        admin.database().ref("/v1/" + gameId + "/uprm-roster").once('value').then((snapshot) => {
-            //
+        // Retrieve UPRM roster from RTDB.
+        await admin.database().ref("/v1/" + gameId + "/uprm-roster").once('value').then((snapshot) => {
+            // Insert athlete VolleyballStatsEntry into the uprmPlayerStats map.
             snapshot.forEach((athleteSnap) => {
                 const athleteKey: string = <string>athleteSnap.key;
-                console.log(athleteKey);
+                // console.log("volleyballGameSync Athlete ID: " + athleteKey);
                 uprmPlayerStats.set(athleteKey, new VoleyballStatsEntry());
             });
         }).catch(() => {
-            console.log("It's broken...");
+            console.log("volleyballGameSync Error: Unable to retrieve UPRM roster.");
+            return null;
         });
 
-        console.log(uprmPlayerStats.keys);
+
+        // Retrieve game actions and per each game action modify uprmPlayerStats and uprmStats.
+        // The conditional branches in the following code segment follow the flowchart for the
+        // Volleyball Game Sync process specified in progress report #1 for MJOLNIR.
+        await admin.database().ref("/v1/" + gameId + "/game-actions").once('value').then((snapshot) => {
+            // Update uprmPlayerStats and uprmStats based on each volleyball play (from game actions).
+            snapshot.forEach((gameAction) => {
+                const actionType: string = <string>gameAction.child("action-type").val();
+                updateVolleyballStats(actionType, uprmPlayerStats, uprmStats);
+            });
+        }).catch(() => {
+            console.log("volleyballGameSync Error: Unable to retrieve UPRM roster.");
+            return null;
+        });
+
+        let athleteStats: any = [];
+
+        uprmPlayerStats.forEach((stats: VoleyballStatsEntry, athleteId: string) => {
+            athleteStats.push(
+                {
+                    "athlete_id": athleteId,
+                    "statistics": stats.getJSON()
+                }
+            );
+        });
+
+        const gameStatistics = <JSON><unknown>{
+            "event_id": gameId,
+            "team_statistics": uprmStats.getJSON(),
+            "athlete_statistics": JSON.stringify(athleteStats)
+        };
+
+        console.log(gameStatistics);
+
 
         const answer = "No"
         return change.after.ref.update({ answer });
