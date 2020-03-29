@@ -4,6 +4,7 @@ import os
 import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
+from auth import createHash, verifyHash, generateToken, verifyToken
 
 
 
@@ -11,6 +12,33 @@ from handler.athlete import AthleteHandler
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+
+def token_check(func):
+    """
+    Midleware to verify the request is authorized.
+
+    Midleware function used to protect routes from unauthorized request
+    by verifying each request provides a valid token.
+    """
+    @wraps(func)
+    def decorated():
+
+        token = request.headers.get('Authorization')
+        print(token)
+        print(request.headers)
+        print(request.get_json())
+
+        if not token:
+            return jsonify(Error='Token is missing'), 403
+        response = verifyToken(token, app.config['SECRET_KEY'])
+        print(response, app.config['SECRET_KEY'])
+        if response == False:
+            return jsonify(Error="Token is invalid"), 403
+        else:
+            pass
+        return func()
+    return decorated
 
 
 @app.route("/")
@@ -42,7 +70,8 @@ def allUsers():
     if request.method == 'GET':
         return handler.getAllDashUsers()
     if request.method == 'POST':
-        return handler.addDashUser(req['username'],req['fullName'], req['email'], req['password'])
+        password = createHash(password,)
+        return handler.addDashUser(req['username'],req['fullName'], req['email'], password)
 
 @app.route("/users/<int:duid>", methods = ['GET','PUT','DELETE'])
 def userByID(duid):
@@ -72,3 +101,4 @@ def userByEmail(email):
 #Launch app.
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+    
