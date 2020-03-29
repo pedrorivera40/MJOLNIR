@@ -16,56 +16,58 @@ class AthleteHandler:
         result['school'] = record[8]
         result['number'] = record[9]
         result['profilePicLink'] = record[10]
+        return result
     
     def getAtheletesBySport(self,sID,aBranch):
         dao = AthleteDAO()
         result = dao.getAtheletesBySport(sID,aBranch)
-        if result == None:
-            return jsonify(Error = "Athletes not found for the sport: {sID} and branch: {aBranch}."),404
+        if not result:
+            return jsonify(Error = "Athletes not found for the sport: {} and branch: {}.".format(sID,aBranch)),404
         mappedResult = []
-        for athlete in result:
+        for athlete in result:                        
             mappedResult.append(self.mapAtheleteToDict(athlete))
+        #print(mappedResult)
         return jsonify(Atheletes = mappedResult), 201
     
     def getAthleteByID(self,aID):
         dao = AthleteDAO()
         result = dao.getAthleteByID(aID)
-        if result == None:
-            return jsonify(Error = "Athlete with aID:{aID} not found."),404
+        if not result:
+            return jsonify(Error = "Athlete with aID:{} not found.".format(aID)),404
         mappedResult = self.mapAtheleteToDict(result);
         return jsonify(Athlete = mappedResult), 201
     
     def getAthleteByName(self,aFName,aMName,aLName):
         dao = AthleteDAO()
-        result = dao.getAthleteByName()
-        if result == None:
-            return jsonify(Error = "Athletes not found with the name: {aFName} {aMName} {aLName}."),404
+        result = dao.getAthleteByName(aFName,aMName,aLName)
+        if not result:
+            return jsonify(Error = "Athletes not found with the name: {} {} {}.".format(aFName,aMName,aLName)),404
         mappedResult = []
         for athlete in result:
             mappedResult.append(self.mapAtheleteToDict(athlete))
         return jsonify(Athletes = mappedResult), 201
 
-    def addAthlete(self,sID, attributes):
+    def addAthlete(self,sID,attributes):
         dao = AthleteDAO()
-        result = dao.addAthlete(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9])
-        if result == None:
+        result = dao.addAthlete(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10])
+        if not result:
             return jsonify(Error = "Problem inserting new athlete."),500
-        return jsonify(Athlete = "Added new athlete with id:{result}."),201
+        return jsonify(Athlete = "Added new athlete with id:{}.".format(result)),201
 
-    def editAthlete(self,sID,aID,attributes):
+    def editAthlete(self,aID,attributes):
         dao = AthleteDAO()
-        result = dao.addAthlete(sID,aID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9])
-        if result == None:
-            return jsonify(Error = "Athlete not found with id:{aID} for the sport:{sID}."),404
-        mappedResult == self.mapAtheleteToDict(result)
+        result = dao.editAthlete(aID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10],attributes[11])
+        if not result:
+            return jsonify(Error = "Athlete not found with id:{}.".format(aID)),404
+        mappedResult = self.mapAtheleteToDict(result)
         return jsonify(Athlete = mappedResult),201
     
-    def removeAthlete(self,sID,aID):
+    def removeAthlete(self,aID):
         dao = AthleteDAO()
-        result = dao.removeAthlete(sID,aID)
-        if result == None:
-            return jsonify(Error = "Athlete not found with id:{aID} for the sport:{sID}."),404
-        return jsonify(Athlete = "Removed athlete with id:{result}."),201
+        result = dao.removeAthlete(aID)
+        if not result:
+            return jsonify(Error = "Athlete not found with id:{} for the sport:{}.".format(sID,aID)),404
+        return jsonify(Athlete = "Removed athlete with id:{}.".format(result)),201
     
 
 
