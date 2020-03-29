@@ -35,19 +35,23 @@ def athleteByID(aid):
         
 
 #--------- Dashboard User Routes ---------#
-@app.route("/users/", methods = ['GET'])
+@app.route("/users/", methods = ['GET','POST'])
 def allUsers():
+    handler = UserHandler()
+    req = request.json
     if request.method == 'GET':
-        handler = UserHandler()
-
         return handler.getAllDashUsers()
+    if request.method == 'POST':
+        return handler.addDashUser(req['username'],req['fullName'], req['email'], req['password'])
 
-@app.route("/users/<int:duid>", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/users/<int:duid>", methods = ['GET','PUT','DELETE'])
 def userByID(duid):
+    handler = UserHandler()
+    # req = request.json
     if request.method == 'GET':
-        handler = UserHandler()
-
         return handler.getDashUserByID(duid)
+    
+
 
 @app.route("/users/<string:username>", methods = ['GET'])
 def userByUsername(username):

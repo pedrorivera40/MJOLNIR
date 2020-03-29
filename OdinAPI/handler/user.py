@@ -15,6 +15,17 @@ class UserHandler:
         userDictionary['is_invalid'] = record[5]
 
         return userDictionary
+    def mapNewUserToDict(self, record):
+        """
+        Converts a record returned by the DAO into a dictionary.
+        """
+        
+        userDictionary = {}
+        userDictionary['id'] = record[0]
+        userDictionary['username'] = record[1]
+        userDictionary['email'] = record[2]
+
+        return userDictionary
 
     def getAllDashUsers(self):
         """
@@ -109,7 +120,7 @@ class UserHandler:
         #TODO: Tell everyone that 201 is cor creates.
         return jsonify(Users=mappedUser),200 #200 == OK
 
-    def addDashUser(self, firstName, lastName,email, password):
+    def addDashUser(self, username, fullName,email, password):
         """
         Adds a new Dashboard user with the provided information.
 
@@ -126,7 +137,16 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the new dashboard user.
         """
-        return None
+        dao = UserDAO()
+        res = dao.addDashUser(username, fullName,email, password)
+        if res == 'UserError1':
+            return jsonify(Error='Email has been registered.')
+        elif res == 'UserError2':
+            return jsonify(Error='Username is already taken.')
+        elif res == 'UserError3':
+            return jsonify(Error="New user not created")
+        else:
+          return jsonify(User=self.mapNewUserToDict(res)),201
 
     def updateDashUserPassword(self, duid, password):
         """
