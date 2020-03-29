@@ -58,8 +58,8 @@ class AthleteDAO:
 
     def addAthlete(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink):
         cursor = self.conn.cursor()
-        query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id) "\
-                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id;"
+        query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id,is_invalid) "\
+                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;"
         cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))
         aID = cursor.fetchone()[0]
         if not aID:
@@ -67,7 +67,7 @@ class AthleteDAO:
         self.commitChanges()
         return aID
 
-    def editAthlete(self,aID,aBranch, aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID):
+    def editAthlete(self,aID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID):
         cursor = self.conn.cursor()
         query = "update athlete "\
                 "set first_name = %s,"\
@@ -104,7 +104,7 @@ class AthleteDAO:
     def removeAthlete(self,aID):
         cursor = self.conn.cursor()
         query = "update athlete "\
-                "set school_of_precedence = 'Simulating Removal in this column' "\
+                "set is_invalid = 'true' "\
                 "where id = %s "\
                 "returning id"
         cursor.execute(query,(aID,))
