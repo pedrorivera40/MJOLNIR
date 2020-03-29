@@ -88,6 +88,13 @@ def userByID(duid):
     if request.method == 'GET':
         return handler.getDashUserByID(duid)
     if request.method == 'PATCH':
+        return handler.updateDashUserUsername(duid,req['username'])
+
+@app.route("/users/<int:duid>/reset", methods = ['PATCH'])
+def passwordReset(duid):
+    handler = UserHandler()
+    req = request.json
+    if request.method == 'PATCH':
         password = createHash(req['password'])
         return handler.updateDashUserPassword(duid,password)
     

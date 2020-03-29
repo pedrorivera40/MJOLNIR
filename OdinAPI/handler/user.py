@@ -166,7 +166,7 @@ class UserHandler:
         dao = UserDAO()
         res = dao.updateDashUserPassword(duid, password)
         
-        return jsonify(User=self.mapNewUserToDict(res)),201
+        return jsonify(User=self.mapNewUserToDict(res)),200
 
     def updateDashUserUsername(self, duid,username):
         """
@@ -183,7 +183,12 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user. 
         """
-        return None
+        dao = UserDAO()
+        res = dao.updateDashUserUsername(duid, username)
+        if res == 'UserError4':
+            return jsonify(Error='Username already taken.')
+        else:
+            return jsonify(User=self.mapNewUserToDict(res)),201
 
     def markDashUserInactive(self, duid):
         """

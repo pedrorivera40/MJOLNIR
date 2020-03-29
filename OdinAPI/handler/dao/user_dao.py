@@ -189,7 +189,27 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
-        return None
+        cursor = self.conn.cursor()
+
+        probeQuery = """
+                    Select case when (select count(*) from dashboard_user where username =%s) > 0
+                    then 'yes' else 'no' end as usernameTest;
+                    """
+        cursor.execute(probeQuery, (username,))
+        conflicts = cursor.fetchone()
+        if(conflicts[0]=='yes'):
+            return 'UserError4'
+
+        query = """
+                update dashboard_user
+                set username = %s
+                where id = %s
+                returning id, username, email;
+                """
+        cursor.execute(query,(username,duid))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
 
     def markDashUserInactive(self, duid):
         """
