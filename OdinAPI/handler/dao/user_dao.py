@@ -21,10 +21,17 @@ class UserDAO:
         dashboard users in the system.
 
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing all the dashboard users in the system.
         """
-        return None
+        cursor = self.conn.cursor()
+        query = 'select id, username, full_name, email, is_active, is_invalid from dashboard_user;'
+        cursor.execute(query,)
+        users = []
+        for row in cursor:
+            users.append(row)
+        
+        return users
 
     def getDashUserByID(self, duid):
         """
@@ -37,7 +44,7 @@ class UserDAO:
             duid: The ID of the dashboboard user that needs to be fetched.
             
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing the matching record for the given ID.
         """
         return None
@@ -53,7 +60,7 @@ class UserDAO:
             username: The username of the dashboboard user that needs to be fetched.
             
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing the matching record for the given username.
         """
         return None
@@ -69,7 +76,7 @@ class UserDAO:
             email: The email of the dashboboard user that needs to be fetched.
             
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing the matching record for the given email.
         """
         return None
@@ -89,7 +96,7 @@ class UserDAO:
             password: The hash of the password for the new dashboboard user.
             
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing the matching record for the new dashboard user.
         """
         return None
@@ -106,7 +113,7 @@ class UserDAO:
             password: The hash of the new password for the dashboboard user.
             
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
         return None
@@ -123,7 +130,7 @@ class UserDAO:
             username: The new username for the dashboard user.
             
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
         return None
@@ -139,7 +146,7 @@ class UserDAO:
             duid: The ID of the user that will be deactivated.
             
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
         return None
@@ -155,7 +162,7 @@ class UserDAO:
             duid: The ID of the user that will be activated.
             
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
         return None
@@ -172,7 +179,7 @@ class UserDAO:
             duid: The ID of the user that will be invalidated.
             
         Returns:
-            A string containing the response to the database query
+            A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
         return None

@@ -5,17 +5,15 @@ class UserHandler:
     def mapUserToDict(self, record):
         """
         Converts a record returned by the DAO into a dictionary.
-
-
         """
         userDictionary = {}
-        userDictionary[''] = record[0]
-        userDictionary[''] = record[1]
-        userDictionary[''] = record[2]
-        userDictionary[''] = record[3]
-        userDictionary[''] = record[4]
-        userDictionary[''] = record[5]
-        userDictionary[''] = record[6]
+        userDictionary['id'] = record[0]
+        userDictionary['username'] = record[1]
+        userDictionary['full_name'] = record[2]
+        userDictionary['email'] = record[3]
+        userDictionary['is_active'] = record[4]
+        userDictionary['is_invalid'] = record[5]
+
         return userDictionary
 
     def getAllDashUsers(self):
@@ -31,7 +29,6 @@ class UserHandler:
         """
         dao = UserDAO()
         userList = dao.getAllDashUsers()
-        
         if userList == None:
             return jsonify(Error="No users found in the system."), 404
         
