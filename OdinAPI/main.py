@@ -2,7 +2,8 @@ from flask import Flask,request,jsonify
 from flask_cors import CORS
 import os
 import datetime
-from handler.dao.athlete import AthleteDAO
+# from handler.dao.athlete import AthleteDAO
+from handler.user import UserHandler
 
 
 
@@ -17,10 +18,17 @@ def hello():
     return jsonify("Hi, this is a route that will be eliminated xD")
 
 
-@app.route("/athletes/", methods = ['GET'])
-def athleteProfiles():
-    athlete = AthleteDAO()
-    return athlete.getAtheletes()
+# @app.route("/athletes/", methods = ['GET'])
+# def athleteProfiles():
+#     athlete = AthleteDAO()
+#     return athlete.getAtheletes()
+
+@app.route("/users/", methods = ['GET'])
+def users():
+    if request.method == 'GET':
+        handler = UserHandler()
+
+        return handler.getAllDashUsers()
 
 
 
