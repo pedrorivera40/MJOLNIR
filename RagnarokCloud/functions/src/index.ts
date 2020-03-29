@@ -1,5 +1,8 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin'
+import * as admin from 'firebase-admin';
+
+// Add XMLHttpRequest library for interacting with Odin API.
+// const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 /*
     This file contains the Cloud Functions required for the development of Huella Deportiva Web.
@@ -339,8 +342,28 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
 
         console.log(gameStatistics);
 
-        // TODO -> Request to API...
+        // TODO -> Add authorization credentials for Odin API.
+        // Prepare for POST request to Odin API with volleyball results.
+        const volleyballPath = "PATH_TO_ODIN_API";
+        let request: XMLHttpRequest = new XMLHttpRequest();
 
-        const answer = "No"
-        return change.after.ref.update({ answer });
+        // Perform HTTP request to Odin API.
+        try {
+            request.open("POST", volleyballPath, false);
+            request.responseType = "json";
+            request.onload = function () {
+                console.log(JSON.parse(request.responseText));
+            }
+
+            request.send();
+
+            if (request.status !== 200) {
+                console.log("volleyballGameSync Error: HTTP request error.");
+            }
+        } catch (error) {
+            console.log("volleyballGameSync Error: " + error);
+        }
+
+        // End of volleyballGameSync process.
+        return;
     });
