@@ -47,7 +47,16 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the given ID.
         """
-        return None
+        cursor = self.conn.cursor()
+        query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
+                    where id = {};
+        """.format(duid)
+        cursor.execute(query,)
+        users = []
+        for row in cursor:
+            users.append(row)
+        
+        return users
         
     def getDashUserByUsername(self, username):
         """
@@ -63,7 +72,16 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the given username.
         """
-        return None
+        cursor = self.conn.cursor()
+        query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
+                    where username = '{}';
+                """.format(username)
+        cursor.execute(query,)
+        users = []
+        for row in cursor:
+            users.append(row)
+        
+        return users
 
     def getDashUserByEmail(self, email):
         """

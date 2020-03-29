@@ -36,11 +36,25 @@ def athleteByID(aid):
 
 #--------- Dashboard User Routes ---------#
 @app.route("/users/", methods = ['GET'])
-def users():
+def allUsers():
     if request.method == 'GET':
         handler = UserHandler()
 
         return handler.getAllDashUsers()
+
+@app.route("/users/<int:duid>", methods = ['GET'])
+def userByID(duid):
+    if request.method == 'GET':
+        handler = UserHandler()
+
+        return handler.getDashUserByID(duid)
+
+@app.route("/users/<string:username>", methods = ['GET'])
+def userByEmail(username):
+    if request.method == 'GET':
+        handler = UserHandler()
+
+        return handler.getDashUserByUsername(username)
 
 
 #Launch app.
