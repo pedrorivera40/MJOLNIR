@@ -127,8 +127,20 @@ class VoleyballStatsEntry {
 
 }
 
-const updateVolleyballStats = function (actionType: string, playerStats: Map<string,
-    VoleyballStatsEntry>, teamStats: VoleyballStatsEntry): void {
+// TODO -> Support remaining game actions.
+const updateVolleyballStats = function (actionType: string, playerStats:
+    VoleyballStatsEntry, teamStats: VoleyballStatsEntry, player: string): void {
+
+    switch (actionType) {
+        case "Ace":
+            playerStats.ace();
+            teamStats.ace();
+            break;
+
+        default:
+            console.log("Other shit.");
+            break;
+    }
 
     return;
 
@@ -138,6 +150,14 @@ const updateVolleyballStats = function (actionType: string, playerStats: Map<str
 // TODO -> Add function documentation.
 export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-metadata/game-ended")
     .onUpdate(async (change, context) => {
+
+        /* 
+            <Section 1> 
+                This section represents the first input block from the flowchart
+                in figure F.1 of MJOLNIR's progress report #1. In this part, meta-data,
+                uprm-roster, game actions, and game score is retrieved.
+        */
+
         // Read the game id (event_id).
         const gameId = context.params.game_id;
         console.log("Change detected on game-id=" + gameId);
@@ -154,7 +174,7 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
 
         // If the game is not over, ignore/return.
         if (gameState === "No") {
-            console.log("Game is not over! " + gameState);
+            console.log("volleyballGameSync: Game is not over! " + gameState);
             return null;
         }
 
@@ -178,10 +198,38 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
             return null;
         }
 
+        // Obtain game score based on sets won by each team.
+        let uprmScore: number = 0;
+        let opponentScore: number = 0;
+        await admin.database().ref("/v1/" + gameId + "/score").once('value').then((snapshot) => {
+            // Find the score on each quarter and calculate the number of quarter won by each team.
+            for (let i = 1; i <= 5; i++) {
+
+                const uprmPoints: number = snapshot.child("set" + i + "-uprm").val();
+                const opponentPoints: number = snapshot.child("set" + i + "-opponent").val();
+
+                if (uprmPoints > opponentPoints) {
+                    uprmScore++;
+                }
+
+                if (uprmPoints < opponentPoints) {
+                    opponentScore++;
+                }
+            }
+        }).catch(() => {
+            console.log("volleyballGameSync Error: Unable to retrieve score.");
+            return null;
+        });
+
         // If the game is marked as over and is a volleyball game, start sync process.
 
-        // Following Volleyball Game Sync Cloud Function Flowchart.
-        // Refer to MJOLNIR's Progress Resport #1, figure F.1
+        /*
+            <Section 2>
+                This section represents the first process block of the flowchart in which
+                uprm-player-stats (uprmPlayerStats in code) and uprm-stats (uprmStats) are
+                initialized. Note that in this implementation, when the game actions are
+                retrieved, uprmPlayerStats and uprmStats collections are being modified.
+        */
 
         // Initialize Variables.
         let uprmPlayerStats: Map<string, VoleyballStatsEntry> = new Map();
@@ -192,7 +240,6 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
             // Insert athlete VolleyballStatsEntry into the uprmPlayerStats map.
             snapshot.forEach((athleteSnap) => {
                 const athleteKey: string = <string>athleteSnap.key;
-                // console.log("volleyballGameSync Athlete ID: " + athleteKey);
                 uprmPlayerStats.set(athleteKey, new VoleyballStatsEntry());
             });
         }).catch(() => {
@@ -207,16 +254,23 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
         await admin.database().ref("/v1/" + gameId + "/game-actions").once('value').then((snapshot) => {
             // Update uprmPlayerStats and uprmStats based on each volleyball play (from game actions).
             snapshot.forEach((gameAction) => {
+
                 const actionType: string = <string>gameAction.child("action-type").val();
-                updateVolleyballStats(actionType, uprmPlayerStats, uprmStats);
+                const team: string = <string>gameAction.child("team").val();
+
+                // Update statistics only if it is a play corresponding to UPRM team.
+                if (actionType !== "Notification" && team === "UPRM") {
+                    const player: string = <string>gameAction.child("athlete-id").val();
+                    updateVolleyballStats(actionType, <VoleyballStatsEntry>uprmPlayerStats.get(player), uprmStats, player);
+                }
             });
         }).catch(() => {
-            console.log("volleyballGameSync Error: Unable to retrieve UPRM roster.");
+            console.log("volleyballGameSync Error: Unable to retrieve game actions.");
             return null;
         });
 
+        // Prepare uprmPlayerStats to be added into the request payload.
         let athleteStats: any = [];
-
         uprmPlayerStats.forEach((stats: VoleyballStatsEntry, athleteId: string) => {
             athleteStats.push(
                 {
@@ -226,14 +280,24 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
             );
         });
 
+        /*
+            <Section 3>
+                In this section, all the statistics have been calculated. The only
+                missing task is to build the JSON payload and send the HTTPS request
+                to Odin API.
+        */
+
         const gameStatistics = <JSON><unknown>{
             "event_id": gameId,
             "team_statistics": uprmStats.getJSON(),
-            "athlete_statistics": JSON.stringify(athleteStats)
+            "athlete_statistics": JSON.stringify(athleteStats),
+            "uprm_score": uprmScore,
+            "opponent_score": opponentScore
         };
 
         console.log(gameStatistics);
 
+        // TODO -> Request to API...
 
         const answer = "No"
         return change.after.ref.update({ answer });
