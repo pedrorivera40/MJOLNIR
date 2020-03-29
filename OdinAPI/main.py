@@ -5,7 +5,10 @@ import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
 from auth import createHash, verifyHash, generateToken, verifyToken
+from dotenv import load_dotenv
 
+## Load environment variables
+load_dotenv()
 
 
 
@@ -70,7 +73,7 @@ def allUsers():
     if request.method == 'GET':
         return handler.getAllDashUsers()
     if request.method == 'POST':
-        password = createHash(password,)
+        password = createHash(req['password'])
         return handler.addDashUser(req['username'],req['fullName'], req['email'], password)
 
 @app.route("/users/<int:duid>", methods = ['GET','PUT','DELETE'])
