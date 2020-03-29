@@ -18,14 +18,21 @@ def hello():
     return jsonify("Hi, this is a route that will be eliminated xD")
 
 #--------- Athlete Routes ---------#
+@app.route("/athletes/",methods = ['GET','POST'])
+def athletes():
+    handler = AthleteHandler()
+    if request.method == 'POST':
+        json = request.json
+        return handler.addAthlete(json['sID'],json['attributes'])
+    elif request.method == 'GET':
+        json = request.json
+        return handler.getAtheletesBySport(json['sID'],json['branch'])
+
 @app.route("/athletes/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 def athleteByID(aid):
     handler = AthleteHandler()
     if request.method == 'GET':
-        return handler.getAthleteByID(aid)
-    elif request.method == 'POST':
-        json = request.json
-        return handler.addAthlete(json['sID'],json['attributes'])
+        return handler.getAthleteByID(aid)   
     elif request.method == 'PUT':
         json = request.json
         return handler.editAthlete(aid,json['attributes'])
