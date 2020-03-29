@@ -45,7 +45,7 @@ class UserHandler:
         
         mappedUsers = []
         for user in userList:
-          mappedUsers.append(self.mapUserToDict(user)) 
+            mappedUsers.append(self.mapUserToDict(user)) 
         
         #TODO: Tell everyone that 201 is cor creates.
         return jsonify(Users=mappedUsers),200 #200 == OK
@@ -146,7 +146,7 @@ class UserHandler:
         elif res == 'UserError3':
             return jsonify(Error="New user not created")
         else:
-          return jsonify(User=self.mapNewUserToDict(res)),201
+            return jsonify(User=self.mapNewUserToDict(res)),201
 
     def updateDashUserPassword(self, duid, password):
         """
@@ -163,7 +163,10 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user.
         """
-        return None
+        dao = UserDAO()
+        res = dao.updateDashUserPassword(duid, password)
+        
+        return jsonify(User=self.mapNewUserToDict(res)),201
 
     def updateDashUserUsername(self, duid,username):
         """

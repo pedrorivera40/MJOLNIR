@@ -5,7 +5,9 @@ import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
 from auth import createHash, verifyHash, generateToken, verifyToken
+from functools import wraps
 from dotenv import load_dotenv
+import os
 
 ## Load environment variables
 load_dotenv()
@@ -34,8 +36,10 @@ def token_check(func):
 
         if not token:
             return jsonify(Error='Token is missing'), 403
-        response = verifyToken(token, app.config['SECRET_KEY'])
-        print(response, app.config['SECRET_KEY'])
+
+        response = verifyToken(token, os.getenv('SECRET_KEY'))
+        print(response, os.getenv('SECRET_KEY'))
+
         if response == False:
             return jsonify(Error="Token is invalid"), 403
         else:
@@ -64,8 +68,9 @@ def athleteByID(aid):
         json = request.json
         return handler.removeAthlete(aid)
         
-
+###########################################
 #--------- Dashboard User Routes ---------#
+###########################################
 @app.route("/users/", methods = ['GET','POST'])
 def allUsers():
     handler = UserHandler()
@@ -76,12 +81,15 @@ def allUsers():
         password = createHash(req['password'])
         return handler.addDashUser(req['username'],req['fullName'], req['email'], password)
 
-@app.route("/users/<int:duid>", methods = ['GET','PUT','DELETE'])
+@app.route("/users/<int:duid>", methods = ['GET','PATCH','DELETE'])
 def userByID(duid):
     handler = UserHandler()
-    # req = request.json
+    req = request.json
     if request.method == 'GET':
         return handler.getDashUserByID(duid)
+    if request.method == 'PATCH':
+        password = createHash(req['password'])
+        return handler.updateDashUserPassword(duid,password)
     
 
 

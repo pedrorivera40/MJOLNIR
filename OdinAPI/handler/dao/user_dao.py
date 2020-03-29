@@ -162,7 +162,17 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
-        return None
+        cursor = self.conn.cursor()
+        query = """
+                update dashboard_user
+                set password_hash = %s
+                where id = %s
+                returning id, username, email;
+                """
+        cursor.execute(query,(password,duid))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
 
     def updateDashUserUsername(self, duid,username):
         """
