@@ -76,8 +76,10 @@ def allUsers():
     handler = UserHandler()
     req = request.json
     if request.method == 'GET':
+        ## For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
+        ## For account creation
         password = createHash(req['password'])
         return handler.addDashUser(req['username'],req['fullName'], req['email'], password)
 
@@ -86,8 +88,10 @@ def userByID(duid):
     handler = UserHandler()
     req = request.json
     if request.method == 'GET':
+        ## For managing specific users
         return handler.getDashUserByID(duid)
     if request.method == 'PATCH':
+        ## For username change
         return handler.updateDashUserUsername(duid,req['username'])
 
 @app.route("/users/<int:duid>/reset", methods = ['PATCH'])
@@ -95,8 +99,23 @@ def passwordReset(duid):
     handler = UserHandler()
     req = request.json
     if request.method == 'PATCH':
+        ## For password reset
         password = createHash(req['password'])
         return handler.updateDashUserPassword(duid,password)
+
+@app.route("/users/<string:duid>/toggleActive", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
+def toggleActive(duid):
+    handler = UserHandler()
+    req = request.json
+    if request.method == 'PATCH':
+        return handler.toggleDashUserActive(duid)
+
+@app.route("/users/<string:duid>/remove", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
+def remove(duid):
+    handler = UserHandler()
+    req = request.json
+    if request.method == 'PATCH':
+        return handler.removeDashUser(duid)
     
 
 
