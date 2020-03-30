@@ -1,0 +1,4 @@
+.vscode/settings.json
+*.pyc
+OdinAPI/.env
+OdinAPI/.venv
