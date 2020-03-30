@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: |
-    This is the documentation for the API calls within the OdinAPI.
+    This is the documentation for the API calls within the OdinAPI. It also serves as a test bed to perform these API calls directly.
   version: 1.0.0
   title: OdinAPI
 servers:
@@ -11,27 +11,40 @@ tags:
     description: Everything about dashboard users
 
 paths:
-  /users/{duid}/reset:
-    patch:
-      summary: "Password Reset"
-      description: " Reset the password for the user with the given Id"
+  /users/:
+    get:
+      summary: "Get all users"
+      description: "Endpoint to get all the dashboard users within the system."
+      operationId: listUsers
       tags:
         - Users
-      parameters:
-        - name: duid
-          in: path
-          description: The id for the user
-          required: true
-          schema:
-            type: string
+      responses:
+        "200":
+          description: "Success!"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: "Add new user"
+      description: "Endpoint to create a new user in the system."
+      operationId: addUsers
+      tags:
+        - Users
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PasswordReset"
+              $ref: "#/components/schemas/NewUser"
       responses:
         "200":
-          description: OK
+          description: "Success!"
           content:
             application/json:
               schema:
@@ -82,6 +95,11 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UsernameChange"
       responses:
         "200":
           description: OK
@@ -96,16 +114,77 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /users/:
-    get:
-      summary: "Get all users"
-      description: "Endpoint to get all the dashboard users within the system."
-      operationId: listUsers
+  /users/username/:
+    post:
+      summary: "Get by username"
+      description: "Get the record of the user with the given username."
       tags:
         - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UsernameChange"
       responses:
         "200":
-          description: "Success!"
+          description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/email/:
+    post:
+      summary: "Get by email"
+      description: "Get the record of the user with the given email."
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Email"
+      responses:
+        "200":
+          description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{duid}/reset:
+    patch:
+      summary: "Password Reset"
+      description: " Reset the password for the user with the given Id"
+      tags:
+        - Users
+      parameters:
+        - name: duid
+          in: path
+          description: The id for the user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordReset"
+      responses:
+        "200":
+          description: OK
           content:
             application/json:
               schema:
@@ -116,40 +195,50 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-    post:
-      summary: "Add new user"
-      description: "Endpoint to create a new user in the system."
-      operationId: addUsers
+
+  /users/{duid}/toggleActive:
+    patch:
+      summary: "Activate/Deactivate a user"
+      description: "Toggles the active state for a user with the given Id"
       tags:
         - Users
       parameters:
-        - name: username
-          in: query
-          description: The username fot the user
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: The password for the user
-          required: true
-          schema:
-            type: string
-        - name: email
-          in: query
-          description: The email for the user
-          required: true
-          schema:
-            type: string
-        - name: full_name
-          in: query
-          description: The user's full name
+        - name: duid
+          in: path
+          description: The id for the user
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: "Success!"
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{duid}/remove:
+    patch:
+      summary: "Remove a user from the system"
+      description: "Removes a user with the given Id from the system by invalidating its record in the database."
+      tags:
+        - Users
+      parameters:
+        - name: duid
+          in: path
+          description: The id for the user
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
           content:
             application/json:
               schema:
@@ -163,6 +252,16 @@ paths:
 
 components:
   schemas:
+    UsernameChange:
+      type: object
+      properties:
+        username:
+          type: string
+    Email:
+      type: object
+      properties:
+        email:
+          type: string
     PasswordReset:
       type: object
       properties:
@@ -192,6 +291,19 @@ components:
           enum:
             - TRUE
             - FALSE
+      xml:
+        name: User
+    NewUser:
+      type: object
+      properties:
+        username:
+          type: string
+        full_naame:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
       xml:
         name: User
     Error:

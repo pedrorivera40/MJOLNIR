@@ -113,26 +113,24 @@ def toggleActive(duid):
 @app.route("/users/<string:duid>/remove", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
 def remove(duid):
     handler = UserHandler()
-    req = request.json
     if request.method == 'PATCH':
         return handler.removeDashUser(duid)
     
 
 
-@app.route("/users/<string:username>", methods = ['GET'])
-def userByUsername(username):
-    if request.method == 'GET':
+@app.route("/users/username/", methods = ['POST'])
+def userByUsername():
+    if request.method == 'POST':
         handler = UserHandler()
+        req = request.json
+        return handler.getDashUserByUsername(req['username'])
 
-        return handler.getDashUserByUsername(username)
-
-@app.route("/users/email/<string:email>", methods = ['GET'])
-def userByEmail(email):
-    print (email)
-    if request.method == 'GET':
+@app.route("/users/email/", methods = ['POST'])
+def userByEmail():
+    if request.method == 'POST':
         handler = UserHandler()
-
-        return handler.getDashUserByEmail(email)
+        req = request.json
+        return handler.getDashUserByEmail(req['email'])
 
 
 #Launch app.
