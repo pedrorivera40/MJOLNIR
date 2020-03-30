@@ -149,47 +149,84 @@ class BasketballEventDAO:
         self.commitChanges()
         return tsID
 
-    #NEW : aggregate statistics automatically and update
-    def addTeamStatisticsAuto(self,eid):
+    #NEW : aggregate statistics automatically and insert new team stats
+    #TODO: name better. this method will take the aggregate and add the necessary team statistics
+    def addTeamStatisticsAuto(self,eID):
         cursor = self.conn.cursor()
-        query = ""
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))
-        aID = cursor.fetchone()[0]
-        if not aID:
-            return aID
+        #the first query collects the aggregate
+        #DONE: needed to add subquery so we only aggregate from the valid events :)
+        query = """
+                with valid_basketball_events as
+                (SELECT *
+                FROM basketball_event
+                WHERE (is_invalid=false or is_invalid is null))
+                select 
+                sum(points) as points,sum(rebounds) as rebounds, sum(assists) as assists,sum(steals) as steals,
+                sum(blocks) as blocks,sum(turnovers) as turnovers,sum(field_goal_attempt) as field_goal_attempt,
+                sum(successful_field_goal) as successful_field_goal,sum(three_point_attempt) as three_point_attempt,
+                sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,
+                sum(successful_free_throw) as successful_free_throw
+                from valid_basketball_event
+                WHERE event_id = %s;
+                """
+        cursor.execute(query,(int(eID),))
+        resultTeam = cursor.fetchone()
+        #TODO: Add case of query failure?
+        if not resultTeam:
+            return resultTeam
+        query = """
+                INSERT INTO basketball_event_team_stats(points,rebounds,assists,steals,blocks,turnovers,
+                field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
+                free_throw_attempt,successful_free_throw,event_id)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id;
+                """
+        cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
+        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
+        int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
+        tsID = cursor.fetchone()[0]
+        if not tsID:
+            return tsID
         self.commitChanges()
-        return aID
+        return tsID
 
-    def editStatistics(self,eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalPercentage,threePointPercentage,freeThrowPercentage):
+    #TODO: recal athlete will be validaded by handler
+    def editStatistics(self,eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalAttempt, 
+    successfulFieldGoal,threePointAttempt,successfulThreePoint, freeThrowAttempt,successfulFreeThrow):
         #NEW: will also have to update the team statistics
+        #TODO: update team statistic. simply call the outside dao?
         cursor = self.conn.cursor()
         query = """
-                update basketball_event
-                set first_name = %s,
-                    middle_name = %s,
-                    last_names = %s,
-                    short_bio = %s,
-                    height_inches = %s,
-                    study_program = %s,
-                    date_of_birth = %s,
-                    school_of_precedence = %s,
-                    number = %s,
-                    profile_image_link = %s,
-                    sport_id = %s
-                where event = %s 
-                returning first_name,
-                    middle_name,
-                    last_names,
-                    short_bio,
-                    height_inches,
-                    study_program,
-                    date_of_birth,
-                    school_of_precedence,
-                    number,
-                    profile_image_link,
-                    sport_id
+                UPDATE basketball_event
+                SET points = %s,
+                    rebounds = %s,
+                    assists = %s,
+                    steals = %s,
+                    blocks = %s,
+                    turnovers = %s,
+                    field_goal_attempt = %s,
+                    successful_field_goal = %s,
+                    three_point_attempt = %s,
+                    successful_three_point = %s,
+                    free_throw_attempt = %s,
+                    successful_free_throw = %s
+                WHERE event_id = %s and athlete_id = %s 
+                RETURNING
+                    points,
+                    rebounds,
+                    assists,
+                    steals,
+                    blocks,
+                    turnovers,
+                    field_goal_attempt,
+                    successful_field_goal,
+                    three_point_attempt,
+                    successful_three_point,
+                    free_throw_attempt,
+                    successful_free_throw;
                 """
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,aID,))
+        cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),int(turnovers),
+        int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),int(successfulThreePoint),
+        int(freeThrowAttempt),int(successfulFreeThrow),int(eID),int(aID),))
         result = cursor.fetchone()
         if not result:
             return result
@@ -197,21 +234,77 @@ class BasketballEventDAO:
         return result
 
     #NEW: edit team statistics. automatically update based on aggregate. 
-    def updateTeamStatistics(self,eID):
+    def editTeamStatistics(self,eID):
         cursor = self.conn.cursor()
-        query = ""
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,aID,))
+        #the first query collects the aggregate
+        query = """
+                with valid_basketball_events as
+                (SELECT *
+                FROM basketball_event
+                WHERE (is_invalid=false or is_invalid is null))
+                select 
+                sum(points) as points,sum(rebounds) as rebounds, sum(assists) as assists,sum(steals) as steals,
+                sum(blocks) as blocks,sum(turnovers) as turnovers,sum(field_goal_attempt) as field_goal_attempt,
+                sum(successful_field_goal) as successful_field_goal,sum(three_point_attempt) as three_point_attempt,
+                sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,
+                sum(successful_free_throw) as successful_free_throw
+                from valid_basketball_event
+                WHERE event_id = %s;
+                """
+        cursor.execute(query,(int(eID),))
+        resultTeam = cursor.fetchone()
+        #TODO: Add case of query failure?
+        if not resultTeam:
+            return resultTeam
+        #the second query updates the basketball_event_team_stats based on aggregate results
+        query = """
+                UPDATE basketball_event_team_stats
+                SET points = %s,
+                    rebounds = %s,
+                    assists = %s,
+                    steals = %s,
+                    blocks = %s,
+                    turnovers = %s,
+                    field_goal_attempt = %s,
+                    successful_field_goal = %s,
+                    three_point_attempt = %s,
+                    successful_three_point = %s,
+                    free_throw_attempt = %s,
+                    successful_free_throw = %s
+                WHERE event_id = %s 
+                RETURNING
+                    points,
+                    rebounds,
+                    assists,
+                    steals,
+                    blocks,
+                    turnovers,
+                    field_goal_attempt,
+                    successful_field_goal,
+                    three_point_attempt,
+                    successful_three_point,
+                    free_throw_attempt,
+                    successful_free_throw;
+                """
+        cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
+        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
+        int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
         result = cursor.fetchone()
         if not result:
             return result
         self.commitChanges()
         return result
                 
-    
+    #TODO: in handler must call update team statistics (auto) after this. 
     def removeStatistics(self,eID,aID):
         cursor = self.conn.cursor()
-        query = ""
-        cursor.execute(query,(aID,))
+        query = """
+                UPDATE basketball_event
+                SET is_invalid = true
+                WHERE event_id = %s  and athlete_id = %s
+                RETURNING is_invalid,
+                """
+        cursor.execute(query,(int(eID),int(aID),))
         result = cursor.fetchone()[0]
         if not result:
             return result
@@ -221,8 +314,13 @@ class BasketballEventDAO:
     #NEW : remove team statistics
     def removeTeamStatistics(self,eID,aID):
         cursor = self.conn.cursor()
-        query = ""
-        cursor.execute(query,(aID,))
+        query = """
+                UPDATE basketball_event_team_stats
+                SET is_invalid = true
+                WHERE event_id = %s
+                RETURNING is_invalid,
+                """
+        cursor.execute(query,(int(eID),))
         result = cursor.fetchone()[0]
         if not result:
             return result
