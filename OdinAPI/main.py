@@ -4,14 +4,49 @@ import os
 import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
+from auth import createHash, verifyHash, generateToken, verifyToken
+from functools import wraps
+from dotenv import load_dotenv
+import os
 from handler.position import PositionHandler
 
+## Load environment variables
+load_dotenv()
 
 
 
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+
+def token_check(func):
+    """
+    Midleware to verify the request is authorized.
+
+    Midleware function used to protect routes from unauthorized request
+    by verifying each request provides a valid token.
+    """
+    @wraps(func)
+    def decorated():
+
+        token = request.headers.get('Authorization')
+        print(token)
+        print(request.headers)
+        print(request.get_json())
+
+        if not token:
+            return jsonify(Error='Token is missing'), 403
+
+        response = verifyToken(token, os.getenv('SECRET_KEY'))
+        print(response, os.getenv('SECRET_KEY'))
+
+        if response == False:
+            return jsonify(Error="Token is invalid"), 403
+        else:
+            pass
+        return func()
+    return decorated
 
 
 @app.route("/")
@@ -66,16 +101,72 @@ def athletePositions(sid,aid):
     if request.method == 'PUT':
         return handler.editAthletePosition(request.json['apID'],request.json['psID'],aid)
 
-
+###########################################
 #--------- Dashboard User Routes ---------#
-@app.route("/users/", methods = ['GET'])
-def users():
+###########################################
+@app.route("/users/", methods = ['GET','POST'])
+def allUsers():
+    handler = UserHandler()
+    req = request.json
     if request.method == 'GET':
-        handler = UserHandler()
-
+        ## For user list display
         return handler.getAllDashUsers()
+    if request.method == 'POST':
+        ## For account creation
+        password = createHash(req['password'])
+        return handler.addDashUser(req['username'],req['full_name'], req['email'], password)
+
+@app.route("/users/<int:duid>", methods = ['GET','PATCH'])
+def userByID(duid):
+    handler = UserHandler()
+    req = request.json
+    if request.method == 'GET':
+        ## For managing specific users
+        return handler.getDashUserByID(duid)
+    if request.method == 'PATCH':
+        ## For username change
+        return handler.updateDashUserUsername(duid,req['username'])
+
+@app.route("/users/<int:duid>/reset", methods = ['PATCH'])
+def passwordReset(duid):
+    handler = UserHandler()
+    req = request.json
+    if request.method == 'PATCH':
+        ## For password reset
+        password = createHash(req['password'])
+        return handler.updateDashUserPassword(duid,password)
+
+@app.route("/users/<string:duid>/toggleActive", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
+def toggleActive(duid):
+    handler = UserHandler()
+    req = request.json
+    if request.method == 'PATCH':
+        return handler.toggleDashUserActive(duid)
+
+@app.route("/users/<string:duid>/remove", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
+def remove(duid):
+    handler = UserHandler()
+    if request.method == 'PATCH':
+        return handler.removeDashUser(duid)
+    
+
+
+@app.route("/users/username/", methods = ['POST'])
+def userByUsername():
+    if request.method == 'POST':
+        handler = UserHandler()
+        req = request.json
+        return handler.getDashUserByUsername(req['username'])
+
+@app.route("/users/email/", methods = ['POST'])
+def userByEmail():
+    if request.method == 'POST':
+        handler = UserHandler()
+        req = request.json
+        return handler.getDashUserByEmail(req['email'])
 
 
 #Launch app.
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+    

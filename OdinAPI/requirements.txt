@@ -1,4 +1,5 @@
 astroid==2.3.3
+bcrypt==3.1.7
 certifi==2019.11.28
 cffi==1.14.0
 chardet==3.0.4
@@ -26,9 +27,9 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
 pycrypto==2.6.1
+PyJWT==1.7.1
 pylint==2.4.4
 python-dotenv==0.12.0
-python-jwt==3.2.6
 requests==2.23.0
 requests-toolbelt==0.9.1
 rsa==4.0
