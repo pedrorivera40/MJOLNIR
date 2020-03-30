@@ -5,6 +5,7 @@ import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
 from handler.position import PositionHandler
+from handler.basketball_event import BasketballEventHandler
 
 
 
@@ -74,6 +75,14 @@ def users():
         handler = UserHandler()
 
         return handler.getAllDashUsers()
+
+#TODO: WORK ON THIS
+#--------- Result Routes ---------#
+@app.route("/basketball_statistics/<int:eid>", methods = ['GET'])
+def basketballStatistics(eid):
+    if request.method == 'GET':
+        handler = BasketballEventHandler()
+        return handler.getAllStatisticsByBasketballEventID(eid)
 
 
 #Launch app.
