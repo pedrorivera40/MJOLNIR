@@ -10,6 +10,21 @@ class PositionHandler:
         result['name'] = record[1]
         return result
 
+    def mapAthleteSportPositionToDict(self,record):
+        result = {}
+        result['apID'] = record[0]
+        result['pID'] = record[1]
+        result['psName'] = record[2]
+        return result
+    
+    def mapAthletePositionToDict(self,record):
+        result = {}
+        result['id'] = record[0]
+        result['position_id'] = record[1]
+        result['athlete_id'] = record[2]
+        return result
+
+
     def getPositions(self,sID):
         dao = PositionDAO()
         result = dao.getPositions(sID)
@@ -17,8 +32,8 @@ class PositionHandler:
             return jsonify(Error = "Positions for the sport with id:  {} not found.".format(sID)), 404
         mappedResult = []
         for position in result:
-            mappedResult = self.mapPositionToDict(position)
-        return jsonify(Positions = mappedResult), 201
+            mappedResult.append(self.mapPositionToDict(position))
+        return jsonify(Positions = mappedResult), 200
     
     def getPositionByName(self,psName):
         dao = PositionDAO()
@@ -26,38 +41,38 @@ class PositionHandler:
         if not result:
             return jsonify(Error = "Position with the name:{} not found.".format(psName)), 404
         mappedResult = self.mapPositionToDict(result)
-        return jsonify(Position = mappedResult), 201
+        return jsonify(Position = mappedResult), 200
     
-    def getPositionByAID(self,sID,aID):
+    def getAthletePositionInSport(self,sID,aID):
         dao = PositionDAO()
-        result = dao.getPositionByAID(sID,aID)
+        result = dao.getAthletePositionInSport(sID,aID)
         if not result:
             return jsonify(Error = "Position not found  for the sport with id:{} and athlete with id:{} not found.".format(sID,aID)),404
-        mappedResult = self.mapPositionToDict(result)
-        return jsonify(AthletePosition = mappedResult), 201
+        mappedResult = self.mapAthleteSportPositionToDict(result)
+        return jsonify(AthletePosition = mappedResult), 200
 
-    def addPosition(self,sID,aID,psName):
+    def addAthletePosition(self,psID,aID):
         dao = PositionDAO()
-        result = dao.addPosition(sID,aID,psName)
+        result = dao.addAthletePosition(psID,aID)
         if not result:
             return jsonify(Error = "Position could not be added."), 404
         
         return jsonify(Position = "Added new position for the athlete with id:{}.".format(result)), 201
     
-    def editPosition(self,pID,sID,aID,psName):
+    def editAthletePosition(self,apID,psID,aID):
         dao = PositionDAO()
-        result = dao.editPosition(pID,sID,aID,psName)
+        result = dao.editAthletePosition(apID,psID,aID)
         if not result:
             return jsonify(Error = "Position to edit was not found."), 404
-        mappedResult = self.mapPositionToDict(result)
-        return jsonify(Position = mappedResult), 201
+        mappedResult = self.mapAthletePositionToDict(result)
+        return jsonify(EditedPosition = mappedResult), 200
     
-    def removePosition(self,pID,sID,aID):
+    def removeAthletePosition(self,apID):
         dao = PositionDAO()
-        result = dao.removePosition(pID,sID,aID)
+        result = dao.removeAthletePosition(apID)
         if not result:
             return jsonify(Error = "Position to remove was not found."), 404
-        return jsonify(Position = "Position for the athlete with id:{} was removed.".format(result)), 201
+        return jsonify(Position = "Position for the athlete with id:{} was removed.".format(result)), 200
 
         
     
