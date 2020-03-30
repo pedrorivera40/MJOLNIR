@@ -4,6 +4,7 @@ import os
 import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
+from handler.position import PositionHandler
 
 
 
@@ -39,7 +40,32 @@ def athleteByID(aid):
     elif request.method == 'DELETE':
         json = request.json
         return handler.removeAthlete(aid)
-        
+
+#--------- Position Routes ---------# 
+@app.route("/positions/", methods = ['GET','DELETE'])
+def position():
+    handler = PositionHandler()
+    if request.method == 'GET':
+        return handler.getPositionByName(request.json['psName'])
+    elif request.method == 'DELETE':
+        return handler.removeAthletePosition(request.json['apID'])
+    
+
+@app.route("/positions/<int:sid>", methods = ['GET'])
+def sportPositions(sid):
+    handler = PositionHandler()
+    if request.method == 'GET':
+        return handler.getPositions(sid)
+@app.route("/positions/<int:sid>/<int:aid>", methods = ['GET','POST','PUT'])
+def athletePositions(sid,aid):
+    handler = PositionHandler()
+    if request.method == 'GET':
+        return handler.getAthletePositionInSport(sid,aid)
+    if request.method == 'POST':
+        return handler.addAthletePosition(request.json['psID'],aid)
+    if request.method == 'PUT':
+        return handler.editAthletePosition(request.json['apID'],request.json['psID'],aid)
+
 
 #--------- Dashboard User Routes ---------#
 @app.route("/users/", methods = ['GET'])
