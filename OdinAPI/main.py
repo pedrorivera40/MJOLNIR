@@ -81,9 +81,9 @@ def allUsers():
     if request.method == 'POST':
         ## For account creation
         password = createHash(req['password'])
-        return handler.addDashUser(req['username'],req['fullName'], req['email'], password)
+        return handler.addDashUser(req['username'],req['full_name'], req['email'], password)
 
-@app.route("/users/<int:duid>", methods = ['GET','PATCH','DELETE'])
+@app.route("/users/<int:duid>", methods = ['GET','PATCH'])
 def userByID(duid):
     handler = UserHandler()
     req = request.json

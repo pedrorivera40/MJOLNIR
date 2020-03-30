@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  description: |
+    This is the documentation for the API calls within the OdinAPI.
+  version: 1.0.0
+  title: OdinAPI
+servers:
+  - url: "http://localhost:5000"
+tags:
+  - name: Users
+    description: Everything about dashboard users
+
+paths:
+  /users/{duid}/reset:
+    patch:
+      summary: "Password Reset"
+      description: " Reset the password for the user with the given Id"
+      tags:
+        - Users
+      parameters:
+        - name: duid
+          in: path
+          description: The id for the user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordReset"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{duid}:
+    get:
+      summary: "Get user by ID"
+      description: "Get dashboard user with the given Id"
+      tags:
+        - Users
+      parameters:
+        - name: duid
+          in: path
+          description: The id for the user
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    patch:
+      summary: "Update username"
+      description: "Update the username for the user with the given Id"
+      tags:
+        - Users
+      parameters:
+        - name: duid
+          in: path
+          description: The id for the user
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/:
+    get:
+      summary: "Get all users"
+      description: "Endpoint to get all the dashboard users within the system."
+      operationId: listUsers
+      tags:
+        - Users
+      responses:
+        "200":
+          description: "Success!"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: "Add new user"
+      description: "Endpoint to create a new user in the system."
+      operationId: addUsers
+      tags:
+        - Users
+      parameters:
+        - name: username
+          in: query
+          description: The username fot the user
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for the user
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: The email for the user
+          required: true
+          schema:
+            type: string
+        - name: full_name
+          in: query
+          description: The user's full name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Success!"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    PasswordReset:
+      type: object
+      properties:
+        password:
+          type: string
+    Users:
+      type: object
+      properties:
+        duid:
+          type: integer
+          format: int64
+        username:
+          type: string
+        full_naame:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        is_active:
+          type: boolean
+          enum:
+            - TRUE
+            - FALSE
+        is_invalid:
+          type: boolean
+          enum:
+            - TRUE
+            - FALSE
+      xml:
+        name: User
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
