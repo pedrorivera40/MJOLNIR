@@ -94,16 +94,16 @@ class TestUserRoutes(unittest.TestCase):
     } """
 
   def test_toggle_active(self):
+    # TODO add a check for when you are trying to activate a non existent user.
     response = self.client.patch('/users/22/toggleActive',follow_redirects=True)
     self.assertEqual(response.status_code, 201)
-    self.assertTrue(response.json['User']) == """ {
-    "email": "pesejo@email.com",
-    "full_name": "Mau Neo",
-    "id": 22,
-    "is_active": true,
-    "is_invalid": false,
-    "username": "mhchito"
-    } """
+    self.assertEqual(response.json['User']['is_active'], False)
+
+  def test_remove_user(self):
+    #  TODO ADD a check to check if trying to remove an already removed user.
+    response = self.client.patch('/users/22/remove',follow_redirects=True)
+    # self.assertEqual(response.status_code, 201)
+    self.assertEqual(response.json['User']['is_invalid'], True) 
 
 
 

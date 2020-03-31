@@ -47,6 +47,8 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the given ID.
         """
+        # TODO check if user with that ID exits
+
         cursor = self.conn.cursor()
         query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
                     where id = %s;
@@ -70,6 +72,8 @@ class UserDAO:
             containing the matching record for the given username.
         """
         cursor = self.conn.cursor()
+        # TODO check if user with that Username exits
+
         query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
                     where username = %s;
                 """
@@ -93,6 +97,8 @@ class UserDAO:
             containing the matching record for the given email.
         """
         cursor = self.conn.cursor()
+        # TODO check if user with that Email exits
+        
         query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
                     where email = %s;
                 """
@@ -130,9 +136,9 @@ class UserDAO:
         cursor.execute(probeQuery, (email, username,))
         conflicts = cursor.fetchone()
         if(conflicts[0]=='yes'):
-            return 'UserError1'
+            return 'UserError1' # User with that email already exists in the system
         elif(conflicts[1]=='yes'):
-            return 'UserError2'
+            return 'UserError2' # User with that username already exists in the system
         else:
             # is_active and is_invalid are false by default because we want inactive, valid accounts upon creation.
             query = """
@@ -163,6 +169,7 @@ class UserDAO:
             containing the matching record for the modified dashboard user.
         """
         cursor = self.conn.cursor()
+        # TODO Check that user with that ID exists
         query = """
                 update dashboard_user
                 set password_hash = %s
@@ -190,7 +197,6 @@ class UserDAO:
             containing the matching record for the modified dashboard user.
         """
         cursor = self.conn.cursor()
-
         probeQuery = """
                     Select case when (select count(*) from dashboard_user where username =%s) > 0
                     then 'yes' else 'no' end as usernameTest;
@@ -198,7 +204,7 @@ class UserDAO:
         cursor.execute(probeQuery, (username,))
         conflicts = cursor.fetchone()
         if(conflicts[0]=='yes'):
-            return 'UserError4'
+            return 'UserError4' # User with that username does not exist.
 
         query = """
                 update dashboard_user
@@ -226,6 +232,8 @@ class UserDAO:
             containing the matching record for the modified dashboard user.
         """
         cursor = self.conn.cursor()
+        # TODO check if user with that ID exits
+
         query = """
                 update dashboard_user 
                 set is_active= not is_active 
@@ -253,6 +261,7 @@ class UserDAO:
             containing the matching record for the modified dashboard user.
         """
         cursor = self.conn.cursor()
+        # TODO check if user with that ID exits
         query = """
                 update dashboard_user 
                 set is_invalid= TRUE

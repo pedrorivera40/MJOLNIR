@@ -139,12 +139,11 @@ def passwordReset(duid):
 @app.route("/users/<string:duid>/toggleActive", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
 def toggleActive(duid):
     handler = UserHandler()
-    req = request.json
     if request.method == 'PATCH':
         return handler.toggleDashUserActive(duid)
 
 @app.route("/users/<string:duid>/remove", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
-def remove(duid):
+def removeUser(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
         return handler.removeDashUser(duid)
@@ -152,14 +151,14 @@ def remove(duid):
 
 
 @app.route("/users/username/", methods = ['POST'])
-def userByUsername():
+def getUserByUsername():
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
         return handler.getDashUserByUsername(req['username'])
 
 @app.route("/users/email/", methods = ['POST'])
-def userByEmail():
+def getUserByEmail():
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
