@@ -106,14 +106,17 @@ class BasketballEventHandler:
 
         result = dict(Event = event_info, Event_Statistics = stat_info)
         return result
-    
+
+
 #========/PROGRESS SO FAR/============
 #
-#[X]Added the basic handlers with basic functions
-#[X] Need to add the extra handlers (get all athlete stats per season)
-#[3] Need to add validation of parameters (like correct event/team for athlete)
-#[4] Need to add routes for all
-#[5] Need to add handler documentation
+#TODO: Progress So Far
+#
+#[1][X]Added the basic handlers with basic functions
+#[2][X] Need to add the extra handlers (get all athlete stats per season)
+#[3][*] Need to add validation of parameters (like correct event/team for athlete)
+#[4][*] Need to add routes for all
+#[5][ ] Need to add handler documentation
 #
 #=====================================
 
@@ -121,8 +124,9 @@ class BasketballEventHandler:
 
 #===========================//I.GETS//====================================
 
-    #TODO: not just the basic gets, also confirm the valid parameter (does athlete belong to team? etc.)
-    # parameter to confirm is the event ID belonging to an existing event
+    #TODO: Validation - For add/updates, validate the len(attributes), same as previous len(form)
+    #TODO: Validation Overkill - Remove Unnecesary Validation methods, while still keeping constraint of is_valid values
+
     def getAllStatisticsByBasketballEventID(self,eID):
         """
         """
@@ -143,10 +147,10 @@ class BasketballEventHandler:
             mappedResult.append(self.mapBasketballEventCollectionToDict(athlete_statistics))
         return jsonify(Basketball_Event = mappedResult), 200
 
-    # Validation: check athlete exists and check event exists
     def getAllAthleteStatisticsByBasketballEventId(self,eID,aID):
         """
         """
+
         #validate existing event
         e_dao = EventDAO()
         event = e_dao.getEventByID(eID)
@@ -167,7 +171,6 @@ class BasketballEventHandler:
             return jsonify(Error = "Basketball Event Statistics not found for the event: {} and the id: {}.".format(eID,aID)),404
         mappedResult = self.mapBasketballEventToDict(result)
         return jsonify(Basketball_Event_Athlete_Statistics = mappedResult),200
-
 
     def getAllAthleteStatisticsPerSeason(self,aID,seasonYear):
         """
@@ -194,6 +197,7 @@ class BasketballEventHandler:
     def addStatistics(self,eID,aID,attributes): # Instantiates a Basketball Event DAO in order to complete the desired post request and it returns a JSON with either a confirmation or error message.
         """
         """
+        
         # Validate existing event
         e_dao = EventDAO()
         event = e_dao.getEventByID(eID)

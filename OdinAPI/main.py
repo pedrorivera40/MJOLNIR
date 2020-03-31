@@ -83,12 +83,37 @@ def basketballStatistics(eid):
     if request.method == 'GET':
         handler = BasketballEventHandler()
         return handler.getAllStatisticsByBasketballEventID(eid)
+    
 
-@app.route("/results/basketball/<int:eid>/<int:aid>/", methods = ['GET'])
+@app.route("/results/basketball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 def basketballAthleteStatistics(eid,aid):
     if request.method == 'GET':
         handler = BasketballEventHandler()
         return handler.getAllAthleteStatisticsByBasketballEventId(eid,aid)
+    if request.method == 'POST':
+        handler = BasketballEventHandler()
+        return handler.getAllStatisticsByBasketballEventID(eid,aid)
+    if request.method == 'PUT':
+        handler = BasketballEventHandler()
+        return handler.getAllStatisticsByBasketballEventID(eid,aid)
+    if request.method == 'DELETE':
+        handler = BasketballEventHandler()
+        return handler.getAllStatisticsByBasketballEventID(eid,aid)
+
+@app.route("/results/basketball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
+def basketballTeamStatistics(eid):
+    if request.method == 'GET':
+        handler = BasketballEventHandler()
+        return handler.getAllAthleteStatisticsByBasketballEventId(eid)
+    if request.method == 'POST':
+        handler = BasketballEventHandler()
+        return handler.getAllStatisticsByBasketballEventID(eid)
+    if request.method == 'PUT':
+        handler = BasketballEventHandler()
+        return handler.getAllStatisticsByBasketballEventID(eid)
+    if request.method == 'DELETE':
+        handler = BasketballEventHandler()
+        return handler.getAllStatisticsByBasketballEventID(eid)
 
 @app.route("/results/basketball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
 def basketballSeasonAthleteStatistics(aid,seasonYear):
