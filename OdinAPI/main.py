@@ -78,11 +78,24 @@ def users():
 
 #TODO: WORK ON THIS
 #--------- Result Routes ---------#
-@app.route("/basketball_statistics/<int:eid>", methods = ['GET'])
+@app.route("/results/basketball/<int:eid>", methods = ['GET'])
 def basketballStatistics(eid):
     if request.method == 'GET':
         handler = BasketballEventHandler()
         return handler.getAllStatisticsByBasketballEventID(eid)
+
+@app.route("/results/basketball/<int:eid>/<int:aid>/", methods = ['GET'])
+def basketballAthleteStatistics(eid,aid):
+    if request.method == 'GET':
+        handler = BasketballEventHandler()
+        return handler.getAllAthleteStatisticsByBasketballEventId(eid,aid)
+
+@app.route("/results/basketball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
+def basketballSeasonAthleteStatistics(aid,seasonYear):
+    if request.method == 'GET':
+        handler = BasketballEventHandler()
+        return handler.getAllAthleteStatisticsPerSeason(aid,seasonYear)
+
 
 
 #Launch app.
