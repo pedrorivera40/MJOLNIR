@@ -58,7 +58,7 @@ class UserHandler:
             return jsonify(Error="No user found in the system with that id."), 404
         
         mappedUser = self.mapUserToDict(fetchedUser)
-        return jsonify(Users=mappedUser),200 #200 == OK
+        return jsonify(User=mappedUser),200 #200 == OK
         
     def getDashUserByUsername(self, username):
         """
@@ -80,7 +80,7 @@ class UserHandler:
             return jsonify(Error="No user found in the system with that username."), 404
         
         mappedUser = self.mapUserToDict(fetchedUser)
-        return jsonify(Users=mappedUser),200 #200 == OK
+        return jsonify(User=mappedUser),200 #200 == OK
 
     def getDashUserByEmail(self, email):
         """
@@ -102,7 +102,7 @@ class UserHandler:
             return jsonify(Error="No user found in the system with that email."), 404
         
         mappedUser = self.mapUserToDict(fetchedUser)
-        return jsonify(Users=mappedUser),200 #200 == OK
+        return jsonify(User=mappedUser),200 #200 == OK
 
     def addDashUser(self, username, fullName,email, password):
         """
@@ -150,7 +150,7 @@ class UserHandler:
         dao = UserDAO()
         res = dao.updateDashUserPassword(duid, password)
         
-        return jsonify(User=self.mapUserToDict(res)),200
+        return jsonify(User=self.mapUserToDict(res)),201
 
     def updateDashUserUsername(self, duid,username):
         """

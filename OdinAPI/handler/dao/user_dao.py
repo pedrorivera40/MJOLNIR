@@ -169,7 +169,7 @@ class UserDAO:
                 where id = %s
                 returning id, username, full_name, email, is_active, is_invalid;
                 """
-        cursor.execute(query,(password,duid))
+        cursor.execute(query,(password,duid,))
         users = cursor.fetchone()
         self.commitChanges()
         return users
@@ -206,7 +206,7 @@ class UserDAO:
                 where id = %s
                 returning id, username, full_name, email, is_active, is_invalid;
                 """
-        cursor.execute(query,(username,duid))
+        cursor.execute(query,(username,duid,))
         users = cursor.fetchone()
         self.commitChanges()
         return users
@@ -232,7 +232,7 @@ class UserDAO:
                 WHERE id = %s
                 returning id, username, full_name, email, is_active, is_invalid;
                 """
-        cursor.execute(query,(duid))
+        cursor.execute(query,(duid,))
         users = cursor.fetchone()
         self.commitChanges()
         return users
@@ -259,7 +259,7 @@ class UserDAO:
                 WHERE id = %s
                 returning id, username, full_name, email, is_active, is_invalid;
                 """
-        cursor.execute(query,(duid))
+        cursor.execute(query,(duid,))
         users = cursor.fetchone()
         self.commitChanges()
         return users
