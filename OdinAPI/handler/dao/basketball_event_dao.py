@@ -190,20 +190,20 @@ class BasketballEventDAO:
         to the system with the provided information.
 
         Args:
-            eID: the ID of the event for which the statistics record will be added
-            aID: the ID of the athlete for which the statistics record will be added
-            points: number of points scored by the player in the event
-            rebounds: number of rebounds attained by the player in the event
-            assists: number of assists attained by the player in the event
-            steals: number of steals attained by the player in the event
-            blocks: number of blocks attained by the player in the event
-            turnovers: number of turnovers attained by the player in the event
-            fieldGoalAttempt: number of field goal attempts attained by the player in the event
-            successfulFieldGoal: number of successful field goals attained by the player in the event
-            threePointAttempt: number of three point attempts attained by the player in the event
-            successfulThreePoint: number of successful three point shots attained by the player in the event
-            freeThrowAttempt: number of free throw attempts attained by the player in the event
-            successfulFreeThrow: number of successful free throws attained by the player in the event
+            eID: the ID of the event for which the statistics record will be added.
+            aID: the ID of the athlete for which the statistics record will be added.
+            points: number of points scored by the player in the event.
+            rebounds: number of rebounds attained by the player in the event.
+            assists: number of assists attained by the player in the event.
+            steals: number of steals attained by the player in the event.
+            blocks: number of blocks attained by the player in the event.
+            turnovers: number of turnovers attained by the player in the event.
+            fieldGoalAttempt: number of field goal attempts attained by the player in the event.
+            successfulFieldGoal: number of successful field goals attained by the player in the event.
+            threePointAttempt: number of three point attempts attained by the player in the event.
+            successfulThreePoint: number of successful three point shots attained by the player in the event.
+            freeThrowAttempt: number of free throw attempts attained by the player in the event.
+            successfulFreeThrow: number of successful free throws attained by the player in the event.
             
         Returns:
             A list containing the response to the database query
@@ -237,19 +237,19 @@ class BasketballEventDAO:
         to the system with the provided information.
 
         Args:
-            eID: the ID of the event for which the team statistics record will be added
-            points: numer of points scored by the team in the event
-            rebounds: number of rebounds attained by the team in the event
-            assists: number of assists attained by the team in the event
-            steals: number of steals attained by the team in the event
-            blocks: number of blocks attained by the team in the event
-            turnovers: number of turnovers attained by the team in the event
-            fieldGoalAttempt: number of field goal attempts attained by the team in the event
-            successfulFieldGoal: number of successful field goals attained by the team in the event
-            threePointAttempt: number of three point attempts attained by the team in the event
-            successfulThreePoint: number of successful three point shots attained by the team in the event
-            freeThrowAttempt: number of free throw attempts attained by the team in the event
-            successfulFreeThrow: number of successful free throws attained by the team in the event
+            eID: the ID of the event for which the team statistics record will be added.
+            points: numer of points scored by the team in the event.
+            rebounds: number of rebounds attained by the team in the event.
+            assists: number of assists attained by the team in the event.
+            steals: number of steals attained by the team in the event.
+            blocks: number of blocks attained by the team in the event.
+            turnovers: number of turnovers attained by the team in the event.
+            fieldGoalAttempt: number of field goal attempts attained by the team in the event.
+            successfulFieldGoal: number of successful field goals attained by the team in the event.
+            threePointAttempt: number of three point attempts attained by the team in the event.
+            successfulThreePoint: number of successful three point shots attained by the team in the event.
+            freeThrowAttempt: number of free throw attempts attained by the team in the event.
+            successfulFreeThrow: number of successful free throws attained by the team in the event.
             
         Returns:
             A list containing the response to the database query
@@ -337,20 +337,20 @@ class BasketballEventDAO:
         matching IDs.
 
         Args:
-            eID: the ID of the event for which the statistics record will be updated
-            aID: the ID of the athlete for which the statistics record will be updated
-            points: number of points scored by the player in the event
-            rebounds: number of rebounds attained by the player in the event
-            assists: number of assists attained by the player in the event
-            steals: number of steals attained by the player in the event
-            blocks: number of blocks attained by the player in the event
-            turnovers: number of turnovers attained by the player in the event
-            fieldGoalAttempt: number of field goal attempts attained by the player in the event
-            successfulFieldGoal: number of successful field goals attained by the player in the event
-            threePointAttempt: number of three point attempts attained by the player in the event
-            successfulThreePoint: number of successful three point shots attained by the player in the event
-            freeThrowAttempt: number of free throw attempts attained by the player in the event
-            successfulFreeThrow: number of successful free throws attained by the player in the event
+            eID: the ID of the event for which the statistics record will be updated.
+            aID: the ID of the athlete for which the statistics record will be updated.
+            points: number of points scored by the player in the event.
+            rebounds: number of rebounds attained by the player in the event.
+            assists: number of assists attained by the player in the event.
+            steals: number of steals attained by the player in the event.
+            blocks: number of blocks attained by the player in the event.
+            turnovers: number of turnovers attained by the player in the event.
+            fieldGoalAttempt: number of field goal attempts attained by the player in the event.
+            successfulFieldGoal: number of successful field goals attained by the player in the event.
+            threePointAttempt: number of three point attempts attained by the player in the event.
+            successfulThreePoint: number of successful three point shots attained by the player in the event.
+            freeThrowAttempt: number of free throw attempts attained by the player in the event.
+            successfulFreeThrow: number of successful free throws attained by the player in the event.
             
         Returns:
             A list containing the response to the database query
@@ -507,7 +507,7 @@ class BasketballEventDAO:
         return result
 
     #NEW : remove team statistics
-    def removeTeamStatistics(self,eID,aID):
+    def removeTeamStatistics(self,eID):
         """
         Invalidates a basketball event team statistics entry in the database.
 
