@@ -13,12 +13,12 @@ class AthleteDAO:
         self.conn = psycopg2.connect(connection_url)
 
 
-    def getAtheletesBySport(self,sID,aBranch):
+    def getAthletesBySport(self,sID,aBranch):
         cursor = self.conn.cursor()
         query = "select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.profile_image_link "\
-                "from sport as S inner join (athlete as A inner join (team_members as TM inner join(team as T inner join branch as B on T.branch_id = B.id) on TM.team_id = T.id) on A.id = TM.athlete_id) on A.sport_id = S.id "\
-                "where S.id = %s "\
-                "and B.name = %s"
+                "from (athlete as A inner join (team_members as TM inner join team as T on TM.team_id = T.id) on A.id = TM.athlete_id)"\
+                "where T.sport_id = %s "\
+                "and T.branch_id = %s"
         cursor.execute(query,(sID,aBranch,))        
         result = []
         for row in cursor:
