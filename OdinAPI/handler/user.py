@@ -34,12 +34,10 @@ class UserHandler:
         
         mappedUsers = []
         for user in userList:
-          mappedUsers.append(self.mapUserToDict(user)) 
+            mappedUsers.append(self.mapUserToDict(user)) 
         
-        #TODO: Tell everyone that 201 is cor creates.
         return jsonify(Users=mappedUsers),200 #200 == OK
         
-
     def getDashUserByID(self, duid):
         """
         Gets a single dashboard user given their ID.
@@ -54,7 +52,13 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the given ID.
         """
-        return None
+        dao = UserDAO()
+        fetchedUser = dao.getDashUserByID(duid)
+        if fetchedUser == None:
+            return jsonify(Error="No user found in the system with that id."), 404
+        
+        mappedUser = self.mapUserToDict(fetchedUser)
+        return jsonify(Users=mappedUser),200 #200 == OK
         
     def getDashUserByUsername(self, username):
         """
@@ -70,7 +74,13 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the given username.
         """
-        return None
+        dao = UserDAO()
+        fetchedUser = dao.getDashUserByUsername(username)
+        if fetchedUser == None:
+            return jsonify(Error="No user found in the system with that username."), 404
+        
+        mappedUser = self.mapUserToDict(fetchedUser)
+        return jsonify(Users=mappedUser),200 #200 == OK
 
     def getDashUserByEmail(self, email):
         """
@@ -86,9 +96,15 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the given email.
         """
-        return None
+        dao = UserDAO()
+        fetchedUser = dao.getDashUserByEmail(email)
+        if fetchedUser == None:
+            return jsonify(Error="No user found in the system with that email."), 404
+        
+        mappedUser = self.mapUserToDict(fetchedUser)
+        return jsonify(Users=mappedUser),200 #200 == OK
 
-    def addDashUser(self, firstName, lastName,email, password):
+    def addDashUser(self, username, fullName,email, password):
         """
         Adds a new Dashboard user with the provided information.
 
@@ -105,7 +121,16 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the new dashboard user.
         """
-        return None
+        dao = UserDAO()
+        res = dao.addDashUser(username, fullName,email, password)
+        if res == 'UserError1':
+            return jsonify(Error='Email has been registered.')
+        elif res == 'UserError2':
+            return jsonify(Error='Username is already taken.')
+        elif res == 'UserError3':
+            return jsonify(Error="New user not created")
+        else:
+            return jsonify(User=self.mapUserToDict(res)),201
 
     def updateDashUserPassword(self, duid, password):
         """
@@ -122,7 +147,10 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user.
         """
-        return None
+        dao = UserDAO()
+        res = dao.updateDashUserPassword(duid, password)
+        
+        return jsonify(User=self.mapUserToDict(res)),200
 
     def updateDashUserUsername(self, duid,username):
         """
@@ -139,39 +167,33 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user. 
         """
-        return None
+        dao = UserDAO()
+        res = dao.updateDashUserUsername(duid, username)
+        if res == 'UserError4':
+            return jsonify(Error='Username already taken.')
+        else:
+            return jsonify(User=self.mapUserToDict(res)),201
 
-    def markDashUserInactive(self, duid):
+    #TODO: Update documentation of the API merge mard inactive/active to toggle active
+    def toggleDashUserActive(self, duid):
         """
-        Marks a user as inactive in the database.
+        Toggle the active status of a dashboard user.
 
-        Calls the UserDAO to deactivate a dashboard user's account. It then
-        maps the result to a JSON that contains the desired record. That JSON 
-        object is then returned.
+        Calls the UserDAO to toggle a dashboard user account's active state. 
+        It then maps the result to a JSON that contains the desired record. 
+        That JSON object is then returned.
 
         Args:
-            duid: The ID of the user that will be deactivated.
+            duid: The ID of the user that will be toggled.
             
         Returns:
-            A JSON containing all the user with the updated dashboard user.
+            A JSON containing the updated dashboard user.
         """
-        return None
 
-    def markDashUserActive(self, duid):
-        """
-        Marks a user as active in the database.
+        dao = UserDAO()
+        res = dao.toggleDashUserActive(duid)
+        return jsonify(User=self.mapUserToDict(res)),201
 
-        Calls the UserDAO to activate a dashboard user's account. It then
-        maps the result to a JSON that contains the desired record. That JSON 
-        object is then returned.
-
-        Args:
-            duid: The ID of the user that will be activated.
-            
-        Returns:
-            A JSON containing all the user with the updated dashboard user.
-        """
-        return None
 
     def removeDashUser(self, duid):
         """
@@ -187,4 +209,6 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user.
         """
-        return None
+        dao = UserDAO()
+        res = dao.removeDashUser(duid)
+        return jsonify(User=self.mapUserToDict(res)),201
