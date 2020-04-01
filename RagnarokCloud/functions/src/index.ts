@@ -1,8 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-// Add XMLHttpRequest library for interacting with Odin API.
-// const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+// Add axios library for interacting with Odin API via HTTP.
+const axios = require('axios').default;
+
 
 /*
     This file contains the Cloud Functions required for the development of Huella Deportiva Web.
@@ -191,6 +192,54 @@ const updateVolleyballStats = function (actionType: string, playerStats:
 
 }
 
+// TODO -> Add try/catch, TEST THIS!
+const postVolleyballResults = async function (gameStatistics: JSON) {
+    // TODO -> Add authorization credentials for Odin API.
+    // Prepare for POST request to Odin API with volleyball results.
+    // NOTE -> For testing purposes, this section uses the Echo API.
+    const loginPath = "http://0.0.0.0:5000/login";
+    const volleyballPath = "http://0.0.0.0:5000/mock_results";
+    const credentials = {
+        'usr': 'usr1',
+        'hash': 'something'
+    };
+
+    let token: string = "";
+
+    await axios({
+        method: 'post',
+        url: loginPath,
+        responseType: 'application/json',
+        data: credentials,
+    }).then(function (response) {
+        console.log("HERE");
+        console.log(response.data);
+        token = response.data['ACCESS']['token'];
+        return true;
+    }).catch((error) => {
+        console.log("postVolleyballResults login error: " + error);
+    });
+
+
+    // Given the token, send statistics to Odin API.
+    await axios({
+        method: 'post',
+        url: volleyballPath,
+        responseType: 'application/json',
+        data: gameStatistics,
+        headers: {
+            'Authorization': token
+        }
+    }).then(function (response) {
+        console.log(response.data);
+        return true;
+    }).catch((error) => {
+        console.log("postVolleyballResults posting results error: " + error);
+    });
+
+    return false;
+}
+
 
 // TODO -> Add cloud function documentation.
 export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-metadata/game-ended")
@@ -332,6 +381,7 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
                 to Odin API.
         */
 
+        // Prepare payload.
         const gameStatistics = <JSON><unknown>{
             "event_id": gameId,
             "team_statistics": uprmStats.getJSON(),
@@ -342,28 +392,11 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
 
         console.log(gameStatistics);
 
-        // TODO -> Add authorization credentials for Odin API.
-        // Prepare for POST request to Odin API with volleyball results.
-        const volleyballPath = "PATH_TO_ODIN_API";
-        let request: XMLHttpRequest = new XMLHttpRequest();
-
-        // Perform HTTP request to Odin API.
-        try {
-            request.open("POST", volleyballPath, false);
-            request.responseType = "json";
-            request.onload = function () {
-                console.log(JSON.parse(request.responseText));
-            }
-
-            request.send();
-
-            if (request.status !== 200) {
-                console.log("volleyballGameSync Error: HTTP request error.");
-            }
-        } catch (error) {
-            console.log("volleyballGameSync Error: " + error);
-        }
+        // Send game statistics to Odin API.
+        postVolleyballResults(gameStatistics)
 
         // End of volleyballGameSync process.
         return;
     });
+
+postVolleyballResults(JSON.parse("{ \"val_1\": 23 }"));
