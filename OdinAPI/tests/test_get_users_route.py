@@ -20,7 +20,7 @@ class TestUserRoutes(unittest.TestCase):
     self.assertEqual(response.status_code, 200)
 
   def test_get_user_by_id(self):
-    response = self.client.get('/users/{}'.format(newUserID), follow_redirects=True) # TODO: Again ID changes depending on the id of the user being added
+    response = self.client.get(f'/users/{newUserID}', follow_redirects=True) # TODO: Again ID changes depending on the id of the user being added
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.json['User']['email'], self.data['email'])
     self.assertEqual(response.json['User']['full_name'], self.data['full_name'])
