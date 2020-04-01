@@ -272,7 +272,8 @@ class UserDAO:
         # TODO make user inactive before deleting
         query = """
                 update dashboard_user 
-                set is_invalid= TRUE
+                set is_invalid= TRUE,
+                is_active = FALSE,
                 WHERE id = %s
                 AND is_invalid = FALSE
                 returning id, username, full_name, email, is_active, is_invalid;
