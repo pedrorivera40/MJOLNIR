@@ -2,6 +2,7 @@ from .config.sqlconfig import db_config
 from flask import jsonify
 import psycopg2
 
+# TODO: ALWAYS CHECK THE is_invalid field is false before every query. Otherise we are searching trhough records that technically do not exist
 
 class UserDAO:
     def __init__(self):
@@ -12,6 +13,53 @@ class UserDAO:
             db_config['host']
         )
         self.conn = psycopg2.connect(connection_url)
+
+    def addDashUser(self, username, fullName, email, password):
+        """
+        Adds a new Dashboard user with the provided information.
+
+        This function accepts a first name, last name, email and password, 
+        to perform a query to the database that adds a new dashboard user 
+        to the system with the provided information.
+
+        Args:
+            firstName: The first name of the new dashboboard user.
+            lastName: The last name of the new dashboboard user.
+            email: The email of the new dashboboard user.
+            password: The hash of the password for the new dashboboard user.
+            
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the new dashboard user.
+        """ 
+        
+        cursor = self.conn.cursor()
+        # Make sure the user being added does not exist already:
+        probeQuery = """
+                    Select case when (select count(*) from dashboard_user where email =%s ) > 0
+                    then 'yes' else 'no' end as emailTest,
+                    case when (select count(*) from dashboard_user where username =%s AND is_invalid = FALSE ) >0
+                    then 'yes' else 'no' end as usernameTest;
+                    """
+        cursor.execute(probeQuery, (email, username,))
+        conflicts = cursor.fetchone()
+        if(conflicts[0]=='yes'):
+            return 'UserError1' # User with that email already exists in the system
+        elif(conflicts[1]=='yes'):
+            return 'UserError2' # User with that username already exists in the system
+        else:
+            # is_active and is_invalid are false by default because we want inactive, valid accounts upon creation.
+            query = """
+                    insert into dashboard_user(username, full_name, email,password_hash, is_active, is_invalid)
+                    values (%s,%s, %s,%s, FALSE, FALSE) 
+                    returning id, username, full_name, email, is_active, is_invalid;
+                    """
+            cursor.execute(query,(username,fullName, email, password,))
+            newUser = cursor.fetchone()
+            if not newUser:
+                return 'UserError3'
+            self.commitChanges()
+            return newUser
 
     def getAllDashUsers(self):
         """
@@ -25,7 +73,7 @@ class UserDAO:
             containing all the dashboard users in the system.
         """
         cursor = self.conn.cursor()
-        query = 'select id, username, full_name, email, is_active, is_invalid from dashboard_user;'
+        query = 'select id, username, full_name, email, is_active, is_invalid from dashboard_user where is_invalid = FALSE;'
         cursor.execute(query,)
         users = []
         for row in cursor:
@@ -51,7 +99,8 @@ class UserDAO:
 
         cursor = self.conn.cursor()
         query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
-                    where id = %s;
+                    where id = %s
+                    AND is_invalid = FALSE;
                 """
         cursor.execute(query,(duid,))
         user = cursor.fetchone()
@@ -75,7 +124,8 @@ class UserDAO:
         # TODO check if user with that Username exits
 
         query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
-                    where username = %s;
+                    where username = %s
+                    AND is_invalid = FALSE;
                 """
         cursor.execute(query,(username,))
         user = cursor.fetchone()
@@ -100,58 +150,12 @@ class UserDAO:
         # TODO check if user with that Email exits
         
         query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
-                    where email = %s;
+                    where email = %s
+                    AND is_invalid = FALSE;
                 """
         cursor.execute(query,(email,))
         users = cursor.fetchone()
         return users
-
-    def addDashUser(self, username, fullName, email, password):
-        """
-        Adds a new Dashboard user with the provided information.
-
-        This function accepts a first name, last name, email and password, 
-        to perform a query to the database that adds a new dashboard user 
-        to the system with the provided information.
-
-        Args:
-            firstName: The first name of the new dashboboard user.
-            lastName: The last name of the new dashboboard user.
-            email: The email of the new dashboboard user.
-            password: The hash of the password for the new dashboboard user.
-            
-        Returns:
-            A list containing the response to the database query
-            containing the matching record for the new dashboard user.
-        """ 
-        
-        cursor = self.conn.cursor()
-        # Make sure the user being added does not exist already:
-        probeQuery = """
-                    Select case when (select count(*) from dashboard_user where email =%s) > 0
-                    then 'yes' else 'no' end as emailTest,
-                    case when (select count(*) from dashboard_user where username =%s) >0
-                    then 'yes' else 'no' end as usernameTest;
-                    """
-        cursor.execute(probeQuery, (email, username,))
-        conflicts = cursor.fetchone()
-        if(conflicts[0]=='yes'):
-            return 'UserError1' # User with that email already exists in the system
-        elif(conflicts[1]=='yes'):
-            return 'UserError2' # User with that username already exists in the system
-        else:
-            # is_active and is_invalid are false by default because we want inactive, valid accounts upon creation.
-            query = """
-                    insert into dashboard_user(username, full_name, email,password_hash, is_active, is_invalid)
-                    values (%s,%s, %s,%s, FALSE, FALSE) 
-                    returning id, username, full_name, email, is_active, is_invalid;
-                    """
-            cursor.execute(query,(username,fullName, email, password,))
-            newUser = cursor.fetchone()
-            if not newUser:
-                return 'UserError3'
-            self.commitChanges()
-            return newUser
 
     def updateDashUserPassword(self, duid, password):
         """
@@ -174,6 +178,7 @@ class UserDAO:
                 update dashboard_user
                 set password_hash = %s
                 where id = %s
+                AND is_invalid = FALSE
                 returning id, username, full_name, email, is_active, is_invalid;
                 """
         cursor.execute(query,(password,duid,))
@@ -198,18 +203,19 @@ class UserDAO:
         """
         cursor = self.conn.cursor()
         probeQuery = """
-                    Select case when (select count(*) from dashboard_user where username =%s) > 0
+                    Select case when (select count(*) from dashboard_user where username =%s AND is_invalid = FALSE) > 0
                     then 'yes' else 'no' end as usernameTest;
                     """
         cursor.execute(probeQuery, (username,))
         conflicts = cursor.fetchone()
         if(conflicts[0]=='yes'):
-            return 'UserError4' # User with that username does not exist.
+            return 'UserError2' # User with that username does not exist.
 
         query = """
                 update dashboard_user
                 set username = %s
                 where id = %s
+                AND is_invalid = FALSE
                 returning id, username, full_name, email, is_active, is_invalid;
                 """
         cursor.execute(query,(username,duid,))
@@ -238,6 +244,7 @@ class UserDAO:
                 update dashboard_user 
                 set is_active= not is_active 
                 WHERE id = %s
+                AND is_invalid = FALSE
                 returning id, username, full_name, email, is_active, is_invalid;
                 """
         cursor.execute(query,(duid,))
@@ -262,10 +269,12 @@ class UserDAO:
         """
         cursor = self.conn.cursor()
         # TODO check if user with that ID exits
+        # TODO make user inactive before deleting
         query = """
                 update dashboard_user 
                 set is_invalid= TRUE
                 WHERE id = %s
+                AND is_invalid = FALSE
                 returning id, username, full_name, email, is_active, is_invalid;
                 """
         cursor.execute(query,(duid,))

@@ -127,6 +127,20 @@ def userByID(duid):
         ## For username change
         return handler.updateDashUserUsername(duid,req['username'])
 
+@app.route("/users/username/", methods = ['POST'])
+def getUserByUsername():
+    if request.method == 'POST':
+        handler = UserHandler()
+        req = request.json
+        return handler.getDashUserByUsername(req['username'])
+
+@app.route("/users/email/", methods = ['POST'])
+def getUserByEmail():
+    if request.method == 'POST':
+        handler = UserHandler()
+        req = request.json
+        return handler.getDashUserByEmail(req['email'])
+
 @app.route("/users/<int:duid>/reset", methods = ['PATCH'])
 def passwordReset(duid):
     handler = UserHandler()
@@ -147,23 +161,6 @@ def removeUser(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
         return handler.removeDashUser(duid)
-    
-
-
-@app.route("/users/username/", methods = ['POST'])
-def getUserByUsername():
-    if request.method == 'POST':
-        handler = UserHandler()
-        req = request.json
-        return handler.getDashUserByUsername(req['username'])
-
-@app.route("/users/email/", methods = ['POST'])
-def getUserByEmail():
-    if request.method == 'POST':
-        handler = UserHandler()
-        req = request.json
-        return handler.getDashUserByEmail(req['email'])
-
 
 #Launch app.
 if __name__ == '__main__':

@@ -15,6 +15,34 @@ class UserHandler:
         userDictionary['is_invalid'] = record[5]
 
         return userDictionary
+        
+    def addDashUser(self, username, fullName,email, password):
+        """
+        Adds a new Dashboard user with the provided information.
+
+        Calls the UserDAO to add a new dashboard user and maps the result to
+        to a JSON that contains the desired record. That JSON object 
+        is then returned.
+
+        Args:
+            firstName: The first name of the new dashboboard user.
+            lastName: The last name of the new dashboboard user.
+            email: The email of the new dashboboard user.
+            password: The hash of the password for the new dashboboard user.
+            
+        Returns:
+            A JSON containing all the user with the new dashboard user.
+        """
+        dao = UserDAO()
+        res = dao.addDashUser(username, fullName,email, password)
+        if res == 'UserError1':
+            return jsonify(Error='Email has been registered.')
+        elif res == 'UserError2':
+            return jsonify(Error='Username is already taken.')
+        elif res == 'UserError3':
+            return jsonify(Error="New user not created")
+        else:
+            return jsonify(User=self.mapUserToDict(res)),201
 
     def getAllDashUsers(self):
         """
@@ -104,34 +132,6 @@ class UserHandler:
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser),200 #200 == OK
 
-    def addDashUser(self, username, fullName,email, password):
-        """
-        Adds a new Dashboard user with the provided information.
-
-        Calls the UserDAO to add a new dashboard user and maps the result to
-        to a JSON that contains the desired record. That JSON object 
-        is then returned.
-
-        Args:
-            firstName: The first name of the new dashboboard user.
-            lastName: The last name of the new dashboboard user.
-            email: The email of the new dashboboard user.
-            password: The hash of the password for the new dashboboard user.
-            
-        Returns:
-            A JSON containing all the user with the new dashboard user.
-        """
-        dao = UserDAO()
-        res = dao.addDashUser(username, fullName,email, password)
-        if res == 'UserError1':
-            return jsonify(Error='Email has been registered.')
-        elif res == 'UserError2':
-            return jsonify(Error='Username is already taken.')
-        elif res == 'UserError3':
-            return jsonify(Error="New user not created")
-        else:
-            return jsonify(User=self.mapUserToDict(res)),201
-
     def updateDashUserPassword(self, duid, password):
         """
         Updates the password for the dashboard user with the given ID.
@@ -149,7 +149,8 @@ class UserHandler:
         """
         dao = UserDAO()
         res = dao.updateDashUserPassword(duid, password)
-        
+        if res == None:
+            return jsonify(Error='No user found in the system with that id.'), 404
         return jsonify(User=self.mapUserToDict(res)),201
 
     def updateDashUserUsername(self, duid,username):
@@ -169,7 +170,9 @@ class UserHandler:
         """
         dao = UserDAO()
         res = dao.updateDashUserUsername(duid, username)
-        if res == 'UserError4':
+        if res == None:
+            return jsonify(Error='No user found in the system with that id.'), 404
+        if res == 'UserError2':
             return jsonify(Error='Username already taken.')
         else:
             return jsonify(User=self.mapUserToDict(res)),201
@@ -192,6 +195,8 @@ class UserHandler:
 
         dao = UserDAO()
         res = dao.toggleDashUserActive(duid)
+        if res == None:
+            return jsonify(Error='No user found in the system with that id.'), 404
         return jsonify(User=self.mapUserToDict(res)),201
 
 
@@ -211,4 +216,6 @@ class UserHandler:
         """
         dao = UserDAO()
         res = dao.removeDashUser(duid)
+        if res == None:
+            return jsonify(Error='No user found in the system with that id.'), 404
         return jsonify(User=self.mapUserToDict(res)),201
