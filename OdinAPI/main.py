@@ -27,7 +27,7 @@ def athletes():
         return handler.addAthlete(json['sID'],json['attributes'])
     elif request.method == 'GET':
         json = request.json
-        return handler.getAtheletesBySport(json['sID'],json['branch'])
+        return handler.getAthletesBySport(json['sID'])
 
 @app.route("/athletes/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 def athleteByID(aid):
