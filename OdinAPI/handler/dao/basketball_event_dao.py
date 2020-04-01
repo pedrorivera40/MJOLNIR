@@ -214,7 +214,7 @@ class BasketballEventDAO:
                 INSERT INTO basketball_event(points,rebounds,assists,steals,blocks,turnovers,
                 field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
                 free_throw_attempt,successful_free_throw,event_id,athlete_id)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id;
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id;
                 """
         cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),
         int(turnovers),int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),
@@ -303,7 +303,7 @@ class BasketballEventDAO:
                 sum(successful_field_goal) as successful_field_goal,sum(three_point_attempt) as three_point_attempt,
                 sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,
                 sum(successful_free_throw) as successful_free_throw
-                from valid_basketball_event
+                from valid_basketball_events
                 WHERE event_id = %s;
                 """
         cursor.execute(query,(int(eID),))
@@ -387,7 +387,11 @@ class BasketballEventDAO:
                     three_point_attempt,
                     successful_three_point,
                     free_throw_attempt,
-                    successful_free_throw;
+                    successful_free_throw,
+                    get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
+                    get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
+                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage;
+
                 """
         cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),int(turnovers),
         int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),int(successfulThreePoint),
@@ -428,7 +432,7 @@ class BasketballEventDAO:
                 sum(successful_field_goal) as successful_field_goal,sum(three_point_attempt) as three_point_attempt,
                 sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,
                 sum(successful_free_throw) as successful_free_throw
-                from valid_basketball_event
+                from valid_basketball_events
                 WHERE event_id = %s;
                 """
         cursor.execute(query,(int(eID),))
@@ -464,7 +468,11 @@ class BasketballEventDAO:
                     three_point_attempt,
                     successful_three_point,
                     free_throw_attempt,
-                    successful_free_throw;
+                    successful_free_throw,
+                    get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
+                    get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
+                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage;
+
                 """
         cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
         int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
@@ -497,7 +505,7 @@ class BasketballEventDAO:
                 UPDATE basketball_event
                 SET is_invalid = true
                 WHERE event_id = %s  and athlete_id = %s
-                RETURNING is_invalid,
+                RETURNING id;
                 """
         cursor.execute(query,(int(eID),int(aID),))
         result = cursor.fetchone()[0]
@@ -528,7 +536,7 @@ class BasketballEventDAO:
                 UPDATE basketball_event_team_stats
                 SET is_invalid = true
                 WHERE event_id = %s
-                RETURNING is_invalid,
+                RETURNING id;
                 """
         cursor.execute(query,(int(eID),))
         result = cursor.fetchone()[0]

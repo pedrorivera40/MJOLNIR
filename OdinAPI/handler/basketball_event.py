@@ -5,19 +5,63 @@ from .dao.basketball_event_dao import BasketballEventDAO
 from .dao.athlete import AthleteDAO
 
 #CONSTANTS: 
-BASKETBALL_ID = 1
+BASKETBALL_IDM = 1
+BASKETBALL_IDF = 10
 
-
-
-
+# THESE ARE MOCK CLASSES FOR EVENT AND TEAM
 #TODO: Remove this later, it's just so that it compiles while the other DAOs arent finished
 class EventDAO:
-    def something(self):
-        return
+    def getEventByID(self,eID):
+        #   id  date            is_local|venue      team_id
+        #   3	"2020-03-30"	true	"Mangual"	1
+        #   4	"2020-03-14"	true	"Espada"	1
+        if eID == 3:
+            return ('2020-03-30',True,'Mangual',1)
+        if eID == 4:
+            return ('2020-03-14',True,'Espada',1)
+        return None
+    def getEventTeamByID(self,eID):
+        if eID == 3 or eID == 4:
+            return 1
+        else:
+            return None
 
 class TeamDAO:
-    def something(self):
+    def getTeamSportByID(self,tID) :
+        # Sport ID distribution
+        # Team 1 is Volleyball M (1)
+        # Team 2 is Volleyball M (2)
+        # Team 3 is Basketball M (10)
+        # Teams 4 and 5 is Volleyball F (12)
+        if tID == 1:
+            return 1
+        if tID == 2:
+            return 2
+        if tID == 3:
+            return 10
+        if tID == 4:
+            return 12
+        else:
+            return None
         return
+    def getTeamMemberByIDs(self,aID,tID):
+        # Team 1 has Athletes 1,3,4,8
+        #returnable = dict(athlete_id = 8,team_id = 1)
+        if tID == 1:
+            if aID == 1 or aID == 3 or aID == 4 or aID == 8:
+                return (aID,tID)
+        return None
+            
+
+class AthleteDAO:
+    def getAthleteByID(self,aID):
+        # Many Athletes in system, gonna only demo a few.
+        valid_list = [1,3,4,5,7,8,9,10,11,12,13,15,16]
+        if aID in valid_list:
+            # We dont care about value here, just that it returns 
+            # something to prove it exists
+            return 1
+        return None
 
 class BasketballEventHandler:
     
@@ -84,7 +128,7 @@ class BasketballEventHandler:
         #result = dict(Event_Statistics = stat_info)
         return stat_info
     
-    def mapBasketballEventCollectionToDict(self,record):
+    def mapBasketballEventSeasonCollectionToDict(self,record):
         event_info = {}
         stat_info = {}
         
@@ -115,12 +159,23 @@ class BasketballEventHandler:
 #
 #TODO: Progress So Far
 #
+#LEYENDA: [X] is done, [*] is WIP, [ ] is not done
+#
 #[1][X]Added the basic handlers with basic functions
 #[2][X] Need to add the extra handlers (get all athlete stats per season)
-#[3][*] Need to add validation of parameters (like correct event/team for athlete)
-#[4][*] Need to add routes for all
-#[5][ ] Need to add handler documentation
-#[6][ ] Add Final Score table
+#[3][X] Need to add validation of parameters (like correct event/team for athlete)
+#[4][X] Need to add routes for all
+#[5][X] Need to add handler documentation
+#[6][ ] Add Final Score table (handlers/dao)
+#[7][X] Prepare Tests and Mock Returns for Event, Team, etc
+#       -GetAllStats(eID)           --> GET[X]
+#       -GetAllStats(eID,aID)       --> GET[X], POST    [X],    PUT[X], REMOVE[X]
+#       -GetTeamStats(eID)          --> GET[X], POST(x2)[X][X], PUT[X], REMOVE[X]
+#       -GetSeasonStats(aID,season) --> GET[X]
+#[8][ ] Error Handling (try catch all of it), and check event form length
+#[9][ ] Add the validation of Previously Existing on Add (avoid duplicates) and Remove (cant remove nonexisting). Maybe on update 
+#[10][ ]Default is_invalid to false on adds.
+#[11][ ]Add Route to give "payload" JSON as parameter and basically upload ALL results
 #
 #=====================================
 
@@ -189,15 +244,43 @@ class BasketballEventHandler:
         athlete = a_dao.getAthleteByID(aID)
         if not athlete:
             return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-        print("HELLO HELLO THERE, the ath id is",athlete)
         
         #validate existing basketball_event entry and format returnable
         dao = BasketballEventDAO()
         result = dao.getAllAthleteStatisticsByEventID(eID,aID)
         if not result:
-            return jsonify(Error = "Basketball Event Statistics not found for the event: {} and the id: {}.".format(eID,aID)),404
+            return jsonify(Error = "Basketball Event Statistics not found for the event: {} and the athlete id: {}.".format(eID,aID)),404
         mappedResult = self.mapBasketballEventToDict(result)
         return jsonify(Basketball_Event_Athlete_Statistics = mappedResult),200
+
+    def getAllTeamStatisticsByBasketballEventId(self,eID):
+        """
+        Gets all the statistics for a given event. 
+
+        Calls the BasketballEventDAO to get event team statistics and maps the result to
+        to a JSON that contains all the team statistics for that event in the system. That
+        JSON object is then returned.
+
+        Args:
+            eID: The ID of the event of which team statistics need to be fetched.
+            
+        Returns:
+            A JSON containing all the team statistics in the system for the specified event.
+        """
+
+        #validate existing event
+        e_dao = EventDAO()
+        event = e_dao.getEventByID(eID)
+        if not event:
+            return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
+        
+        #validate existing basketball_event entry and format returnable
+        dao = BasketballEventDAO()
+        result = dao.getAllTeamStatisticsByEventID(eID)
+        if not result:
+            return jsonify(Error = "Basketball Event Team Statistics not found for the event: {}".format(eID)),404
+        mappedResult = self.mapBasketballEventToDict(result)
+        return jsonify(Basketball_Event_Team_Stats = mappedResult),200
 
     def getAllAthleteStatisticsPerSeason(self,aID,seasonYear):
         """
@@ -228,7 +311,7 @@ class BasketballEventHandler:
             return jsonify(Error = "Basketball Event Statistics not found for the athlete id:{} in season year:{}.".format(aID,seasonYear)),404
         mappedResult = []
         for athlete_statistics in result:                     
-            mappedResult.append(self.mapBasketballEventCollectionToDict(athlete_statistics))
+            mappedResult.append(self.mapBasketballEventSeasonCollectionToDict(athlete_statistics))
         #print(mappedResult)
         return jsonify(Basketball_Event_Season_Athlete_Statistics = mappedResult), 200
 
@@ -275,9 +358,9 @@ class BasketballEventHandler:
 
         # Validate that the event belongs to the correct sport.
         #TODO: (Herbert) Need TeamDAO to return sport_id of a team.
-        sID = t_dao.getTeamSportByID(tID)
-        if sID != BASKETBALL_ID:
-            return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Sport ID:{}.".format(eID,BASKETBALL_ID)),400
+        sID = t_dao.getTeamSportByID(tID) 
+        if sID != BASKETBALL_IDF and sID != BASKETBALL_IDM:
+            return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Basketball.".format(eID)),400
 
         # Validate existing athlete 
         a_dao = AthleteDAO()
@@ -343,8 +426,8 @@ class BasketballEventHandler:
         # Validate that the event belongs to the correct sport.
         #TODO: (Herbert) Need TeamDAO to return sport_id of a team.
         sID = t_dao.getTeamSportByID(tID)
-        if sID != BASKETBALL_ID:
-            return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Sport ID:{}.".format(eID,BASKETBALL_ID)),400
+        if sID != BASKETBALL_IDF and sID != BASKETBALL_IDM:
+            return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Basketball.".format(eID)),400
 
         # Create and Validate new Basketball_Event team stats
         dao = BasketballEventDAO()
@@ -384,12 +467,12 @@ class BasketballEventHandler:
         # Validate that the event belongs to the correct sport.
         #TODO: (Herbert) Need TeamDAO to return sport_id of a team.
         sID = t_dao.getTeamSportByID(tID)
-        if sID != BASKETBALL_ID:
-            return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Sport ID:{}.".format(eID,BASKETBALL_ID)),400
+        if sID != BASKETBALL_IDF and sID != BASKETBALL_IDM:
+            return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Basketball.".format(eID)),400
 
         # Create and Validate new Basketball_Event team stats
         dao = BasketballEventDAO()
-        result = dao.addTeamStatistics(eID)
+        result = dao.addTeamStatisticsAuto(eID)
         if not result:
             return jsonify(Error = "Problem inserting new team statistics record."),500
         return jsonify(Basketball_Event_Team_Stats = "Added new team statistics record with id:{} for event id:{}.".format(result,eID)),201
@@ -438,9 +521,9 @@ class BasketballEventHandler:
 
         # Update and Validate Basketball event, format returnable
         dao = BasketballEventDAO()
-        result = dao.editStatistics(aID,attributes[0],attributes[1],attributes[2],attributes[3],
+        result = dao.editStatistics(eID,aID,attributes[0],attributes[1],attributes[2],attributes[3],
         attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],
-        attributes[10])
+        attributes[10],attributes[11])
         if not result:
             return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
         mappedResult = self.mapBasketballEventToDict(result)
@@ -467,12 +550,6 @@ class BasketballEventHandler:
         event = e_dao.getEventByID(eID)
         if not event:
             return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        
-        # Validate existing athlete 
-        a_dao = AthleteDAO()
-        athlete = a_dao.getAthleteByID(aID)
-        if not athlete:
-            return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
 
         # Update and Validate Basketball event team stats, format returnable
         dao = BasketballEventDAO()
@@ -538,12 +615,6 @@ class BasketballEventHandler:
         event = e_dao.getEventByID(eID)
         if not event:
             return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        
-        # Validate existing athlete 
-        a_dao = AthleteDAO()
-        athlete = a_dao.getAthleteByID(aID)
-        if not athlete:
-            return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
 
         # Remove Basketball_Event Team Statistics and format returnabe
         dao = BasketballEventDAO()
