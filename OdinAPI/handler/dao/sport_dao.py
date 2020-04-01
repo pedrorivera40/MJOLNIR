@@ -6,8 +6,10 @@ import psycopg2
 # TODO -> Add class documentation.
 class SportDAO:
 
-    # Initialize postgreSQL db connection with psycopg2.
     def __init__(self):
+        '''
+        Initialize postgreSQL db connection with psycopg2.
+        '''
         connection_url = "dbname={} user={} password={} host ={} ".format(
             db_config['database'],
             db_config['username'],
@@ -17,74 +19,94 @@ class SportDAO:
         print(connection_url)
         self.conn = psycopg2.connect(connection_url)
 
-    # Returns a list of all the Sport records in the database.
-    def getAllSports(self):
-        cursor = self.conn.cursor()
-
-        # Get sport names and images for all valid sports.
-        query = '''
-                    select S.id, S.name, S.sport_image_url
-                    from sport as S
-                    where S.is_invalid = false;
-                '''
-        cursor.execute(query)
-
+    def _build_result(self, cursor):
+        '''
+        Internal method for building the list of rows from a given query.
+        '''
         result = []
         for row in cursor:
             result.append(row)
-
         return result
 
-    # def getSportsByBranch(self, branch):
-    #     cursor = self.conn.cursor()
+    def getAllSports(self):
+        """
+        Gets all sports supported within the system.
+        This function queries sports from the relational database.
+        Returns:
+            A list of tuples which represent the response to the database query.
+            Each sport tuple follows the following structure:
+                (id, name, sport_image_url, branch).
+        """
+        cursor = self.conn.cursor()
+        query = '''
+                select S.id, S.name, S.sport_image_url, B.name
+                from sport as S inner join branch as B on S.branch_id = B.id
+                where S.is_invalid = false;
+                '''
+        cursor.execute(query)
+        return self._build_result(cursor)
 
-    #     # Get all valid sport names and images for all valid sports given its branch.
-    #     query = '''
-    #                 select S.id, S.name, S.sport_image_url
-    #                 from (sport as S) natural inner join
-    #                 where S.is_invalid = false
-    #                 and branch = %s;
-    #             '''
-
-    #     cursor.execute(query, (branch,))
-
-    #     result = []
-    #     for row in cursor:
-    #         print(row)
-    #         result.append(row)
-
-    #     return result
-
-    # Returns a specific Sport record that matches the sID given as parameter.
-    def getSportById(self, sport_id):
+    def getSportsByBranch(self, branch):
+        """
+        Gets all sports supported within the system filtered by branch.
+        This function queries sports by branch from the relational database.
+        Returns:
+            A list of tuples which represent the response to the database query.
+            Each sport tuple follows the following structure:
+                (id, name, sport_image_url, branch).
+        """
         cursor = self.conn.cursor()
 
-        # Get a sport name and image url given its id.
+        # Get all valid sport names and images for all valid sports given its branch.
         query = '''
-                    select S.id, S.name, S.sport_image_url
-                    from sport as S
-                    where S.is_invalid = false
-                    and S.id = %s;
+                select S.id, S.name, S.sport_image_url, B.name
+                from (sport as S inner join branch as B on S.branch_id = B.id)
+                where S.is_invalid = false
+                and B.name = %s;
+                '''
+
+        cursor.execute(query, (branch,))
+        return self._build_result(cursor)
+
+    def getSportById(self, sport_id):
+        """
+        Fetches at most one sport record in the database corresponding to a given id.
+        This function queries a sport given its id from the relational database.
+        Returns:
+            A sport tuple follows the following structure:
+                (id, name, sport_image_url, branch).
+        """
+        
+        cursor = self.conn.cursor()
+        query = '''
+                select S.id, S.name, S.sport_image_url, B.name
+                from sport as S inner join branch as B on S.branch_id = B.id
+                where S.is_invalid = false
+                and S.id = %s;
                 '''
 
         cursor.execute(query, (sport_id,))
-
         return cursor.fetchone()
 
-    # Returns a specific Sport record that matches the name of the sport given as parameter.
     def getSportByName(self, sport_name):
-        cursor = self.conn.cursor()
+        """
+        Fetches sport records from the database corresponding to a given sport name.
+        This function queries sports given a sport name from the relational database.
+        Returns:
+            A list of tuples which represent the response to the database query.
+            Each sport tuple follows the following structure:
+                (id, name, sport_image_url, branch).
+        """
 
-        # Get a sport name and image url given its sport name.
+        cursor = self.conn.cursor()
         query = '''
-                    select S.id, S.name, S.sport_image_url
-                    from sport as S
-                    where S.is_invalid = false
-                    and S.name = %s;
+                select S.id, S.name, S.sport_image_url, B.name
+                from sport as S inner join branch as B on S.branch_id = B.id
+                where S.is_invalid = false
+                and S.name = %s;
                 '''
 
         cursor.execute(query, (sport_name,))
-
         return cursor.fetchone()
 
 
@@ -94,4 +116,4 @@ if __name__ == '__main__':
     print(sport_dao.getAllSports())
     print(sport_dao.getSportById("1"))
     print(sport_dao.getSportByName("soccer"))
-    # print(sport_dao.getSportsByBranch("Masculino"))
+    print(sport_dao.getSportsByBranch("male"))
