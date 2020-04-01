@@ -7,6 +7,9 @@ from .dao.athlete import AthleteDAO
 #CONSTANTS: 
 BASKETBALL_ID = 1
 
+
+
+
 #TODO: Remove this later, it's just so that it compiles while the other DAOs arent finished
 class EventDAO:
     def something(self):
@@ -117,6 +120,7 @@ class BasketballEventHandler:
 #[3][*] Need to add validation of parameters (like correct event/team for athlete)
 #[4][*] Need to add routes for all
 #[5][ ] Need to add handler documentation
+#[6][ ] Add Final Score table
 #
 #=====================================
 
@@ -129,6 +133,17 @@ class BasketballEventHandler:
 
     def getAllStatisticsByBasketballEventID(self,eID):
         """
+        Gets all the statistics for a given event. 
+
+        Calls the BasketballEventDAO to get event statistics and maps the result to
+        to a JSON that contains all the statistics for that event in the system. That
+        JSON object is then returned.
+
+        Args:
+            eID: The ID of the event of which statistics need to be fetched.
+            
+        Returns:
+            A JSON containing all the statistics in the system for the specified event.
         """
 
         #validate existing event
@@ -149,6 +164,18 @@ class BasketballEventHandler:
 
     def getAllAthleteStatisticsByBasketballEventId(self,eID,aID):
         """
+        Gets all the statistics for a given event and athlete. 
+
+        Calls the BasketballEventDAO to get event statistics and maps the result to
+        to a JSON that contains all the statistics for that athlete and event in the system. That
+        JSON object is then returned.
+
+        Args:
+            eID: The ID of the event of which statistics need to be fetched.
+            aID: The ID of the athlete of which statistics need to be fetched
+            
+        Returns:
+            A JSON containing all the statistics in the system for the specified event and athlete.
         """
 
         #validate existing event
@@ -174,6 +201,18 @@ class BasketballEventHandler:
 
     def getAllAthleteStatisticsPerSeason(self,aID,seasonYear):
         """
+        Gets all the statistics for a given athlete during a given season. 
+
+        Calls the BasketballEventDAO to get event statistics and maps the result to
+        to a JSON that contains all the statistics for that athlete during the given season
+        in the system. That JSON object is then returned.
+
+        Args:
+            seasonYear: the season year of which statistics need to be fetched
+            aID: The ID of the athlete of which statistics need to be fetched
+            
+        Returns:
+            A JSON containing all the statistics in the system for the specified athlete and season year.
         """
 
         #validate existing athlete 
@@ -196,8 +235,33 @@ class BasketballEventHandler:
 #===========================//II.POSTS//====================================
     def addStatistics(self,eID,aID,attributes): # Instantiates a Basketball Event DAO in order to complete the desired post request and it returns a JSON with either a confirmation or error message.
         """
+        Adds a new statistics record with the provided information.
+
+        Calls the BastketballEventDAO to add a new statistics record and maps the result to
+        to a JSON that contains the desired record. That JSON object 
+        is then returned.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be added.
+            aID: the ID of the athlete for which the statistics record will be added.
+            Attributes:
+                points: number of points scored by the athlete in the event.
+                rebounds: number of rebounds attained by the athlete in the event.
+                assists: number of assists attained by the athlete in the event.
+                steals: number of steals attained by the athlete in the event.
+                blocks: number of blocks attained by the athlete in the event.
+                turnovers: number of turnovers attained by the athlete in the event.
+                fieldGoalAttempt: number of field goal attempts attained by the athlete in the event.
+                successfulFieldGoal: number of successful field goals attained by the athlete in the event.
+                threePointAttempt: number of three point attempts attained by the athlete in the event.
+                successfulThreePoint: number of successful three point shots attained by the athlete in the event.
+                freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
+                successfulFreeThrow: number of successful free throws attained by the athlete in the event.
+            
+        Returns:
+            A JSON containing all the statistics for the new Basketball Event record.
         """
-        
+
         # Validate existing event
         e_dao = EventDAO()
         event = e_dao.getEventByID(eID)
@@ -239,7 +303,32 @@ class BasketballEventHandler:
    
     def addTeamStatistics(self,eID,attributes): # Instantiates a Basketball Event DAO in order to complete the desired post request and it returns a JSON with either a confirmation or error message.
         """
+        Adds a new team statistics record with the provided information.
+
+        Calls the BastketballEventDAO to add a new team statistics record and maps the result to
+        to a JSON that contains the desired record. That JSON object 
+        is then returned.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be added.
+            Attributes:
+                points: number of points scored by the athlete in the event.
+                rebounds: number of rebounds attained by the athlete in the event.
+                assists: number of assists attained by the athlete in the event.
+                steals: number of steals attained by the athlete in the event.
+                blocks: number of blocks attained by the athlete in the event.
+                turnovers: number of turnovers attained by the athlete in the event.
+                fieldGoalAttempt: number of field goal attempts attained by the athlete in the event.
+                successfulFieldGoal: number of successful field goals attained by the athlete in the event.
+                threePointAttempt: number of three point attempts attained by the athlete in the event.
+                successfulThreePoint: number of successful three point shots attained by the athlete in the event.
+                freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
+                successfulFreeThrow: number of successful free throws attained by the athlete in the event.
+            
+        Returns:
+            A JSON containing all the statistics for the new Basketball Event team statistics record.
         """
+
         # Validate existing event
         e_dao = EventDAO()
         event = e_dao.getEventByID(eID)
@@ -268,6 +357,17 @@ class BasketballEventHandler:
 
     def addTeamStatisticsAuto(self,eID): # Instantiates a Basketball Event DAO in order to complete the desired post request and it returns a JSON with either a confirmation or error message.
         """
+        Adds a new team statistics record with the provided information and an aggregate of existing information.
+
+        Calls the BastketballEventDAO to add a new team statistics record and maps the result to
+        to a JSON that contains the desired record. That JSON object 
+        is then returned.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be added.
+            
+        Returns:
+            A JSON containing all the statistics for the new Basketball Event team statistics record.
         """
 
         # Validate existing event
@@ -297,6 +397,31 @@ class BasketballEventHandler:
     #TODO: Need to call the update team statistics call
     def editStatistics(self,eID,aID,attributes): # Instantiates a Basketball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
         """
+        Updates the statistics for the basketball event with the given IDs.
+
+        Calls the BasktballEventDAO to update the statistics of a basketball event. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be updated.
+            aID: the ID of the athlete for which the statistics record will be updated.
+            Attributes:
+                points: number of points scored by the athlete in the event.
+                rebounds: number of rebounds attained by the athlete in the event.
+                assists: number of assists attained by the athlete in the event.
+                steals: number of steals attained by the athlete in the event.
+                blocks: number of blocks attained by the athlete in the event.
+                turnovers: number of turnovers attained by the athlete in the event.
+                fieldGoalAttempt: number of field goal attempts attained by the athlete in the event.
+                successfulFieldGoal: number of successful field goals attained by the athlete in the event.
+                threePointAttempt: number of three point attempts attained by the athlete in the event.
+                successfulThreePoint: number of successful three point shots attained by the athlete in the event.
+                freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
+                successfulFreeThrow: number of successful free throws attained by the athlete in the event.
+            
+        Returns:
+            A JSON containing all the user with the updated dashboard user.
         """
 
         # Validate existing event
@@ -323,6 +448,18 @@ class BasketballEventHandler:
 
     def editTeamStatistics(self,eID): # Instantiates a Basketball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
         """
+        Updates the team statistics for the basketball event with the given ID and aggregates of existing data.
+
+        Calls the BasktballEventDAO to update the statistics of a basketball event. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be updated.
+        
+            
+        Returns:
+            A JSON containing all the user with the updated dashboard user.
         """
 
         # Validate existing event
@@ -348,6 +485,18 @@ class BasketballEventHandler:
     #TODO: need to add the update team statistics call
     def removeStatistics(self,eID,aID): # Instantiates a Basketball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
         """
+        Invalidates a statistics record in the database based on the given IDs.
+
+        Calls the BasketballEventDAO to invalidate a statistics record. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be invalidated.
+            aID: the ID of the athlete for which the statistics record will be invalidated.
+            
+        Returns:
+            A JSON containing all the statistics with the updated Basketball Event.
         """
 
         # Validate existing event
@@ -371,6 +520,17 @@ class BasketballEventHandler:
 
     def removeTeamStatistics(self,eID): # Instantiates a Basketball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
         """
+        Invalidates a team statistics record in the database based on the given ID.
+
+        Calls the BasketballEventDAO to invalidate a team statistics record. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be invalidated.
+            
+        Returns:
+            A JSON containing all the statistics with the updated Basketball Event.
         """
 
         # Validate existing event
