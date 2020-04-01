@@ -268,12 +268,10 @@ class UserDAO:
             containing the matching record for the modified dashboard user.
         """
         cursor = self.conn.cursor()
-        # TODO check if user with that ID exits
-        # TODO make user inactive before deleting
         query = """
                 update dashboard_user 
                 set is_invalid= TRUE,
-                is_active = FALSE,
+                is_active = FALSE
                 WHERE id = %s
                 AND is_invalid = FALSE
                 returning id, username, full_name, email, is_active, is_invalid;
