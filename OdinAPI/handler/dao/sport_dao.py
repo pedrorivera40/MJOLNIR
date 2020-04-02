@@ -37,6 +37,7 @@ class SportDAO:
         """
         Gets all sports supported within the system.
         This function queries sports from the relational database.
+
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
@@ -45,7 +46,7 @@ class SportDAO:
         cursor = self.conn.cursor()
         query = '''
                 select S.id, S.name, S.sport_image_url, B.name
-                from sport as S inner join branch as B on S.branch_id = B.id
+                from sport as S inner join branch as B on S.branch_id = B.id;
                 '''
         cursor.execute(query)
         return self._build_result(cursor)
@@ -54,6 +55,10 @@ class SportDAO:
         """
         Gets all sports supported within the system filtered by branch.
         This function queries sports by branch from the relational database.
+
+        Args
+            branch: string corresponging to the sport branch
+
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
@@ -74,6 +79,10 @@ class SportDAO:
         """
         Fetches at most one sport record in the database corresponding to a given id.
         This function queries a sport given its id from the relational database.
+
+        Args
+            sport_id: integer corresponding to a sport id in the relational database
+
         Returns:
             A sport tuple follows the following structure:
                 (sport_id, sport_name, sport_image_url, branch_name).
@@ -94,6 +103,10 @@ class SportDAO:
         """
         Fetches sport records from the database corresponding to a given sport name.
         This function queries sports given a sport name from the relational database.
+
+        Args
+            sport_name: string corresponding to the sport name of interest
+
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
@@ -108,13 +121,14 @@ class SportDAO:
                 '''
 
         cursor.execute(query, (sport_name,))
-        return cursor.fetchone()
+        return self._build_result(cursor)
 
     def getSportCategoriesPositions(self):
         """
         Get records from the database corresponding to sports and their 
-        corresponding categories and positions if any.
+        respective categories and positions if any.
         This function queries sport categories and positions from the relational database.
+
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:

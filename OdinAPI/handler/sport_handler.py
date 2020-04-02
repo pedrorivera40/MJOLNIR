@@ -2,8 +2,14 @@ from flask import jsonify
 from .dao.sport_dao import SportDAO
 
 
-# TODO -> Add class documentation...
 class SportHandler:
+    '''
+    SportHandler - This class handles incomming requests from Odin API's gateway
+                   by interacting with the SportDAO. It is responsible for read
+                   operations corresponding to sports information including 
+                   sport names, branches, categories, and positions.
+    @author Pedro Luis Rivera Gomez
+    '''
 
     def __init__(self):
         self._dao = SportDAO()
@@ -81,6 +87,20 @@ class SportHandler:
         return result
 
     def getAllSports(self):
+        """
+        Gets all sports supported within the system.
+        This function fetches sport records from the DAO.
+
+        Returns:
+            A JSON object that contains a list of sport entries.
+            Each sport entry follows the following format:
+                {
+                    "sport_id": SPORT_ID_VALUE,
+                    "sport_name": SPORT_NAME_VALUE,
+                    "sport_image_url": SPORT_IMAGE_URL_VALUE,
+                    "branch_name": BRANCH_NAME_VALUE
+                }
+        """
 
         sports = []
         try:
@@ -92,6 +112,24 @@ class SportHandler:
         return jsonify(SPORTS=sports), 200
 
     def getSportsByBranch(self, branch):
+        """
+        Gets all sports supported within the system filtered by branch.
+        This function fetches sport records corresponding to a given branch from the DAO.
+
+        Args
+            branch: string corresponging to the sport branch
+
+        Returns:
+            A JSON object that contains a list of sport entries.
+            Each sport entry follows the following format:
+                {
+                    "sport_id": SPORT_ID_VALUE,
+                    "sport_name": SPORT_NAME_VALUE,
+                    "sport_image_url": SPORT_IMAGE_URL_VALUE,
+                    "branch_name": BRANCH_NAME_VALUE
+                }
+        """
+
         sports = []
         try:
             sport_rows = self._dao.getSportsByBranch(branch)
@@ -102,6 +140,23 @@ class SportHandler:
         return jsonify(SPORTS=sports), 200
 
     def getSportById(self, sport_id):
+        """
+        Gets sport entry for a given sport id.
+        This function fetches the sport record corresponding to a given sport id from the DAO.
+
+        Args
+            sport_id: integer corresponding to a sport id in the system
+
+        Returns:
+            A JSON object with a list of sport entries.
+            Each entry follows the following format:
+                {
+                    "sport_id": SPORT_ID_VALUE,
+                    "sport_name": SPORT_NAME_VALUE,
+                    "sport_image_url": SPORT_IMAGE_URL_VALUE,
+                    "branch_name": BRANCH_NAME_VALUE
+                }
+        """
         sport = {}
         try:
             sport_row = self._dao.getSportById(sport_id)
@@ -112,6 +167,24 @@ class SportHandler:
         return jsonify(SPORT=sport), 200
 
     def getSportByName(self, sport_name):
+        """
+        Gets the sports within the system that correspond to a given names.
+        This function fetches sport records corresponding to a given branch from the DAO.
+
+        Args
+            sport_name: string corresponding to the sport name of interest
+
+        Returns:
+            A JSON object that contains a list of sport entries.
+            Each sport entry follows the following format:
+                {
+                    "sport_id": SPORT_ID_VALUE,
+                    "sport_name": SPORT_NAME_VALUE,
+                    "sport_image_url": SPORT_IMAGE_URL_VALUE,
+                    "branch_name": BRANCH_NAME_VALUE
+                }
+        """
+
         sports = {}
         try:
             sport_rows = self._dao.getSportByName(sport_name)
@@ -122,6 +195,24 @@ class SportHandler:
         return jsonify(SPORTS=sports), 200
 
     def getSportCategoriesPositions(self):
+        """
+        Get sports and their respective categories and positions if any.
+        This function obtains sports, categories, and positions from the DAO.
+
+        Returns:
+            A JSON object that follows the following structure:
+                {
+                    SPORT_NAME_1 : 
+                    {
+                        "sport_id" [SPORT_ID_1, SPORT_ID_2, ...],
+                        "sport_image_url": [SPORT_IMAGE_URL_1, SPORT_IMAGE_URL_2, ...],
+                        "position": [POSITION_NAME_1, POSITION_NAME_2, ...],
+                        "category": [CATEGORY_NAME_1, CATEGORY_NAME_2, ...]
+                    },
+                    ...
+                }
+        """
+
         sports = {}
         try:
             sport_rows = self._dao.getSportCategoriesPositions()
