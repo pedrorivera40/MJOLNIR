@@ -9,6 +9,7 @@ class TestUserRoutes(unittest.TestCase):
   def setUp(self):
       app.config['DEBUG'] = True
       self.data = newUser
+      self.newUserID = 1
       self.client = app.test_client()
 
   ###########################################
@@ -26,17 +27,3 @@ class TestUserRoutes(unittest.TestCase):
     self.assertEqual(response.json['User']['is_active'], False)
     self.assertEqual(response.json['User']['is_invalid'], False)
     self.assertEqual(response.json['User']['username'], self.data['username'])
-
-  ###########################################################
-  # -------- Test Performing Actions on Removed Users --------#
-  ###########################################################
-  
-  def test_get_user_by_id_of_removed_user(self):
-      response = self.client.get(f'/users/{newUserID}', follow_redirects=True)
-      self.assertEqual(response.status_code, 404)
-      self.assertEqual(response.json['Error'], 'No user found in the system with that id.') # TODO add corresponding error message
-
-  def test_get_user_by_username_of_removed_user(self):
-    response = self.client.post('/users/username/', data=json.dumps({'username': self.data['username']}),content_type='application/json',  follow_redirects=True)
-    self.assertEqual(response.status_code, 404)
-    self.assertEqual(response.json['Error'], 'No user found in the system with that username.') # TODO add corresponding error message
