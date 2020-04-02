@@ -189,6 +189,15 @@ def basketballStatistics(eid):
     else:
         return jsonify("Method not allowed."), 405
 
+@app.route("/results/basketball/<int:eid>/all/", methods = ['GET'])
+def basketballAllStatistics(eid):
+    json = request.json
+    handler = BasketballEventHandler()
+    if request.method == 'GET':
+        return handler.getAllStatisticsForEvent(eid)
+    else:
+        return jsonify("Method not allowed."), 405
+
 @app.route("/results/basketball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 def basketballAthleteStatistics(eid,aid):
     json = request.json
@@ -199,9 +208,6 @@ def basketballAthleteStatistics(eid,aid):
         return handler.addStatistics(eid,aid,json['attributes'])
     if request.method == 'PUT':
         returnable = handler.editStatistics(eid,aid,json['attributes'])
-        # TODO: somehow manage to prevent this from executing if errors
-        # TODO: actually, change so that this is inside the handler above. fun, right?
-        handler.editTeamStatistics(eid) 
         return returnable
     if request.method == 'DELETE':
         return handler.removeStatistics(eid,aid)
