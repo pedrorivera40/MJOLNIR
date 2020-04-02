@@ -56,6 +56,8 @@ class UserDAO:
                     """
             cursor.execute(query,(username,fullName, email, password,))
             newUser = cursor.fetchone()
+            newUserID = newUser[0]
+            self.addUserPermissions(newUserID, [13,14,15,16,17,18,19,20,21,22,23,24,25,26,27]) ## Call addUserPermision to create a new user with all permissions false by default.
             if not newUser:
                 return 'UserError3'
             self.commitChanges()
@@ -281,6 +283,7 @@ class UserDAO:
         self.commitChanges()
         return users
 
+    ## THis will not be used directly, it
     def addUserPermissions(self,duid,pidList):
         """
         Adds permissions to a user.
