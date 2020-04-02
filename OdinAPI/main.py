@@ -176,28 +176,73 @@ def addPermissions(duid):
 #TODO: WORK ON THIS (Herbert) -> Improve route naming, base on args...
 #--------- Result Routes ---------#
 #TODO: Route Error Management, how does it not explode while saying error message?
+
+
+#REQUEST FORMAT FOR ROUTE:
+# { "event_id": 5,
+#   "team_statistics": 
+#    { "basketball_statistics": 
+#       { "points":500, "rebounds":500, "assists":500, "steals":500, "blocks":500, "turnovers":500, "field_goal_attempt":500,
+# 		"successful_field_goal":500, "three_point_attempt":500, "successful_three_point":500, "free_throw_attempt":500,
+# 		"successful_free_throw":500
+#       } 
+#    },
+#   "athlete_statistics": 
+#   [
+#   	{"athlete_id":4,
+#   	"statistics":
+# 	  	{"basketball_statistics":
+# 		  	{"points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2, 
+#             "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2, 
+#             "successful_free_throw":2
+# 		  	}
+# 	  	}
+#   	},
+#   	{"athlete_id":8,
+#   	"statistics":
+# 	  	{"basketball_statistics":
+# 		  	{"points":1, "rebounds":1, "assists":1, "steals":1, "blocks":1, "turnovers":1, "field_goal_attempt":1,
+# 			"successful_field_goal":1, "three_point_attempt":1, "successful_three_point":1, "free_throw_attempt":1,
+# 	        "successful_free_throw":1
+# 		  	}
+# 	  	}
+#   	}
+#   	],
+#   "uprm_score": 0,
+#   "opponent_score": 0 }
 @app.route("/results/basketball/<int:eid>/", methods = ['GET','POST'])
 def basketballStatistics(eid):
     json = request.json
     handler = BasketballEventHandler()
     if request.method == 'GET':
-        return handler.getAllStatisticsByBasketballEventID(eid)
+        return handler.getAllStatisticsForEvent(eid)
+        #Removed call for version with only athlete stats list, new version returns all
+        #return handler.getAllStatisticsByBasketballEventID(eid)
     if request.method == 'POST':
         #TODO: change eID to json['event_id']
-        return handler.addAllEventStatistics(eid,json['team_statistics']['basketball_statistics'],json['athlete_statistics'])
+        return handler.addAllEventStatistics(eid,json['team_statistics']['basketball_statistics'],json['athlete_statistics'],json['uprm_score'],json['opponent_score'])
         #return jsonify(json),200
     else:
         return jsonify("Method not allowed."), 405
 
-@app.route("/results/basketball/<int:eid>/all/", methods = ['GET'])
-def basketballAllStatistics(eid):
-    json = request.json
-    handler = BasketballEventHandler()
-    if request.method == 'GET':
-        return handler.getAllStatisticsForEvent(eid)
-    else:
-        return jsonify("Method not allowed."), 405
+# @app.route("/results/basketball/<int:eid>/all/", methods = ['GET'])
+# def basketballAllStatistics(eid):
+#     json = request.json
+#     handler = BasketballEventHandler()
+#     if request.method == 'GET':
+#         return handler.getAllStatisticsForEvent(eid)
+#     else:
+#         return jsonify("Method not allowed."), 405
 
+
+#FORMAT FOR REQUEST:
+# {"attributes":
+#   {
+#   "points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2,
+#   "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2,
+#   "successful_free_throw":2
+#   }
+# }
 @app.route("/results/basketball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 def basketballAthleteStatistics(eid,aid):
     json = request.json
@@ -214,6 +259,15 @@ def basketballAthleteStatistics(eid,aid):
     else:
         return jsonify(Error="Method not allowed."), 405
 
+#FORMAT FOR REQUEST:
+# {"add_type":"manual"
+# "attributes":
+#   {
+#   "points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2,
+#   "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2,
+#   "successful_free_throw":2
+#   }
+# }
 @app.route("/results/basketball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
 def basketballTeamStatistics(eid):
     json = request.json
@@ -223,12 +277,37 @@ def basketballTeamStatistics(eid):
     if request.method == 'POST':
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(eid)
-        else:
+        if json['add_type'] == 'MANUAL':
             return handler.addTeamStatistics(eid,json['attributes'])
+        else: 
+            return jsonify(Error= "Method not allowed, Must specify valid add_type"),405
     if request.method == 'PUT':
         return handler.editTeamStatistics(eid)
     if request.method == 'DELETE':
         return handler.removeTeamStatistics(eid)
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+
+#FORMAT FOR REQUEST:
+# {"attributes":
+#   {
+#   "local_score":2, "opponent_score":2 
+#   }
+# }
+@app.route("/results/basketball/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
+def basketballFinalScores(eid):
+    json = request.json
+    handler = BasketballEventHandler()
+    if request.method == 'GET':
+        return handler.getFinalScore(eid)
+    if request.method == 'POST':
+        return handler.addFinalScore(eid,json['attributes'])
+    if request.method == 'PUT':
+        return handler.editFinalScore(eid,json['attributes'])
+    if request.method == 'DELETE':
+        return handler.removeFinalScore(eid)
     else:
         return jsonify(Error="Method not allowed."), 405
 

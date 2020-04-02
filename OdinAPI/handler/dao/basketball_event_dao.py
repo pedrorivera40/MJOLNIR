@@ -67,7 +67,8 @@ class BasketballEventDAO:
                 WHERE event_id = %s and (is_invalid = false or is_invalid is Null);
                 """
         cursor.execute(query,(int(eID),))
-        result = cursor
+        result = cursor.fetchone()
+        #print(result)
         return result
 
     
@@ -620,13 +621,13 @@ class BasketballEventDAO:
         query = """
                 UPDATE final_score
                 SET local_score = %s,
-                    opponent_score = %s,
+                    opponent_score = %s
                 WHERE event_id = %s 
                 RETURNING
                     local_score,
                     opponent_score, 
                     event_id, 
-                    id as final_score_id,
+                    id as final_score_id;
                 """
         cursor.execute(query,(int(local_score),int(opponent_score),int(eID),))
         result = cursor.fetchone()
