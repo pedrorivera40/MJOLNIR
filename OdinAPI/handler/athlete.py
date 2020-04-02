@@ -99,9 +99,20 @@ class AthleteHandler:
 
         """
         dao = AthleteDAO()
-        result = dao.addAthlete(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10],attributes[11])
-        if not result:
-            return jsonify(Error = "Problem inserting new athlete."),500
+        result = None
+        if attributes[10] and not attributes[11]:#attributes[11] contains the positions, #attributes[11] contains the categories
+            if not isinstance(attributes[10],dict):
+                return jsonify(Error = 'Positions for the athlete must be a dictionary.'),500
+            result = dao.addAthleteWithPosition(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10])
+        elif not attributes[10] and attributes[11]:
+            if not isinstance(attributes[11],dict):
+                return jsonify(Error = 'Categories for the athlete must be a dictionary.'),500
+            result = dao.addAthleteWithCategory(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[11])
+        else:
+            result = dao.addAthlete(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9])
+        if isinstance(result,str):#If true, result will contain the error message.
+            return jsonify(Error = result),500
+
         return jsonify(Athlete = "Added new athlete with id:{}.".format(result)),201
 
     def editAthlete(self,aID,attributes):
