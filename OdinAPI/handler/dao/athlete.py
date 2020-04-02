@@ -58,7 +58,7 @@ class AthleteDAO:
             result.append(row)
         return result
 
-    def addAthlete(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,aPosition,aCategory):
+    def addAthlete(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,aPositions,aCategories):
         cursor = self.conn.cursor()                
         query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id,is_invalid) "\
                 "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;"
@@ -70,49 +70,75 @@ class AthleteDAO:
             return []#Empty
         
         
-        if aPosition != None:
-            query = """select P.id
-                       from position as P inner join sport as S on P.sport_id=S.id
-                       where S.id = %s
-                       and P.name = %s                    
+        if aPositions != None and aCategories == None:
+            query = """select P.id, P.name
+                       from position as P
+                       where P.sport_id = %s                                          
                     """
-            cursor.execute(query,(sID,aPosition,))
-            pID = cursor.fetchone()
-            print(pID)
-            if not pID:
-                return []
+            cursor.execute(query,(sID,))            
             
-            print(pID)
-            query = """insert into athlete_position(position_id,athlete_id,is_invalid)
-                       values(%s,%s,'false') returning id
-                    """
-            cursor.execute(query,(pID,aID,))
-            apID = cursor.fetchone()[0]
-            if not apID:
+            if not cursor:
                 return []
-        if aCategory != None:
-            query = """select C.id
+
+            positions = []            
+            for row in cursor:
+                positions.append(row)
+            if len(positions) != len(aPositions):
+                return []
+
+            apIDs = []
+            try:
+                for position in positions:
+                    query = """insert into athlete_position(position_id,athlete_id,is_invalid)
+                            values(%s,%s,%s) returning id
+                            """
+                    cursor.execute(query,(position[0],aID,aPositions[position[1]],))
+                    apID = cursor.fetchone()[0]
+                    if not apID:
+                        return []
+                    apIDs.append(apID)
+            except:                
+                if len(apIDs) != len(positions):
+                    return []
+            
+            
+        if aCategories != None and aPositions == None:
+            query = """select C.id,C.name
                        from  category as C inner join sport as S on C.sport_id=S.id
-                       where S.id = %s
-                       and C.name = %s
+                       where S.id = %s                       
                     """
-            cursor.execute(query,(sID,aCategory,))
-            cID = cursor.fetchone()
-            if not cID:
+            cursor.execute(query,(sID,))
+            
+            if not cursor:
                 return []
             
-            query = """insert into athlete_category(athlete_id,category_id,is_invalid)
-                       values(%s,%s,'false') returning id
-                    """
-            cursor.execute(query,(aID,cID,))
-            acID = cursor.fetchone()[0]
-            if not acID:
+            categories = []
+            for row in cursor:
+                categories.append(row)
+            
+            if len(categories) != len(aCategories):
                 return []
+            
+            acIDs = []
+
+            try:   
+                for category in categories:            
+                    query = """insert into athlete_category(athlete_id,category_id,is_invalid)
+                            values(%s,%s,%s) returning id
+                            """
+                    cursor.execute(query,(aID,category[0],aCategories[category[1]],))
+                    acID = cursor.fetchone()[0]
+                    if not acID:
+                        return []
+                    acIDs.append(acID)
+            except:
+                if len(acIDs) != len(categories):
+                    return []
 
         self.commitChanges()
         return aID
 
-    def editAthlete(self,aID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,aPosition,aCategory):
+    def editAthlete(self,aID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,aPositions,aCategories):
         cursor = self.conn.cursor()
         query = """update athlete
                    set first_name = %s,
@@ -144,13 +170,13 @@ class AthleteDAO:
         if not result:
             return []
 
-        if aPosition != None:
+        if aPositions != None:
             query = """select P.id
                        from position as P inner join sport as S on P.sport_id=S.id
                        where S.id = %s
                        and P.name = %s                    
                     """
-            cursor.execute(query,(sID,aPosition,))
+            cursor.execute(query,(sID,aPositions,))
             pID = cursor.fetchone()
             print(pID)
             if not pID:
@@ -172,13 +198,13 @@ class AthleteDAO:
             if not newPosition:
                 return []
 
-        if aCategory != None:
+        if aCategories != None:
             query = """select C.id
                        from  category as C inner join sport as S on C.sport_id=S.id
                        where S.id = %s
                        and C.name = %s
                     """
-            cursor.execute(query,(sID,aCategory,))
+            cursor.execute(query,(sID,aCategories,))
             cID = cursor.fetchone()
             if not cID:
                 return []
