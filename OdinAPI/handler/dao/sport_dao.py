@@ -3,8 +3,13 @@ from flask import jsonify
 import psycopg2
 
 
-# TODO -> Add class documentation.
 class SportDAO:
+    '''
+    SportDAO - This class implements a Data Access Object pattern to provide 
+               Odin API information regarding sports stored in the relational 
+               database.
+    @author Pedro Luis Rivera Gomez
+    '''
 
     def __init__(self):
         '''
@@ -35,11 +40,11 @@ class SportDAO:
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
-                (id, name, sport_image_url, branch).
+                (sport_id, sport_name, sport_image_url, branch_id, branch_name).
         """
         cursor = self.conn.cursor()
         query = '''
-                select S.id, S.name, S.sport_image_url, B.name
+                select S.id, S.name, S.sport_image_url, B.id, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
                 where S.is_invalid = false;
                 '''
@@ -53,13 +58,13 @@ class SportDAO:
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
-                (id, name, sport_image_url, branch).
+                (sport_id, sport_name, sport_image_url, branch_id, branch_name).
         """
         cursor = self.conn.cursor()
 
         # Get all valid sport names and images for all valid sports given its branch.
         query = '''
-                select S.id, S.name, S.sport_image_url, B.name
+                select S.id, S.name, S.sport_image_url, B.id, B.name
                 from (sport as S inner join branch as B on S.branch_id = B.id)
                 where S.is_invalid = false
                 and B.name = %s;
@@ -74,12 +79,12 @@ class SportDAO:
         This function queries a sport given its id from the relational database.
         Returns:
             A sport tuple follows the following structure:
-                (id, name, sport_image_url, branch).
+                (sport_id, sport_name, sport_image_url, branch_id, branch_name).
         """
         
         cursor = self.conn.cursor()
         query = '''
-                select S.id, S.name, S.sport_image_url, B.name
+                select S.id, S.name, S.sport_image_url, B.id, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
                 where S.is_invalid = false
                 and S.id = %s;
@@ -95,12 +100,12 @@ class SportDAO:
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
-                (id, name, sport_image_url, branch).
+                (sport_id, sport_name, sport_image_url, branch_id, branch_name).
         """
 
         cursor = self.conn.cursor()
         query = '''
-                select S.id, S.name, S.sport_image_url, B.name
+                select S.id, S.name, S.sport_image_url, B.id, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
                 where S.is_invalid = false
                 and S.name = %s;
@@ -108,6 +113,17 @@ class SportDAO:
 
         cursor.execute(query, (sport_name,))
         return cursor.fetchone()
+
+    def getSportCategories(self):
+        return 1
+
+    def getSportPositions(self):
+        return 1
+
+    def getSportCategoriesPositions(self):
+        return 1
+
+    
 
 
 if __name__ == '__main__':
