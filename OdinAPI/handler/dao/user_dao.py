@@ -281,5 +281,38 @@ class UserDAO:
         self.commitChanges()
         return users
 
+    def addUserPermissions(self,duid,pidList):
+        """
+        Adds permissions to a user.
+
+        This fucntion will go thorugh the permissions list and apply them to 
+        the user with the specified duid.
+
+        Args:
+            duid: The id of the user's whose permissions will be modified.
+            pidList: A list of the permissions to add to the user.
+        
+        Returns:
+            A list containing the response to the database query containing 
+            the matching record of modiffied user permissions.
+        """
+        queryResults = []
+        cursor = self.conn.cursor()
+        if self.getDashUserByID(duid) == None: # TODO finde better way to do this.
+            return 'UserError4'
+        if pidList == None:
+            return 'UserError5'
+        for pid in pidList:
+            query = """
+                    insert into user_permission (user_id, permission_id, is_invalid)
+                    values (%s,%s, False)
+                    returning id, user_id, permission_id, is_invalid
+            """
+            cursor.execute(query, (duid, pid,))
+            queryResults.append(cursor.fetchone())
+        self.commitChanges()
+        return queryResults
+
+
     def commitChanges(self):
         self.conn.commit()

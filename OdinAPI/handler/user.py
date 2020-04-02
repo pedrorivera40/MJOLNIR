@@ -15,7 +15,18 @@ class UserHandler:
         userDictionary['is_invalid'] = record[5]
 
         return userDictionary
-        
+
+    def mapPermissionsToDict(self, record):
+        """
+        Converts results returned by DAO into a dictionary.
+        """
+        permissionsDictionary = {}
+        permissionsDictionary['id'] = record[0]
+        permissionsDictionary['user_id'] = record[1]
+        permissionsDictionary['permission_id'] = record[2]
+        permissionsDictionary['is_invalid'] = record[3]
+        return permissionsDictionary
+
     def addDashUser(self, username, fullName,email, password):
         """
         Adds a new Dashboard user with the provided information.
@@ -219,3 +230,29 @@ class UserHandler:
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
         return jsonify(User=self.mapUserToDict(res)),201
+
+    def addUserPermissions(self,duid,pidList):
+            """
+            Adds permissions to a user.
+
+            This fucntion will go thorugh the permissions list and apply them to 
+            the user with the specified duid.
+
+            Args:
+                duid: The id of the user's whose permissions will be modified.
+                pidList: A list of the permissions to add to the user.
+            
+            Returns:
+                A list containing the response to the database query containing 
+                the matching record of modiffied user permissions.
+            """
+            dao = UserDAO()
+            permisionsList = dao.addUserPermissions(duid, pidList)
+            if permisionsList == 'UserError4':
+                return jsonify(Error='No User found in the system with that id.'), 404
+            if permisionsList == 'UserError5':
+                return jsonify(Error='Permissions cant be empty.'), 400 # Bad request
+            mappedPermissions = []
+            for row in permisionsList:
+                mappedPermissions.append(self.mapPermissionsToDict(row))
+            return jsonify(Permissions=mappedPermissions),201
