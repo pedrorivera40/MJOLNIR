@@ -94,7 +94,7 @@ def get_sports():
         body = request.get_json()
         handler = SportHandler()
 
-        if len(body) == 0:
+        if not body:
             return handler.getAllSports()
 
         if len(body) == 1:
@@ -102,23 +102,27 @@ def get_sports():
             if 'branch' in body:
                 return handler.getSportsByBranch(body['branch'])
 
-            if 'name' in body:
-                return handler.getSportByName(body['name'])
+            if 'sport_name' in body:
+                return handler.getSportByName(body['sport_name'])
+
+            if 'sport_id' in body:
+                return handler.getSportById(body['sport_id'])
 
         return jsonify(ERROR="Odin/sports: Malformed request, either branch or name is allowed."), 400
 
     return jsonify(ERROR="Odin/sports: HTTP verb not allowed."), 405
 
-    @app.route("/sports/details", methods=['GET'])
-    def get_sport_info():
-        if request.method == 'GET':
-            body = request.get_json()
-            if len(body) == 0:
-                return SportHandler().getSportCategoriesPositions()
 
-            return jsonify(ERROR="Odin/sports/details: Malformed request, either branch or name is allowed."), 400
+@app.route("/sports/details", methods=['GET'])
+def get_sport_info():
+    if request.method == 'GET':
+        body = request.get_json()
+        if not body:
+            return SportHandler().getSportCategoriesPositions()
 
-        return jsonify(ERROR="Odin/sports: HTTP verb not allowed."), 405
+        return jsonify(ERROR="Odin/sports/details: Malformed request, no params allowed."), 400
+
+    return jsonify(ERROR="Odin/sports: HTTP verb not allowed."), 405
 
 
 # Launch app.

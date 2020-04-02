@@ -19,7 +19,7 @@ class SportHandler:
         Internal method for building a dictionary per sport row obtained from DAO.
         '''
 
-        if len(sport_row != 4):
+        if len(sport_row) != 4:
             raise Exception("SportHandler Error: invalid sport row length.")
 
         return {
@@ -104,8 +104,11 @@ class SportHandler:
 
         sports = []
         try:
+            print(1)
             sport_rows = self._dao.getAllSports()
+            print(2, sport_rows)
             sports = self._build_sport_dict(sport_rows)
+            print(3)
         except:
             return jsonify(ERROR="SportHandler.getAllSports - unable to obtain sports from DAO."), 500
 
