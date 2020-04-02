@@ -71,39 +71,41 @@ def athletePositions(sid,aid):
 #--------- Dashboard User Routes ---------#
 @app.route("/users/", methods = ['GET'])
 def users():
+    handler = UserHandler()
     if request.method == 'GET':
-        handler = UserHandler()
-
         return handler.getAllDashUsers()
 
 #TODO: WORK ON THIS (Herbert) -> Improve route naming, base on args...
 #--------- Result Routes ---------#
 #TODO: Route Error Management, how does it not explode while saying error message?
-@app.route("/results/basketball/<int:eid>", methods = ['GET'])
+@app.route("/results/basketball/<int:eid>/", methods = ['GET','POST'])
 def basketballStatistics(eid):
+    json = request.json
+    handler = BasketballEventHandler()
     if request.method == 'GET':
-        handler = BasketballEventHandler()
         return handler.getAllStatisticsByBasketballEventID(eid)
+    if request.method == 'POST':
+        #TODO: change eID to json['event_id']
+        return handler.addAllEventStatistics(eid,json['team_statistics']['basketball_statistics'],json['athlete_statistics'])
+        #return jsonify(json),200
     else:
         return jsonify("Method not allowed."), 405
 
 @app.route("/results/basketball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 def basketballAthleteStatistics(eid,aid):
     json = request.json
+    handler = BasketballEventHandler()
     if request.method == 'GET':
-        handler = BasketballEventHandler()
         return handler.getAllAthleteStatisticsByBasketballEventId(eid,aid)
     if request.method == 'POST':
-        handler = BasketballEventHandler()
         return handler.addStatistics(eid,aid,json['attributes'])
     if request.method == 'PUT':
-        handler = BasketballEventHandler()
         returnable = handler.editStatistics(eid,aid,json['attributes'])
         # TODO: somehow manage to prevent this from executing if errors
+        # TODO: actually, change so that this is inside the handler above. fun, right?
         handler.editTeamStatistics(eid) 
         return returnable
     if request.method == 'DELETE':
-        handler = BasketballEventHandler()
         return handler.removeStatistics(eid,aid)
     else:
         return jsonify(Error="Method not allowed."), 405
@@ -111,20 +113,17 @@ def basketballAthleteStatistics(eid,aid):
 @app.route("/results/basketball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
 def basketballTeamStatistics(eid):
     json = request.json
+    handler = BasketballEventHandler()
     if request.method == 'GET':
-        handler = BasketballEventHandler()
         return handler.getAllTeamStatisticsByBasketballEventId(eid)
     if request.method == 'POST':
-        handler = BasketballEventHandler()
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(eid)
         else:
             return handler.addTeamStatistics(eid,json['attributes'])
     if request.method == 'PUT':
-        handler = BasketballEventHandler()
         return handler.editTeamStatistics(eid)
     if request.method == 'DELETE':
-        handler = BasketballEventHandler()
         return handler.removeTeamStatistics(eid)
     else:
         return jsonify(Error="Method not allowed."), 405
@@ -132,8 +131,8 @@ def basketballTeamStatistics(eid):
 @app.route("/results/basketball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
 def basketballSeasonAthleteStatistics(aid,seasonYear):
     json = request.json
+    handler = BasketballEventHandler()
     if request.method == 'GET':
-        handler = BasketballEventHandler()
         return handler.getAllAthleteStatisticsPerSeason(aid,seasonYear)
     else:
         return jsonify(Error="Method not allowed."), 405

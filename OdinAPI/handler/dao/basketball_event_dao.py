@@ -22,7 +22,57 @@ class BasketballEventDAO:
         )
         self.conn = psycopg2.connect(connection_url)
 
+#=============================//HELPERS//====================
+    def getBasketballEventID(self,eID,aID):
+        """
+        Checks if basketball event exists.
+
+        This function uses IDs to perform a query to the database
+        that verifies if the Basketball Event exists.
+
+        Args:
+            eID: The ID of the event 
+            aID: The ID of the athlete
+            
+        Returns:
+            The id of the basketball event entry if it exists.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT id
+                FROM basketball_event
+                WHERE event_id = %s and athlete_id = %s and (is_invalid = false or is_invalid is Null);
+                """
+        cursor.execute(query,(int(eID),int(aID),))
+        result = cursor.fetchone()
+        return result
     
+    def getBasketballEventTeamStatsID(self,eID):
+        """
+        Checks if basketball event team stats exist.
+
+        This function uses IDs to perform a query to the database
+        that verifies if the Basketball Event exists.
+
+        Args:
+            eID: The ID of the event 
+            
+        Returns:
+            The id of the basketball event team stats entry if it exists.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT id
+                FROM basketball_event_team_stats
+                WHERE event_id = %s and (is_invalid = false or is_invalid is Null);
+                """
+        cursor.execute(query,(int(eID),))
+        result = cursor
+        return result
+
+    
+#=============================//GETS//=======================
+
     def getAllStatisticsByEventID(self,eID):
         """
         Gets all the statistics per athlete for a given event. 
@@ -49,7 +99,8 @@ class BasketballEventDAO:
                 three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
                 get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
                 get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage
+                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                basketball_event.event_id, basketball_event.id as basketball_event_id
                 FROM basketball_event
                 INNER JOIN athlete ON athlete.id = basketball_event.athlete_id
                 WHERE event_id = %s and 
@@ -88,7 +139,8 @@ class BasketballEventDAO:
                 three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
                 get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
                 get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage
+                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                basketball_event.event_id, basketball_event.id as basketball_event_id, basketball_event.athlete_id
                 FROM basketball_event
                 WHERE event_id = %s and athlete_id = %s and 
                 (basketball_event.is_invalid = false or basketball_event.is_invalid is null);
@@ -123,7 +175,8 @@ class BasketballEventDAO:
                 three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
                 get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
                 get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage
+                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                basketball_event_team_stats.event_id, basketball_event_team_stats.id as basketball_event_team_stats_id
                 FROM basketball_event_team_stats
                 WHERE event_id = %s  and 
                 (basketball_event_team_stats.is_invalid = false or basketball_event_team_stats.is_invalid is null);
@@ -160,7 +213,9 @@ class BasketballEventDAO:
                 three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
                 get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
                 get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage
+                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                basketball_event.id as basketball_event_id,
+                basketball_event.athlete_id
                 FROM basketball_event
                 INNER JOIN event ON event.id = basketball_event.event_id
                 INNER JOIN team on team.id = event.team_id
@@ -175,7 +230,7 @@ class BasketballEventDAO:
         return result  
     
 
-
+#=============================//POST//=======================
     
     # Need to validate: event exists. athlete belongs to team  that is tied to the event. 
     # needless to say, a bunch changes since these are more complex statistics...
@@ -213,8 +268,8 @@ class BasketballEventDAO:
         query = """
                 INSERT INTO basketball_event(points,rebounds,assists,steals,blocks,turnovers,
                 field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
-                free_throw_attempt,successful_free_throw,event_id,athlete_id)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id;
+                free_throw_attempt,successful_free_throw,event_id,athlete_id,is_invalid)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),
         int(turnovers),int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),
@@ -222,7 +277,7 @@ class BasketballEventDAO:
         sID = cursor.fetchone()[0]
         if not sID:
             return sID
-        self.commitChanges()
+        #self.commitChanges()
         return sID
 
     
@@ -259,8 +314,8 @@ class BasketballEventDAO:
         query = """
                 INSERT INTO basketball_event_team_stats(points,rebounds,assists,steals,blocks,turnovers,
                 field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
-                free_throw_attempt,successful_free_throw,event_id)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id;
+                free_throw_attempt,successful_free_throw,event_id,is_invalid)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),
         int(turnovers),int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),
@@ -268,7 +323,7 @@ class BasketballEventDAO:
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
-        self.commitChanges()
+        #self.commitChanges()
         return tsID
 
     
@@ -314,8 +369,8 @@ class BasketballEventDAO:
         query = """
                 INSERT INTO basketball_event_team_stats(points,rebounds,assists,steals,blocks,turnovers,
                 field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
-                free_throw_attempt,successful_free_throw,event_id)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id;
+                free_throw_attempt,successful_free_throw,event_id,is_invalid)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
         int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
@@ -323,8 +378,10 @@ class BasketballEventDAO:
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
-        self.commitChanges()
+        #self.commitChanges()
         return tsID
+
+#=============================//PUTS//=======================
 
     #TODO: recal athlete will be validaded by handler
     def editStatistics(self,eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalAttempt, 
@@ -390,7 +447,8 @@ class BasketballEventDAO:
                     successful_free_throw,
                     get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
                     get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage;
+                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                    basketball_event.event_id, basketball_event.id as basketball_event_id, basketball_event.athlete_id;
 
                 """
         cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),int(turnovers),
@@ -471,7 +529,8 @@ class BasketballEventDAO:
                     successful_free_throw,
                     get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
                     get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage;
+                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                    basketball_event_team_stats.event_id, basketball_event_team_stats.id as basketball_event_team_stats_id;
 
                 """
         cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
@@ -482,7 +541,9 @@ class BasketballEventDAO:
             return result
         self.commitChanges()
         return result
-                
+
+#=============================//DELETE//=======================
+     
     #TODO: in handler must call update team statistics (auto) after this. 
     def removeStatistics(self,eID,aID):
         """
@@ -508,7 +569,7 @@ class BasketballEventDAO:
                 RETURNING id;
                 """
         cursor.execute(query,(int(eID),int(aID),))
-        result = cursor.fetchone()[0]
+        result = cursor.fetchone()
         if not result:
             return result
         self.commitChanges()
@@ -539,7 +600,7 @@ class BasketballEventDAO:
                 RETURNING id;
                 """
         cursor.execute(query,(int(eID),))
-        result = cursor.fetchone()[0]
+        result = cursor.fetchone()
         if not result:
             return result
         self.commitChanges()
