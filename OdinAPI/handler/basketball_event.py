@@ -323,13 +323,13 @@ class BasketballEventHandler:
 #[3][X] Need to add validation of parameters (like correct event/team for athlete)
 #[4][X] Need to add routes for all
 #[5][X] Need to add handler documentation
-#[6][*] Add Final Score table (handlers/dao) --> added the dao. added handler. missing route for edit/remove. where do we do this? right now the get is not alone, it's in the general and teamStats...mix too?
+#[6][X] Add Final Score table (handlers/dao) --> added the dao. added handler. missing route for edit/remove. where do we do this? right now the get is not alone, it's in the general and teamStats...mix too?
 #[7][X] Prepare Tests and Mock Returns for Event, Team, etc
 #       -GetAllStats(eID)           --> GET[X], 
 #       -GetAllStats(eID,aID)       --> GET[X], POST    [X],    PUT[X], REMOVE[X]
 #       -GetTeamStats(eID)          --> GET[X], POST(x2)[X][X], PUT[X], REMOVE[X]
 #       -GetSeasonStats(aID,season) --> GET[X]
-#[8][ ] Error Handling (try catch all of it), and check event form length
+#[8][ ] Error Handling (try catch all of it), and check event form length --> check valid parameters everywhere. valid lenght, valid keys try catch
 #[9][X] Add the validation of Previously Existing on Add (avoid duplicates) and Remove (cant remove nonexisting). Maybe on update 
 #[10][X]Default is_invalid to false on adds.
 #[11][X]PAYLOAD MEGAQUERY ADD: Add Route to give "payload" JSON as parameter and basically upload ALL results
