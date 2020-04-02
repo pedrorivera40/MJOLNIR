@@ -1,4 +1,4 @@
-from config.sqlconfig import db_config
+from .config.sqlconfig import db_config
 from flask import jsonify
 import psycopg2
 
