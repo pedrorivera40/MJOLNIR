@@ -114,18 +114,29 @@ class SportDAO:
         cursor.execute(query, (sport_name,))
         return cursor.fetchone()
 
-    def getSportCategories(self):
-        return 1
-
-    def getSportPositions(self):
-        return 1
-
     def getSportCategoriesPositions(self):
-        return 1
+        """
+        Get records from the database corresponding to sports and their 
+        corresponding categories and positions if any.
+        This function queries sport categories and positions from the relational database.
+        Returns:
+            A list of tuples which represent the response to the database query.
+            Each sport tuple follows the following structure:
+                (sport_id, sport_name, sport_image_url, position_name, category_name).
+        """
+
+        cursor = self.conn.cursor()
+        query = '''
+                select S.id, S.name, S.sport_image_url, P.name as position_name, C.name as category_name
+                from (sport as S full join position as P on S.id = P.sport_id) 
+					  full join category as C on S.id = C.sport_id
+                where S.is_invalid = false
+                '''
+
+        cursor.execute(query)
+        return self._build_result(cursor)
 
     
-
-
 if __name__ == '__main__':
     sport_dao = SportDAO()
 
