@@ -2,6 +2,7 @@ from .config.sqlconfig import db_config
 from flask import jsonify
 import psycopg2
 
+# TODO: ALWAYS CHECK THE is_invalid field is false before every query. Otherise we are searching trhough records that technically do not exist
 
 class UserDAO:
     def __init__(self):
@@ -12,6 +13,53 @@ class UserDAO:
             db_config['host']
         )
         self.conn = psycopg2.connect(connection_url)
+
+    def addDashUser(self, username, fullName, email, password):
+        """
+        Adds a new Dashboard user with the provided information.
+
+        This function accepts a first name, last name, email and password, 
+        to perform a query to the database that adds a new dashboard user 
+        to the system with the provided information.
+
+        Args:
+            firstName: The first name of the new dashboboard user.
+            lastName: The last name of the new dashboboard user.
+            email: The email of the new dashboboard user.
+            password: The hash of the password for the new dashboboard user.
+            
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the new dashboard user.
+        """ 
+        
+        cursor = self.conn.cursor()
+        # Make sure the user being added does not exist already:
+        probeQuery = """
+                    Select case when (select count(*) from dashboard_user where email =%s ) > 0
+                    then 'yes' else 'no' end as emailTest,
+                    case when (select count(*) from dashboard_user where username =%s AND is_invalid = FALSE ) >0
+                    then 'yes' else 'no' end as usernameTest;
+                    """
+        cursor.execute(probeQuery, (email, username,))
+        conflicts = cursor.fetchone()
+        if(conflicts[0]=='yes'):
+            return 'UserError1' # User with that email already exists in the system
+        elif(conflicts[1]=='yes'):
+            return 'UserError2' # User with that username already exists in the system
+        else:
+            # is_active and is_invalid are false by default because we want inactive, valid accounts upon creation.
+            query = """
+                    insert into dashboard_user(username, full_name, email,password_hash, is_active, is_invalid)
+                    values (%s,%s, %s,%s, FALSE, FALSE) 
+                    returning id, username, full_name, email, is_active, is_invalid;
+                    """
+            cursor.execute(query,(username,fullName, email, password,))
+            newUser = cursor.fetchone()
+            if not newUser:
+                return 'UserError3'
+            self.commitChanges()
+            return newUser
 
     def getAllDashUsers(self):
         """
@@ -25,7 +73,7 @@ class UserDAO:
             containing all the dashboard users in the system.
         """
         cursor = self.conn.cursor()
-        query = 'select id, username, full_name, email, is_active, is_invalid from dashboard_user;'
+        query = 'select id, username, full_name, email, is_active, is_invalid from dashboard_user where is_invalid = FALSE;'
         cursor.execute(query,)
         users = []
         for row in cursor:
@@ -47,7 +95,16 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the given ID.
         """
-        return None
+        # TODO check if user with that ID exits
+
+        cursor = self.conn.cursor()
+        query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
+                    where id = %s
+                    AND is_invalid = FALSE;
+                """
+        cursor.execute(query,(duid,))
+        user = cursor.fetchone()
+        return user
         
     def getDashUserByUsername(self, username):
         """
@@ -63,7 +120,17 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the given username.
         """
-        return None
+        cursor = self.conn.cursor()
+        # TODO check if user with that Username exits
+
+        query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
+                    where username = %s
+                    AND is_invalid = FALSE;
+                """
+        cursor.execute(query,(username,))
+        user = cursor.fetchone()
+        
+        return user
 
     def getDashUserByEmail(self, email):
         """
@@ -79,27 +146,16 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the given email.
         """
-        return None
-
-    def addDashUser(self, firstName, lastName,email, password):
-        """
-        Adds a new Dashboard user with the provided information.
-
-        This function accepts a first name, last name, email and password, 
-        to perform a query to the database that adds a new dashboard user 
-        to the system with the provided information.
-
-        Args:
-            firstName: The first name of the new dashboboard user.
-            lastName: The last name of the new dashboboard user.
-            email: The email of the new dashboboard user.
-            password: The hash of the password for the new dashboboard user.
-            
-        Returns:
-            A list containing the response to the database query
-            containing the matching record for the new dashboard user.
-        """
-        return None
+        cursor = self.conn.cursor()
+        # TODO check if user with that Email exits
+        
+        query = """select id, username, full_name, email, is_active, is_invalid from dashboard_user
+                    where email = %s
+                    AND is_invalid = FALSE;
+                """
+        cursor.execute(query,(email,))
+        users = cursor.fetchone()
+        return users
 
     def updateDashUserPassword(self, duid, password):
         """
@@ -116,7 +172,19 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
-        return None
+        cursor = self.conn.cursor()
+        # TODO Check that user with that ID exists
+        query = """
+                update dashboard_user
+                set password_hash = %s
+                where id = %s
+                AND is_invalid = FALSE
+                returning id, username, full_name, email, is_active, is_invalid;
+                """
+        cursor.execute(query,(password,duid,))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
 
     def updateDashUserUsername(self, duid,username):
         """
@@ -133,39 +201,56 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
-        return None
+        cursor = self.conn.cursor()
+        probeQuery = """
+                    Select case when (select count(*) from dashboard_user where username =%s AND is_invalid = FALSE) > 0
+                    then 'yes' else 'no' end as usernameTest;
+                    """
+        cursor.execute(probeQuery, (username,))
+        conflicts = cursor.fetchone()
+        if(conflicts[0]=='yes'):
+            return 'UserError2' # User with that username does not exist.
 
-    def markDashUserInactive(self, duid):
+        query = """
+                update dashboard_user
+                set username = %s
+                where id = %s
+                AND is_invalid = FALSE
+                returning id, username, full_name, email, is_active, is_invalid;
+                """
+        cursor.execute(query,(username,duid,))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
+
+    def toggleDashUserActive(self, duid):
         """
-        Marks a user as inactive in the database.
+        Toogles a user's active status in the database.
 
-        This function accepts an ID and uses it to set the "active" field
-        within the database as inactive.
+        This function accepts an ID and uses it to togle the "is_active" field
+        within the database depending on the current value.
 
         Args:
-            duid: The ID of the user that will be deactivated.
+            duid: The ID of the user that will be toggled.
             
         Returns:
-            A list containing the response to the database query
+            A list with the response to the database query
             containing the matching record for the modified dashboard user.
         """
-        return None
+        cursor = self.conn.cursor()
+        # TODO check if user with that ID exits
 
-    def markDashUserActive(self, duid):
-        """
-        Marks a user as active in the database.
-
-        This function accepts an ID and uses it to set the "active" field
-        within the database as active.
-
-        Args:
-            duid: The ID of the user that will be activated.
-            
-        Returns:
-            A list containing the response to the database query
-            containing the matching record for the modified dashboard user.
-        """
-        return None
+        query = """
+                update dashboard_user 
+                set is_active= not is_active 
+                WHERE id = %s
+                AND is_invalid = FALSE
+                returning id, username, full_name, email, is_active, is_invalid;
+                """
+        cursor.execute(query,(duid,))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
 
     def removeDashUser(self, duid):
         """
@@ -182,9 +267,52 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
-        return None
+        cursor = self.conn.cursor()
+        query = """
+                update dashboard_user 
+                set is_invalid= TRUE,
+                is_active = FALSE
+                WHERE id = %s
+                AND is_invalid = FALSE
+                returning id, username, full_name, email, is_active, is_invalid;
+                """
+        cursor.execute(query,(duid,))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
 
-    ## DOnt really thing we need these.
+    def addUserPermissions(self,duid,pidList):
+        """
+        Adds permissions to a user.
+
+        This fucntion will go thorugh the permissions list and apply them to 
+        the user with the specified duid.
+
+        Args:
+            duid: The id of the user's whose permissions will be modified.
+            pidList: A list of the permissions to add to the user.
+        
+        Returns:
+            A list containing the response to the database query containing 
+            the matching record of modiffied user permissions.
+        """
+        queryResults = []
+        cursor = self.conn.cursor()
+        if self.getDashUserByID(duid) == None: # TODO finde better way to do this.
+            return 'UserError4'
+        if pidList == None:
+            return 'UserError5'
+        for pid in pidList:
+            query = """
+                    insert into user_permission (user_id, permission_id, is_invalid)
+                    values (%s,%s, False)
+                    returning id, user_id, permission_id, is_invalid
+            """
+            cursor.execute(query, (duid, pid,))
+            queryResults.append(cursor.fetchone())
+        self.commitChanges()
+        return queryResults
+
+
     def commitChanges(self):
-        #TODO Still need to implement this function.
-        return None
+        self.conn.commit()
