@@ -40,11 +40,11 @@ class SportDAO:
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
-                (sport_id, sport_name, sport_image_url, branch_id, branch_name).
+                (sport_id, sport_name, sport_image_url, branch_name).
         """
         cursor = self.conn.cursor()
         query = '''
-                select S.id, S.name, S.sport_image_url, B.id, B.name
+                select S.id, S.name, S.sport_image_url, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
                 where S.is_invalid = false;
                 '''
@@ -58,13 +58,13 @@ class SportDAO:
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
-                (sport_id, sport_name, sport_image_url, branch_id, branch_name).
+                (sport_id, sport_name, sport_image_url, branch_name).
         """
         cursor = self.conn.cursor()
 
         # Get all valid sport names and images for all valid sports given its branch.
         query = '''
-                select S.id, S.name, S.sport_image_url, B.id, B.name
+                select S.id, S.name, S.sport_image_url, B.name
                 from (sport as S inner join branch as B on S.branch_id = B.id)
                 where S.is_invalid = false
                 and B.name = %s;
@@ -79,12 +79,12 @@ class SportDAO:
         This function queries a sport given its id from the relational database.
         Returns:
             A sport tuple follows the following structure:
-                (sport_id, sport_name, sport_image_url, branch_id, branch_name).
+                (sport_id, sport_name, sport_image_url, branch_name).
         """
-        
+
         cursor = self.conn.cursor()
         query = '''
-                select S.id, S.name, S.sport_image_url, B.id, B.name
+                select S.id, S.name, S.sport_image_url, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
                 where S.is_invalid = false
                 and S.id = %s;
@@ -100,12 +100,12 @@ class SportDAO:
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
-                (sport_id, sport_name, sport_image_url, branch_id, branch_name).
+                (sport_id, sport_name, sport_image_url, branch_name).
         """
 
         cursor = self.conn.cursor()
         query = '''
-                select S.id, S.name, S.sport_image_url, B.id, B.name
+                select S.id, S.name, S.sport_image_url, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
                 where S.is_invalid = false
                 and S.name = %s;
@@ -136,7 +136,7 @@ class SportDAO:
         cursor.execute(query)
         return self._build_result(cursor)
 
-    
+
 if __name__ == '__main__':
     sport_dao = SportDAO()
 
