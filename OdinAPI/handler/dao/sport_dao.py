@@ -46,7 +46,6 @@ class SportDAO:
         query = '''
                 select S.id, S.name, S.sport_image_url, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
-                where S.is_invalid = false;
                 '''
         cursor.execute(query)
         return self._build_result(cursor)
@@ -60,14 +59,12 @@ class SportDAO:
             Each sport tuple follows the following structure:
                 (sport_id, sport_name, sport_image_url, branch_name).
         """
-        cursor = self.conn.cursor()
 
-        # Get all valid sport names and images for all valid sports given its branch.
+        cursor = self.conn.cursor()
         query = '''
                 select S.id, S.name, S.sport_image_url, B.name
                 from (sport as S inner join branch as B on S.branch_id = B.id)
-                where S.is_invalid = false
-                and B.name = %s;
+                where B.name = %s;
                 '''
 
         cursor.execute(query, (branch,))
@@ -86,13 +83,13 @@ class SportDAO:
         query = '''
                 select S.id, S.name, S.sport_image_url, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
-                where S.is_invalid = false
-                and S.id = %s;
+                where S.id = %s;
                 '''
 
         cursor.execute(query, (sport_id,))
         return cursor.fetchone()
 
+    # TODO -> Fix it to return all sports...
     def getSportByName(self, sport_name):
         """
         Fetches sport records from the database corresponding to a given sport name.
@@ -107,8 +104,7 @@ class SportDAO:
         query = '''
                 select S.id, S.name, S.sport_image_url, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
-                where S.is_invalid = false
-                and S.name = %s;
+                where S.name = %s;
                 '''
 
         cursor.execute(query, (sport_name,))
@@ -129,8 +125,7 @@ class SportDAO:
         query = '''
                 select S.id, S.name, S.sport_image_url, P.name as position_name, C.name as category_name
                 from (sport as S full join position as P on S.id = P.sport_id) 
-					  full join category as C on S.id = C.sport_id
-                where S.is_invalid = false
+					  full join category as C on S.id = C.sport_id;
                 '''
 
         cursor.execute(query)
