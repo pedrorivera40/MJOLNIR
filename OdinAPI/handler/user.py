@@ -1,4 +1,5 @@
 from flask import jsonify
+from OdinAPI.auth import createHash
 from .dao.user_dao import UserDAO
 
 class UserHandler:
@@ -44,8 +45,12 @@ class UserHandler:
         """
         if username == None or fullName == None or email == None or  password == None:
             return jsonify(Error='Bad Request'), 400
+
+        # Hash the password 
+        hashedPassword = createHash(password)
+        
         dao = UserDAO()
-        res = dao.addDashUser(username, fullName,email, password)
+        res = dao.addDashUser(username, fullName,email, hashedPassword)
         if res == 'UserError1':
             return jsonify(Error='Email has been registered.')
         elif res == 'UserError2':
