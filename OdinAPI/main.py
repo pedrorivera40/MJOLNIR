@@ -162,12 +162,18 @@ def removeUser(duid):
     if request.method == 'PATCH':
         return handler.removeDashUser(duid)
 
-@app.route("/users/<string:duid>/setPermissions",  methods = ['POST', 'PATCH'])
-def addPermissions(duid):
-    if request.method == 'POST':
+@app.route("/users/<string:duid>/setPermissions",  methods = [ 'PATCH'])
+def setPermissions(duid):
+    if request.method == 'PATCH':
         req = request.json
         handler = UserHandler()
-        return  handler.addUserPermissions(duid, req['permissions'])
+        return  handler.setUserPermissions(duid, req['permissions'])
+
+@app.route("/users/<string:duid>/getPermissions",  methods = ['GET'])
+def getPermissions(duid):
+    if request.method == 'GET':
+        handler = UserHandler()
+        return  handler.getUserPermissions(duid)
 
 #Launch app.
 if __name__ == '__main__':

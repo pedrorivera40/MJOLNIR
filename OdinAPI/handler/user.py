@@ -21,10 +21,10 @@ class UserHandler:
         Converts results returned by DAO into a dictionary.
         """
         permissionsDictionary = {}
-        permissionsDictionary['id'] = record[0]
-        permissionsDictionary['user_id'] = record[1]
-        permissionsDictionary['permission_id'] = record[2]
-        permissionsDictionary['is_invalid'] = record[3]
+        # permissionsDictionary['id'] = record[0]
+        # permissionsDictionary['user_id'] = record[1]
+        permissionsDictionary['permission_id'] = record[0]
+        permissionsDictionary['is_invalid'] = record[1]
         return permissionsDictionary
 
     def addDashUser(self, username, fullName,email, password):
@@ -210,7 +210,6 @@ class UserHandler:
             return jsonify(Error='No user found in the system with that id.'), 404
         return jsonify(User=self.mapUserToDict(res)),201
 
-
     def removeDashUser(self, duid):
         """
         Invalidates a user in the database.
@@ -231,7 +230,7 @@ class UserHandler:
             return jsonify(Error='No user found in the system with that id.'), 404
         return jsonify(User=self.mapUserToDict(res)),201
 
-    def addUserPermissions(self,duid,pidList):
+    def setUserPermissions(self,duid,permissionsList):
             """
             Adds permissions to a user.
 
@@ -240,19 +239,40 @@ class UserHandler:
 
             Args:
                 duid: The id of the user's whose permissions will be modified.
-                pidList: A list of the permissions to add to the user.
+                permissionsList: A list of the permissions to add to the user.
             
             Returns:
                 A list containing the response to the database query containing 
                 the matching record of modiffied user permissions.
             """
             dao = UserDAO()
-            permisionsList = dao.addUserPermissions(duid, pidList)
-            if permisionsList == 'UserError4':
+            resultList = dao.setUserPermissions(duid, permissionsList)
+            if resultList == 'UserError4':
                 return jsonify(Error='No User found in the system with that id.'), 404
-            if permisionsList == 'UserError5':
+            if resultList == 'UserError5':
                 return jsonify(Error='Permissions cant be empty.'), 400 # Bad request
             mappedPermissions = []
-            for row in permisionsList:
+            for row in resultList:
                 mappedPermissions.append(self.mapPermissionsToDict(row))
             return jsonify(Permissions=mappedPermissions),201
+
+    def getUserPermissions(self,duid):
+        """
+        Get permissions for a user.
+
+        Get the permissions of a user with the given permission ID.
+
+        Args:
+            duid: Id of the user whose permissions are to be fetched.
+
+        Returns:
+            A list of permission dictionnaries ordered by permission id in ascending fashion.
+        """
+        dao = UserDAO()
+        permisionsList = dao.getUserPermissions(duid)
+        if permisionsList == 'UserError4':
+            return jsonify(Error='No User found in the system with that id.'), 404
+        mappedPermissions = []
+        for row in permisionsList:
+            mappedPermissions.append(self.mapPermissionsToDict(row))
+        return jsonify(Permissions=mappedPermissions),200
