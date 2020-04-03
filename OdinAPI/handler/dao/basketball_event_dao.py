@@ -47,6 +47,30 @@ class BasketballEventDAO:
         result = cursor.fetchone()
         return result
     
+    def getBasketballEventIDInvalid(self,eID,aID):
+        """
+        Checks if invalid basketball event exists.
+
+        This function uses IDs to perform a query to the database
+        that verifies if the invalid Basketball Event exists.
+
+        Args:
+            eID: The ID of the event 
+            aID: The ID of the athlete
+            
+        Returns:
+            The id of the invalid basketball event entry if it exists.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT id
+                FROM basketball_event
+                WHERE event_id = %s and athlete_id = %s and (is_invalid = true);
+                """
+        cursor.execute(query,(int(eID),int(aID),))
+        result = cursor.fetchone()
+        return result
+    
     def getBasketballEventTeamStatsID(self,eID):
         """
         Checks if basketball event team stats exist.
@@ -69,6 +93,55 @@ class BasketballEventDAO:
         cursor.execute(query,(int(eID),))
         result = cursor.fetchone()
         #print(result)
+        return result
+
+    def getBasketballEventTeamStatsIDInvalid(self,eID):
+        """
+        Checks if invalid basketball event team stats exist.
+
+        This function uses IDs to perform a query to the database
+        that verifies if the invalid Basketball Event exists.
+
+        Args:
+            eID: The ID of the event 
+            
+        Returns:
+            The id of the invalid basketball event team stats entry if it exists.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT id
+                FROM basketball_event_team_stats
+                WHERE event_id = %s and (is_invalid = true);
+                """
+        cursor.execute(query,(int(eID),))
+        result = cursor.fetchone()
+        #print(result)
+        return result
+
+    def getFinalScoreInvalid(self,eID):
+        """
+        Gets the invalid final score for a given event. 
+
+        This function uses an ID to perform a query to the database
+        that gets the invalid final score in the system that match the given ID.
+
+        Args:
+            eID: The ID of the event of final score need to be fetched.
+            
+        Returns:
+           The id of the invalid event, if it exists. 
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT local_score, opponent_score, opponent_name, opponent_color, 
+                event_id, id as final_score_id
+                FROM final_score
+                WHERE event_id = %s and 
+                (is_invalid = true)
+                """
+        cursor.execute(query,(int(eID),))
+        result = cursor.fetchone()
         return result
 
     
@@ -377,10 +450,10 @@ class BasketballEventDAO:
         cursor = self.conn.cursor()
         query = """
                 INSERT INTO final_score(local_score,opponent_score,event_id,is_invalid,
-                opponent_score, opponent_color)
+                opponent_name, opponent_color)
                 VALUES(%s,%s,%s,false,%s,%s) returning id;
                 """
-        cursor.execute(query,(int(local_score),int(opponent_score),int(eID),str(opponent_name),str(opponent_color)))
+        cursor.execute(query,(int(local_score),int(opponent_score),int(eID),str(opponent_name),str(opponent_color),))
         fsID = cursor.fetchone()[0]
         if not fsID:
             return fsID
@@ -491,7 +564,8 @@ class BasketballEventDAO:
                     three_point_attempt = %s,
                     successful_three_point = %s,
                     free_throw_attempt = %s,
-                    successful_free_throw = %s
+                    successful_free_throw = %s,
+                    is_invalid = false
                 WHERE event_id = %s and athlete_id = %s 
                 RETURNING
                     points,
@@ -573,7 +647,8 @@ class BasketballEventDAO:
                     three_point_attempt = %s,
                     successful_three_point = %s,
                     free_throw_attempt = %s,
-                    successful_free_throw = %s
+                    successful_free_throw = %s,
+                    is_invalid = false
                 WHERE event_id = %s 
                 RETURNING
                     points,
@@ -604,7 +679,7 @@ class BasketballEventDAO:
         return result
 
     #NEW: edit final score for an event 
-    def editFinalScore(self,eID, local_score, opponent_score):
+    def editFinalScore(self,eID, local_score, opponent_score,opponent_name, opponent_color):
         """
         Updates the final score for the basketball event with the given IDs.
 
@@ -627,15 +702,20 @@ class BasketballEventDAO:
         query = """
                 UPDATE final_score
                 SET local_score = %s,
-                    opponent_score = %s
+                    opponent_score = %s,
+                    opponent_name = %s,
+                    opponent_color = %s,
+                    is_invalid = false
                 WHERE event_id = %s 
                 RETURNING
                     local_score,
-                    opponent_score, 
+                    opponent_score,
+                    opponent_name,
+                    opponent_color, 
                     event_id, 
                     id as final_score_id;
                 """
-        cursor.execute(query,(int(local_score),int(opponent_score),int(eID),))
+        cursor.execute(query,(int(local_score),int(opponent_score),str(opponent_name),str(opponent_color),int(eID),))
         result = cursor.fetchone()
         if not result:
             return result
