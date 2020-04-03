@@ -4,7 +4,7 @@ import os
 import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
-from auth import createHash, verifyHash, generateToken, verifyToken
+from auth import verifyHash, generateToken, verifyToken
 from functools import wraps
 from dotenv import load_dotenv
 import os
@@ -91,6 +91,7 @@ def sportPositions(sid):
     handler = PositionHandler()
     if request.method == 'GET':
         return handler.getPositions(sid)
+
 @app.route("/positions/<int:sid>/<int:aid>", methods = ['GET','POST','PUT'])
 def athletePositions(sid,aid):
     handler = PositionHandler()
@@ -113,8 +114,7 @@ def allUsers():
         return handler.getAllDashUsers()
     if request.method == 'POST':
         ## For account creation
-        password = createHash(req['password'])
-        return handler.addDashUser(req['username'],req['full_name'], req['email'], password)
+        return handler.addDashUser(req['username'],req['full_name'], req['email'], req['password'])
 
 @app.route("/users/<int:duid>", methods = ['GET','PATCH'])
 def userByID(duid):
