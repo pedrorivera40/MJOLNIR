@@ -1,5 +1,5 @@
 from flask import jsonify
-from .dao.position import PositionDAO
+from .dao.position_dao import PositionDAO
 
 class PositionHandler:
 
