@@ -53,7 +53,7 @@ class PBPDao:
             self._db_keywords["score-key"]: score_val
         }
 
-        path = self._db_keywords["root"] + event_id
+        path = self._db_keywords["root"] + int(event_id)
         self._rtdb.reference(path).set(event_node)
 
     def remove_pbp_seq(self, event_id):
@@ -68,47 +68,47 @@ class PBPDao:
             void
         """
 
-        path = self._db_keywords["root"] + event_id
+        path = self._db_keywords["root"] + int(event_id)
         return self._rtdb.reference(path).delete()
 
     def set_pbp_metadata(self, event_id, metadata):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["meta"]).set(metadata)
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["meta"]).set(metadata)
 
     def set_uprm_roster(self, event_id, uprm_roster):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["uprm-roster"]).set(uprm_roster)
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["uprm-roster"]).set(uprm_roster)
 
     def set_opponent_roster(self, event_id, opponent_roster):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["opp-roster"]).set(opponent_roster)
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["opp-roster"]).set(opponent_roster)
 
     def pbp_exists(self, event_id):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id).get() != None
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id)).get() != None
 
     def set_current_set(self, event_id, new_set):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["set"]).set(new_set)
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["set"]).set(new_set)
 
     def get_current_set(self, event_id):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["set"]).get()
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["set"]).get()
 
     def set_uprm_score(self, event_id, set, score):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["score"] + self._db_keywords["uprm-sets"][set - 1]).set(score)
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + self._db_keywords["uprm-sets"][set - 1]).set(score)
 
     def get_uprm_score(self, event_id, set):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["score"] + self._db_keywords["uprm-sets"][set - 1]).get()
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + self._db_keywords["uprm-sets"][set - 1]).get()
 
     def set_opponent_score(self, event_id, set, score):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["score"] + self._db_keywords["opp-sets"][set - 1]).set(score)
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + self._db_keywords["opp-sets"][set - 1]).set(score)
 
     def get_opponent_score(self, event_id, set):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["score"] + self._db_keywords["opp-sets"][set - 1]).get()
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + self._db_keywords["opp-sets"][set - 1]).get()
 
     def pbp_game_action_exists(self, event_id, action_id):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["actions"] + "/" + action_id).get() != None
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["actions"] + "/" + action_id).get() != None
 
     def add_pbp_game_action(self, event_id, action_content):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["actions"]).push(action_content)
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["actions"]).push(action_content)
 
     def edit_pbp_game_action(self, event_id, action_id, action_content):
-        return self._rtdb.reference(self._db_keywords["root"] + event_id + self._db_keywords["actions"] + "/" + action_id).set(action_content)
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["actions"] + "/" + action_id).set(action_content)
 
     def remove_pbp_game_action(self, event_id, action_id):
         """
@@ -117,13 +117,14 @@ class PBPDao:
 
         Args
             event_id: integer corresponding to an event id.
+            action_id: string corresponding to the game action to remove.
 
         Returns:
             void
         """
 
         path = self._db_keywords["root"] + int(event_id) + \
-            self._db_keywords["actions"] + "/" + int(action_id)
+            self._db_keywords["actions"] + "/" + action_id
 
         self._rtdb.reference(path).delete()
 

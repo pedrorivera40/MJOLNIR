@@ -83,6 +83,11 @@ class PBPHandler:
         except:
             return jsonify(ERROR="PBPHandler.startPBPSequence: Could not retrieve information from PBP DAO."), 500
 
+    # TODO -> Add edit metadata method & Docs...
+    def editPBPMetadata(self, metadata):
+        return 1
+
+    # TODO -> Add roster methods... & Docs...
     def addUPRMRoster(self):
         return 1
 
@@ -126,7 +131,7 @@ class PBPHandler:
 
                 if pbp_dao.is_game_over(event_id):
                     return jsonify(ERROR="PBPHandler.addPBPAction: PBP sequence already over."), 403
-                # TODO -> validate sequence info is complete... VALIDATE SPORT == voleibol...
+                # TODO -> validate sequence info is complete...
                 return jsonify(ADDED=pbp_dao.add_pbp_game_action(event_id, {})), 200
 
             return jsonify(ERROR="PBPHandler.addPBPAction: Non-existing PBP sequence."), 403
@@ -148,8 +153,26 @@ class PBPHandler:
         Returns:
             Response containing a MSG in case of success, or ERROR message in case of failure.
         """
+        try:
+            event_dao = EventDAO()
 
-        return 0
+            # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
+            if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
+                return jsonify(MSG="PBPHandler.editPBPAction: Not a volleyball event."), 403
+
+            pbp_dao = VolleyballPBPDao()
+            if pbp_dao.pbp_exists(event_id):
+
+                if pbp_dao.is_game_over(event_id):
+                    return jsonify(ERROR="PBPHandler.editPBPAction: PBP sequence already over."), 403
+                # TODO -> validate sequence info is complete...
+                pbp_dao.edit_pbp_game_action(event_id, action_id, new_action)
+                return jsonify(MSG="Edit game action success."), 200
+
+            return jsonify(ERROR="PBPHandler.editPBPAction: Non-existing PBP sequence."), 403
+
+        except:
+            return jsonify(ERROR="PBPHandler.editPBPAction: Internal error from PBP DAO."), 500
 
     def removePlayPBPAction(self, event_id, game_action_id):
         """
