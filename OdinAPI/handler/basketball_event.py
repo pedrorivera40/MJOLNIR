@@ -347,8 +347,16 @@ class BasketballEventHandler:
 #[20][*] In gieneral check the leftover TODOs
 #[21][ ] LATER: the edit for E V E R Y T H I N G STATS (main route, payload).
 #[22][X] Check that edit also verifies previously existing to avoid editing an invalid data
-#[23][ ][!] Check pull request issue. should I do that that way? right now it says I'm not doing shit lol. 
+#=======>
+# [23][ ][!] Check pull request issue. should I do that that way? right now it says I'm not doing shit lol.
+# [24][ ] clear up inheritance issue, both in dao and handler
+# [25][ ] clear up dao instantiation
+# [26][ ] clear up changes with design documentation like the FInal Results handler being linked to the <sportname> event ...
+# [27][ ] do we need to put the dao = BasketballEventDAO() thing under the try catch? probably...
+# [28][ ] MAIN ROUTES: change so no parameters on route, but on request. update naming. validate json.
+#  
 #=====================================
+
 
 #===========================//HANDLERS//==================================
     
