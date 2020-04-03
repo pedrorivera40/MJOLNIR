@@ -209,7 +209,10 @@ def addPermissions(duid):
 #   	}
 #   	],
 #   "uprm_score": 0,
-#   "opponent_score": 0 }
+#   "opponent_score": 0
+#   "opponent_name" = "name_here"
+#   "opponent_color" = "#HEX_VAL_HERE" 
+# }
 @app.route("/results/basketball/<int:eid>/", methods = ['GET','POST'])
 def basketballStatistics(eid):
     json = request.json
@@ -220,7 +223,7 @@ def basketballStatistics(eid):
         #return handler.getAllStatisticsByBasketballEventID(eid)
     if request.method == 'POST':
         #TODO: change eID to json['event_id']
-        return handler.addAllEventStatistics(eid,json['team_statistics']['basketball_statistics'],json['athlete_statistics'],json['uprm_score'],json['opponent_score'])
+        return handler.addAllEventStatistics(eid,)
         #return jsonify(json),200
     else:
         return jsonify("Method not allowed."), 405
@@ -293,7 +296,9 @@ def basketballTeamStatistics(eid):
 #FORMAT FOR REQUEST:
 # {"attributes":
 #   {
-#   "local_score":2, "opponent_score":2 
+#   "local_score":2, "opponent_score":2
+#   "opponent_name" = "name_here"
+#   "opponent_color" = "#HEX_VAL_HERE"  
 #   }
 # }
 @app.route("/results/basketball/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])

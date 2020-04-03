@@ -91,7 +91,8 @@ class BasketballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                SELECT local_score, opponent_score, event_id, id as final_score_id
+                SELECT local_score, opponent_score, opponent_name, opponent_color, 
+                event_id, id as final_score_id
                 FROM final_score
                 WHERE event_id = %s and 
                 (is_invalid = false or is_invalid is Null)
@@ -300,7 +301,7 @@ class BasketballEventDAO:
                 """
         cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),
         int(turnovers),int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),
-        int(successfulThreePoint),int(freeThrowAttempt),int(successfulFreeThrow),int(eID),int(aID)))
+        int(successfulThreePoint),int(freeThrowAttempt),int(successfulFreeThrow),int(eID),int(aID),))
         sID = cursor.fetchone()[0]
         if not sID:
             return sID
@@ -346,7 +347,7 @@ class BasketballEventDAO:
                 """
         cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),
         int(turnovers),int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),
-        int(successfulThreePoint),int(freeThrowAttempt),int(successfulFreeThrow),int(eID)))
+        int(successfulThreePoint),int(freeThrowAttempt),int(successfulFreeThrow),int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
@@ -354,7 +355,7 @@ class BasketballEventDAO:
         return tsID
 
     #NEW: add final score
-    def addFinalScore(self,eID, local_score, opponent_score):
+    def addFinalScore(self,eID, local_score, opponent_score, opponent_name, opponent_color):
         """
         Adds a new basketball event final score with the provided information.
 
@@ -366,6 +367,8 @@ class BasketballEventDAO:
             eID: the ID of the event for which the final score record will be added.
             local_score: the final score of the local team for the event
             opponent_score: the final score of the opponent team for the event
+            opponent_name: name of the opponent team
+            opponent_color: color to be used for opponent team
             
         Returns:
             A list containing the response to the database query
@@ -373,10 +376,11 @@ class BasketballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO final_score(local_score,opponent_score,event_id,is_invalid)
-                VALUES(%s,%s,%s,false) returning id;
+                INSERT INTO final_score(local_score,opponent_score,event_id,is_invalid,
+                opponent_score, opponent_color)
+                VALUES(%s,%s,%s,false,%s,%s) returning id;
                 """
-        cursor.execute(query,(int(local_score),int(opponent_score),int(eID)))
+        cursor.execute(query,(int(local_score),int(opponent_score),int(eID),str(opponent_name),str(opponent_color)))
         fsID = cursor.fetchone()[0]
         if not fsID:
             return fsID
@@ -611,6 +615,8 @@ class BasketballEventDAO:
             eID: the ID of the event for which the final score record will be updated
             local_score: the local score to be updated
             opponent_score: the opponent score to be updated
+            opponent_name: name of the opponent team
+            opponent_color: color to be used for opponent team
             
         Returns:
             A list containing the response to the database query

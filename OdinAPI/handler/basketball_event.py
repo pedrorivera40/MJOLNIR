@@ -174,8 +174,10 @@ class BasketballEventHandler:
 
     # for final score
     def mapFinalScoreToDict(self,final_record):
-        score = dict(uprm_score = final_record[0], opponent_score = final_record[1])
-        return score
+        score = dict(uprm_score = final_record[0], opponent_score = final_record[1], 
+        opponent_name = final_record[2], opponent_color = final_record[3])
+        event_info = dict(event_id=final_record[4],final_score_id=final_record[5])
+        return dict(event_info = event_info, score = score)
     
     def mapBasketballEventSeasonCollectionToDict(self,record):
         event_info = {}
@@ -307,8 +309,9 @@ class BasketballEventHandler:
 
             athlete_statistics.append(dict(athlete_info = athlete_info, statistics = statistics))
         
-        result = dict(event_info = event_info, team_statistics = team_statistics, athlete_statistic = athlete_statistics, 
-        uprm_score = final_record[0], opponent_score = final_record[1])
+        result = dict(event_info = event_info, team_statistics = team_statistics, 
+        athlete_statistic = athlete_statistics, uprm_score = final_record[0], 
+        opponent_score = final_record[1],opponent_name = final_record[2], opponent_color = final_record[3])
         return result
 
 
@@ -329,7 +332,7 @@ class BasketballEventHandler:
 #       -GetAllStats(eID,aID)       --> GET[X], POST    [X],    PUT[X], REMOVE[X]
 #       -GetTeamStats(eID)          --> GET[X], POST(x2)[X][X], PUT[X], REMOVE[X]
 #       -GetSeasonStats(aID,season) --> GET[X]
-#[8][ ] Error Handling (try catch all of it), and check event form length --> check valid parameters everywhere. valid lenght, valid keys try catch
+#[8][*] Error Handling (try catch all of it), and check event form length --> check valid parameters everywhere. valid lenght, valid keys try catch
 #[9][X] Add the validation of Previously Existing on Add (avoid duplicates) and Remove (cant remove nonexisting). Maybe on update 
 #[10][X]Default is_invalid to false on adds.
 #[11][X]PAYLOAD MEGAQUERY ADD: Add Route to give "payload" JSON as parameter and basically upload ALL results
@@ -342,6 +345,7 @@ class BasketballEventHandler:
 #[18][X]Make it so the parameters Attributes passed to main have the attribute names like the AddAllStatistics payload to be consisten. I know, frutrating
 #[19][ ]How do we catch Dao initialization/handler initialization error?
 #[20][ ] In gieneral check the leftover TODOs
+#[21][ ] LATER: the edit for E V E R Y T H I N G.
 #=====================================
 
 #===========================//HANDLERS//==================================
@@ -693,7 +697,16 @@ class BasketballEventHandler:
                 return jsonify(Error = "Problem inserting new statistics record."),500
         except:
             return jsonify(ERROR="Unable to verify basketball event from DAO."), 500
-        #TODO: should I mention the sport in this part? like, "basketball statistics record" or so
+
+        #update and validate Basketball Event Team Statistic
+        try:
+            team_result = dao.editTeamStatistics(eID)
+            if not result:
+                return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
+            mappedResult = self.mapBasketballEventAthleteStatsToDict(result)
+        except:
+            return jsonify(ERROR="Unable to verify basketball event team statistics from DAO."), 500
+
         dao.commitChanges()
         return jsonify(Basketball_Event_Athlete_Statistics = "Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),201
 
@@ -849,6 +862,8 @@ class BasketballEventHandler:
             attributes:
                local_Score: the final score of the local uprm team
                opponent_Score: the final score of the opponent
+               opponent_name: name of the opponent team
+            opponent_color: color to be used for opponent team
             
         Returns:
             A JSON containing the final score id for the new Basketball Event team statistics record.
@@ -873,7 +888,8 @@ class BasketballEventHandler:
          
         # Create and Validate new Basketball_Event final score
         try:
-            result = dao.addFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
+            result = dao.addFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'],
+            attributes['opponent_name'],attributes['opponent_color'])
             if not result:
                 return jsonify(Error = "Problem inserting new final score record."),500
         except:
@@ -882,68 +898,8 @@ class BasketballEventHandler:
         dao.commitChanges()
         return jsonify(Basketball_Event_Team_Stats = "Added new final score record with id:{} for event id:{}.".format(result,eID)),201
 
-    # THE JSON REQUEST PARAMETER FORMAT(Volleyball version, mostly the same tho...)
-    # { "event_id": 5,
-    # "team_statistics": 
-    # { "basketball_statistics": 
-    #     { "points":500,
-    #         "rebounds":500,
-    #         "assists":500,
-    #         "steals":500,
-    #         "blocks":500,
-    #         "turnovers":500,
-    #         "field_goal_attempt":500,
-    #         "successful_field_goal":500,
-    #         "three_point_attempt":500,
-    #         "successful_three_point":500,
-    #         "free_throw_attempt":500,
-    #         "successful_free_throw":500
-    #     } 
-    # },
-    # "athlete_statistics": 
-    # [
-    #     {"athlete_id":4,
-    #     "statistics":
-    #         {"basketball_statistics":
-    #             {"points":2,
-    #             "rebounds":2,
-    #             "assists":2,
-    #             "steals":2,
-    #             "blocks":2,
-    #             "turnovers":2,
-    #             "field_goal_attempt":2,
-    #             "successful_field_goal":2,
-    #             "three_point_attempt":2,
-    #             "successful_three_point":2,
-    #             "free_throw_attempt":2,
-    #             "successful_free_throw":2
-    #             }
-    #         }
-    #     },
-    #     {"athlete_id":8,
-    #     "statistics":
-    #         {"basketball_statistics":
-    #             {"points":1,
-    #             "rebounds":1,
-    #             "assists":1,
-    #             "steals":1,
-    #             "blocks":1,
-    #             "turnovers":1,
-    #             "field_goal_attempt":1,
-    #             "successful_field_goal":1,
-    #             "three_point_attempt":1,
-    #             "successful_three_point":1,
-    #             "free_throw_attempt":1,
-    #             "successful_free_throw":1
-    #             }
-    #         }
-    #     }
-    #     ],
-    # "uprm_score": 0,
-    # "opponent_score": 0 }
-
     #NEW: the mega query
-    def addAllEventStatistics(self,eID,team_statistics,athlete_statistics,local_score,opponent_score):
+    def addAllEventStatistics(self,eID,attributes):
         """
         Adds new statistics records with the provided information.
 
@@ -954,39 +910,48 @@ class BasketballEventHandler:
         Args:
             eID: the ID of the event for which the statistics record will be added.
             team_statistics: the IDs of the athletes for which the statistics record will be added.
-            Athlete Statistics:
-                athlete_id: the id for which the athlete statistics will be added for
-                points: number of points scored by the athlete in the event.
-                rebounds: number of rebounds attained by the athlete in the event.
-                assists: number of assists attained by the athlete in the event.
-                steals: number of steals attained by the athlete in the event.
-                blocks: number of blocks attained by the athlete in the event.
-                turnovers: number of turnovers attained by the athlete in the event.
-                fieldGoalAttempt: number of field goal attempts attained by the athlete in the event.
-                successfulFieldGoal: number of successful field goals attained by the athlete in the event.
-                threePointAttempt: number of three point attempts attained by the athlete in the event.
-                successfulThreePoint: number of successful three point shots attained by the athlete in the event.
-                freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
-                successfulFreeThrow: number of successful free throws attained by the athlete in the event.
-            team_statistis:
-                points: number of points scored by the team in the event.
-                rebounds: number of rebounds attained by the team in the event.
-                assists: number of assists attained by the team in the event.
-                steals: number of steals attained by the team in the event.
-                blocks: number of blocks attained by the team in the event.
-                turnovers: number of turnovers attained by the team in the event.
-                fieldGoalAttempt: number of field goal attempts attained by the team in the event.
-                successfulFieldGoal: number of successful field goals attained by the team in the event.
-                threePointAttempt: number of three point attempts attained by the team in the event.
-                successfulThreePoint: number of successful three point shots attained by the team in the event.
-                freeThrowAttempt: number of free throw attempts attained by the team in the event.
-                successfulFreeThrow: number of successful free throws attained by the team in the event.
-            local_score: the final score for the local uprm team
-            opponent_score: the final score for the opponent team
+            Attributes:
+                Athlete Statistics:
+                    athlete_id: the id for which the athlete statistics will be added for
+                    points: number of points scored by the athlete in the event.
+                    rebounds: number of rebounds attained by the athlete in the event.
+                    assists: number of assists attained by the athlete in the event.
+                    steals: number of steals attained by the athlete in the event.
+                    blocks: number of blocks attained by the athlete in the event.
+                    turnovers: number of turnovers attained by the athlete in the event.
+                    fieldGoalAttempt: number of field goal attempts attained by the athlete in the event.
+                    successfulFieldGoal: number of successful field goals attained by the athlete in the event.
+                    threePointAttempt: number of three point attempts attained by the athlete in the event.
+                    successfulThreePoint: number of successful three point shots attained by the athlete in the event.
+                    freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
+                    successfulFreeThrow: number of successful free throws attained by the athlete in the event.
+                team_statistis:
+                    points: number of points scored by the team in the event.
+                    rebounds: number of rebounds attained by the team in the event.
+                    assists: number of assists attained by the team in the event.
+                    steals: number of steals attained by the team in the event.
+                    blocks: number of blocks attained by the team in the event.
+                    turnovers: number of turnovers attained by the team in the event.
+                    fieldGoalAttempt: number of field goal attempts attained by the team in the event.
+                    successfulFieldGoal: number of successful field goals attained by the team in the event.
+                    threePointAttempt: number of three point attempts attained by the team in the event.
+                    successfulThreePoint: number of successful three point shots attained by the team in the event.
+                    freeThrowAttempt: number of free throw attempts attained by the team in the event.
+                    successfulFreeThrow: number of successful free throws attained by the team in the event.
+                local_score: the final score for the local uprm team
+                opponent_score: the final score for the opponent team
+                opponent_name: name of the opponent team
+                opponent_color: color to be used for opponent team
             
         Returns:
             A JSON the id for the new Basketball Event record.
         """
+        team_statistics = attributes['team_statistics']['basketball_statistics']
+        athlete_statistics = attributes['athlete_statistics']
+        local_score = attributes['uprm_score']
+        opponent_score = attributes['opponent_score']
+        opponent_score = attributes['opponent_name']
+        opponent_color = attributes['opponent_color']
 
         dao = BasketballEventDAO()
         # Validate Avoid Duplication Team Stats
@@ -1024,9 +989,9 @@ class BasketballEventHandler:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
          
         # Go through every set of athlete to add attributes for. 
-        for attributes in athlete_statistics:
+        for athlete_attributes in athlete_statistics:
 
-            aID = attributes['athlete_id']
+            aID = athlete_attributes['athlete_id']
             try:
                 # Validate Avoid Duplication Basketball Event Entry
                 if dao.getBasketballEventID(eID,aID):
@@ -1035,7 +1000,7 @@ class BasketballEventHandler:
                 return jsonify(ERROR="Unable to verify basketball event from DAO."), 500
          
             # Validate existing athlete 
-            statistics = attributes['statistics']['basketball_statistics']
+            statistics = athlete_attributes['statistics']['basketball_statistics']
             a_dao = AthleteDAO()
             try:
                 athlete = a_dao.getAthleteByID(aID)
@@ -1062,13 +1027,13 @@ class BasketballEventHandler:
             except:
                 return jsonify(ERROR="Unable to verify basketball event from DAO."), 500
          
-            #TODO: should I mention the sport in this part? like, "basketball statistics record" or so
+      
             # SUCCESS MESSAGE
             # return jsonify(Basketball_Event_Athlete_Statistics = "Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),201
 
         # Create and Validate Final Score entry
         try:
-            result = dao.addFinalScore(eID,local_score, opponent_score)
+            result = dao.addFinalScore(eID,local_score, opponent_score, opponent_name, opponent_color)
             if not result:
                 return jsonify(Error = "Problem inserting new final score record."),500
         except:
@@ -1091,7 +1056,7 @@ class BasketballEventHandler:
 
 
 #===========================//III.PUTS//====================================
-    #TODO: Need to call the update team statistics call
+
     def editStatistics(self,eID,aID,attributes): # Instantiates a Basketball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
         """
         Updates the statistics for the basketball event with the given IDs.
@@ -1211,6 +1176,11 @@ class BasketballEventHandler:
 
         Args:
             eID: the ID of the event for which the final score record will be updated.
+            attributes:
+                local_score: the score of the local uprm team
+                opponent_score: the score of the opponent team
+                opponent_name: name of the opponent team
+                opponent_color: color to be used for opponent team
         
             
         Returns:
@@ -1230,7 +1200,8 @@ class BasketballEventHandler:
         # Update and Validate Basketball event final score, format returnable
         dao = BasketballEventDAO()
         try:
-            result = dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
+            result = dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'],
+            attributes['opponent_name'],attributes['opponent_color'])
             if not result:
                 return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
             mappedResult = self.mapFinalScoreToDict(result)
@@ -1241,7 +1212,6 @@ class BasketballEventHandler:
         return jsonify(Basketball_Event_Team_Stats = mappedResult),200
 
 #===========================//IV.PATCH//====================================
-    #TODO: need to add the update team statistics call
     def removeStatistics(self,eID,aID): # Instantiates a Basketball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
         """
         Invalidates a statistics record in the database based on the given IDs.
@@ -1286,6 +1256,15 @@ class BasketballEventHandler:
         except:
             return jsonify(ERROR="Unable to verify basketball event from DAO."), 500
          
+        #update and validate Basketball Event Team Statistic
+        try:
+            team_result = dao.editTeamStatistics(eID)
+            if not result:
+                return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
+            mappedResult = self.mapBasketballEventAthleteStatsToDict(result)
+        except:
+            return jsonify(ERROR="Unable to verify basketball event team statistics from DAO."), 500
+
         dao.commitChanges()
         return jsonify(Basketball_Event_Athlete_Statistics = "Removed statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),200
 
