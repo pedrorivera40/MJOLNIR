@@ -1,5 +1,5 @@
 from flask import jsonify
-from .dao.athlete import AthleteDAO
+from .dao.athlete_dao import AthleteDAO
 
 class AthleteHandler:
     
