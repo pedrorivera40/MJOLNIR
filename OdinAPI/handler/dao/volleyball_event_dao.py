@@ -4,15 +4,16 @@ import psycopg2
 
 class VolleyballEventDAO:
 
+
+# athletes 70 and 71 play F Volleybal (12) on Teams 4 and 5. 
+
+
 # getAllStatisticsByEventID(eID)//Return all statistics of a Volleyball Event event.
 # getAllAthleteStatisticsByEventId(eID,aID)//Returns all of an Athlete statistics of a Volleyball Event for a given id.
 # addStatistics(eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalPe rcentage,threePointPercentage,freeThrowPercentage)//Adds a Volleyball Event record in the database and returns the id of the inserted record.
 # editStatistics(eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalPe rcentage,threePointPercentage,freeThrowPercentage)//Edits a Volleyball record in the database for a specific Athlete during an Event by the ids given and returns the updated record.
 # removesStatistics(eID, aID)//Invalidates a Volleyball Event record on a database and it returns the invalidated record.
 # commitChanges()//Commits changes on the database after an insertion or update query.
-
-#TODO: need to add not-invalid check to all the queries
-
     def __init__(self):
         connection_url = "dbname={} user={} password={} host ={} ".format(
         db_config['database'],
@@ -47,6 +48,30 @@ class VolleyballEventDAO:
         result = cursor.fetchone()
         return result
     
+    def getVolleyballEventIDInvalid(self,eID,aID):
+        """
+        Checks if invalid volleyball event exists.
+
+        This function uses IDs to perform a query to the database
+        that verifies if the invalid Volleyball Event exists.
+
+        Args:
+            eID: The ID of the event 
+            aID: The ID of the athlete
+            
+        Returns:
+            The id of the invalid volleyball event entry if it exists.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT id
+                FROM volleyball_event
+                WHERE event_id = %s and athlete_id = %s and (is_invalid = true);
+                """
+        cursor.execute(query,(int(eID),int(aID),))
+        result = cursor.fetchone()
+        return result
+    
     def getVolleyballEventTeamStatsID(self,eID):
         """
         Checks if volleyball event team stats exist.
@@ -71,6 +96,55 @@ class VolleyballEventDAO:
         #print(result)
         return result
 
+    def getVolleyballEventTeamStatsIDInvalid(self,eID):
+        """
+        Checks if invalid volleyball event team stats exist.
+
+        This function uses IDs to perform a query to the database
+        that verifies if the invalid Volleyball Event exists.
+
+        Args:
+            eID: The ID of the event 
+            
+        Returns:
+            The id of the invalid volleyball event team stats entry if it exists.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT id
+                FROM volleyball_event_team_stats
+                WHERE event_id = %s and (is_invalid = true);
+                """
+        cursor.execute(query,(int(eID),))
+        result = cursor.fetchone()
+        #print(result)
+        return result
+
+    def getFinalScoreInvalid(self,eID):
+        """
+        Gets the invalid final score for a given event. 
+
+        This function uses an ID to perform a query to the database
+        that gets the invalid final score in the system that match the given ID.
+
+        Args:
+            eID: The ID of the event of final score need to be fetched.
+            
+        Returns:
+           The id of the invalid event, if it exists. 
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT local_score, opponent_score, opponent_name, opponent_color, 
+                event_id, id as final_score_id
+                FROM final_score
+                WHERE event_id = %s and 
+                (is_invalid = true)
+                """
+        cursor.execute(query,(int(eID),))
+        result = cursor.fetchone()
+        return result
+
     
 #=============================//GETS//=======================
     #NEW get the final score table detal
@@ -91,7 +165,8 @@ class VolleyballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                SELECT local_score, opponent_score, event_id, id as final_score_id
+                SELECT local_score, opponent_score, opponent_name, opponent_color, 
+                event_id, id as final_score_id
                 FROM final_score
                 WHERE event_id = %s and 
                 (is_invalid = false or is_invalid is Null)
@@ -122,8 +197,8 @@ class VolleyballEventDAO:
                 SELECT
                 athlete.id as athlete_id, athlete.first_name, athlete.middle_name, athlete.last_names, 
                 athlete.number, athlete.profile_image_link,
-                kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors, 
-                reception_errors, 
+                kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
+                reception_errors,
                 volleyball_event.event_id, volleyball_event.id as volleyball_event_id
                 FROM volleyball_event
                 INNER JOIN athlete ON athlete.id = volleyball_event.athlete_id
@@ -159,11 +234,8 @@ class VolleyballEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT
-                points,rebounds,assists,steals,blocks,turnovers,field_goal_attempt,successful_field_goal,
-                three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
-                get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
-                get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
+                reception_errors,
                 volleyball_event.event_id, volleyball_event.id as volleyball_event_id, volleyball_event.athlete_id
                 FROM volleyball_event
                 WHERE event_id = %s and athlete_id = %s and 
@@ -195,11 +267,8 @@ class VolleyballEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT
-                points,rebounds,assists,steals,blocks,turnovers,field_goal_attempt,successful_field_goal,
-                three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
-                get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
-                get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
+                reception_errors,
                 volleyball_event_team_stats.event_id, volleyball_event_team_stats.id as volleyball_event_team_stats_id
                 FROM volleyball_event_team_stats
                 WHERE event_id = %s  and 
@@ -233,11 +302,8 @@ class VolleyballEventDAO:
         query = """
                 SELECT
                 event.id as event_id, event.event_date,
-                points,rebounds,assists,steals,blocks,turnovers,field_goal_attempt,successful_field_goal,
-                three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
-                get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
-                get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
+                reception_errors,
                 volleyball_event.id as volleyball_event_id,
                 volleyball_event.athlete_id
                 FROM volleyball_event
@@ -259,8 +325,8 @@ class VolleyballEventDAO:
     # Need to validate: event exists. athlete belongs to team  that is tied to the event. 
     # needless to say, a bunch changes since these are more complex statistics...
     # TODO: need to update documentation, substitute percentages for success/attempt.
-    def addStatistics(self,eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalAttempt, 
-    successfulFieldGoal,threePointAttempt,successfulThreePoint, freeThrowAttempt,successfulFreeThrow):
+    def addStatistics(self,eID,aID,kill_points, attack_errors, assists, aces, service_errors, 
+    digs, blocks, blocking_errors,reception_errors):
         """
         Adds a new volleyball event statistics record with the provided information.
 
@@ -271,18 +337,15 @@ class VolleyballEventDAO:
         Args:
             eID: the ID of the event for which the statistics record will be added.
             aID: the ID of the athlete for which the statistics record will be added.
-            points: number of points scored by the athlete in the event.
-            rebounds: number of rebounds attained by the athlete in the event.
-            assists: number of assists attained by the athlete in the event.
-            steals: number of steals attained by the athlete in the event.
-            blocks: number of blocks attained by the athlete in the event.
-            turnovers: number of turnovers attained by the athlete in the event.
-            fieldGoalAttempt: number of field goal attempts attained by the athlete in the event.
-            successfulFieldGoal: number of successful field goals attained by the athlete in the event.
-            threePointAttempt: number of three point attempts attained by the athlete in the event.
-            successfulThreePoint: number of successful three point shots attained by the athlete in the event.
-            freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
-            successfulFreeThrow: number of successful free throws attained by the athlete in the event.
+            kill_points:
+            attack_errors:
+            assists:
+            aces:
+            service_errors:
+            digs:
+            blocks:
+            blocking_errors:
+            reception_errors:
             
         Returns:
             A list containing the response to the database query
@@ -290,14 +353,13 @@ class VolleyballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO volleyball_event(points,rebounds,assists,steals,blocks,turnovers,
-                field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
-                free_throw_attempt,successful_free_throw,event_id,athlete_id,is_invalid)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
+                INSERT INTO volleyball_event(kill_points, attack_errors,
+                assists, aces, service_errors, digs, blocks, blocking_errors,
+                reception_errors,event_id,athlete_id,is_invalid)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),
-        int(turnovers),int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),
-        int(successfulThreePoint),int(freeThrowAttempt),int(successfulFreeThrow),int(eID),int(aID)))
+        cursor.execute(query,(int(kill_points),int(attack_errors),int(assists),int(aces),int(service_errors),int(digs),int(blocks),
+        int(blocking_errors),int(reception_errors),int(eID),int(aID),))
         sID = cursor.fetchone()[0]
         if not sID:
             return sID
@@ -306,8 +368,8 @@ class VolleyballEventDAO:
 
     
     #NEW: add team statistics aggregate passed by parameter
-    def addTeamStatistics(self,eID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalAttempt, 
-    successfulFieldGoal,threePointAttempt,successfulThreePoint, freeThrowAttempt,successfulFreeThrow):
+    def addTeamStatistics(self,eID,kill_points, attack_errors, assists, aces, service_errors, 
+    digs, blocks, blocking_errors,reception_errors):
         """
         Adds a new volleyball event team statistics record with the provided information.
 
@@ -317,18 +379,15 @@ class VolleyballEventDAO:
 
         Args:
             eID: the ID of the event for which the team statistics record will be added.
-            points: numer of points scored by the team in the event.
-            rebounds: number of rebounds attained by the team in the event.
-            assists: number of assists attained by the team in the event.
-            steals: number of steals attained by the team in the event.
-            blocks: number of blocks attained by the team in the event.
-            turnovers: number of turnovers attained by the team in the event.
-            fieldGoalAttempt: number of field goal attempts attained by the team in the event.
-            successfulFieldGoal: number of successful field goals attained by the team in the event.
-            threePointAttempt: number of three point attempts attained by the team in the event.
-            successfulThreePoint: number of successful three point shots attained by the team in the event.
-            freeThrowAttempt: number of free throw attempts attained by the team in the event.
-            successfulFreeThrow: number of successful free throws attained by the team in the event.
+            kill_points:
+            attack_errors:
+            assists:
+            aces:
+            service_errors:
+            digs:
+            blocks:
+            blocking_errors:
+            reception_errors:
             
         Returns:
             A list containing the response to the database query
@@ -336,14 +395,13 @@ class VolleyballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO volleyball_event_team_stats(points,rebounds,assists,steals,blocks,turnovers,
-                field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
-                free_throw_attempt,successful_free_throw,event_id,is_invalid)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
+                INSERT INTO volleyball_event_team_stats(kill_points, attack_errors,
+                assists, aces, service_errors, digs, blocks, blocking_errors,
+                reception_errors,event_id,is_invalid)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),
-        int(turnovers),int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),
-        int(successfulThreePoint),int(freeThrowAttempt),int(successfulFreeThrow),int(eID)))
+        cursor.execute(query,(int(kill_points),int(attack_errors),int(assists),int(aces),int(service_errors),int(digs),int(blocks),
+        int(blocking_errors),int(reception_errors),int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
@@ -351,7 +409,7 @@ class VolleyballEventDAO:
         return tsID
 
     #NEW: add final score
-    def addFinalScore(self,eID, local_score, opponent_score):
+    def addFinalScore(self,eID, local_score, opponent_score, opponent_name, opponent_color):
         """
         Adds a new volleyball event final score with the provided information.
 
@@ -363,6 +421,8 @@ class VolleyballEventDAO:
             eID: the ID of the event for which the final score record will be added.
             local_score: the final score of the local team for the event
             opponent_score: the final score of the opponent team for the event
+            opponent_name: name of the opponent team
+            opponent_color: color to be used for opponent team
             
         Returns:
             A list containing the response to the database query
@@ -370,10 +430,11 @@ class VolleyballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO final_score(local_score,opponent_score,event_id,is_invalid)
-                VALUES(%s,%s,%s,false) returning id;
+                INSERT INTO final_score(local_score,opponent_score,event_id,is_invalid,
+                opponent_name, opponent_color)
+                VALUES(%s,%s,%s,false,%s,%s) returning id;
                 """
-        cursor.execute(query,(int(local_score),int(opponent_score),int(eID)))
+        cursor.execute(query,(int(local_score),int(opponent_score),int(eID),str(opponent_name),str(opponent_color),))
         fsID = cursor.fetchone()[0]
         if not fsID:
             return fsID
@@ -407,11 +468,9 @@ class VolleyballEventDAO:
                 FROM volleyball_event
                 WHERE (is_invalid=false or is_invalid is null))
                 select 
-                sum(points) as points,sum(rebounds) as rebounds, sum(assists) as assists,sum(steals) as steals,
-                sum(blocks) as blocks,sum(turnovers) as turnovers,sum(field_goal_attempt) as field_goal_attempt,
-                sum(successful_field_goal) as successful_field_goal,sum(three_point_attempt) as three_point_attempt,
-                sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,
-                sum(successful_free_throw) as successful_free_throw
+                sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
+                sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
+                sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors
                 from valid_volleyball_events
                 WHERE event_id = %s;
                 """
@@ -421,14 +480,12 @@ class VolleyballEventDAO:
         if not resultTeam:
             return resultTeam
         query = """
-                INSERT INTO volleyball_event_team_stats(points,rebounds,assists,steals,blocks,turnovers,
-                field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
-                free_throw_attempt,successful_free_throw,event_id,is_invalid)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
+                INSERT INTO volleyball_event_team_stats(kill_points, attack_errors, assists, aces, service_errors, 
+                digs, blocks, blocking_errors,reception_errors,event_id,is_invalid)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
-        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
-        int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
+        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
@@ -438,8 +495,8 @@ class VolleyballEventDAO:
 #=============================//PUTS//=======================
 
     #TODO: recal athlete will be validaded by handler
-    def editStatistics(self,eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalAttempt, 
-    successfulFieldGoal,threePointAttempt,successfulThreePoint, freeThrowAttempt,successfulFreeThrow):
+    def editStatistics(self,eID,aID,kill_points, attack_errors, assists, aces, service_errors, 
+    digs, blocks, blocking_errors,reception_errors):
         """
         Updates the statistics for the volleyball event with the given IDs.
 
@@ -450,18 +507,15 @@ class VolleyballEventDAO:
         Args:
             eID: the ID of the event for which the statistics record will be updated.
             aID: the ID of the athlete for which the statistics record will be updated.
-            points: number of points scored by the athlete in the event.
-            rebounds: number of rebounds attained by the athlete in the event.
-            assists: number of assists attained by the athlete in the event.
-            steals: number of steals attained by the athlete in the event.
-            blocks: number of blocks attained by the athlete in the event.
-            turnovers: number of turnovers attained by the athlete in the event.
-            fieldGoalAttempt: number of field goal attempts attained by the athlete in the event.
-            successfulFieldGoal: number of successful field goals attained by the athlete in the event.
-            threePointAttempt: number of three point attempts attained by the athlete in the event.
-            successfulThreePoint: number of successful three point shots attained by the athlete in the event.
-            freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
-            successfulFreeThrow: number of successful free throws attained by the athlete in the event.
+            kill_points:
+            attack_errors:
+            assists:
+            aces:
+            service_errors:
+            digs:
+            blocks:
+            blocking_errors:
+            reception_errors:
             
         Returns:
             A list containing the response to the database query
@@ -473,41 +527,32 @@ class VolleyballEventDAO:
         cursor = self.conn.cursor()
         query = """
                 UPDATE volleyball_event
-                SET points = %s,
-                    rebounds = %s,
+                SET kill_points = %s,
+                    attack_errors = %s,
                     assists = %s,
-                    steals = %s,
+                    aces = %s,
+                    service_errors = %s,
+                    digs = %s,
                     blocks = %s,
-                    turnovers = %s,
-                    field_goal_attempt = %s,
-                    successful_field_goal = %s,
-                    three_point_attempt = %s,
-                    successful_three_point = %s,
-                    free_throw_attempt = %s,
-                    successful_free_throw = %s
+                    blocking_errors = %s,
+                    reception_errors = %s,
+                    is_invalid = false
                 WHERE event_id = %s and athlete_id = %s 
                 RETURNING
-                    points,
-                    rebounds,
+                    kill_points,
+                    attack_errors,
                     assists,
-                    steals,
+                    aces,
+                    service_errors,
+                    digs,
                     blocks,
-                    turnovers,
-                    field_goal_attempt,
-                    successful_field_goal,
-                    three_point_attempt,
-                    successful_three_point,
-                    free_throw_attempt,
-                    successful_free_throw,
-                    get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
-                    get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                    blocking_errors,
+                    reception_errors,
                     volleyball_event.event_id, volleyball_event.id as volleyball_event_id, volleyball_event.athlete_id;
 
                 """
-        cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),int(turnovers),
-        int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),int(successfulThreePoint),
-        int(freeThrowAttempt),int(successfulFreeThrow),int(eID),int(aID),))
+        cursor.execute(query,(int(kill_points),int(attack_errors),int(assists),int(aces),int(service_errors),int(digs),int(blocks),
+        int(blocking_errors),int(reception_errors),int(eID),int(aID),))
         result = cursor.fetchone()
         if not result:
             return result
@@ -539,11 +584,9 @@ class VolleyballEventDAO:
                 FROM volleyball_event
                 WHERE (is_invalid=false or is_invalid is null))
                 select 
-                sum(points) as points,sum(rebounds) as rebounds, sum(assists) as assists,sum(steals) as steals,
-                sum(blocks) as blocks,sum(turnovers) as turnovers,sum(field_goal_attempt) as field_goal_attempt,
-                sum(successful_field_goal) as successful_field_goal,sum(three_point_attempt) as three_point_attempt,
-                sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,
-                sum(successful_free_throw) as successful_free_throw
+                sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
+                sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
+                sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors
                 from valid_volleyball_events
                 WHERE event_id = %s;
                 """
@@ -555,41 +598,33 @@ class VolleyballEventDAO:
         #the second query updates the volleyball_event_team_stats based on aggregate results
         query = """
                 UPDATE volleyball_event_team_stats
-                SET points = %s,
-                    rebounds = %s,
+                SET kill_points = %s,
+                    attack_errors = %s,
                     assists = %s,
-                    steals = %s,
+                    aces = %s,
+                    service_errors = %s,
+                    digs = %s,
                     blocks = %s,
-                    turnovers = %s,
-                    field_goal_attempt = %s,
-                    successful_field_goal = %s,
-                    three_point_attempt = %s,
-                    successful_three_point = %s,
-                    free_throw_attempt = %s,
-                    successful_free_throw = %s
-                WHERE event_id = %s 
+                    blocking_errors = %s,
+                    reception_errors = %s,
+                    is_invalid = false
+                WHERE event_id = %s
                 RETURNING
-                    points,
-                    rebounds,
+                    kill_points,
+                    attack_errors,
                     assists,
-                    steals,
+                    aces,
+                    service_errors,
+                    digs,
                     blocks,
-                    turnovers,
-                    field_goal_attempt,
-                    successful_field_goal,
-                    three_point_attempt,
-                    successful_three_point,
-                    free_throw_attempt,
-                    successful_free_throw,
-                    get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
-                    get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
-                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                    blocking_errors,
+                    reception_errors,
                     volleyball_event_team_stats.event_id, volleyball_event_team_stats.id as volleyball_event_team_stats_id;
 
                 """
         cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
         int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
-        int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
+        int(eID),))
         result = cursor.fetchone()
         if not result:
             return result
@@ -597,7 +632,7 @@ class VolleyballEventDAO:
         return result
 
     #NEW: edit final score for an event 
-    def editFinalScore(self,eID, local_score, opponent_score):
+    def editFinalScore(self,eID, local_score, opponent_score,opponent_name, opponent_color):
         """
         Updates the final score for the volleyball event with the given IDs.
 
@@ -608,6 +643,8 @@ class VolleyballEventDAO:
             eID: the ID of the event for which the final score record will be updated
             local_score: the local score to be updated
             opponent_score: the opponent score to be updated
+            opponent_name: name of the opponent team
+            opponent_color: color to be used for opponent team
             
         Returns:
             A list containing the response to the database query
@@ -618,15 +655,20 @@ class VolleyballEventDAO:
         query = """
                 UPDATE final_score
                 SET local_score = %s,
-                    opponent_score = %s
+                    opponent_score = %s,
+                    opponent_name = %s,
+                    opponent_color = %s,
+                    is_invalid = false
                 WHERE event_id = %s 
                 RETURNING
                     local_score,
-                    opponent_score, 
+                    opponent_score,
+                    opponent_name,
+                    opponent_color, 
                     event_id, 
                     id as final_score_id;
                 """
-        cursor.execute(query,(int(local_score),int(opponent_score),int(eID),))
+        cursor.execute(query,(int(local_score),int(opponent_score),str(opponent_name),str(opponent_color),int(eID),))
         result = cursor.fetchone()
         if not result:
             return result
