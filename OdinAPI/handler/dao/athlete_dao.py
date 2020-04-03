@@ -10,6 +10,7 @@ class AthleteDAO:
         db_config['password'],
         db_config['host']
         )
+
         self.conn = psycopg2.connect(connection_url)#Establish a connection with the relational database.
 
 
@@ -80,7 +81,7 @@ class AthleteDAO:
     def getAthleteByName(self,aFName,aMName,aLName):
         cursor = self.conn.cursor()
         query = None
-        if aMName:
+        if not aMName:        
             query = "select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.profile_image_link "\
                     "from athlete as A "\
                     "where A.first_name = %s "\
@@ -435,17 +436,16 @@ class AthleteDAO:
         This effectively acts as a removal of the athlete in 
         from the system.
         """
+        
         cursor = self.conn.cursor()
-        query = "update athlete "\
-                "set is_invalid = 'true' "\
-                "where id = %s "\
-                "returning id"
-        cursor.execute(query,(aID,))
-        result = cursor.fetchone()[0]
-        if not result:
-            return result
+        query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id,is_invalid) "\
+                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;"
+        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))
+        aID = cursor.fetchone()[0]
+        if not aID:
+            return aID
         self.commitChanges()
-        return result
+        return aID
 
     def sportExists(self,cursor,sID):
         """
