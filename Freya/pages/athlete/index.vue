@@ -11,7 +11,7 @@
             <v-row>
               <v-col
                 cols="12"
-                md="4"
+                md="2"
               >
                 <ValidationProvider v-slot="{ errors }" name="Nombre" rules="required|alpha|max:20">
                   <v-text-field
@@ -26,7 +26,7 @@
 
               <v-col
                 cols="12"
-                md="4"
+                md="3"
               >
                 <ValidationProvider v-slot="{ errors }" name="Segundo Nombre" rules="alpha">
                   <v-text-field
@@ -53,7 +53,34 @@
                   ></v-text-field>
                 </ValidationProvider> 
               </v-col>
-              <v-spacer />
+              
+               <v-col cols="12" sm="6" md="3">
+                <v-menu
+                  ref="menu"
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  :return-value.sync="date"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+               
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="date"
+                      label="Fecha de nacimiento"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker v-model="date" no-title scrollable locale="es-419">
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                    <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                  </v-date-picker>
+                </v-menu>
+              </v-col>  
             </v-row>
             
             <ValidationProvider v-slot="{ errors }" name="Biografia" rules="max:1000">
@@ -71,9 +98,10 @@
             <v-row>
               <v-col
                 cols="1"
-                md="2"
+                md="3"
               >
-              <span>Estatura: </span>
+
+              <h2>Estatura:</h2>
                
               </v-col>
 
@@ -87,21 +115,25 @@
                   label ="Pies"
                   prepend-icon="mdi-human-male-height"
                 ></v-select>
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="4"
-              >
-                <v-select
+                 <v-select
                   v-model="height_inches"
                   :items="inches"
                   label ="Pulgadas"
+                  prepend-icon="mdi-human-male-height"
                 ></v-select>
               </v-col>
             </v-row>
 
             <v-row>
+
+              <v-col
+                cols="1"
+                md="3"
+              >
+
+              <h2>Educacion:</h2>
+               
+              </v-col>
 
               <v-col
               cols="12"
@@ -134,55 +166,24 @@
                   ></v-text-field>
                 </ValidationProvider>
               </v-col>
-
-              <v-col
-              cols="12"
-              md="4"
-              >
-                <ValidationProvider v-slot="{ errors }" name="Enlace de Imagen de Perfil" rules="">
-                  <v-text-field
-                    v-model="school_of_precedence"
-                    :error-messages="errors"                    
-                    label="Enlace de Imagen de Perfil"
-                    prepend-icon="mdi-link"
-                    required
-                  ></v-text-field>
-                </ValidationProvider>
-              </v-col>
+              
             </v-row>
 
-            <v-row>
-               <v-col cols="12" sm="6" md="3">
-                <v-menu
-                  ref="menu"
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  :return-value.sync="date"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="290px"
-                >
+            <v-row> 
+              
+              <v-col
+                cols="1"
+                md="3"
+              >
+
+              <h2>Deporte:</h2>
                
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="date"
-                      label="Fecha de nacimiento"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker v-model="date" no-title scrollable>
-                    <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                    <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-                  </v-date-picker>
-                </v-menu>
               </v-col>
+            
 
               <v-col
-                cols="12"
-                md="4"
+                cols="12" 
+                md="4"               
               >
                 <v-select
                   v-model="sport"
@@ -190,25 +191,84 @@
                   label ="Deporte"
                   prepend-icon="mdi-volleyball"
                 ></v-select>
-              </v-col>
 
-              <v-col
-                cols="12"
-                md="4"
-              >
+                <v-select
+                  v-model="number"
+                  :items="sports"
+                  label ="Branch"
+                  prepend-icon="mdi-file-tree"
+                ></v-select>
+
+                <ValidationProvider v-slot="{ errors }" name="Posicion" rules="required_if:getSport(),Voleibol'">
+                  <v-text-field
+                    v-model="athlete_position"
+                    :error-messages="errors"                    
+                    label="Posicion"
+                    prepend-icon="mdi-alpha-x-box-outline"
+                    v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'"
+                  ></v-text-field>
+                </ValidationProvider>             
+
+              
+                <ValidationProvider v-slot="{ errors }" name="Categoria" rules="required_if:getSport(),Voleibol'">
+                  <v-text-field
+                    v-model="sport_category"
+                    :error-messages="errors"                    
+                    label="Categoria"
+                    prepend-icon="mdi-clipboard-list"
+                    v-if="getSport() == 'Atletismo' | getSport() == 'Baloncesto'"
+                  ></v-text-field>
+                </ValidationProvider>
+             
                 <v-select
                   v-model="number"
                   :items="numbers"
                   label ="Numero del Athleta"
                   prepend-icon="mdi-numeric-0-box"
+                  v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'"
                 ></v-select>
-              </v-col>
-            </v-row>        
-
+              </v-col>              
+            </v-row>
             
-           
-            <v-btn class="mr-4" @click="submit">submit</v-btn>
-            <v-btn @click="clear">clear</v-btn>
+
+            <v-row>
+
+              <v-col
+                cols="1"
+                md="3"
+              >
+
+              <h2>Imagen de Perfil:</h2>
+               
+              </v-col>
+
+
+              <v-col
+              cols="12"
+              md="5"
+              >
+                <ValidationProvider v-slot="{ errors }" name="Enlace de Imagen de Perfil" rules="">
+                  <v-text-field
+                    v-model="profile_image_link"
+                    :error-messages="errors"                    
+                    label="Enlace de Imagen de Perfil"
+                    prepend-icon="mdi-link"
+                    required
+                  ></v-text-field>
+                </ValidationProvider>
+              </v-col>
+
+            </v-row>
+
+
+            <v-row>
+              <v-spacer/>
+              <v-spacer/>
+              <v-col>
+                <v-btn class="mr-4" @click="submit">submit</v-btn>
+                <v-btn @click="clear">clear</v-btn>
+              </v-col>
+            </v-row>
             
           </v-container>
         </form>
@@ -218,7 +278,7 @@
 </template>
 
 <script>
-  import { required, email, max, alpha_spaces, alpha, alpha_dash, regex } from 'vee-validate/dist/rules'
+  import { required, email, max, alpha_spaces, alpha, alpha_dash, regex,required_if } from 'vee-validate/dist/rules'
   import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 
   setInteractionMode('eager')
@@ -253,7 +313,11 @@
   })
   extend('regex',{
     ...regex,
-    message:"El campos es invalido,",
+    message:"El campos es invalido",
+  })
+  extend('required_if',{
+    ...required_if,
+    message:"La posicion es requerida para este deporte",
   })
   
 
@@ -274,11 +338,13 @@
       study_program:'', 
       date_of_birth:'',
       school_of_precedence:'',
-      number:0,
+      athlete_position:'',
+      sport_category:'',
+      number:'',
       profile_image_link:'',
       sport_id:0,
       sport:'',
-      sports:['Voleibol','Baloncesto'],
+      sports:['Voleibol','Baloncesto','Atletismo'],
       feet: [4,5,6,7],
       inches:[0,1,2,3,4,5,6,7,8,9,10,11,12],
       numbers:[0,1,2,3,4,5,6,7,8,9,10,11,12,
@@ -295,6 +361,7 @@
       
       
     }),
+  
 
     methods: {
       submit () {
@@ -317,6 +384,10 @@
         
         this.$refs.observer.reset()
       },
+
+      getSport(){
+        return this.sport
+      }
     },
   }
 </script>
