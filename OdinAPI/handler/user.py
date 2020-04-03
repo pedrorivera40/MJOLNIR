@@ -21,8 +21,6 @@ class UserHandler:
         Converts results returned by DAO into a dictionary.
         """
         permissionsDictionary = {}
-        # permissionsDictionary['id'] = record[0]
-        # permissionsDictionary['user_id'] = record[1]
         permissionsDictionary['permission_id'] = record[0]
         permissionsDictionary['is_invalid'] = record[1]
         return permissionsDictionary
@@ -44,6 +42,8 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the new dashboard user.
         """
+        if username == None or fullName == None or email == None or  password == None:
+            return jsonify(Error='Bad Request'), 400
         dao = UserDAO()
         res = dao.addDashUser(username, fullName,email, password)
         if res == 'UserError1':
@@ -91,6 +91,8 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the given ID.
         """
+        if duid == None:
+            return jsonify(Error='Bad Request'), 400
         dao = UserDAO()
         fetchedUser = dao.getDashUserByID(duid)
         if fetchedUser == None:
@@ -113,6 +115,8 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the given username.
         """
+        if username == None:
+            return jsonify(Error='Bad Request'), 400
         dao = UserDAO()
         fetchedUser = dao.getDashUserByUsername(username)
         if fetchedUser == None:
@@ -135,6 +139,8 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the given email.
         """
+        if email == None:
+            return jsonify(Error='Bad Request'), 400
         dao = UserDAO()
         fetchedUser = dao.getDashUserByEmail(email)
         if fetchedUser == None:
@@ -158,6 +164,8 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user.
         """
+        if duid == None or password == None:
+            return jsonify(Error='Bad Request'), 400
         dao = UserDAO()
         res = dao.updateDashUserPassword(duid, password)
         if res == None:
@@ -179,6 +187,8 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user. 
         """
+        if duid == None or username == None:
+            return jsonify(Error='Bad Request'), 400
         dao = UserDAO()
         res = dao.updateDashUserUsername(duid, username)
         if res == None:
@@ -203,7 +213,8 @@ class UserHandler:
         Returns:
             A JSON containing the updated dashboard user.
         """
-
+        if duid == None:
+            return jsonify(Error='Bad Request'), 400
         dao = UserDAO()
         res = dao.toggleDashUserActive(duid)
         if res == None:
@@ -224,6 +235,8 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user.
         """
+        if duid == None:
+            return jsonify(Error='Bad Request'), 400
         dao = UserDAO()
         res = dao.removeDashUser(duid)
         if res == None:
@@ -245,6 +258,12 @@ class UserHandler:
                 A list containing the response to the database query containing 
                 the matching record of modiffied user permissions.
             """
+            if duid == None or permissionsList == None:
+                return jsonify(Error='Bad Request'), 400
+            for permission in permissionsList: #If at least one of the parameters of one the indexes is None, scrap the request
+                if permission['permission_id'] == None or permission['is_invalid'] == None:
+                    return jsonify(Error='Bad Request'), 400
+
             dao = UserDAO()
             resultList = dao.setUserPermissions(duid, permissionsList)
             if resultList == 'UserError4':
@@ -268,6 +287,8 @@ class UserHandler:
         Returns:
             A list of permission dictionnaries ordered by permission id in ascending fashion.
         """
+        if duid == None:
+            return jsonify(Error='Bad Request'), 400
         dao = UserDAO()
         permisionsList = dao.getUserPermissions(duid)
         if permisionsList == 'UserError4':
