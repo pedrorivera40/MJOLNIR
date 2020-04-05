@@ -1,8 +1,10 @@
 from flask import jsonify
 from .dao.volleyball_event_dao import VolleyballEventDAO
+from .dao.final_score_dao import FinalScoreDAO
 #from .dao.event import EventDAO
 #from .dao.team import TeamDAO
-from .dao.athlete import AthleteDAO
+#from .dao.athlete import AthleteDAO
+from .event_result import EventResultHandler
 
 #CONSTANTS: 
 VOLLEYBALL_IDM = 2
@@ -82,7 +84,7 @@ class AthleteDAO:
             return True
         return False
 
-class VolleyballEventHandler:
+class VolleyballEventHandler(EventResultHandler):
     
 # getAllStatisticsByVolleyballEventID(eID)//Instantiates a Volleyball Event DAO in order to complete the desired get request and it returns a JSON with the desired information or with an error message.
 # getAllAthleteStatisticsByVolleyballEventId(eID,aID)//Instantiates a Volleyball Event DAO in order to complete the desired get request and it returns a JSON with the desired information or with an error message
@@ -168,13 +170,6 @@ class VolleyballEventHandler:
         #result = dict(Event_Statistics = stat_info)
         return dict(event_info= event_info, event_statistics = stat_info)
         # UPRM_Score = final_record[0], Opponent_Score = final_record[1]
-
-    # for final score
-    def mapFinalScoreToDict(self,final_record):
-        score = dict(uprm_score = final_record[0], opponent_score = final_record[1], 
-        opponent_name = final_record[2], opponent_color = final_record[3])
-        event_info = dict(event_id=final_record[4],final_score_id=final_record[5])
-        return dict(event_info = event_info, score = score)
     
     def mapEventSeasonCollectionToDict(self,record):
         event_info = {}
@@ -379,45 +374,6 @@ class VolleyballEventHandler:
          
         return jsonify(Volleyball_Event_Team_Stats = mappedResult),200
 
-    #New: get the final score only
-    def getFinalScore(self,eID):
-        """
-        Gets the final score a given event. 
-
-        Calls the VolleyballEventDAO to get event final score and maps the result to
-        to a JSON that contains the final score for that event in the system. That
-        JSON object is then returned.
-
-        Args:
-            eID: The ID of the event of whichthe final score need to be fetched.
-            
-        Returns:
-            A JSON containing the final score in the system for the specified event.
-        """
-
-        #validate existing event
-        e_dao = EventDAO()
-        try:
-            event = e_dao.getEventByID(eID)
-            if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
-         
-        dao = VolleyballEventDAO()
-        #get final score
-        try:
-            final_score_result = dao.getFinalScore(eID)
-            if not final_score_result:
-                return jsonify(Error = "Volleyball Event Final Score not found for the event: {}.".format(eID)),404
-            mappedResult = self.mapFinalScoreToDict(final_score_result)
-        except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
-         
-        return jsonify(Volleyball_Event_Team_Stats = mappedResult),200
-        
-        
-
     def getAllAthleteStatisticsPerSeason(self,aID,seasonYear):
         """
         Gets all the statistics for a given athlete during a given season. 
@@ -501,7 +457,8 @@ class VolleyballEventHandler:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
          
         try:
-            final_score_result = dao.getFinalScore(eID)
+            fs_dao = FinalScoreDAO()
+            final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:
                 return jsonify(Error = "Volleyball Event Statistics not found for the event: {}.".format(eID)),404
             mappedResult = self.mapEventAllStatsToDict(team_result,all_stats_result, final_score_result)
@@ -807,77 +764,6 @@ class VolleyballEventHandler:
             dao.commitChanges()
             return jsonify(Volleyball_Event_Team_Stats = "Added new team statistics record with id:{} for event id:{}.".format(result,eID)),201        
 
- 
-    #NEW
-    def addFinalScore(self,eID,attributes): # Instantiates a Volleyball Event DAO in order to complete the desired post request and it returns a JSON with either a confirmation or error message.
-        """
-        Adds a new final score record with the provided information.
-
-        Calls the BastketballEventDAO to add a final score record and maps the result to
-        to a JSON that contains the desired record. That JSON object 
-        is then returned.
-
-        Args:
-            eID: the ID of the event for which the final score will be added.
-            attributes:
-               local_Score: the final score of the local uprm team
-               opponent_Score: the final score of the opponent
-               opponent_name: name of the opponent team
-            opponent_color: color to be used for opponent team
-            
-        Returns:
-            A JSON containing the final score id for the new Volleyball Event team statistics record.
-        """
-
-        # Validate Avoid Duplication
-        dao = VolleyballEventDAO()
-        try:
-            if dao.getFinalScore(eID):
-                return jsonify(Error = "Volleyball Event Final Score Entry already exists for Event ID:{}".format(eID)),400
-        except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
-         
-        # Validate existing event
-        e_dao = EventDAO()
-        try:
-            event = e_dao.getEventByID(eID)
-            if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
-         
-        invalid_duplicate = False
-        try:
-            if dao.getFinalScoreInvalid(eID):
-                invalid_duplicate = True
-        except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
-        
-        #case with previously existing invalid entry, in that case update that entry
-        if invalid_duplicate:
-            try:
-                result = dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'],
-                attributes['opponent_name'],attributes['opponent_color'])
-                if not result:
-                    return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
-                mappedResult = self.mapFinalScoreToDict(result)
-            except:
-                return jsonify(ERROR="Unable to verify final score from DAO."), 500
-         
-            dao.commitChanges()
-            return jsonify(Volleyball_Event_Team_Stats = mappedResult),200
-        else:
-        # Create and Validate new Volleyball_Event final score
-            try:
-                result = dao.addFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'],
-                attributes['opponent_name'],attributes['opponent_color'])
-                if not result:
-                    return jsonify(Error = "Problem inserting new final score record."),500
-            except:
-                return jsonify(ERROR="Unable to verify final score from DAO."), 500
-            dao.commitChanges()
-            return jsonify(Volleyball_Event_Team_Stats = "Added new final score record with id:{} for event id:{}.".format(result,eID)),201
-
     #NEW: the mega query
     def addAllEventStatistics(self,eID,attributes):
         """
@@ -1005,7 +891,8 @@ class VolleyballEventHandler:
 
         # Create and Validate Final Score entry
         try:
-            result = dao.addFinalScore(eID,local_score, opponent_score, opponent_name, opponent_color)
+            fs_dao = FinalScoreDAO()
+            result = fs_dao.addFinalScore(eID,local_score, opponent_score, opponent_name, opponent_color)
             if not result:
                 return jsonify(Error = "Problem inserting new final score record."),500
         except:
@@ -1020,7 +907,7 @@ class VolleyballEventHandler:
                 return jsonify(Error = "Problem inserting new team statistics record."),500
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
-         
+        fs_dao.commitChanges
         dao.commitChanges()
         return jsonify(Volleyball_Event_Team_Stats = "Added new team statistics record with id:{} and individual statistics for event id:{}.".format(result,eID)),201
 
@@ -1051,7 +938,7 @@ class VolleyballEventHandler:
                 reception_errors:
             
         Returns:
-            A JSON containing all the user with the updated dashboard user.
+            A JSON containing all the user with the updated entry.
         """
 
         # Validate Exists in order to update
@@ -1116,7 +1003,7 @@ class VolleyballEventHandler:
         
             
         Returns:
-            A JSON containing all the user with the updated dashboard user.
+            A JSON containing all the user with the updated entry.
         """
 
         # Validate exists so can update
@@ -1145,58 +1032,6 @@ class VolleyballEventHandler:
             mappedResult = self.mapEventTeamStatsToDict(result)
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
-         
-        dao.commitChanges()
-        return jsonify(Volleyball_Event_Team_Stats = mappedResult),200
-    
-    #NEW
-    def editFinalScore(self, eID, attributes): # Instantiates a Volleyball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
-        """
-        Updates the final score  the volleyball event with the given ID .
-
-        Calls the BasktballEventDAO to update the final score of a volleyball event. It then
-        maps the result to a JSON that contains the desired record. That JSON 
-        object is then returned.
-
-        Args:
-            eID: the ID of the event for which the final score record will be updated.
-            attributes:
-                local_score: the score of the local uprm team
-                opponent_score: the score of the opponent team
-                opponent_name: name of the opponent team
-                opponent_color: color to be used for opponent team
-        
-            
-        Returns:
-            A JSON containing the final score with the updated dashboard user.
-        """
-        # Validate Exists so can update
-        dao = VolleyballEventDAO()
-        try:
-            if not dao.getFinalScore(eID):
-                return jsonify(Error = "Volleyball Event Final Score Entry does not exist for Event ID:{}".format(eID)),400
-        except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
-
-        # Validate existing event
-        e_dao = EventDAO()
-        try:   
-            event = e_dao.getEventByID(eID)
-            if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
-         
-
-        # Update and Validate Volleyball event final score, format returnable
-        try:
-            result = dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'],
-            attributes['opponent_name'],attributes['opponent_color'])
-            if not result:
-                return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapFinalScoreToDict(result)
-        except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
          
         dao.commitChanges()
         return jsonify(Volleyball_Event_Team_Stats = mappedResult),200
@@ -1294,44 +1129,6 @@ class VolleyballEventHandler:
          
         dao.commitChanges()
         return jsonify(Volleyball_Event_Team_Statistics = "Removed team statistics record with id:{} for event id:{}.".format(result,eID)),200
-
-    # NEW
-    def removeFinalScore(self,eID): # Instantiates a Volleyball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
-        """
-        Invalidates a final_score record in the database based on the given ID.
-
-        Calls the VolleyballEventDAO to invalidate a final score record. It then
-        maps the result to a JSON that contains the desired record. That JSON 
-        object is then returned.
-
-        Args:
-            eID: the ID of the event for which the final score will be invalidated.
-            
-        Returns:
-            A JSON containing the final score  id of the invalidated value
-        """
-
-        # Validate existing event
-        e_dao = EventDAO()
-        try:
-            event = e_dao.getEventByID(eID)
-            if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
-         
-
-        # Remove Volleyball_Event final score and format returnabe
-        dao = VolleyballEventDAO()
-        try:
-            result = dao.removeFinalScore(eID)
-            if not result:
-                return jsonify(Error = "Final Score Record not found with event id:{}.".format(eID)),404
-        except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
-         
-        dao.commitChanges()
-        return jsonify(Volleyball_Event_Team_Statistics = "Removed final score record with id:{} for event id:{}.".format(result,eID)),200
 
 
 
