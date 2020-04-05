@@ -104,9 +104,9 @@ paths:
         "200":
           description: OK
           content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/Users"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
         default:
           description: Unexpected error
           content:
@@ -129,9 +129,9 @@ paths:
         "200":
           description: OK
           content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/Users"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
         default:
           description: Unexpected error
           content:
@@ -154,9 +154,9 @@ paths:
         "200":
           description: OK
           content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/Users"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
         default:
           description: Unexpected error
           content:
@@ -250,8 +250,72 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /users/{duid}/permissions:
+    get:
+      summary: "Get user permissions"
+      description: "Get permissions for the user with the given duid."
+      operationId: getPermissions
+      tags:
+        - Users
+      parameters:
+        - name: duid
+          in: path
+          required: true
+          description: Id of the user whose permissions are being fetched.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Success!"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserPermissions"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      summary: "Set user permissions"
+      description: "Set permissions for the user with the given duid."
+      operationId: setPermissions
+      tags:
+        - Users
+      parameters:
+        - name: duid
+          in: path
+          required: true
+          description: Id of the user whose permissions are being fetched.
+          schema:
+            type: string
+      responses:
+        "201":
+          description: "Success!"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
 components:
   schemas:
+    UserPermissions:
+      type: object
+      properties:
+        permission_id:
+          type: integer
+        is_invalid:
+          type: boolean
     UsernameChange:
       type: object
       properties:
@@ -275,7 +339,7 @@ components:
           format: int64
         username:
           type: string
-        full_naame:
+        full_name:
           type: string
         email:
           type: string
