@@ -580,10 +580,10 @@ class BasketballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify team from DAO."), 500
 
         #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
-        invalid_duplicate = false
+        invalid_duplicate = False
         try:
             if dao.getBasketballEventIDInvalid(eID,aID):
-                invalid_duplicate = true
+                invalid_duplicate = True
         except:
             return jsonify(ERROR="Unable to verify basketball_event from DAO."), 500
         
@@ -694,10 +694,10 @@ class BasketballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify team from DAO."), 500
 
         #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
-        invalid_duplicate = false
+        invalid_duplicate = False
         try:
             if dao.getBasketballEventTeamStatsIDInvalid(eID):
-                invalid_duplicate = true
+                invalid_duplicate = True
         except:
             return jsonify(ERROR="Unable to verify basketball_event_team_Stats from DAO."), 500
         #the case of there already existing an entry, but marked as invalid
@@ -781,10 +781,10 @@ class BasketballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify team from DAO."), 500
          
         #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
-        invalid_duplicate = false
+        invalid_duplicate = False
         try:
             if dao.getBasketballEventTeamStatsIDInvalid(eID):
-                invalid_duplicate = true
+                invalid_duplicate = True
         except:
             return jsonify(ERROR="Unable to verify basketball_event_team_Stats from DAO."), 500
         #the case of there already existing an entry, but marked as invalid

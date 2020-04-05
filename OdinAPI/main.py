@@ -11,6 +11,8 @@ import os
 from handler.position import PositionHandler
 from handler.basketball_event import BasketballEventHandler
 from handler.volleyball_event import VolleyballEventHandler
+from handler.soccer_event import SoccerEventHandler
+from handler.baseball_event import BaseballEventHandler
 
 ## Load environment variables
 load_dotenv()
@@ -521,6 +523,366 @@ def volleyballSeasonAthleteStatistics(aid,seasonYear):
 
 #===================================================================================
 #===================//END VOLLEYBALL RESULTS ROUTES//===============================
+#===================================================================================
+
+
+#===================================================================================
+#=======================//SOCCER RESULTS ROUTES//===============================
+#===================================================================================
+
+# REQUEST FORMAT FOR ROUTE:
+# { "event_id": 5,
+#   "team_statistics": 
+#    { "soccer_statistics": 
+#       { 
+#         "goal_attempts":1, 
+#         "assists":1,
+#         "fouls":1,
+#         "cards":1,
+#         "successful_goals":1,
+#         "tackles":1
+#       } 
+#    },
+#   "athlete_statistics": 
+#   [
+#   	{"athlete_id":4,
+#   	"statistics":
+# 	  	{"soccer_statistics":
+# 		  	{
+#             "goal_attempts":1, 
+#             "assists":1,
+#             "fouls":1,
+#             "cards":1,
+#             "successful_goals":1,
+#             "tackles":1
+# 		  	}
+# 	  	}
+#   	},
+#   	{"athlete_id":8,
+#   	"statistics":
+# 	  	{"soccer_statistics":
+# 		  	{
+#             "goal_attempts":1, 
+#             "assists":1,
+#             "fouls":1,
+#             "cards":1,
+#             "successful_goals":1,
+#             "tackles":1
+# 		  	}
+# 	  	}
+#   	}
+#   	],
+#   "uprm_score": 0,
+#   "opponent_score": 0,
+#   "opponent_name": "name_here",
+#   "opponent_color": "#HEX_VAL_HERE" 
+# }
+
+# TODO: validate JSON request arguments somehow
+# @app.route("/results/soccer/<int:eid>/", methods = ['GET','POST'])
+@app.route("/results/soccer/", methods = ['GET','POST'])
+def soccerStatistics():
+    json = request.json
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        return handler.getAllStatisticsByEventID(json['event_id'])
+    if request.method == 'POST':
+        return handler.addAllEventStatistics(json['event_id'],json)
+        #return jsonify(json),200
+    else:
+        return jsonify("Method not allowed."), 405
+
+# FORMAT FOR REQUEST:
+# {
+#   "event_id": 2,
+#   "athlete_id":2,
+#   "attributes":
+#   {
+#     "goal_attempts":1, 
+#     "assists":1,
+#     "fouls":1,
+#     "cards":1,
+#     "successful_goals":1,
+#     "tackles":1
+#   }
+# }
+
+# @app.route("/results/soccer/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/soccer/individual/", methods = ['GET','POST','PUT','DELETE'])
+def soccerAthleteStatistics():
+    json = request.json
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        return handler.getAllAthleteStatisticsByEventId(json['event_id'],json['athlete_id'])
+    if request.method == 'POST':
+        return handler.addStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+    if request.method == 'PUT':
+        returnable = handler.editStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        return returnable
+    if request.method == 'DELETE':
+        return handler.removeStatistics(json['event_id'],json['athlete_id'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# FORMAT FOR REQUEST:
+# {
+# "add_type":"manual",
+# "event_id":1,
+# "attributes":
+#   {
+#     "goal_attempts":1, 
+#     "assists":1,
+#     "fouls":1,
+#     "cards":1,
+#     "successful_goals":1,
+#     "tackles":1
+#   }
+# }
+
+# @app.route("/results/soccer/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/soccer/team/", methods = ['GET','POST','PUT','DELETE'])
+def soccerTeamStatistics():
+    json = request.json
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        return handler.getAllTeamStatisticsByEventId(json['event_id'])
+    if request.method == 'POST':
+        if json['add_type'] == 'AUTO':
+            return handler.addTeamStatisticsAuto(json['event_id'])
+        if json['add_type'] == 'MANUAL':
+            return handler.addTeamStatistics(json['event_id'],json['attributes'])
+        else: 
+            return jsonify(Error= "Method not allowed, Must specify valid add_type"),405
+    if request.method == 'PUT':
+        return handler.editTeamStatistics(json['event_id'])
+    if request.method == 'DELETE':
+        return handler.removeTeamStatistics(json['event_id'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+
+#FORMAT FOR REQUEST:
+# { "event_id":3,
+#   "attributes":
+#   {
+#   "local_score":2, "opponent_score":2,
+#   "opponent_name": "name_here",
+#   "opponent_color": "#HEX_VAL_HERE"  
+#   }
+# }
+
+# @app.route("/results/soccer/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/soccer/score/", methods = ['GET','POST','PUT','DELETE'])
+def soccerFinalScores():
+    json = request.json
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        return handler.getFinalScore(json['event_id'])
+    if request.method == 'POST':
+        return handler.addFinalScore(json['event_id'],json['attributes'])
+    if request.method == 'PUT':
+        return handler.editFinalScore(json['event_id'],json['attributes'])
+    if request.method == 'DELETE':
+        return handler.removeFinalScore(json['event_id'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
+@app.route("/results/soccer/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
+def soccerSeasonAthleteStatistics(aid,seasonYear):
+    json = request.json
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        return handler.getAllAthleteStatisticsPerSeason(aid,seasonYear)
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+#===================================================================================
+#===================//END SOCCER RESULTS ROUTES//===============================
+#===================================================================================
+
+#===================================================================================
+#=======================//BASEBALL RESULTS ROUTES//===============================
+#===================================================================================
+
+# REQUEST FORMAT FOR ROUTE:
+# { "event_id": 5,
+#   "team_statistics": 
+#    { "baseball_statistics": 
+#       { 
+#         "at_bats":1,
+#         "runs":1,
+#         "hits":1,
+#         "runs_batted_in":1,
+#         "base_on_balls":1,
+#         "strikeouts":1,
+#         "left_on_base":1
+#       } 
+#    },
+#   "athlete_statistics": 
+#   [
+#   	{"athlete_id":4,
+#   	"statistics":
+# 	  	{"baseball_statistics":
+# 		  	{
+#             "at_bats":1,
+#             "runs":1,
+#             "hits":1,
+#             "runs_batted_in":1,
+#             "base_on_balls":1,
+#             "strikeouts":1,
+#             "left_on_base":1
+# 		  	}
+# 	  	}
+#   	},
+#   	{"athlete_id":8,
+#   	"statistics":
+# 	  	{"baseball_statistics":
+# 		  	{
+#             "at_bats":1,
+#             "runs":1,
+#             "hits":1,
+#             "runs_batted_in":1,
+#             "base_on_balls":1,
+#             "strikeouts":1,
+#             "left_on_base":1
+# 		  	}
+# 	  	}
+#   	}
+#   	],
+#   "uprm_score": 0,
+#   "opponent_score": 0,
+#   "opponent_name": "name_here",
+#   "opponent_color": "#HEX_VAL_HERE" 
+# }
+
+# TODO: validate JSON request arguments somehow
+# @app.route("/results/baseball/<int:eid>/", methods = ['GET','POST'])
+@app.route("/results/baseball/", methods = ['GET','POST'])
+def baseballStatistics():
+    json = request.json
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        return handler.getAllStatisticsByEventID(json['event_id'])
+    if request.method == 'POST':
+        return handler.addAllEventStatistics(json['event_id'],json)
+        #return jsonify(json),200
+    else:
+        return jsonify("Method not allowed."), 405
+
+# FORMAT FOR REQUEST:
+# {
+#   "event_id": 2,
+#   "athlete_id":2,
+#   "attributes":
+#   {
+#     "at_bats":1,
+#     "runs":1,
+#     "hits":1,
+#     "runs_batted_in":1,
+#     "base_on_balls":1,
+#     "strikeouts":1,
+#     "left_on_base":1
+#   }
+# }
+
+# @app.route("/results/baseball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/baseball/individual/", methods = ['GET','POST','PUT','DELETE'])
+def baseballAthleteStatistics():
+    json = request.json
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        return handler.getAllAthleteStatisticsByEventId(json['event_id'],json['athlete_id'])
+    if request.method == 'POST':
+        return handler.addStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+    if request.method == 'PUT':
+        returnable = handler.editStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        return returnable
+    if request.method == 'DELETE':
+        return handler.removeStatistics(json['event_id'],json['athlete_id'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# FORMAT FOR REQUEST:
+# {
+# "add_type":"manual",
+# "event_id":1,
+# "attributes":
+#   {
+#     "at_bats":1,
+#     "runs":1,
+#     "hits":1,
+#     "runs_batted_in":1,
+#     "base_on_balls":1,
+#     "strikeouts":1,
+#     "left_on_base":1
+#   }
+# }
+
+# @app.route("/results/baseball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/baseball/team/", methods = ['GET','POST','PUT','DELETE'])
+def baseballTeamStatistics():
+    json = request.json
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        return handler.getAllTeamStatisticsByEventId(json['event_id'])
+    if request.method == 'POST':
+        if json['add_type'] == 'AUTO':
+            return handler.addTeamStatisticsAuto(json['event_id'])
+        if json['add_type'] == 'MANUAL':
+            return handler.addTeamStatistics(json['event_id'],json['attributes'])
+        else: 
+            return jsonify(Error= "Method not allowed, Must specify valid add_type"),405
+    if request.method == 'PUT':
+        return handler.editTeamStatistics(json['event_id'])
+    if request.method == 'DELETE':
+        return handler.removeTeamStatistics(json['event_id'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+
+#FORMAT FOR REQUEST:
+# { "event_id":3,
+#   "attributes":
+#   {
+#   "local_score":2, "opponent_score":2,
+#   "opponent_name": "name_here",
+#   "opponent_color": "#HEX_VAL_HERE"  
+#   }
+# }
+
+# @app.route("/results/baseball/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/baseball/score/", methods = ['GET','POST','PUT','DELETE'])
+def baseballFinalScores():
+    json = request.json
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        return handler.getFinalScore(json['event_id'])
+    if request.method == 'POST':
+        return handler.addFinalScore(json['event_id'],json['attributes'])
+    if request.method == 'PUT':
+        return handler.editFinalScore(json['event_id'],json['attributes'])
+    if request.method == 'DELETE':
+        return handler.removeFinalScore(json['event_id'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
+@app.route("/results/baseball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
+def baseballSeasonAthleteStatistics(aid,seasonYear):
+    json = request.json
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        return handler.getAllAthleteStatisticsPerSeason(aid,seasonYear)
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+#===================================================================================
+#===================//END BASEBALL RESULTS ROUTES//===============================
 #===================================================================================
 
 #Launch app.
