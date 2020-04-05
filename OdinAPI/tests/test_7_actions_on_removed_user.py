@@ -40,15 +40,13 @@ class TestUserRoutes(unittest.TestCase):
 
   def test_add_new_user_with_username_of_removed_user(self):
     newUserOldUsername = {
-          'email' : 'necw@email.com',
-          'full_name' : 'Roy Bayron',
+          'email' : 'iklo9@email.com',
+          'full_name' : 'Barbell Bayron',
           'username' : self.data['username'],
           'password' : 'ninjaTurtles'
     }
     id = newUserID + 1
     response = self.client.post('/users/', data=json.dumps(newUserOldUsername),content_type='application/json', follow_redirects=True)
-    print()
-    print(response.status_code)
     self.assertEqual(response.status_code, 201)
     self.assertEqual(response.json['User']['email'], newUserOldUsername['email'])
     self.assertEqual(response.json['User']['full_name'], newUserOldUsername['full_name'])

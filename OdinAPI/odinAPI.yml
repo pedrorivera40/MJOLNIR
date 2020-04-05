@@ -339,7 +339,7 @@ components:
           format: int64
         username:
           type: string
-        full_naame:
+        full_name:
           type: string
         email:
           type: string
