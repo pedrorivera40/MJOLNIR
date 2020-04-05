@@ -147,8 +147,7 @@ def passwordReset(duid):
     req = request.json
     if request.method == 'PATCH':
         ## For password reset
-        password = createHash(req['password'])
-        return handler.updateDashUserPassword(duid,password)
+        return handler.updateDashUserPassword(duid,req['password'])
 
 @app.route("/users/<string:duid>/toggleActive", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
 def toggleActive(duid):

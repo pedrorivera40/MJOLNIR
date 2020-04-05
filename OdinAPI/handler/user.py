@@ -1,5 +1,5 @@
 from flask import jsonify
-from OdinAPI.auth import createHash
+from auth import createHash
 from .dao.user_dao import UserDAO
 
 class UserHandler:
@@ -171,8 +171,11 @@ class UserHandler:
         """
         if duid == None or password == None:
             return jsonify(Error='Bad Request'), 400
+        
+        # Hash password 
+        hashedPassword = createHash(password)
         dao = UserDAO()
-        res = dao.updateDashUserPassword(duid, password)
+        res = dao.updateDashUserPassword(duid, hashedPassword)
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
         return jsonify(User=self.mapUserToDict(res)),201
