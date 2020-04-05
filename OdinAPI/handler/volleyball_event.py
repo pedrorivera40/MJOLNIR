@@ -310,8 +310,9 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         #validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -319,8 +320,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify event from DAO."), 500
         
         #validate existing athlete 
-        a_dao = AthleteDAO()
+        
         try: 
+            a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
@@ -328,8 +330,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
         
         #validate existing volleyball_event entry and format returnable
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             result = dao.getAllAthleteStatisticsByEventID(eID,aID)
             if not result:
                 return jsonify(Error = "Volleyball Event Statistics not found for the event: {} and the athlete id: {}.".format(eID,aID)),404
@@ -354,8 +357,9 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         #validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -363,8 +367,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify event from DAO."), 500
 
         #validate existing volleyball_event entry and format returnable
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             result = dao.getAllTeamStatisticsByEventID(eID)
             if not result:
                 return jsonify(Error = "Volleyball Event Team Statistics not found for the event: {}".format(eID)),404
@@ -391,8 +396,9 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         #validate existing athlete 
-        a_dao = AthleteDAO()
+        
         try: 
+            a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
@@ -400,8 +406,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
          
         # validate existing volleyball_event entries and format returnable
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             result = dao.getAllAthleteStatisticsPerSeason(aID,seasonYear)
             if not result:
                 return jsonify(Error = "Volleyball Event Statistics not found for the athlete id:{} in season year:{}.".format(aID,seasonYear)),404
@@ -432,8 +439,9 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         #validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -441,8 +449,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify event from DAO."), 500
          
 
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             team_result = dao.getAllTeamStatisticsByEventID(eID)
             if not team_result:
                 return jsonify(Error = "Volleyball Event Team Statistics not found for the event: {}".format(eID)),404
@@ -495,15 +504,17 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         # Validate Avoid Duplication
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             if dao.getVolleyballEventID(eID,aID):
                 return jsonify(Error = "Volleyball Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),403 #TODO: Use 403 for duplicates
         except:
             return jsonify(ERROR="Unable to verify volleyball_event from DAO."), 500
         # Validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -512,9 +523,10 @@ class VolleyballEventHandler(EventResultHandler):
        
         
         # Get Event Team For Validation
-        t_dao = TeamDAO()
+        
         #TODO: (Luis) Need EventDAO method to obtain team ID
         try:
+            t_dao = TeamDAO()
             tID = e_dao.getEventTeamByID(eID)
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -529,8 +541,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify team from DAO."), 500
 
         # Validate existing athlete 
-        a_dao = AthleteDAO()
+        
         try:
+            a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
@@ -618,16 +631,18 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         # Validate Avoid Duplication
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             if dao.getVolleyballEventTeamStatsID(eID):
                 return jsonify(Error = "Volleyball Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event_team_stats from DAO."), 500
 
         # Validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -635,9 +650,10 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify event from DAO."), 500
 
         # Get Event Team For Validation
-        t_dao = TeamDAO()
+        
         #TODO: (Luis) Need EventDAO method to obtain team ID
         try:
+            t_dao = TeamDAO()
             tID = e_dao.getEventTeamByID(eID)
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -700,16 +716,18 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         # Validate Avoid Duplication
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             if dao.getVolleyballEventTeamStatsID(eID):
                 return jsonify(Error = "Volleyball Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team sats from DAO."), 500
          
         # Validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -717,9 +735,10 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify event from DAO."), 500
          
         # Get Event Team For Validation
-        t_dao = TeamDAO()
+        
         #TODO: (Luis) Need EventDAO method to obtain team ID
         try:
+            t_dao = TeamDAO()
             tID = e_dao.getEventTeamByID(eID)
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -812,17 +831,19 @@ class VolleyballEventHandler(EventResultHandler):
         opponent_name = attributes['opponent_name']
         opponent_color = attributes['opponent_color']
 
-        dao = VolleyballEventDAO()
+        
         # Validate Avoid Duplication Team Stats
         try:
+            dao = VolleyballEventDAO()
             if dao.getVolleyballEventTeamStatsID(eID):
                 return jsonify(Error = "Volleyball Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team stats from DAO."), 500
          
         # Validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -830,9 +851,10 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify event from DAO."), 500
          
         # Get Event Team For Validation
-        t_dao = TeamDAO()
+        
         #TODO: (Luis) Need EventDAO method to obtain team ID
         try:
+            t_dao = TeamDAO()
             tID = e_dao.getEventTeamByID(eID)
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -860,8 +882,9 @@ class VolleyballEventHandler(EventResultHandler):
          
             # Validate existing athlete 
             statistics = athlete_attributes['statistics']['volleyball_statistics']
-            a_dao = AthleteDAO()
+            
             try:
+                a_dao = AthleteDAO()
                 athlete = a_dao.getAthleteByID(aID)
                 if not athlete:
                     return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
@@ -942,8 +965,9 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         # Validate Exists in order to update
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             # TODO: what is the error code for this case, where it DOESNT exit?
             if not dao.getVolleyballEventID(eID,aID):
                 return jsonify(Error = "Volleyball Event Entry does not exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),400 
@@ -951,8 +975,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify volleyball_event from DAO."), 500
 
         # Validate existing event
-        e_dao = EventDAO()
+       
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -960,8 +985,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify event from DAO."), 500
          
         # Validate existing athlete 
-        a_dao = AthleteDAO()
+        
         try:
+            a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
@@ -969,8 +995,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
          
         # Update and Validate Volleyball event, format returnable
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             result = dao.editStatistics(eID,aID,attributes['kill_points'],attributes['attack_errors'],attributes['assists'],attributes['aces'],
                     attributes['service_errors'],attributes['digs'],attributes['blocks'],attributes['blocking_errors'],attributes['reception_errors'])
             if not result:
@@ -1007,16 +1034,18 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         # Validate exists so can update
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             if not dao.getVolleyballEventTeamStatsID(eID):
                 return jsonify(Error = "Volleyball Event Team Stats Entry does not exists for Event ID:{}".format(eID)),400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event_team_stats from DAO."), 500
 
         # Validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -1024,8 +1053,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify event from DAO."), 500
          
         # Update and Validate Volleyball event team stats, format returnable
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             result = dao.editTeamStatistics(eID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
@@ -1054,8 +1084,9 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         # Validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -1064,8 +1095,9 @@ class VolleyballEventHandler(EventResultHandler):
          
         
         # Validate existing athlete 
-        a_dao = AthleteDAO()
+        
         try:
+            a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
@@ -1073,8 +1105,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
          
         # Remove Volleyball_Event Statistics and format returnabe
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             result = dao.removeStatistics(eID,aID)
             if not result:
                 return jsonify(Error = "Statistics Record not found with event id:{} for athlete id:{}.".format(eID,aID)),404
@@ -1110,8 +1143,9 @@ class VolleyballEventHandler(EventResultHandler):
         """
 
         # Validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -1119,8 +1153,9 @@ class VolleyballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify event from DAO."), 500
          
         # Remove Volleyball_Event Team Statistics and format returnabe
-        dao = VolleyballEventDAO()
+        
         try:
+            dao = VolleyballEventDAO()
             result = dao.removeTeamStatistics(eID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found with event id:{}.".format(eID)),404
