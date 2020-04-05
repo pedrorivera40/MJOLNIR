@@ -108,11 +108,16 @@ def athletePositions(sid,aid):
 @app.route("/users/", methods = ['GET','POST'])
 def allUsers():
     handler = UserHandler()
-    req = request.json
     if request.method == 'GET':
         ## For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
+        req = request.json
+
+        ## Check the request contains the right structure.
+        if req['username'] == None or req['full_name'] == None or req['email'] == None or req['password'] == None:
+            return jsonify(Error='Bad Request'), 400
+
         ## For account creation
         return handler.addDashUser(req['username'],req['full_name'], req['email'], req['password'])
 
@@ -125,6 +130,10 @@ def userByID(duid):
         return handler.getDashUserByID(duid)
     if request.method == 'PATCH':
         ## For username change
+        ## Check the request contains the right structure.
+        if req['username'] == None:
+            return jsonify(Error='Bad Request'), 400
+
         return handler.updateDashUserUsername(duid,req['username'])
 
 @app.route("/users/username/", methods = ['POST'])
@@ -132,6 +141,10 @@ def getUserByUsername():
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
+        ## Check the request contains the right structure.
+        if req['username'] == None:
+            return jsonify(Error='Bad Request'), 400
+
         return handler.getDashUserByUsername(req['username'])
 
 @app.route("/users/email/", methods = ['POST'])
@@ -139,6 +152,9 @@ def getUserByEmail():
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
+        ## Check the request contains the right structure.
+        if req['email'] == None:
+            return jsonify(Error='Bad Request'), 400
         return handler.getDashUserByEmail(req['email'])
 
 @app.route("/users/<int:duid>/reset", methods = ['PATCH'])
@@ -147,6 +163,9 @@ def passwordReset(duid):
     req = request.json
     if request.method == 'PATCH':
         ## For password reset
+        ## Check the request contains the right structure.
+        if req['password'] == None:
+            return jsonify(Error='Bad Request'), 400
         return handler.updateDashUserPassword(duid,req['password'])
 
 @app.route("/users/<string:duid>/toggleActive", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
@@ -168,6 +187,9 @@ def userPermissions(duid):
         return  handler.getUserPermissions(duid)
     if request.method == 'PATCH':
         req = request.json
+        ## Check the request contains the right structure.
+        if req['permissions'] == None:
+            return jsonify(Error='Bad Request'), 400
         handler = UserHandler()
         return  handler.setUserPermissions(duid, req['permissions'])
 
