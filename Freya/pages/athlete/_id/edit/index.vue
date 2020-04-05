@@ -1,7 +1,7 @@
 <template>
   <v-card width="800" class="elevation-12 mx-auto">
     <v-toolbar color="green darken-1" dark flat>
-      <v-toolbar-title>Atleta</v-toolbar-title>
+      <v-toolbar-title>Editar Atleta</v-toolbar-title>
       <v-spacer />
     </v-toolbar>
     <v-card-text>            
@@ -185,25 +185,22 @@
                 cols="12" 
                 md="4"               
               >
-                <ValidationProvider v-slot="{ errors }" name="Sport" rules="required">
-                  <v-select
+               
+                <v-text-field
                     v-model="sport"
-                    :items="sports"
-                    :error-messages="errors"
-                    label ="Deporte"
+                    disabled
+                    readonly                   
+                    solo                   
                     prepend-icon="mdi-volleyball"
-                  ></v-select>
-                </ValidationProvider>
+                ></v-text-field>                
                 
-                <ValidationProvider v-slot="{ errors }" name="Branch" rules="required">
-                  <v-select
+                <v-text-field
                     v-model="branch"
-                    :items="branches"
-                    :error-messages="errors"
-                    label ="Rama"
+                    disabled
+                    readonly                   
+                    solo                     
                     prepend-icon="mdi-file-tree"
-                  ></v-select>
-                </ValidationProvider>
+                ></v-text-field>                
 
               </v-col>              
             </v-row>
@@ -274,12 +271,11 @@
 
               <v-col
                 cols="12" 
-                md="4"               
+                md="2"               
               >
                 <v-select
                   v-model="number"
-                  :items="numbers"
-                  label ="Numero del Athleta"
+                  :items="numbers"                  
                   prepend-icon="mdi-numeric-0-box"
                   v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'"
                 ></v-select>
@@ -321,8 +317,8 @@
               <v-spacer/>
               <v-spacer/>
               <v-col>
-                <v-btn class="mr-4" @click="submit">submit</v-btn>
-                <v-btn @click="clear">clear</v-btn>
+                <v-btn class="mr-4" @click="submit" color="blue darken-2">submit</v-btn>
+                <v-btn @click="clear" color="red darken-2">clear</v-btn>
               </v-col>
             </v-row>
             
@@ -386,25 +382,23 @@
       selected_categories:[],
       date: new Date().toISOString().substr(0,10),
       menu: false,
-      first_name: '',
-      middle_name: '',
-      last_names:'',
-      short_bio:'',
-      height_feet:'',
-      height_inches:'',
-      study_program:'', 
+      first_name: 'Fname',
+      middle_name: 'Mname',
+      last_names:'Lname',
+      short_bio:'Mini Bio',
+      height_feet:5,//Pull from DB
+      height_inches:9,//Pull from DB
+      study_program:'Programa de Estudio',//Pull from DB 
       date_of_birth:'',
-      school_of_precedence:'',
-      athlete_position:'',
-      sport_positions:{"Delantero":false,"Libero":true},
-      sport_category:{"100m":true,"200m":false,"300m":true},
-      number:'',
-      profile_image_link:'',
-      sport_id:0,
-      sport:'',      
-      sports:['Voleibol','Baloncesto','Atletismo'],
-      branch:'',
-      branches:['Masculino','Femenino','Otro'],
+      school_of_precedence:'Nombre de Escuela',//Pull from DB   
+      sport_positions:{"Delantero":false,"Libero":true},//Pull from DB   
+      sport_category:{"100m":true,"200m":false,"300m":true},//Pull from DB   
+      number:0,//Pull from DB   
+      profile_image_link:'www.photo.com',
+      
+      sport:'Voleibol',//Pull from DB      
+      branch:'Masculino',//Pull from DB
+     
       feet: [4,5,6,7],
       inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0],
       numbers:[0,1,2,3,4,5,6,7,8,9,10,11,12,
