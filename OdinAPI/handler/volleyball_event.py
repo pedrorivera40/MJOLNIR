@@ -89,12 +89,12 @@ class VolleyballEventHandler:
 # addStatistics(eID, aID, attributes)//Instantiates a Volleyball Event DAO in order to complete the desired post request and it returns a JSON with either a confirmation or error message.
 # editStatistics(eID, aID,attributes)//Instantiates a Volleyball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
 # removesStatistics(eID, aID)//Instantiates a Volleyball Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
-# mapVolleyballEventToDict(record)//Maps a Volleyball Event record to a dictionary and returns it.
+# mapEventToDict(record)//Maps a Volleyball Event record to a dictionary and returns it.
 
 
 #===========================//DICTIONARY MAPPERS//==================================
     #TODO: need to label somehow the jsonify/request in the route so that it has the sport?
-    def mapVolleyballEventToDict(self,record):
+    def mapEventToDict(self,record):
         athlete_info = {}
         stat_info = {}
         event_info = {}
@@ -126,7 +126,7 @@ class VolleyballEventHandler:
 
         
     #For Specific Athlete Event Info
-    def mapVolleyballEventAthleteStatsToDict(self,record):
+    def mapEventAthleteStatsToDict(self,record):
         stat_info = {}
         event_info = {}
 
@@ -148,7 +148,7 @@ class VolleyballEventHandler:
         return dict(event_info= event_info, event_statistics = stat_info)
 
     # for team statistics
-    def mapVolleyballEventTeamStatsToDict(self,record):
+    def mapEventTeamStatsToDict(self,record):
         stat_info = {}
         event_info = {}
 
@@ -176,7 +176,7 @@ class VolleyballEventHandler:
         event_info = dict(event_id=final_record[4],final_score_id=final_record[5])
         return dict(event_info = event_info, score = score)
     
-    def mapVolleyballEventSeasonCollectionToDict(self,record):
+    def mapEventSeasonCollectionToDict(self,record):
         event_info = {}
         stat_info = {}
         
@@ -234,7 +234,7 @@ class VolleyballEventHandler:
 # 	  	}
 #   	},
 
-    def mapVolleyballEventAllStatsToDict(self,team_record,athlete_records,final_record):
+    def mapEventAllStatsToDict(self,team_record,athlete_records,final_record):
         event_info = dict(
             event_id = team_record[9],
             volleyball_event_team_stats_id = team_record[10]
@@ -255,7 +255,7 @@ class VolleyballEventHandler:
 
         # mappedResult = []
         # for athlete_statistics in result:                        
-        #     mappedResult.append(self.mapVolleyballEventToDict(athlete_statistics))
+        #     mappedResult.append(self.mapEventToDict(athlete_statistics))
         # return jsonify(Volleyball_Event = mappedResult), 200
 
         athlete_statistics = []
@@ -298,7 +298,7 @@ class VolleyballEventHandler:
 
     #TODO: Validation - For add/updates, validate the len(attributes), same as previous len(form)
 
-    def getAllAthleteStatisticsByVolleyballEventId(self,eID,aID):
+    def getAllAthleteStatisticsByEventId(self,eID,aID):
         """
         Gets all the statistics for a given event and athlete. 
 
@@ -338,12 +338,12 @@ class VolleyballEventHandler:
             result = dao.getAllAthleteStatisticsByEventID(eID,aID)
             if not result:
                 return jsonify(Error = "Volleyball Event Statistics not found for the event: {} and the athlete id: {}.".format(eID,aID)),404
-            mappedResult = self.mapVolleyballEventAthleteStatsToDict(result)
+            mappedResult = self.mapEventAthleteStatsToDict(result)
         except:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
         return jsonify(Volleyball_Event_Athlete_Statistics = mappedResult),200
 
-    def getAllTeamStatisticsByVolleyballEventId(self,eID):
+    def getAllTeamStatisticsByEventId(self,eID):
         """
         Gets all the statistics for a given event. 
 
@@ -373,7 +373,7 @@ class VolleyballEventHandler:
             result = dao.getAllTeamStatisticsByEventID(eID)
             if not result:
                 return jsonify(Error = "Volleyball Event Team Statistics not found for the event: {}".format(eID)),404
-            mappedResult = self.mapVolleyballEventTeamStatsToDict(result)
+            mappedResult = self.mapEventTeamStatsToDict(result)
         except:
             return jsonify(ERROR="Unable to verify volleyball_even_team_stats from DAO."), 500
          
@@ -451,7 +451,7 @@ class VolleyballEventHandler:
                 return jsonify(Error = "Volleyball Event Statistics not found for the athlete id:{} in season year:{}.".format(aID,seasonYear)),404
             mappedResult = []
             for athlete_statistics in result:                     
-                mappedResult.append(self.mapVolleyballEventSeasonCollectionToDict(athlete_statistics))
+                mappedResult.append(self.mapEventSeasonCollectionToDict(athlete_statistics))
             #print(mappedResult)
         except:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -460,7 +460,7 @@ class VolleyballEventHandler:
 
     #NEW get ALL the statistics for a given event be it team or individual
     #TODO: naming is confusign with the top function
-    def getAllStatisticsByVolleyballEventID(self,eID):
+    def getAllStatisticsByEventID(self,eID):
         """
         Gets all the team and individual statistics for a given event. 
 
@@ -504,7 +504,7 @@ class VolleyballEventHandler:
             final_score_result = dao.getFinalScore(eID)
             if not final_score_result:
                 return jsonify(Error = "Volleyball Event Statistics not found for the event: {}.".format(eID)),404
-            mappedResult = self.mapVolleyballEventAllStatsToDict(team_result,all_stats_result, final_score_result)
+            mappedResult = self.mapEventAllStatsToDict(team_result,all_stats_result, final_score_result)
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
          
@@ -621,13 +621,13 @@ class VolleyballEventHandler:
             team_result = dao.editTeamStatistics(eID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapVolleyballEventAthleteStatsToDict(result)
+            mappedResult = self.mapEventAthleteStatsToDict(result)
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
 
         
         if invalid_duplicate:
-            mappedResult = self.mapVolleyballEventAthleteStatsToDict(result)
+            mappedResult = self.mapEventAthleteStatsToDict(result)
             dao.commitChanges()
             return jsonify(Volleyball_Event_Athlete_Statistics = mappedResult),200
         else:
@@ -710,7 +710,7 @@ class VolleyballEventHandler:
             except:
                 return jsonify(ERROR="Unable to verify volleyball team event from DAO."), 500
             
-            mappedResult = self.mapVolleyballEventTeamStatsToDict(result)
+            mappedResult = self.mapEventTeamStatsToDict(result)
             dao.commitChanges()
             return jsonify(Volleyball_Event_Team_Stats = mappedResult),200
         else:
@@ -793,7 +793,7 @@ class VolleyballEventHandler:
             except:
                 return jsonify(ERROR="Unable to verify volleyball team event from DAO."), 500
 
-            mappedResult = self.mapVolleyballEventTeamStatsToDict(result)
+            mappedResult = self.mapEventTeamStatsToDict(result)
             dao.commitChanges()
             return jsonify(Volleyball_Event_Team_Stats = mappedResult),200
         else:
@@ -1096,7 +1096,7 @@ class VolleyballEventHandler:
             team_result = dao.editTeamStatistics(eID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapVolleyballEventAthleteStatsToDict(result)
+            mappedResult = self.mapEventAthleteStatsToDict(result)
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
          
@@ -1142,7 +1142,7 @@ class VolleyballEventHandler:
             result = dao.editTeamStatistics(eID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapVolleyballEventTeamStatsToDict(result)
+            mappedResult = self.mapEventTeamStatsToDict(result)
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
          
@@ -1251,7 +1251,7 @@ class VolleyballEventHandler:
             team_result = dao.editTeamStatistics(eID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapVolleyballEventAthleteStatsToDict(result)
+            mappedResult = self.mapEventAthleteStatsToDict(result)
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
 

@@ -222,9 +222,9 @@ def basketballStatistics():
     json = request.json
     handler = BasketballEventHandler()
     if request.method == 'GET':
-        return handler.getAllStatisticsByBasketballEventID(json['event_id'])
+        return handler.getAllStatisticsByEventID(json['event_id'])
         #Removed call for version with only athlete stats list, new version returns all
-        #return handler.getAllStatisticsByBasketballEventID(eid)
+        #return handler.getAllStatisticsByEventID(eid)
     if request.method == 'POST':
         return handler.addAllEventStatistics(json['event_id'],json)
         #return jsonify(json),200
@@ -249,7 +249,7 @@ def basketballAthleteStatistics():
     json = request.json
     handler = BasketballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsByBasketballEventId(json['event_id'],json['athlete_id'])
+        return handler.getAllAthleteStatisticsByEventId(json['event_id'],json['athlete_id'])
     if request.method == 'POST':
         return handler.addStatistics(json['event_id'],json['athlete_id'],json['attributes'])
     if request.method == 'PUT':
@@ -277,7 +277,7 @@ def basketballTeamStatistics():
     json = request.json
     handler = BasketballEventHandler()
     if request.method == 'GET':
-        return handler.getAllTeamStatisticsByBasketballEventId(json['event_id'])
+        return handler.getAllTeamStatisticsByEventId(json['event_id'])
     if request.method == 'POST':
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
@@ -399,7 +399,7 @@ def volleyballStatistics():
     json = request.json
     handler = VolleyballEventHandler()
     if request.method == 'GET':
-        return handler.getAllStatisticsByVolleyballEventID(json['event_id'])
+        return handler.getAllStatisticsByEventID(json['event_id'])
     if request.method == 'POST':
         return handler.addAllEventStatistics(json['event_id'],json)
         #return jsonify(json),200
@@ -430,7 +430,7 @@ def volleyballAthleteStatistics():
     json = request.json
     handler = VolleyballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsByVolleyballEventId(json['event_id'],json['athlete_id'])
+        return handler.getAllAthleteStatisticsByEventId(json['event_id'],json['athlete_id'])
     if request.method == 'POST':
         return handler.addStatistics(json['event_id'],json['athlete_id'],json['attributes'])
     if request.method == 'PUT':
@@ -465,7 +465,7 @@ def volleyballTeamStatistics():
     json = request.json
     handler = VolleyballEventHandler()
     if request.method == 'GET':
-        return handler.getAllTeamStatisticsByVolleyballEventId(json['event_id'])
+        return handler.getAllTeamStatisticsByEventId(json['event_id'])
     if request.method == 'POST':
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
