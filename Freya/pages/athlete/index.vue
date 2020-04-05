@@ -185,41 +185,97 @@
                 cols="12" 
                 md="4"               
               >
-                <v-select
-                  v-model="sport"
-                  :items="sports"
-                  label ="Deporte"
-                  prepend-icon="mdi-volleyball"
-                ></v-select>
-
-                <v-select
-                  v-model="number"
-                  :items="sports"
-                  label ="Branch"
-                  prepend-icon="mdi-file-tree"
-                ></v-select>
-
-                <ValidationProvider v-slot="{ errors }" name="Posicion" rules="required_if:getSport(),Voleibol'">
-                  <v-text-field
-                    v-model="athlete_position"
-                    :error-messages="errors"                    
-                    label="Posicion"
-                    prepend-icon="mdi-alpha-x-box-outline"
-                    v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'"
-                  ></v-text-field>
-                </ValidationProvider>             
-
-              
-                <ValidationProvider v-slot="{ errors }" name="Categoria" rules="required_if:getSport(),Voleibol'">
-                  <v-text-field
-                    v-model="sport_category"
-                    :error-messages="errors"                    
-                    label="Categoria"
-                    prepend-icon="mdi-clipboard-list"
-                    v-if="getSport() == 'Atletismo' | getSport() == 'Baloncesto'"
-                  ></v-text-field>
+                <ValidationProvider v-slot="{ errors }" name="Sport" rules="required">
+                  <v-select
+                    v-model="sport"
+                    :items="sports"
+                    :error-messages="errors"
+                    label ="Deporte"
+                    prepend-icon="mdi-volleyball"
+                  ></v-select>
                 </ValidationProvider>
-             
+                
+                <ValidationProvider v-slot="{ errors }" name="Branch" rules="required">
+                  <v-select
+                    v-model="branch"
+                    :items="branches"
+                    :error-messages="errors"
+                    label ="Rama"
+                    prepend-icon="mdi-file-tree"
+                  ></v-select>
+                </ValidationProvider>
+
+              </v-col>              
+            </v-row>
+
+            <v-row>
+              <v-col
+                cols="12" 
+                md="4"               
+              >              
+                <div>                  
+                  <h2 v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'">
+                   
+                    Posiciones:
+
+                  </h2>
+                </div>
+
+                <div>                  
+                  <h2 v-if="getSport() == 'Atletismo'">
+                   
+                    Categorias:
+
+                  </h2>
+                </div>
+
+              </v-col>
+
+              <v-col
+                cols="12" 
+                md="4"               
+              > 
+              
+                <div v-for="(value,key) in sport_positions" :key="key" >
+                  <v-checkbox
+                    :input-value="value"
+                    :label="key"                    
+                    v-if="getSport()=='Voleibol' | getSport()=='Baloncesto'"                      
+                  ></v-checkbox>
+                </div>
+              
+                
+                <div v-for="(value,key) in sport_category" :key="key">
+                  <v-checkbox
+                    :input-value="value"
+                    :label="key"
+                    v-on:change="updateCategories(key,value)"
+                    v-if="getSport()=='Atletismo'"                      
+                  ></v-checkbox>
+                </div>
+
+              </v-col>                   
+            </v-row>  
+
+            <v-row> 
+
+              <v-col
+                cols="12" 
+                md="4"               
+              >              
+                <div>                  
+                  <h2 v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'">
+                   
+                    Numero del Atleta:
+
+                  </h2>
+                </div> 
+              </v-col>
+
+              <v-col
+                cols="12" 
+                md="4"               
+              >
                 <v-select
                   v-model="number"
                   :items="numbers"
@@ -227,9 +283,9 @@
                   prepend-icon="mdi-numeric-0-box"
                   v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'"
                 ></v-select>
-              </v-col>              
-            </v-row>
-            
+
+              </v-col>
+            </v-row>            
 
             <v-row>
 
@@ -327,7 +383,8 @@
       ValidationObserver,
     },
     data: () => ({
-      date: new Date().toISOString().substring(0,10),
+      selected_categories:[],
+      date: new Date().toISOString().substr(0,10),
       menu: false,
       first_name: '',
       middle_name: '',
@@ -339,14 +396,17 @@
       date_of_birth:'',
       school_of_precedence:'',
       athlete_position:'',
-      sport_category:'',
+      sport_positions:{"Delantero":false,"Libero":true},
+      sport_category:{"100m":true,"200m":false,"300m":true},
       number:'',
       profile_image_link:'',
       sport_id:0,
-      sport:'',
+      sport:'',      
       sports:['Voleibol','Baloncesto','Atletismo'],
+      branch:'',
+      branches:['Masculino','Femenino','Otro'],
       feet: [4,5,6,7],
-      inches:[0,1,2,3,4,5,6,7,8,9,10,11,12],
+      inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0],
       numbers:[0,1,2,3,4,5,6,7,8,9,10,11,12,
               13,14,15,16,17,18,19,20,21,22,
               23,24,25,26,27,28,29,30,31,32,
@@ -361,6 +421,10 @@
       
       
     }),
+           
+      
+      
+    
   
 
     methods: {
@@ -383,6 +447,17 @@
         this.sport ='', 
         
         this.$refs.observer.reset()
+      },
+      updateCategories(key,value){
+        console.log(key)
+        console.log(!value)
+        this.sport_category[key]=!value
+        console.log(this.sport_category)
+        
+      },
+      getVal(key)
+      {
+        return this.sport_category[key]
       },
 
       getSport(){
