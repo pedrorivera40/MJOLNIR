@@ -40,8 +40,8 @@ class TestUserRoutes(unittest.TestCase):
 
   def test_add_new_user_with_username_of_removed_user(self):
     newUserOldUsername = {
-          'email' : 'iklo9@email.com',
-          'full_name' : 'Barbell Bayron',
+          'email' : 'newnewUser4@email.com',
+          'full_name' : 'Newnew User4',
           'username' : self.data['username'],
           'password' : 'ninjaTurtles'
     }

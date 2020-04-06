@@ -305,7 +305,6 @@ class UserDAO:
             containing the matching record for the modified dashboard user.
         """
         cursor = self.conn.cursor()
-        # TODO check if user with that ID exits
 
         query = """
                 update dashboard_user 
@@ -366,7 +365,9 @@ class UserDAO:
         """
         queryResults = []
         cursor = self.conn.cursor()
+
         # TODO finde better way to do this.
+        # This makes sure it is a valid user.
         if self.getDashUserByID(duid) == None:
             return 'UserError4'
         if permissionsList == None:
