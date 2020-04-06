@@ -140,7 +140,7 @@ class UserHandler:
 
         Args:
             username: The username of the dashboboard user that needs to be fetched.
-            
+            password: The password of the dashboard user
         Returns:
             A JSON containing all the user's hash.
         """
@@ -150,7 +150,7 @@ class UserHandler:
             return jsonify(Error="Username or Password are incorrect."), 200
         
         mappedHash = self.mapHash(fetchedHash)
-        
+        #TODO AES encryption.
         if verifyHash(password, mappedHash['hash']):
             # User provided correct password
             token = generateToken(username)
