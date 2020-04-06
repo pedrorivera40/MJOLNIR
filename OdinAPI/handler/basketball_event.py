@@ -5,70 +5,15 @@ from .event_result import EventResultHandler
 #from .dao.event import EventDAO
 #from .dao.team import TeamDAO
 #from .dao.athlete import AthleteDAO
+#TODO: REMOVE FOR FULL VERSIONS
+#MOCK IMPLEMENTATIONS OF DAO
+from .dao.mock_dao import EventDAO
+from .dao.mock_dao import TeamDAO
+from .dao.mock_dao import AthleteDAO
 
 #CONSTANTS: 
 BASKETBALL_IDM = 1
 BASKETBALL_IDF = 10
-
-# THESE ARE MOCK CLASSES FOR EVENT AND TEAM
-#TODO: Remove this later, it's just so that it compiles while the other DAOs arent finished
-class EventDAO:
-    def getEventByID(self,eID):
-        #   id  date            is_local|venue      team_id
-        #   3	"2020-03-30"	true	"Mangual"	1
-        #   4	"2020-03-14"	true	"Espada"	1
-        if eID == 3:
-            return ('2020-03-30',True,'Mangual',1)
-        if eID == 4:
-            return ('2020-03-14',True,'Espada',1)
-        if eID == 5:
-            return ('2020-04-01',True,'Mangual',1)
-        if eID == 6:
-            return ('2020-04-20',True,'Espada',1)
-        return None
-    def getEventTeamByID(self,eID):
-        team1events =[3,4,5,6]
-        if eID in team1events:
-            return 1
-        else:
-            return None
-
-class TeamDAO:
-    def getTeamSportByID(self,tID) :
-        # Sport ID distribution
-        # Team 1 is Volleyball M (1)
-        # Team 2 is Volleyball M (2)
-        # Team 3 is Basketball M (10)
-        # Teams 4 and 5 is Volleyball F (12)
-        if tID == 1:
-            return 1
-        if tID == 2:
-            return 2
-        if tID == 3:
-            return 10
-        if tID == 4:
-            return 12
-        else:
-            return None
-        return
-    def getTeamMemberByIDs(self,aID,tID):
-        # Team 1 has Athletes 1,3,4,8
-        #returnable = dict(athlete_id = 8,team_id = 1)
-        if tID == 1:
-            if aID == 1 or aID == 3 or aID == 4 or aID == 8:
-                return (aID,tID)
-        return None
-            
-
-class AthleteDAO:
-    def getAthleteByID(self,aID):
-        # Many Athletes in system, gonna only demo a few.
-        valid_list = [1,3,4,5,7,8,9,10,11,12,13,15,16]
-        if aID in valid_list:
-            # We dont care about value here, just that it returns 
-            # something to prove it exists
-            return True
-        return False
 
 class BasketballEventHandler(EventResultHandler):
     
