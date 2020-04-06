@@ -72,14 +72,13 @@ class TestUserRoutes(unittest.TestCase):
         self.data = newUser
         self.client = app.test_client()
 
-    ###########################################
-    #-------- Remove User From System --------#
-    ###########################################
+    #######################################################
+    #-------- Set User Permissiona fot the System --------#
+    #######################################################
 
     def test_set_user_permissions(self):
         response = self.client.patch(f'/users/{newUserID}/permissions', data=json.dumps(self.default_permissions), content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 201)
-        print('Hemlock groock')
         for permission in response.json['Permissions']:
             if permission['permission_id'] == 13:
                 self.assertEqual(permission['is_invalid'], True)
