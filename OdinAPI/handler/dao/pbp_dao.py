@@ -229,7 +229,7 @@ class PBPDao:
         return self._rtdb.reference(path).get()
 
     # TODO -> Add documentation for this...
-    def set_score_by_set(self, event_id, set_path, score):
+    def _set_score_by_set(self, event_id, set_path, score):
         return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + set_path).set(score)
 
     def get_score_by_set(self, event_id, set_path):
@@ -237,7 +237,9 @@ class PBPDao:
 
     def adjust_score_by_set(self, event_id, set_path, adjust):
         current_score = int(self.get_score_by_set(event_id, set_path))
-        return self.set_score_by_set(event_id, set_path, current_score + int(adjust))
+        if current_score + int(adjust) < 0:
+            raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
+        return self._set_score_by_set(event_id, set_path, current_score + int(adjust))
 
     def pbp_game_action_exists(self, event_id, action_id):
         """

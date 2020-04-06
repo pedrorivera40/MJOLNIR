@@ -73,7 +73,7 @@ class PBPHandler:
 
         return set_path
 
-    def get_indirect_set_path(self, team, event_id, dao):
+    def _get_indirect_set_path(self, team, event_id, dao):
         """
         Internal method to obtain the indirect set path. It is the complement of the direct set path.
         """
@@ -100,8 +100,12 @@ class PBPHandler:
 
         action_type = action["type"]
 
+        # Initial validations.
         if not action_type:
             raise Exception("PBPHandler: Invalid PBP action.")
+
+        if not dao.pbp_exists(event_id):
+            raise Exception("PBPHandler: Invalid event id.")
 
         # Notifications are only posted. No score or set value needs to be modified from a notification.
         if action_type == self._sport_keywords["notification"]:
@@ -116,21 +120,49 @@ class PBPHandler:
             dao.adjust_score_by_set(event_id, set_path, difference)
             return
 
+        is_valid_athlete = (action["athlete_id"] in dao.get_uprm_roster(event_id)
+                            or action["athlete_id"] in dao.get_opponent_roster(event_id))
+
         # Scoring game actions modify athlete statistics and team score.
-        # TODO -> Finish this section.
+        # TODO -> TEST THIS SECTION.
         if action_type in self._sport_keywords["scoring_actions"]:
-            set_path = self._get_direct_set_path(action["team"], event_id, dao)
-            difference = int(action["difference"])
-            # if action["athlete_id"] in dao.
-            dao.adjust_score_by_set(event_id, set_path, difference)
+
+            if is_valid_athlete:
+                set_path = self._get_direct_set_path(
+                    action["team"], event_id, dao)
+                difference = int(action["difference"])
+                dao.add_pbp_game_action(event_id, action)
+                dao.adjust_score_by_set(event_id, set_path, 1)
+
+            else:
+                raise Exception("PBPHandler: Invalid athlete information.")
+
             return
 
+        # Personal actions only modify athlete statistics.
+        # The only action to do is add to Feed and let clients compute statistics.
         if action_type in self._sport_keywords["personal_actions"]:
-            print("PERSONAL ACTION!")
+
+            if is_valid_athlete:
+                dao.add_pbp_game_action(event_id, action)
+
+            else:
+                raise Exception("PBPHandler: Invalid athlete information.")
+
             return
 
         if action_type in self._sport_keywords["error_actions"]:
-            print("ERROR ACTION!")
+
+            if is_valid_athlete:
+                set_path = self._get_indirect_set_path(
+                    action["team"], event_id, dao)
+                difference = int(action["difference"])
+                dao.add_pbp_game_action(event_id, action)
+                dao.adjust_score_by_set(event_id, set_path, 1)
+
+            else:
+                raise Exception("PBPHandler: Invalid athlete information.")
+
             return
 
         raise Exception(
