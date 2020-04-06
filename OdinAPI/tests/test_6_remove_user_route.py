@@ -9,7 +9,6 @@ class TestUserRoutes(unittest.TestCase):
   def setUp(self):
       app.config['DEBUG'] = True
       self.data = newUser
-      self.newUserID = 1
       self.client = app.test_client()
 
   ###########################################
