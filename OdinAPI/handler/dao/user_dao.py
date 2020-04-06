@@ -334,6 +334,9 @@ class UserDAO:
             A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
+        # Remove all permissions from the account that will be deleted.
+        self.setUserPermissions(duid, self.default_permissions)
+
         cursor = self.conn.cursor()
         query = """
                 update dashboard_user 
