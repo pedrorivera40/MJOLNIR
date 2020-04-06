@@ -177,10 +177,6 @@ class PBPDao:
             int(event_id) + self._db_keywords["opp-roster"]
         return self._rtdb.reference(path).get()
 
-    # TODO -> Confirm if this will be implemented...
-    def set_pbp_metadata(self, event_id, metadata):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["meta"]).set(metadata)
-
     def pbp_exists(self, event_id):
         """
         Determines if a PBP sequence exists.
@@ -232,6 +228,7 @@ class PBPDao:
 
         return self._rtdb.reference(path).get()
 
+    # TODO -> Add documentation for this...
     def set_score_by_set(self, event_id, set_path, score):
         return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + set_path).set(score)
 

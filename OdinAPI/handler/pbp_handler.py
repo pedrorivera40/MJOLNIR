@@ -117,9 +117,11 @@ class PBPHandler:
             return
 
         # Scoring game actions modify athlete statistics and team score.
+        # TODO -> Finish this section.
         if action_type in self._sport_keywords["scoring_actions"]:
             set_path = self._get_direct_set_path(action["team"], event_id, dao)
             difference = int(action["difference"])
+            # if action["athlete_id"] in dao.
             dao.adjust_score_by_set(event_id, set_path, difference)
             return
 
@@ -168,11 +170,7 @@ class PBPHandler:
 
             # At this point, the event exists and does not have a PBP sequence.
             game_metadata = {
-                "branch": event_info[0],
                 "game-ended": {"answer": "No"},
-                "location": "Home" if event_info[1] else "Away",
-                "opponent-color": event_info[2],
-                "opponent-name": event_info[3],
                 "sport": event_info[4],
             }
 
@@ -183,10 +181,6 @@ class PBPHandler:
 
         except:
             return jsonify(ERROR="PBPHandler.startPBPSequence: Could not retrieve information from PBP DAO."), 500
-
-    # TODO -> Add edit metadata method & Docs... (MAKE SURE IT SYNCHRONIZES...)
-    def editPBPMetadata(self, metadata):
-        return 1
 
     # TODO -> Add roster methods... & Docs...
     def addUPRMPlayer(self, event_id, player_info):
