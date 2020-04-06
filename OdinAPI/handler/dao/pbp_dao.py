@@ -248,6 +248,22 @@ class PBPDao:
 
         Args
             event_id: integer corresponding to an event id.
+            action_id: string corresponding to the game action to check.
+
+        Returns:
+            Boolean that determines if the game action exists.
+        """
+
+        return self.get_pbp_action(event_id, action_id) != None
+
+    def get_pbp_action(self, event_id, action_id):
+        """
+        Find a PBP sequence action..
+        This function returns a PBP action given its event and action id.
+
+        Args
+            event_id: integer corresponding to an event id.
+            action_id: string corresponding to the game action to get.
 
         Returns:
             Boolean that determines if the game action exists.
@@ -256,7 +272,7 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             int(event_id) + self._db_keywords["actions"] + "/" + action_id
 
-        return self._rtdb.reference(path).get() != None
+        return self._rtdb.reference(path).get()
 
     def add_pbp_game_action(self, event_id, action_content):
         """

@@ -99,14 +99,17 @@ class VolleyballVolleyballPBPHandler:
         Internal method for handling Volleyball PBP Actions via a PBPDao.
         """
 
-        action_type = action["type"]
-
         # Initial validations.
-        if not action_type:
-            raise Exception("VolleyballPBPHandler: Invalid PBP action.")
-
         if not dao.pbp_exists(event_id):
             raise Exception("VolleyballPBPHandler: Invalid event id.")
+
+        if dao.is_game_over(event_id):
+            raise Exception("PBPHandler: event is over.")
+
+        action_type = action["type"]
+
+        if not action_type:
+            raise Exception("VolleyballPBPHandler: Invalid PBP action.")
 
         # Notifications are only posted. No score or set value needs to be modified from a notification.
         if action_type == self._sport_keywords["notification"]:
@@ -134,12 +137,11 @@ class VolleyballVolleyballPBPHandler:
                 difference = int(action["difference"])
                 dao.add_pbp_game_action(event_id, action)
                 dao.adjust_score_by_set(event_id, set_path, 1)
+                return
 
             else:
                 raise Exception(
                     "VolleyballPBPHandler: Invalid athlete information.")
-
-            return
 
         # Personal actions only modify athlete statistics.
         # The only action to do is add to Feed and let clients compute statistics.
@@ -147,12 +149,11 @@ class VolleyballVolleyballPBPHandler:
 
             if is_valid_athlete:
                 dao.add_pbp_game_action(event_id, action)
+                return
 
             else:
                 raise Exception(
                     "VolleyballPBPHandler: Invalid athlete information.")
-
-            return
 
         if action_type in self._sport_keywords["error_actions"]:
 
@@ -162,15 +163,63 @@ class VolleyballVolleyballPBPHandler:
                 difference = int(action["difference"])
                 dao.add_pbp_game_action(event_id, action)
                 dao.adjust_score_by_set(event_id, set_path, 1)
+                return
 
             else:
                 raise Exception(
                     "VolleyballPBPHandler: Invalid athlete information.")
 
-            return
-
         raise Exception(
             "VolleyballPBPHandler: Undefined Volleyball PBP Sequence Game Action.")
+
+    def _handle_pbp_edit_action(self, event_id, action_id, new_action, dao):
+        """
+        Internal method for handling editting previously added game actions in a PBP sequence.
+        """
+
+        if not dao.pbp_exists(event_id):
+            raise Exception("PBPHandler: event does not exist.")
+
+        if dao.is_game_over(event_id):
+            raise Exception("PBPHandler: event is over.")
+
+        if not dao.pbp_game_action_exists(event_id, action_id):
+            raise Exception("PBPHandler: action does not exist.")
+
+        # Every action must have a type.
+        prev_action = dao.get_pbp_action(event_id, action_id)
+        prev_type = prev_action["type"]
+        new_type = new_action["type"]
+
+        # Variables to be used depending on the edit type.
+        are_same_type = (prev_type == new_type)
+        is_valid_athlete = True
+
+        # Notifications are only posted. No score or set value needs to be modified from a notification.
+        if are_same_type and prev_type == self._sport_keywords["notification"]:
+            dao.add_pbp_game_action(event_id, new_action)
+            return
+
+        # If action involves an athlete, validate the new action involves a valid athlete.
+        if (new_type in self._sport_keywords["scoring_actions"]
+            or new_type in self._sport_keywords["personal_actions"]
+                or new_type in self._sport_keywords["error_actions"]):
+
+            # A valid athlete must be in one of the two rosters for the given event id.
+            is_valid_athlete = (new_action["athlete_id"] in dao.get_uprm_roster(event_id)
+                                or new_action["athlete_id"] in dao.get_opponent_roster(event_id))
+
+        if not is_valid_athlete:
+            raise Exception("PBPHandler: Invalid athlete id.")
+
+        if are_same_type and prev_type in self._sport_keywords["scoring_actions"]:
+            new_team = new_action["team"]
+            if new_team in self._sport_keywords["teams"] and new_team != prev_action["team"]:
+                print("MUST REVERT SCORE IN FAVOUR OF NEW_TEAM")
+
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
+
+        return 1
 
     def startPBPSequence(self, event_id):
         """
@@ -392,15 +441,16 @@ class VolleyballVolleyballPBPHandler:
 
                 if pbp_dao.is_game_over(event_id):
                     return jsonify(ERROR="VolleyballPBPHandler.editPBPAction: PBP sequence already over."), 403
-                # TODO -> validate sequence info is complete...
-                pbp_dao.edit_pbp_game_action(event_id, action_id, new_action)
+                self._handle_pbp_edit_action(
+                    event_id, action_id, new_action, pbp_dao)
                 return jsonify(MSG="Edit game action success."), 200
 
             return jsonify(ERROR="VolleyballPBPHandler.editPBPAction: Non-existing PBP sequence."), 403
 
         except:
-            return jsonify(ERROR="VolleyballPBPHandler.editPBPAction: Internal error from PBP DAO."), 500
+            return jsonify(ERROR="VolleyballPBPHandler.editPBPAction: Internal error editting action."), 500
 
+    # TODO -> Make it work same as add action (handle scoring actions...)
     def removePlayPBPAction(self, event_id, game_action_id):
         """
         Removes a PBP game action from the feed.
