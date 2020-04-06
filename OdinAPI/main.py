@@ -112,6 +112,20 @@ def athletePositions(sid, aid):
         return handler.editAthletePosition(request.json['apID'], request.json['psID'], aid)
 
 ###########################################
+#--------- Authentication Routes ---------#
+###########################################
+@app.route("/auth/", methods=['POST'])
+def auth():
+    if request.method == 'POST':
+        handler = UserHandler()
+        username = request.json['username']
+        password = request.json['password'] # TODO: AES Encryption
+        
+        return handler.getHashByUsername(username, password)
+        
+
+
+###########################################
 #--------- Dashboard User Routes ---------#
 ###########################################
 @app.route("/users/", methods = ['GET','POST'])
@@ -176,6 +190,7 @@ def passwordReset(duid):
         ## Check the request contains the right structure.
         if req['password'] == None:
             return jsonify(Error='Bad Request'), 400
+        print('Hello from main: {}'.format(req['password']))
         return handler.updateDashUserPassword(duid,req['password'])
 
 @app.route("/users/<string:duid>/toggleActive", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string

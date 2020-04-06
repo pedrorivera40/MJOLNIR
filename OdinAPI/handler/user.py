@@ -1,5 +1,5 @@
 from flask import jsonify
-from auth import createHash
+from auth import createHash, verifyHash
 from .dao.user_dao import UserDAO
 
 class UserHandler:
@@ -24,6 +24,14 @@ class UserHandler:
         permissionsDictionary = {}
         permissionsDictionary['permission_id'] = record[0]
         permissionsDictionary['is_invalid'] = record[1]
+        return permissionsDictionary
+
+    def mapHash(self, record):
+        """
+        Converts results returned by DAO into a dictionary.
+        """
+        permissionsDictionary = {}
+        permissionsDictionary['hash'] = record[0]
         return permissionsDictionary
 
     def addDashUser(self, username, fullName,email, password):
@@ -121,6 +129,31 @@ class UserHandler:
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser),200 #200 == OK
 
+    def getHashByUsername(self, username, password):
+        """
+        Gets a dashboard's user password hash given their username.
+
+        Calls the UserDAO to get a user's password hash given their username 
+        and maps the result to a JSON that contains the desired record. 
+        That JSON object is then returned.
+
+        Args:
+            username: The username of the dashboboard user that needs to be fetched.
+            
+        Returns:
+            A JSON containing all the user's hash.
+        """
+        dao = UserDAO()
+        fetchedHash = dao.getHashByUsername(username)
+        if fetchedHash == None:
+            return jsonify(Error="Username or Password are incorrect."), 200
+        
+        mappedHash = self.mapHash(fetchedHash)
+        
+        return jsonify(result=verifyHash(password, mappedHash['hash']))
+
+        # return jsonify(User=mappedHash),200 #200 == OK
+
     def getDashUserByEmail(self, email):
         """
         Gets a single Dashboard user given their email.
@@ -162,6 +195,7 @@ class UserHandler:
         # Hash password 
         hashedPassword = createHash(password)
         dao = UserDAO()
+        print('Hello From handler: {}'.format(hashedPassword))
         res = dao.updateDashUserPassword(duid, hashedPassword)
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404

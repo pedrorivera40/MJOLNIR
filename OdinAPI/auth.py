@@ -27,12 +27,12 @@ def createHash(password):
     """
     utfPasswd = password.encode('utf-8')
     salt = bcrypt.gensalt(rounds=10)  # 10 rounds for now
-    hash = bcrypt.hashpw(utfPasswd, salt)
+    encoded = bcrypt.hashpw(utfPasswd, salt)
+    decoded = encoded.decode('utf-8')
+    return decoded
 
-    return hash
 
-
-def verifyHash(storedHash, password):
+def verifyHash(password, storedHash):
     """
     Verify the passed password's is a correct.
 
@@ -47,12 +47,10 @@ def verifyHash(storedHash, password):
         A boolean value signifying if the password is a match or not.
     """
     # hardcoding the user to be evaluated
+    print(storedHash)
     if storedHash == None:
         return False
-    elif bcrypt.checkpw(password, storedHash.encode('utf-8')):
-        return True
-    else:
-        return False
+    return bcrypt.checkpw(password.encode('utf-8'), storedHash.encode('utf-8'))
 
 
 ### JWT Token Related Functions ###
