@@ -29,8 +29,77 @@ class PBPHandler:
                 "set5-opponent": 0,
                 "set5-uprm": 0
             },
-            "sport": "Voleibol"
+            "uprm-sets": ["/set1-uprm", "/set2-uprm", "/set3-uprm", "/set4-uprm", "/set5-uprm"],
+            "opp-sets": ["/set1-opponent", "/set2-opponent", "/set3-opponent", "/set4-opponent", "/set5-opponent"],
+            "sport": "Voleibol",
+            "scoring_actions": [
+                "KillPoint",
+                "Assist"
+                "Ace",
+                "Block",
+                "BlockPoint",
+                "Dig",
+            ],
+            "adjust": "ScoreAdjust",
+            "error_actions": [
+                "AttackError",
+                "ServiceError",
+                "BlockingError",
+                "ReceptionError"
+            ],
+            "notification": "Notification",
+            "teams": ["uprm", "opponent"]
         }
+
+    def _get_direct_set_path(self, action, dao):
+        """
+        Internal method to determine set path directly depending on the action team.
+        """
+
+        # Validate team value is specified correctly.
+        if action["team"] not in self._sport_keywords["teams"]:
+            raise Exception("PBPHandler: Invalid team value.")
+
+        current_set = int(dao.get_current_set())
+        set_path = ""
+
+        # Determine proper set path value based on the team that needs the adjust.
+        if action["team"] == self._sport_keywords["teams"][0]:
+            set_path = self._sport_keywords["uprm-sets"][current_set - 1]
+        else:
+            set_path = self._sport_keywords["opp-sets"][current_set - 1]
+
+        return set_path
+
+    def _handle_pbp_action(self, event_id, action, dao):
+        """
+        Internal method for handling Volleyball PBP Actions via a PBPDao.
+        """
+
+        action_type = action["type"]
+
+        if not action_type:
+            raise Exception("PBPHandler: Invalid PBP action.")
+
+        if action_type == self._sport_keywords["notification"]:
+            dao.add_pbp_game_action(event_id, action)
+            return
+
+        if action_type == self._sport_keywords["adjust"]:
+            set_path = self._get_direct_set_path(action, dao)
+            difference = int(action["difference"])
+            dao.adjust_score_by_set(event_id, set_path, difference)
+            return
+
+        elif action_type in self._sport_keywords["scoring_actions"]:
+            print("SCORING ACTIONS!")
+
+        elif action_type in self._sport_keywords["error_actions"]:
+            print("ERROR ACTION!")
+
+        else:
+            raise Exception(
+                "PBPHandler: Undefined Volleyball PBP Sequence Game Action.")
 
     def startPBPSequence(self, event_id):
         """
@@ -72,7 +141,6 @@ class PBPHandler:
                 "opponent-color": event_info[2],
                 "opponent-name": event_info[3],
                 "sport": event_info[4],
-                "venue": event_info[5]
             }
 
             pbp_dao.create_volleyball_pbp_seq(
@@ -83,27 +151,27 @@ class PBPHandler:
         except:
             return jsonify(ERROR="PBPHandler.startPBPSequence: Could not retrieve information from PBP DAO."), 500
 
-    # TODO -> Add edit metadata method & Docs...
+    # TODO -> Add edit metadata method & Docs... (MAKE SURE IT SYNCHRONIZES...)
     def editPBPMetadata(self, metadata):
         return 1
 
     # TODO -> Add roster methods... & Docs...
-    def addUPRMRoster(self):
+    def addUPRMPlayer(self, event_id, player_info):
         return 1
 
-    def addOppRoster(self):
+    def addOppPlayer(self, event_id,  player_info):
         return 1
 
-    def editUPRMRoster(self):
+    def editUPRMPlayer(self, event_id,  player_id, player_info):
         return 1
 
-    def editOppRoster(self):
+    def editOppPlayer(self, event_id,  player_id, player_info):
         return 1
 
-    def removeUPRMRoster(self):
+    def removeUPRMPlayer(self, event_id,  player_id):
         return 1
 
-    def removeOppRoster(self):
+    def removeOppPlayer(self, event_id,  player_id):
         return 1
 
     def addPBPAction(self, event_id, action_data):

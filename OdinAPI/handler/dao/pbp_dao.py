@@ -30,8 +30,6 @@ class PBPDao:
             "score-key": "score",
             "over": "/game-ended",
             "answer": "/answer",
-            "uprm-sets": ["/set1-uprm", "/set2-uprm", "/set3-uprm", "/set4-uprm", "/set5-uprm"],
-            "opp-sets": ["/set1-opponent", "/set2-opponent", "/set3-opponent", "/set4-opponent", "/set5-opponent"]
         }
 
     def create_pbp_seq(self, event_id, game_metadata, score_val):
@@ -81,34 +79,121 @@ class PBPDao:
         return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["opp-roster"]).set(opponent_roster)
 
     def pbp_exists(self, event_id):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id)).get() != None
+        """
+        Determines if a PBP sequence exists.
+        This function determines whether a PBP sequence exists in the non-relational database.
+
+        Args
+            event_id: integer corresponding to an event id.
+            action_id: string corresponding to the game action to remove.
+
+        Returns:
+            Boolean that determines if the PBP sequence exists.
+        """
+
+        path = self._db_keywords["root"] + int(event_id)
+
+        return self._rtdb.reference(path).get() != None
 
     def set_current_set(self, event_id, new_set):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["set"]).set(new_set)
+        """
+        Updates the current set or period for a PBP sequence.
+        This function sets the current set or period value of a PBP sequence given its id.
+
+        Args
+            event_id: integer corresponding to an event id.
+            new_set: integer corresponding to the new set or period value.
+
+        Returns:
+            void
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + self._db_keywords["set"]
+
+        self._rtdb.reference(path).set(int(new_set))
 
     def get_current_set(self, event_id):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["set"]).get()
+        """
+        Gets the current set or period for a PBP sequence.
+        This function gets the current set or period value of a PBP sequence given its id.
 
-    def set_uprm_score(self, event_id, set, score):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + self._db_keywords["uprm-sets"][set - 1]).set(score)
+        Args
+            event_id: integer corresponding to an event id.
 
-    def get_uprm_score(self, event_id, set):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + self._db_keywords["uprm-sets"][set - 1]).get()
+        Returns:
+            integer denoting the current set or period of a PBP sequence.
+        """
 
-    def set_opponent_score(self, event_id, set, score):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + self._db_keywords["opp-sets"][set - 1]).set(score)
+        path = self._db_keywords["root"] + \
+            int(event_id) + self._db_keywords["set"]
 
-    def get_opponent_score(self, event_id, set):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + self._db_keywords["opp-sets"][set - 1]).get()
+        return self._rtdb.reference(path).get()
+
+    def set_score_by_set(self, event_id, set_path, score):
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + set_path).set(score)
+
+    def get_score_by_set(self, event_id, set_path):
+        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + set_path).get()
+
+    def adjust_score_by_set(self, event_id, set_path, adjust):
+        current_score = int(self.get_score_by_set(event_id, set_path))
+        return self.set_score_by_set(event_id, set_path, current_score + int(adjust))
 
     def pbp_game_action_exists(self, event_id, action_id):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["actions"] + "/" + action_id).get() != None
+        """
+        Determines if a PBP action exists.
+        This function determines whether a particular game action exists as part of a PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+            action_id: string corresponding to the game action to remove.
+
+        Returns:
+            Boolean that determines if the game action exists.
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + self._db_keywords["actions"] + "/" + action_id
+
+        return self._rtdb.reference(path).get() != None
 
     def add_pbp_game_action(self, event_id, action_content):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["actions"]).push(action_content)
+        """
+        Adds a game action from PBP sequence.
+        This function inserts a particular game action into PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+            action_content: JSON object corresponding to the new action content.
+
+        Returns:
+            ID corresponding to the newly inserted game action.
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + self._db_keywords["actions"]
+
+        return self._rtdb.reference(path).push(action_content)
 
     def edit_pbp_game_action(self, event_id, action_id, action_content):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["actions"] + "/" + action_id).set(action_content)
+        """
+        Edits a game action from PBP sequence.
+        This function updates a particular game action from PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+            action_id: string corresponding to the game action to remove.
+            action_content: JSON object corresponding to the new action content.
+
+        Returns:
+            void
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + self._db_keywords["actions"] + "/" + action_id
+
+        return self._rtdb.reference(path).set(action_content)
 
     def remove_pbp_game_action(self, event_id, action_id):
         """
