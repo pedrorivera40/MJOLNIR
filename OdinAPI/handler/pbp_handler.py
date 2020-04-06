@@ -3,11 +3,12 @@ from .dao.pbp_dao import PBPDao as VolleyballPBPDao
 from.dao.mock.event_dao import _mockEventDAO as EventDAO
 
 
-class PBPHandler:
+class VolleyballPBPHandler:
     '''
     PBPHandler - This class handles incomming requests from Odin API's gateway
                  by interacting with the PBPDAO. It is responsible for modifying
-                 the state of content stored in the non-relational database.
+                 the state of content stored in the non-relational database,
+                 especially information regarding Volleyball PBP sequences.
     @author Pedro Luis Rivera Gomez
     '''
 
@@ -216,6 +217,17 @@ class PBPHandler:
 
     # TODO -> TESTS & Docs...
     def setUPRMPlayer(self, event_id, player_info):
+        """
+        Add an athlete to UPRM roster or updates its value if exists in the system.
+        This function adds an athlete to UPRM roster given it's event_id.
+        If the athlete exists, it updates its information.
+
+        Args
+            event_id: integer corresponding to an event id.
+
+        Returns:
+            Response containing a MSG in case of success, or ERROR message in case of failure.
+        """
 
         try:
             pbp_dao = VolleyballPBPDao()
@@ -233,6 +245,17 @@ class PBPHandler:
             return jsonify(ERROR="PBPHandler.setUPRMPlayer: Internal error from PBP DAO."), 500
 
     def setOppPlayer(self, event_id,  player_info):
+        """
+        Add an athlete to opponent roster or updates its value if exists in the system.
+        This function adds an athlete to opponent roster given it's event_id.
+        If the athlete exists, it updates its information.
+
+        Args
+            event_id: integer corresponding to an event id.
+
+        Returns:
+            Response containing a MSG in case of success, or ERROR message in case of failure.
+        """
 
         try:
             pbp_dao = VolleyballPBPDao()
@@ -250,6 +273,17 @@ class PBPHandler:
             return jsonify(ERROR="PBPHandler.setOppPlayer: Internal error from PBP DAO."), 500
 
     def removeUPRMPlayer(self, event_id,  player_id):
+        """
+        Removes a UPRM athlete from the PBP sequence.
+        This function deletes a particular UPRM athlete from PBP sequence via the PBP DAO.
+
+        Args
+            event_id: integer corresponding to an event id.
+            athlete_id: integer corresponding to the athlete to remove.
+
+        Returns:
+            Response containing a MSG in case of success, or ERROR message in case of failure.
+        """
 
         try:
             pbp_dao = VolleyballPBPDao()
@@ -267,6 +301,17 @@ class PBPHandler:
             return jsonify(ERROR="PBPHandler.removeUPRMPlayer: Internal error from PBP DAO."), 500
 
     def removeOppPlayer(self, event_id,  player_id):
+        """
+        Removes an opponent athlete from the PBP sequence.
+        This function deletes a particular opponent athlete from PBP sequence via the PBP DAO.
+
+        Args
+            event_id: integer corresponding to an event id.
+            athlete_id: integer corresponding to the athlete to remove.
+
+        Returns:
+            Response containing a MSG in case of success, or ERROR message in case of failure.
+        """
 
         try:
             pbp_dao = VolleyballPBPDao()
