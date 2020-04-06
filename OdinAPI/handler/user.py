@@ -153,8 +153,12 @@ class UserHandler:
         
         if verifyHash(password, mappedHash['hash']):
             # User provided correct password
-            token = generateToken(username, )
-            return jsonify()
+            token = generateToken(username)
+            loginInfo = {
+                'user': username,
+                'token': token
+            }
+            return jsonify(auth=loginInfo), 201
         
         return jsonify(Error="Username or Password are incorrect."), 200
 
