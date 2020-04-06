@@ -151,8 +151,8 @@ class SoccerEventHandler(EventResultHandler):
 
     def mapEventAllStatsToDict(self,team_record,athlete_records,final_record):
         event_info = dict(
-            event_id = team_record[9],
-            soccer_event_team_stats_id = team_record[10]
+            event_id = team_record[6],
+            soccer_event_team_stats_id = team_record[7]
             # event_date = team_record[17]  
         )
         soccer_statistics = dict(
@@ -383,7 +383,7 @@ class SoccerEventHandler(EventResultHandler):
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:
-                return jsonify(Error = "Soccer Event Statistics not found for the event: {}.".format(eID)),404
+                return jsonify(Error = "Soccer Event Final Score not found for the event: {}.".format(eID)),404
             mappedResult = self.mapEventAllStatsToDict(team_result,all_stats_result, final_score_result)
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -832,7 +832,7 @@ class SoccerEventHandler(EventResultHandler):
                 return jsonify(Error = "Problem inserting new team statistics record."),500
         except:
             return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
-        fs_dao.commitChanges
+        fs_dao.commitChanges()
         dao.commitChanges()
         return jsonify(Soccer_Event_Team_Stats = "Added new team statistics record with id:{} and individual statistics for event id:{}.".format(result,eID)),201
 

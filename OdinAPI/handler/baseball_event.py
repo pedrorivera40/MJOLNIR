@@ -386,7 +386,7 @@ class BaseballEventHandler(EventResultHandler):
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:
-                return jsonify(Error = "Baseball Event Statistics not found for the event: {}.".format(eID)),404
+                return jsonify(Error = "Baseball Event Final Score not found for the event: {}.".format(eID)),404
             mappedResult = self.mapEventAllStatsToDict(team_result,all_stats_result, final_score_result)
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
