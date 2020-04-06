@@ -4,7 +4,9 @@ import json
 import bcrypt
 import jwt
 import datetime
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 # BCrypt Authentication Related Functions
@@ -57,7 +59,7 @@ def verifyHash(password, storedHash):
 
 
 # Generates a new JWT token for the user with the secret key given and returns it.
-def generateToken(username, key):
+def generateToken(username):
     """
       Creates a new token for the user.
 
@@ -72,7 +74,7 @@ def generateToken(username, key):
       """
     # Create a JWT token
     token = jwt.encode({'user': username, 'exp': datetime.datetime.utcnow(
-    )+datetime.timedelta(minutes=3)}, key)
+    )+datetime.timedelta(minutes=3)}, os.getenv('SECRET_KEY'))
     return token.decode('UTF-8')
 
 

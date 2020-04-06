@@ -1,6 +1,7 @@
 from flask import jsonify
-from auth import createHash, verifyHash
+from auth import createHash, verifyHash, generateToken
 from .dao.user_dao import UserDAO
+
 
 class UserHandler:
     def mapUserToDict(self, record):
@@ -150,7 +151,12 @@ class UserHandler:
         
         mappedHash = self.mapHash(fetchedHash)
         
-        return jsonify(result=verifyHash(password, mappedHash['hash']))
+        if verifyHash(password, mappedHash['hash']):
+            # User provided correct password
+            token = generateToken(username, )
+            return jsonify()
+        
+        return jsonify(Error="Username or Password are incorrect."), 200
 
         # return jsonify(User=mappedHash),200 #200 == OK
 
