@@ -34,10 +34,12 @@ class PBPHandler:
             "sport": "Voleibol",
             "scoring_actions": [
                 "KillPoint",
-                "Assist"
                 "Ace",
-                "Block",
                 "BlockPoint",
+            ],
+            "personal_actions": [
+                "Assist",
+                "Block",
                 "Dig",
             ],
             "adjust": "ScoreAdjust",
@@ -51,23 +53,43 @@ class PBPHandler:
             "teams": ["uprm", "opponent"]
         }
 
-    def _get_direct_set_path(self, action, dao):
+    def _get_direct_set_path(self, team, event_id, dao):
         """
         Internal method to determine set path directly depending on the action team.
         """
 
         # Validate team value is specified correctly.
-        if action["team"] not in self._sport_keywords["teams"]:
+        if team not in self._sport_keywords["teams"]:
             raise Exception("PBPHandler: Invalid team value.")
 
-        current_set = int(dao.get_current_set())
+        current_set = int(dao.get_current_set(event_id))
         set_path = ""
 
         # Determine proper set path value based on the team that needs the adjust.
-        if action["team"] == self._sport_keywords["teams"][0]:
+        if team == self._sport_keywords["teams"][0]:
             set_path = self._sport_keywords["uprm-sets"][current_set - 1]
         else:
             set_path = self._sport_keywords["opp-sets"][current_set - 1]
+
+        return set_path
+
+    def get_indirect_set_path(self, team, event_id, dao):
+        """
+        Internal method to obtain the indirect set path. It is the complement of the direct set path.
+        """
+
+        # Validate team value is specified correctly.
+        if team not in self._sport_keywords["teams"]:
+            raise Exception("PBPHandler: Invalid team value.")
+
+        current_set = int(dao.get_current_set(event_id))
+        set_path = ""
+
+        # Determine proper set path value based on the team value (returns the opposite team set path).
+        if team == self._sport_keywords["teams"][0]:
+            set_path = self._sport_keywords["opp-sets"][current_set - 1]
+        else:
+            set_path = self._sport_keywords["uprm-sets"][current_set - 1]
 
         return set_path
 
@@ -81,25 +103,34 @@ class PBPHandler:
         if not action_type:
             raise Exception("PBPHandler: Invalid PBP action.")
 
+        # Notifications are only posted. No score or set value needs to be modified from a notification.
         if action_type == self._sport_keywords["notification"]:
             dao.add_pbp_game_action(event_id, action)
             return
 
+        # Adjust game actions modify the score of the direct team indicated in action["team"].
         if action_type == self._sport_keywords["adjust"]:
-            set_path = self._get_direct_set_path(action, dao)
+            set_path = self._get_direct_set_path(action["team"], event_id, dao)
             difference = int(action["difference"])
             dao.adjust_score_by_set(event_id, set_path, difference)
             return
 
-        elif action_type in self._sport_keywords["scoring_actions"]:
-            print("SCORING ACTIONS!")
+        if action_type in self._sport_keywords["scoring_actions"]:
+            set_path = self._get_direct_set_path(action["team"], event_id, dao)
+            difference = int(action["difference"])
+            dao.adjust_score_by_set(event_id, set_path, difference)
+            return
 
-        elif action_type in self._sport_keywords["error_actions"]:
+        if action_type in self._sport_keywords["personal_actions"]:
+            print("PERSONAL ACTION!")
+            return
+
+        if action_type in self._sport_keywords["error_actions"]:
             print("ERROR ACTION!")
+            return
 
-        else:
-            raise Exception(
-                "PBPHandler: Undefined Volleyball PBP Sequence Game Action.")
+        raise Exception(
+            "PBPHandler: Undefined Volleyball PBP Sequence Game Action.")
 
     def startPBPSequence(self, event_id):
         """
