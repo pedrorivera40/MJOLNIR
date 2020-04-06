@@ -190,7 +190,6 @@ def passwordReset(duid):
         ## Check the request contains the right structure.
         if req['password'] == None:
             return jsonify(Error='Bad Request'), 400
-        print('Hello from main: {}'.format(req['password']))
         return handler.updateDashUserPassword(duid,req['password'])
 
 @app.route("/users/<string:duid>/toggleActive", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string

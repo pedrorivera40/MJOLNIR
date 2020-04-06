@@ -277,7 +277,6 @@ class UserDAO:
         cursor.execute(query, (password, duid,))
         users = cursor.fetchone()
         self.commitChanges()
-        print('Hello from dao: {}'.format(password))
         return users
 
     def updateDashUserUsername(self, duid, username):

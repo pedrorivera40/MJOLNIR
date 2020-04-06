@@ -195,7 +195,6 @@ class UserHandler:
         # Hash password 
         hashedPassword = createHash(password)
         dao = UserDAO()
-        print('Hello From handler: {}'.format(hashedPassword))
         res = dao.updateDashUserPassword(duid, hashedPassword)
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
