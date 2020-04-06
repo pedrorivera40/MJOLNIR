@@ -214,24 +214,74 @@ class PBPHandler:
         except:
             return jsonify(ERROR="PBPHandler.startPBPSequence: Could not retrieve information from PBP DAO."), 500
 
-    # TODO -> Add roster methods... & Docs...
-    def addUPRMPlayer(self, event_id, player_info):
-        return 1
+    # TODO -> TESTS & Docs...
+    def setUPRMPlayer(self, event_id, player_info):
 
-    def addOppPlayer(self, event_id,  player_info):
-        return 1
+        try:
+            pbp_dao = VolleyballPBPDao()
 
-    def editUPRMPlayer(self, event_id,  player_id, player_info):
-        return 1
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(ERROR="PBPHandler.setUPRMPlayer: Invalid event id."), 403
 
-    def editOppPlayer(self, event_id,  player_id, player_info):
-        return 1
+            if not player_info["number"] or not player_info["name"] or not player_info["athlete_id"]:
+                return jsonify(ERROR="PBPHandler.setUPRMPlayer: Invalid player_info. Must contain number, name, and athlete id."), 403
+
+            pbp_dao.set_uprm_athlete(event_id, player_info)
+            return jsonify(SET="Athlete information set in the system."), 200
+
+        except:
+            return jsonify(ERROR="PBPHandler.setUPRMPlayer: Internal error from PBP DAO."), 500
+
+    def setOppPlayer(self, event_id,  player_info):
+
+        try:
+            pbp_dao = VolleyballPBPDao()
+
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(ERROR="PBPHandler.setOppPlayer: Invalid event id."), 403
+
+            if not player_info["number"] or not player_info["name"]:
+                return jsonify(ERROR="PBPHandler.setOppPlayer: Invalid player_info. Must contain number, and name."), 403
+
+            pbp_dao.set_opponent_athlete(event_id, player_info)
+            return jsonify(SET="Athlete information set in the system."), 200
+
+        except:
+            return jsonify(ERROR="PBPHandler.setOppPlayer: Internal error from PBP DAO."), 500
 
     def removeUPRMPlayer(self, event_id,  player_id):
-        return 1
+
+        try:
+            pbp_dao = VolleyballPBPDao()
+
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(ERROR="PBPHandler.removeUPRMPlayer: Invalid event id."), 403
+
+            if not player_id in pbp_dao.get_uprm_roster(event_id):
+                return jsonify(ERROR="PBPHandler.removeUPRMPlayer: Player does not exist."), 404
+
+            pbp_dao.remove_uprm_athlete(event_id, player_id)
+            return jsonify(SET="Athlete information removed from the system."), 200
+
+        except:
+            return jsonify(ERROR="PBPHandler.removeUPRMPlayer: Internal error from PBP DAO."), 500
 
     def removeOppPlayer(self, event_id,  player_id):
-        return 1
+
+        try:
+            pbp_dao = VolleyballPBPDao()
+
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(ERROR="PBPHandler.removeOppPlayer: Invalid event id."), 403
+
+            if not player_id in pbp_dao.get_opponent_roster(event_id):
+                return jsonify(ERROR="PBPHandler.removeOppPlayer: Player does not exist."), 404
+
+            pbp_dao.remove_opponent_athlete(event_id, player_id)
+            return jsonify(SET="Athlete information removed from the system."), 200
+
+        except:
+            return jsonify(ERROR="PBPHandler.removeOppPlayer: Internal error from PBP DAO."), 500
 
     def addPBPAction(self, event_id, action_data):
         """
