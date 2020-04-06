@@ -109,12 +109,14 @@ class PBPHandler:
             return
 
         # Adjust game actions modify the score of the direct team indicated in action["team"].
+        # These are not added to the notifications feed (non-relational database).
         if action_type == self._sport_keywords["adjust"]:
             set_path = self._get_direct_set_path(action["team"], event_id, dao)
             difference = int(action["difference"])
             dao.adjust_score_by_set(event_id, set_path, difference)
             return
 
+        # Scoring game actions modify athlete statistics and team score.
         if action_type in self._sport_keywords["scoring_actions"]:
             set_path = self._get_direct_set_path(action["team"], event_id, dao)
             difference = int(action["difference"])

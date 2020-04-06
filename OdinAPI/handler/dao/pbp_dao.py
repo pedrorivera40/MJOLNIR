@@ -69,14 +69,117 @@ class PBPDao:
         path = self._db_keywords["root"] + int(event_id)
         return self._rtdb.reference(path).delete()
 
+    def set_uprm_athlete(self, event_id, athlete_entry):
+        """
+        Add an athlete to UPRM roster or updates its value if exists in the system.
+        This function adds an athlete to UPRM roster given it's PBP sequence's event_id.
+        If the athlete exists, it updates its information.
+
+        Args
+            event_id: integer corresponding to an event id.
+
+        Returns:
+            void
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + \
+            self._db_keywords["uprm-roster"] + \
+            "/" + athlete_entry["athlete_id"]
+        self._rtdb.reference(path).set(athlete_entry)
+
+    def set_opponent_athlete(self, event_id, athlete_entry):
+        """
+        Add an athlete to opponent roster or updates its value if exists in the system.
+        This function adds an athlete to opponent roster given it's PBP sequence's event_id.
+        If the athlete exists, it updates its information.
+
+        Args
+            event_id: integer corresponding to an event id.
+
+        Returns:
+            void
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + \
+            self._db_keywords["opp-roster"] + \
+            "/" + athlete_entry["athlete_id"]
+        self._rtdb.reference(path).set(athlete_entry)
+
+    def remove_uprm_athlete(self, event_id, athlete_id):
+        """
+        Removes a UPRM athlete from the PBP sequence.
+        This function deletes a particular UPRM athlete from PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+            athlete_id: integer corresponding to the athlete to remove.
+
+        Returns:
+            void
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + \
+            self._db_keywords["uprm-roster"] + \
+            "/" + athlete_id
+        self._rtdb.reference(path).delete()
+
+    def remove_opponent_athlete(self, event_id, athlete_id):
+        """
+        Removes an opponent athlete from the PBP sequence.
+        This function deletes a particular opponent athlete from PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+            athlete_id: integer corresponding to the athlete to remove.
+
+        Returns:
+            void
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + \
+            self._db_keywords["opp-roster"] + \
+            "/" + athlete_id
+        self._rtdb.reference(path).delete()
+
+    def get_uprm_roster(self, event_id):
+        """
+        Get UPRM roster of an existing PBP sequence.
+        This function returns a dictionary with the UPRM roster given the event_id of a PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+
+        Returns:
+            dictionary containing UPRM athlete entries for the PBP sequence.
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + self._db_keywords["uprm-roster"]
+        return self._rtdb.reference(path).get()
+
+    def get_opponent_roster(self, event_id):
+        """
+        Get opponent roster of an existing PBP sequence.
+        This function returns a dictionary with the opponent roster given the event_id of a PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+
+        Returns:
+            dictionary containing opponent athlete entries for the PBP sequence.
+        """
+
+        path = self._db_keywords["root"] + \
+            int(event_id) + self._db_keywords["opp-roster"]
+        return self._rtdb.reference(path).get()
+
+    # TODO -> Confirm if this will be implemented...
     def set_pbp_metadata(self, event_id, metadata):
         return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["meta"]).set(metadata)
-
-    def set_uprm_roster(self, event_id, uprm_roster):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["uprm-roster"]).set(uprm_roster)
-
-    def set_opponent_roster(self, event_id, opponent_roster):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["opp-roster"]).set(opponent_roster)
 
     def pbp_exists(self, event_id):
         """
@@ -85,7 +188,6 @@ class PBPDao:
 
         Args
             event_id: integer corresponding to an event id.
-            action_id: string corresponding to the game action to remove.
 
         Returns:
             Boolean that determines if the PBP sequence exists.
@@ -147,7 +249,6 @@ class PBPDao:
 
         Args
             event_id: integer corresponding to an event id.
-            action_id: string corresponding to the game action to remove.
 
         Returns:
             Boolean that determines if the game action exists.
@@ -183,7 +284,7 @@ class PBPDao:
 
         Args
             event_id: integer corresponding to an event id.
-            action_id: string corresponding to the game action to remove.
+            action_id: string corresponding to the game action to edit.
             action_content: JSON object corresponding to the new action content.
 
         Returns:
