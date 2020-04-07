@@ -15,18 +15,24 @@ class TestUserRoutes(unittest.TestCase):
   #-------- Resetting Invalid Passwords --------#
   ###############################################
   def test_reset_password_8_chars(self):
-    response = self.client.patch(f'/users/{newUserID}/reset', data=json.dumps({'password' : 'Pasword1'}), content_type='application/json',  follow_redirects=True)
-    self.assertEqual(response.status_code, 200)
-    self.assertEqual(response.json['Error'], """Password should contain At least 1 upercase letter,
-            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long.""")
+    response = self.client.patch(f'/users/{newUserID}/reset', data=json.dumps({'password' : 'P4sword!'}), content_type='application/json',  follow_redirects=True)
+    self.assertEqual(response.status_code, 201)
+    self.assertEqual(response.json['User']['email'], self.data['email'])
+    self.assertEqual(response.json['User']['full_name'], self.data['full_name'])
+    self.assertEqual(response.json['User']['id'], newUserID)
+    self.assertEqual(response.json['User']['is_active'], False)
+    self.assertEqual(response.json['User']['is_invalid'], False)
+    self.assertEqual(response.json['User']['username'], self.data['username'])
 
   def test_reset_password_64_chars(self):
     response = self.client.patch(f'/users/{newUserID}/reset', data=json.dumps({'password' : 'newPaswordlololollololollololollololollololollololollololollol1!'}), content_type='application/json',  follow_redirects=True)
-    self.assertEqual(response.status_code, 200)
-    self.assertEqual(response.json['Error'], """Password should contain At least 1 upercase letter,
-            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long.""")
+    self.assertEqual(response.status_code, 201)
+    self.assertEqual(response.json['User']['email'], self.data['email'])
+    self.assertEqual(response.json['User']['full_name'], self.data['full_name'])
+    self.assertEqual(response.json['User']['id'], newUserID)
+    self.assertEqual(response.json['User']['is_active'], False)
+    self.assertEqual(response.json['User']['is_invalid'], False)
+    self.assertEqual(response.json['User']['username'], self.data['username'])
 
   def test_reset_password_shorter_than_8_chars(self):
     response = self.client.patch(f'/users/{newUserID}/reset', data=json.dumps({'password' : 'new!'}), content_type='application/json',  follow_redirects=True)
