@@ -255,6 +255,42 @@ class VolleyballVolleyballPBPHandler:
             dao.edit_pbp_game_action(event_id, action_id, new_action)
             return
 
+        # At this point, cases in which same play type were considered.
+        # The following cases represent when a different action type is found (except for notifications).
+
+        # *** Case previously considered scoring action, but changed into an error action. ***
+        if prev_type in self._sport_keywords["scoring_actions"] and new_type in self._sport_keywords["error_actions"]:
+            # If different action but same team, point must be attributed to the other team. Otherwise just update the action.
+            if new_team == prev_action["team"]:
+                dec_path = self._get_direct_set_path(new_team, event_id, dao)
+                inc_path = self._get_indirect_set_path(new_team, event_id, dao)
+                dao.adjust_score_by_differential(
+                    event_id, dec_path, inc_path, 1)
+
+            # Update action.
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
+            return
+
+        # *** Case previously considered scoring action, but changed into a personal action. ***
+        if prev_type in self._sport_keywords["scoring_actions"] and new_type in self._sport_keywords["personal_actions"]:
+            # If different action but same team, score must decrease for current team. Otherwise just update the action.
+            dec_path = self._get_direct_set_path(new_team, event_id, dao)
+            if new_team != prev_action["team"]:
+                dec_path = self._get_indirect_set_path(new_team, event_id, dao)
+
+            dao.adjust_score_by_set(event_id, dec_path, -1)
+            # Update action.
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
+            return
+
+        # *** Case previously considered error action, but changed into a scoring action. ***
+
+        # *** Case previously considered error action, but changed into a personal action. ***
+
+        # *** Case previously considered personal action, but changed into a scoring action. ***
+
+        # *** Case previously considered personal action, but changed into a error action. ***
+
         return 1
 
     def _handle_remove_pbp_action(self, event_id, action_id, dao):
@@ -309,27 +345,24 @@ class VolleyballVolleyballPBPHandler:
             if event_info["sport_name"] != self._sport_keywords["sport"]:
                 return jsonify(ERROR="VolleyballPBPHandler.startPBPSequence: Sport does not match Volleyball."), 403
 
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.startPBPSequence: Could not retrieve information from Event DAO."), 500
-
-        try:
             pbp_dao = VolleyballPBPDao()
             if pbp_dao.pbp_exists(event_id):
                 return jsonify(ERROR="VolleyballPBPHandler.startPBPSequence: PBP Sequence already created."), 403
 
             # At this point, the event exists and does not have a PBP sequence.
+            # TODO -> Add opponent color!
             game_metadata = {
                 "game-ended": {"answer": "No"},
                 "sport": event_info[4],
             }
 
-            pbp_dao.create_volleyball_pbp_seq(
-                event_id, game_metadata, self._sport_keyword["score-val"])
+            pbp_dao.create_pbp_seq(
+                event_id, game_metadata, self._sport_keywords["score-val"])
 
             return jsonify(MSG="PBP Sequence for " + id + " was successfully created"), 200
 
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.startPBPSequence: Could not retrieve information from PBP DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="VolleyballPBPHandler.startPBPSequence: " + e), 500
 
     # TODO -> TESTS & Docs...
     def setUPRMPlayer(self, event_id, player_info):
@@ -346,6 +379,13 @@ class VolleyballVolleyballPBPHandler:
         """
         # TODO -> Verify the player is valid...
         try:
+            event_dao = EventDAO()
+
+            # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
+            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
+            if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
+                return jsonify(MSG="VolleyballPBPHandler.setUPRMPlayer: Not a volleyball event."), 403
+
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
@@ -357,8 +397,8 @@ class VolleyballVolleyballPBPHandler:
             pbp_dao.set_uprm_athlete(event_id, player_info)
             return jsonify(MSG="Athlete information set in the system."), 200
 
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.setUPRMPlayer: Internal error from PBP DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="VolleyballPBPHandler.setUPRMPlayer: " + e), 500
 
     def setOppPlayer(self, event_id,  player_info):
         """
@@ -380,7 +420,7 @@ class VolleyballVolleyballPBPHandler:
             # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
             # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
             if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
-                return jsonify(MSG="VolleyballPBPHandler.removeUPRMPlayer: Not a volleyball event."), 403
+                return jsonify(MSG="VolleyballPBPHandler.setOppPlayer: Not a volleyball event."), 403
 
             pbp_dao = VolleyballPBPDao()
 
