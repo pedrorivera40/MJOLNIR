@@ -1,5 +1,5 @@
 from flask import jsonify
-from auth import createHash, verifyHash, generateToken
+from auth import createHash, verifyHash, generateToken, rulesMatch
 from .dao.user_dao import UserDAO
 
 
@@ -52,6 +52,11 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the new dashboard user.
         """
+        # Verify password complies with the rules
+        if not rulesMatch(password):
+            return jsonify(Error="""Password should contain At least 1 upercase letter,
+            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
+            10 and 64 characters long."""), 200
         # Hash the password 
         hashedPassword = createHash(password)
         
@@ -201,7 +206,11 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user.
         """
-        
+        # Verify password complies with the rules
+        if not rulesMatch(password):
+            return jsonify(Error="""Password should contain At least 1 upercase letter,
+            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
+            10 and 64 characters long."""), 200
         # Hash password 
         hashedPassword = createHash(password)
         dao = UserDAO()
