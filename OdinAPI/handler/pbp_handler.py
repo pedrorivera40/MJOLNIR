@@ -284,14 +284,55 @@ class VolleyballVolleyballPBPHandler:
             return
 
         # *** Case previously considered error action, but changed into a scoring action. ***
+        if prev_type in self._sport_keywords["error_actions"] and new_type in self._sport_keywords["scoring_actions"]:
+            # If different action but same team, point must be attributed to the other team. Otherwise just update the action.
+            if new_team == prev_action["team"]:
+                dec_path = self._get_indirect_set_path(new_team, event_id, dao)
+                inc_path = self._get_direct_set_path(new_team, event_id, dao)
+                dao.adjust_score_by_differential(
+                    event_id, dec_path, inc_path, 1)
+
+            # Update action.
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
+            return
 
         # *** Case previously considered error action, but changed into a personal action. ***
+        if prev_type in self._sport_keywords["error_actions"] and new_type in self._sport_keywords["personal_actions"]:
+            # If different action but same team, score must decrease for current team. Otherwise just update the action.
+            inc_path = self._get_direct_set_path(new_team, event_id, dao)
+            if new_team != prev_action["team"]:
+                inc_path = self._get_indirect_set_path(new_team, event_id, dao)
+
+            dao.adjust_score_by_set(event_id, inc_path, 1)
+            # Update action.
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
+            return
 
         # *** Case previously considered personal action, but changed into a scoring action. ***
+        if prev_type in self._sport_keywords["personal_actions"] and new_type in self._sport_keywords["scoring_actions"]:
+            # If different action but same team, score must decrease for current team. Otherwise just update the action.
+            inc_path = self._get_direct_set_path(new_team, event_id, dao)
+            if new_team != prev_action["team"]:
+                inc_path = self._get_indirect_set_path(new_team, event_id, dao)
+
+            dao.adjust_score_by_set(event_id, inc_path, 1)
+            # Update action.
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
+            return
 
         # *** Case previously considered personal action, but changed into a error action. ***
+        if prev_type in self._sport_keywords["personal_actions"] and new_type in self._sport_keywords["error_actions"]:
+            # If different action but same team, score must decrease for current team. Otherwise just update the action.
+            dec_path = self._get_direct_set_path(new_team, event_id, dao)
+            if new_team != prev_action["team"]:
+                dec_path = self._get_indirect_set_path(new_team, event_id, dao)
 
-        return 1
+            dao.adjust_score_by_set(event_id, dec_path, -1)
+            # Update action.
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
+            return
+
+        raise Exception("Unexpected PBP action")
 
     def _handle_remove_pbp_action(self, event_id, action_id, dao):
         """
