@@ -213,7 +213,7 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team_members.id as team_members_id, team_members.team_id, team_members.athlete_id, 
-                athlete.id,athlete.first_name,athlete.middle_name,athlete.last_names 
+                athlete.id,athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link
                 FROM team_members
                 INNER JOIN athlete on team_members.athlete_id = athlete.id
                 WHERE team_id = %s and
