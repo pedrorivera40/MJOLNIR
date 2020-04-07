@@ -30,6 +30,7 @@ class PBPDao:
             "score-key": "score",
             "over": "/game-ended",
             "answer": "/answer",
+            "color": "/color"
         }
 
     def create_pbp_seq(self, event_id, game_metadata, score_val):
@@ -243,7 +244,6 @@ class PBPDao:
         self._set_score_by_set(event_id, set_path, current_score + int(adjust))
 
     def adjust_score_by_differential(self, event_id, path_dec, path_inc, difference):
-        print(event_id, path_dec, path_inc, difference)
         dec_score = int(self.get_score_by_set(event_id, path_dec))
         inc_score = int(self.get_score_by_set(event_id, path_inc))
 
@@ -254,6 +254,12 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + self._db_keywords["score"]
         self._rtdb.reference(path).update(update)
+
+    def set_opponent_color(self, event_id, color):
+        path = self._db_keywords["root"] + \
+            str(int(event_id)) + \
+            self._db_keywords["meta"] + self._db_keywords["color"]
+        self._rtdb.reference(path).set(color)
 
     def pbp_game_action_exists(self, event_id, action_id):
         """
