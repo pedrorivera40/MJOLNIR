@@ -49,7 +49,6 @@ def verifyHash(password, storedHash):
         A boolean value signifying if the password is a match or not.
     """
     # hardcoding the user to be evaluated
-    print(storedHash)
     if storedHash == None:
         return False
     return bcrypt.checkpw(password.encode('utf-8'), storedHash.encode('utf-8'))

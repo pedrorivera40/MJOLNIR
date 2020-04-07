@@ -117,7 +117,11 @@ def athletePositions(sid, aid):
 @app.route("/auth/", methods=['POST'])
 def auth():
     if request.method == 'POST':
-        handler = UserHandler()
+        handler = UserHandler() 
+
+        if request.json['username'] == None or request.json['password'] == None:
+            return jsonify(Error='Bad Request'), 400
+            
         username = request.json['username']
         password = request.json['password'] # TODO: AES Encryption
         
