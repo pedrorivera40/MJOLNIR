@@ -1,9 +1,9 @@
-# Edit this user object before starting new test.
+# TODO: Edit this user object before starting new test.
 newUser = {
-        'username': 'newUser22',
-        'email': 'newuser22@email.com',
-        'full_name': 'New User22',
-        'password':'password',
+        'username': 'newUser24',
+        'email': 'newuser24@email.com',
+        'full_name': 'New User24',
+        'password':'N3wP4ssword!',
       }
 
-newUserID = 71 # Check database before running tests to ensure the correct number is used.
+newUserID = 73 #TODO: Check database before running tests to ensure the correct number is used.
