@@ -9,11 +9,13 @@ from functools import wraps
 from dotenv import load_dotenv
 import os
 from handler.position import PositionHandler
+from handler.event import EventHandler
 from handler.basketball_event import BasketballEventHandler
 from handler.volleyball_event import VolleyballEventHandler
 from handler.soccer_event import SoccerEventHandler
 from handler.baseball_event import BaseballEventHandler
 from handler.sport import SportHandler
+
 
 
 ## Load environment variables
@@ -216,6 +218,37 @@ def userPermissions(duid):
             return jsonify(Error='Bad Request'), 400
         handler = UserHandler()
         return  handler.setUserPermissions(duid, req['permissions'])
+
+
+#--------- Event Routes ---------#
+@app.route("/events/",methods = ['GET'])
+def events():
+    handler = EventHandler()
+    if request.method == 'GET':
+        return handler.getAllEvents()
+    
+
+@app.route("/events/<int:eID>/",methods =['GET','PUT','DELETE'])
+def eventsById(eID):
+    handler = EventHandler()
+    if request.method == 'GET':
+        return handler.getEventByID(eID)
+    elif request.method == 'PUT':
+        json = request.json
+        return handler.editEvent(eID,json['attributes'])
+    elif request.method == 'DELETE':
+        return handler.removeEvent(eID)
+
+@app.route("/events/team/<int:tID>/", methods = ['GET','POST'])
+def teamEvents(tID):
+    handler = EventHandler()
+    if request.method == 'GET':
+        return handler.getEventsByTeam(tID)
+    elif request.method == 'POST':
+        json = request.json
+        return handler.addEvent(tID,json['attributes'])
+
+
 
 #--------- Sports/Categories/Positions Routes ---------#
 
