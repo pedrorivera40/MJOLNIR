@@ -38,26 +38,22 @@ def token_check(func):
     @wraps(func)
     def decorated():
 
-        token = request.headers.get('Authorization')
-        print(token)
-        print(request.headers)
-        print(request.get_json())
+        # Extract token from auth header.
+        token = request.headers.get('Authorization').split(' ')[1]
 
+        
         if not token:
             return jsonify(Error='Token is missing'), 403
 
-        response = verifyToken(token, os.getenv('SECRET_KEY'))
-        print(response, os.getenv('SECRET_KEY'))
-
-        if response == False:
+        if not verifyToken(token):
             return jsonify(Error="Token is invalid"), 403
         else:
-            pass
-        return func()
+            return func()
     return decorated
 
 
 @app.route("/")
+@token_check
 def hello():
     return jsonify("Hi, this is a route that will be eliminated xD")
 

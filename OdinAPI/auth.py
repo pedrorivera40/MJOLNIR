@@ -32,7 +32,7 @@ def rulesMatch(password):
     pw = password
 
     # set the rules for the regular expression
-    reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,64}$"
+    reg = "111111"
 
     # Compile it
     compiledReg = re.compile(reg)
@@ -92,21 +92,25 @@ def verifyHash(password, storedHash):
 # Generates a new JWT token for the user with the secret key given and returns it.
 def generateToken(username):
     """
-      Creates a new token for the user.
+    Creates a new token for the user.
 
-      Generates a new token for the user in order to create an auth session.
+    Generates a new token for the user in order to create an auth session.
 
-      Args:
-          username: The username of the user requesting the session.
-          key: Secret key to sign the token.
+    Args:
+        username: The username of the user requesting the session.
+        key: Secret key to sign the token.
 
-      Returns:
-          A valid token assigend to the provided user.
-      """
+    Returns:
+        A valid token assigend to the provided user.
+    """
     # Create a JWT token
-    token = jwt.encode({'user': username, 'exp': datetime.datetime.utcnow(
-    )+datetime.timedelta(minutes=3)}, os.getenv('SECRET_KEY'), algorithm='HS256')
-    return token.decode('UTF-8')
+    payload = {
+        'sub': username,
+        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=3),
+        'iat': datetime.datetime.utcnow()
+    }
+    token = jwt.encode(payload, os.getenv('SECRET_KEY'), algorithm='HS256')
+    return f'Bearer {token.decode("UTF-8")}'
 
 
 # Verifies a token with the key given.
