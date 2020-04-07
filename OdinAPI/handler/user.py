@@ -1,6 +1,7 @@
 from flask import jsonify
-from auth import createHash
+from auth import createHash, verifyHash, generateToken, rulesMatch
 from .dao.user_dao import UserDAO
+
 
 class UserHandler:
     def mapUserToDict(self, record):
@@ -26,6 +27,14 @@ class UserHandler:
         permissionsDictionary['is_invalid'] = record[1]
         return permissionsDictionary
 
+    def mapHash(self, record):
+        """
+        Converts results returned by DAO into a dictionary.
+        """
+        permissionsDictionary = {}
+        permissionsDictionary['hash'] = record[0]
+        return permissionsDictionary
+
     def addDashUser(self, username, fullName,email, password):
         """
         Adds a new Dashboard user with the provided information.
@@ -43,6 +52,11 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the new dashboard user.
         """
+        # Verify password complies with the rules
+        if not rulesMatch(password):
+            return jsonify(Error="""Password should contain At least 1 upercase letter,
+            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
+            10 and 64 characters long."""), 200
         # Hash the password 
         hashedPassword = createHash(password)
         
@@ -121,6 +135,40 @@ class UserHandler:
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser),200 #200 == OK
 
+    def getHashByUsername(self, username, password):
+        """
+        Gets a dashboard's user password hash given their username.
+
+        Calls the UserDAO to get a user's password hash given their username 
+        and maps the result to a JSON that contains the desired record. 
+        That JSON object is then returned.
+
+        Args:
+            username: The username of the dashboboard user that needs to be fetched.
+            password: The password of the dashboard user
+        Returns:
+            A JSON containing all the user's hash.
+        """
+        dao = UserDAO()
+        fetchedHash = dao.getHashByUsername(username)
+        if fetchedHash == None:
+            return jsonify(Error="Username or Password are incorrect."), 200
+        
+        mappedHash = self.mapHash(fetchedHash)
+        #TODO AES encryption.
+        if verifyHash(password, mappedHash['hash']):
+            # User provided correct password
+            token = generateToken(username)
+            loginInfo = {
+                'user': username,
+                'token': token
+            }
+            return jsonify(auth=loginInfo), 201
+        
+        return jsonify(Error="Username or Password are incorrect."), 200
+
+        # return jsonify(User=mappedHash),200 #200 == OK
+
     def getDashUserByEmail(self, email):
         """
         Gets a single Dashboard user given their email.
@@ -158,7 +206,11 @@ class UserHandler:
         Returns:
             A JSON containing all the user with the updated dashboard user.
         """
-        
+        # Verify password complies with the rules
+        if not rulesMatch(password):
+            return jsonify(Error="""Password should contain At least 1 upercase letter,
+            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
+            10 and 64 characters long."""), 200
         # Hash password 
         hashedPassword = createHash(password)
         dao = UserDAO()

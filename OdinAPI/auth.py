@@ -4,10 +4,44 @@ import json
 import bcrypt
 import jwt
 import datetime
+import os
+import re
+from dotenv import load_dotenv
+load_dotenv()
 
 
+###################################
+### Password Related Functions ###
+###################################
 
-# BCrypt Authentication Related Functions
+def rulesMatch(password):
+    """
+    Verifies the password complies with pasword rules.
+
+    Takes in a password and checks it against a regular espression to
+    verify it is a compliant password that contains: At least 1 upercase letter,
+    1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
+    10 and 64 characters long.
+
+    Args:
+        password: password to be checked againt the regex.
+    
+    Returns:
+        A boolean to determine if the password complies or not.
+    """
+    pw = password
+
+    # set the rules for the regular expression
+    reg = "111111"
+
+    # Compile it
+    compiledReg = re.compile(reg)
+
+    # Create the matcher.
+    match = re.search(compiledReg, pw)
+
+    # Return true if it matches false if it does not.
+    return match
 
 # Uses BCrypt hashing algorithm to hash a password given with
 # the amount of rounds specified in the gensalt() method
@@ -27,12 +61,12 @@ def createHash(password):
     """
     utfPasswd = password.encode('utf-8')
     salt = bcrypt.gensalt(rounds=10)  # 10 rounds for now
-    hash = bcrypt.hashpw(utfPasswd, salt)
+    encoded = bcrypt.hashpw(utfPasswd, salt)
+    decoded = encoded.decode('utf-8')
+    return decoded
 
-    return hash
 
-
-def verifyHash(storedHash, password):
+def verifyHash(password, storedHash):
     """
     Verify the passed password's is a correct.
 
@@ -49,37 +83,38 @@ def verifyHash(storedHash, password):
     # hardcoding the user to be evaluated
     if storedHash == None:
         return False
-    elif bcrypt.checkpw(password, storedHash.encode('utf-8')):
-        return True
-    else:
-        return False
+    return bcrypt.checkpw(password.encode('utf-8'), storedHash.encode('utf-8'))
 
-
+###################################
 ### JWT Token Related Functions ###
-
+###################################
 
 # Generates a new JWT token for the user with the secret key given and returns it.
-def generateToken(username, key):
+def generateToken(username):
     """
-      Creates a new token for the user.
+    Creates a new token for the user.
 
-      Generates a new token for the user in order to create an auth session.
+    Generates a new token for the user in order to create an auth session.
 
-      Args:
-          username: The username of the user requesting the session.
-          key: Secret key to sign the token.
+    Args:
+        username: The username of the user requesting the session.
+        key: Secret key to sign the token.
 
-      Returns:
-          A valid token assigend to the provided user.
-      """
+    Returns:
+        A valid token assigend to the provided user.
+    """
     # Create a JWT token
-    token = jwt.encode({'user': username, 'exp': datetime.datetime.utcnow(
-    )+datetime.timedelta(minutes=3)}, key)
-    return token.decode('UTF-8')
+    payload = {
+        'user': username,
+        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=3),
+        'iat': datetime.datetime.utcnow()
+    }
+    token = jwt.encode(payload, os.getenv('SECRET_KEY'), algorithm='HS256')
+    return f'Bearer {token.decode("UTF-8")}'
 
 
 # Verifies a token with the key given.
-def verifyToken(token, key):
+def verifyToken(token):
     """
     Verify if the provided token is valid.
 
@@ -93,7 +128,7 @@ def verifyToken(token, key):
         A boolean value signifying if the token is valid or not.
     """
     try:
-        jwt.decode(token, key), 403
+        jwt.decode(token, os.getenv('SECRET_KEY'), algorithm='HS256')
         return True
     except:
         return False
