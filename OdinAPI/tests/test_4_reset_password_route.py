@@ -16,7 +16,7 @@ class TestUserRoutes(unittest.TestCase):
   ######################################
 
   def test_reset_password(self):
-    response = self.client.patch(f'/users/{newUserID}/reset', data=json.dumps({'password' : 'newPaswordlololol1!'}), content_type='application/json',  follow_redirects=True)
+    response = self.client.patch(f'/users/{newUserID}/reset', data=json.dumps({'password' : 'newPaswordlololol'}), content_type='application/json',  follow_redirects=True)
     self.assertEqual(response.status_code, 201)
     self.assertEqual(response.json['User']['email'], self.data['email'])
     self.assertEqual(response.json['User']['full_name'], self.data['full_name'])
