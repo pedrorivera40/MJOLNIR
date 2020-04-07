@@ -73,7 +73,7 @@ def generateToken(username):
       """
     # Create a JWT token
     token = jwt.encode({'user': username, 'exp': datetime.datetime.utcnow(
-    )+datetime.timedelta(minutes=3)}, os.getenv('SECRET_KEY'))
+    )+datetime.timedelta(minutes=3)}, os.getenv('SECRET_KEY'), algorithm='HS256')
     return token.decode('UTF-8')
 
 
@@ -92,7 +92,7 @@ def verifyToken(token):
         A boolean value signifying if the token is valid or not.
     """
     try:
-        jwt.decode(token, os.getenv('SECRET_KEY')), 403
+        jwt.decode(token, os.getenv('SECRET_KEY'), algorithm='HS256'), 403
         return True
     except:
         return False
