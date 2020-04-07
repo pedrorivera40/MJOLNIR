@@ -271,7 +271,7 @@ class EventHandle:
             if not eventDate or not isinstance(eventDate,str):
                 return "Invalid date given."
 
-            if not isLocal or isinstance(isLocal,str):
+            if not isLocal or isinstance(isLocal,bool):
                 return "Invalid locality given."
 
             if venue and not isinstance(venue,str):
