@@ -174,8 +174,8 @@ class EventDAO:
         """
         cursor = self.conn.cursor()
 
-        query = """insert into event(team_id,event_date,is_local,venue,opponent_name,opponent_color)
-                   values(%s,%s,%s,%s,%s,%s)
+        query = """insert into event(team_id,event_date,is_local,venue,opponent_name,opponent_color,is_invalid)
+                   values(%s,%s,%s,%s,%s,%s,false)
                    returning id;
                 """
         
@@ -223,7 +223,7 @@ class EventDAO:
                    returning id;
                 """
         try:
-            cursor.execute(query,(eID,))
+            cursor.execute(query,(eventDate,isLocal,venue,opponentName,opponentColor,eID,))
 
             eid = cursor.fetchone()[0]       
 

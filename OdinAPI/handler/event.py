@@ -1,7 +1,7 @@
 from flask import jsonify
 from .dao.event_dao import EventDAO
 
-class EventHandle:
+class EventHandler:
 
 
     def mapEventToDict(self,record):
