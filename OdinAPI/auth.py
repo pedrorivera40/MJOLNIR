@@ -128,7 +128,7 @@ def verifyToken(token):
         A boolean value signifying if the token is valid or not.
     """
     try:
-        jwt.decode(token, os.getenv('SECRET_KEY'), algorithm='HS256'), 403
+        jwt.decode(token, os.getenv('SECRET_KEY'), algorithm='HS256')
         return True
     except:
         return False
