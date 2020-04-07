@@ -1,3 +1,4 @@
+from re import search
 from flask import jsonify
 from .dao.pbp_dao import PBPDao as VolleyballPBPDao
 from.dao.mock.event_dao import _mockEventDAO as EventDAO
@@ -51,7 +52,8 @@ class VolleyballVolleyballPBPHandler:
                 "ReceptionError"
             ],
             "notification": "Notification",
-            "teams": ["uprm", "opponent"]
+            "teams": ["uprm", "opponent"],
+            "color-format": "^#(?:[0-9a-fA-F]{1,2}){3}$"
         }
 
     def _get_direct_set_path(self, team, event_id, dao):
@@ -386,7 +388,6 @@ class VolleyballVolleyballPBPHandler:
                 return jsonify(ERROR="PBP Sequence already created."), 403
 
             # At this point, the event exists and does not have a PBP sequence.
-            # TODO -> Add opponent color!
             game_metadata = {
                 "game-ended": {"answer": "No"},
                 "sport": event_info[4],
@@ -400,12 +401,24 @@ class VolleyballVolleyballPBPHandler:
         except Exception as e:
             return jsonify(ERROR=e), 500
 
-    # TODO -> ADD DOCS!
     def setOpponentColor(self, event_id, color):
         """
+        Sets the opponent color.
+        This function sets the opponent color of a particular PBP sequence. This is mainly for UI purposes on the client side.
 
+        Args
+            event_id: integer corresponding to an event id.
+            color: string corresponding to a hex-formatted color.
+
+        Returns:
+            Response containing a MSG in case of success, or ERROR message in case of failure.
         """
+
         try:
+            # Validate a hex formatted color is provided.
+            if not search(self._sport_keywords["color-format"], color):
+                return jsonify(ERROR="Invalid color format."), 400
+
             event_info = EventDAO().getEventById(event_id)
 
             if not event_info:

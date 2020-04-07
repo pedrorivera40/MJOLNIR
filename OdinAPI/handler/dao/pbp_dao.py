@@ -256,6 +256,18 @@ class PBPDao:
         self._rtdb.reference(path).update(update)
 
     def set_opponent_color(self, event_id, color):
+        """
+        Sets the opponent color.
+        This function sets the opponent color of a particular PBP sequence in the NoSQL database.
+
+        Args
+            event_id: integer corresponding to an event id.
+            color: string corresponding to a hex-formatted color.
+
+        Returns:
+            void
+        """
+
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["meta"] + self._db_keywords["color"]
