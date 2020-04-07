@@ -188,35 +188,45 @@ class VolleyballVolleyballPBPHandler:
 
         # Every action must have a type.
         prev_action = dao.get_pbp_action(event_id, action_id)
+
+        if prev_action == new_action:
+            raise Exception("PBPHandler: There is no change in new action.")
+
         prev_type = prev_action["type"]
         new_type = new_action["type"]
 
         # Variables to be used depending on the edit type.
         are_same_type = (prev_type == new_type)
-        is_valid_athlete = True
-        current_set = dao.get_current_set(event_id)
 
         # Notifications are only posted. No score or set value needs to be modified from a notification.
         if are_same_type and prev_type == self._sport_keywords["notification"]:
             dao.add_pbp_game_action(event_id, new_action)
             return
 
-        # If action involves an athlete, validate the new action involves a valid athlete.
-        if (new_type in self._sport_keywords["scoring_actions"]
-            or new_type in self._sport_keywords["personal_actions"]
-                or new_type in self._sport_keywords["error_actions"]):
+        # If actions are not the same and one of them is notification. This operation is not allowed.
+        if prev_type == self._sport_keywords["notification"] or new_type == self._sport_keywords["notification"]:
+            raise Exception(
+                "PBPHandler: NOTIFICATIONS and other GAME ACTIONS do not get along.")
 
-            # A valid athlete must be in one of the two rosters for the given event id.
-            is_valid_athlete = (new_action["athlete_id"] in dao.get_uprm_roster(event_id)
-                                or new_action["athlete_id"] in dao.get_opponent_roster(event_id))
+        # From now on, the remaining game actions involve game plays.
+        # Plays require values for team and athlete_id.
+        # Validate team and athlete_id are valid.
+        new_team = new_action["team"]
+        athlete_id = new_action["athlete_id"]
 
-        if not is_valid_athlete:
-            raise Exception("PBPHandler: Invalid athlete id.")
+        if new_team not in self._sport_keywords["teams"]:
+            raise Exception("PBPHandler: Invalid team.")
 
+        if new_team == self._sport_keywords["teams"][0] and athlete_id not in dao.get_uprm_roster(event_id):
+            raise Exception("PBPHandler: Athlete not in UPRM roster.")
+
+        if new_team == self._sport_keywords["teams"][1] and athlete_id not in dao.get_opponent_roster(event_id):
+            raise Exception("PBPHandler: Athlete not in opponent roster.")
+
+        # *** Case same play, but a change is present. ***
         if are_same_type and prev_type in self._sport_keywords["scoring_actions"]:
-            new_team = new_action["team"]
             # Different team means we need to re-attribute the point to the proper team.
-            if new_team in self._sport_keywords["teams"] and new_team != prev_action["team"]:
+            if new_team != prev_action["team"]:
                 inc_path = self._get_direct_set_path(new_team, event_id, dao)
                 dec_path = self._get_indirect_set_path(new_team, event_id, dao)
                 dao.adjust_score_by_differential(
@@ -224,6 +234,7 @@ class VolleyballVolleyballPBPHandler:
 
             # Update action.
             dao.edit_pbp_game_action(event_id, action_id, new_action)
+            return
 
         return 1
 
