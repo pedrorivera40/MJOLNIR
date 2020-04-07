@@ -105,7 +105,7 @@ def generateToken(username):
     """
     # Create a JWT token
     payload = {
-        'sub': username,
+        'user': username,
         'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=3),
         'iat': datetime.datetime.utcnow()
     }

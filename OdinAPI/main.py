@@ -41,7 +41,6 @@ def token_check(func):
         # Extract token from auth header.
         token = request.headers.get('Authorization').split(' ')[1]
 
-        
         if not token:
             return jsonify(Error='Token is missing'), 403
 

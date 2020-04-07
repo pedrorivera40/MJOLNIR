@@ -22,9 +22,10 @@ class TestUserRoutes(unittest.TestCase):
           'password': self.data['password']
         }
         response = self.client.post('/auth/', data=json.dumps(loginInfo), content_type='application/json',  follow_redirects=True)
+        token = response.json['auth']['token'].split(' ')[1]
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json['auth']['user'], self.data['username'])
-        self.assertEqual(verifyToken(response.json['auth']['token']), True)
+        self.assertEqual(verifyToken(token), True)
 
     def test_wrong_password_login(self):
         loginInfo = {
