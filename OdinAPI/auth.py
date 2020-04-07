@@ -79,7 +79,7 @@ def generateToken(username):
 
 
 # Verifies a token with the key given.
-def verifyToken(token, key):
+def verifyToken(token):
     """
     Verify if the provided token is valid.
 
@@ -93,7 +93,7 @@ def verifyToken(token, key):
         A boolean value signifying if the token is valid or not.
     """
     try:
-        jwt.decode(token, key), 403
+        jwt.decode(token, os.getenv('SECRET_KEY')), 403
         return True
     except:
         return False
