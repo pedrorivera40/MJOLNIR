@@ -194,6 +194,7 @@ class VolleyballVolleyballPBPHandler:
         # Variables to be used depending on the edit type.
         are_same_type = (prev_type == new_type)
         is_valid_athlete = True
+        current_set = dao.get_current_set(event_id)
 
         # Notifications are only posted. No score or set value needs to be modified from a notification.
         if are_same_type and prev_type == self._sport_keywords["notification"]:
@@ -214,9 +215,14 @@ class VolleyballVolleyballPBPHandler:
 
         if are_same_type and prev_type in self._sport_keywords["scoring_actions"]:
             new_team = new_action["team"]
+            # Different team means we need to re-attribute the point to the proper team.
             if new_team in self._sport_keywords["teams"] and new_team != prev_action["team"]:
-                print("MUST REVERT SCORE IN FAVOUR OF NEW_TEAM")
+                inc_path = self._get_direct_set_path(new_team, event_id, dao)
+                dec_path = self._get_indirect_set_path(new_team, event_id, dao)
+                dao.adjust_score_by_differential(
+                    event_id, dec_path, inc_path, 1)
 
+            # Update action.
             dao.edit_pbp_game_action(event_id, action_id, new_action)
 
         return 1
@@ -280,7 +286,7 @@ class VolleyballVolleyballPBPHandler:
         Returns:
             Response containing a MSG in case of success, or ERROR message in case of failure.
         """
-
+        # TODO -> Verify the player is valid...
         try:
             pbp_dao = VolleyballPBPDao()
 
@@ -308,6 +314,7 @@ class VolleyballVolleyballPBPHandler:
         Returns:
             Response containing a MSG in case of success, or ERROR message in case of failure.
         """
+        # TODO -> Verify the player is valid...
 
         try:
             pbp_dao = VolleyballPBPDao()

@@ -1,4 +1,4 @@
-from .config.fb_config import serv_path, rtdb_config
+from config.fb_config import serv_path, rtdb_config
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
@@ -189,7 +189,7 @@ class PBPDao:
             Boolean that determines if the PBP sequence exists.
         """
 
-        path = self._db_keywords["root"] + int(event_id)
+        path = self._db_keywords["root"] + str(int(event_id))
 
         return self._rtdb.reference(path).get() != None
 
@@ -230,7 +230,8 @@ class PBPDao:
 
     # TODO -> Add documentation for this...
     def _set_score_by_set(self, event_id, set_path, score):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + set_path).set(score)
+        self._rtdb.reference(
+            self._db_keywords["root"] + str(int(event_id)) + self._db_keywords["score"] + set_path).set(score)
 
     def get_score_by_set(self, event_id, set_path):
         return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + set_path).get()
@@ -239,7 +240,20 @@ class PBPDao:
         current_score = int(self.get_score_by_set(event_id, set_path))
         if current_score + int(adjust) < 0:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
-        return self._set_score_by_set(event_id, set_path, current_score + int(adjust))
+        self._set_score_by_set(event_id, set_path, current_score + int(adjust))
+
+    def adjust_score_by_differential(self, event_id, path_dec, path_inc, difference):
+        print(event_id, path_dec, path_inc, difference)
+        dec_score = int(self.get_score_by_set(event_id, path_dec))
+        inc_score = int(self.get_score_by_set(event_id, path_inc))
+
+        update = {
+            (event_id + path_dec): dec_score - difference,
+            (event_id + path_inc): inc_score + difference,
+        }
+        path = self._db_keywords["root"] + \
+            str(int(event_id)) + self._db_keywords["score"]
+        self._rtdb.reference(path).update(update)
 
     def pbp_game_action_exists(self, event_id, action_id):
         """
@@ -367,9 +381,8 @@ class PBPDao:
 
 # if __name__ == '__main__':
 
-#     # Initialize a Play-by-Play DAO for quick testing purposes.
-#     pbp_dao = PBPDao()
-#     print(pbp_dao._rtdb.reference("v1").get())
-#     print(pbp_dao.pbp_exists("crap"))
-#     print(pbp_dao._rtdb.reference("v1/crap").delete())
-#     print(pbp_dao.pbp_exists("crap"))
+    # # Initialize a Play-by-Play DAO for quick testing purposes.
+    # pbp_dao = PBPDao()
+    # print(pbp_dao._rtdb.reference("v1").get())
+    # print(pbp_dao.pbp_exists("123412341234"))
+    # pbp_dao.adjust_score_by_differential("123412341234", "/a", "/b", 10)
