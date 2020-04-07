@@ -135,7 +135,7 @@ class UserHandler:
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser),200 #200 == OK
 
-    def getHashByUsername(self, username, password):
+    def login(self, username, password):
         """
         Gets a dashboard's user password hash given their username.
 

@@ -122,7 +122,7 @@ def auth():
         username = request.json['username']
         password = request.json['password'] # TODO: AES Encryption
         
-        return handler.getHashByUsername(username, password)
+        return handler.login(username, password)
         
 
 
