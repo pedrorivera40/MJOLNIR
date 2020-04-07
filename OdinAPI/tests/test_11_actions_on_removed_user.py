@@ -43,7 +43,7 @@ class TestUserRoutes(unittest.TestCase):
           'email' : 'newnewUser4@email.com',
           'full_name' : 'Newnew User4',
           'username' : self.data['username'],
-          'password' : 'ninjaTurtles'
+          'password' : 'ninjaTurtles1!'
     }
     id = newUserID + 1
     response = self.client.post('/users/', data=json.dumps(newUserOldUsername),content_type='application/json', follow_redirects=True)
