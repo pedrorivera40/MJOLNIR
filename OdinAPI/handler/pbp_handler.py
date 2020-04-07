@@ -223,7 +223,7 @@ class VolleyballVolleyballPBPHandler:
         if new_team == self._sport_keywords["teams"][1] and athlete_id not in dao.get_opponent_roster(event_id):
             raise Exception("PBPHandler: Athlete not in opponent roster.")
 
-        # *** Case same play, but a change is present. ***
+        # *** Case same type of play (scoring action), but a change is present. ***
         if are_same_type and prev_type in self._sport_keywords["scoring_actions"]:
             # Different team means we need to re-attribute the point to the proper team.
             if new_team != prev_action["team"]:
@@ -236,7 +236,54 @@ class VolleyballVolleyballPBPHandler:
             dao.edit_pbp_game_action(event_id, action_id, new_action)
             return
 
+        # *** Case same play type (personal action), but a change is present. ***
+        if are_same_type and prev_type in self._sport_keywords["personal_actions"]:
+            # Just update action.
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
+            return
+
+        # *** Case same type of play (error action), but a change is present. ***
+        if are_same_type and prev_type in self._sport_keywords["error_actions"]:
+            # Different team means we need to re-attribute the point to the proper team.
+            if new_team != prev_action["team"]:
+                inc_path = self._get_indirect_set_path(new_team, event_id, dao)
+                dec_path = self._get_direct_set_path(new_team, event_id, dao)
+                dao.adjust_score_by_differential(
+                    event_id, dec_path, inc_path, 1)
+
+            # Update action.
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
+            return
+
         return 1
+
+    def _handle_remove_pbp_action(self, event_id, action_id, dao):
+        """
+        Internal method for handling PBP actions removal and its effects over current score.
+        """
+
+        if not dao.pbp_exists(event_id):
+            raise Exception("Event does not exist.")
+
+        if dao.is_game_over(event_id):
+            raise Exception("Event is over.")
+
+        if not dao.pbp_game_action_exists(event_id, action_id):
+            raise Exception("Action does not exist.")
+
+        action = dao.get_pbp_action(event_id, action_id)
+
+        # If it is a scoring action, direct team score must decrease by 1.
+        if action["type"] in self._sport_keywords["scoring_actions"]:
+            path = self._get_direct_set_path(action["team"], event_id, dao)
+            dao.adjust_score_by_set(event_id, path, -1)
+
+        # If it is an error action, indirect score must decrease by 1.
+        elif action["type"] in self._sport_keywords["error_actions"]:
+            path = self._get_indirect_set_path(action["team"], event_id, dao)
+            dao.adjust_score_by_set(event_id, path, -1)
+
+        dao.remove_pbp_game_action(event_id, action_id)
 
     def startPBPSequence(self, event_id):
         """
@@ -483,22 +530,11 @@ class VolleyballVolleyballPBPHandler:
 
         try:
             event_dao = EventDAO()
+            self._handle_remove_pbp_action(event_id, game_action_id, event_dao)
 
-            # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
-            if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
-                return jsonify(MSG="VolleyballPBPHandler.setPBPSequenceOver: Not a volleyball event."), 403
-
-            pbp_dao = VolleyballPBPDao()
-            if pbp_dao.pbp_exists(event_id):
-
-                if pbp_dao.pbp_game_action_exists(event_id, game_action_id):
-                    return jsonify(pbp_dao.remove_pbp_game_action(event_id, game_action_id)), 200
-
-                return jsonify(ERROR="VolleyballPBPHandler.setPBPSequenceOver: Non-existing game action."), 403
-
-            return jsonify(ERROR="VolleyballPBPHandler.setPBPSequenceOver: Non-existing PBP Sequence."), 403
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.removePlayPBPSequence: Internal error from PBP DAO."), 500
+            return jsonify(MSG="VolleyballPBPHandler.setPBPSequenceOver: Removed game action"), 200
+        except Exception as e:
+            return jsonify(ERROR="VolleyballPBPHandler.removePlayPBPSequence: " + e), 500
 
     def setPBPSequenceOver(self, event_id):
         """
