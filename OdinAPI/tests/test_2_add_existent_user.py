@@ -26,7 +26,7 @@ class TestUserRoutes(unittest.TestCase):
         'username': self.data['username'],
         'email': 'rellyDiffEmailLol@email.com',
         'full_name': self.data['full_name'],
-        'password':'someR4nd0mP455woRd!',
+        'password':'someR4nd0mP455woRd',
       }),content_type='application/json', follow_redirects=True)
     self.assertEqual(response.json['Error'], 'Username is already taken.') 
 

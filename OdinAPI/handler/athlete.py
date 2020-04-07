@@ -104,7 +104,7 @@ class AthleteHandler:
     
     def getAthleteByID(self,aID):
         """
-        Gets a specified athlete by their id.
+        Gets a specified athletes by their id.
 
         Calls the AthleteDAO to get an athlete by their id 
         and maps the result to a JSON that contains the desired 
@@ -156,7 +156,7 @@ class AthleteHandler:
             attributes: A list containing the attributes of the athlete to
                         be added.
         Returns:
-            A JSON object containing the id of the newly added event.
+            A JSON object containing the id of the newly added user.
 
         """
         if not isinstance(sID,int):#Validate that the sport id is an integer.
@@ -189,7 +189,7 @@ class AthleteHandler:
         the given id.
 
         Calls the AthleteDAO to edit the athlete record. It then maps the result
-        to a JSON that contains the desired record. The JSON object created is
+        to a JSON that contains the desirerd record. The JSON object created is
         then returned to the caller.
 
         Args:
@@ -221,7 +221,7 @@ class AthleteHandler:
 
         Call the AthleteDAO to invalidate the athlete record. It then
         maps the result to a JSON object that contains the id of the 
-        invalidated athlete. The JSON object is then returned to the caller.
+        invalidated user. The JSON object is then returned to the caller.
 
         Args:
             aID: The id of the athlete to be invalidated.

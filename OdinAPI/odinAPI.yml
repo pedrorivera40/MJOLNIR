@@ -306,50 +306,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /auth/:
-    post:
-      summary: "Authenticate a user"
-      description: "Verify user credentials and generate auth token."
-      operationId: setAuth
-      tags:
-        - Users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UserAuth"
-      responses:
-        "201":
-          description: "Success!"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/UserAuthResponse"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
-    UserAuth:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-    UserAuthResponse:
-      type: object
-      properties:
-        username:
-          type: string
-        token:
-          type: string
     UserPermissions:
       type: object
       properties:
