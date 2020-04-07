@@ -198,6 +198,32 @@ class UserDAO:
         user = cursor.fetchone()
 
         return user
+    
+    def getHashByUsername(self, username):
+        """
+        Gets a Dashboard user's hash given their username.
+
+        This function accepts a username to perform a query to the database that
+        gets a dashboard user's hash that matches the given username.
+
+        Args:
+            username: The username of the dashboboard user that needs to be fetched.
+
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the given username.
+        """
+        cursor = self.conn.cursor()
+        # TODO check if user with that Username exits
+
+        query = """select password_hash from dashboard_user
+                    where username = %s
+                    AND is_invalid = FALSE;
+                """
+        cursor.execute(query, (username,))
+        user = cursor.fetchone()
+
+        return user
 
     def getDashUserByEmail(self, email):
         """

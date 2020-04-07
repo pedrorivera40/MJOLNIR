@@ -112,6 +112,20 @@ def athletePositions(sid, aid):
         return handler.editAthletePosition(request.json['apID'], request.json['psID'], aid)
 
 ###########################################
+#--------- Authentication Routes ---------#
+###########################################
+@app.route("/auth/", methods=['POST'])
+def auth():
+    if request.method == 'POST':
+        handler = UserHandler()
+        username = request.json['username']
+        password = request.json['password'] # TODO: AES Encryption
+        
+        return handler.getHashByUsername(username, password)
+        
+
+
+###########################################
 #--------- Dashboard User Routes ---------#
 ###########################################
 @app.route("/users/", methods = ['GET','POST'])

@@ -4,7 +4,9 @@ import json
 import bcrypt
 import jwt
 import datetime
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 # BCrypt Authentication Related Functions
@@ -27,12 +29,12 @@ def createHash(password):
     """
     utfPasswd = password.encode('utf-8')
     salt = bcrypt.gensalt(rounds=10)  # 10 rounds for now
-    hash = bcrypt.hashpw(utfPasswd, salt)
+    encoded = bcrypt.hashpw(utfPasswd, salt)
+    decoded = encoded.decode('utf-8')
+    return decoded
 
-    return hash
 
-
-def verifyHash(storedHash, password):
+def verifyHash(password, storedHash):
     """
     Verify the passed password's is a correct.
 
@@ -47,19 +49,17 @@ def verifyHash(storedHash, password):
         A boolean value signifying if the password is a match or not.
     """
     # hardcoding the user to be evaluated
+    print(storedHash)
     if storedHash == None:
         return False
-    elif bcrypt.checkpw(password, storedHash.encode('utf-8')):
-        return True
-    else:
-        return False
+    return bcrypt.checkpw(password.encode('utf-8'), storedHash.encode('utf-8'))
 
 
 ### JWT Token Related Functions ###
 
 
 # Generates a new JWT token for the user with the secret key given and returns it.
-def generateToken(username, key):
+def generateToken(username):
     """
       Creates a new token for the user.
 
@@ -74,12 +74,12 @@ def generateToken(username, key):
       """
     # Create a JWT token
     token = jwt.encode({'user': username, 'exp': datetime.datetime.utcnow(
-    )+datetime.timedelta(minutes=3)}, key)
+    )+datetime.timedelta(minutes=3)}, os.getenv('SECRET_KEY'))
     return token.decode('UTF-8')
 
 
 # Verifies a token with the key given.
-def verifyToken(token, key):
+def verifyToken(token):
     """
     Verify if the provided token is valid.
 
@@ -93,7 +93,7 @@ def verifyToken(token, key):
         A boolean value signifying if the token is valid or not.
     """
     try:
-        jwt.decode(token, key), 403
+        jwt.decode(token, os.getenv('SECRET_KEY')), 403
         return True
     except:
         return False
