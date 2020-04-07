@@ -438,9 +438,12 @@ class AthleteDAO:
         """
         
         cursor = self.conn.cursor()
-        query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id,is_invalid) "\
-                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;"
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))
+        query = """update athlete
+                   set is_invalid=true 
+                   where id=%s
+                   returning id;
+                """
+        cursor.execute(query,(aID,))
         aID = cursor.fetchone()[0]
         if not aID:
             return aID
