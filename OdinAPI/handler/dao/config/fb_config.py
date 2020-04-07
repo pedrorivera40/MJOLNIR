@@ -1,7 +1,6 @@
 # Import os library to determine CWD.
 import os
 
-
 # Path to service account credentials.
 serv_path = os.getcwd() + \
     ""
