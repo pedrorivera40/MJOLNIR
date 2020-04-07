@@ -5,11 +5,43 @@ import bcrypt
 import jwt
 import datetime
 import os
+import re
 from dotenv import load_dotenv
 load_dotenv()
 
 
-# BCrypt Authentication Related Functions
+###################################
+### Password Related Functions ###
+###################################
+
+def rulesMatch(password):
+    """
+    Verifies the password complies with pasword rules.
+
+    Takes in a password and checks it against a regular espression to
+    verify it is a compliant password that contains: At least 1 upercase letter,
+    1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
+    10 and 64 characters long.
+
+    Args:
+        password: password to be checked againt the regex.
+    
+    Returns:
+        A boolean to determine if the password complies or not.
+    """
+    pw = password
+
+    # set the rules for the regular expression
+    reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,64}$"
+
+    # Compile it
+    compiledReg = re.compile(reg)
+
+    # Create the matcher.
+    match = re.search(compiledReg, pw)
+
+    # Return true if it matches false if it does not.
+    return match
 
 # Uses BCrypt hashing algorithm to hash a password given with
 # the amount of rounds specified in the gensalt() method
@@ -53,9 +85,9 @@ def verifyHash(password, storedHash):
         return False
     return bcrypt.checkpw(password.encode('utf-8'), storedHash.encode('utf-8'))
 
-
+###################################
 ### JWT Token Related Functions ###
-
+###################################
 
 # Generates a new JWT token for the user with the secret key given and returns it.
 def generateToken(username):
