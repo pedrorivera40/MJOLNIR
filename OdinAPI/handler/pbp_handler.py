@@ -104,7 +104,7 @@ class VolleyballVolleyballPBPHandler:
             raise Exception("VolleyballPBPHandler: Invalid event id.")
 
         if dao.is_game_over(event_id):
-            raise Exception("PBPHandler: event is over.")
+            raise Exception("VolleyballPBPHandler: event is over.")
 
         action_type = action["type"]
 
@@ -375,6 +375,13 @@ class VolleyballVolleyballPBPHandler:
         # TODO -> Verify the player is valid...
 
         try:
+            event_dao = EventDAO()
+
+            # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
+            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
+            if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
+                return jsonify(MSG="VolleyballPBPHandler.removeUPRMPlayer: Not a volleyball event."), 403
+
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
@@ -386,8 +393,8 @@ class VolleyballVolleyballPBPHandler:
             pbp_dao.set_opponent_athlete(event_id, player_info)
             return jsonify(MSG="Athlete information set in the system."), 200
 
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.setOppPlayer: Internal error from PBP DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="VolleyballPBPHandler.setOppPlayer: " + e), 500
 
     def removeUPRMPlayer(self, event_id,  player_id):
         """
@@ -403,6 +410,13 @@ class VolleyballVolleyballPBPHandler:
         """
 
         try:
+            event_dao = EventDAO()
+
+            # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
+            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
+            if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
+                return jsonify(MSG="VolleyballPBPHandler.removeUPRMPlayer: Not a volleyball event."), 403
+
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
@@ -414,8 +428,8 @@ class VolleyballVolleyballPBPHandler:
             pbp_dao.remove_uprm_athlete(event_id, player_id)
             return jsonify(MSG="Athlete information removed from the system."), 200
 
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.removeUPRMPlayer: Internal error from PBP DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="VolleyballPBPHandler.removeUPRMPlayer: " + e), 500
 
     def removeOppPlayer(self, event_id,  player_id):
         """
@@ -431,6 +445,13 @@ class VolleyballVolleyballPBPHandler:
         """
 
         try:
+            event_dao = EventDAO()
+
+            # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
+            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
+            if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
+                return jsonify(MSG="VolleyballPBPHandler.addPBPAction: Not a volleyball event."), 403
+
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
@@ -442,8 +463,8 @@ class VolleyballVolleyballPBPHandler:
             pbp_dao.remove_opponent_athlete(event_id, player_id)
             return jsonify(MSG="Athlete information removed from the system."), 200
 
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.removeOppPlayer: Internal error from PBP DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="VolleyballPBPHandler.removeOppPlayer: " + e), 500
 
     def addPBPAction(self, event_id, action_data):
         """
@@ -462,22 +483,16 @@ class VolleyballVolleyballPBPHandler:
             event_dao = EventDAO()
 
             # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
+            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
             if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
-                return jsonify(MSG="VolleyballPBPHandler.setPBPSequenceOver: Not a volleyball event."), 403
+                return jsonify(MSG="VolleyballPBPHandler.addPBPAction: Not a volleyball event."), 403
 
             pbp_dao = VolleyballPBPDao()
-            if pbp_dao.pbp_exists(event_id):
+            self._handle_pbp_action(event_id, action_data, pbp_dao)
+            return jsonify(MSG="VolleyballPBPHandler.addPBPAction: Action added into the system."), 200
 
-                if pbp_dao.is_game_over(event_id):
-                    return jsonify(ERROR="VolleyballPBPHandler.addPBPAction: PBP sequence already over."), 403
-                # TODO -> validate sequence info is complete....
-                self._handle_pbp_action(event_id, action_data, pbp_dao)
-                return jsonify(MSG="VolleyballPBPHandler.addPBPAction: Action added into the system."), 200
-
-            return jsonify(ERROR="VolleyballPBPHandler.addPBPAction: Non-existing PBP sequence."), 403
-
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.addPBPSequence: Could not retrieve information from PBP DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="VolleyballPBPHandler.addPBPSequence: " + e), 500
 
     # TODO -> Edit to implement a similar approach to the addPBPAction method.
     def editPBPAction(self, event_id, action_id, new_action):
@@ -498,22 +513,18 @@ class VolleyballVolleyballPBPHandler:
             event_dao = EventDAO()
 
             # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
+            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
             if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
-                return jsonify(MSG="VolleyballPBPHandler.editPBPAction: Not a volleyball event."), 403
+                return jsonify(ERROR="VolleyballPBPHandler.editPBPAction: Not a volleyball event."), 403
 
             pbp_dao = VolleyballPBPDao()
-            if pbp_dao.pbp_exists(event_id):
 
-                if pbp_dao.is_game_over(event_id):
-                    return jsonify(ERROR="VolleyballPBPHandler.editPBPAction: PBP sequence already over."), 403
-                self._handle_pbp_edit_action(
-                    event_id, action_id, new_action, pbp_dao)
-                return jsonify(MSG="Edit game action success."), 200
+            self._handle_pbp_edit_action(
+                event_id, action_id, new_action, pbp_dao)
+            return jsonify(MSG="Edit game action success."), 200
 
-            return jsonify(ERROR="VolleyballPBPHandler.editPBPAction: Non-existing PBP sequence."), 403
-
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.editPBPAction: Internal error editting action."), 500
+        except Exception as e:
+            return jsonify(ERROR="VolleyballPBPHandler.editPBPAction: " + e), 500
 
     # TODO -> Make it work same as add action (handle scoring actions...)
     def removePlayPBPAction(self, event_id, game_action_id):
@@ -530,9 +541,16 @@ class VolleyballVolleyballPBPHandler:
 
         try:
             event_dao = EventDAO()
+
+            # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
+            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
+            if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
+                return jsonify(ERROR="VolleyballPBPHandler.removePlayPBPAction: Not a volleyball event."), 403
+
+            event_dao = EventDAO()
             self._handle_remove_pbp_action(event_id, game_action_id, event_dao)
 
-            return jsonify(MSG="VolleyballPBPHandler.setPBPSequenceOver: Removed game action"), 200
+            return jsonify(MSG="VolleyballPBPHandler.removePlayPBPAction: Removed game action"), 200
         except Exception as e:
             return jsonify(ERROR="VolleyballPBPHandler.removePlayPBPSequence: " + e), 500
 
@@ -554,6 +572,7 @@ class VolleyballVolleyballPBPHandler:
             event_dao = EventDAO()
 
             # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
+            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
             if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
                 return jsonify(MSG="VolleyballPBPHandler.setPBPSequenceOver: Not a volleyball event."), 403
 
@@ -563,5 +582,5 @@ class VolleyballVolleyballPBPHandler:
 
             return jsonify(ERROR="VolleyballPBPHandler.setPBPSequenceOver: Non-existing PBP Sequence."), 403
 
-        except:
-            return jsonify(ERROR="VolleyballPBPHandler.setPBPSequenceOver: Internal error from PBP DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="VolleyballPBPHandler.setPBPSequenceOver: " + e), 500
