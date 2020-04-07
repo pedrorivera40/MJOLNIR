@@ -134,7 +134,7 @@ def allUsers():
     handler = UserHandler()
     if request.method == 'GET':
         ## For user list display
-        return handler.getAllDashUsers()
+        return handler.getAllDashUsers() 
     if request.method == 'POST':
         req = request.json
 
