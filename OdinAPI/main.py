@@ -16,10 +16,9 @@ from handler.volleyball_event import VolleyballEventHandler
 from handler.soccer_event import SoccerEventHandler
 from handler.baseball_event import BaseballEventHandler
 from handler.sport import SportHandler
+from handler.pbp_handler import VolleyballPBPHandler
 
-
-
-## Load environment variables
+# Load environment variables
 load_dotenv()
 
 
@@ -49,16 +48,6 @@ def token_check(func):
             return func()
     return decorated
 
-#--------- PBP Routes ---------#
-@app.route("/pbp/", methods=['POST', 'PUT', 'DELETE'])
-def pbp_sequence():
-    # CREATE PBP SEQUENCE & EDIT METADATA. (ALSO DELETE)
-    return 1
-  
-@app.route("/")
-@token_check
-def hello():
-    return jsonify("Hi, this is a route that will be eliminated xD")
 
 #--------- Athlete Routes ---------#
 @app.route("/athletes/", methods=['GET', 'POST'])
@@ -118,143 +107,149 @@ def athletePositions(sid, aid):
 @app.route("/auth/", methods=['POST'])
 def auth():
     if request.method == 'POST':
-        handler = UserHandler() 
+        handler = UserHandler()
 
         if request.json['username'] == None or request.json['password'] == None:
             return jsonify(Error='Bad Request'), 400
-            
+
         username = request.json['username']
-        password = request.json['password'] # TODO: AES Encryption
-        
+        password = request.json['password']  # TODO: AES Encryption
+
         return handler.getHashByUsername(username, password)
-        
 
 
 ###########################################
 #--------- Dashboard User Routes ---------#
 ###########################################
-@app.route("/users/", methods = ['GET','POST'])
+@app.route("/users/", methods=['GET', 'POST'])
 def allUsers():
     handler = UserHandler()
     if request.method == 'GET':
-        ## For user list display
-        return handler.getAllDashUsers() 
+        # For user list display
+        return handler.getAllDashUsers()
     if request.method == 'POST':
         req = request.json
 
-        ## Check the request contains the right structure.
+        # Check the request contains the right structure.
         if req['username'] == None or req['full_name'] == None or req['email'] == None or req['password'] == None:
             return jsonify(Error='Bad Request'), 400
 
-        ## For account creation
-        return handler.addDashUser(req['username'],req['full_name'], req['email'], req['password'])
+        # For account creation
+        return handler.addDashUser(req['username'], req['full_name'], req['email'], req['password'])
 
-@app.route("/users/<int:duid>", methods = ['GET','PATCH'])
+
+@app.route("/users/<int:duid>", methods=['GET', 'PATCH'])
 def userByID(duid):
     handler = UserHandler()
     req = request.json
     if request.method == 'GET':
-        ## For managing specific users
+        # For managing specific users
         return handler.getDashUserByID(duid)
     if request.method == 'PATCH':
-        ## For username change
-        ## Check the request contains the right structure.
+        # For username change
+        # Check the request contains the right structure.
         if req['username'] == None:
             return jsonify(Error='Bad Request'), 400
 
-        return handler.updateDashUserUsername(duid,req['username'])
+        return handler.updateDashUserUsername(duid, req['username'])
 
-@app.route("/users/username/", methods = ['POST'])
+
+@app.route("/users/username/", methods=['POST'])
 def getUserByUsername():
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
-        ## Check the request contains the right structure.
+        # Check the request contains the right structure.
         if req['username'] == None:
             return jsonify(Error='Bad Request'), 400
 
         return handler.getDashUserByUsername(req['username'])
 
 
-@app.route("/users/email/", methods = ['POST'])
+@app.route("/users/email/", methods=['POST'])
 def getUserByEmail():
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
-        ## Check the request contains the right structure.
+        # Check the request contains the right structure.
         if req['email'] == None:
             return jsonify(Error='Bad Request'), 400
         return handler.getDashUserByEmail(req['email'])
 
-@app.route("/users/<int:duid>/reset", methods = ['PATCH'])
+
+@app.route("/users/<int:duid>/reset", methods=['PATCH'])
 def passwordReset(duid):
     handler = UserHandler()
     req = request.json
     if request.method == 'PATCH':
-        ## For password reset
-        ## Check the request contains the right structure.
+        # For password reset
+        # Check the request contains the right structure.
         if req['password'] == None:
             return jsonify(Error='Bad Request'), 400
-        return handler.updateDashUserPassword(duid,req['password'])
+        return handler.updateDashUserPassword(duid, req['password'])
 
-@app.route("/users/<string:duid>/toggleActive", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
+
+# TODO: id's that are sanwdiwch must be converted to string
+@app.route("/users/<string:duid>/toggleActive", methods=['PATCH'])
 def toggleActive(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
         return handler.toggleDashUserActive(duid)
 
-@app.route("/users/<string:duid>/remove", methods = ['PATCH']) ## TODO: id's that are sanwdiwch must be converted to string
+
+# TODO: id's that are sanwdiwch must be converted to string
+@app.route("/users/<string:duid>/remove", methods=['PATCH'])
 def removeUser(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
         return handler.removeDashUser(duid)
 
-@app.route("/users/<string:duid>/permissions",  methods = [ 'GET','PATCH'])
+
+@app.route("/users/<string:duid>/permissions",  methods=['GET', 'PATCH'])
 def userPermissions(duid):
     handler = UserHandler()
     if request.method == 'GET':
-        return  handler.getUserPermissions(duid)
+        return handler.getUserPermissions(duid)
     if request.method == 'PATCH':
         req = request.json
-        ## Check the request contains the right structure.
+        # Check the request contains the right structure.
         if req['permissions'] == None:
             return jsonify(Error='Bad Request'), 400
         handler = UserHandler()
-        return  handler.setUserPermissions(duid, req['permissions'])
+        return handler.setUserPermissions(duid, req['permissions'])
 
 
 #--------- Event Routes ---------#
-@app.route("/events/",methods = ['GET'])
+@app.route("/events/", methods=['GET'])
 def events():
     handler = EventHandler()
     if request.method == 'GET':
         return handler.getAllEvents()
-    
 
-@app.route("/events/<int:eID>/",methods =['GET','PUT','DELETE'])
+
+@app.route("/events/<int:eID>/", methods=['GET', 'PUT', 'DELETE'])
 def eventsById(eID):
     handler = EventHandler()
     if request.method == 'GET':
         return handler.getEventByID(eID)
     elif request.method == 'PUT':
         json = request.json
-        return handler.editEvent(eID,json['attributes'])
+        return handler.editEvent(eID, json['attributes'])
     elif request.method == 'DELETE':
         return handler.removeEvent(eID)
 
-@app.route("/events/team/<int:tID>/", methods = ['GET','POST'])
+
+@app.route("/events/team/<int:tID>/", methods=['GET', 'POST'])
 def teamEvents(tID):
     handler = EventHandler()
     if request.method == 'GET':
         return handler.getEventsByTeam(tID)
     elif request.method == 'POST':
         json = request.json
-        return handler.addEvent(tID,json['attributes'])
-
+        return handler.addEvent(tID, json['attributes'])
 
 
 #--------- Sports/Categories/Positions Routes ---------#
-
 '''
     TODO ***************************************** TODO
         1. Add routes documentation.
@@ -263,29 +258,27 @@ def teamEvents(tID):
         4. Tests, tests, and more tests...
 '''
 
-
-
-#TODO: WORK ON THIS (Herbert) -> Improve route naming, base on args...
+# TODO: WORK ON THIS (Herbert) -> Improve route naming, base on args...
 #--------- Result Routes ---------#
-#TODO: Route Error Management, how does it not explode while saying error message?
+# TODO: Route Error Management, how does it not explode while saying error message?
 
 
-#REQUEST FORMAT FOR ROUTE:
+# REQUEST FORMAT FOR ROUTE:
 # { "event_id": 5,
-#   "team_statistics": 
-#    { "basketball_statistics": 
+#   "team_statistics":
+#    { "basketball_statistics":
 #       { "points":500, "rebounds":500, "assists":500, "steals":500, "blocks":500, "turnovers":500, "field_goal_attempt":500,
 # 		"successful_field_goal":500, "three_point_attempt":500, "successful_three_point":500, "free_throw_attempt":500,
 # 		"successful_free_throw":500
-#       } 
+#       }
 #    },
-#   "athlete_statistics": 
+#   "athlete_statistics":
 #   [
 #   	{"athlete_id":4,
 #   	"statistics":
 # 	  	{"basketball_statistics":
-# 		  	{"points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2, 
-#             "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2, 
+# 		  	{"points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2,
+#             "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2,
 #             "successful_free_throw":2
 # 		  	}
 # 	  	}
@@ -303,26 +296,26 @@ def teamEvents(tID):
 #   "uprm_score": 0,
 #   "opponent_score": 0,
 #   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE" 
+#   "opponent_color": "#HEX_VAL_HERE"
 # }
 
 # TODO: validate JSON request arguments somehow
 # @app.route("/results/basketball/<int:eid>/", methods = ['GET','POST'])
-@app.route("/results/basketball/", methods = ['GET','POST'])
+@app.route("/results/basketball/", methods=['GET', 'POST'])
 def basketballStatistics():
     json = request.json
     handler = BasketballEventHandler()
     if request.method == 'GET':
         return handler.getAllStatisticsByEventID(json['event_id'])
-        #Removed call for version with only athlete stats list, new version returns all
-        #return handler.getAllStatisticsByEventID(eid)
+        # Removed call for version with only athlete stats list, new version returns all
+        # return handler.getAllStatisticsByEventID(eid)
     if request.method == 'POST':
-        return handler.addAllEventStatistics(json['event_id'],json)
-        #return jsonify(json),200
+        return handler.addAllEventStatistics(json['event_id'], json)
+        # return jsonify(json),200
     else:
         return jsonify("Method not allowed."), 405
 
-#FORMAT FOR REQUEST:
+# FORMAT FOR REQUEST:
 # {
 #   "event_id": 2,
 #   "athlete_id":2,
@@ -335,23 +328,24 @@ def basketballStatistics():
 # }
 
 # @app.route("/results/basketball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/basketball/individual/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/basketball/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def basketballAthleteStatistics():
     json = request.json
     handler = BasketballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsByEventId(json['event_id'],json['athlete_id'])
+        return handler.getAllAthleteStatisticsByEventId(json['event_id'], json['athlete_id'])
     if request.method == 'POST':
-        return handler.addStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
     if request.method == 'PUT':
-        returnable = handler.editStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        returnable = handler.editStatistics(
+            json['event_id'], json['athlete_id'], json['attributes'])
         return returnable
     if request.method == 'DELETE':
-        return handler.removeStatistics(json['event_id'],json['athlete_id'])
+        return handler.removeStatistics(json['event_id'], json['athlete_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
-#FORMAT FOR REQUEST:
+# FORMAT FOR REQUEST:
 # {"add_type":"manual",
 # "event_id":1,
 # "attributes":
@@ -363,7 +357,7 @@ def basketballAthleteStatistics():
 # }
 
 # @app.route("/results/basketball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/basketball/team/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/basketball/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def basketballTeamStatistics():
     json = request.json
     handler = BasketballEventHandler()
@@ -373,9 +367,9 @@ def basketballTeamStatistics():
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
         if json['add_type'] == 'MANUAL':
-            return handler.addTeamStatistics(json['event_id'],json['attributes'])
-        else: 
-            return jsonify(Error= "Method not allowed, Must specify valid add_type"),405
+            return handler.addTeamStatistics(json['event_id'], json['attributes'])
+        else:
+            return jsonify(Error="Method not allowed, Must specify valid add_type"), 405
     if request.method == 'PUT':
         return handler.editTeamStatistics(json['event_id'])
     if request.method == 'DELETE':
@@ -383,73 +377,164 @@ def basketballTeamStatistics():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-
-
-#FORMAT FOR REQUEST:
+# FORMAT FOR REQUEST:
 # { "event_id":3,
 #   "attributes":
 #   {
 #   "local_score":2, "opponent_score":2,
 #   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"  
+#   "opponent_color": "#HEX_VAL_HERE"
 #   }
 # }
 
 # @app.route("/results/basketball/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/basketball/score/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/basketball/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def basketballFinalScores():
     json = request.json
     handler = BasketballEventHandler()
     if request.method == 'GET':
         return handler.getFinalScore(json['event_id'])
     if request.method == 'POST':
-        return handler.addFinalScore(json['event_id'],json['attributes'])
+        return handler.addFinalScore(json['event_id'], json['attributes'])
     if request.method == 'PUT':
-        return handler.editFinalScore(json['event_id'],json['attributes'])
+        return handler.editFinalScore(json['event_id'], json['attributes'])
     if request.method == 'DELETE':
         return handler.removeFinalScore(json['event_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
-#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
-@app.route("/results/basketball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
-def basketballSeasonAthleteStatistics(aid,seasonYear):
+# TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
+@app.route("/results/basketball/season/<int:seasonYear>/<int:aid>/", methods=['GET'])
+def basketballSeasonAthleteStatistics(aid, seasonYear):
     json = request.json
     handler = BasketballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsPerSeason(aid,seasonYear)
+        return handler.getAllAthleteStatisticsPerSeason(aid, seasonYear)
     else:
         return jsonify(Error="Method not allowed."), 405
 
-@app.route("/pbp/rosters", methods=['POST', 'PUT', 'DELETE'])
+#--------- PBP Routes ---------#
+@app.route("/pbp", methods=['POST', 'DELETE'])
+def pbp_sequence():
+
+    body = request.get_json()
+    if len(body) != 1 or "event_id" not in body:
+        return jsonify("Bad request. ")
+
+    handler = VolleyballPBPHandler()
+    event_id = body["event_id"]
+    if request.method == 'POST':
+        return handler.startPBPSequence(event_id)
+
+    return handler.removePBPSequence(event_id)
+
+
+@app.route("/pbp/color", methods=['POST', 'PUT'])
+def pbp_set_color():
+    body = request.get_json()
+    if len(body) == 2 and "color" in body and "event_id" in body:
+        return VolleyballPBPHandler().setOpponentColor(body["event_id"], body["color"])
+
+    return jsonify(ERROR="Bad request, client must pass both event id and color within request body."), 400
+
+
+@app.route("/pbp/roster", methods=['POST', 'PUT', 'DELETE'])
 def pbp_roster():
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
-    return 1
+    body = request.get_json()
+
+    # Validate team is given within request body.
+    if not "team" in body or not "event_id" in body:
+        return jsonify(ERROR="Bad request. Values for team and event id must be included in request body."), 400
+
+    handler = VolleyballPBPHandler()
+    team = body["team"]
+    event_id = body["event_id"]
+
+    if request.method == 'POST' or request.method == 'PUT':
+        # Validate data is present in body.
+        if len(body) != 3 or not "data" in body:
+            return jsonify(ERROR="Bad request. Values for team, event id, and data must be included in request body."), 400
+
+        data = body["data"]
+        if team == "uprm":
+            return handler.setUPRMPlayer(event_id, data)
+
+        if team == "opponent":
+            return handler.setOppPlayer(event_id, data)
+
+        # Team not recognized.
+        return jsonify(ERROR="Bad request. Team value invalid."), 400
+
+    # Validate athlete id is given.
+    if len(body) != 3 or "athlete_id" not in body:
+        return jsonify(ERROR="Bad request. Values for team, event id, and athlete id must be provided."), 400
+
+    athlete_id = body["athlete_id"]
+
+    if team == "uprm":
+        return handler.removeUPRMPlayer(event_id, athlete_id)
+
+    if team == "opponent":
+        return handler.removeOppPlayer(event_id, athlete_id)
+
+    # Team not recognized.
+    return jsonify(ERROR="Bad request. Team value invalid."), 400
+
 
 @app.route("/pbp/actions", methods=['POST', 'PUT', 'DELETE'])
 def pbp_actions():
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
-    return 1
+    body = request.get_json()
+
+    # Validate event id is present in body.
+    if "event_id" not in body:
+        return jsonify(ERROR="Bad request. Not event id found."), 400
+
+    event_id = body["event_id"]
+    handler = VolleyballPBPHandler()
+    if request.method == 'POST':
+        # Validate action data is present in request body.
+        if len(body) != 2 or "data" not in body:
+            return jsonify(ERROR="Bad request. Must send both event id and data within request body."), 400
+
+        return handler.addPBPAction(event_id, body["data"])
+
+    if request.method == 'PUT':
+        # Validate data and action id are present in request body.
+        if len(body) != 3 or "data" not in body or "action_id" not in body:
+            return jsonify(ERROR="Bad request. Must send both event id and data within request body."), 400
+
+        return handler.editPBPAction(event_id, body["action_id"], body["data"])
+
+    # For delete, validate action id is present in body.
+    if len(body) != 2 or "action_id" not in body:
+        return jsonify(ERROR="Bad request. Must send both event id and action id within request body."), 400
+
+    return handler.removePlayPBPAction(event_id, body["action_id"])
 
 
 @app.route("/pbp/end", methods=['POST'])
 def pbp_end():
-    # END PBP SEQUENCE
-    return 1
+    body = request.get_json()
+    if len(body) == 1 and "event_id" in body:
+        return VolleyballPBPHandler().setPBPSequenceOver(body["event_id"])
+
+    return jsonify(ERROR="Bad request, client must pass event_id only, within the body."), 400
 
 
-    # Launch app.
+# Launch app.
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-#===================================================================================
-#=======================//VOLLEYBALL RESULTS ROUTES//===============================
-#===================================================================================
+# ===================================================================================
+# =======================//VOLLEYBALL RESULTS ROUTES//===============================
+# ===================================================================================
 
 # REQUEST FORMAT FOR ROUTE:
 # { "event_id": 5,
-#   "team_statistics": 
-#    { "volleyball_statistics": 
-#       { 
+#   "team_statistics":
+#    { "volleyball_statistics":
+#       {
 #         "kill_points": 1,
 #         "attack_errors":1,
 #         "assists":1,
@@ -459,9 +544,9 @@ if __name__ == '__main__':
 #         "blocks":1,
 #         "blocking_errors":1,
 #         "reception_errors":1
-#       } 
+#       }
 #    },
-#   "athlete_statistics": 
+#   "athlete_statistics":
 #   [
 #   	{"athlete_id":4,
 #   	"statistics":
@@ -499,20 +584,20 @@ if __name__ == '__main__':
 #   "uprm_score": 0,
 #   "opponent_score": 0,
 #   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE" 
+#   "opponent_color": "#HEX_VAL_HERE"
 # }
 
 # TODO: validate JSON request arguments somehow
 # @app.route("/results/volleyball/<int:eid>/", methods = ['GET','POST'])
-@app.route("/results/volleyball/", methods = ['GET','POST'])
+@app.route("/results/volleyball/", methods=['GET', 'POST'])
 def volleyballStatistics():
     json = request.json
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         return handler.getAllStatisticsByEventID(json['event_id'])
     if request.method == 'POST':
-        return handler.addAllEventStatistics(json['event_id'],json)
-        #return jsonify(json),200
+        return handler.addAllEventStatistics(json['event_id'], json)
+        # return jsonify(json),200
     else:
         return jsonify("Method not allowed."), 405
 
@@ -535,19 +620,20 @@ def volleyballStatistics():
 # }
 
 # @app.route("/results/volleyball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/volleyball/individual/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/volleyball/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def volleyballAthleteStatistics():
     json = request.json
     handler = VolleyballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsByEventId(json['event_id'],json['athlete_id'])
+        return handler.getAllAthleteStatisticsByEventId(json['event_id'], json['athlete_id'])
     if request.method == 'POST':
-        return handler.addStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
     if request.method == 'PUT':
-        returnable = handler.editStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        returnable = handler.editStatistics(
+            json['event_id'], json['athlete_id'], json['attributes'])
         return returnable
     if request.method == 'DELETE':
-        return handler.removeStatistics(json['event_id'],json['athlete_id'])
+        return handler.removeStatistics(json['event_id'], json['athlete_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
@@ -570,7 +656,7 @@ def volleyballAthleteStatistics():
 # }
 
 # @app.route("/results/volleyball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/volleyball/team/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/volleyball/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def volleyballTeamStatistics():
     json = request.json
     handler = VolleyballEventHandler()
@@ -580,9 +666,9 @@ def volleyballTeamStatistics():
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
         if json['add_type'] == 'MANUAL':
-            return handler.addTeamStatistics(json['event_id'],json['attributes'])
-        else: 
-            return jsonify(Error= "Method not allowed, Must specify valid add_type"),405
+            return handler.addTeamStatistics(json['event_id'], json['attributes'])
+        else:
+            return jsonify(Error="Method not allowed, Must specify valid add_type"), 405
     if request.method == 'PUT':
         return handler.editTeamStatistics(json['event_id'])
     if request.method == 'DELETE':
@@ -590,74 +676,72 @@ def volleyballTeamStatistics():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-
-
-#FORMAT FOR REQUEST:
+# FORMAT FOR REQUEST:
 # { "event_id":3,
 #   "attributes":
 #   {
 #   "local_score":2, "opponent_score":2,
 #   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"  
+#   "opponent_color": "#HEX_VAL_HERE"
 #   }
 # }
 
 # @app.route("/results/volleyball/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/volleyball/score/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/volleyball/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def volleyballFinalScores():
     json = request.json
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         return handler.getFinalScore(json['event_id'])
     if request.method == 'POST':
-        return handler.addFinalScore(json['event_id'],json['attributes'])
+        return handler.addFinalScore(json['event_id'], json['attributes'])
     if request.method == 'PUT':
-        return handler.editFinalScore(json['event_id'],json['attributes'])
+        return handler.editFinalScore(json['event_id'], json['attributes'])
     if request.method == 'DELETE':
         return handler.removeFinalScore(json['event_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
-#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
-@app.route("/results/volleyball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
-def volleyballSeasonAthleteStatistics(aid,seasonYear):
+# TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
+@app.route("/results/volleyball/season/<int:seasonYear>/<int:aid>/", methods=['GET'])
+def volleyballSeasonAthleteStatistics(aid, seasonYear):
     json = request.json
     handler = VolleyballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsPerSeason(aid,seasonYear)
+        return handler.getAllAthleteStatisticsPerSeason(aid, seasonYear)
     else:
         return jsonify(Error="Method not allowed."), 405
 
 
-#===================================================================================
-#===================//END VOLLEYBALL RESULTS ROUTES//===============================
-#===================================================================================
+# ===================================================================================
+# ===================//END VOLLEYBALL RESULTS ROUTES//===============================
+# ===================================================================================
 
 
-#===================================================================================
-#=======================//SOCCER RESULTS ROUTES//===============================
-#===================================================================================
+# ===================================================================================
+# =======================//SOCCER RESULTS ROUTES//===============================
+# ===================================================================================
 
 # REQUEST FORMAT FOR ROUTE:
 # { "event_id": 5,
-#   "team_statistics": 
-#    { "soccer_statistics": 
-#       { 
-#         "goal_attempts":1, 
+#   "team_statistics":
+#    { "soccer_statistics":
+#       {
+#         "goal_attempts":1,
 #         "assists":1,
 #         "fouls":1,
 #         "cards":1,
 #         "successful_goals":1,
 #         "tackles":1
-#       } 
+#       }
 #    },
-#   "athlete_statistics": 
+#   "athlete_statistics":
 #   [
 #   	{"athlete_id":4,
 #   	"statistics":
 # 	  	{"soccer_statistics":
 # 		  	{
-#             "goal_attempts":1, 
+#             "goal_attempts":1,
 #             "assists":1,
 #             "fouls":1,
 #             "cards":1,
@@ -670,7 +754,7 @@ def volleyballSeasonAthleteStatistics(aid,seasonYear):
 #   	"statistics":
 # 	  	{"soccer_statistics":
 # 		  	{
-#             "goal_attempts":1, 
+#             "goal_attempts":1,
 #             "assists":1,
 #             "fouls":1,
 #             "cards":1,
@@ -683,20 +767,20 @@ def volleyballSeasonAthleteStatistics(aid,seasonYear):
 #   "uprm_score": 0,
 #   "opponent_score": 0,
 #   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE" 
+#   "opponent_color": "#HEX_VAL_HERE"
 # }
 
 # TODO: validate JSON request arguments somehow
 # @app.route("/results/soccer/<int:eid>/", methods = ['GET','POST'])
-@app.route("/results/soccer/", methods = ['GET','POST'])
+@app.route("/results/soccer/", methods=['GET', 'POST'])
 def soccerStatistics():
     json = request.json
     handler = SoccerEventHandler()
     if request.method == 'GET':
         return handler.getAllStatisticsByEventID(json['event_id'])
     if request.method == 'POST':
-        return handler.addAllEventStatistics(json['event_id'],json)
-        #return jsonify(json),200
+        return handler.addAllEventStatistics(json['event_id'], json)
+        # return jsonify(json),200
     else:
         return jsonify("Method not allowed."), 405
 
@@ -706,7 +790,7 @@ def soccerStatistics():
 #   "athlete_id":2,
 #   "attributes":
 #   {
-#     "goal_attempts":1, 
+#     "goal_attempts":1,
 #     "assists":1,
 #     "fouls":1,
 #     "cards":1,
@@ -716,19 +800,20 @@ def soccerStatistics():
 # }
 
 # @app.route("/results/soccer/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/soccer/individual/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/soccer/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def soccerAthleteStatistics():
     json = request.json
     handler = SoccerEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsByEventId(json['event_id'],json['athlete_id'])
+        return handler.getAllAthleteStatisticsByEventId(json['event_id'], json['athlete_id'])
     if request.method == 'POST':
-        return handler.addStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
     if request.method == 'PUT':
-        returnable = handler.editStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        returnable = handler.editStatistics(
+            json['event_id'], json['athlete_id'], json['attributes'])
         return returnable
     if request.method == 'DELETE':
-        return handler.removeStatistics(json['event_id'],json['athlete_id'])
+        return handler.removeStatistics(json['event_id'], json['athlete_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
@@ -738,7 +823,7 @@ def soccerAthleteStatistics():
 # "event_id":1,
 # "attributes":
 #   {
-#     "goal_attempts":1, 
+#     "goal_attempts":1,
 #     "assists":1,
 #     "fouls":1,
 #     "cards":1,
@@ -748,7 +833,7 @@ def soccerAthleteStatistics():
 # }
 
 # @app.route("/results/soccer/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/soccer/team/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/soccer/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def soccerTeamStatistics():
     json = request.json
     handler = SoccerEventHandler()
@@ -758,9 +843,9 @@ def soccerTeamStatistics():
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
         if json['add_type'] == 'MANUAL':
-            return handler.addTeamStatistics(json['event_id'],json['attributes'])
-        else: 
-            return jsonify(Error= "Method not allowed, Must specify valid add_type"),405
+            return handler.addTeamStatistics(json['event_id'], json['attributes'])
+        else:
+            return jsonify(Error="Method not allowed, Must specify valid add_type"), 405
     if request.method == 'PUT':
         return handler.editTeamStatistics(json['event_id'])
     if request.method == 'DELETE':
@@ -768,58 +853,56 @@ def soccerTeamStatistics():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-
-
-#FORMAT FOR REQUEST:
+# FORMAT FOR REQUEST:
 # { "event_id":3,
 #   "attributes":
 #   {
 #   "local_score":2, "opponent_score":2,
 #   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"  
+#   "opponent_color": "#HEX_VAL_HERE"
 #   }
 # }
 
 # @app.route("/results/soccer/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/soccer/score/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/soccer/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def soccerFinalScores():
     json = request.json
     handler = SoccerEventHandler()
     if request.method == 'GET':
         return handler.getFinalScore(json['event_id'])
     if request.method == 'POST':
-        return handler.addFinalScore(json['event_id'],json['attributes'])
+        return handler.addFinalScore(json['event_id'], json['attributes'])
     if request.method == 'PUT':
-        return handler.editFinalScore(json['event_id'],json['attributes'])
+        return handler.editFinalScore(json['event_id'], json['attributes'])
     if request.method == 'DELETE':
         return handler.removeFinalScore(json['event_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
-#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
-@app.route("/results/soccer/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
-def soccerSeasonAthleteStatistics(aid,seasonYear):
+# TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
+@app.route("/results/soccer/season/<int:seasonYear>/<int:aid>/", methods=['GET'])
+def soccerSeasonAthleteStatistics(aid, seasonYear):
     json = request.json
     handler = SoccerEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsPerSeason(aid,seasonYear)
+        return handler.getAllAthleteStatisticsPerSeason(aid, seasonYear)
     else:
         return jsonify(Error="Method not allowed."), 405
 
 
-#===================================================================================
-#===================//END SOCCER RESULTS ROUTES//===============================
-#===================================================================================
+# ===================================================================================
+# ===================//END SOCCER RESULTS ROUTES//===============================
+# ===================================================================================
 
-#===================================================================================
-#=======================//BASEBALL RESULTS ROUTES//===============================
-#===================================================================================
+# ===================================================================================
+# =======================//BASEBALL RESULTS ROUTES//===============================
+# ===================================================================================
 
 # REQUEST FORMAT FOR ROUTE:
 # { "event_id": 5,
-#   "team_statistics": 
-#    { "baseball_statistics": 
-#       { 
+#   "team_statistics":
+#    { "baseball_statistics":
+#       {
 #         "at_bats":1,
 #         "runs":1,
 #         "hits":1,
@@ -827,9 +910,9 @@ def soccerSeasonAthleteStatistics(aid,seasonYear):
 #         "base_on_balls":1,
 #         "strikeouts":1,
 #         "left_on_base":1
-#       } 
+#       }
 #    },
-#   "athlete_statistics": 
+#   "athlete_statistics":
 #   [
 #   	{"athlete_id":4,
 #   	"statistics":
@@ -863,20 +946,20 @@ def soccerSeasonAthleteStatistics(aid,seasonYear):
 #   "uprm_score": 0,
 #   "opponent_score": 0,
 #   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE" 
+#   "opponent_color": "#HEX_VAL_HERE"
 # }
 
 # TODO: validate JSON request arguments somehow
 # @app.route("/results/baseball/<int:eid>/", methods = ['GET','POST'])
-@app.route("/results/baseball/", methods = ['GET','POST'])
+@app.route("/results/baseball/", methods=['GET', 'POST'])
 def baseballStatistics():
     json = request.json
     handler = BaseballEventHandler()
     if request.method == 'GET':
         return handler.getAllStatisticsByEventID(json['event_id'])
     if request.method == 'POST':
-        return handler.addAllEventStatistics(json['event_id'],json)
-        #return jsonify(json),200
+        return handler.addAllEventStatistics(json['event_id'], json)
+        # return jsonify(json),200
     else:
         return jsonify("Method not allowed."), 405
 
@@ -897,19 +980,20 @@ def baseballStatistics():
 # }
 
 # @app.route("/results/baseball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/baseball/individual/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/baseball/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def baseballAthleteStatistics():
     json = request.json
     handler = BaseballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsByEventId(json['event_id'],json['athlete_id'])
+        return handler.getAllAthleteStatisticsByEventId(json['event_id'], json['athlete_id'])
     if request.method == 'POST':
-        return handler.addStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
     if request.method == 'PUT':
-        returnable = handler.editStatistics(json['event_id'],json['athlete_id'],json['attributes'])
+        returnable = handler.editStatistics(
+            json['event_id'], json['athlete_id'], json['attributes'])
         return returnable
     if request.method == 'DELETE':
-        return handler.removeStatistics(json['event_id'],json['athlete_id'])
+        return handler.removeStatistics(json['event_id'], json['athlete_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
@@ -930,7 +1014,7 @@ def baseballAthleteStatistics():
 # }
 
 # @app.route("/results/baseball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/baseball/team/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/baseball/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def baseballTeamStatistics():
     json = request.json
     handler = BaseballEventHandler()
@@ -940,9 +1024,9 @@ def baseballTeamStatistics():
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
         if json['add_type'] == 'MANUAL':
-            return handler.addTeamStatistics(json['event_id'],json['attributes'])
-        else: 
-            return jsonify(Error= "Method not allowed, Must specify valid add_type"),405
+            return handler.addTeamStatistics(json['event_id'], json['attributes'])
+        else:
+            return jsonify(Error="Method not allowed, Must specify valid add_type"), 405
     if request.method == 'PUT':
         return handler.editTeamStatistics(json['event_id'])
     if request.method == 'DELETE':
@@ -950,50 +1034,48 @@ def baseballTeamStatistics():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-
-
-#FORMAT FOR REQUEST:
+# FORMAT FOR REQUEST:
 # { "event_id":3,
 #   "attributes":
 #   {
 #   "local_score":2, "opponent_score":2,
 #   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"  
+#   "opponent_color": "#HEX_VAL_HERE"
 #   }
 # }
 
 # @app.route("/results/baseball/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
-@app.route("/results/baseball/score/", methods = ['GET','POST','PUT','DELETE'])
+@app.route("/results/baseball/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def baseballFinalScores():
     json = request.json
     handler = BaseballEventHandler()
     if request.method == 'GET':
         return handler.getFinalScore(json['event_id'])
     if request.method == 'POST':
-        return handler.addFinalScore(json['event_id'],json['attributes'])
+        return handler.addFinalScore(json['event_id'], json['attributes'])
     if request.method == 'PUT':
-        return handler.editFinalScore(json['event_id'],json['attributes'])
+        return handler.editFinalScore(json['event_id'], json['attributes'])
     if request.method == 'DELETE':
         return handler.removeFinalScore(json['event_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
-#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
-@app.route("/results/baseball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
-def baseballSeasonAthleteStatistics(aid,seasonYear):
+# TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
+@app.route("/results/baseball/season/<int:seasonYear>/<int:aid>/", methods=['GET'])
+def baseballSeasonAthleteStatistics(aid, seasonYear):
     json = request.json
     handler = BaseballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsPerSeason(aid,seasonYear)
+        return handler.getAllAthleteStatisticsPerSeason(aid, seasonYear)
     else:
         return jsonify(Error="Method not allowed."), 405
 
 
-#===================================================================================
-#===================//END BASEBALL RESULTS ROUTES//===============================
-#===================================================================================
+# ===================================================================================
+# ===================//END BASEBALL RESULTS ROUTES//===============================
+# ===================================================================================
 
-#Launch app.
+# Launch app.
 @app.route("/sports", methods=['GET'])
 def get_sports():
     if request.method == 'GET':
@@ -1034,4 +1116,3 @@ def get_sport_info():
 # Launch app.
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-    

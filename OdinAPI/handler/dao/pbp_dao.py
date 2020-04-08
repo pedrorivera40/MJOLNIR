@@ -1,4 +1,4 @@
-from config.fb_config import serv_path, rtdb_config
+from .config.fb_config import serv_path, rtdb_config
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
@@ -190,9 +190,23 @@ class PBPDao:
             Boolean that determines if the PBP sequence exists.
         """
 
-        path = self._db_keywords["root"] + str(int(event_id))
+        return self.get_pbp_meta(event_id) != None
 
-        return self._rtdb.reference(path).get() != None
+    def get_pbp_meta(self, event_id):
+        """
+        Get PBP sequence metadata.
+        This function fetches a PBP sequence metadata from the non-relational database.
+
+        Args
+            event_id: integer corresponding to an event id.
+
+        Returns:
+            dictionary that contains the pbp information (metadata: sport, game-ended).
+        """
+
+        path = self._db_keywords["root"] + \
+            str(int(event_id)) + self._db_keywords["meta"]
+        return self._rtdb.reference(path).get()
 
     def set_current_set(self, event_id, new_set):
         """
