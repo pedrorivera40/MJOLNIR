@@ -31,10 +31,10 @@ class EventDAO:
 class TeamDAO:
     def getTeamSportByID(self,tID) :
         # Sport ID distribution
-        # Team 1 is Soccer M (1)
-        # Team 2 is Soccer M (2)
-        # Team 3 is Soccer M (10)
-        # Teams 4 and 5 is Soccer F (12)
+        # Team 1 is Basketball M (1)
+        # Team 2 is Volleyball M (2)
+        # Team 3 is Basketball F (10)
+        # Teams 4 and 5 is Volleyball F (12)
         if tID == 1:
             return 1
         if tID == 2:
@@ -77,3 +77,18 @@ class AthleteDAO:
             # something to prove it exists
             return True
         return False
+    def getAthleteSportByID(self,aID):
+        basketball_athletes_m = [1,3,4,5,7,8,15,16]
+        basketball_athletes_f = []
+        volleyball_athletes_m = [68,69,72]
+        volleyball_athletes_f = [70,71]
+        if aID in basketball_athletes_m:
+            return 1
+        if aID in basketball_athletes_f:
+            return 10
+        if aID in volleyball_athletes_m:
+            return 2
+        if aID in volleyball_athletes_f:
+            return 12
+        
+            

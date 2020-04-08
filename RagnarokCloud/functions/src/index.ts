@@ -11,6 +11,7 @@ import * as functions from 'firebase-functions';
 // In this case that is performed over the game_ended child inside the metadata
 // corresponding to a game. For details, refer to the NoSQL structure in the progress
 // report #1 for MJOLNIR.
+
 export const sampleCloudFunction = functions.database.ref("/v1/{game_id}/game-metadata/game-ended")
     .onUpdate((change, context) => {
         // Read the game id for the change. It will be logged for quick testing purposes.

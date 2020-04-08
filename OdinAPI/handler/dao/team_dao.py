@@ -36,6 +36,7 @@ class TeamDAO:
         self.conn = psycopg2.connect(connection_url)
 
 #=============================//HELPERS//====================
+    #ALL NEW
 
     def getTeamSportByID(self,tID):
         """
@@ -44,10 +45,116 @@ class TeamDAO:
         query = """
                 SELECT sport_id 
                 FROM team
-                WHERE team_id = %s
-                (is_invalid == false or is_invalid is Null);
+                WHERE id = %s and
+                (is_invalid = false or is_invalid is Null);
                 """
         cursor.execute(query,(int(tID),))
+        result = cursor.fetchone()
+        return result
+
+    def getTeamIDByYear(self,sID,tYear): # Returns a Team id based on year
+        """
+        Gets a specific team's id.
+
+        This function uses sport ID and season year to perform a query to the database
+        that gets the team in the system that matches the given parameters.
+
+        Args:
+            sID: The ID of the sport of which the team needs to be fetched.
+            tYear: the season year of which the team needs to be fetched
+            
+        Returns:
+            The response to the database query
+            containing the team in the system containing 
+            the matching record for the given parameters
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT team.id as team_id
+                FROM team
+                WHERE sport_id = %s and season_year = %s and
+                (team.is_invalid = false or team.is_invalid is Null);
+                """
+        cursor.execute(query,(int(sID),int(tYear),))
+        result = cursor.fetchone()
+        return result
+
+    def getTeamByIDInvalid(self,tID): # Returns a Team record by its id.
+        """
+        Gets a specific invalid team.
+
+        This function uses an ID to perform a query to the database
+        that gets the invalid team in the system that matches the given ID.
+
+        Args:
+            tID: The ID of the invalid team which needs to be fetched.
+            
+        Returns:
+            The response to the database query
+            containing the team in the system containing 
+            the matching record for the given ID if invalid
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT team.id as team_id
+                FROM team
+                WHERE team.id = %s and
+                (team.is_invalid = true);
+                """
+        cursor.execute(query,(int(tID),))
+        result = cursor.fetchone()
+        return result
+
+    def getTeamByYearInvalid(self,sID,tYear): # Returns a Team record by its id.
+        """
+        Gets a specific invalid team.
+
+        This function uses an ID to perform a query to the database
+        that gets the invalid team in the system that matches the given ID.
+
+        Args:
+            tID: The ID of the invalid team which needs to be fetched.
+            
+        Returns:
+            The response to the database query
+            containing the team in the system containing 
+            the matching record for the given ID if invalid
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT team.id as team_id
+                FROM team
+                WHERE team.sport_id = %s and team.season_year = %s and
+                (team.is_invalid = true);
+                """
+        cursor.execute(query,(int(sID),int(tYear),))
+        result = cursor.fetchone()
+        return result
+    
+    def getTeamMemberByIDsInvalid(self,aID,tID): 
+        """
+        Gets a specific invalid team member entry
+
+        This function uses IDs to perform a query to the database
+        that gets the invalid team member that matches the given IDs.
+
+        Args:
+            aID: The ID of the athlete of which the record needs to be fetched.
+            tID: The ID of the team of which the record needs to be fetched.
+            
+        Returns:
+            the response to the database query
+            containing the team member in the system containing 
+            the matching record for the given ID if invalid
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT team_members.id as team_members_id
+                FROM team_members
+                WHERE team_id = %s and athlete_id = %s and
+                (team_members.is_invalid = true);
+                """
+        cursor.execute(query,(int(tID),int(aID),))        
         result = cursor.fetchone()
         return result
 #=============================//GETS//=======================
@@ -107,7 +214,7 @@ class TeamDAO:
             result.append(row)
         return result 
 
-    def getTeamById(self,tID): # Returns a Team record by its id.
+    def getTeamByID(self,tID): # Returns a Team record by its id.
         """
         Gets a specific team.
 
@@ -159,7 +266,7 @@ class TeamDAO:
                 FROM team
                 INNER JOIN sport on team.sport_id = sport.id
                 INNER JOIN branch on sport.branch_id = branch.id
-                WHERE sport.id = %s and team.season_year = %s
+                WHERE sport.id = %s and team.season_year = %s and
                 (team.is_invalid = false or team.is_invalid is Null);
                 """
         cursor.execute(query,(int(sID),int(tYear),))        
@@ -185,12 +292,14 @@ class TeamDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                SELECT id as team_member_id, team_id, athlete_id
+                SELECT team_members.id as team_members_id, team_members.team_id, team_members.athlete_id, 
+                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link
                 FROM team_members
+                INNER JOIN athlete on team_members.athlete_id = athlete.id
                 WHERE team_id = %s and athlete_id = %s and
-                (is_invalid = false or is_invalid is Null);
+                (team_members.is_invalid = false or team_members.is_invalid is Null);
                 """
-        cursor.execute(query,(int(aID),int(tID),))        
+        cursor.execute(query,(int(tID),int(aID),))        
         result = cursor.fetchone()
         return result
     
@@ -213,15 +322,17 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team_members.id as team_members_id, team_members.team_id, team_members.athlete_id, 
-                athlete.id,athlete.first_name,athlete.middle_name,athlete.last_names 
+                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link
                 FROM team_members
                 INNER JOIN athlete on team_members.athlete_id = athlete.id
                 WHERE team_id = %s and
                 (team_members.is_invalid = false or team_members.is_invalid is Null);
                 """
-        cursor.execute(query,(int(tID),))        
-        result = cursor.fetchone()
-        return result
+        cursor.execute(query,(int(tID),))     
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result 
 #=============================//POST//=======================
     
     #UPDATED: removed branch parameter. removed tRoster. whatever that was.
@@ -316,6 +427,41 @@ class TeamDAO:
             return result
         #self.commitChanges()
         return result
+    
+    # TODO: Updated... not sure if we should allow Sport/season year update. roster aint a thing.
+    def editTeamByYear(self,sID,tYear,tImageLink): #Edits a team record identified by tID and returns the updated record.  
+        """
+        Updates the entry for the team with the given information.
+
+        This function accepts an ID, season year and image link and uses them 
+        to update the team record  with the matching ID.
+
+        Args:
+            tID: the ID of the team to be edited
+            tImageLink: the url for the team image
+            
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the modified team.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                UPDATE team
+                SET team_image_url = %s,
+                    is_invalid = false
+                WHERE sport_id = %s and season_year = %s
+                RETURNING
+                    id as team_id,
+                    sport_id, 
+                    season_year, 
+                    team_image_url;
+                """
+        cursor.execute(query,(str(tImageLink),int(sID),int(tYear),))
+        result = cursor.fetchone()
+        if not result:
+            return result
+        #self.commitChanges()
+        return result
 
     #NEW: is this even necessary?
     def editTeamMember(self,aID,tID): 
@@ -374,6 +520,35 @@ class TeamDAO:
                 RETURNING id;
                 """
         cursor.execute(query,(int(tID),))
+        result = cursor.fetchone()
+        if not result:
+            return result
+        #self.commitChanges()
+        return result
+
+    #updated: removed the
+    def removeTeamByYear(self,sID,tYear): #Invalidates a team record given the team ID and returns the invalidated record.  
+        """
+        Invalidates a team entry in the database.
+
+        This function accepts an ID and uses it to set the valid field
+        within the database as invalid, this acts as a deletion of the 
+        team entry from the system.
+
+        Args:
+            tID: The ID of the team which will be invalidated.
+            
+        Returns:
+            the id of the invalidated team
+        """
+        cursor = self.conn.cursor()
+        query = """
+                UPDATE team
+                SET is_invalid = true
+                WHERE sport_id= %s and season_year = %s
+                RETURNING id;
+                """
+        cursor.execute(query,(int(sID),int(tYear),))
         result = cursor.fetchone()
         if not result:
             return result
