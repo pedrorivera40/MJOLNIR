@@ -57,11 +57,13 @@ class UserHandler:
             return jsonify(Error="""Password should contain At least 1 upercase letter,
             1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
             10 and 64 characters long."""), 400
+            
         # Hash the password 
         hashedPassword = createHash(password)
-        
+
         dao = UserDAO()
         res = dao.addDashUser(username, fullName,email, hashedPassword)
+
         if res == 'UserError1':
             return jsonify(Error='Email has been registered.'),400 # Conflict with the current state of the server
         elif res == 'UserError2':
@@ -69,7 +71,9 @@ class UserHandler:
         elif res == 'UserError3':
             return jsonify(Error="New user not created"), 400
         else:
-            return jsonify(User=self.mapUserToDict(res)),201
+            mappedUser = self.mapUserToDict(res)
+            dao.setLoginAttempts(mappedUser['id'],0) #sets login attempts to 0 upon creation.
+            return jsonify(User=mappedUser),201
 
     def getAllDashUsers(self):
         """
@@ -239,8 +243,9 @@ class UserHandler:
         res = dao.updateDashUserPassword(duid, hashedPassword)
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
-
+        
         ## When password is reset, login attempts are set to 0
+        self.toggleDashUserActive(duid) #Set account active to true.
         dao.setLoginAttempts(duid,0)
         return jsonify(User=self.mapUserToDict(res)),201
 
@@ -325,7 +330,7 @@ class UserHandler:
                 the matching record of modiffied user permissions.
             """
             for permission in permissionsList: #If at least one of the parameters of one the indexes is None, scrap the request
-                if permission['permission_id'] == None or permission['is_invalid'] == None:
+                if 'permission_id' not in permission or 'is_invalid' not in permission:
                     return jsonify(Error='Bad Request'), 400
 
             dao = UserDAO()
