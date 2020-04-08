@@ -1,7 +1,7 @@
 {
-  "name": "Freya",
+  "name": "loki",
   "version": "1.0.0",
-  "description": "Huella Deportiva&#39;s Public Website dubbed: Huella Deportiva Web",
+  "description": "Huella Deportiva&#39;s Administration Dashboard.",
   "author": "MJOLNIR",
   "private": true,
   "scripts": {
@@ -15,8 +15,7 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
     "firebase": "^7.12.0",
-    "nuxt": "^2.0.0",
-    "vee-validate": "^3.2.5"
+    "nuxt": "^2.0.0"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.0.0",
