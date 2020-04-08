@@ -1,7 +1,8 @@
 from flask import jsonify
 
 from .dao.team_dao import TeamDAO
-from .dao.athlete_dao import AthleteDAO
+#from .dao.athlete_dao import AthleteDAO
+from .dao.mock_dao import AthleteDAO
 
 class TeamHandler():
     
@@ -63,41 +64,43 @@ class TeamHandler():
     def mapTeamMembersToDict(self,record):
 
         # {
+        # "team_id":1,
         # "team_members":[
         #     {
         #         "team_member_id":1,
-        #         "first_name"="Bruce",
-        #         "middle_name"="Batman",
-        #         "last_names"="Wayne",
-        #         "number"=27,
-        #         "profile_image_link"="www.google.com",
+        #         "athlete_id":1,
+        #         "first_name":"Bruce",
+        #         "middle_name":"Batman",
+        #         "last_names":"Wayne",
+        #         "number":27,
+        #         "profile_image_link":"www.google.com",
         #     },
         #     {
         #         "team_member_id":2,
-        #         "first_name"="Clark",
-        #         "middle_name"="Superman",
-        #         "last_names"="Kent",
-        #         "number"=3,
-        #         "profile_image_link"="www.google.com",
+        #         "athlete_id":2,
+        #         "first_name":"Clark",
+        #         "middle_name":"Superman",
+        #         "last_names":"Kent",
+        #         "number":3,
+        #         "profile_image_link":"www.google.com",
         #     }
         #     ]
         # }
 
         team_members = []
-
         for team_member in record:
+            team_id = team_member[1]
             team_members.append(dict(
-                team_members_id = record[0], 
-                team_id = record[1], 
-                athlete_id = record[2], 
-                first_name = record[3], 
-                middle_name = record[4], 
-                last_names = record[5], 
-                number = record[6], 
-                profile_image_link = record[7]
+                team_members_id = team_member[0], 
+                athlete_id = team_member[2], 
+                first_name = team_member[3], 
+                middle_name = team_member[4], 
+                last_names = team_member[5], 
+                number = team_member[6], 
+                profile_image_link = team_member[7]
                 ))
 
-        result = dict(team_members = team_members)
+        result = dict(team_id = team_id, team_members = team_members)
         return result
 
     def mapTeamMemberToDict(self,record):
@@ -106,18 +109,19 @@ class TeamHandler():
         # "team_member":
         #     {
         #         "team_member_id":1,
-        #         "first_name"="Bruce",
-        #         "middle_name"="Batman",
-        #         "last_names"="Wayne",
-        #         "number"=27,
-        #         "profile_image_link"="www.google.com",
-        #     },
-        #     
+        #         "team_id":1,
+        #         "athlete_id":1,
+        #         "first_name":"Bruce",
+        #         "middle_name":"Batman",
+        #         "last_names":"Wayne",
+        #         "number":27,
+        #         "profile_image_link":"www.google.com",
+        #     }
         # }
 
         team_member = dict(
-                team_members_id = record[0], 
-                team_id = record[1], 
+                team_members_id = record[0],
+                team_id = record[1],  
                 athlete_id = record[2], 
                 first_name = record[3], 
                 middle_name = record[4], 
@@ -331,41 +335,6 @@ class TeamHandler():
             return jsonify(ERROR="Unable to verify team from DAO."), 500
 
         return jsonify(Team = mappedResult)
-
-    # TODO: remove, unnecesary handler (?)
-        #NEW: def not necessary, the dao is more of a helper...
-        # def getTeamMemberByIDs(self, aID,tID): 
-        #     """
-        #     Gets the team member in the system that matches the given ids.  
-
-        #     Calls the TeamDAO to get the team member entry and maps the result
-        #     to a JSON that contains the team member in the system that matches the ids. 
-        #     That JSON object is then returned.
-
-        #     Args:
-        #         aID: the ID of the athlete of which the team member entry will be returned
-        #         tID: the ID of the team of which the team member entry will be returned
-                
-        #     Returns:
-        #         A JSON containing the team member. 
-        #     """
-        #     #it's a get, so tID validation is just if it exists as a valid entry
-        #     try:
-        #         #TODO: validate athlete (?)
-        #         #TODO: validate team (?)
-        #         pass
-        #     except:
-        #         return jsonify(ERROR="Unable to verify sport from DAO."), 500
-
-        #     try:
-        #         dao = TeamDAO()
-        #         result = dao.getTeamMemberByIDs(aID,tID)
-        #         if not result:
-        #             return jsonify(Error = "Team member not found with athlete id:{} and team id:{}.".format(aID,tID)),404
-        #         mappedResult = self.mapTeamToDict(result)
-        #     except:
-        #         return jsonify(ERROR="Unable to verify team member from DAO."), 500
-        #     return jsonify(Teams = mappedResult)
     
 
     # TODO: check if this is dupliacted by getTeam. most likely is. 
@@ -385,9 +354,44 @@ class TeamHandler():
         try:
             result = dao.getTeamMembersByID(tID)
             if not result:
-                #TODO: team has no members
-                pass
+                return jsonify(Error = "Team with id:{} has no members".format(tID)),400
             mappedResult = self.mapTeamMembersToDict(result)
+        except:
+            return jsonify(ERROR="Unable to verify team members from DAO."), 500
+        return jsonify(Team = mappedResult)
+
+    def getTeamMemberByIDs(self,aID,tID):
+
+        # Validate Existing Team
+        try:
+            dao = TeamDAO()
+            if not dao.getTeamByID(tID):
+                return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+        except:
+            return jsonify(ERROR="Unable to verify Team from DAO."), 500
+
+
+        # verify existing athlete & correct sport
+        try:
+            a_dao = AthleteDAO()
+            athlete = a_dao.getAthleteByID(aID)
+            if not athlete:
+                return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
+            #MOCKED METHOD TO GET ATHLETE SPORT
+            athlete_sport = a_dao.getAthleteSportByID(aID)
+            sID = dao.getTeamSportByID(tID)[0]
+            if athlete_sport != sID:
+                return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
+        except:
+            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+
+        #get members
+        #TODO: case of team with no members
+        try:
+            result = dao.getTeamMemberByIDs(aID,tID)
+            if not result:
+                return jsonify(Error = "Athlete with ID:{} does not belong to team with id:{} has no members".format(aID,tID)),400
+            mappedResult = self.mapTeamMemberToDict(result)
         except:
             return jsonify(ERROR="Unable to verify team members from DAO."), 500
         return jsonify(Team = mappedResult)
@@ -416,15 +420,14 @@ class TeamHandler():
         #TODO: Validate Sport (already done by validatig the athlete?)
         
         # add team member
-        invalid_duplicate = False
         try:
-            if dao.getTeamByYearIDInvalid(sID,tYear):
-                invalid_duplicate = True
+            invalid_duplicate = dao.getTeamByYearInvalid(sID,tYear)
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         #the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
             # edit team member
+            team_id = invalid_duplicate[0]
             try: 
                 result = dao.editTeamByYear(sID,tYear,tImageLink)
                 if not result:
@@ -443,6 +446,7 @@ class TeamHandler():
                 return jsonify(ERROR="Unable to verify Team from DAO."), 500
             
         dao.commitChanges()
+        # FIX BECAUSE IN CASE OF INVALID DID UPDATE AND DONT KNOW TEAM ID.
         return jsonify(Team = "Added new team record with id:{} for Sport ID for Sport ID:{} and Season Year:{}".format(team_id,sID,tYear))
 
     #NEW
@@ -470,14 +474,13 @@ class TeamHandler():
                     return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
                 #MOCKED METHOD TO GET ATHLETE SPORT
                 athlete_sport = a_dao.getAthleteSportByID(aID)
-                sID = dao.getTeamSportByID(tID)
+                sID = dao.getTeamSportByID(tID)[0]
                 if athlete_sport != sID:
                     return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
             except:
                 return jsonify(ERROR="Unable to verify athlete from DAO."), 500
 
-            # verify non duplicated member
-            # Validate Avoid Duplication Team
+            # Validate Avoid Duplication Team member
             try:
                 if dao.getTeamMemberByIDs(aID,tID):
                     return jsonify(Error = "Team member with athlete id:{} already exists for team id:{}".format(aID,tID)),400
@@ -485,10 +488,8 @@ class TeamHandler():
                 return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
             # add team member
-            invalid_duplicate = False
             try:
-                if dao.getTeamMemberByIDsInvalid(aID,tID):
-                    invalid_duplicate = True
+                invalid_duplicate = dao.getTeamMemberByIDsInvalid(aID,tID)
             except:
                 return jsonify(ERROR="Unable to verify Team Member from DAO."), 500
             #the case of there already existing an entry, but marked as invalid
@@ -526,7 +527,6 @@ class TeamHandler():
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
-        # go through list and add members
 
         # verify existing athlete & correct sport
         try:
@@ -536,18 +536,22 @@ class TeamHandler():
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
             #MOCKED METHOD TO GET ATHLETE SPORT
             athlete_sport = a_dao.getAthleteSportByID(aID)
-            sID = dao.getTeamSportByID(tID)
+            sID = dao.getTeamSportByID(tID)[0]
             if athlete_sport != sID:
                 return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
 
+        # Validate Avoid Duplication Team member
+        try:
+            if dao.getTeamMemberByIDs(aID,tID):
+                return jsonify(Error = "Team member with athlete id:{} already exists for team id:{}".format(aID,tID)),400
+        except:
+            return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
         # add team member
-        invalid_duplicate = False
         try:
-            if dao.getTeamMemberByIDsInvalid(aID,tID):
-                invalid_duplicate = True
+            invalid_duplicate =  dao.getTeamMemberByIDsInvalid(aID,tID)
         except:
             return jsonify(ERROR="Unable to verify Team Member from DAO."), 500
         #the case of there already existing an entry, but marked as invalid
@@ -609,59 +613,96 @@ class TeamHandler():
         dao.commitChanges()
         return jsonify(Team = mappedResult)
 
-    #NEW
-    def editTeamMember(self, aID,tID): 
+    def editTeamByYear(self,sID,tYear,tImageLink):
         """
-        edits team member (revalidates)
+        edit a team
         """
-        # Validate Existing Team
+        
+        # Validate Team Exists
         try:
             dao = TeamDAO()
-            if not dao.getTeamByID(tID):
-                return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+            if not dao.getTeamByYear(sID,tYear):
+                return jsonify(Error = "Team does not exist for sport ID:{} and season year:{}".format(sID,tYear)),400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
-
-        # go through list and add members
-
-        # verify existing athlete & correct sport
-        try:
-            a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
-            if not athlete:
-                return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-            #MOCKED METHOD TO GET ATHLETE SPORT
-            athlete_sport = a_dao.getAthleteSportByID(aID)
-            sID = dao.getTeamSportByID(tID)
-            if athlete_sport != sID:
-                return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
-        except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
-
-        #check it exists already
-        try:
-            if not dao.getTeamMemberByIDs(aID,tID):
-                return jsonify(Error = "Team member with athlete id:{} for team id:{} does not exist.".format(aID,tID)),400
-        except:
-            return jsonify(ERROR="Unable to verify Team from DAO."), 500
-
-        # edit team member
-        try: 
-            result = dao.editTeamMember(aID,tID)
-            if not result:
-                return jsonify(Error = "Problem updating team member record."),500
-        except:
-            return jsonify(ERROR="Unable to verify team member from DAO."), 500
-    
-        #return the updated team member
-        try:
-            returnable = dao.getTeamMemberByIDs(aID,tID)
-            mappedResult = self.mapTeamMemberToDict(returnable)
-        except:
-            return jsonify(ERROR="Unable to verify team member from DAO."), 500
+         
+        #TODO: Validate Existing Duplicate, convert to update (need to create new DAO function)
+        #TODO: Validate Sport (already done by validatig the athlete?)
         
+        #edit the team
+        try:
+            team_id = dao.editTeamByYear(sID,tYear,tImageLink)
+            if not team_id:
+                return jsonify(Error = "Problem updating team record."),500
+
+            #mappedResult = self.mapTeamBasic(result)
+        except:
+            return jsonify(ERROR="Unable to verify Team from DAO."), 500
+        
+        #return the updated team 
+        try:
+            #verify this works
+            returnable = dao.getTeamByYear(sID,tYear)
+            mappedResult = self.mapTeamToDict(returnable)
+        except:
+            return jsonify(ERROR="Unable to verify Team from DAO."), 500
         dao.commitChanges()
-        return jsonify(team_member = mappedResult)
+        return jsonify(Team = mappedResult)
+
+    # #TODO: will remove, serves absolutely no purpose. 
+    # #NEW
+    # def editTeamMember(self, aID,tID): 
+    #     """
+    #     edits team member (revalidates)
+    #     """
+    #     # Validate Existing Team
+    #     try:
+    #         dao = TeamDAO()
+    #         if not dao.getTeamByID(tID):
+    #             return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+    #     except:
+    #         return jsonify(ERROR="Unable to verify Team from DAO."), 500
+
+    #     # go through list and add members
+
+    #     # verify existing athlete & correct sport
+    #     try:
+    #         a_dao = AthleteDAO()
+    #         athlete = a_dao.getAthleteByID(aID)
+    #         if not athlete:
+    #             return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
+    #         #MOCKED METHOD TO GET ATHLETE SPORT
+    #         athlete_sport = a_dao.getAthleteSportByID(aID)
+    #         sID = dao.getTeamSportByID(tID)[0]
+    #         if athlete_sport != sID:
+    #             return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
+    #     except:
+    #         return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+
+    #     #check it exists already
+    #     try:
+    #         if not dao.getTeamMemberByIDs(aID,tID):
+    #             return jsonify(Error = "Team member with athlete id:{} for team id:{} does not exist.".format(aID,tID)),400
+    #     except:
+    #         return jsonify(ERROR="Unable to verify Team from DAO."), 500
+
+    #     # edit team member
+    #     try: 
+    #         result = dao.editTeamMember(aID,tID)
+    #         if not result:
+    #             return jsonify(Error = "Problem updating team member record."),500
+    #     except:
+    #         return jsonify(ERROR="Unable to verify team member from DAO."), 500
+    
+    #     #return the updated team member
+    #     try:
+    #         returnable = dao.getTeamMemberByIDs(aID,tID)
+    #         mappedResult = self.mapTeamMemberToDict(returnable)
+    #     except:
+    #         return jsonify(ERROR="Unable to verify team member from DAO."), 500
+        
+    #     dao.commitChanges()
+    #     return jsonify(team_member = mappedResult)
     #===========================//IV.REMOVE//====================================
 
     #updated, dont need sport id
@@ -672,7 +713,7 @@ class TeamHandler():
         # Validate Team Exists
         try:
             dao = TeamDAO()
-            if not dao.getTeamByYear(tID):
+            if not dao.getTeamByID(tID):
                 return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
@@ -690,6 +731,33 @@ class TeamHandler():
         
         dao.commitChanges()
         return jsonify(team = "Removed team record with id:{}.".format(tID)),200
+
+    #new
+    def removeTeamByYear(self,sID,tYear): 
+        """
+        remove a team from the system (invalidate it)
+        """
+        # Validate Team Exists
+        try:
+            dao = TeamDAO()
+            if not dao.getTeamByYear(sID,tYear):
+                return jsonify(Error = "Team does not exist for sport ID:{} and season year:{}".format(sID,tYear)),400
+        except:
+            return jsonify(ERROR="Unable to verify Team from DAO."), 500
+         
+        #TODO: Validate Existing Duplicate, convert to update (need to create new DAO function)
+        #TODO: Validate Sport (already done by validatig the athlete?)
+        
+        #remove the team
+        try:
+            team_id = dao.removeTeamByYear(sID,tYear)
+            if not team_id:
+                return jsonify(Error = "Problem removing team record."),500
+        except:
+            return jsonify(ERROR="Unable to verify Team from DAO."), 500
+        
+        dao.commitChanges()
+        return jsonify(team = "Removed team record for sport ID:{} team for season year:{}.".format(sID,tYear)),200
         
 
     #NEW
@@ -715,7 +783,7 @@ class TeamHandler():
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
             #MOCKED METHOD TO GET ATHLETE SPORT
             athlete_sport = a_dao.getAthleteSportByID(aID)
-            sID = dao.getTeamSportByID(tID)
+            sID = dao.getTeamSportByID(tID)[0]
             if athlete_sport != sID:
                 return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
         except:

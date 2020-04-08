@@ -15,6 +15,8 @@ from handler.soccer_event import SoccerEventHandler
 from handler.baseball_event import BaseballEventHandler
 from handler.sport import SportHandler
 
+from handler.team import TeamHandler
+
 
 ## Load environment variables
 load_dotenv()
@@ -960,6 +962,87 @@ def get_sport_info():
         return jsonify(ERROR="Odin/sports/details: Malformed request, no params allowed."), 400
 
     return jsonify(ERROR="Odin/sports: HTTP verb not allowed."), 405
+
+#==================================TEST TEAM ROUTES==========
+"""
+What routes will we actually need for Team? Discuss with Onix, but for now:
+
+general team route, allows to get the team metadata [get,post,update,delete] -> /team/
+
+display many members route [get,post] --> /team/members/
+
+specific team member route [get, post, update, delete] --: /team/member
+
+"""
+
+
+# {
+# "sport_id":1,
+# "season_year":"2020",
+# "team_image_url":"www.google.com"
+# }
+
+@app.route("/teams/", methods = ['GET','POST','PUT','DELETE'])
+# sport_id,season_year
+def teamByYear():
+    json = request.json
+    handler = TeamHandler()
+    if request.method == 'GET':
+        return handler.getTeamByYear(json['sport_id'],json['season_year'])
+    if request.method == 'POST':
+        return handler.addTeam(json['sport_id'],json['season_year'],json['team_image_url'])
+    if request.method == 'PUT':
+        return handler.editTeamByYear(json['sport_id'],json['season_year'],json['team_image_url'])
+    if request.method == 'DELETE':
+        return handler.removeTeamByYear(json['sport_id'],json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+# {
+# "team_id":1,
+# "team_members":[
+#     { 
+#         "athlete_id":1
+#     },
+#     {
+#         "athlete_id":2
+#     }
+#     ]
+# }
+
+@app.route("/teams/members/", methods = ['GET','POST'])
+# takes the tID
+def teamMembers():
+    json = request.json
+    handler = TeamHandler()
+    if request.method == 'GET':
+        return handler.getTeamMembersByID(json['team_id'])
+    if request.method == 'POST':
+        return handler.addTeamMembers(json['team_id'],json['team_members'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+# {
+#     "team_id":1,
+#     "athlete_id":1
+# }
+#TODO: THere's a chance that this route is completely unnecdsary and we can just do in the general team/members/ route everything. Would just need to adapt 
+# remove to work there, its the only problem, but we'd just loop through it, so it's not a big issue tbh. 
+@app.route("/teams/member/", methods = ['GET','POST','DELETE'])
+# takes the athlete ID and team ID
+def teamMemberByIDs():
+    json = request.json
+    handler = TeamHandler()
+    if request.method == 'GET':
+        return handler.getTeamMemberByIDs(json['athlete_id'],json['team_id'])
+    if request.method == 'POST':
+        return handler.addTeamMember(json['athlete_id'],json['team_id'])
+    if request.method == 'DELETE':
+        return handler.removeTeamMember(json['athlete_id'],json['team_id'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
 
 # Launch app.

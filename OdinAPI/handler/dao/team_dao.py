@@ -45,10 +45,37 @@ class TeamDAO:
         query = """
                 SELECT sport_id 
                 FROM team
-                WHERE team_id = %s and
-                (is_invalid == false or is_invalid is Null);
+                WHERE id = %s and
+                (is_invalid = false or is_invalid is Null);
                 """
         cursor.execute(query,(int(tID),))
+        result = cursor.fetchone()
+        return result
+
+    def getTeamIDByYear(self,sID,tYear): # Returns a Team id based on year
+        """
+        Gets a specific team's id.
+
+        This function uses sport ID and season year to perform a query to the database
+        that gets the team in the system that matches the given parameters.
+
+        Args:
+            sID: The ID of the sport of which the team needs to be fetched.
+            tYear: the season year of which the team needs to be fetched
+            
+        Returns:
+            The response to the database query
+            containing the team in the system containing 
+            the matching record for the given parameters
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT team.id as team_id
+                FROM team
+                WHERE sport_id = %s and season_year = %s and
+                (team.is_invalid = false or team.is_invalid is Null);
+                """
+        cursor.execute(query,(int(sID),int(tYear),))
         result = cursor.fetchone()
         return result
 
@@ -97,7 +124,7 @@ class TeamDAO:
         query = """
                 SELECT team.id as team_id
                 FROM team
-                WHERE team.sport_id = %s, and team.season_year = %s and
+                WHERE team.sport_id = %s and team.season_year = %s and
                 (team.is_invalid = true);
                 """
         cursor.execute(query,(int(sID),int(tYear),))
@@ -127,7 +154,7 @@ class TeamDAO:
                 WHERE team_id = %s and athlete_id = %s and
                 (team_members.is_invalid = true);
                 """
-        cursor.execute(query,(int(aID),int(tID),))        
+        cursor.execute(query,(int(tID),int(aID),))        
         result = cursor.fetchone()
         return result
 #=============================//GETS//=======================
@@ -266,13 +293,13 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team_members.id as team_members_id, team_members.team_id, team_members.athlete_id, 
-                athlete.id,athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link
+                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link
                 FROM team_members
                 INNER JOIN athlete on team_members.athlete_id = athlete.id
                 WHERE team_id = %s and athlete_id = %s and
                 (team_members.is_invalid = false or team_members.is_invalid is Null);
                 """
-        cursor.execute(query,(int(aID),int(tID),))        
+        cursor.execute(query,(int(tID),int(aID),))        
         result = cursor.fetchone()
         return result
     
@@ -295,15 +322,17 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team_members.id as team_members_id, team_members.team_id, team_members.athlete_id, 
-                athlete.id,athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link
+                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link
                 FROM team_members
                 INNER JOIN athlete on team_members.athlete_id = athlete.id
                 WHERE team_id = %s and
                 (team_members.is_invalid = false or team_members.is_invalid is Null);
                 """
-        cursor.execute(query,(int(tID),))        
-        result = cursor.fetchone()
-        return result
+        cursor.execute(query,(int(tID),))     
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result 
 #=============================//POST//=======================
     
     #UPDATED: removed branch parameter. removed tRoster. whatever that was.
@@ -491,6 +520,35 @@ class TeamDAO:
                 RETURNING id;
                 """
         cursor.execute(query,(int(tID),))
+        result = cursor.fetchone()
+        if not result:
+            return result
+        #self.commitChanges()
+        return result
+
+    #updated: removed the
+    def removeTeamByYear(self,sID,tYear): #Invalidates a team record given the team ID and returns the invalidated record.  
+        """
+        Invalidates a team entry in the database.
+
+        This function accepts an ID and uses it to set the valid field
+        within the database as invalid, this acts as a deletion of the 
+        team entry from the system.
+
+        Args:
+            tID: The ID of the team which will be invalidated.
+            
+        Returns:
+            the id of the invalidated team
+        """
+        cursor = self.conn.cursor()
+        query = """
+                UPDATE team
+                SET is_invalid = true
+                WHERE sport_id= %s and season_year = %s
+                RETURNING id;
+                """
+        cursor.execute(query,(int(sID),int(tYear),))
         result = cursor.fetchone()
         if not result:
             return result

@@ -78,10 +78,10 @@ class AthleteDAO:
             return True
         return False
     def getAthleteSportByID(self,aID):
-        basketball_athletes_m = []
+        basketball_athletes_m = [1,3,4,5,7,8,15,16]
         basketball_athletes_f = []
-        volleyball_athletes_m = []
-        volleyball_athletes_f = []
+        volleyball_athletes_m = [68,69,72]
+        volleyball_athletes_f = [70,71]
         if aID in basketball_athletes_m:
             return 1
         if aID in basketball_athletes_f:
