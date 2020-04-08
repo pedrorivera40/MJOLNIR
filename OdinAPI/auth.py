@@ -32,7 +32,7 @@ def rulesMatch(password):
     pw = password
 
     # set the rules for the regular expression
-    reg = "111111"
+    reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$"
 
     # Compile it
     compiledReg = re.compile(reg)

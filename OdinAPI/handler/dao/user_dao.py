@@ -344,6 +344,62 @@ class UserDAO:
         self.commitChanges()
         return users
 
+    def deactivateDashUserAccount(self, duid):
+        """
+        Sets a user's active status to false in the database.
+
+        This function accepts an ID and uses it set the "is_active" field
+        within the database to false.
+
+        Args:
+            duid: The ID of the user that will be deactivated.
+
+        Returns:
+            A list with the response to the database query
+            containing the matching record for the modified dashboard user.
+        """
+        cursor = self.conn.cursor()
+
+        query = """
+                update dashboard_user 
+                set is_active= False 
+                WHERE id = %s
+                AND is_invalid = FALSE
+                returning id, username, full_name, email, is_active, is_invalid;
+                """
+        cursor.execute(query, (duid,))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
+
+    def activateDashUserAccount(self, duid):
+        """
+        Sets a user's active status to true in the database.
+
+        This function accepts an ID and uses it set the "is_active" field
+        within the database to true.
+
+        Args:
+            duid: The ID of the user that will be activated.
+
+        Returns:
+            A list with the response to the database query
+            containing the matching record for the modified dashboard user.
+        """
+        cursor = self.conn.cursor()
+
+        query = """
+                update dashboard_user 
+                set is_active= TRUE 
+                WHERE id = %s
+                AND is_invalid = FALSE
+                returning id, username, full_name, email, is_active, is_invalid;
+                """
+        cursor.execute(query, (duid,))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
+
     def removeDashUser(self, duid):
         """
         Invalidates a user in the database.
@@ -473,6 +529,56 @@ class UserDAO:
         queryResults = cursor.fetchall()
         self.commitChanges()
         return queryResults
+
+    def getLoginAttempts(self,duid):
+        """
+        Returns the login attempts for a user.
+
+        Performs a query to the database that returns the current number 
+        of login attempts for the user with the given username.
+
+        Args:
+            username: Username of user for which to fetch login attempts.
+
+        Returns:
+            Current number of login attempts.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                select login_attempts 
+                from dashboard_user
+                where id = %s
+                and is_invalid=False;
+                """
+        cursor.execute(query, (duid, ))
+        attempts = cursor.fetchone()
+        return attempts
+
+    def setLoginAttempts(self,duid, attempts):
+        """
+        Sets the value of login attempts for a user.
+
+        Performs a query to the database that sets the current number 
+        of login attempts for the user with the given username.
+
+        Args:
+            username: Username of user for which to set login attempts.
+
+        Returns:
+            Current number of login attempts.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                update dashboard_user 
+                set login_attempts=%s
+                where id=%s
+                and is_invalid=False
+                returning login_attempts;
+                """
+        cursor.execute(query, (attempts,duid, ))
+        attempts = cursor.fetchone()
+        self.commitChanges()
+        return attempts
 
     def commitChanges(self):
         self.conn.commit()

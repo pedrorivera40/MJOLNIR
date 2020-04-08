@@ -56,20 +56,24 @@ class UserHandler:
         if not rulesMatch(password):
             return jsonify(Error="""Password should contain At least 1 upercase letter,
             1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long."""), 200
+            10 and 64 characters long."""), 400
+
         # Hash the password 
         hashedPassword = createHash(password)
-        
+
         dao = UserDAO()
         res = dao.addDashUser(username, fullName,email, hashedPassword)
+
         if res == 'UserError1':
-            return jsonify(Error='Email has been registered.'),409 # Conflict with the current state of the server
+            return jsonify(Error='Email has been registered.'),400 # Conflict with the current state of the server
         elif res == 'UserError2':
-            return jsonify(Error='Username is already taken.'),409
+            return jsonify(Error='Username is already taken.'),400
         elif res == 'UserError3':
-            return jsonify(Error="New user not created")
+            return jsonify(Error="New user not created"), 400
         else:
-            return jsonify(User=self.mapUserToDict(res)),201
+            mappedUser = self.mapUserToDict(res)
+            dao.setLoginAttempts(mappedUser['id'],0) #sets login attempts to 0 upon creation.
+            return jsonify(User=mappedUser),201
 
     def getAllDashUsers(self):
         """
@@ -84,6 +88,9 @@ class UserHandler:
         """
         dao = UserDAO()
         userList = dao.getAllDashUsers()
+
+        if userList == None:
+            return jsonify(Error='No users found in the system'), 404
         
         mappedUsers = []
         for user in userList:
@@ -135,40 +142,6 @@ class UserHandler:
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser),200 #200 == OK
 
-    def getHashByUsername(self, username, password):
-        """
-        Gets a dashboard's user password hash given their username.
-
-        Calls the UserDAO to get a user's password hash given their username 
-        and maps the result to a JSON that contains the desired record. 
-        That JSON object is then returned.
-
-        Args:
-            username: The username of the dashboboard user that needs to be fetched.
-            password: The password of the dashboard user
-        Returns:
-            A JSON containing all the user's hash.
-        """
-        dao = UserDAO()
-        fetchedHash = dao.getHashByUsername(username)
-        if fetchedHash == None:
-            return jsonify(Error="Username or Password are incorrect."), 200
-        
-        mappedHash = self.mapHash(fetchedHash)
-        #TODO AES encryption.
-        if verifyHash(password, mappedHash['hash']):
-            # User provided correct password
-            token = generateToken(username)
-            loginInfo = {
-                'user': username,
-                'token': token
-            }
-            return jsonify(auth=loginInfo), 201
-        
-        return jsonify(Error="Username or Password are incorrect."), 200
-
-        # return jsonify(User=mappedHash),200 #200 == OK
-
     def getDashUserByEmail(self, email):
         """
         Gets a single Dashboard user given their email.
@@ -191,6 +164,59 @@ class UserHandler:
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser),200 #200 == OK
 
+    def login(self, username, password):
+        """
+        Gets a dashboard's user password hash given their username.
+
+        Calls the UserDAO to get a user's password hash given their username 
+        and maps the result to a JSON that contains the desired record. 
+        That JSON object is then returned.
+
+        Args:
+            username: The username of the dashboboard user that needs to be fetched.
+            password: The password of the dashboard user
+        Returns:
+            A JSON containing all the user's hash.
+        """
+        dao = UserDAO()
+
+        #get user by username
+        user = dao.getDashUserByUsername(username) 
+
+        # verify is user exists
+        if user == None:
+            # Login attempts do not increase because username does not exist.
+            return jsonify(Error="Username or Password are incorrect."), 400
+
+        # get user id , whic is position 0 of the user array.
+        duid = user[0] 
+        attempts = dao.getLoginAttempts(duid)[0] #get current number of attempts
+        
+        if attempts == 3: # If there are 3 failed login attempts, deactivate account.
+            dao.deactivateDashUserAccount(duid)
+            return jsonify(Error='Account is locked, contact administrator.'), 401
+
+        fetchedHash = dao.getHashByUsername(username)
+        if fetchedHash == None: #TODO this may be repeated code.
+            # Login attempts do not increase because username does not exist.
+            return jsonify(Error="Username or Password are incorrect."), 400
+        
+        mappedHash = self.mapHash(fetchedHash)
+        #TODO AES encryption.
+        if verifyHash(password, mappedHash['hash']):
+            # User provided correct password
+            token = generateToken(username)
+            loginInfo = {
+                'user': username,
+                'token': token
+            }
+            
+            dao.setLoginAttempts(duid,0)
+            return jsonify(auth=loginInfo), 201
+
+        dao.setLoginAttempts(duid,attempts+1)
+        return jsonify(Error="Username or Password are incorrect."), 400
+
     def updateDashUserPassword(self, duid, password):
         """
         Updates the password for the dashboard user with the given ID.
@@ -210,13 +236,17 @@ class UserHandler:
         if not rulesMatch(password):
             return jsonify(Error="""Password should contain At least 1 upercase letter,
             1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long."""), 200
+            10 and 64 characters long."""), 400
         # Hash password 
         hashedPassword = createHash(password)
         dao = UserDAO()
         res = dao.updateDashUserPassword(duid, hashedPassword)
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
+        
+        ## When password is reset, login attempts are set to 0
+        dao.activateDashUserAccount(duid) #Set account active to true.
+        dao.setLoginAttempts(duid,0)
         return jsonify(User=self.mapUserToDict(res)),201
 
     def updateDashUserUsername(self, duid,username):
@@ -239,7 +269,7 @@ class UserHandler:
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
         if res == 'UserError2':
-            return jsonify(Error='Username already taken.')
+            return jsonify(Error='Username already taken.'), 400
         else:
             return jsonify(User=self.mapUserToDict(res)),201
 
@@ -300,7 +330,7 @@ class UserHandler:
                 the matching record of modiffied user permissions.
             """
             for permission in permissionsList: #If at least one of the parameters of one the indexes is None, scrap the request
-                if permission['permission_id'] == None or permission['is_invalid'] == None:
+                if 'permission_id' not in permission or 'is_invalid' not in permission:
                     return jsonify(Error='Bad Request'), 400
 
             dao = UserDAO()
@@ -309,6 +339,7 @@ class UserHandler:
                 return jsonify(Error='No User found in the system with that id.'), 404
             if resultList == 'UserError5':
                 return jsonify(Error='Permissions cant be empty.'), 400 # Bad request
+
             mappedPermissions = []
             for row in resultList:
                 mappedPermissions.append(self.mapPermissionsToDict(row))

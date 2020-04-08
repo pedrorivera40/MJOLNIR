@@ -22,6 +22,7 @@ class TestUserRoutes(unittest.TestCase):
           'password': self.data['password']
         }
         response = self.client.post('/auth/', data=json.dumps(loginInfo), content_type='application/json',  follow_redirects=True)
+        print(response.json)
         token = response.json['auth']['token'].split(' ')[1]
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json['auth']['user'], self.data['username'])
@@ -29,11 +30,11 @@ class TestUserRoutes(unittest.TestCase):
 
     def test_wrong_password_login(self):
         loginInfo = {
-          'username': 'newUser20',
+          'username': self.data['username'],
           'password': 'piljnvdijn'
         }
         response = self.client.post('/auth/', data=json.dumps(loginInfo), content_type='application/json',  follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json['Error'], 'Username or Password are incorrect.')
 
     def test_invalid_username_login(self):
@@ -42,7 +43,7 @@ class TestUserRoutes(unittest.TestCase):
           'password': 'piljnvdijn'
         }
         response = self.client.post('/auth/', data=json.dumps(loginInfo), content_type='application/json',  follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json['Error'], 'Username or Password are incorrect.')
 
 
