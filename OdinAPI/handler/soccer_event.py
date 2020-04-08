@@ -1018,12 +1018,11 @@ class SoccerEventHandler(EventResultHandler):
             team_result = dao.editTeamStatistics(eID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapEventAthleteStatsToDict(result)
         except:
             return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
 
         dao.commitChanges()
-        return jsonify(Soccer_Event_Athlete_Statistics = "Removed statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),200
+        return jsonify(Soccer_Event_Athlete_Statistics = "Removed statistics record with id:{} for athlete id:{} in event id:{}.".format(result[0],aID,eID)),200
 
     #NEW
     def removeTeamStatistics(self,eID): # Instantiates a Soccer Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
