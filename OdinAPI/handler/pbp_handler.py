@@ -4,7 +4,7 @@ from .dao.pbp_dao import PBPDao as VolleyballPBPDao
 from.dao.mock.event_dao import _mockEventDAO as EventDAO
 
 
-class VolleyballVolleyballPBPHandler:
+class VolleyballPBPHandler:
     '''
     VolleyballPBPHandler - This class handles incomming requests from Odin API's gateway
                  by interacting with the PBPDAO. It is responsible for modifying
@@ -400,6 +400,22 @@ class VolleyballVolleyballPBPHandler:
 
         except Exception as e:
             return jsonify(ERROR=e), 500
+
+    def removePBPSequence(self, event_id):
+        try:
+            pbp_dao = VolleyballPBPDao()
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(ERROR="PBP sequence does not exist."), 403
+
+            meta = pbp_dao.get_pbp_meta(event_id)
+            if meta["sport"] != meta["sport"]:
+                return jsonify(ERROR="Not volleyball PBP sequence"), 403
+
+            pbp_dao.remove_pbp_seq(event_id)
+            return jsonify(MSG="PBP Sequence removed."), 200
+
+        except Exception as e:
+            return jsonify(ERROR=e)
 
     def setOpponentColor(self, event_id, color):
         """
