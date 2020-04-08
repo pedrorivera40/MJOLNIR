@@ -56,18 +56,18 @@ class UserHandler:
         if not rulesMatch(password):
             return jsonify(Error="""Password should contain At least 1 upercase letter,
             1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long."""), 200
+            10 and 64 characters long."""), 400
         # Hash the password 
         hashedPassword = createHash(password)
         
         dao = UserDAO()
         res = dao.addDashUser(username, fullName,email, hashedPassword)
         if res == 'UserError1':
-            return jsonify(Error='Email has been registered.'),409 # Conflict with the current state of the server
+            return jsonify(Error='Email has been registered.'),400 # Conflict with the current state of the server
         elif res == 'UserError2':
-            return jsonify(Error='Username is already taken.'),409
+            return jsonify(Error='Username is already taken.'),400
         elif res == 'UserError3':
-            return jsonify(Error="New user not created")
+            return jsonify(Error="New user not created"), 400
         else:
             return jsonify(User=self.mapUserToDict(res)),201
 
@@ -84,6 +84,9 @@ class UserHandler:
         """
         dao = UserDAO()
         userList = dao.getAllDashUsers()
+
+        if userList == None:
+            return jsonify(Error='No users found in the system'), 404
         
         mappedUsers = []
         for user in userList:
@@ -162,7 +165,7 @@ class UserHandler:
         fetchedHash = dao.getHashByUsername(username)
         if fetchedHash == None:
             dao.setLoginAttempts(duid,attempts+1)
-            return jsonify(Error="Username or Password are incorrect."), 200
+            return jsonify(Error="Username or Password are incorrect."), 400
         
         mappedHash = self.mapHash(fetchedHash)
         #TODO AES encryption.
@@ -178,7 +181,7 @@ class UserHandler:
             return jsonify(auth=loginInfo), 201
 
         dao.setLoginAttempts(duid,attempts+1)
-        return jsonify(Error="Username or Password are incorrect."), 200
+        return jsonify(Error="Username or Password are incorrect."), 400
 
     def getDashUserByEmail(self, email):
         """
@@ -221,14 +224,14 @@ class UserHandler:
         if not rulesMatch(password):
             return jsonify(Error="""Password should contain At least 1 upercase letter,
             1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long."""), 200
+            10 and 64 characters long."""), 400
         # Hash password 
         hashedPassword = createHash(password)
         dao = UserDAO()
         res = dao.updateDashUserPassword(duid, hashedPassword)
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
-            
+
         ## When password is reset, login attempts are set to 0
         dao.setLoginAttempts(duid,0)
         return jsonify(User=self.mapUserToDict(res)),201
@@ -253,7 +256,7 @@ class UserHandler:
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
         if res == 'UserError2':
-            return jsonify(Error='Username already taken.')
+            return jsonify(Error='Username already taken.'), 400
         else:
             return jsonify(User=self.mapUserToDict(res)),201
 
@@ -323,6 +326,7 @@ class UserHandler:
                 return jsonify(Error='No User found in the system with that id.'), 404
             if resultList == 'UserError5':
                 return jsonify(Error='Permissions cant be empty.'), 400 # Bad request
+                
             mappedPermissions = []
             for row in resultList:
                 mappedPermissions.append(self.mapPermissionsToDict(row))
