@@ -42,14 +42,17 @@ class AthleteDAO:
                    where S.id = %s
                    and A.is_invalid=false
                 """
-        cursor.execute(query,(sID,))        
-        result = []#Will hold the list with athlete records.
-        aids = []#List of the ids of the athletes fetched in the query above.
-        for row in cursor:
-            aids.append(row[0])#Add the ids of the participant athletes in the sport
-        for aid in aids:
-            result.append(self.getAthleteByID(aid)) #Call this function in order to get the information of the athletes.                       
-        return result       
+        try:
+            cursor.execute(query,(sID,))        
+            result = []#Will hold the list with athlete records.
+            aids = []#List of the ids of the athletes fetched in the query above.
+            for row in cursor:
+                aids.append(row[0])#Add the ids of the participant athletes in the sport
+            for aid in aids:
+                result.append(self.getAthleteByID(aid)) #Call this function in order to get the information of the athletes.                       
+            return result
+        except:
+            return "A problem ocurred when fetching the athletes of a sport."
     
     def getAthleteByID(self,aID):
         """
@@ -72,10 +75,13 @@ class AthleteDAO:
                    where A.id=%s
                    and A.is_invalid=false
                 """
-        cursor.execute(query,(aID,))
-        result = cursor.fetchall()    
-       
-        return result
+        try:
+            cursor.execute(query,(aID,))
+            result = cursor.fetchall()    
+        
+            return result
+        except:
+            return "A problem ocurred when fethching the athlete."
     
     #This function might not be required and therefore eliminated.
     def getAthleteByName(self,aFName,aMName,aLName):
@@ -101,7 +107,7 @@ class AthleteDAO:
 
     def addAthlete(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink):
         """
-        Add a new athlete into the database with the information given.
+        Adds a new athlete into the database with the information given.
 
         Uses the arguments given in order to perform an insert query on 
         the database.Then it returns the id of the newly added athlete in
@@ -126,17 +132,20 @@ class AthleteDAO:
         cursor = self.conn.cursor() 
         if not self.sportExists(cursor,sID):
             return 'Sport does not exist'
-
+    
         query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id,is_invalid) "\
                 "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;"
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))       
-        
-        aID = cursor.fetchone()[0]
-        if not aID:
-            return 'Insert query failed'           
-        
-        self.commitChanges()
-        return aID
+        try:
+            cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))       
+            
+            aID = cursor.fetchone()[0]
+            if not aID:
+                return 'Insert query failed'           
+            
+            self.commitChanges()
+            return aID
+        except:
+            return "A problem ocurred when inserting the athlete."
 
     def addAthleteWithPosition(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,aPositions):
         """
@@ -297,7 +306,7 @@ class AthleteDAO:
 
         Uses the arguments given in order to perform an update query on 
         the database with the id of the athlete given.Then it returns
-        the id of the newly added athlete in the datase.
+        the id of the newly updated athlete in the datase.
 
         Args:
             aID: The id of athlete to be updated.
@@ -435,17 +444,26 @@ class AthleteDAO:
         to set the is_invalid field to true in the database.
         This effectively acts as a removal of the athlete in 
         from the system.
+
+        Args:
+            aID: The id of the athlete to invalidate.
+
+        Returns:
+            The id of the updated athlete record
         """
         
         cursor = self.conn.cursor()
-        query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id,is_invalid) "\
-                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;"
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))
-        aID = cursor.fetchone()[0]
-        if not aID:
-            return aID
+        query = """update athlete
+                   set is_invalid=true 
+                   where id=%s
+                   returning id;
+                """
+        cursor.execute(query,(aID,))
+        aid = cursor.fetchone()[0]
+        if not aid:
+            return aid
         self.commitChanges()
-        return aID
+        return aid
 
     def sportExists(self,cursor,sID):
         """
@@ -467,10 +485,13 @@ class AthleteDAO:
                    from sport 
                    where id=%s
                 """
-        cursor.execute(query,(sID,))
-        if not cursor.fetchone():
-            exists = False
-        return exists
+        try:
+            cursor.execute(query,(sID,))
+            if not cursor.fetchone():
+                exists = False
+            return exists
+        except:
+            return "A problem ocurred when verifying the sport."
 
     #This function migh be used later.
     def _athleteExists(self,cursor,aID):

@@ -40,10 +40,10 @@ class TestUserRoutes(unittest.TestCase):
 
   def test_add_new_user_with_username_of_removed_user(self):
     newUserOldUsername = {
-          'email' : 'newnewUser4@email.com',
-          'full_name' : 'Newnew User4',
+          'email' : 'newnewUser24@email.com',
+          'full_name' : 'Newnew User24',
           'username' : self.data['username'],
-          'password' : 'ninjaTurtles'
+          'password' : 'ninjaTurtles1!'
     }
     id = newUserID + 1
     response = self.client.post('/users/', data=json.dumps(newUserOldUsername),content_type='application/json', follow_redirects=True)
