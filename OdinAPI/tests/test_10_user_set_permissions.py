@@ -90,7 +90,7 @@ class TestUserRoutes(unittest.TestCase):
                 self.assertEqual(permission['is_invalid'], False)
 
     def test_set_user_permissions_inexistent_user(self):
-        response = self.client.patch(f'/users/8923892387/permissions', data=json.dumps(self.default_permissions), content_type='application/json',  follow_redirects=True)
+        response = self.client.patch(f'/users/89238/permissions', data=json.dumps(self.default_permissions), content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json['Error'], 'No User found in the system with that id.')
 

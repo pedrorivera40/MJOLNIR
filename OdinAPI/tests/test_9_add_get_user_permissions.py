@@ -32,7 +32,7 @@ class TestUserRoutes(unittest.TestCase):
         we will perform a get of those permissions. Effectively testing both
         methods at the same time."""
 
-        response = self.client.get(f'/users/987438348/permissions', content_type='application/json',  follow_redirects=True)
+        response = self.client.get(f'/users/9874/permissions', content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json['Error'], 'No User found in the system with that id.')
 
