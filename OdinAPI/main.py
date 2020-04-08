@@ -150,8 +150,7 @@ def allUsers():
         req = request.json
 
         ## Check the request contains the right structure.
-        if 'username' not in req or 'fullname' not in req or 'email' not in req or 'password' not in req:
-            
+        if 'username' not in req or 'full_name' not in req or 'email' not in req or 'password' not in req:
             return jsonify(Error='Bad Request'), 400
 
         ## For account creation

@@ -57,7 +57,7 @@ class UserHandler:
             return jsonify(Error="""Password should contain At least 1 upercase letter,
             1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
             10 and 64 characters long."""), 400
-            
+
         # Hash the password 
         hashedPassword = createHash(password)
 
@@ -245,7 +245,7 @@ class UserHandler:
             return jsonify(Error='No user found in the system with that id.'), 404
         
         ## When password is reset, login attempts are set to 0
-        self.toggleDashUserActive(duid) #Set account active to true.
+        dao.activateDashUserAccount(duid) #Set account active to true.
         dao.setLoginAttempts(duid,0)
         return jsonify(User=self.mapUserToDict(res)),201
 

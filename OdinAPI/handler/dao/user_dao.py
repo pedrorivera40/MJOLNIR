@@ -372,6 +372,34 @@ class UserDAO:
         self.commitChanges()
         return users
 
+    def activateDashUserAccount(self, duid):
+        """
+        Sets a user's active status to true in the database.
+
+        This function accepts an ID and uses it set the "is_active" field
+        within the database to true.
+
+        Args:
+            duid: The ID of the user that will be activated.
+
+        Returns:
+            A list with the response to the database query
+            containing the matching record for the modified dashboard user.
+        """
+        cursor = self.conn.cursor()
+
+        query = """
+                update dashboard_user 
+                set is_active= TRUE 
+                WHERE id = %s
+                AND is_invalid = FALSE
+                returning id, username, full_name, email, is_active, is_invalid;
+                """
+        cursor.execute(query, (duid,))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
+
     def removeDashUser(self, duid):
         """
         Invalidates a user in the database.
