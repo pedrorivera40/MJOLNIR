@@ -438,19 +438,82 @@ def pbp_set_color():
     return jsonify(ERROR="Bad request, client must pass both event id and color within request body."), 400
 
 
-@app.route("/pbp/rosters", methods=['POST', 'PUT', 'DELETE'])
+@app.route("/pbp/roster", methods=['POST', 'PUT', 'DELETE'])
 def pbp_roster():
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
-    return 1
+    body = request.get_json()
+
+    # Validate team is given within request body.
+    if not "team" in body or not "event_id" in body:
+        return jsonify(ERROR="Bad request. Values for team and event id must be included in request body."), 400
+
+    handler = VolleyballPBPHandler()
+    team = body["team"]
+    event_id = body["event_id"]
+
+    if request.method == 'POST' or request.method == 'PUT':
+        # Validate data is present in body.
+        if len(body) != 3 or not "data" in body:
+            return jsonify(ERROR="Bad request. Values for team, event id, and data must be included in request body."), 400
+
+        data = body["data"]
+        if team == "uprm":
+            return handler.setUPRMPlayer(event_id, data)
+
+        if team == "opponent":
+            return handler.setOppPlayer(event_id, data)
+
+        # Team not recognized.
+        return jsonify(ERROR="Bad request. Team value invalid."), 400
+
+    # Validate athlete id is given.
+    if len(body) != 3 or "athlete_id" not in body:
+        return jsonify(ERROR="Bad request. Values for team, event id, and athlete id must be provided."), 400
+
+    athlete_id = body["athlete_id"]
+
+    if team == "uprm":
+        return handler.removeUPRMPlayer(event_id, athlete_id)
+
+    if team == "opponent":
+        return handler.removeOppPlayer(event_id, athlete_id)
+
+    # Team not recognized.
+    return jsonify(ERROR="Bad request. Team value invalid."), 400
 
 
 @app.route("/pbp/actions", methods=['POST', 'PUT', 'DELETE'])
 def pbp_actions():
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
-    return 1
+    body = request.get_json()
+
+    # Validate event id is present in body.
+    if "event_id" not in body:
+        return jsonify(ERROR="Bad request. Not event id found."), 400
+
+    event_id = body["event_id"]
+    handler = VolleyballPBPHandler()
+    if request.method == 'POST':
+        # Validate action data is present in request body.
+        if len(body) != 2 or "data" not in body:
+            return jsonify(ERROR="Bad request. Must send both event id and data within request body."), 400
+
+        return handler.addPBPAction(event_id, body["data"])
+
+    if request.method == 'PUT':
+        # Validate data and action id are present in request body.
+        if len(body) != 3 or "data" not in body or "action_id" not in body:
+            return jsonify(ERROR="Bad request. Must send both event id and data within request body."), 400
+
+        return handler.editPBPAction(event_id, body["action_id"], body["data"])
+
+    # For delete, validate action id is present in body.
+    if len(body) != 2 or "action_id" not in body:
+        return jsonify(ERROR="Bad request. Must send both event id and action id within request body."), 400
+
+    return handler.removePlayPBPAction(event_id, body["action_id"])
 
 
-# TODO -> Docs + Tests
 @app.route("/pbp/end", methods=['POST'])
 def pbp_end():
     body = request.get_json()
