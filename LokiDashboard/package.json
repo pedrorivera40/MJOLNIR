@@ -1,7 +1,7 @@
 {
-  "name": "Freya",
+  "name": "loki",
   "version": "1.0.0",
-  "description": "Huella Deportiva&#39;s Public Website dubbed: Huella Deportiva Web",
+  "description": "Huella Deportiva&#39;s Administration Dashboard.",
   "author": "MJOLNIR",
   "private": true,
   "scripts": {
