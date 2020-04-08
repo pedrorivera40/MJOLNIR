@@ -24,29 +24,17 @@ class TeamHandler():
 
     #NEW:
     # def getTeamSportByID(self, tID): #helper for event result handlers (NOT NEEDED)
-
     # def getTeamMemberByIDs(self, aID,tID): # validates if an athlete belongs to a team. returns info.
     # def addTeamMember(self, aID,tID): # adds someone to ateam
-    # def editTeamMember(self, aID,tID): 
-    # def removeTeamMember(self, aID,tID):
+    # def editTeamMember(self, aID,tID): (NOT NEEDED)
+    # def removeTeamMember(self, aID,tID): 
     # def getTeamMembersByID(self, tID):
+    # def addTeamMembers()
 
 
 #===========================//DICTIONARY MAPPERS//==================================
-    #TODO: need to label somehow the jsonify/request in the route so that it has the sport?
     #NEW (name): basic team info
     def mapTeamToDict(self,record):
-
-        # "team":{
-        #     "team_id":1,
-        #     "sport_id":1,
-        #     "sport_name":"SampleSport",
-        #     "season_year":"2020",
-        #     "team_image_url":"www.google.com"
-        #     "branch_id":2,
-        #     "branch_name":"Femenina"
-        #   }
-
         team_info = {}
 
         team_info['team_id'] = record[0]
@@ -206,7 +194,7 @@ class TeamHandler():
     #===========================//HANDLERS//==================================
     #===========================//I.GETS//====================================
 
-    # Is this even necessary?? Probably not, no tenemos un view que pida todos los teams del sistema....
+    # TODO: Likely remove, not necessary as of now. check front end
     # gets all the information...
     def getAllTeams(self): 
         """
@@ -232,11 +220,6 @@ class TeamHandler():
         
         return jsonify(Teams = mappedResult)
 
-    # TODO: clear up this one, very confused as to what the purpose was...there is more than one team per branch and sport.
-    # TODO: maybe repurpose as getTeamsBySport(self,sID)
-    # I think it might just have been a typo...since there's a DAO for getTeams that does the same
-    # I assume the get team also returns the members, as in, it will return ALL the team info
-    #updated: branch not needed
     def getTeams(self,sID): 
         """
         Gets all the teams in the system that match the given sport id. 
@@ -275,7 +258,7 @@ class TeamHandler():
         """
         Gets the team in the system that matches the given team id.  
 
-        Calls the TeamDAO to get the team entry and its team members and maps the result
+        Calls the TeamDAO to get the team entry and maps the result
         to a JSON that contains the team in the system that matches the team ID. 
         That JSON object is then returned.
 
@@ -283,7 +266,7 @@ class TeamHandler():
             tID: the ID of the team which will be returned
             
         Returns:
-            A JSON containing the team and its members.
+            A JSON containing the team.
         """
         #it's a get, so tID validation is just if it exists as a valid entry
 
@@ -305,7 +288,7 @@ class TeamHandler():
         """
         Gets the team in the system that matches the given sport and season year.  
 
-        Calls the TeamDAO to get the team entry and its team members and maps the result
+        Calls the TeamDAO to get the team entry and maps the result
         to a JSON that contains the team in the system that matches the sport and season. 
         That JSON object is then returned.
 
@@ -314,7 +297,7 @@ class TeamHandler():
             tYear: the season year from which the team will be returned
             
         Returns:
-            A JSON containing the team and its members.
+            A JSON containing the team.
         """
         #it's a get, so tID validation is just if it exists as a valid entry
         try:
@@ -336,11 +319,20 @@ class TeamHandler():
 
         return jsonify(Team = mappedResult)
     
-
-    # TODO: check if this is dupliacted by getTeam. most likely is. 
-    #NEW: is it necessary? also part of get team...
     def getTeamMembersByID(self, tID):
+        """
+        Gets the team members in the system that match the given team.  
 
+        Calls the TeamDAO to get the team member entries and maps the result
+        to a JSON that contains the team members in the system that match the team id.
+        That JSON object is then returned.
+
+        Args:
+            tID: the ID of the team of which members will be fetched
+            
+        Returns:
+            A JSON containing the team members
+        """
         # Validate Existing Team
         try:
             dao = TeamDAO()
@@ -350,7 +342,6 @@ class TeamHandler():
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
         #get members
-        #TODO: case of team with no members
         try:
             result = dao.getTeamMembersByID(tID)
             if not result:
@@ -361,7 +352,20 @@ class TeamHandler():
         return jsonify(Team = mappedResult)
 
     def getTeamMemberByIDs(self,aID,tID):
+        """
+        Gets the team member entry in the system that matches the given athlete and team.  
 
+        Calls the TeamDAO to get the team member entry and maps the result
+        to a JSON that contains the team member in the system that matches the athlete and team. 
+        That JSON object is then returned.
+
+        Args:
+            aID: the ID of the athlete from which the team member will be returned
+            tID: the ID of the team from which the team member will be returned
+            
+        Returns:
+            A JSON containing the team member.
+        """
         # Validate Existing Team
         try:
             dao = TeamDAO()
@@ -386,7 +390,6 @@ class TeamHandler():
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
 
         #get members
-        #TODO: case of team with no members
         try:
             result = dao.getTeamMemberByIDs(aID,tID)
             if not result:
@@ -399,14 +402,19 @@ class TeamHandler():
     #update: image link was missing? tRoster removed, separate
     def addTeam(self,sID,tYear,tImageLink): 
         """
-        creates a team and adds members to it...
-        need to ge tthe id of the created team to form relationship
+        Adds a new team with the provided information.
+
+        Calls the TeamDAO to add a new team record and maps the result to
+        to a JSON. That JSON object is then returned.
+
+        Args:
+            sID: the sport id of the team to be added
+            tYear: the season year of the team to be added
+            tImageLink: the image link for the team
+            
+        Returns:
+            A JSON containing the id for the new Team record.
         """
-        # Alternative:
-        # sport_id = attributes['sport_id']
-        # season_year = attributes['season_year']
-        # team_image_url = attributes['team_image_url']
-        # team_members = attributes['team_members']
         
         # Validate Avoid Duplication Team
         try:
@@ -452,7 +460,18 @@ class TeamHandler():
     #NEW
     def addTeamMembers(self,tID,tRoster):
         """
-        add members to a team (many at once, or just one, dynamic form?)
+        Adds a new team member record with the provided information.
+
+        Calls the TeamDAO to add new team member records and maps the result to
+        to a JSON. That JSON object 
+        is then returned.
+
+        Args:
+            tID: the team to which members will be added
+            tRoster:
+                athlete_id: the id of an athlete that will be added to the team
+        Returns:
+            A JSON containing containing the id for the updated team.
         """
         # Validate Existing Team
         try:
@@ -517,7 +536,17 @@ class TeamHandler():
     #NEW
     def addTeamMember(self, aID,tID): 
         """
-        adds an athlete to a team
+        Adds a new team member record with the provided information.
+
+        Calls the TeamDAO to add new team member records and maps the result to
+        to a JSON. That JSON object 
+        is then returned.
+
+        Args:
+            tID: the team to which member will be added
+            athlete_id: the id of an athlete that will be added to the team
+        Returns:
+            A JSON containing containing the id for the updated team.
         """
         # Validate Existing Team
         try:
@@ -578,8 +607,19 @@ class TeamHandler():
     #===========================//III.PUTS//====================================
 
     def editTeam(self,tID,tImageLink):
-        """
-        edit a team
+        """"
+        Updates the team with the given ID.
+
+        Calls the TeamDAO to update the team record. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            tID: the id of the team to be updated
+            tImagelINK: the updated image link
+            
+        Returns:
+            A JSON containing the the updated entry.
         """
         
         # Validate Team Exists
@@ -614,8 +654,20 @@ class TeamHandler():
         return jsonify(Team = mappedResult)
 
     def editTeamByYear(self,sID,tYear,tImageLink):
-        """
-        edit a team
+        """"
+        Updates the team with the given ID.
+
+        Calls the TeamDAO to update the team record. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            sID: the sport id of the team to be updated
+            tYear: the season year of the team to be updated
+            tImagelINK: the updated image link
+            
+        Returns:
+            A JSON containing the the updated entry.
         """
         
         # Validate Team Exists
@@ -708,7 +760,17 @@ class TeamHandler():
     #updated, dont need sport id
     def removeTeam(self,tID): 
         """
-        remove a team from the system (invalidate it)
+        Invalidates a team record in the database based on the given ID.
+
+        Calls the TeamDAO to invalidate a team record. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            tID: the ID of the team for which the  record will be invalidated.
+            
+        Returns:
+            A JSON containing the id of the invalidated record.
         """
         # Validate Team Exists
         try:
@@ -735,7 +797,18 @@ class TeamHandler():
     #new
     def removeTeamByYear(self,sID,tYear): 
         """
-        remove a team from the system (invalidate it)
+        Invalidates a team record in the database based on the given ID.
+
+        Calls the TeamDAO to invalidate a team record. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            sID: the sport ID of the team for which the  record will be invalidated.
+            tYear: the season year of the team for which the  record will be invalidated.
+            
+        Returns:
+            A JSON containing the id of the invalidated record.
         """
         # Validate Team Exists
         try:
@@ -763,7 +836,18 @@ class TeamHandler():
     #NEW
     def removeTeamMember(self, aID,tID):
         """
-        remove a team member
+        Invalidates a team member record in the database based on the given ID.
+
+        Calls the TeamDAO to invalidate a team member record. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            aID: the athlete ID of the team member for which the  record will be invalidated.
+            tID: the team ID of the team for which the  record will be invalidated.
+            
+        Returns:
+            A JSON containing the id of the invalidated record.
         """
         # Validate Existing Team
         try:
