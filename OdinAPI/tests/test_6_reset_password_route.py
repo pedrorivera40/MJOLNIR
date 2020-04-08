@@ -24,3 +24,8 @@ class TestUserRoutes(unittest.TestCase):
     self.assertEqual(response.json['User']['is_active'], False)
     self.assertEqual(response.json['User']['is_invalid'], False)
     self.assertEqual(response.json['User']['username'], self.data['username'])
+
+  def test_reset_password_unexisten_user(self):
+    response = self.client.patch(f'/users/89999999/reset', data=json.dumps({'password' : 'newPaswordlololol1!'}), content_type='application/json',  follow_redirects=True)
+    self.assertEqual(response.status_code, 404)
+    self.assertEqual(response.json['Error'], 'No user found in the system with that id.')
