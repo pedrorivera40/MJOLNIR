@@ -150,8 +150,18 @@ class UserHandler:
             A JSON containing all the user's hash.
         """
         dao = UserDAO()
+
+        #get user id based on username
+        duid = dao.getDashUserByUsername(username)[0] #TODO: find better way to do this.
+        attempts = dao.getLoginAttempts(duid)[0] #get current number of attempts
+        
+        if attempts == 3: # If there are 3 failed login attempts, deactivate account.
+            dao.deactivateDashUserAccount(duid)
+            return jsonify(Error='Account is locked, contact administrator.'), 401
+
         fetchedHash = dao.getHashByUsername(username)
         if fetchedHash == None:
+            dao.setLoginAttempts(duid,attempts+1)
             return jsonify(Error="Username or Password are incorrect."), 200
         
         mappedHash = self.mapHash(fetchedHash)
@@ -163,11 +173,12 @@ class UserHandler:
                 'user': username,
                 'token': token
             }
+            
+            dao.setLoginAttempts(duid,0)
             return jsonify(auth=loginInfo), 201
-        
-        return jsonify(Error="Username or Password are incorrect."), 200
 
-        # return jsonify(User=mappedHash),200 #200 == OK
+        dao.setLoginAttempts(duid,attempts+1)
+        return jsonify(Error="Username or Password are incorrect."), 200
 
     def getDashUserByEmail(self, email):
         """
@@ -217,6 +228,9 @@ class UserHandler:
         res = dao.updateDashUserPassword(duid, hashedPassword)
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
+            
+        ## When password is reset, login attempts are set to 0
+        dao.setLoginAttempts(duid,0)
         return jsonify(User=self.mapUserToDict(res)),201
 
     def updateDashUserUsername(self, duid,username):

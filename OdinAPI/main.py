@@ -124,7 +124,18 @@ def auth():
         
         return handler.login(username, password)
         
+@app.route("/test/", methods=['get'])
+def test():
+    if request.method == 'get':
+        handler = UserHandler() 
 
+        if request.json['username'] == None or request.json['password'] == None:
+            return jsonify(Error='Bad Request'), 400
+            
+        username = request.json['username']
+        password = request.json['password'] # TODO: AES Encryption
+        
+        return handler.login(username, password)
 
 ###########################################
 #--------- Dashboard User Routes ---------#
