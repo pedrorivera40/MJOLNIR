@@ -216,11 +216,11 @@ def userPermissions(duid):
 '''
 
 
-
-#TODO: WORK ON THIS (Herbert) -> Improve route naming, base on args...
-#--------- Result Routes ---------#
-#TODO: Route Error Management, how does it not explode while saying error message?
-
+#===================================================================================
+#=======================//BASKETBALL RESULTS ROUTES//===============================
+#===================================================================================
+#TODO: (Herbert) verify route naming/division 
+#TODO: (Herbert) validate JSON request arguments
 
 #REQUEST FORMAT FOR ROUTE:
 # { "event_id": 5,
@@ -257,9 +257,6 @@ def userPermissions(duid):
 #   "opponent_name": "name_here",
 #   "opponent_color": "#HEX_VAL_HERE" 
 # }
-
-# TODO: validate JSON request arguments somehow
-# @app.route("/results/basketball/<int:eid>/", methods = ['GET','POST'])
 @app.route("/results/basketball/", methods = ['GET','POST'])
 def basketballStatistics():
     json = request.json
@@ -285,8 +282,6 @@ def basketballStatistics():
 #   "successful_free_throw":2
 #   }
 # }
-
-# @app.route("/results/basketball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/basketball/individual/", methods = ['GET','POST','PUT','DELETE'])
 def basketballAthleteStatistics():
     json = request.json
@@ -313,8 +308,6 @@ def basketballAthleteStatistics():
 #   "successful_free_throw":2
 #   }
 # }
-
-# @app.route("/results/basketball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/basketball/team/", methods = ['GET','POST','PUT','DELETE'])
 def basketballTeamStatistics():
     json = request.json
@@ -346,8 +339,6 @@ def basketballTeamStatistics():
 #   "opponent_color": "#HEX_VAL_HERE"  
 #   }
 # }
-
-# @app.route("/results/basketball/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/basketball/score/", methods = ['GET','POST','PUT','DELETE'])
 def basketballFinalScores():
     json = request.json
@@ -363,7 +354,7 @@ def basketballFinalScores():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
+#TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/basketball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
 def basketballSeasonAthleteStatistics(aid,seasonYear):
     json = request.json
@@ -373,6 +364,9 @@ def basketballSeasonAthleteStatistics(aid,seasonYear):
     else:
         return jsonify(Error="Method not allowed."), 405
 
+#===================================================================================
+#===================//END BASKETBALL RESULTS ROUTES//===============================
+#===================================================================================
 
 #===================================================================================
 #=======================//VOLLEYBALL RESULTS ROUTES//===============================
@@ -434,9 +428,6 @@ def basketballSeasonAthleteStatistics(aid,seasonYear):
 #   "opponent_name": "name_here",
 #   "opponent_color": "#HEX_VAL_HERE" 
 # }
-
-# TODO: validate JSON request arguments somehow
-# @app.route("/results/volleyball/<int:eid>/", methods = ['GET','POST'])
 @app.route("/results/volleyball/", methods = ['GET','POST'])
 def volleyballStatistics():
     json = request.json
@@ -466,8 +457,6 @@ def volleyballStatistics():
 #     "reception_errors":1
 #   }
 # }
-
-# @app.route("/results/volleyball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/volleyball/individual/", methods = ['GET','POST','PUT','DELETE'])
 def volleyballAthleteStatistics():
     json = request.json
@@ -501,8 +490,6 @@ def volleyballAthleteStatistics():
 #     "reception_errors":1
 #   }
 # }
-
-# @app.route("/results/volleyball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/volleyball/team/", methods = ['GET','POST','PUT','DELETE'])
 def volleyballTeamStatistics():
     json = request.json
@@ -534,8 +521,6 @@ def volleyballTeamStatistics():
 #   "opponent_color": "#HEX_VAL_HERE"  
 #   }
 # }
-
-# @app.route("/results/volleyball/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/volleyball/score/", methods = ['GET','POST','PUT','DELETE'])
 def volleyballFinalScores():
     json = request.json
@@ -551,7 +536,6 @@ def volleyballFinalScores():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
 @app.route("/results/volleyball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
 def volleyballSeasonAthleteStatistics(aid,seasonYear):
     json = request.json
@@ -618,9 +602,6 @@ def volleyballSeasonAthleteStatistics(aid,seasonYear):
 #   "opponent_name": "name_here",
 #   "opponent_color": "#HEX_VAL_HERE" 
 # }
-
-# TODO: validate JSON request arguments somehow
-# @app.route("/results/soccer/<int:eid>/", methods = ['GET','POST'])
 @app.route("/results/soccer/", methods = ['GET','POST'])
 def soccerStatistics():
     json = request.json
@@ -647,8 +628,6 @@ def soccerStatistics():
 #     "tackles":1
 #   }
 # }
-
-# @app.route("/results/soccer/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/soccer/individual/", methods = ['GET','POST','PUT','DELETE'])
 def soccerAthleteStatistics():
     json = request.json
@@ -679,8 +658,6 @@ def soccerAthleteStatistics():
 #     "tackles":1
 #   }
 # }
-
-# @app.route("/results/soccer/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/soccer/team/", methods = ['GET','POST','PUT','DELETE'])
 def soccerTeamStatistics():
     json = request.json
@@ -712,8 +689,6 @@ def soccerTeamStatistics():
 #   "opponent_color": "#HEX_VAL_HERE"  
 #   }
 # }
-
-# @app.route("/results/soccer/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/soccer/score/", methods = ['GET','POST','PUT','DELETE'])
 def soccerFinalScores():
     json = request.json
@@ -728,8 +703,6 @@ def soccerFinalScores():
         return handler.removeFinalScore(json['event_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
-
-#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
 @app.route("/results/soccer/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
 def soccerSeasonAthleteStatistics(aid,seasonYear):
     json = request.json
@@ -798,9 +771,6 @@ def soccerSeasonAthleteStatistics(aid,seasonYear):
 #   "opponent_name": "name_here",
 #   "opponent_color": "#HEX_VAL_HERE" 
 # }
-
-# TODO: validate JSON request arguments somehow
-# @app.route("/results/baseball/<int:eid>/", methods = ['GET','POST'])
 @app.route("/results/baseball/", methods = ['GET','POST'])
 def baseballStatistics():
     json = request.json
@@ -828,8 +798,6 @@ def baseballStatistics():
 #     "left_on_base":1
 #   }
 # }
-
-# @app.route("/results/baseball/<int:eid>/<int:aid>/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/baseball/individual/", methods = ['GET','POST','PUT','DELETE'])
 def baseballAthleteStatistics():
     json = request.json
@@ -861,8 +829,6 @@ def baseballAthleteStatistics():
 #     "left_on_base":1
 #   }
 # }
-
-# @app.route("/results/baseball/<int:eid>/team/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/baseball/team/", methods = ['GET','POST','PUT','DELETE'])
 def baseballTeamStatistics():
     json = request.json
@@ -894,8 +860,6 @@ def baseballTeamStatistics():
 #   "opponent_color": "#HEX_VAL_HERE"  
 #   }
 # }
-
-# @app.route("/results/baseball/<int:eid>/score/", methods = ['GET','POST','PUT','DELETE'])
 @app.route("/results/baseball/score/", methods = ['GET','POST','PUT','DELETE'])
 def baseballFinalScores():
     json = request.json
@@ -911,7 +875,6 @@ def baseballFinalScores():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-#TODO: need to prepare a reuquest schema for this one. just aid and seasonYear
 @app.route("/results/baseball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
 def baseballSeasonAthleteStatistics(aid,seasonYear):
     json = request.json
@@ -963,27 +926,16 @@ def get_sport_info():
 
     return jsonify(ERROR="Odin/sports: HTTP verb not allowed."), 405
 
-#==================================TEST TEAM ROUTES==========
-"""
-What routes will we actually need for Team? Discuss with Onix, but for now:
 
-general team route, allows to get the team metadata [get,post,update,delete] -> /team/
-
-display many members route [get,post] --> /team/members/
-
-specific team member route [get, post, update, delete] --: /team/member
-
-"""
-
-
+#===================================================================================
+#===================//START TEAM RESULTS ROUTES//===================================
+#===================================================================================
 # {
 # "sport_id":1,
 # "season_year":"2020",
 # "team_image_url":"www.google.com"
 # }
-
 @app.route("/teams/", methods = ['GET','POST','PUT','DELETE'])
-# sport_id,season_year
 def teamByYear():
     json = request.json
     handler = TeamHandler()
@@ -1010,9 +962,7 @@ def teamByYear():
 #     }
 #     ]
 # }
-
 @app.route("/teams/members/", methods = ['GET','POST'])
-# takes the tID
 def teamMembers():
     json = request.json
     handler = TeamHandler()
@@ -1028,10 +978,8 @@ def teamMembers():
 #     "team_id":1,
 #     "athlete_id":1
 # }
-#TODO: THere's a chance that this route is completely unnecdsary and we can just do in the general team/members/ route everything. Would just need to adapt 
-# remove to work there, its the only problem, but we'd just loop through it, so it's not a big issue tbh. 
+#TODO: (Herbert) Check if need to remove route due to redundancy, wait for front end 
 @app.route("/teams/member/", methods = ['GET','POST','DELETE'])
-# takes the athlete ID and team ID
 def teamMemberByIDs():
     json = request.json
     handler = TeamHandler()
@@ -1043,6 +991,10 @@ def teamMemberByIDs():
         return handler.removeTeamMember(json['athlete_id'],json['team_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
+
+#===================================================================================
+#===================//END TEAM RESULTS ROUTES//=====================================
+#===================================================================================
 
 
 # Launch app.
