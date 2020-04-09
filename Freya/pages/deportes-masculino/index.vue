@@ -6,6 +6,15 @@
       </v-col>
     </v-row>
     <v-row>
+      <v-col>
+        <div v-if="sports.length === 0">
+          <v-overlay>
+            <v-progress-circular indeterminate></v-progress-circular>
+          </v-overlay>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col v-for="sport in sports" :key="sport.id" cols="12" md="6" lg="3">
         <SportCard :sport_name="sport.sport_name" :img="sport.img" />
       </v-col>
