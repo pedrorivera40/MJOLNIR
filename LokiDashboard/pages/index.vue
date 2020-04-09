@@ -1,8 +1,6 @@
 <template>
   <v-layout
     column
-    justify-center
-    align-center
   >
     <v-flex
       xs12
@@ -13,7 +11,7 @@
         <h1 class="header my-12">Welcome to Huella Deportiva Dashboard!</h1>
         <logo />
         <h2 class="my-6">Please, login to continue.</h2>
-        <v-btn color="#26B117" dark link to="/login">
+        <v-btn color="primary_dark" dark link to="/login">
           Login
         </v-btn>
       </div>
