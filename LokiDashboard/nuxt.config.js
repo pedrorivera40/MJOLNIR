@@ -55,6 +55,24 @@ export default {
   axios: {
     baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API
   },
+
+  /*
+  ** Auth module configuration
+  ** See https://auth.nuxtjs.org/schemes/local.html#options
+  */
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: 'auth/', method: 'post', propertyName: 'auth.token' },
+          logout: { url: 'auth/logout', method: 'post' },
+        },
+        tokenRequired: true,
+        tokenType: '',
+        autoFetchUser: false
+      }
+    }
+  },
   /*
   ** vuetify module configuration
   ** https://github.com/nuxt-community/vuetify-module
@@ -63,16 +81,28 @@ export default {
     customVariables: ['~/assets/variables.scss'],
     theme: {
       dark: false,
+      light: true,
       themes: {
         dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
+          primary: '#168F09',
+          primary_dark: '#0B7300',
+          primary_light: '#26B117',
+          accent: '#45b439',
+          error: '#FF5252',
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FFC107',
+        },
+        light: {
+          primary: '#168F09',
+          primary_dark: '#0B7300',
+          primary_light: '#26B117',
+          accent: '#999999',
+          error: '#FF5252',
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FFC107',
+        },
       }
     }
   },
@@ -90,7 +120,7 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend(config, ctx) {
     }
   }
 }
