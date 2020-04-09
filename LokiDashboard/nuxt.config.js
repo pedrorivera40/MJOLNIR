@@ -65,11 +65,12 @@ export default {
       local: {
         endpoints: {
           login: { url: 'auth/', method: 'post', propertyName: 'auth.token' },
-          logout: { url: 'auth/logout', method: 'post' },
+          user: false,
+          logout: false,
         },
-        tokenRequired: true,
+        // tokenRequired: true,
         tokenType: '',
-        autoFetchUser: false
+        autoFetchUser: false,
       }
     }
   },

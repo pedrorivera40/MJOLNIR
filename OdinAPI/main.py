@@ -26,7 +26,7 @@ load_dotenv()
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
 
 def token_check(func):
@@ -120,18 +120,6 @@ def auth():
         
         return handler.login(username, password)
         
-@app.route("/test/", methods=['get'])
-def test():
-    if request.method == 'get':
-        handler = UserHandler() 
-
-        if 'username' not in request.json or 'password' not in request.json:
-            return jsonify(Error='Bad Request'), 400
-
-        username = request.json['username']
-        password = request.json['password'] # TODO: AES Encryption
-        
-        return handler.login(username, password)
 
 ###########################################
 #--------- Dashboard User Routes ---------#

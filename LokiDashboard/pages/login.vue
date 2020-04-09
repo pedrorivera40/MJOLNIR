@@ -44,28 +44,19 @@
 </template>
 
 <script>
+import { mapActions } from "vuex"
 export default {
   data() {
     return {
       show: false,
-      username: "",
-      password: ""
+      username: "newUser27",
+      password: "ninjaTurtles1!"
     };
   },
   methods: {
-    async login() {
-      try {
-        let response = await this.$auth.loginWith('local', { 
-          data: {
-            username: this.username,
-            password: this.password
-          }
-          })
-        console.log(response)
-      } catch (err) {
-        console.log(err)
-      }
-    }
+    ...mapActions({
+      login: 'userAuth/login'
+    })
   },
 };
 </script>
