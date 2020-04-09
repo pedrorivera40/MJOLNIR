@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <h1 class="display-1">Deportes</h1>
+        <h1 class="display-1">{{page_title}}</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -51,15 +51,16 @@ export default {
   data() {
     return {
       error_string: "This is a damn error",
-      dialog: false,
+      dialog: true,
       error_icon: "mdi-alert-circle-outline",
+      page_title: "Deportes Masculino",
       sports: [
-        {
-          sport_name: "Baloncesto",
-          id: 23,
-          img:
-            "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/88207403_3003298336425647_2084912734775803904_o.jpg?_nc_cat=109&_nc_sid=e007fa&_nc_ohc=WGEYwiYREnsAX8BP7zH&_nc_ht=scontent.fsig1-1.fna&oh=924e05d564c1f4f5fa5a1e70fad416fb&oe=5EB319D6"
-        }
+        // {
+        //   sport_name: "Baloncesto",
+        //   id: 23,
+        //   img:
+        //     "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/88207403_3003298336425647_2084912734775803904_o.jpg?_nc_cat=109&_nc_sid=e007fa&_nc_ohc=WGEYwiYREnsAX8BP7zH&_nc_ht=scontent.fsig1-1.fna&oh=924e05d564c1f4f5fa5a1e70fad416fb&oe=5EB319D6"
+        // },
         // {
         //   sport_name: "Voleibol",
         //   img:
@@ -101,7 +102,7 @@ export default {
   methods: {
     redirect(sport_id) {
       // This will throw 404. TODO -> Meet with Herbert for details about this page.
-      this.$router.push("teams/" + sport_id);
+      this.$router.push("equipo/" + sport_id);
     }
   }
 };
