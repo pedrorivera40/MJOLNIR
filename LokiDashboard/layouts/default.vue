@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="#168F09" dark clipped-left v-if="$auth.isLoggedin">
+    <v-app-bar app color="primary" dark clipped-left v-if="$auth.isLoggedin">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
       <v-toolbar-title>Huella Deportiva Dashboard</v-toolbar-title>
@@ -26,24 +26,28 @@
       </v-menu>
     </v-app-bar>
 
-    <v-navigation-drawer app v-model="drawer" bottom clipped v-if="$auth.isLoggedin">
+    <v-navigation-drawer
+      class="nav-drawer"
+      app
+      v-model="drawer"
+      bottom
+      clipped
+      v-if="$auth.isLoggedin"
+    >
+      >
       <v-list dense>
         <v-list-item-group class="nav-links">
-          <v-list-item v-for="(item,index) in items" :key="index" :to='item.to' nuxt>
+          <v-list-item v-for="(item,index) in items" :key="index" :to="item.to" nuxt>
             <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-            <v-list-item-title>
-              {{item.title}}
-            </v-list-item-title>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>{{item.title}}</v-list-item-title>
           </v-list-item>
-
-          
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
     <v-content>
-      <v-container>
+      <v-container class="main-container">
         <nuxt />
       </v-container>
     </v-content>
@@ -96,7 +100,7 @@ export default {
           icon: "mdi-chart-bubble",
           title: "Inspire",
           to: "/inspire"
-        },
+        }
       ],
       miniVariant: false,
       right: true,
@@ -108,11 +112,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../assets/variables.scss';
-
-  .nav-links{
+@import "../assets/variables.scss";
+.main-container {
+  height: 100%;
+}
+.nav-drawer {
+  .nav-links {
     a {
       color: $highlight-color;
     }
   }
+}
 </style>
