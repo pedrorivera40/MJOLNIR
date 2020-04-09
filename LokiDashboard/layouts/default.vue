@@ -1,29 +1,30 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark clipped-left v-if="$auth.isLoggedin">
+    <v-app-bar app color="primary" dark clipped-left v-if="$auth.loggedIn">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
       <v-toolbar-title>Huella Deportiva Dashboard</v-toolbar-title>
 
       <v-spacer />
 
-      <v-btn icon>
-        <v-icon>mdi-account-circle</v-icon>
-      </v-btn>
+      <v-icon class="mr-2">mdi-account-circle</v-icon>
+      {{$auth.user.User.username}}
 
-      <v-menu left bottom>
+      <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon>mdi-menu-down</v-icon>
+          <v-btn 
+            class="ml-2"
+            @click='logout'
+            v-on="on"
+            icon
+          >
+            <v-icon>mdi-logout</v-icon>
           </v-btn>
         </template>
+      <span>Logout</span>
+      </v-tooltip>
 
-        <v-list>
-          <v-list-item v-for="n in 5" :key="n" @click="() => {}">
-            <v-list-item-title>Option {{ n }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      
     </v-app-bar>
 
     <v-navigation-drawer
@@ -32,9 +33,8 @@
       v-model="drawer"
       bottom
       clipped
-      v-if="$auth.isLoggedin"
+      v-if="$auth.loggedIn"
     >
-      >
       <v-list dense>
         <v-list-item-group class="nav-links">
           <v-list-item v-for="(item,index) in items" :key="index" :to="item.to" nuxt>
