@@ -46,6 +46,7 @@
 <script>
 import { mapActions } from "vuex"
 export default {
+  midleware: 'guest',
   data() {
     return {
       show: false,

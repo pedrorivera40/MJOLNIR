@@ -23,6 +23,7 @@
 import Logo from '~/components/Logo.vue'
 
 export default {
+  middleware: 'guest',
   components: {
     Logo,
   }
