@@ -47,6 +47,7 @@
 import { mapActions } from "vuex"
 export default {
   midleware: 'guest',
+  layout: 'guest',
   data() {
     return {
       show: false,
