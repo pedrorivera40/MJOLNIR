@@ -2,7 +2,7 @@
 export default {
   SET_USER_DATA(state, userData) {
     //Set user data
-    state.user = this.$auth.user.User
+    state.user = this.$auth.user
 
     localStorage.setItem('user', JSON.stringify(state.user))
     //Set axios headers to contain the auth token by editing default axios config.
