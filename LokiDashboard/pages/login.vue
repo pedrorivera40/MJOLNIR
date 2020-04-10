@@ -14,6 +14,7 @@
               prepend-icon="mdi-account"
               type="text"
               v-model="username"
+              :rules="[required('username')]"
             />
 
             <v-text-field
@@ -25,6 +26,7 @@
               :type="show ? 'text' : 'password'"
               v-model="password"
               @click:append="show=!show"
+              :rules="[required('password')]"
             />
           </v-form>
         </v-container>
@@ -48,14 +50,17 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import rules from "@/utils/validations";
 export default {
   auth: "guest",
   layout: "guest",
   data() {
     return {
+      valid: false,
       show: false,
       username: "newUser27",
-      password: "ninjaTurtles1!"
+      password: "ninjaTurtles1!",
+      ...rules,
     };
   },
   methods: {
