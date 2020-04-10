@@ -2,6 +2,7 @@
 <!-- TODO: Verify how to pass the team ID, if by route or some other way -->
 <!-- TODO: Check/Confirm that query exists in order to get all athletes of one sport, at least the name fields + ID -->
 <!-- TODO: Check how to make field dynamic in order to add multiple, and be able to remove some from addlist before adding/submitting. -->
+<!-- TODO: instead of a list of all athletes in sport, it could be a search...no idea how to do that though. -->
   <v-card width="800" class="elevation-12 mx-auto">
     <v-toolbar color="green darken-1" dark flat>
         <v-toolbar-title>Añadir Atleta a Equipo {{sport}} - {{branch}}</v-toolbar-title>
@@ -29,6 +30,8 @@
                                 <v-select
                                 v-model="athlete"
                                 :items="sport_athletes"
+                                item-value="athlete_id" 
+                                item-text="athlete_name"
                                 label ="Atleta a Añadir"
                                 prepend-icon="mdi-account-plus"
                                 ></v-select>
@@ -101,21 +104,66 @@
         ValidationObserver,
     },
     data: () => ({
-        selected_categories:[],
         date: new Date().toISOString().substr(0,10),
-        menu: false,
-        
-        about_team:'',
-        
-        team_image_url:'',
-        sport_id:0,
+        sport_id:1,
+        team_id:1,
         // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
         sport:'Baloncesto',      
         sports:['Voleibol','Baloncesto','Atletismo'],
         branch:'Masculino',
         branches:['Masculino','Femenino','Otro'],
-      
-        season_year:'',
+        athlete: '',
+        sport_athletes:[
+            {
+                athlete_name: "Bruce Wayne",
+                athlete_id: "1"
+            },
+            {
+                athlete_name: "Richard Grayson",
+                athlete_id: "2"
+            },
+            {
+                athlete_name: "Clark Kent",
+                athlete_id: "3"
+            },
+            {
+                athlete_name: "Hal Jordan",
+                athlete_id: "4"
+            },
+            {
+                athlete_name: "John Stewart",
+                athlete_id: "5"
+            },
+            {
+                athlete_name: "Wallace West",
+                athlete_id: "6"
+            },
+            {
+                athlete_name: "Arthur Curry",
+                athlete_id: "7"
+            },
+            {
+                athlete_name: "Jason Todd",
+                athlete_id: "8"
+            },
+            {
+                athlete_name: "Timothy Drake",
+                athlete_id: "9"
+            },
+            {
+                athlete_name: "Victor Stone",
+                athlete_id: "10"
+            },
+            {
+                athlete_name: "John Constantine",
+                athlete_id: "11"
+            },
+            {
+                athlete_name: "Simon Baz",
+                athlete_id: "12"
+            }
+        ],
+       
         yearList:[],
     }),
            
@@ -138,6 +186,7 @@
         },
         submit () {
             this.$refs.observer.validate()
+            console.log("Going to add athlete with id "+this.athlete+" to team with id "+this.team_id+".")
             this.goToTeam()
         },
         clear () {
@@ -174,6 +223,7 @@
     //{
     //"sport_id":1,   -->selected from existing
     //"season_year":"2020", --> selected from yearList
-    //"team_image_url":"www.google.com" -->inserted
+    //"team_image_url":"www.google.com" -->inserted, optional
+    //"about_team": "some text" --> inserted, optional
     //}
 </script>

@@ -144,14 +144,13 @@
         ValidationObserver,
     },
     data: () => ({
-        selected_categories:[],
+        
         date: new Date().toISOString().substr(0,10),
-        menu: false,
         
         about_team:'',
         
         team_image_url:'',
-        sport_id:0,
+        sport_id:1,
         // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
         sport:'Baloncesto',      
         sports:['Voleibol','Baloncesto','Atletismo'],
