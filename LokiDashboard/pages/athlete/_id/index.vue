@@ -15,13 +15,11 @@
 			>
 				<v-tabs-slider/>
 				<v-tab>
-						Informacion
-				<v-icon>mdi-card-account-details-outline</v-icon>
+						Informacion				
 				</v-tab>
 
 				<v-tab>
-						Estadisticas por Temporada
-						<v-icon>mdi-table-large</v-icon>
+						Estadisticas por Temporada						
 				</v-tab>
 
 				<v-tab-item>
