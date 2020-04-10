@@ -14,6 +14,5 @@ export default {
   },
   logout({ commit }) {
     commit("CLEAR_USER_DATA")
-    this.$router.push('login')
   }
 }
