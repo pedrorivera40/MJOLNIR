@@ -70,15 +70,14 @@ class AthleteDAO:
         """
 
         cursor = self.conn.cursor()
-        query = """select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.profile_image_link,S.name as sport_name,P.name as position_name,AP.is_invalid,C.name as category_name,AC.is_invalid 
+        query = """select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.year_of_study,A.years_of_participation,A.profile_image_link,S.name as sport_name,P.name as position_name,AP.is_invalid,C.name as category_name,AC.is_invalid
                    from ((athlete as A inner join sport as S on A.sport_id=S.id) full outer join (athlete_position as AP inner join position as P on AP.position_id=P.id) on AP.athlete_id=A.id) full outer join (athlete_category as AC inner join category as C on AC.category_id=C.id) on A.id=AC.athlete_id
                    where A.id=%s
                    and A.is_invalid=false
                 """
         try:
             cursor.execute(query,(aID,))
-            result = cursor.fetchall()    
-        
+            result = cursor.fetchall()            
             return result
         except:
             return "A problem ocurred when fethching the athlete."
@@ -105,7 +104,7 @@ class AthleteDAO:
             result.append(row)
         return result
 
-    def addAthlete(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink):
+    def addAthlete(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink):
         """
         Adds a new athlete into the database with the information given.
 
@@ -124,6 +123,8 @@ class AthleteDAO:
             aDateOfBirth: Data of birth of the athlete.
             aSchoolOfPrecedence:School of Precedence of the athlete.
             aNumber: Number of the athlete in the sport.
+            aYearOfStudy: Number of years the athlete has been studying.
+            aYearsOfParticipation: Number of years the athlete has participated in the sport.
             aProfilePictureLink: Link for the image of the athlete profile
         Returns:
             The id of the newly added athlete.
@@ -133,10 +134,10 @@ class AthleteDAO:
         if not self.sportExists(cursor,sID):
             return 'Sport does not exist'
     
-        query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id,is_invalid) "\
-                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;"
+        query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,year_of_study,years_of_participation,profile_image_link,sport_id,is_invalid) "\
+                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;"
         try:
-            cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))       
+            cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,sID,))       
             
             aID = cursor.fetchone()[0]
             if not aID:
@@ -147,7 +148,7 @@ class AthleteDAO:
         except:
             return "A problem ocurred when inserting the athlete."
 
-    def addAthleteWithPosition(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,aPositions):
+    def addAthleteWithPosition(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,aPositions):
         """
         Add a new athlete with their positions in a sport
         into the database with the information given.
@@ -167,7 +168,9 @@ class AthleteDAO:
             aDateOfBirth: Data of birth of the athlete.
             aSchoolOfPrecedence:School of Precedence of the athlete.
             aNumber: Number of the athlete in the sport.
-            aProfilePictureLink: Link for the image of the athlete profile
+            aYearOfStudy: Number of years the athlete has been studying.
+            aYearsOfParticipation: Number of years the athlete has participated in the sport.
+            aProfilePictureLink: Link for the image of the athlete profile.
             aPositions: A dictionary containing the positions of the athelete in 
                         a sport given.
         Returns:
@@ -177,10 +180,10 @@ class AthleteDAO:
         if not self.sportExists(cursor,sID):
             return 'Sport does not exist'
         
-        query = """insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id,is_invalid)
-                   values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;
+        query = """insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,year_of_study,years_of_participation,profile_image_link,sport_id,is_invalid)
+                   values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;
                 """
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))
+        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,sID,))
         
         
         aID = cursor.fetchone()[0]
@@ -210,19 +213,18 @@ class AthleteDAO:
             query = """insert into athlete_position(position_id,athlete_id,is_invalid)
                         values(%s,%s,%s) returning id
                         """
-            for position in positions:                         
+            for position in positions:                                  
                 cursor.execute(query,(position[0],aID,aPositions[position[1]],))
                 apID = cursor.fetchone()[0]
                 if not apID:
-                    return 'Insertion query for athlete position failed.'
-                
+                    return 'Insertion query for athlete position failed.'                
         except:                
             return 'The names of the positions given are incorrect.'
 
         self.commitChanges()
         return aID
 
-    def addAthleteWithCategory(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,aCategories):
+    def addAthleteWithCategory(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,aCategories):
         """
         Add a new athlete with their categories in a sport
         into the database with the information given.
@@ -242,7 +244,9 @@ class AthleteDAO:
             aDateOfBirth: Data of birth of the athlete.
             aSchoolOfPrecedence:School of Precedence of the athlete.
             aNumber: Number of the athlete in the sport.
-            aProfilePictureLink: Link for the image of the athlete profile
+            aYearOfStudy: Number of years the athlete has been studying.
+            aYearsOfParticipation: Number of years the athlete has participated in the sport.
+            aProfilePictureLink: Link for the image of the athlete profile.
             aCategories: A dictionary containing the categories of the athelete in 
                         a sport given.
         Returns:
@@ -254,10 +258,10 @@ class AthleteDAO:
         if not self.sportExists(cursor,sID):
             return 'Sport does not exist'
         
-        query = """insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,profile_image_link,sport_id,is_invalid) 
-                   values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;
+        query = """insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,year_of_study,years_of_participation,profile_image_link,sport_id,is_invalid) 
+                   values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;
                 """   
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,sID,))
+        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,sID,))
         
         
         aID = cursor.fetchone()[0]
@@ -297,7 +301,7 @@ class AthleteDAO:
         return aID
 
 
-    def editAthlete(self,aID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,aPositions,aCategories):
+    def editAthlete(self,aID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,aPositions,aCategories):
         """
         Updates an existing athlete in the database
         including their positions and categories in
@@ -319,7 +323,9 @@ class AthleteDAO:
             aDateOfBirth: Data of birth of the athlete.
             aSchoolOfPrecedence:School of Precedence of the athlete.
             aNumber: Number of the athlete in the sport.
-            aProfilePictureLink: Link for the image of the athlete profile
+            aYearOfStudy: Number of years the athlete has been studying.
+            aYearsOfParticipation: Number of years the athlete has participated in the sport.
+            aProfilePictureLink: Link for the image of the athlete profile.
             aPositions: A dictionary containing the positions of the athelete in 
                         a sport given.
             aCategories: A dictionary containing the categories of the athelete in 
@@ -339,6 +345,8 @@ class AthleteDAO:
                        date_of_birth = %s,
                        school_of_precedence = %s,
                        number = %s,
+                       year_of_study = %s,
+                       years_of_participation = %s,
                        profile_image_link = %s                       
                    where id = %s 
                    returning first_name,
@@ -350,10 +358,12 @@ class AthleteDAO:
                         date_of_birth,
                         school_of_precedence,
                         number,
+                        year_of_study,
+                        years_of_participation,
                         profile_image_link,
                         sport_id
                 """
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aProfilePictureLink,aID,))
+        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,aID,))
         result = cursor.fetchone()
         if not result:
             return "Athlete update failed"
@@ -366,7 +376,7 @@ class AthleteDAO:
                         from position as P
                         where P.sport_id = %s                                          
                     """
-            cursor.execute(query,(result[10],))             
+            cursor.execute(query,(result[12],))             
             
 
             positions = []#List of positions in a sport.            
@@ -433,7 +443,7 @@ class AthleteDAO:
             
         
         self.commitChanges()
-        return result[0]
+        return aID
                 
     
     def removeAthlete(self,aID):
@@ -505,6 +515,33 @@ class AthleteDAO:
         if not cursor.fetchone():
             exists = False
         return exists
+    
+    def getAthleteSportByID(self,aID):
+        """
+        Returns the id of the sport in which the 
+        athlete participates.
+
+        Performs a simple fetch query to return the id
+        of the sport in which the athlete participates.
+
+        Args:
+            aID: The id of the athlete.
+        Returns:
+            The id of the sport in which the athlete
+            participates.
+        """
+        cursor = self.conn.cursor()
+        query = """select sport_id
+                   from athlete
+                   where id=%s
+                   and is_invalid=false
+                """
+        try:
+            cursor.execute(query,(aID,))
+            result = cursor.fetchone()
+            return result
+        except Exception as e:
+            return "Problem ocurred when fetching the sport id of an athlete." + str(e) 
 
     def commitChanges(self):
         """
