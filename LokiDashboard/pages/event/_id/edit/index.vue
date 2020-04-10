@@ -136,13 +136,41 @@
               </v-col>
             </v-row>
 
+            <v-row>
+              <v-col
+                cols="1"
+                md="3"
+              >	
+
+                <h2>Resumen de Evento:</h2>
+                
+              </v-col>
+
+              <v-col
+                cols="12"
+                md="9"
+              >
+                <ValidationProvider v-slot="{ errors }" name="Resumen" rules="max:250">
+                  <v-textarea
+                    v-model="eventSummary"                      
+                    :counter="250"
+                    :error-messages="errors"
+                    label="Resumen"
+                    auto-grow
+                    rows = "2"
+                    outlined
+                  ></v-textarea>
+                </ValidationProvider>
+              </v-col>
+            </v-row>
+
 
             <v-row>
               <v-spacer/>
               <v-spacer/>
               <v-col>
-                <v-btn class="mr-4" @click="submit">submit</v-btn>
-                <v-btn @click="clear">clear</v-btn>
+                <v-btn color="green darken-1" dark class="mr-4" @click="submit">Someter</v-btn>
+                <v-btn @click="clear">Borrar</v-btn>
               </v-col>
             </v-row>
             
@@ -199,6 +227,7 @@
 			venue:'Mangual',
 			teamSport:'Baloncesto-masculino',		
       opponent_name:'Tornados',
+      eventSummary:'El juego fue entretenido!',
       
 			year:'2020',
 			yearList:[],    

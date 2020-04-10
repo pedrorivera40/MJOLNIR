@@ -58,9 +58,15 @@ def athletes():
     handler = AthleteHandler()
     if request.method == 'POST':
         json = request.json
+        if not 'sID' in json or not 'attributes' in json:
+            return jsonify(Error = "Bad Request"),400
+
         return handler.addAthlete(json['sID'], json['attributes'])
+
     elif request.method == 'GET':
         json = request.json
+        if not 'sID' in json:
+            return jsonify(Error = "Bad Request"),400
 
         return handler.getAthletesBySport(json['sID'])
 
@@ -72,9 +78,12 @@ def athleteByID(aid):
         return handler.getAthleteByID(aid)
     elif request.method == 'PUT':
         json = request.json
+        if 'attributes' not in json:
+            return jsonify(Error = "Bad Request"),400
+
         return handler.editAthlete(aid, json['attributes'])
-    elif request.method == 'DELETE':
-        json = request.json
+        
+    elif request.method == 'DELETE':        
         return handler.removeAthlete(aid)
 
 #--------- Position Routes ---------#
