@@ -10,10 +10,8 @@ export default {
     this.$axios.defaults.headers.common['Authorization'] = `${userData.auth.token}`
   },
   CLEAR_USER_DATA() {
-    // TODO -> Verify how to actually implement this...
-    //Forces a fresh of the page and effectively clears state and axios header settings
-    location.reload()
-
+    console.log('logout commit')
+    this.$auth.logout()
     // //Clear userdata in local storage.
     localStorage.removeItem('user')
   },
