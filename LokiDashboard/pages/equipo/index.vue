@@ -14,23 +14,29 @@
       justify="center">
         <h1>Tarzanes</h1>
       </v-row>
-      <v-row>
+      <v-row align="center"
+      justify="center">
         <v-col md=3>
           <v-select
             v-model="season"
-            :items="teams"
-            item-value="season_year"
-            item-text="season_year" 
+            item-value="season_year" 
+            item-text="season_year"
+            :items="yearList" 
             label ="Temporada"
             prepend-icon="mdi-calendar-blank-multiple"
             @input="getSeasonData"
           ></v-select>
         </v-col>
-        <v-col md=3>
-          <v-btn class="mr-4" @click="getSeasonData" color="green darken-1">Añadir Equipo +</v-btn>
-        </v-col>
-        <v-col md=3>
-          <v-btn class="mr-4" @click="getSeasonData" color="green darken-1">Editar Equipo</v-btn>
+        <v-col>
+          <v-row align="center"
+            justify="end">
+            <v-col md=3>
+              <v-btn class="mr-4" @click="getSeasonData" color="green darken-1">Añadir Equipo +</v-btn>
+            </v-col>
+            <v-col md=3>
+              <v-btn class="mr-4" @click="getSeasonData" color="green darken-1">Editar Equipo</v-btn>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
 			<v-tabs
@@ -196,66 +202,13 @@ export default {
 				{text: 'Three Point Percentage(%)', value: 'Event_Statistics.three_point_percentage'},
 				{text: 'Turnovers', value: 'Event_Statistics.turnovers'},
 
-			],
+      ],
+      //IMPORTANT FOR METHODS:
+      selected: '',
       statistics_per_season:'',
       members:'',
-      //this is basically the get all team members from a specific team. 
-      // members:[
-      // {
-      //   first_name: 'Bruce',
-      //   middle_name: 'Batman',
-      //   last_names:'Wayne',
-      //   short_bio:'I am vengeance, I am the night.',
-      //   height_feet:7,
-      //   height_inches:0,
-      
-      //   study_program:'Forensics', 
-      //   date_of_birth:'1980-07-21',
-      //   school_of_precedence:'Gotham High',
-      //   athlete_positions:["Base","Escolta"],
-      //   athlete_categories:{},      
-      //   number:27,
-      //   profile_image_link:'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/18056978_1321492691261909_7453541174330533269_n.jpg?_nc_cat=102&_nc_sid=8024bb&_nc_oc=AQmWfwxDy-LTXcZv4K0hcL8VNdr4F0JDlBW90Hq3YG157GtEuXYnB-AKL6hNki0uuh4&_nc_ht=scontent-mia3-2.xx&oh=6dc80a0cb41e6c693897b317148b3753&oe=5EB4AFCF',
-      //   sport:'Baloncesto',     
-      //   branch:'Masculino', 
-      // },
-      // {
-      //   first_name: 'Richard',
-      //   middle_name: 'Nightwing',
-      //   last_names:'Grayson',
-      //   short_bio:'Dick Grayson is a vigilante in the Batman Family and the original hero known as Robin. Eventually, he outgrew this position and was inspired by Superman to become Nightwing, while Jason Todd and Tim Drake succeeded him as Robin. Following the disappearance of Bruce Wayne, he succeeded his mentor to become Batman with Damian Wayne as his Robin. Bruce\'s return allowed them to both wear the mantle for a short while, although Grayson has since then returned to his identity as Nightwing.',
-      //   height_feet:7,
-      //   height_inches:0,
-      
-      //   study_program:'Police', 
-      //   date_of_birth:'1980-07-21',
-      //   school_of_precedence:'Themyscira',
-      //   athlete_positions:["Base","Escolta"],
-      //   athlete_categories:{},      
-      //   number:77,
-      //   profile_image_link:'https://vignette.wikia.nocookie.net/marvel_dc/images/a/a2/Nightwing_0008.jpg/revision/latest?cb=20111009075845',
-      //   sport:'Baloncesto',     
-      //   branch:'Masculino', 
-      // },
-      // {
-      //   first_name: 'Clark',
-      //   middle_name: 'Superman',
-      //   last_names:'Kent',
-      //   short_bio:'Up, up, and away',
-      //   height_feet:7,
-      //   height_inches:0,
-      
-      //   study_program:'Reporter', 
-      //   date_of_birth:'1980-07-21',
-      //   school_of_precedence:'Gotham High',
-      //   athlete_positions:["Base","Escolta"],
-      //   athlete_categories:{},      
-      //   number:1,
-      //   profile_image_link:'https://pbs.twimg.com/media/DUOPKlWU0AEGY0S.jpg:large',
-      //   sport:'Baloncesto',     
-      //   branch:'Masculino', 
-      // }
-      // ],
+      yearList:[],  
+      defaultSelected:[],
 
     //Get all teams from a given sport is necessary
     teams: [
@@ -283,18 +236,41 @@ export default {
 
 
       }),//end of data()
-		
+    
+    created(){
+      
+      this.buildYearList()
+      this.buildDefaultValues()
+      this.getSeasonData()
+      
+    }, 
+
 		methods: {
+      buildYearList(){
+        let yearToAdd = 2020
+        let currentYear = new Date(2024,8).getFullYear()
+        this.season = currentYear
+        
+        while(yearToAdd <= currentYear)
+        {
+            this.yearList.push({'season_year':yearToAdd++})
+        }
+      },
+      buildDefaultValues(){
+        let currentYear = new Date(2024,8).getFullYear()
+        this.defaultSelected.push({'season_year':currentYear})
+      },
       getMembersData(){
         if(this.season!=''){
           
         }
       },
 			getSeasonData(){
+        console.log(this.season)
 				if(this.season!=''){
           //This line below will later be modified to fetch data from a file.
           if(this.season == 2020){
-            console.log(this.season)
+          
             this.members = {"members":[
               {
                 "first_name": "Bruce",
@@ -512,6 +488,65 @@ export default {
               {
                 "first_name": "Clark",
                 "middle_name": "Superman, but 2023",
+                "last_names":"Kent",
+                "short_bio":"Up, Up, and Away",
+                "height_feet":7,
+                "height_inches":0,
+              
+                "study_program":"Reporter", 
+                "date_of_birth":"1980-07-21",
+                "school_of_precedence":"Smallville High",
+                "athlete_positions":["Base","Escolta"],
+                "athlete_categories":{},      
+                "number":1,
+                "profile_image_link":"https://pbs.twimg.com/media/DUOPKlWU0AEGY0S.jpg:large",
+                "sport":"Baloncesto",     
+                "branch":"Masculino",
+              }
+              ],
+            }
+          } 
+          else if(this.season==2024){
+            this.members = {"members":[
+              {
+                "first_name": "Bruce",
+                "middle_name": "Batman, but 2024",
+                "last_names":"Wayne",
+                "short_bio":"I am vengeance, I am the night.",
+                "height_feet":7,
+                "height_inches":0,
+              
+                "study_program":"Forensics", 
+                "date_of_birth":"1980-07-21",
+                "school_of_precedence":"Gotham High",
+                "athlete_positions":["Base","Escolta"],
+                "athlete_categories":{},      
+                "number":27,
+                "profile_image_link":"https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/18056978_1321492691261909_7453541174330533269_n.jpg?_nc_cat=102&_nc_sid=8024bb&_nc_oc=AQmWfwxDy-LTXcZv4K0hcL8VNdr4F0JDlBW90Hq3YG157GtEuXYnB-AKL6hNki0uuh4&_nc_ht=scontent-mia3-2.xx&oh=6dc80a0cb41e6c693897b317148b3753&oe=5EB4AFCF",
+                "sport":"Baloncesto",     
+                "branch":"Masculino", 
+              },
+              {
+                "first_name": "Richard",
+                "middle_name": "Nightwing, but 2024",
+                "last_names":"Grayson",
+                "short_bio":"I am vengeance, I am the night.",
+                "height_feet":7,
+                "height_inches":0,
+              
+                "study_program":"Police", 
+                "date_of_birth":"1980-07-21",
+                "school_of_precedence":"Flying Graysons",
+                "athlete_positions":["Base","Escolta"],
+                "athlete_categories":{},      
+                "number":77,
+                "profile_image_link":"https://vignette.wikia.nocookie.net/marvel_dc/images/a/a2/Nightwing_0008.jpg/revision/latest?cb=20111009075845",
+                "sport":"Baloncesto",     
+                "branch":"Masculino",
+              },
+              {
+                "first_name": "Clark",
+                "middle_name": "Superman, but 2024",
                 "last_names":"Kent",
                 "short_bio":"Up, Up, and Away",
                 "height_feet":7,

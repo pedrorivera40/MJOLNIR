@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mx-auto" outlined>								
+    <v-card class="mx-auto" outlined @click="goToAthlete">								
         <v-container>
             <v-row>
                 <v-col md=3>
