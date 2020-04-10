@@ -8,23 +8,16 @@
       <v-spacer />
 
       <v-icon class="mr-2">mdi-account-circle</v-icon>
-      {{$auth.user.User.username}}
 
+      {{user}}
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn 
-            class="ml-2"
-            @click='logout'
-            v-on="on"
-            icon
-          >
+          <v-btn class="ml-2" @click="logout" v-on="on" icon>
             <v-icon>mdi-logout</v-icon>
           </v-btn>
         </template>
-      <span>Logout</span>
+        <span>Logout</span>
       </v-tooltip>
-
-      
     </v-app-bar>
 
     <v-navigation-drawer
@@ -59,9 +52,11 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      displayUser: '',
       clipped: false,
       drawer: true,
       fixed: false,
@@ -107,6 +102,19 @@ export default {
       rightDrawer: false,
       title: "Vuetify.js"
     };
+  }, methods: {
+    ...mapActions({
+        logout: 'userAuth/logout',
+        setUser: 'userAuth/setUser'
+    }),
+  },
+  computed: {
+    ...mapGetters({
+      user: 'userAuth/user'
+    })
+  },
+  mounted(){
+    this.setUser()
   }
 };
 </script>

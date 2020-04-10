@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
+import { mapActions, mapGetters } from "vuex"
 export default {
   midleware: 'guest',
   layout: 'guest',
