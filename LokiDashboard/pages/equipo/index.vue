@@ -290,9 +290,7 @@ export default {
       
       this.buildYearList()
       this.buildDefaultValues()
-      console.log("BEFORE BUILDING:"+this.headers)
       this.buildTable()
-      console.log("AFTER BUILDING:"+this.headers)
       this.getSeasonData()
       
     }, 
@@ -382,7 +380,7 @@ export default {
             console.log("Will Remove Team("+this.current_team.team_id+")")
         },
 			getSeasonData(){
-        console.log(this.season)
+        //console.log(this.season)
 				if(this.season!=''){
           //This line below will later be modified to fetch data from a file.
           if(this.season == 2020){
