@@ -535,10 +535,6 @@ def pbp_end():
 
     return jsonify(ERROR="Bad request, client must pass event_id only, within the body."), 400
 
-
-# Launch app.
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
 # ===================================================================================
 # =======================//VOLLEYBALL RESULTS ROUTES//===============================
 # ===================================================================================
