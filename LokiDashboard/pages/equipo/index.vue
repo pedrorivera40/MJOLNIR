@@ -34,6 +34,9 @@
               <v-btn class="mr-4" @click="goToEditTeam" color="green darken-1">Editar Equipo</v-btn>
             </v-col>
             <v-col md=3 align="end">
+              <v-btn class="mr-4" @click="removeTeam" color="green darken-1">Remover Equipo</v-btn>
+            </v-col>
+            <v-col md=3 align="end">
               <v-btn class="mr-4" @click="goToCreateTeam" color="green darken-1">Añadir Equipo +</v-btn>
             </v-col>
           </v-row>
@@ -63,7 +66,7 @@
 				
 						<v-card class="mx-auto" outlined>								
 							<v-container>
-                <v-row>
+                <!-- <v-row>
                   <v-carousel
                   cycle
                   hide-delimiters
@@ -72,12 +75,17 @@
                     <v-carousel-item
                       v-for="(team,i) in teams"
                       :key="i"
-                      :src="team.team_image_link"
+                      :src="team.team_image_url"
                     ></v-carousel-item>
                   </v-carousel>		
+                </v-row> -->
+                <v-row>
+                  <v-img :src="current_team.team_image_url" aspect-ratio="2"> 
+                  </v-img>
                 </v-row>
 								<v-row>
 									<v-col>
+                    <!-- TODO: (herbert) Hide this if there is no about team. -->
 										<h2> Sobre el Equipo: </h2>
 										<p>
 											{{current_team.about_team}}
@@ -150,6 +158,8 @@
                 POR EQUIPO
             </v-tab>
 
+            <!-- TODO: need to make it so the table "by athlete" has the season statistics OF EACH ATHLETE. Show athlete name and maaaybe pic. -->
+            <!-- TODO: need to make it so the table "by team" doesnt have date, just the general statistics of the team for the season. -->
             <v-tab-item>				
                 <v-card flat>
                   <v-data-table 
@@ -251,22 +261,22 @@ export default {
           {
             team_id: 1,
             season_year: 2020,
-            team_image_link: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/85226550_3003297953092352_1360046190787297280_o.jpg?_nc_cat=107&_nc_sid=cdbe9c&_nc_oc=AQmakM3rR18YLUFlI8ZRraQEU8mHM4f2V-1UI3Dv5eo-C3XwYGCO7mkelEfv3qWOem0&_nc_ht=scontent-mia3-2.xx&oh=1ef35fa1c82cd0fe716b8ccde133d9e7&oe=5EB4A8D7',
+            team_image_url: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/85226550_3003297953092352_1360046190787297280_o.jpg?_nc_cat=107&_nc_sid=cdbe9c&_nc_oc=AQmakM3rR18YLUFlI8ZRraQEU8mHM4f2V-1UI3Dv5eo-C3XwYGCO7mkelEfv3qWOem0&_nc_ht=scontent-mia3-2.xx&oh=1ef35fa1c82cd0fe716b8ccde133d9e7&oe=5EB4A8D7',
           },
           {
             team_id: 2,
             season_year: 2021,
-            team_image_link: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53308974_2150741998347956_5929499645469261824_o.jpg?_nc_cat=102&_nc_sid=cdbe9c&_nc_oc=AQkRydUsowo3pUMMVoN8KdZMqSWP60zWLGlFYgOQLJhN6eH2SAQB01cyGsigTmasvv0&_nc_ht=scontent-mia3-2.xx&oh=7fc8133a08a2c9e049dedbbc689d62a3&oe=5EB5C2E2',
+            team_image_url: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53308974_2150741998347956_5929499645469261824_o.jpg?_nc_cat=102&_nc_sid=cdbe9c&_nc_oc=AQkRydUsowo3pUMMVoN8KdZMqSWP60zWLGlFYgOQLJhN6eH2SAQB01cyGsigTmasvv0&_nc_ht=scontent-mia3-2.xx&oh=7fc8133a08a2c9e049dedbbc689d62a3&oe=5EB5C2E2',
           },
           {
             team_id: 3,
             season_year: 2022,
-            team_image_link: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/89775037_3018436938245120_7244710629703942144_o.jpg?_nc_cat=103&_nc_sid=cdbe9c&_nc_oc=AQm3OioI29F5kvicCjSrascjVapegmU7TrqInUzAdUK_Odqr1yFkNqxgzUcondMhuuo&_nc_ht=scontent-mia3-2.xx&oh=eb53711a5de3d73ace11e40f4f663c11&oe=5EB4540F',
+            team_image_url: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/89775037_3018436938245120_7244710629703942144_o.jpg?_nc_cat=103&_nc_sid=cdbe9c&_nc_oc=AQm3OioI29F5kvicCjSrascjVapegmU7TrqInUzAdUK_Odqr1yFkNqxgzUcondMhuuo&_nc_ht=scontent-mia3-2.xx&oh=eb53711a5de3d73ace11e40f4f663c11&oe=5EB4540F',
           },
           {
             team_id: 4,
             season_year: 2023,
-            team_image_link: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53255400_2150742488347907_5032536115572113408_o.jpg?_nc_cat=110&_nc_sid=cdbe9c&_nc_oc=AQlAZzUmMDbfLqJXSfAOlDAoP7_pyp58sPqPJ1MLE9-JgUtmldcr3NEq3OcNJMZEgt8&_nc_ht=scontent-mia3-2.xx&oh=9ca5fa4bb6ee0bdc1acb52841855cf6f&oe=5EB61445',
+            team_image_url: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53255400_2150742488347907_5032536115572113408_o.jpg?_nc_cat=110&_nc_sid=cdbe9c&_nc_oc=AQlAZzUmMDbfLqJXSfAOlDAoP7_pyp58sPqPJ1MLE9-JgUtmldcr3NEq3OcNJMZEgt8&_nc_ht=scontent-mia3-2.xx&oh=9ca5fa4bb6ee0bdc1acb52841855cf6f&oe=5EB61445',
           },
         ],
 
@@ -304,10 +314,14 @@ export default {
             this.$router.push('/equipo/create/')
         },
       goToAddMembers(){
-            this.$router.push('/equipo/members/add/')
+            this.$router.push('/equipo/miembros/add/')
         },
+      // TODO: Implement the removes so they probly create a pop up for confirmation?
       removeMember(athlete_id){
             console.log("Will Remove Athlete("+athlete_id+") from Team("+this.current_team.team_id+")")
+        },
+      removeTeam(){
+            console.log("Will Remove Team("+this.current_team.team_id+")")
         },
 			getSeasonData(){
         console.log(this.season)
@@ -315,9 +329,10 @@ export default {
           //This line below will later be modified to fetch data from a file.
           if(this.season == 2020){
             this.current_team = {
-              team_id: 1,
-              season_year: 2020,
-              team_image_link: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/85226550_3003297953092352_1360046190787297280_o.jpg?_nc_cat=107&_nc_sid=cdbe9c&_nc_oc=AQmakM3rR18YLUFlI8ZRraQEU8mHM4f2V-1UI3Dv5eo-C3XwYGCO7mkelEfv3qWOem0&_nc_ht=scontent-mia3-2.xx&oh=1ef35fa1c82cd0fe716b8ccde133d9e7&oe=5EB4A8D7',
+              "team_id": 1,
+              "season_year": 2020,
+              "team_image_url": "https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/85226550_3003297953092352_1360046190787297280_o.jpg?_nc_cat=107&_nc_sid=cdbe9c&_nc_oc=AQmakM3rR18YLUFlI8ZRraQEU8mHM4f2V-1UI3Dv5eo-C3XwYGCO7mkelEfv3qWOem0&_nc_ht=scontent-mia3-2.xx&oh=1ef35fa1c82cd0fe716b8ccde133d9e7&oe=5EB4A8D7",
+              "about_team": "We are the best team of 2020",
             }
             this.members = {"members":[
               {
@@ -388,9 +403,10 @@ export default {
           } 
           else if(this.season==2021){
             this.current_team = {
-              team_id: 2,
-              season_year: 2021,
-              team_image_link: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53308974_2150741998347956_5929499645469261824_o.jpg?_nc_cat=102&_nc_sid=cdbe9c&_nc_oc=AQkRydUsowo3pUMMVoN8KdZMqSWP60zWLGlFYgOQLJhN6eH2SAQB01cyGsigTmasvv0&_nc_ht=scontent-mia3-2.xx&oh=7fc8133a08a2c9e049dedbbc689d62a3&oe=5EB5C2E2',
+              "team_id": 2,
+              "season_year": 2021,
+              "team_image_url": "https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53308974_2150741998347956_5929499645469261824_o.jpg?_nc_cat=102&_nc_sid=cdbe9c&_nc_oc=AQkRydUsowo3pUMMVoN8KdZMqSWP60zWLGlFYgOQLJhN6eH2SAQB01cyGsigTmasvv0&_nc_ht=scontent-mia3-2.xx&oh=7fc8133a08a2c9e049dedbbc689d62a3&oe=5EB5C2E2",
+              "about_team": "We are the best team of 2021",
             }
             this.members = {"members":[
               {
@@ -440,9 +456,10 @@ export default {
           } 
           else if(this.season==2022){
             this.current_team ={
-                team_id: 3,
-                season_year: 2022,
-                team_image_link: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/89775037_3018436938245120_7244710629703942144_o.jpg?_nc_cat=103&_nc_sid=cdbe9c&_nc_oc=AQm3OioI29F5kvicCjSrascjVapegmU7TrqInUzAdUK_Odqr1yFkNqxgzUcondMhuuo&_nc_ht=scontent-mia3-2.xx&oh=eb53711a5de3d73ace11e40f4f663c11&oe=5EB4540F',
+                "team_id": 3,
+                "season_year": 2022,
+                "team_image_url": "https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/89775037_3018436938245120_7244710629703942144_o.jpg?_nc_cat=103&_nc_sid=cdbe9c&_nc_oc=AQm3OioI29F5kvicCjSrascjVapegmU7TrqInUzAdUK_Odqr1yFkNqxgzUcondMhuuo&_nc_ht=scontent-mia3-2.xx&oh=eb53711a5de3d73ace11e40f4f663c11&oe=5EB4540F",
+                "about_team": "We are the best team of 2022",
               }
             this.members = {"members":[
               {
@@ -492,9 +509,10 @@ export default {
           } 
           else if(this.season==2023){
             this.current_team = {
-              team_id: 4,
-              season_year: 2023,
-              team_image_link: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53255400_2150742488347907_5032536115572113408_o.jpg?_nc_cat=110&_nc_sid=cdbe9c&_nc_oc=AQlAZzUmMDbfLqJXSfAOlDAoP7_pyp58sPqPJ1MLE9-JgUtmldcr3NEq3OcNJMZEgt8&_nc_ht=scontent-mia3-2.xx&oh=9ca5fa4bb6ee0bdc1acb52841855cf6f&oe=5EB61445',
+              "team_id": 4,
+              "season_year": 2023,
+              "team_image_url": "https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53255400_2150742488347907_5032536115572113408_o.jpg?_nc_cat=110&_nc_sid=cdbe9c&_nc_oc=AQlAZzUmMDbfLqJXSfAOlDAoP7_pyp58sPqPJ1MLE9-JgUtmldcr3NEq3OcNJMZEgt8&_nc_ht=scontent-mia3-2.xx&oh=9ca5fa4bb6ee0bdc1acb52841855cf6f&oe=5EB61445",
+              "about_team": "We are the best team of 2023",
             }
             this.members = {"members":[
               {

@@ -13,7 +13,7 @@
                         <v-row>      
                             <div>                  
                             <h2>
-                                Año de Temporada:
+                                Temporada:
                             </h2>
                             </div> 
                         </v-row>
@@ -70,7 +70,7 @@
                                 v-model="about_team"                      
                                 :counter="1000"
                                 :error-messages="errors"
-                                label="Sobre el Equipo"
+                                label="Breve Descripcion Del Equipo"
                                 auto-grow
                                 rows = "3"
                                 outlined
