@@ -62,6 +62,12 @@ export default {
   */
   auth: {
     strategies: {
+      redirect: {
+        login: '/login',
+        logout: '/',
+        callback: '/dashboard',
+        home: '/dashboard'
+      },
       local: {
         endpoints: {
           login: { url: 'auth/', method: 'post', propertyName: 'auth.token' },
@@ -73,6 +79,14 @@ export default {
         autoFetchUser: false,
       }
     }
+  },
+  /**
+   * Router module configuration
+   */
+  router: {
+    middleware: [
+      'auth' //sets global guard. All routes requires auth, unless explicitly stated otherwise.
+    ]
   },
   /*
   ** vuetify module configuration

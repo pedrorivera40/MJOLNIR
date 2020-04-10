@@ -46,7 +46,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex"
 export default {
-  midleware: 'guest',
+  auth: 'guest',
   layout: 'guest',
   data() {
     return {
