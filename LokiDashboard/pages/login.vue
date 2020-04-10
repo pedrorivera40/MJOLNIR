@@ -32,7 +32,10 @@
       <v-card-actions>
         <a color="warning" class="ml-6">Forgot Password?</a>
         <v-spacer />
+        <v-progress-circular v-if="isLoading" indeterminate color="primary_light"
+          class="ma-5 mr-8"></v-progress-circular>
         <v-btn
+          v-else
           dark
           color="primary_light"
           class="ma-5"
@@ -44,10 +47,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex"
+import { mapActions, mapGetters } from "vuex";
 export default {
-  auth: 'guest',
-  layout: 'guest',
+  auth: "guest",
+  layout: "guest",
   data() {
     return {
       show: false,
@@ -57,9 +60,14 @@ export default {
   },
   methods: {
     ...mapActions({
-      login: 'userAuth/login'
+      login: "userAuth/login"
     })
   },
+  computed: {
+    ...mapGetters({
+      isLoading: "userAuth/isLoading"
+    })
+  }
 };
 </script>
 
