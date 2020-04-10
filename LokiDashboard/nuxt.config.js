@@ -135,7 +135,10 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend(config, ctx) {
+    transpile: [
+      "vee-validate/dist/rules"
+    ],
+    extend (config, ctx) {
     }
   }
 }

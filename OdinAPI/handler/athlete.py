@@ -28,8 +28,11 @@ class AthleteHandler:
         result['dBirth'] = record[7]
         result['school'] = record[8]
         result['number'] = record[9]
-        result['profilePicLink'] = record[10]
-        result['sportName'] = record[11]        
+        result['yearOfStudy'] = record[10]
+        result['yearsOfParticipation'] = record[11]
+        result['profilePicLink'] = record[12]
+        result['sportName'] = record[13]        
+
         return result
 
     def mapAthleteWithPositionsAndCategoriesToDict(self,records):
@@ -60,10 +63,10 @@ class AthleteHandler:
         positions = {}
         categories = {}
         for record in records:
-            if record[12]:#Holds the position of the athlete if not null.
-                positions.update(dict(((record[12],record[13]),)))
-            if record[14]:#Holds the category of the athlete if not null.
-                categories.update(dict(((record[14],record[15]),)))
+            if record[14]:#Holds the position of the athlete if not null.
+                positions.update(dict(((record[14],record[15]),)))
+            if record[16]:#Holds the category of the athlete if not null.
+                categories.update(dict(((record[16],record[17]),)))
         
         result.update(dict((('athlete_positions',positions),)))
         result.update(dict((('athlete_categories',categories),)))
@@ -126,7 +129,7 @@ class AthleteHandler:
             result = dao.getAthleteByID(aID)
             if not result:
                 return jsonify(Error = "Athlete with aID:{} not found.".format(aID)),404
-            
+            print(result)
             mappedResult = self.mapAthleteWithPositionsAndCategoriesToDict(result)
             return jsonify(Athlete = mappedResult), 200
         except:
@@ -167,14 +170,17 @@ class AthleteHandler:
             return jsonify(Error = validationResult),400
         
         dao = AthleteDAO()
+
+        aPositions = attributes[12]
+        aCategories = attributes[13]
         try:            
             result = None
             if aPositions and not aCategories:                   
-                result = dao.addAthleteWithPosition(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10])
+                result = dao.addAthleteWithPosition(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10],attributes[11],aPositions)
             elif not aPositions and aCategories:                 
-                result = dao.addAthleteWithCategory(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[11])
+                result = dao.addAthleteWithCategory(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10],attributes[11],aCategories)
             else:
-                result = dao.addAthlete(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9])
+                result = dao.addAthlete(sID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10],attributes[11])
             
             if isinstance(result,str):#If true, result will contain the error message.
                 return jsonify(Error = result),400
@@ -205,15 +211,15 @@ class AthleteHandler:
         validationResult = self._validateAttributesList(attributes)
         if isinstance(validationResult,str):
             return jsonify(Error = validationResult),400               
-        dao = AthleteDAO()
+       
         try:            
-            result = dao.editAthlete(aID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10],attributes[11])
+            result = AthleteDAO().editAthlete(aID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4],attributes[5],attributes[6],attributes[7],attributes[8],attributes[9],attributes[10],attributes[11],attributes[12],attributes[13])
             if isinstance(result,str):
                 return jsonify(Error = result),400
             
             return jsonify(Athlete = "Edited athlete with id: {}".format(result)),200
-        except:
-            return jsonify(Error = "Problem ocurred when updating an athlete."),400
+        except Exception as e:
+            return jsonify(Error = str(e)),400
     
     def removeAthlete(self,aID):
         """
@@ -253,7 +259,7 @@ class AthleteHandler:
 
         if not isinstance(attributes,list):
             return "The attributes of the athlete must be in a list."
-        if not len(attributes) == 12:
+        if not len(attributes) == 14:
             return "The attributes list does not have the correct ammount of elements."
         
         
@@ -267,9 +273,11 @@ class AthleteHandler:
         aDateOfBirth = attributes[6]
         aSchoolOfPrecedence = attributes[7]
         aNumber = attributes[8]
-        aProfilePictureLink = attributes[9]
-        aPositions = attributes[10]
-        aCategories = attributes[11]    
+        aYearOfStudy = attributes[9]
+        aYearsOfParticipation = attributes[10]
+        aProfilePictureLink = attributes[11]
+        aPositions = attributes[12]
+        aCategories = attributes[13]    
    
         #Validation of inputs 
         if not aFName or not isinstance(aFName,str) or len(aFName)<2 or len(aFName)>20 or not aFName.isalpha():
@@ -287,7 +295,7 @@ class AthleteHandler:
                 return "Athlete bio given does nto follow the constraints."
 
         if aHeight:
-            if not isinstance(aBio,float):
+            if not isinstance(aHeight,float):
                 return "The height given is not a real number."
 
         if aStudyProgram:
@@ -306,11 +314,19 @@ class AthleteHandler:
             if not isinstance(aNumber,int):
                 return "The number of the athlete must be an integer."
 
+        if aYearOfStudy:
+            if not isinstance(aYearOfStudy,int) or aYearOfStudy < 1 or aYearOfStudy > 15:
+                return "The number of the athlete must be an integer."
+
+        if aYearsOfParticipation:
+            if not isinstance(aYearsOfParticipation,int) or aYearsOfParticipation < 1 or aYearsOfParticipation > 4 :
+                return "The number of the athlete must be an integer."
+
         if aProfilePictureLink:
             if not isinstance(aProfilePictureLink,str):
                 return "The profile picture link must be a string."
 
-        if aPositions:
+        if aPositions:            
             if not isinstance(aPositions,dict):
                 return "Positions must be in dictionary."
 

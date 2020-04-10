@@ -89,27 +89,33 @@
                 cols="1"
                 md="3"
             	>
-               <v-select
-                    v-model="teamSport"
-                    :items="sportsList"
-                    name="sportName"                    
-                    label ="Deporte del Equipo"
-                    item-text="sportName"
-                    item-value="id"                    
-                    prepend-icon=""
-                ></v-select>
+               <ValidationProvider v-slot="{ errors }" name="Deporte del equipo" rules="required">
+                <v-select
+                      v-model="teamSport"
+                      :items="sportsList"
+                      :error-messages="errors"
+                      name="sportName"                    
+                      label ="Deporte del Equipo"
+                      item-text="sportName"
+                      item-value="id"                    
+                      prepend-icon=""
+                  ></v-select>
+               </ValidationProvider>
               </v-col>
 
               <v-col
                 cols="1"
                 md="3"
             	>
-               <v-select
-                    v-model="year"
-                    :items="yearList"                                       
-                    label ="A~no del equipo"                                        
-                    prepend-icon=""
-                ></v-select>
+               <ValidationProvider v-slot="{ errors }" name="A~no del equipo" rules="required">
+                <v-select
+                      v-model="year"
+                      :error-messages="errors"
+                      :items="yearList"                                       
+                      label ="A~no del equipo"                                        
+                      prepend-icon=""
+                  ></v-select>
+               </ValidationProvider>
               </v-col>
 
             </v-row>
@@ -138,14 +144,41 @@
                 </ValidationProvider>
               </v-col>
             </v-row>
+            <v-row>
+              <v-col
+                cols="1"
+                md="3"
+              >	
+
+                <h2>Resumen de Evento:</h2>
+                
+              </v-col>
+
+              <v-col
+                cols="12"
+                md="9"
+              >
+                <ValidationProvider v-slot="{ errors }" name="Resumen" rules="max:250">
+                  <v-textarea
+                    v-model="eventSummary"                      
+                    :counter="250"
+                    :error-messages="errors"
+                    label="Resumen"
+                    auto-grow
+                    rows = "2"
+                    outlined
+                  ></v-textarea>
+                </ValidationProvider>
+              </v-col>
+            </v-row>
 
 
             <v-row>
               <v-spacer/>
               <v-spacer/>
               <v-col>
-                <v-btn class="mr-4" @click="submit">submit</v-btn>
-                <v-btn @click="clear">clear</v-btn>
+                <v-btn color="green darken-1" dark class="mr-4" @click="submit">Someter</v-btn>
+                <v-btn @click="clear">Borrar</v-btn>
               </v-col>
             </v-row>
             
@@ -202,6 +235,7 @@
 			venue:'',
 			teamSport:'',		
       opponent_name:'',
+      eventSummary:'',
       yearList:[],
       year:'',
       sportsList:[], 
