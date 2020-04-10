@@ -9,7 +9,9 @@
 
       <v-icon class="mr-2">mdi-account-circle</v-icon>
 
-      {{user}}
+      <v-label dark v-if="user!== null">
+        {{user.username}}
+      </v-label>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn class="ml-2" @click="logout" v-on="on" icon>
