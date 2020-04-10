@@ -515,6 +515,33 @@ class AthleteDAO:
         if not cursor.fetchone():
             exists = False
         return exists
+    
+    def getAthleteSportByID(self,aID):
+        """
+        Returns the id of the sport in which the 
+        athlete participates.
+
+        Performs a simple fetch query to return the id
+        of the sport in which the athlete participates.
+
+        Args:
+            aID: The id of the athlete.
+        Returns:
+            The id of the sport in which the athlete
+            participates.
+        """
+        cursor = self.conn.cursor()
+        query = """select sport_id
+                   from athlete
+                   where id=%s
+                   and is_invalid=false
+                """
+        try:
+            cursor.execute(query,(aID,))
+            result = cursor.fetchone()
+            return result
+        except Exception as e:
+            return "Problem ocurred when fetching the sport id of an athlete." + str(e) 
 
     def commitChanges(self):
         """
