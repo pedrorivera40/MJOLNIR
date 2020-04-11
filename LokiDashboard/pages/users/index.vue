@@ -52,7 +52,6 @@ export default {
         { text: "Username", value: "username" },
         { text: "Email", value: "email" },
         { text: "Account Status", value: "is_active" },
-        { text: "Iron (%)", value: "iron" }
       ]
     };
   },
