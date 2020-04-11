@@ -15,12 +15,12 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+  import { mapState } from 'vuex';
   export default {
     name: 'TheSnackbar',
     computed: {
-      ...mapGetters({
-        snackbars: 'notifications/snackbars'
+      ...mapState({
+        snackbars: state => state.notifications.snackbars
       })
     },    
   }
