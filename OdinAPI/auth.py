@@ -106,7 +106,7 @@ def generateToken(username):
     # Create a JWT token
     payload = {
         'user': username,
-        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=3),
+        'exp': datetime.datetime.utcnow()+datetime.timedelta(hours=3),
         'iat': datetime.datetime.utcnow()
     }
     token = jwt.encode(payload, os.getenv('SECRET_KEY'), algorithm='HS256')

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 
 from flask_cors import CORS
 import os
@@ -26,7 +26,9 @@ load_dotenv()
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+app.secret_key = 'any random string'
+
+CORS(app)
 
 
 def token_check(func):
@@ -126,21 +128,22 @@ def auth():
             
         username = req['username']
         password = req['password'] # TODO: AES Encryption
-        
         return handler.login(username, password)
-        
-@app.route("/test/", methods=['get'])
-def test():
-    if request.method == 'get':
-        handler = UserHandler() 
+@app.route("/auth/user", methods=['GET'])
+def userSession():
+    if request.method == 'GET':
+        if 'username' in session:
+            return jsonify(User=session['username'])
+        return jsonify(Error='Could not get session')
 
-        if 'username' not in request.json or 'password' not in request.json:
-            return jsonify(Error='Bad Request'), 400
-
-        username = request.json['username']
-        password = request.json['password'] # TODO: AES Encryption
+@app.route("/auth/drop", methods=['GET'])
+def dropSession():
+    if request.method == 'GET':
+        if 'username' in session:
+            session.pop('username', None)
+            return jsonify(Message='Session droped.')
+        return jsonify(Error='Could not drop session')
         
-        return handler.login(username, password)
 
 ###########################################
 #--------- Dashboard User Routes ---------#
