@@ -262,7 +262,9 @@ def eventsById(eID):
     if request.method == 'GET':
         return handler.getEventByID(eID)
     elif request.method == 'PUT':
-        json = request.json
+        json = request.json        
+        if 'attributes' not in json:
+            return jsonify(Error = "Bad arguments"),400            
         return handler.editEvent(eID, json['attributes'])
     elif request.method == 'DELETE':
         return handler.removeEvent(eID)
@@ -275,6 +277,8 @@ def teamEvents(tID):
         return handler.getEventsByTeam(tID)
     elif request.method == 'POST':
         json = request.json
+        if 'attributes' not in json:
+            return jsonify(Error = "Bad arguments"),400
         return handler.addEvent(tID, json['attributes'])
 
 

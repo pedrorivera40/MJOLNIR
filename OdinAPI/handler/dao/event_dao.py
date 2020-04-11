@@ -30,7 +30,7 @@ class EventDAO:
         """  
         cursor = self.conn.cursor()
         
-        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.opponent_color,S.name,B.name,F.local_score,F.opponent_score
+        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.event_summary,S.name,S.sport_image_url,B.name,F.local_score,F.opponent_score
                    from (event as E inner join ((sport as S inner join branch as B on S.branch_id=B.id) inner join team as T on S.id=T.sport_id) on E.team_id=T.id) full outer join final_score as F on F.event_id=E.id
                    where E.is_invalid=false
                    and T.is_invalid=false
@@ -69,7 +69,7 @@ class EventDAO:
             id as a participant.
         """
         cursor = self.conn.cursor()
-        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.opponent_color,S.name,B.name,F.local_score,F.opponent_score
+        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.event_summary,S.name,S.sport_image_url,B.name,F.local_score,F.opponent_score
                    from (event as E inner join ((sport as S inner join branch as B on S.branch_id=B.id) inner join team as T on S.id=T.sport_id) on E.team_id=T.id) full outer join final_score as F on F.event_id=E.id
                    where E.is_invalid=false
                    and T.is_invalid=false
@@ -105,7 +105,7 @@ class EventDAO:
             the database that has the id given.
         """
         cursor = self.conn.cursor()
-        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.opponent_color,S.name,B.name
+        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.event_summary,S.name,S.sport_image_url,B.name
                    from (event as E inner join ((sport as S inner join branch as B on S.branch_id=B.id) inner join team as T on S.id=T.sport_id) on E.team_id=T.id)
                    where E.is_invalid=false
                    and T.is_invalid=false
@@ -154,7 +154,7 @@ class EventDAO:
         except:
             return "A problem ocurred when fetching the team id."
 
-    def addEvent(self,tID,eventDate,isLocal,venue,opponentName,opponentColor):
+    def addEvent(self,tID,eventDate,isLocal,venue,opponentName,eventSummary):
         """
         Adds a new event into the database with the information given.
 
@@ -168,19 +168,19 @@ class EventDAO:
             isLocal: Designates if the game is local.
             venue: The venue for the event.            
             opponentName: The name of the opponent team.
-            opponentColor: The color of the opponent team.
+            eventSummary: A summary of the event.
         Returns:
             The id of the newly added event.
         """
         cursor = self.conn.cursor()
 
-        query = """insert into event(team_id,event_date,is_local,venue,opponent_name,opponent_color,is_invalid)
+        query = """insert into event(team_id,event_date,is_local,venue,opponent_name,event_summary,is_invalid)
                    values(%s,%s,%s,%s,%s,%s,false)
                    returning id;
                 """
         
         try:
-            cursor.execute(query,(tID,eventDate,isLocal,venue,opponentName,opponentColor,))
+            cursor.execute(query,(tID,eventDate,isLocal,venue,opponentName,eventSummary,))
             eID = cursor.fetchone()[0]
             if not eID:
                 return "Insert query failed."
@@ -193,7 +193,7 @@ class EventDAO:
 
 
        
-    def editEvent(self,eID,eventDate,isLocal,venue,opponentName,opponentColor):
+    def editEvent(self,eID,eventDate,isLocal,venue,opponentName,eventSummary):
         """
         Updates an existing event in the database.        
 
@@ -207,7 +207,7 @@ class EventDAO:
             isLocal: Designates if the game is local.
             venue: The venue for the event.            
             opponentName: The name of the opponent team.
-            opponentColor: The color of the opponent team.            
+            eventSummary: A summary of the event.            
         Returns:
             The id of the newly updated event.
         """
@@ -217,13 +217,13 @@ class EventDAO:
                        is_local=%s,
                        venue=%s,
                        opponent_name=%s,
-                       opponent_color=%s
+                       event_summary=%s
                    where id=%s
                    and is_invalid=false                   
                    returning id;
                 """
         try:
-            cursor.execute(query,(eventDate,isLocal,venue,opponentName,opponentColor,eID,))
+            cursor.execute(query,(eventDate,isLocal,venue,opponentName,eventSummary,eID,))
 
             eid = cursor.fetchone()[0]       
 
