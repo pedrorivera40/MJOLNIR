@@ -32,7 +32,9 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <a color="warning" class="ml-6">Forgot Password?</a>
+        <nuxt-link class="ml-6" to="/reset">
+          Forgot Password?
+        </nuxt-link>
         <v-spacer />
         <v-progress-circular v-if="isLoading" indeterminate color="primary_light"
           class="ma-5 mr-8"></v-progress-circular>

@@ -11,11 +11,16 @@ export default {
     }
   },
   async setUser({commit}){
-    console.log('inSetUser')
     const user = JSON.parse(localStorage.getItem('user'))
     await this.$auth.setUser(user)
     
     commit("SET_USER_DATA_ON_RELOAD")
+  },
+  async reset({commit}, credentials){
+    const user = await this.$axios.post('users/username/', {username: credentials.username}) //call get user by username to set auth user.
+    const id = user.data.User.id
+    
+    console.log()
   },
   logout({ commit }) {
     commit("CLEAR_USER_DATA")

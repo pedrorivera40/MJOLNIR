@@ -17,8 +17,15 @@ const passwordFormat = () => {
   return v => regex.test(v) || "Password must contain at least: 1 upercase, 1 lowercase, 1 number, and 1 special character."
 }
 
+const passwordMatch = (password) => {
+  return v => v === password || "Password does not match."
+
+}
+
 export default {
   required,
   minLength,
   maxLength,
+  passwordFormat,
+  passwordMatch
 }
