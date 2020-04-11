@@ -36,11 +36,9 @@
           Forgot Password?
         </nuxt-link>
         <v-spacer />
-        <v-progress-circular v-if="isLoading" indeterminate color="primary_light"
-          class="ma-5 mr-8"></v-progress-circular>
         <v-btn
-          v-else
           dark
+          :loading="isLoading"
           color="primary_light"
           class="ma-5"
           @click="login({username: username, password: password})"
