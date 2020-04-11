@@ -24,7 +24,7 @@ export default {
   },
 
   DONE_LOADING(state){
-    state.isLoading = true;
+    state.isLoading = false;
   },
 
 }
