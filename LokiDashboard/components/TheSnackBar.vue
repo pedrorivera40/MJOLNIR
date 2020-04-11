@@ -6,7 +6,7 @@
       v-model="snackbar.showing"
       :timeout="snackbar.timeout"
       :color="snackbar.color"
-      :style="`bottom: ${(index * 60) + 8}px`"
+      :style="`bottom: ${(index * 60) + 40}px`"
     >
       {{snackbar.text}}
       <v-btn text @click="snackbar.showing = false">Close</v-btn>
@@ -15,13 +15,13 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
+  import { mapState, mapActions } from 'vuex';
   export default {
     name: 'TheSnackbar',
     computed: {
       ...mapState({
         snackbars: state => state.notifications.snackbars
       })
-    },    
+    },
   }
 </script>
