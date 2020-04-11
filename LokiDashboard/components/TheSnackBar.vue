@@ -6,6 +6,7 @@
       v-model="snackbar.showing"
       :timeout="snackbar.timeout"
       :color="snackbar.color"
+      :multiline="snackbar.multiline"
       :style="`bottom: ${(index * 60) + 40}px`"
     >
       {{snackbar.text}}
