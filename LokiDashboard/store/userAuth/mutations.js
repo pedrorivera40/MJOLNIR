@@ -23,4 +23,8 @@ export default {
     state.isLoading = true;
   },
 
+  DONE_LOADING(state){
+    state.isLoading = true;
+  },
+
 }
