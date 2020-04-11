@@ -25,9 +25,13 @@ class EventHandler:
         result['venue'] = record[3]
         result['team_id'] = record[4]
         result['opponent_name'] = record[5]
-        result['opponent_color'] = record[6]
+        result['event_summary'] = record[6]
         result['sport_name'] = record[7]
-        result['branch'] = record[8]
+        result['sport_img_url'] = record[8]
+        result['branch'] = record[9]
+
+        if 'Voleibol' in record[7]:
+            result['hasPBP'] = self._pbp_exists(record[0])
 
         return result
 
@@ -56,11 +60,16 @@ class EventHandler:
         result['venue'] = record[3]
         result['team_id'] = record[4]
         result['opponent_name'] = record[5]
-        result['opponent_color'] = record[6]
+        result['event_summary'] = record[6]
         result['sport_name'] = record[7]
-        result['branch'] = record[8]
-        result['local_score'] = record[9]
-        result['opponent_score'] = record[10]
+        result['sport_img_url'] = record[8]
+        result['branch'] = record[9]
+        result['local_score'] = record[10]
+        result['opponent_score'] = record[11]
+
+        if 'Voleibol' in record[7]:
+            result['hasPBP'] = self._pbp_exists(record[0])
+
         return result
 
     def getAllEvents(self):
@@ -266,7 +275,7 @@ class EventHandler:
             isLocal = attributes[1]
             venue = attributes[2]            
             opponentName = attributes[3]
-            opponentColor = attributes[4] 
+            eventSummary = attributes[4] 
 
             if not eventDate or not isinstance(eventDate,str):
                 return "Invalid date given."
@@ -280,13 +289,30 @@ class EventHandler:
             if opponentName and not isinstance(opponentName,str):
                 return "Invalid opponent name given."               
 
-            if opponentColor and not isinstance(opponentColor,str):
+            if eventSummary and not isinstance(eventSummary,str) and len(eventSummary)>250:
                 return "Invalid opponent color given."
             
             return 1
 
         except:
-            return "Bad argument keys were given."    
+            return "Bad argument keys were given."  
+
+    def _pbp_exists(self,eID):
+        """
+        Mock function of the on found in PBP DAO
+        using it to return true if a volleyball event
+        identified by their id has a pbp sequence.
+
+        Args:
+            eID: The id of the volleyball event.
+        Returns:
+            True if the id matches a predefined one, False otherwise
+        """  
+
+        if eID == 7:
+            return True
+        else:
+            return False
 
     
     
