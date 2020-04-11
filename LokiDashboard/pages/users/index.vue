@@ -4,11 +4,10 @@
     <div class="content-area pa-4 pt-12">
       <v-card>
         <v-card-title>
-          <v-btn
-            color="primary_light"
-            class="white--text"
-          >
-            <v-icon left>mdi-plus</v-icon>
+          <v-btn color="primary_light" class="white--text">
+            <v-icon left>
+              mdi-plus
+            </v-icon>
             Add New User
           </v-btn>
           <v-spacer />
@@ -21,7 +20,16 @@
             hide-details
           />
         </v-card-title>
-        <v-data-table :headers="headers" :items="users" :search="search" :loading="isLoading" />
+        <v-data-table
+          :headers="headers"
+          :items="users"
+          :search="search"
+          :loading="isLoading"
+        >
+          <template v-slot:item.is_active="{ item }">
+            {{setStatus(item.is_active)}}
+          </template>
+        </v-data-table>
       </v-card>
     </div>
   </div>
@@ -45,22 +53,25 @@ export default {
         { text: "Email", value: "email" },
         { text: "Account Status", value: "is_active" },
         { text: "Iron (%)", value: "iron" }
-      ],
+      ]
     };
   },
   methods: {
     ...mapActions({
-      getUsers: 'dashboardUsers/getUsers'
-    })
+      getUsers: "dashboardUsers/getUsers"
+    }),
+    setStatus(status) {
+      return status ? "Active" : "Inactive";
+    }
   },
   computed: {
     ...mapGetters({
-      users: 'dashboardUsers/users',
-      isLoading: 'dashboardUsers/isLoading'
+      users: "dashboardUsers/users",
+      isLoading: "dashboardUsers/isLoading"
     })
   },
-  mounted(){
-    this.getUsers()
+  mounted() {
+    this.getUsers();
   }
 };
 </script>

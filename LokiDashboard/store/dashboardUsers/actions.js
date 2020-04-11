@@ -3,7 +3,6 @@ export default {
     try {
       commit("SET_LOADING")
       const response = await this.$axios.get('users/')
-      console.log(response.data.Users)
       commit("SET_USERS", response.data.Users )
       commit("DONE_LOADING")
 
