@@ -9,9 +9,7 @@
 
       <v-icon class="mr-2">mdi-account-circle</v-icon>
 
-      <v-label dark v-if="user!== null">
-        {{user.username}}
-      </v-label>
+      <v-label dark v-if="user!== null">{{user.username}}</v-label>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn class="ml-2" @click="logout" v-on="on" icon>
@@ -46,6 +44,7 @@
         <nuxt />
       </v-container>
     </v-content>
+    <TheSnackBar />
     <v-footer :fixed="fixed" app>
       <v-spacer />
       <span>MJOLNIR &copy; {{ new Date().getFullYear() }}</span>
@@ -55,10 +54,14 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import TheSnackBar from "@/components/TheSnackBar";
 export default {
+  components: {
+    TheSnackBar
+  },
   data() {
     return {
-      displayUser: '',
+      displayUser: "",
       clipped: false,
       drawer: true,
       fixed: false,
@@ -104,19 +107,20 @@ export default {
       rightDrawer: false,
       title: "Vuetify.js"
     };
-  }, methods: {
+  },
+  methods: {
     ...mapActions({
-        logout: 'userAuth/logout',
-        setUser: 'userAuth/setUser'
-    }),
+      logout: "userAuth/logout",
+      setUser: "userAuth/setUser"
+    })
   },
   computed: {
     ...mapGetters({
-      user: 'userAuth/user'
+      user: "userAuth/user"
     })
   },
-  mounted(){
-    this.setUser()
+  mounted() {
+    this.setUser();
   }
 };
 </script>

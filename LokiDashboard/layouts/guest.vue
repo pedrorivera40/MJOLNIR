@@ -1,15 +1,21 @@
 <template>
   <v-app>
     <v-content>
-    <v-container class="main-container">
-      <nuxt />
-    </v-container>
-  </v-content>
+      <v-container class="main-container">
+        <nuxt />
+      </v-container>
+    </v-content>
+    <TheSnackBar />
   </v-app>
 </template>
 
 <script>
-export default {};
+import TheSnackBar from "@/components/TheSnackBar";
+export default {
+  components: {
+    TheSnackBar,
+  }
+};
 </script>
 
 <style lang="scss" scoped>
