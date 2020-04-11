@@ -7,7 +7,7 @@
       </v-toolbar>
       <v-card-text>
         <v-container>
-          <v-form>
+          <v-form v-model="valid">
             <v-text-field
               label="Username"
               name="login"
@@ -37,8 +37,9 @@
         </nuxt-link>
         <v-spacer />
         <v-btn
-          dark
+          :dark="valid"
           :loading="isLoading"
+          :disabled="!valid"
           color="primary_light"
           class="ma-5"
           @click="login({username: username, password: password})"
