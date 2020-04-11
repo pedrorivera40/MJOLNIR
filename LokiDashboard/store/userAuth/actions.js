@@ -7,7 +7,7 @@ export default {
       await this.$auth.setUser(user.data.User) // Set auth user.
       commit("SET_USER_DATA", response.data.User) 
     } catch (error) {
-      commit("SET_LOADING")
+      commit("DONE_LOADING")
       console.log("Trouble fetching events.", error)
     }
   },
