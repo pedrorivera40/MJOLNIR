@@ -48,7 +48,7 @@
           <template v-slot:item.actions>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-icon small class="mr-2" v-on="on" @click="dialog = !dialog">
+                <v-icon small class="mr-2" v-on="on" @click="dialogEdit = !dialogEdit">
                   mdi-pencil
                 </v-icon>
               </template>
@@ -56,7 +56,7 @@
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-icon small class="mr-2" v-on="on" @click="dialog = !dialog">
+                <v-icon small class="mr-2" v-on="on" @click="dialogPermissions = !dialogPermissions">
                   mdi-shield-lock
                 </v-icon>
               </template>
@@ -64,7 +64,7 @@
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-icon small class="mr-2" v-on="on" @click="dialog = !dialog">
+                <v-icon small class="mr-2" v-on="on" @click="dialogDelete = !dialogDelete">
                   mdi-delete
                 </v-icon>
               </template>
@@ -85,6 +85,7 @@ export default {
     return {
       search: "",
       dialogEdit: false,
+      dialogDelete: false,
       dialogPermissions: false,
       headers: [
         {
