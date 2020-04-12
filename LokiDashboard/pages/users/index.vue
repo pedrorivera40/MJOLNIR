@@ -48,7 +48,7 @@
           <template v-slot:item.actions="{item}">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-icon small class="mr-2" v-on="on" @click="dialogEdit = !dialogEdit">
+                <v-icon small class="mr-2" v-on="on" @click.stop="editUser(item)">
                   mdi-pencil
                 </v-icon>
               </template>
@@ -72,7 +72,8 @@
             </v-tooltip>
           </template>
         </v-data-table>
-        <DeleteUserModal :dialog.sync="dialogDelete" :username="editedItem.username" />
+        <DeleteUserModal :dialog.sync="dialogDelete" :username="editedItem.username" v-on:update:dialog="dialogDelete = $event" />
+        <UpdateUserModal :dialog.sync="dialogEdit"  />
       </v-card>
     </div>
   </div>
@@ -81,6 +82,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import DeleteUserModal from "@/components/DeleteUserModal";
+import UpdateUserModal from "@/components/UpdateUserInfoModal";
 export default {
   data() {
     return {
@@ -119,6 +121,7 @@ export default {
   },
   components: {
     DeleteUserModal,
+    UpdateUserModal
   },
   methods: {
     ...mapActions({
@@ -130,9 +133,15 @@ export default {
     deleteUser(user) {
       this.editedItem = Object.assign({}, user) //This hsit is to not mess with vuex state
       //call vuex action to delete user.
-      
+
       this.dialogDelete = true
-    }
+    },
+    editUser(user) {
+      this.editedItem = Object.assign({}, user) //This hsit is to not mess with vuex state
+      //call vuex action to delete user.
+
+      this.dialogEdit = true
+    },
   },
   computed: {
     ...mapGetters({
