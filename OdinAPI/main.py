@@ -322,9 +322,7 @@ def teamEvents(tID):
 #   	}
 #   	],
 #   "uprm_score": 0,
-#   "opponent_score": 0,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "opponent_score": 0
 # }
 @app.route("/results/basketball/", methods = ['GET','POST'])
 def basketballStatistics():
@@ -402,9 +400,7 @@ def basketballTeamStatistics():
 # { "event_id":3,
 #   "attributes":
 #   {
-#   "local_score":2, "opponent_score":2,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "uprm_score":2, "opponent_score":2
 #   }
 # }
 @app.route("/results/basketball/score/", methods = ['GET','POST','PUT','DELETE'])
@@ -600,9 +596,7 @@ def pbp_end():
 #   	}
 #   	],
 #   "uprm_score": 0,
-#   "opponent_score": 0,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "opponent_score": 0
 # }
 @app.route("/results/volleyball/", methods = ['GET','POST'])
 def volleyballStatistics():
@@ -691,9 +685,7 @@ def volleyballTeamStatistics():
 # { "event_id":3,
 #   "attributes":
 #   {
-#   "local_score":2, "opponent_score":2,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "uprm_score":2, "opponent_score":2
 #   }
 # }
 @app.route("/results/volleyball/score/", methods = ['GET','POST','PUT','DELETE'])
@@ -773,9 +765,7 @@ def volleyballSeasonAthleteStatistics(aid,seasonYear):
 #   	}
 #   	],
 #   "uprm_score": 0,
-#   "opponent_score": 0,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "opponent_score": 0
 # }
 @app.route("/results/soccer/", methods = ['GET','POST'])
 def soccerStatistics():
@@ -858,9 +848,7 @@ def soccerTeamStatistics():
 # { "event_id":3,
 #   "attributes":
 #   {
-#   "local_score":2, "opponent_score":2,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "uprm_score":2, "opponent_score":2
 #   }
 # }
 @app.route("/results/soccer/score/", methods = ['GET','POST','PUT','DELETE'])
@@ -941,9 +929,7 @@ def soccerSeasonAthleteStatistics(aid,seasonYear):
 #   	}
 #   	],
 #   "uprm_score": 0,
-#   "opponent_score": 0,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "opponent_score": 0
 # }
 @app.route("/results/baseball/", methods = ['GET','POST'])
 def baseballStatistics():
@@ -1028,9 +1014,7 @@ def baseballTeamStatistics():
 # { "event_id":3,
 #   "attributes":
 #   {
-#   "local_score":2, "opponent_score":2,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "uprm_score":2, "opponent_score":2
 #   }
 # }
 @app.route("/results/baseball/score/", methods = ['GET','POST','PUT','DELETE'])

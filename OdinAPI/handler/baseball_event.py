@@ -198,7 +198,7 @@ class BaseballEventHandler(EventResultHandler):
         
         result = dict(event_info = event_info, team_statistics = team_statistics, 
         athlete_statistic = athlete_statistics, uprm_score = final_record[0], 
-        opponent_score = final_record[1],opponent_name = final_record[2], opponent_color = final_record[3])
+        opponent_score = final_record[1])
         return result
 
 #===========================//HANDLERS//==================================
@@ -727,8 +727,7 @@ class BaseballEventHandler(EventResultHandler):
                     left_on_base:
                 local_score: the final score for the local uprm team
                 opponent_score: the final score for the opponent team
-                opponent_name: name of the opponent team
-                opponent_color: color to be used for opponent team
+              
             
         Returns:
             A JSON the id for the new Baseball Event record.
@@ -737,8 +736,7 @@ class BaseballEventHandler(EventResultHandler):
         athlete_statistics = attributes['athlete_statistics']
         local_score = attributes['uprm_score']
         opponent_score = attributes['opponent_score']
-        opponent_name = attributes['opponent_name']
-        opponent_color = attributes['opponent_color']
+    
 
         
         # Validate Avoid Duplication Team Stats
@@ -824,7 +822,7 @@ class BaseballEventHandler(EventResultHandler):
         # Create and Validate Final Score entry
         try:
             fs_dao = FinalScoreDAO()
-            result = fs_dao.addFinalScore(eID,local_score, opponent_score, opponent_name, opponent_color)
+            result = fs_dao.addFinalScore(eID,local_score, opponent_score)
             if not result:
                 return jsonify(Error = "Problem inserting new final score record."),500
         except:
