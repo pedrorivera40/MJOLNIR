@@ -50,7 +50,9 @@ export default {
 
   async deleteUser({ commit, dispatch },payload) {
     try {
-      // await this.$axios.patch(`users/${payload.id}/remove`,)
+      console.log(payload.id)
+      await this.$axios.patch(`users/${payload.id}/remove`,)
+      commit("DELETE_USER", payload.id)
       dispatch('notifications/setSnackbar', {text: `${payload.username} has been deleted.`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {

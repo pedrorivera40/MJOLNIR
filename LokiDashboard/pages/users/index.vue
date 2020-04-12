@@ -88,6 +88,7 @@
         </v-data-table>
         <DeleteUserModal
           :dialog.sync="dialogDelete"
+          :id="editedItem.id"
           :username="editedItem.username"
           v-on:update:dialog="dialogDelete = $event"
         />

@@ -15,6 +15,10 @@ export default {
 
   },
 
+  DELETE_USER(state, id){
+    state.users = state.users.filter(users => users.id !== id)
+  },
+  
   SET_LOADING(state, selector){
     if(selector==='users'){
       state.isLoadingU = true
