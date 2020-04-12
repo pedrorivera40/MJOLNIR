@@ -38,7 +38,6 @@
               <v-tabs-slider color="green" />
               <v-tab>{{opponent_team_name}}</v-tab>
               <v-tab>{{uprm_team_name}}</v-tab>
-
               <v-tab-item>
                 <VolleyballStatistics :volleyball_stats="uprm_team_statistics" />
               </v-tab-item>
@@ -55,6 +54,15 @@
               <v-tabs-slider color="green" />
               <v-tab>{{opponent_team_name}}</v-tab>
               <v-tab>{{uprm_team_name}}</v-tab>
+              <v-tab-item>
+                <v-container v-for="athlete in opp_roster" :key="athlete.number">
+                  <PBPRosterEntry
+                    :athlete_name="athlete.name"
+                    :athlete_img="athlete.img"
+                    :athlete_number="athlete.number"
+                  />
+                </v-container>
+              </v-tab-item>
             </v-tabs>
           </v-container>
         </v-tab-item>
@@ -66,11 +74,13 @@
 <script>
 import VolleyballScore from "../../../components/VolleyballScore";
 import VolleyballStatistics from "../../../components/VolleyballStatistics";
+import PBPRosterEntry from "../../../components/PBPRosterEntry";
 
 export default {
   components: {
     VolleyballScore,
-    VolleyballStatistics
+    VolleyballStatistics,
+    PBPRosterEntry
   },
   data: () => ({
     sport_name: "Voleibol",
@@ -116,68 +126,89 @@ export default {
     },
     uprm_roster: [
       {
-        id: 12345,
+        img:
+          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
         name: "Jose Juan Barea",
         number: 11
       },
       {
-        id: 12345,
+        img:
+          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
         name: "Jose Juan Barea",
         number: 11
       },
       {
-        id: 12345,
+        img:
+          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
         name: "Jose Juan Barea",
         number: 11
       },
       {
-        id: 12345,
+        img:
+          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
         name: "Jose Juan Barea",
         number: 11
       },
       {
-        id: 12345,
+        img:
+          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
         name: "Jose Juan Barea",
         number: 11
       },
       {
-        id: 12345,
+        img:
+          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
         name: "Jose Juan Barea",
         number: 11
       },
       {
-        id: 12345,
+        img:
+          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
         name: "Jose Juan Barea",
         number: 11
       }
     ],
     opp_roster: [
       {
-        name: "Jose Juan Barea",
+        img:
+          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
+        name: "Bad Jose Juan Barea",
         number: 11
       },
       {
-        name: "Jose Juan Barea",
+        img:
+          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
+        name: "Bad Jose Juan Barea",
         number: 11
       },
       {
-        name: "Jose Juan Barea",
+        img:
+          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
+        name: "Bad Jose Juan Barea",
         number: 11
       },
       {
-        name: "Jose Juan Barea",
+        img:
+          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
+        name: "Bad Jose Juan Barea",
         number: 11
       },
       {
-        name: "Jose Juan Barea",
+        img:
+          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
+        name: "Bad Jose Juan Barea",
         number: 11
       },
       {
-        name: "Jose Juan Barea",
+        img:
+          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
+        name: "Bad Jose Juan Barea",
         number: 11
       },
       {
-        name: "Jose Juan Barea",
+        img:
+          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
+        name: "Bad Jose Juan Barea",
         number: 11
       }
     ],
