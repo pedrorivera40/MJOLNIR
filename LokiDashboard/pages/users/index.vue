@@ -32,7 +32,7 @@
           :headers="headers"
           :items="users"
           :search="search"
-          :loading="isLoading"
+          :loading="isLoadingU"
         >
           <template v-slot:item.is_active="{ item }">
             {{ setStatus(item.is_active) }}
@@ -175,7 +175,7 @@ export default {
   computed: {
     ...mapGetters({
       users: "dashboardUsers/users",
-      isLoading: "dashboardUsers/isLoading"
+      isLoadingU: "dashboardUsers/isLoadingU"
     })
   },
   mounted() {
@@ -189,7 +189,6 @@ export default {
   height: 100%;
 
   .content-area {
-    background-color: red;
     height: 100%;
     width: 100%;
   }

@@ -15,12 +15,21 @@ export default {
 
   },
 
-  SET_LOADING(state){
-    state.isLoading = true;
+  SET_LOADING(state, selector){
+    if(selector==='users'){
+      state.isLoadingU = true
+    }
+    else if (selector==='permission'){
+      state.isLoadingP = true;
+    } 
   },
 
-  DONE_LOADING(state){
-    state.isLoading = false;
+  DONE_LOADING(state, selector){
+    if(selector==='users'){
+      state.isLoadingU = false;
+    }else if (selector==='permission'){
+      state.isLoadingP = false;
+    }
   },
 
 }

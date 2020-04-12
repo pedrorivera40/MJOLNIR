@@ -2,5 +2,6 @@ export default ()=>({
   user: null,
   users: [],
   permissions: [],
-  isLoading: false
+  isLoadingU: false,
+  isLoadingP: false,
 })

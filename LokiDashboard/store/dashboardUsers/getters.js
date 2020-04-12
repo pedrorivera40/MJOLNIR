@@ -2,5 +2,6 @@ export default {
   user: state => state.user,
   users: state => state.users,
   permissions: state => state.permissions,
-  isLoading: state => state.isLoading
+  isLoadingU: state => state.isLoadingU,
+  isLoadingP: state => state.isLoadingP
 }

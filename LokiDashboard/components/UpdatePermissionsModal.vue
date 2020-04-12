@@ -12,7 +12,7 @@
         </v-card-title>
         <v-card-text >
           <!-- TODO change is loadingf to !isloading -->
-          <v-container class="pl-12" v-if="isLoading && !!permissions[0]">
+          <v-container class="pl-12" v-if="isLoading && permissions.length > 0">
             <v-row align="center">
               <v-col cols="12" sm="3">
                 <h2 class="font-weight-regular" v-text="'Events:'"></h2>
