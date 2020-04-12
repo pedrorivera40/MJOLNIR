@@ -267,6 +267,136 @@ class VolleyballEventDAO:
             result.append(row)
         return result  
     
+    #NEW
+    def getAggregatedAthleteStatisticsPerSeason(self,aID,seasonYear):
+        """
+        Gets the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            aID: The ID of the athlete of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
+                sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
+                sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors,
+                volleyball_event.athlete_id
+
+                FROM volleyball_event
+                INNER JOIN event ON event.id = volleyball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE athlete_id = %s and team.season_year = %s and
+                (volleyball_event.is_invalid = false or volleyball_event.is_invalid is null)
+                GROUP BY volleyball_Event.athlete_id)
+                select 
+                kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
+                reception_errors,
+                athlete_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(aID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
+
+    #NEW
+    def getAllAggregatedAthleteStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: the sport id for the volleyball branch of which statistics need to be fetched
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing all the aggregated statistics in the system containing 
+            the matching record for the season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
+                sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
+                sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors,
+                volleyball_event.athlete_id
+
+                FROM volleyball_event
+                INNER JOIN event ON event.id = volleyball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE team.sport_id = %s and team.season_year = %s and
+                (volleyball_event.is_invalid = false or volleyball_event.is_invalid is null)
+                GROUP BY volleyball_Event.athlete_id)
+                select 
+                kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
+                reception_errors,
+                athlete_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(sID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
+
+    #NEW
+    def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets the aggregated team statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: The ID of the sport of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated team statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
+                sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
+                sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors,
+                event.team_id
+                FROM volleyball_event
+                INNER JOIN event ON event.id = volleyball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE team.sport_id = %s and team.season_year = %s and
+                (volleyball_event.is_invalid = false or volleyball_event.is_invalid is null)
+                GROUP BY event.team_id)
+                select 
+                kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
+                reception_errors,
+                team_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(sID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
 
 #=============================//POST//=======================
     

@@ -263,7 +263,133 @@ class BaseballEventDAO:
             result.append(row)
         return result  
     
+    #NEW
+    def getAggregatedAthleteStatisticsPerSeason(self,aID,seasonYear):
+        """
+        Gets the aggregated statistics for a given athlete and season. 
 
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            aID: The ID of the athlete of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
+                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
+                from valid_baseball_softball_events,
+                baseball_softball_event.athlete_id
+
+                FROM baseball_softball_event
+                INNER JOIN event ON event.id = baseball_softball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE athlete_id = %s and team.season_year = %s and
+                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null)
+                GROUP BY baseball_softball_Event.athlete_id)
+                select 
+                at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
+                athlete_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(aID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
+
+    #NEW
+    def getAllAggregatedAthleteStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: the sport id for the baseball_softball branch of which statistics need to be fetched
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing all the aggregated statistics in the system containing 
+            the matching record for the season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
+                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
+                from valid_baseball_softball_events,
+                baseball_softball_event.athlete_id
+
+                FROM baseball_softball_event
+                INNER JOIN event ON event.id = baseball_softball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE team.sport_id = %s and team.season_year = %s and
+                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null)
+                GROUP BY baseball_softball_Event.athlete_id)
+                select 
+                at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
+                athlete_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(sID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
+
+    #NEW
+    def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets the aggregated team statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: The ID of the sport of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated team statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
+                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
+                from valid_baseball_softball_events,
+                event.team_id
+                FROM baseball_softball_event
+                INNER JOIN event ON event.id = baseball_softball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE team.sport_id = %s and team.season_year = %s and
+                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null)
+                GROUP BY event.team_id)
+                select 
+                at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
+                team_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(sID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
 #=============================//POST//=======================
     
     # Need to validate: event exists. athlete belongs to team  that is tied to the event. 
