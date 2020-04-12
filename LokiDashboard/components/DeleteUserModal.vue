@@ -1,21 +1,24 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="290">
+    <v-dialog v-model="dialog" persistent max-width="350">
       <v-card>
         <v-toolbar flat color="primary_dark">
           <v-toolbar-title class="headline white--text">
             Delete User
           </v-toolbar-title>
         </v-toolbar>
-        <v-card-title class=""
-          >Are you sure you want to delete {{ username }}?</v-card-title
+        <v-card-title 
+          >Are you sure you want to delete {{ username }}'s account?</v-card-title
         >
-        <v-card-text>This action is <strong>irreversible</strong>.</v-card-text>
+        <v-card-text>
+          This action is <strong>irreversible</strong>.
+          <v-checkbox v-model="terms" :label="`I accept the consequences.`"></v-checkbox>
+        </v-card-text>
+
         <v-card-actions>
           <v-spacer></v-spacer>
-          <!-- TODO emit event on close to handle resetting of edited user object-->
           <v-btn color="green darken-1" text @click="close()">Cancel</v-btn>
-          <v-btn color="green darken-1" text @click="close()">Delete</v-btn>
+          <v-btn color="green darken-1" :disabled="!terms" text @click="close()">Delete</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -28,9 +31,14 @@ export default {
   props: {
     dialog: Boolean,
     username: String
+  },data() {
+    return {
+      terms: false
+    }
   },
   methods: {
     close() {
+      this.terms = false
       this.$emit("update:dialog", false);
     }
   }

@@ -2,62 +2,32 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
-        <v-card-title>
-          <span class="headline">User Profile</span>
-        </v-card-title>
+        <v-toolbar flat color="primary_dark">
+          <v-toolbar-title class="headline white--text">
+            Delete User
+          </v-toolbar-title>
+        </v-toolbar>
         <v-card-text>
-          <v-container>
+          <v-container v-model="valid">
             <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal first name*" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Legal middle name"
-                  hint="example of helper text only on focus"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Legal last name*"
-                  hint="example of persistent helper text"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Email*" required></v-text-field>
-              </v-col>
               <v-col cols="12">
                 <v-text-field
-                  label="Password*"
-                  type="password"
+                  label="Full Name*"
                   required
-                ></v-text-field>
+                  :rules="[required('name', 'Please input Full Name,')]"
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="Email*" required :rules="[required('email', 'Please input email.'), emailFormat()]"></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="Username*" required :rules="[required('username', 'Please input username.')]"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Age*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  :items="[
-                    'Skiing',
-                    'Ice hockey',
-                    'Soccer',
-                    'Basketball',
-                    'Hockey',
-                    'Reading',
-                    'Writing',
-                    'Coding',
-                    'Basejump'
-                  ]"
-                  label="Interests"
-                  multiple
-                ></v-autocomplete>
+                <v-switch
+                  v-model="isActive"
+                  :label="`Account Active: ${isActive.toString()}`"
+                ></v-switch>
               </v-col>
             </v-row>
           </v-container>
@@ -65,10 +35,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="close() "
-            >Close</v-btn
-          >
-          <v-btn color="blue darken-1" text @click="close() ">Save</v-btn>
+          <v-btn color="blue darken-1" text @click="close()">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="close()" :disabled="!valid">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -76,15 +44,27 @@
 </template>
 
 <script>
+import rules from "@/utils/validations";
 export default {
   name: "UpdateUserInfoModal",
   props: {
     dialog: Boolean,
+    username: String,
+    fullName: String,
+    email: String,
+    isActive: Boolean
+  },
+  data() {
+    return {
+      valid: false,
+    };
   },
   methods: {
     close() {
-      this.$emit('update:dialog', false)
-    }
+      console.log(this.valid)
+      // this.$emit("update:dialog", false);
+    },
+    ...rules,
   }
 };
 </script>
