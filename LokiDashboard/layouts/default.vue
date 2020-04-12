@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="backgrnd">
     <v-app-bar app color="primary" dark clipped-left v-if="$auth.loggedIn">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
@@ -50,7 +50,7 @@
       </v-container>
     </v-content>
     <TheSnackBar />
-    <v-footer :fixed="fixed" app>
+    <v-footer color="grey lighten-3" :fixed="fixed" app>
       <v-spacer />
       <span>MJOLNIR &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
@@ -135,13 +135,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/variables.scss";
-.main-container {
-  height: 100%;
-}
-.nav-drawer {
-  .nav-links {
-    a {
-      color: $highlight-color;
+.backgrnd {
+  background-color: whitesmoke;
+  .main-container {
+    height: 100%;
+  }
+  .nav-drawer {
+    .nav-links {
+      a {
+        color: $highlight-color;
+      }
     }
   }
 }
