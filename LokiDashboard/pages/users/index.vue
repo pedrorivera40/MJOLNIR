@@ -34,21 +34,25 @@
           :search="search"
           :loading="isLoading"
         >
-          
           <template v-slot:item.is_active="{ item }">
             {{ setStatus(item.is_active) }}
           </template>
 
-          <template v-slot:item.password="{item}">
-            <v-btn color="primary" outlined small>
+          <template v-slot:item.password="{ item }">
+            <v-btn color="primary" outlined small @click="resetPassword(item)">
               Reset
             </v-btn>
           </template>
 
-          <template v-slot:item.actions="{item}">
+          <template v-slot:item.actions="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-icon small class="mr-2" v-on="on" @click.stop="editUser(item)">
+                <v-icon
+                  small
+                  class="mr-2"
+                  v-on="on"
+                  @click.stop="editUser(item)"
+                >
                   mdi-pencil
                 </v-icon>
               </template>
@@ -56,7 +60,12 @@
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-icon small class="mr-2" v-on="on" @click="dialogPermissions = !dialogPermissions">
+                <v-icon
+                  small
+                  class="mr-2"
+                  v-on="on"
+                  @click="editPermissions(item)"
+                >
                   mdi-shield-lock
                 </v-icon>
               </template>
@@ -64,7 +73,12 @@
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-icon small class="mr-2" v-on="on" @click.stop="deleteUser(item)">
+                <v-icon
+                  small
+                  class="mr-2"
+                  v-on="on"
+                  @click.stop="deleteUser(item)"
+                >
                   mdi-delete
                 </v-icon>
               </template>
@@ -72,9 +86,16 @@
             </v-tooltip>
           </template>
         </v-data-table>
-        <DeleteUserModal :dialog.sync="dialogDelete" :username="editedItem.username" v-on:update:dialog="dialogDelete = $event" />
-        <UpdateUserModal :dialog.sync="dialogEdit"  />
-        <UpdatePermissionsModal :dialog.sync="dialogPermissions"  />
+        <DeleteUserModal
+          :dialog.sync="dialogDelete"
+          :username="editedItem.username"
+          v-on:update:dialog="dialogDelete = $event"
+        />
+        <UpdateUserModal :dialog.sync="dialogEdit" />
+        <UpdatePermissionsModal
+          :dialog.sync="dialogPermissions"
+          :id="editedItem.id"
+        />
       </v-card>
     </div>
   </div>
@@ -108,43 +129,47 @@ export default {
       ],
       editedIndex: -1,
       editedItem: {
-        full_name: '',
-        username: '',
-        email: '',
-        is_active: '',
+        full_name: "",
+        username: "",
+        email: "",
+        is_active: "",
+        id: 0
       },
       defaultItem: {
-        full_name: '',
-        username: '',
-        email: '',
-        is_active: '',
-      },
+        full_name: "",
+        username: "",
+        email: "",
+        is_active: "",
+        id: 0
+      }
     };
   },
   components: {
     DeleteUserModal,
     UpdatePermissionsModal,
-    UpdateUserModal,
+    UpdateUserModal
   },
   methods: {
     ...mapActions({
-      getUsers: "dashboardUsers/getUsers"
+      getUsers: "dashboardUsers/getUsers",
+      getPermissions: "dashboardUsers/getPermissions"
     }),
     setStatus(status) {
       return status ? "Active" : "Inactive";
     },
     deleteUser(user) {
-      this.editedItem = Object.assign({}, user) //This hsit is to not mess with vuex state
-      //call vuex action to delete user.
-
-      this.dialogDelete = true
+      this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+      this.dialogDelete = true;
     },
     editUser(user) {
-      this.editedItem = Object.assign({}, user) //This hsit is to not mess with vuex state
-      //call vuex action to delete user.
-
-      this.dialogEdit = true
+      this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+      this.dialogEdit = true;
     },
+    editPermissions(user) {
+      this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+      this.dialogPermissions = true;
+      this.getPermissions(user.id)
+    }
   },
   computed: {
     ...mapGetters({

@@ -9,7 +9,7 @@
         </v-toolbar>
         <v-card-text>
           <!-- TODO change is loadingf to !isloading -->
-          <v-container v-if="isLoading">
+          <v-container v-if="isLoading && !!permissions[0]">
             <p>{{ permissions }}</p>
             <v-row align="center">
               <v-col cols="3">
@@ -135,6 +135,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "UpdatePermissionsModal",
   props: {
@@ -142,80 +143,24 @@ export default {
     username: String,
     fullName: String,
     email: String,
-    isActive: Boolean
+    isActive: Boolean,
+    id: Number,
   },
   data() {
     return {
       isLoading: true,
-      permissions: [
-        {
-          permission_id: 13,
-          is_invalid: false
-        },
-        {
-          permission_id: 14,
-          is_invalid: false
-        },
-        {
-          permission_id: 15,
-          is_invalid: false
-        },
-        {
-          permission_id: 16,
-          is_invalid: false
-        },
-        {
-          permission_id: 17,
-          is_invalid: false
-        },
-        {
-          permission_id: 18,
-          is_invalid: false
-        },
-        {
-          permission_id: 19,
-          is_invalid: false
-        },
-        {
-          permission_id: 20,
-          is_invalid: false
-        },
-        {
-          permission_id: 21,
-          is_invalid: false
-        },
-        {
-          permission_id: 22,
-          is_invalid: false
-        },
-        {
-          permission_id: 23,
-          is_invalid: false
-        },
-        {
-          permission_id: 24,
-          is_invalid: false
-        },
-        {
-          permission_id: 25,
-          is_invalid: false
-        },
-        {
-          permission_id: 26,
-          is_invalid: false
-        },
-        {
-          permission_id: 27,
-          is_invalid: false
-        }
-      ]
     };
   },
   methods: {
     close() {
-      this.$emit("update:dialog", false);
-    }
-  }
+      this.$emit('update:dialog', false);
+    },
+  },
+  computed: {
+    ...mapGetters({
+      permissions: 'dashboardUsers/permissions',
+    })
+  },
 };
 </script>
 
