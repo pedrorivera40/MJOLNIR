@@ -74,6 +74,7 @@
         </v-data-table>
         <DeleteUserModal :dialog.sync="dialogDelete" :username="editedItem.username" v-on:update:dialog="dialogDelete = $event" />
         <UpdateUserModal :dialog.sync="dialogEdit"  />
+        <UpdatePermissionsModal :dialog.sync="dialogPermissions"  />
       </v-card>
     </div>
   </div>
@@ -82,6 +83,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import DeleteUserModal from "@/components/DeleteUserModal";
+import UpdatePermissionsModal from "@/components/UpdatePermissionsModal";
 import UpdateUserModal from "@/components/UpdateUserInfoModal";
 export default {
   data() {
@@ -121,7 +123,8 @@ export default {
   },
   components: {
     DeleteUserModal,
-    UpdateUserModal
+    UpdatePermissionsModal,
+    UpdateUserModal,
   },
   methods: {
     ...mapActions({

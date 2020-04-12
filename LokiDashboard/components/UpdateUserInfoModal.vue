@@ -61,8 +61,7 @@ export default {
   },
   methods: {
     close() {
-      console.log(this.valid)
-      // this.$emit("update:dialog", false);
+      this.$emit("update:dialog", false);
     },
     ...rules,
   }
