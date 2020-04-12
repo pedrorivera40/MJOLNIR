@@ -12,7 +12,7 @@
         </v-card-title>
         <v-card-text >
           <!-- TODO change is loadingf to !isloading -->
-          <v-container class="pl-12" v-if="isLoading && permissions.length > 0">
+          <v-container class="pl-12" v-if="!isLoadingP && permissions.length > 0">
             <v-row align="center">
               <v-col cols="12" sm="3">
                 <h2 class="font-weight-regular" v-text="'Events:'"></h2>
@@ -129,7 +129,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary ligthen-1" text @click="close()">Close</v-btn>
-          <v-btn color="primary ligthen-1" text @click="close()">Save</v-btn>
+          <v-btn color="primary ligthen-1" text @click="save()" :loading="isLoading">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -150,17 +150,28 @@ export default {
   },
   data() {
     return {
-      isLoading: true,
+      isLoading: false,
     };
   },
   methods: {
+    ...mapActions({
+      setPermissions: 'dashboardUsers/setPermissions',
+    }),
     close() {
       this.$emit('update:dialog', false);
+    },
+    async save() {
+      this.isLoading = true
+      const permissions = this.permissions
+      console.log(permissions)
+      await this.setPermissions({id:this.id, permissions: permissions})
+      this.isLoading = false
     },
   },
   computed: {
     ...mapGetters({
       permissions: 'dashboardUsers/permissions',
+      isLoadingP: 'dashboardUsers/isLoadingP',
     })
   },
 };

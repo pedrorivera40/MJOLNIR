@@ -25,12 +25,11 @@ export default {
     }
   },
   
-  async setPermissions({ commit, dispatch }, userID) {
+  async setPermissions({ commit, dispatch },payload) {
     try {
-      commit("SET_LOADING", 'permissions')
-      const response = await this.$axios.patch(`users/${userID}/permissions`)
-      commit("SET_PERMISSIONS", response.data.Permissions )
-      commit("DONE_LOADING", 'permissions')
+      const response = await this.$axios.patch(`users/${payload.id}/permissions`, {permissions: payload.permissions})
+      console.log( response.data.Permissions)
+      // commit("SET_PERMISSIONS", response.data.Permissions )
 
     } catch (error) {
       dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
