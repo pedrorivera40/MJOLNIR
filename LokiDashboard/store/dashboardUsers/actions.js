@@ -16,7 +16,7 @@ export default {
     try {
       commit("SET_LOADING")
       const response = await this.$axios.get(`users/${userID}/permissions`)
-      commit("SET_USERS", response.data.Users )
+      console.log(response.data.Permissions)
       commit("DONE_LOADING")
 
     } catch (error) {
