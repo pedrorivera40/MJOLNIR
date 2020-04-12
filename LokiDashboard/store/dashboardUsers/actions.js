@@ -14,14 +14,14 @@ export default {
 
   async getPermissions({ commit, dispatch }, userID) {
     try {
-      commit("SET_LOADING", 'permissions')
+      commit("SET_LOADING", 'permission')
       const response = await this.$axios.get(`users/${userID}/permissions`)
       commit("SET_PERMISSIONS", response.data.Permissions )
-      commit("DONE_LOADING", 'permissions')
+      commit("DONE_LOADING", 'permission')
 
     } catch (error) {
       dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-      commit("DONE_LOADING", 'permissions')
+      commit("DONE_LOADING", 'permission')
     }
   },
   
@@ -33,7 +33,7 @@ export default {
 
     } catch (error) {
       dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-      commit("DONE_LOADING", 'permissions')
+      commit("DONE_LOADING", 'permission')
     }
   },
   

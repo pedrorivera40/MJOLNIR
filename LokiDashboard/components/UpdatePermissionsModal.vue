@@ -11,7 +11,6 @@
           {{username}}'s System Permissions
         </v-card-title>
         <v-card-text >
-          <!-- TODO change is loadingf to !isloading -->
           <v-container class="pl-12" v-if="!isLoadingP && permissions.length > 0">
             <v-row align="center">
               <v-col cols="12" sm="3">
@@ -151,6 +150,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      loadingPermissions: true,
     };
   },
   methods: {
