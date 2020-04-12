@@ -4,21 +4,29 @@
     <div class="content-area pa-4 pt-12">
       <v-card>
         <v-card-title>
-          <v-btn color="primary_light" class="white--text">
-            <v-icon left>
-              mdi-plus
-            </v-icon>
-            Add New User
-          </v-btn>
-          <v-spacer />
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            round
-            single-line
-            hide-details
-          />
+          <v-row>
+            <v-col>
+              <v-btn color="primary_light" class="white--text">
+                <v-icon left>
+                  mdi-plus
+                </v-icon>
+                Add New User
+              </v-btn>
+              <v-spacer />
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                rounded
+                dense
+                outlined
+                single-line
+                hide-details
+              />
+            </v-col>
+          </v-row>
         </v-card-title>
         <v-data-table
           :headers="headers"
@@ -26,9 +34,44 @@
           :search="search"
           :loading="isLoading"
         >
+          
           <template v-slot:item.is_active="{ item }">
-            {{setStatus(item.is_active)}}
+            {{ setStatus(item.is_active) }}
           </template>
+
+          <template v-slot:item.password>
+            <v-btn color="primary" outlined small>
+              Reset
+            </v-btn>
+          </template>
+
+          <template v-slot:item.actions>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-icon small class="mr-2" v-on="on" @click="dialog = !dialog">
+                  mdi-pencil
+                </v-icon>
+              </template>
+              <span>Edit User Info</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-icon small class="mr-2" v-on="on" @click="dialog = !dialog">
+                  mdi-shield-lock
+                </v-icon>
+              </template>
+              <span>Edit User Permissions</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-icon small class="mr-2" v-on="on" @click="dialog = !dialog">
+                  mdi-delete
+                </v-icon>
+              </template>
+              <span>Delete User</span>
+            </v-tooltip>
+          </template>
+          
         </v-data-table>
       </v-card>
     </div>
@@ -41,6 +84,8 @@ export default {
   data() {
     return {
       search: "",
+      dialogEdit: false,
+      dialogPermissions: false,
       headers: [
         {
           text: "ID",
@@ -52,8 +97,12 @@ export default {
         { text: "Username", value: "username" },
         { text: "Email", value: "email" },
         { text: "Account Status", value: "is_active" },
+        { text: "Password", value: "password" },
+        { text: "Actions", value: "actions", sortable: false }
       ]
     };
+  },
+  components: {
   },
   methods: {
     ...mapActions({
