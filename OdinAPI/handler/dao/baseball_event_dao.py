@@ -41,7 +41,7 @@ class BaseballEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT id
-                FROM baseball_event
+                FROM baseball_softball_event
                 WHERE event_id = %s and athlete_id = %s and (is_invalid = false or is_invalid is Null);
                 """
         cursor.execute(query,(int(eID),int(aID),))
@@ -65,7 +65,7 @@ class BaseballEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT id
-                FROM baseball_event
+                FROM baseball_softball_event
                 WHERE event_id = %s and athlete_id = %s and (is_invalid = true);
                 """
         cursor.execute(query,(int(eID),int(aID),))
@@ -88,7 +88,7 @@ class BaseballEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT id
-                FROM baseball_event_team_stats
+                FROM baseball_softball_event_team_stats
                 WHERE event_id = %s and (is_invalid = false or is_invalid is Null);
                 """
         cursor.execute(query,(int(eID),))
@@ -112,7 +112,7 @@ class BaseballEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT id
-                FROM baseball_event_team_stats
+                FROM baseball_softball_event_team_stats
                 WHERE event_id = %s and (is_invalid = true);
                 """
         cursor.execute(query,(int(eID),))
@@ -146,11 +146,11 @@ class BaseballEventDAO:
                 athlete.id as athlete_id, athlete.first_name, athlete.middle_name, athlete.last_names, 
                 athlete.number, athlete.profile_image_link,
                 at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
-                baseball_event.event_id, baseball_event.id as baseball_event_id
-                FROM baseball_event
-                INNER JOIN athlete ON athlete.id = baseball_event.athlete_id
+                baseball_softball_event.event_id, baseball_softball_event.id as baseball_softball_event_id
+                FROM baseball_softball_event
+                INNER JOIN athlete ON athlete.id = baseball_softball_event.athlete_id
                 WHERE event_id = %s and 
-                (baseball_event.is_invalid = false or baseball_event.is_invalid is null);
+                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null);
                 """
         #TODO: need to avoid sql injections. the use of  %s and just a non-validated string is dangerous. 
         cursor.execute(query,(int(eID),))        
@@ -182,10 +182,10 @@ class BaseballEventDAO:
         query = """
                 SELECT
                 at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
-                baseball_event.event_id, baseball_event.id as baseball_event_id, baseball_event.athlete_id
-                FROM baseball_event
+                baseball_softball_event.event_id, baseball_softball_event.id as baseball_softball_event_id, baseball_softball_event.athlete_id
+                FROM baseball_softball_event
                 WHERE event_id = %s and athlete_id = %s and 
-                (baseball_event.is_invalid = false or baseball_event.is_invalid is null);
+                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null);
                 """
         cursor.execute(query,(int(eID),int(aID),))
         result = cursor.fetchone()
@@ -214,10 +214,10 @@ class BaseballEventDAO:
         query = """
                 SELECT
                 at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
-                baseball_event_team_stats.event_id, baseball_event_team_stats.id as baseball_event_team_stats_id
-                FROM baseball_event_team_stats
+                baseball_softball_event_team_stats.event_id, baseball_softball_event_team_stats.id as baseball_softball_event_team_stats_id
+                FROM baseball_softball_event_team_stats
                 WHERE event_id = %s  and 
-                (baseball_event_team_stats.is_invalid = false or baseball_event_team_stats.is_invalid is null);
+                (baseball_softball_event_team_stats.is_invalid = false or baseball_softball_event_team_stats.is_invalid is null);
                 """
         cursor.execute(query,(int(eID),))
         result = cursor.fetchone()
@@ -248,13 +248,13 @@ class BaseballEventDAO:
                 SELECT
                 event.id as event_id, event.event_date,
                 at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
-                baseball_event.id as baseball_event_id,
-                baseball_event.athlete_id
-                FROM baseball_event
-                INNER JOIN event ON event.id = baseball_event.event_id
+                baseball_softball_event.id as baseball_softball_event_id,
+                baseball_softball_event.athlete_id
+                FROM baseball_softball_event
+                INNER JOIN event ON event.id = baseball_softball_event.event_id
                 INNER JOIN team on team.id = event.team_id
                 WHERE athlete_id = %s and team.season_year = %s and
-                (baseball_event.is_invalid = false or baseball_event.is_invalid is null);
+                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null);
                 """
         cursor.execute(query,(int(aID),int(seasonYear),))        
         result = []
@@ -263,7 +263,138 @@ class BaseballEventDAO:
             result.append(row)
         return result  
     
+    #NEW
+    def getAggregatedAthleteStatisticsPerSeason(self,aID,seasonYear):
+        """
+        Gets the aggregated statistics for a given athlete and season. 
 
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            aID: The ID of the athlete of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
+                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
+                from valid_baseball_softball_events,
+                baseball_softball_event.athlete_id
+
+                FROM baseball_softball_event
+                INNER JOIN event ON event.id = baseball_softball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE athlete_id = %s and team.season_year = %s and
+                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null)
+                GROUP BY baseball_softball_Event.athlete_id)
+                select 
+                at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
+                athlete_id, first_name, middle_name, last_names, number, profile_image_link
+                from aggregate_query
+                INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
+                ;
+                """
+        cursor.execute(query,(int(aID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
+
+    #NEW
+    def getAllAggregatedAthleteStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: the sport id for the baseball_softball branch of which statistics need to be fetched
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing all the aggregated statistics in the system containing 
+            the matching record for the season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
+                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
+                from valid_baseball_softball_events,
+                baseball_softball_event.athlete_id
+
+                FROM baseball_softball_event
+                INNER JOIN event ON event.id = baseball_softball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE team.sport_id = %s and team.season_year = %s and
+                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null)
+                GROUP BY baseball_softball_Event.athlete_id)
+                select 
+                at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
+                athlete_id, first_name, middle_name, last_names, number, profile_image_link
+                from aggregate_query
+                INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
+                ;
+                """
+        cursor.execute(query,(int(sID),int(seasonYear),))        
+        result = []
+        for row in cursor:
+            #print(row)
+            result.append(row)
+        return result  
+
+    #NEW
+    def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets the aggregated team statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: The ID of the sport of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated team statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
+                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
+                from valid_baseball_softball_events,
+                event.team_id
+                FROM baseball_softball_event
+                INNER JOIN event ON event.id = baseball_softball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE team.sport_id = %s and team.season_year = %s and
+                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null)
+                GROUP BY event.team_id)
+                select 
+                at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
+                team_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(sID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
 #=============================//POST//=======================
     
     # Need to validate: event exists. athlete belongs to team  that is tied to the event. 
@@ -294,7 +425,7 @@ class BaseballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO baseball_event(at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,event_id,athlete_id,is_invalid)
+                INSERT INTO baseball_softball_event(at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,event_id,athlete_id,is_invalid)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         cursor.execute(query,(int(at_bats),int(runs),int(hits),int(runs_batted_in),int(base_on_balls),int(strikeouts),int(left_on_base),
@@ -331,7 +462,7 @@ class BaseballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO baseball_event_team_stats(at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,event_id,is_invalid)
+                INSERT INTO baseball_softball_event_team_stats(at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,event_id,is_invalid)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         cursor.execute(query,(int(at_bats),int(runs),int(hits),int(runs_batted_in),int(base_on_balls),int(strikeouts),int(left_on_base),int(eID),))
@@ -363,27 +494,32 @@ class BaseballEventDAO:
         #the first query collects the aggregate
         #DONE: needed to add subquery so we only aggregate from the valid events :)
         query = """
-                with valid_baseball_events as
+                with aggregate_query as(
+                with valid_baseball_softball_events as
                 (SELECT *
-                FROM baseball_event
+                FROM baseball_softball_event
                 WHERE (is_invalid=false or is_invalid is null))
                 select 
                 sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
                 sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
-                from valid_baseball_events
-                WHERE event_id = %s;
+                from valid_baseball_softball_events
+                WHERE event_id = %s
+                select * 
+                from aggregate_query)
+                where aggregate_query.at_bats is not null;
                 """
         cursor.execute(query,(int(eID),))
         resultTeam = cursor.fetchone()
-        #TODO: Add case of query failure?
-        if not resultTeam:
-            return resultTeam
+ 
         query = """
-                INSERT INTO baseball_event_team_stats(at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,event_id,is_invalid)
+                INSERT INTO baseball_softball_event_team_stats(at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,event_id,is_invalid)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
-        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(eID),))
+        if resultTeam:
+            cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
+            int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(eID),))
+        else:
+            cursor.execute(query,(0,0,0,0,0,0,0,int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
@@ -421,7 +557,7 @@ class BaseballEventDAO:
         #TODO: update team statistic. simply call the outside dao?
         cursor = self.conn.cursor()
         query = """
-                UPDATE baseball_event
+                UPDATE baseball_softball_event
                 SET at_bats = %s,
                     runs = %s,
                     hits = %s,
@@ -439,7 +575,7 @@ class BaseballEventDAO:
                     base_on_balls,
                     strikeouts,
                     left_on_base,
-                    baseball_event.event_id, baseball_event.id as baseball_event_id, baseball_event.athlete_id;
+                    baseball_softball_event.event_id, baseball_softball_event.id as baseball_softball_event_id, baseball_softball_event.athlete_id;
 
                 """
         cursor.execute(query,(int(at_bats),int(runs),int(hits),int(runs_batted_in),int(base_on_balls),int(strikeouts),int(left_on_base),int(eID),int(aID),))
@@ -469,24 +605,26 @@ class BaseballEventDAO:
         cursor = self.conn.cursor()
         #the first query collects the aggregate
         query = """
-                with valid_baseball_events as
+                with aggregate_query as(
+                with valid_baseball_softball_events as
                 (SELECT *
-                FROM baseball_event
+                FROM baseball_softball_event
                 WHERE (is_invalid=false or is_invalid is null))
                 select 
                 sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
                 sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
-                from valid_baseball_events
-                WHERE event_id = %s;
+                from valid_baseball_softball_events
+                WHERE event_id = %s)
+                select * 
+                from aggregate_query
+                where aggregate_query.at_bats is not null;
                 """
         cursor.execute(query,(int(eID),))
         resultTeam = cursor.fetchone()
-        #TODO: Add case of query failure?
-        if not resultTeam:
-            return resultTeam
-        #the second query updates the baseball_event_team_stats based on aggregate results
+        
+        #the second query updates the baseball_softball_event_team_stats based on aggregate results
         query = """
-                UPDATE baseball_event_team_stats
+                UPDATE baseball_softball_event_team_stats
                 SET at_bats = %s,
                     runs = %s,
                     hits = %s,
@@ -504,11 +642,14 @@ class BaseballEventDAO:
                     base_on_balls,
                     strikeouts,
                     left_on_base,
-                    baseball_event_team_stats.event_id, baseball_event_team_stats.id as baseball_event_team_stats_id;
+                    baseball_softball_event_team_stats.event_id, baseball_softball_event_team_stats.id as baseball_softball_event_team_stats_id;
 
                 """
-        cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
-        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(eID),))
+        if resultTeam:
+            cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
+            int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(eID),))
+        else:
+            cursor.execute(query,(0,0,0,0,0,0,0,int(eID),))
         result = cursor.fetchone()
         if not result:
             return result
@@ -536,7 +677,7 @@ class BaseballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                UPDATE baseball_event
+                UPDATE baseball_softball_event
                 SET is_invalid = true
                 WHERE event_id = %s  and athlete_id = %s
                 RETURNING id;
@@ -567,7 +708,7 @@ class BaseballEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                UPDATE baseball_event_team_stats
+                UPDATE baseball_softball_event_team_stats
                 SET is_invalid = true
                 WHERE event_id = %s
                 RETURNING id;

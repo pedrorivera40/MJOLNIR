@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, session
 from auth import createHash, verifyHash, generateToken, rulesMatch
 from .dao.user_dao import UserDAO
 
@@ -212,6 +212,7 @@ class UserHandler:
             }
             
             dao.setLoginAttempts(duid,0)
+            session['username'] = loginInfo['user']
             return jsonify(auth=loginInfo), 201
 
         dao.setLoginAttempts(duid,attempts+1)

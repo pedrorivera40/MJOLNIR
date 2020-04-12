@@ -119,6 +119,40 @@ class SoccerEventHandler(EventResultHandler):
         result = dict(Event = event_info, Event_Statistics = stat_info)
         return result
 
+    def mapAthleteSeasonAggregate(self, record):
+        athlete_info = {}
+        stat_info = {}
+        
+        athlete_info['athlete_id'] = record[6]
+        athlete_info['first_name'] = record[7]
+        athlete_info['middle_name'] = record[8]
+        athlete_info['last_names'] = record[9]
+        athlete_info['number'] = record[10]
+        athlete_info['profile_image_link'] = record[11]
+
+        stat_info['goal_attempts'] = record[0]
+        stat_info['assists'] = record[1]
+        stat_info['fouls'] = record[2]
+        stat_info['cards'] = record[3]
+        stat_info['successful_goals'] = record[4]
+        stat_info['tackles'] = record[5]
+
+        result = dict(Athlete = athlete_info, Event_Statistics = stat_info)
+        return result
+
+    def mapTeamSeasonAggregate(self, record):
+        stat_info = {}
+        
+        stat_info['goal_attempts'] = record[0]
+        stat_info['assists'] = record[1]
+        stat_info['fouls'] = record[2]
+        stat_info['cards'] = record[3]
+        stat_info['successful_goals'] = record[4]
+        stat_info['tackles'] = record[5]
+
+        result = dict(team_id = record[6], Event_Statistics = stat_info)
+        return result
+
 #===========================STOPPED HERE 2:06 AM  (4/5/20)=====================
 
 # { "event_id": 5,
@@ -195,7 +229,7 @@ class SoccerEventHandler(EventResultHandler):
         
         result = dict(event_info = event_info, team_statistics = team_statistics, 
         athlete_statistic = athlete_statistics, uprm_score = final_record[0], 
-        opponent_score = final_record[1],opponent_name = final_record[2], opponent_color = final_record[3])
+        opponent_score = final_record[1])
         return result
 
 #===========================//HANDLERS//==================================
@@ -335,6 +369,115 @@ class SoccerEventHandler(EventResultHandler):
          
         return jsonify(Soccer_Event_Season_Athlete_Statistics = mappedResult), 200
 
+
+    #NEW
+    def getAggregatedAthleteStatisticsPerSeason(self,aID,seasonYear):
+        """
+        Gets aggregated statistics for a given athlete during a given season. 
+
+        Calls the SoccerEventDAO to get aggregated event statistics and maps the result to
+        to a JSON that contains all the statistics for that athlete during the given season
+        in the system. That JSON object is then returned.
+
+        Args:
+            seasonYear: the season year of which statistics need to be fetched
+            aID: The ID of the athlete of which statistics need to be fetched
+            
+        Returns:
+            A JSON containing aggregated  statistics in the system for the specified athlete and season year.
+        """
+
+        #validate existing athlete 
+        
+        try:
+            a_dao = AthleteDAO() 
+            athlete = a_dao.getAthleteByID(aID)
+            if not athlete:
+                return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
+        except:
+            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+         
+        # validate existing soccer_event entries and format returnable
+        
+        try:
+            dao = SoccerEventDAO()
+            result = dao.getAggregatedAthleteStatisticsPerSeason(aID,seasonYear)
+            if not result:
+                return jsonify(Error = "Soccer Event Statistics not found for the athlete id:{} in season year:{}.".format(aID,seasonYear)),404
+            mappedResult = self.mapAthleteSeasonAggregate(result)
+            #print(mappedResult)
+        except:
+            return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+         
+        return jsonify(Soccer_Event_Season_Athlete_Statistics = mappedResult), 200
+
+    #NEW
+    def getAllAggregatedAthleteStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all aggregated statistics for athletes during a given season. 
+
+        Calls the SoccerEventDAO to get  all aggregated event statistics and maps the result to
+        to a JSON that contains all the aggregated statistics  during the given season
+        in the system. That JSON object is then returned.
+
+        Args:
+            seasonYear: the season year of which statistics need to be fetched
+            sID: The ID of the sport of which statistics need to be fetched
+            
+        Returns:
+            A JSON containing all the aggregated statistics in the system for the specified sport and season year.
+        """
+   
+        # validate existing soccer_event entries and format returnable
+        
+        try:
+            dao = SoccerEventDAO()
+            result = dao.getAllAggregatedAthleteStatisticsPerSeason(sID,seasonYear)
+            if not result:
+                return jsonify(Error = "Soccer Event Statistics not found for the sport id:{} in season year:{}.".format(sID,seasonYear)),404
+            mappedResult = []
+            for athlete_statistics in result:                     
+                mappedResult.append(self.mapAthleteSeasonAggregate(athlete_statistics))
+            #print(mappedResult)
+        except:
+            return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+         
+        return jsonify(Soccer_Event_Season_Athlete_Statistics = mappedResult), 200
+
+
+    #NEW
+    def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all aggregated statistics for a given team during a season.  
+
+        Calls the SoccerEventDAO to get  all aggregated event statistics and maps the result to
+        to a JSON that contains all the statistics for that athlete during the given season
+        in the system. That JSON object is then returned.
+
+        Args:
+            seasonYear: the season year of which statistics need to be fetched
+            sID: The ID of the sport of which team statistics need to be fetched
+            
+        Returns:
+            A JSON containing the aggregated team statistics in the system for the specified team and season year.
+        """
+         
+        # validate existing soccer_event entries and format returnable
+        
+        try:
+            dao = SoccerEventDAO()
+            result = dao.getAggregatedTeamStatisticsPerSeason(sID,seasonYear)
+            if not result:
+                return jsonify(Error = "Soccer Event Team Statistics not found for sport id:{} in season year:{}.".format(sID,seasonYear)),404
+            mappedResult = []
+            mappedResult = self.mapTeamSeasonAggregate(result)
+            #print(mappedResult)
+        except:
+            return jsonify(ERROR="Unable to verify soccer event team stats from DAO."), 500
+         
+        return jsonify(Soccer_Event_Season_Team_Statistics = mappedResult), 200
+
+
     #NEW get ALL the statistics for a given event be it team or individual
     #TODO: naming is confusign with the top function
     def getAllStatisticsByEventID(self,eID):
@@ -383,7 +526,8 @@ class SoccerEventHandler(EventResultHandler):
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:
-                return jsonify(Error = "Soccer Event Final Score not found for the event: {}.".format(eID)),404
+                #return jsonify(Error = "Soccer Event Final Score not found for the event: {}.".format(eID)),404
+                final_score_result = [None,None]
             mappedResult = self.mapEventAllStatsToDict(team_result,all_stats_result, final_score_result)
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -498,14 +642,16 @@ class SoccerEventHandler(EventResultHandler):
                 return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
 
         #update and validate Soccer Event Team Statistic
+        # If existing Team Statistics update, else create
         try:
-            team_result = dao.editTeamStatistics(eID)
-            if not result:
-                return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapEventAthleteStatsToDict(result)
+            if dao.getSoccerEventTeamStatsID(eID) or dao.getSoccerEventTeamStatsIDInvalid(eID):
+                team_result = dao.editTeamStatistics(eID)
+                if not team_result:
+                    return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
+            else:
+                dao.addTeamStatisticsAuto(eID)
         except:
             return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
-
         
         if invalid_duplicate:
             mappedResult = self.mapEventAthleteStatsToDict(result)
@@ -587,7 +733,7 @@ class SoccerEventHandler(EventResultHandler):
             try:
                 result = dao.editTeamStatistics(eID)
                 if not result:
-                    return jsonify(Error = "Team statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404  
+                    return jsonify(Error = "Team statistics Record not found for event id:{}.".format(eID)),404  
             except:
                 return jsonify(ERROR="Unable to verify soccer team event from DAO."), 500
             
@@ -673,7 +819,7 @@ class SoccerEventHandler(EventResultHandler):
             try:
                 result = dao.editTeamStatistics(eID)
                 if not result:
-                    return jsonify(Error = "Team statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404   
+                    return jsonify(Error = "Team statistics Record not found for event id:{}.".format(eID)),404   
             except:
                 return jsonify(ERROR="Unable to verify soccer team event from DAO."), 500
 
@@ -720,8 +866,7 @@ class SoccerEventHandler(EventResultHandler):
                     tackles:
                 local_score: the final score for the local uprm team
                 opponent_score: the final score for the opponent team
-                opponent_name: name of the opponent team
-                opponent_color: color to be used for opponent team
+         
             
         Returns:
             A JSON the id for the new Soccer Event record.
@@ -730,8 +875,6 @@ class SoccerEventHandler(EventResultHandler):
         athlete_statistics = attributes['athlete_statistics']
         local_score = attributes['uprm_score']
         opponent_score = attributes['opponent_score']
-        opponent_name = attributes['opponent_name']
-        opponent_color = attributes['opponent_color']
 
         
         # Validate Avoid Duplication Team Stats
@@ -814,24 +957,56 @@ class SoccerEventHandler(EventResultHandler):
             # SUCCESS MESSAGE
             # return jsonify(Soccer_Event_Athlete_Statistics = "Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),201
 
-        # Create and Validate Final Score entry
+        #Check if existing invalid duplicate
+        invalid_duplicate = False
         try:
             fs_dao = FinalScoreDAO()
-            result = fs_dao.addFinalScore(eID,local_score, opponent_score, opponent_name, opponent_color)
-            if not result:
-                return jsonify(Error = "Problem inserting new final score record."),500
+            if fs_dao.getFinalScoreInvalid(eID):
+                invalid_duplicate = True
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
+        
+        #case with previously existing invalid entry, in that case update that entry
+        if invalid_duplicate:
+            try:
+                result = fs_dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
+                if not result:
+                    return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
+            except:
+                return jsonify(ERROR="Unable to verify final score from DAO."), 500
+        else:
+            # Create and Validate Final Score entry
+            try:
+                result = fs_dao.addFinalScore(eID,local_score, opponent_score)
+                if not result:
+                    return jsonify(Error = "Problem inserting new final score record."),500
+            except:
+                return jsonify(ERROR="Unable to verify final score from DAO."), 500
          
-
-        # Create and Validate new Soccer_Event team stats
+        #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
+        invalid_duplicate = False
         try:
-            result = dao.addTeamStatistics(eID,team_statistics['goal_attempts'],team_statistics['assists'],team_statistics['fouls'],team_statistics['cards'],
-                    team_statistics['successful_goals'],team_statistics['tackles'])
-            if not result:
-                return jsonify(Error = "Problem inserting new team statistics record."),500
+            if dao.getSoccerEventTeamStatsIDInvalid(eID):
+                invalid_duplicate = True
         except:
-            return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
+            return jsonify(ERROR="Unable to verify soccer_event_team_Stats from DAO."), 500
+        #the case of there already existing an entry, but marked as invalid
+        if invalid_duplicate:
+            try:
+                result = dao.editTeamStatistics(eID)
+                if not result:
+                    return jsonify(Error = "Team statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404  
+            except:
+                return jsonify(ERROR="Unable to verify soccer team event from DAO."), 500
+        else:
+            # Create and Validate new Soccer_Event team stats
+            try:
+                result = dao.addTeamStatistics(eID,team_statistics['goal_attempts'],team_statistics['assists'],team_statistics['fouls'],team_statistics['cards'],
+                        team_statistics['successful_goals'],team_statistics['tackles'])
+                if not result:
+                    return jsonify(Error = "Problem inserting new team statistics record."),500
+            except:
+                return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
         fs_dao.commitChanges()
         dao.commitChanges()
         return jsonify(Soccer_Event_Team_Stats = "Added new team statistics record with id:{} and individual statistics for event id:{}.".format(result,eID)),201
@@ -907,7 +1082,7 @@ class SoccerEventHandler(EventResultHandler):
         #update and validate Soccer Event Team Statistic
         try:
             team_result = dao.editTeamStatistics(eID)
-            if not result:
+            if not team_result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
             mappedResult = self.mapEventAthleteStatsToDict(result)
         except:
@@ -1016,14 +1191,13 @@ class SoccerEventHandler(EventResultHandler):
         #update and validate Soccer Event Team Statistic
         try:
             team_result = dao.editTeamStatistics(eID)
-            if not result:
+            if not team_result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapEventAthleteStatsToDict(result)
         except:
             return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
 
         dao.commitChanges()
-        return jsonify(Soccer_Event_Athlete_Statistics = "Removed statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),200
+        return jsonify(Soccer_Event_Athlete_Statistics = "Removed statistics record with id:{} for athlete id:{} in event id:{}.".format(result[0],aID,eID)),200
 
     #NEW
     def removeTeamStatistics(self,eID): # Instantiates a Soccer Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.

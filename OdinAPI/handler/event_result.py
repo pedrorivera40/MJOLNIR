@@ -80,9 +80,8 @@ class EventResultHandler:
 
     # for final score
     def mapFinalScoreToDict(self,final_record):
-        score = dict(uprm_score = final_record[0], opponent_score = final_record[1], 
-        opponent_name = final_record[2], opponent_color = final_record[3])
-        event_info = dict(event_id=final_record[4],final_score_id=final_record[5])
+        score = dict(uprm_score = final_record[0], opponent_score = final_record[1])
+        event_info = dict(event_id=final_record[2],final_score_id=final_record[3])
         return dict(event_info = event_info, score = score)
     
     def mapEventSeasonCollectionToDict(self,record):
@@ -174,6 +173,65 @@ class EventResultHandler:
 
         pass
 
+    #NEW
+    def getAggregatedAthleteStatisticsPerSeason(self,aID,seasonYear):
+        """
+        Gets the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            aID: The ID of the athlete of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        pass
+    #NEW
+    def getAllAggregatedAthleteStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: the sport id for the basketball branch of which statistics need to be fetched
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing all the aggregated statistics in the system containing 
+            the matching record for the season year.
+        """
+        pass
+
+    #NEW
+    def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets the aggregated team statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: The ID of the sport of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated team statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        pass
+
     #NEW get ALL the statistics for a given event be it team or individual
     def getAllStatisticsByEventID(self,eID):
         """
@@ -256,10 +314,9 @@ class EventResultHandler:
         Args:
             eID: the ID of the event for which the final score will be added.
             attributes:
-               local_Score: the final score of the local uprm team
+               uprm_score: the final score of the local uprm team
                opponent_Score: the final score of the opponent
-               opponent_name: name of the opponent team
-            opponent_color: color to be used for opponent team
+              
             
         Returns:
             A JSON containing the final score id for the new Final Score entry
@@ -292,8 +349,7 @@ class EventResultHandler:
         #case with previously existing invalid entry, in that case update that entry
         if invalid_duplicate:
             try:
-                result = dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'],
-                attributes['opponent_name'],attributes['opponent_color'])
+                result = dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
                 if not result:
                     return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
                 mappedResult = self.mapFinalScoreToDict(result)
@@ -305,8 +361,7 @@ class EventResultHandler:
         else:
         # Create and Validate new Final Score entry final score
             try:
-                result = dao.addFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'],
-                attributes['opponent_name'],attributes['opponent_color'])
+                result = dao.addFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
                 if not result:
                     return jsonify(Error = "Problem inserting new final score record."),500
             except:
@@ -327,10 +382,9 @@ class EventResultHandler:
                     athlete_id: the id for which the athlete statistics will be added for
                     sport-specific stats
                 team_statistis: sports-specific stats
-                local_score: the final score for the local uprm team
+                uprm_score: the final score for the local uprm team
                 opponent_score: the final score for the opponent team
-                opponent_name: name of the opponent team
-                opponent_color: color to be used for opponent team
+               
             
         Returns:
             A JSON the id for the new Sport Event record.
@@ -379,10 +433,8 @@ class EventResultHandler:
         Args:
             eID: the ID of the event for which the final score record will be updated.
             attributes:
-                local_score: the score of the local uprm team
+                uprm_score: the score of the local uprm team
                 opponent_score: the score of the opponent team
-                opponent_name: name of the opponent team
-                opponent_color: color to be used for opponent team
         
             
         Returns:
@@ -408,8 +460,7 @@ class EventResultHandler:
 
         # Update and Validate event final score, format returnable
         try:
-            result = dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'],
-            attributes['opponent_name'],attributes['opponent_color'])
+            result = dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
             if not result:
                 return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
             mappedResult = self.mapFinalScoreToDict(result)
