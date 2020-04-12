@@ -39,13 +39,13 @@
             {{ setStatus(item.is_active) }}
           </template>
 
-          <template v-slot:item.password>
+          <template v-slot:item.password="{item}">
             <v-btn color="primary" outlined small>
               Reset
             </v-btn>
           </template>
 
-          <template v-slot:item.actions>
+          <template v-slot:item.actions="{item}">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon small class="mr-2" v-on="on" @click="dialogEdit = !dialogEdit">
@@ -64,15 +64,15 @@
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-icon small class="mr-2" v-on="on" @click="dialogDelete = !dialogDelete">
+                <v-icon small class="mr-2" v-on="on" @click.stop="deleteUser(item)">
                   mdi-delete
                 </v-icon>
               </template>
               <span>Delete User</span>
             </v-tooltip>
           </template>
-          
         </v-data-table>
+        <DeleteUserModal :dialog.sync="dialogDelete" :username="editedItem.username" />
       </v-card>
     </div>
   </div>
@@ -80,6 +80,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import DeleteUserModal from "@/components/DeleteUserModal";
 export default {
   data() {
     return {
@@ -100,10 +101,24 @@ export default {
         { text: "Account Status", value: "is_active" },
         { text: "Password", value: "password" },
         { text: "Actions", value: "actions", sortable: false }
-      ]
+      ],
+      editedIndex: -1,
+      editedItem: {
+        full_name: '',
+        username: '',
+        email: '',
+        is_active: '',
+      },
+      defaultItem: {
+        full_name: '',
+        username: '',
+        email: '',
+        is_active: '',
+      },
     };
   },
   components: {
+    DeleteUserModal,
   },
   methods: {
     ...mapActions({
@@ -111,6 +126,12 @@ export default {
     }),
     setStatus(status) {
       return status ? "Active" : "Inactive";
+    },
+    deleteUser(user) {
+      this.editedItem = Object.assign({}, user) //This hsit is to not mess with vuex state
+      //call vuex action to delete user.
+      
+      this.dialogDelete = true
     }
   },
   computed: {
