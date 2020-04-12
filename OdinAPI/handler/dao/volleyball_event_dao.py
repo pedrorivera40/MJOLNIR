@@ -303,8 +303,9 @@ class VolleyballEventDAO:
                 select 
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
                 reception_errors,
-                athlete_id
+                athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
+                INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
                 ;
                 """
         cursor.execute(query,(int(aID),int(seasonYear),))        
@@ -347,13 +348,17 @@ class VolleyballEventDAO:
                 select 
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
                 reception_errors,
-                athlete_id
+                athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
+                INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
                 ;
                 """
         cursor.execute(query,(int(sID),int(seasonYear),))        
-        result = cursor.fetchone()
-        return result
+        result = []
+        for row in cursor:
+            #print(row)
+            result.append(row)
+        return result  
 
     #NEW
     def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):

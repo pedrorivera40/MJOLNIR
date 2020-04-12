@@ -173,6 +173,65 @@ class EventResultHandler:
 
         pass
 
+    #NEW
+    def getAggregatedAthleteStatisticsPerSeason(self,aID,seasonYear):
+        """
+        Gets the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            aID: The ID of the athlete of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        pass
+    #NEW
+    def getAllAggregatedAthleteStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: the sport id for the basketball branch of which statistics need to be fetched
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing all the aggregated statistics in the system containing 
+            the matching record for the season year.
+        """
+        pass
+
+    #NEW
+    def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets the aggregated team statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: The ID of the sport of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated team statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        pass
+
     #NEW get ALL the statistics for a given event be it team or individual
     def getAllStatisticsByEventID(self,eID):
         """

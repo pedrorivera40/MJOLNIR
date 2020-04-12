@@ -119,6 +119,43 @@ class BaseballEventHandler(EventResultHandler):
         return result
 
 
+    def mapAthleteSeasonAggregate(self, record):
+        athlete_info = {}
+        stat_info = {}
+        
+        athlete_info['athlete_id'] = record[7]
+        athlete_info['first_name'] = record[8]
+        athlete_info['middle_name'] = record[9]
+        athlete_info['last_names'] = record[10]
+        athlete_info['number'] = record[11]
+        athlete_info['profile_image_link'] = record[12]
+
+        stat_info['at_bats'] = record[0]
+        stat_info['runs'] = record[1]
+        stat_info['hits'] = record[2]
+        stat_info['runs_batted_in'] = record[3]
+        stat_info['base_on_balls'] = record[4]
+        stat_info['strikeouts'] = record[5]
+        stat_info['left_on_base'] = record[6]
+
+        result = dict(Athlete = athlete_info, Event_Statistics = stat_info)
+        return result
+
+    def mapTeamSeasonAggregate(self, record):
+        stat_info = {}
+        
+        stat_info['at_bats'] = record[0]
+        stat_info['runs'] = record[1]
+        stat_info['hits'] = record[2]
+        stat_info['runs_batted_in'] = record[3]
+        stat_info['base_on_balls'] = record[4]
+        stat_info['strikeouts'] = record[5]
+        stat_info['left_on_base'] = record[6]
+
+        result = dict(team_id = record[7], Event_Statistics = stat_info)
+        return result
+
+
 
 # { "event_id": 5,
 #   "team_statistics": 
@@ -337,6 +374,115 @@ class BaseballEventHandler(EventResultHandler):
             return jsonify(ERROR="Unable to verify baseball event from DAO."), 500
          
         return jsonify(Baseball_Event_Season_Athlete_Statistics = mappedResult), 200
+
+    #NEW
+    def getAggregatedAthleteStatisticsPerSeason(self,aID,seasonYear):
+        """
+        Gets aggregated statistics for a given athlete during a given season. 
+
+        Calls the BaseballEventDAO to get aggregated event statistics and maps the result to
+        to a JSON that contains all the statistics for that athlete during the given season
+        in the system. That JSON object is then returned.
+
+        Args:
+            seasonYear: the season year of which statistics need to be fetched
+            aID: The ID of the athlete of which statistics need to be fetched
+            
+        Returns:
+            A JSON containing aggregated  statistics in the system for the specified athlete and season year.
+        """
+
+        #validate existing athlete 
+        
+        try:
+            a_dao = AthleteDAO() 
+            athlete = a_dao.getAthleteByID(aID)
+            if not athlete:
+                return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
+        except:
+            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+         
+        # validate existing baseball_softball_event entries and format returnable
+        
+        try:
+            dao = BaseballEventDAO()
+            result = dao.getAggregatedAthleteStatisticsPerSeason(aID,seasonYear)
+            if not result:
+                return jsonify(Error = "Baseball Event Statistics not found for the athlete id:{} in season year:{}.".format(aID,seasonYear)),404
+            mappedResult = self.mapAthleteSeasonAggregate(result)
+            #print(mappedResult)
+        except:
+            return jsonify(ERROR="Unable to verify baseball_softball event from DAO."), 500
+         
+        return jsonify(Baseball_Event_Season_Athlete_Statistics = mappedResult), 200
+
+    #NEW
+    def getAllAggregatedAthleteStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all aggregated statistics for athletes during a given season. 
+
+        Calls the BaseballEventDAO to get  all aggregated event statistics and maps the result to
+        to a JSON that contains all the aggregated statistics  during the given season
+        in the system. That JSON object is then returned.
+
+        Args:
+            seasonYear: the season year of which statistics need to be fetched
+            sID: The ID of the sport of which statistics need to be fetched
+            
+        Returns:
+            A JSON containing all the aggregated statistics in the system for the specified sport and season year.
+        """
+   
+        # validate existing baseball_softball_event entries and format returnable
+        
+        try:
+            dao = BaseballEventDAO()
+            result = dao.getAllAggregatedAthleteStatisticsPerSeason(sID,seasonYear)
+            if not result:
+                return jsonify(Error = "Baseball Event Statistics not found for the sport id:{} in season year:{}.".format(sID,seasonYear)),404
+            mappedResult = []
+            for athlete_statistics in result:                     
+                mappedResult.append(self.mapAthleteSeasonAggregate(athlete_statistics))
+            #print(mappedResult)
+        except:
+            return jsonify(ERROR="Unable to verify baseball_softball event from DAO."), 500
+         
+        return jsonify(Baseball_Event_Season_Athlete_Statistics = mappedResult), 200
+
+
+    #NEW
+    def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all aggregated statistics for a given team during a season.  
+
+        Calls the BaseballEventDAO to get  all aggregated event statistics and maps the result to
+        to a JSON that contains all the statistics for that athlete during the given season
+        in the system. That JSON object is then returned.
+
+        Args:
+            seasonYear: the season year of which statistics need to be fetched
+            sID: The ID of the sport of which team statistics need to be fetched
+            
+        Returns:
+            A JSON containing the aggregated team statistics in the system for the specified team and season year.
+        """
+         
+        # validate existing baseball_softball_event entries and format returnable
+        
+        try:
+            dao = BaseballEventDAO()
+            result = dao.getAggregatedTeamStatisticsPerSeason(sID,seasonYear)
+            if not result:
+                return jsonify(Error = "Baseball Event Team Statistics not found for sport id:{} in season year:{}.".format(sID,seasonYear)),404
+            mappedResult = []
+            mappedResult = self.mapTeamSeasonAggregate(result)
+            #print(mappedResult)
+        except:
+            return jsonify(ERROR="Unable to verify baseball_softball event team stats from DAO."), 500
+         
+        return jsonify(Baseball_Event_Season_Team_Statistics = mappedResult), 200
+
+
 
     #NEW get ALL the statistics for a given event be it team or individual
     #TODO: naming is confusign with the top function

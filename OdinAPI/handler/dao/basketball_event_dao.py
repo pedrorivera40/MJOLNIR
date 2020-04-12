@@ -315,8 +315,9 @@ class BasketballEventDAO:
                 get_percentage_big(successful_field_goal,field_goal_attempt) as field_goal_percentage,
                 get_percentage_big(successful_free_throw,free_throw_attempt) as free_throw_percentage,
                 get_percentage_big(successful_three_point,three_point_attempt) as three_point_percentage,
-                athlete_id
+                athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
+                INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
                 ;
                 """
         cursor.execute(query,(int(aID),int(seasonYear),))        
@@ -361,13 +362,17 @@ class BasketballEventDAO:
                 get_percentage_big(successful_field_goal,field_goal_attempt) as field_goal_percentage,
                 get_percentage_big(successful_free_throw,free_throw_attempt) as free_throw_percentage,
                 get_percentage_big(successful_three_point,three_point_attempt) as three_point_percentage,
-                athlete_id
+                athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
+                INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
                 ;
                 """
         cursor.execute(query,(int(sID),int(seasonYear),))        
-        result = cursor.fetchone()
-        return result
+        result = []
+        for row in cursor:
+            #print(row)
+            result.append(row)
+        return result  
 
     #NEW
     def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
