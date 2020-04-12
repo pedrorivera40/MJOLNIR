@@ -4,7 +4,7 @@
       <v-card>
         <v-toolbar flat color="primary_dark">
           <v-toolbar-title class="headline white--text">
-            Delete User
+            {{setFormTitle}}
           </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
@@ -52,11 +52,14 @@ export default {
     username: String,
     fullName: String,
     email: String,
-    isActive: Boolean
+    isActive: Boolean,
+    nameSelector: Number,
+    
   },
   data() {
     return {
       valid: false,
+      formTitle: '',
     };
   },
   methods: {
@@ -64,6 +67,10 @@ export default {
       this.$emit("update:dialog", false);
     },
     ...rules,
+  }, computed: {
+    setFormTitle(){
+      return this.nameSelector === -1 ? 'New User' : 'Edit User'
+    }
   }
 };
 </script>

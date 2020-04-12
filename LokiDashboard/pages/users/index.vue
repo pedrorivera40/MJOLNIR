@@ -96,6 +96,7 @@
           :dialog.sync="dialogPermissions"
           :id="editedItem.id"
           :username="editedItem.username"
+          :nameSelector="editedItemIndex"
         />
       </v-card>
     </div>
@@ -128,7 +129,7 @@ export default {
         { text: "Password", value: "password" },
         { text: "Actions", value: "actions", sortable: false }
       ],
-      editedIndex: -1,
+      editedItemIndex: -1,
       editedItem: {
         full_name: "",
         username: "",
