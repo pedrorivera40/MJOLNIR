@@ -276,7 +276,145 @@ class BasketballEventDAO:
             #print(row)
             result.append(row)
         return result  
-    
+
+    #NEW
+    def getAggregatedAthleteStatisticsPerSeason(self,aID,seasonYear):
+        """
+        Gets the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            aID: The ID of the athlete of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(points) as points,sum(rebounds) as rebounds,sum(assists) as assists,sum(steals) as steals,sum(blocks) as blocks,sum(turnovers) as turnovers,sum(field_goal_attempt) as field_goal_attempt,sum(successful_field_goal) as successful_field_goal,
+                sum(three_point_attempt) as three_point_attempt,sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,sum(successful_free_throw) as successful_free_throw,
+                basketball_event.athlete_id
+
+                FROM basketball_event
+                INNER JOIN event ON event.id = basketball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE athlete_id = %s and team.season_year = %s and
+                (basketball_event.is_invalid = false or basketball_event.is_invalid is null)
+                GROUP BY basketball_Event.athlete_id)
+                select 
+                points,rebounds,assists,steals,blocks,turnovers,field_goal_attempt,successful_field_goal,
+                three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
+                get_percentage_big(successful_field_goal,field_goal_attempt) as field_goal_percentage,
+                get_percentage_big(successful_free_throw,free_throw_attempt) as free_throw_percentage,
+                get_percentage_big(successful_three_point,three_point_attempt) as three_point_percentage,
+                athlete_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(aID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
+
+    #NEW
+    def getAllAggregatedAthleteStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets all the aggregated statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: the sport id for the basketball branch of which statistics need to be fetched
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing all the aggregated statistics in the system containing 
+            the matching record for the season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(points) as points,sum(rebounds) as rebounds,sum(assists) as assists,sum(steals) as steals,sum(blocks) as blocks,sum(turnovers) as turnovers,sum(field_goal_attempt) as field_goal_attempt,sum(successful_field_goal) as successful_field_goal,
+                sum(three_point_attempt) as three_point_attempt,sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,sum(successful_free_throw) as successful_free_throw,
+                basketball_event.athlete_id
+
+                FROM basketball_event
+                INNER JOIN event ON event.id = basketball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE team.sport_id = %s and team.season_year = %s and
+                (basketball_event.is_invalid = false or basketball_event.is_invalid is null)
+                GROUP BY basketball_Event.athlete_id)
+                select 
+                points,rebounds,assists,steals,blocks,turnovers,field_goal_attempt,successful_field_goal,
+                three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
+                get_percentage_big(successful_field_goal,field_goal_attempt) as field_goal_percentage,
+                get_percentage_big(successful_free_throw,free_throw_attempt) as free_throw_percentage,
+                get_percentage_big(successful_three_point,three_point_attempt) as three_point_percentage,
+                athlete_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(sID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
+
+    #NEW
+    def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
+        """
+        Gets the aggregated team statistics for a given athlete and season. 
+
+        This function uses and ID and a year number to perform a query to the database
+        that gets the aggregated statistics in the system that match the given ID and season year.
+
+        Args:
+            sID: The ID of the sport of which statistics need to be fetched.
+            seasonYear: the season year of which statistics need to be fetched.
+            
+            
+        Returns:
+            A list containing the response to the database query
+            containing the aggregated team statistics in the system containing 
+            the matching record for the given ID and season year.
+        """
+        cursor = self.conn.cursor()
+        query = """
+                with aggregate_query as(
+                SELECT
+                sum(points) as points,sum(rebounds) as rebounds,sum(assists) as assists,sum(steals) as steals,sum(blocks) as blocks,sum(turnovers) as turnovers,sum(field_goal_attempt) as field_goal_attempt,sum(successful_field_goal) as successful_field_goal,
+                sum(three_point_attempt) as three_point_attempt,sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,sum(successful_free_throw) as successful_free_throw,
+                event.team_id
+                FROM basketball_event
+                INNER JOIN event ON event.id = basketball_event.event_id
+                INNER JOIN team on team.id = event.team_id
+                WHERE team.sport_id = %s and team.season_year = %s and
+                (basketball_event.is_invalid = false or basketball_event.is_invalid is null)
+                GROUP BY event.team_id)
+                select 
+                points,rebounds,assists,steals,blocks,turnovers,field_goal_attempt,successful_field_goal,
+                three_point_attempt,successful_three_point,free_throw_attempt,successful_free_throw,
+                get_percentage_big(successful_field_goal,field_goal_attempt) as field_goal_percentage,
+                get_percentage_big(successful_free_throw,free_throw_attempt) as free_throw_percentage,
+                get_percentage_big(successful_three_point,three_point_attempt) as three_point_percentage,
+                team_id
+                from aggregate_query
+                ;
+                """
+        cursor.execute(query,(int(sID),int(seasonYear),))        
+        result = cursor.fetchone()
+        return result
+
+        
 
 #=============================//POST//=======================
     
