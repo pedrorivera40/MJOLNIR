@@ -9,6 +9,11 @@ export default {
     state.users = users
 
   },
+  SET_PERMISSIONS(state, permissions) {
+    //Set user data
+    state.permissions = permissions
+
+  },
 
   SET_LOADING(state){
     state.isLoading = true;
