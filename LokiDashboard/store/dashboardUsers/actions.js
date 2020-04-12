@@ -7,7 +7,11 @@ export default {
       commit("DONE_LOADING", 'users')
 
     } catch (error) {
-      dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      if(!!error.reponse.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      }
+      dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+
       commit("DONE_LOADING", 'users')
     }
   },
@@ -20,19 +24,41 @@ export default {
       commit("DONE_LOADING", 'permission')
 
     } catch (error) {
-      dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      if(!!error.reponse.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      }
+      dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+
       commit("DONE_LOADING", 'permission')
     }
   },
   
   async setPermissions({ commit, dispatch },payload) {
     try {
-      const response = await this.$axios.patch(`users/${payload.id}/permissions`, {permissions: payload.permissions})
-      console.log( response.data.Permissions)
-      // commit("SET_PERMISSIONS", response.data.Permissions )
+      await this.$axios.patch(`users/${payload.id}/permissions`, {permissions: payload.permissions})
+      dispatch('notifications/setSnackbar', {text: 'User Permissions Saved.', color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
-      dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      if(!!error.reponse.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      }
+      dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+
+      commit("DONE_LOADING", 'permission')
+    }
+  },
+
+  async deleteUser({ commit, dispatch },payload) {
+    try {
+      // await this.$axios.patch(`users/${payload.id}/remove`,)
+      dispatch('notifications/setSnackbar', {text: `${payload.username} has been deleted.`, color: 'primary lighten-1'}, {root: true})
+
+    } catch (error) {
+      if(!!error.reponse.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      }
+      dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+
       commit("DONE_LOADING", 'permission')
     }
   },
