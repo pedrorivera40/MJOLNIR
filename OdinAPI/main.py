@@ -329,9 +329,7 @@ def teamEvents(tID):
 #   	}
 #   	],
 #   "uprm_score": 0,
-#   "opponent_score": 0,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "opponent_score": 0
 # }
 @app.route("/results/basketball/", methods = ['GET','POST'])
 def basketballStatistics():
@@ -409,9 +407,7 @@ def basketballTeamStatistics():
 # { "event_id":3,
 #   "attributes":
 #   {
-#   "local_score":2, "opponent_score":2,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "uprm_score":2, "opponent_score":2
 #   }
 # }
 @app.route("/results/basketball/score/", methods = ['GET','POST','PUT','DELETE'])
@@ -429,13 +425,57 @@ def basketballFinalScores():
     else:
         return jsonify(Error="Method not allowed."), 405
 
+# {
+#     "athlete_id":1,
+#     "season_year":2020
+# }
 #TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
-@app.route("/results/basketball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
-def basketballSeasonAthleteStatistics(aid,seasonYear):
+@app.route("/results/basketball/season/athlete_games/", methods = ['GET'])
+def basketballSeasonAthleteStatistics():
     json = request.json
     handler = BasketballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsPerSeason(aid, seasonYear)
+        return handler.getAllAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+# {
+#     "athlete_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/basketball/season/athlete_aggregate/", methods = ['GET'])
+def basketballAggregateAthleteStatistics():
+    json = request.json
+    handler = BasketballEventHandler()
+    if request.method == 'GET':
+        return handler.getAggregatedAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# {
+#     "sport_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/basketball/season/all_athletes_aggregate/", methods = ['GET'])
+def basketballAggregateAllAthleteStatistics():
+    json = request.json
+    handler = BasketballEventHandler()
+    if request.method == 'GET':
+        return handler.getAllAggregatedAthleteStatisticsPerSeason(json['sport_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# {
+#     "sport_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/basketball/season/team_aggregate/", methods = ['GET'])
+def basketballAggregateTeamStatistics():
+    json = request.json
+    handler = BasketballEventHandler()
+    if request.method == 'GET':
+        return handler.getAggregatedTeamStatisticsPerSeason(json['sport_id'], json['season_year'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
@@ -607,9 +647,7 @@ def pbp_end():
 #   	}
 #   	],
 #   "uprm_score": 0,
-#   "opponent_score": 0,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "opponent_score": 0
 # }
 @app.route("/results/volleyball/", methods = ['GET','POST'])
 def volleyballStatistics():
@@ -698,9 +736,7 @@ def volleyballTeamStatistics():
 # { "event_id":3,
 #   "attributes":
 #   {
-#   "local_score":2, "opponent_score":2,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "uprm_score":2, "opponent_score":2
 #   }
 # }
 @app.route("/results/volleyball/score/", methods = ['GET','POST','PUT','DELETE'])
@@ -718,15 +754,59 @@ def volleyballFinalScores():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-@app.route("/results/volleyball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
-def volleyballSeasonAthleteStatistics(aid,seasonYear):
+# {
+#     "athlete_id":1,
+#     "season_year":2020
+# }
+#TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
+@app.route("/results/volleyball/season/athlete_games/", methods = ['GET'])
+def volleyballSeasonAthleteStatistics():
     json = request.json
     handler = VolleyballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsPerSeason(aid, seasonYear)
+        return handler.getAllAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
+
+# {
+#     "athlete_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/volleyball/season/athlete_aggregate/", methods = ['GET'])
+def volleyballAggregateAthleteStatistics():
+    json = request.json
+    handler = VolleyballEventHandler()
+    if request.method == 'GET':
+        return handler.getAggregatedAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# {
+#     "sport_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/volleyball/season/all_athletes_aggregate/", methods = ['GET'])
+def volleyballAggregateAllAthleteStatistics():
+    json = request.json
+    handler = VolleyballEventHandler()
+    if request.method == 'GET':
+        return handler.getAllAggregatedAthleteStatisticsPerSeason(json['sport_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# {
+#     "sport_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/volleyball/season/team_aggregate/", methods = ['GET'])
+def volleyballAggregateTeamStatistics():
+    json = request.json
+    handler = VolleyballEventHandler()
+    if request.method == 'GET':
+        return handler.getAggregatedTeamStatisticsPerSeason(json['sport_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
 # ===================================================================================
 # ===================//END VOLLEYBALL RESULTS ROUTES//===============================
@@ -780,9 +860,7 @@ def volleyballSeasonAthleteStatistics(aid,seasonYear):
 #   	}
 #   	],
 #   "uprm_score": 0,
-#   "opponent_score": 0,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "opponent_score": 0
 # }
 @app.route("/results/soccer/", methods = ['GET','POST'])
 def soccerStatistics():
@@ -865,9 +943,7 @@ def soccerTeamStatistics():
 # { "event_id":3,
 #   "attributes":
 #   {
-#   "local_score":2, "opponent_score":2,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "uprm_score":2, "opponent_score":2
 #   }
 # }
 @app.route("/results/soccer/score/", methods = ['GET','POST','PUT','DELETE'])
@@ -884,12 +960,57 @@ def soccerFinalScores():
         return handler.removeFinalScore(json['event_id'])
     else:
         return jsonify(Error="Method not allowed."), 405
-@app.route("/results/soccer/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
-def soccerSeasonAthleteStatistics(aid,seasonYear):
+# {
+#     "athlete_id":1,
+#     "season_year":2020
+# }
+#TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
+@app.route("/results/soccer/season/athlete_games/", methods = ['GET'])
+def soccerSeasonAthleteStatistics():
     json = request.json
     handler = SoccerEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsPerSeason(aid, seasonYear)
+        return handler.getAllAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+# {
+#     "athlete_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/soccer/season/athlete_aggregate/", methods = ['GET'])
+def soccerAggregateAthleteStatistics():
+    json = request.json
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        return handler.getAggregatedAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# {
+#     "sport_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/soccer/season/all_athletes_aggregate/", methods = ['GET'])
+def soccerAggregateAllAthleteStatistics():
+    json = request.json
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        return handler.getAllAggregatedAthleteStatisticsPerSeason(json['sport_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# {
+#     "sport_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/soccer/season/team_aggregate/", methods = ['GET'])
+def soccerAggregateTeamStatistics():
+    json = request.json
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        return handler.getAggregatedTeamStatisticsPerSeason(json['sport_id'], json['season_year'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
@@ -948,9 +1069,7 @@ def soccerSeasonAthleteStatistics(aid,seasonYear):
 #   	}
 #   	],
 #   "uprm_score": 0,
-#   "opponent_score": 0,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "opponent_score": 0
 # }
 @app.route("/results/baseball/", methods = ['GET','POST'])
 def baseballStatistics():
@@ -1035,9 +1154,7 @@ def baseballTeamStatistics():
 # { "event_id":3,
 #   "attributes":
 #   {
-#   "local_score":2, "opponent_score":2,
-#   "opponent_name": "name_here",
-#   "opponent_color": "#HEX_VAL_HERE"
+#   "uprm_score":2, "opponent_score":2
 #   }
 # }
 @app.route("/results/baseball/score/", methods = ['GET','POST','PUT','DELETE'])
@@ -1055,12 +1172,57 @@ def baseballFinalScores():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-@app.route("/results/baseball/season/<int:seasonYear>/<int:aid>/", methods = ['GET'])
-def baseballSeasonAthleteStatistics(aid,seasonYear):
+# {
+#     "athlete_id":1,
+#     "season_year":2020
+# }
+#TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
+@app.route("/results/baseball/season/athlete_games/", methods = ['GET'])
+def baseballSeasonAthleteStatistics():
     json = request.json
     handler = BaseballEventHandler()
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsPerSeason(aid, seasonYear)
+        return handler.getAllAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+# {
+#     "athlete_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/baseball/season/athlete_aggregate/", methods = ['GET'])
+def baseballAggregateAthleteStatistics():
+    json = request.json
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        return handler.getAggregatedAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# {
+#     "sport_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/baseball/season/all_athletes_aggregate/", methods = ['GET'])
+def baseballAggregateAllAthleteStatistics():
+    json = request.json
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        return handler.getAllAggregatedAthleteStatisticsPerSeason(json['sport_id'], json['season_year'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+# {
+#     "sport_id":1,
+#     "season_year":2020
+# }
+@app.route("/results/baseball/season/team_aggregate/", methods = ['GET'])
+def baseballAggregateTeamStatistics():
+    json = request.json
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        return handler.getAggregatedTeamStatisticsPerSeason(json['sport_id'], json['season_year'])
     else:
         return jsonify(Error="Method not allowed."), 405
 
