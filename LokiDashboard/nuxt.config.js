@@ -45,6 +45,8 @@ export default {
     '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
+    //Doc: https://auth.nuxtjs.org 
+    '@nuxtjs/auth',
   ],
   /*
   ** Axios module configuration
@@ -52,6 +54,39 @@ export default {
   */
   axios: {
     baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API
+  },
+
+  /*
+  ** Auth module configuration
+  ** See https://auth.nuxtjs.org/schemes/local.html#options
+  */
+  auth: {
+    strategies: {
+      redirect: {
+        login: '/login',
+        logout: '/',
+        callback: false,
+        home: '/dashboard'
+      },
+      local: {
+        endpoints: {
+          login: { url: 'auth/', method: 'post', propertyName: 'auth.token' },
+          user: false,
+          logout: false,
+        },
+        // tokenRequired: true,
+        tokenType: '',
+        autoFetchUser: false,
+      }
+    }
+  },
+  /**
+   * Router module configuration
+   */
+  router: {
+    middleware: [
+      'auth' //sets global guard. All routes requires auth, unless explicitly stated otherwise.
+    ]
   },
   /*
   ** vuetify module configuration
@@ -61,16 +96,28 @@ export default {
     customVariables: ['~/assets/variables.scss'],
     theme: {
       dark: false,
+      light: true,
       themes: {
         dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
+          primary: '#168F09',
+          primary_dark: '#0B7300',
+          primary_light: '#26B117',
+          accent: '#45b439',
+          error: '#FF5252',
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FFC107',
+        },
+        light: {
+          primary: '#168F09',
+          primary_dark: '#0B7300',
+          primary_light: '#26B117',
+          accent: '#999999',
+          error: '#FF5252',
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FFC107',
+        },
       }
     }
   },
