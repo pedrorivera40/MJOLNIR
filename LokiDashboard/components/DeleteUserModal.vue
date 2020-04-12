@@ -18,7 +18,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" text @click="close()">Cancel</v-btn>
-          <v-btn color="green darken-1" :disabled="!terms" text @click="close()">Delete</v-btn>
+          <v-btn color="green darken-1" :disabled="!terms" text @click="delete_User()">Delete</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -26,18 +26,32 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "DeleteUserModal",
   props: {
     dialog: Boolean,
-    username: String
+    username: String,
+    id: Number,
   },data() {
     return {
       terms: false
     }
   },
   methods: {
+    ...mapActions({
+      deleteUser: 'dashboardUsers/deleteUser'
+    }),
     close() {
+      this.terms = false
+      this.$emit("update:dialog", false);
+    },
+    async delete_User() {
+      const payload = {
+        id: this.id,
+        username: this.username
+      }
+      await this.deleteUser(payload)
       this.terms = false
       this.$emit("update:dialog", false);
     }
