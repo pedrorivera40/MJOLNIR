@@ -20,11 +20,11 @@
 
         <v-tab-item>
           <v-timeline>
-            <v-container v-for="action in actions" :key="action.id" :color="uprm_color">
-              <v-timeline-item left v-if="action.team === opponent_team_name" color:opp_color>
+            <v-container v-for="action in actions" :key="action.id">
+              <v-timeline-item left v-if="action.team === opponent_team_name" :color="uprm_color">
                 <v-row align="center" justify="center">{{action.text}}</v-row>
               </v-timeline-item>
-              <v-timeline-item right v-else color:uprm_color>
+              <v-timeline-item right v-else :color="uprm_color">
                 <v-row align="center" justify="center">{{action.text}}</v-row>
               </v-timeline-item>
             </v-container>
@@ -40,58 +40,11 @@
               <v-tab>{{uprm_team_name}}</v-tab>
 
               <v-tab-item>
-                <v-simple-table fixed-header>
-                  <thead>
-                    <tr>
-                      <th class="text-center">ESTADÍSTICAS DE INTERÉS</th>
-                      <th class="text-center">VALOR DE ESTADÍSTICAS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="text-center">PUNTOS EN ATAQUE</td>
-                      <td class="text-center">{{ uprm_team_statistics.killPoints }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-center">ERRORES DE ATAQUE</td>
-                      <td class="text-center">{{ uprm_team_statistics.attackErrors }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-center">SERVICIOS DIRECTOS</td>
-                      <td class="text-center">{{ uprm_team_statistics.aces }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-center">ERRORES DE SERVICIO</td>
-                      <td class="text-center">{{ uprm_team_statistics.serviceErrors }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-center">ASSISTENCIAS</td>
-                      <td class="text-center">{{ uprm_team_statistics.assists }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-center">BLOQUEOS</td>
-                      <td class="text-center">{{ uprm_team_statistics.blocks }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-center">PUNTOS DE BLOQUEO</td>
-                      <td class="text-center">{{ uprm_team_statistics.blockPoints }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-center">ERRORES DE BLOQUEO</td>
-                      <td class="text-center">{{ uprm_team_statistics.blockingErrors }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-center">RECEPCIONES/BOMPEOS</td>
-                      <td class="text-center">{{ uprm_team_statistics.digs }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-center">ERRORES DE RECEPCIÓN</td>
-                      <td class="text-center">{{ uprm_team_statistics.receptionErrors }}</td>
-                    </tr>
-                  </tbody>
-                </v-simple-table>
+                <VolleyballStatistics :volleyball_stats="uprm_team_statistics" />
               </v-tab-item>
-              <v-tab-item></v-tab-item>
+              <v-tab-item>
+                <VolleyballStatistics :volleyball_stats="opp_team_statistics" />
+              </v-tab-item>
             </v-tabs>
           </v-container>
         </v-tab-item>
@@ -112,10 +65,12 @@
 
 <script>
 import VolleyballScore from "../../../components/VolleyballScore";
+import VolleyballStatistics from "../../../components/VolleyballStatistics";
 
 export default {
   components: {
-    VolleyballScore
+    VolleyballScore,
+    VolleyballStatistics
   },
   data: () => ({
     sport_name: "Voleibol",
@@ -147,7 +102,18 @@ export default {
       blockingErrors: 0,
       receptionErrors: 0
     },
-    opp_team_statistics: {},
+    opp_team_statistics: {
+      killPoints: 0,
+      aces: 0,
+      blockPoints: 0,
+      assists: 0,
+      blocks: 0,
+      digs: 0,
+      attackErrors: 0,
+      serviceErrors: 0,
+      blockingErrors: 0,
+      receptionErrors: 0
+    },
     uprm_roster: [
       {
         id: 12345,
