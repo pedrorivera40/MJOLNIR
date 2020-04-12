@@ -378,6 +378,7 @@ class VolleyballEventDAO:
         #the first query collects the aggregate
         #DONE: needed to add subquery so we only aggregate from the valid events :)
         query = """
+                with aggregate_query as(
                 with valid_volleyball_events as
                 (SELECT *
                 FROM volleyball_event
@@ -387,20 +388,24 @@ class VolleyballEventDAO:
                 sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
                 sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors
                 from valid_volleyball_events
-                WHERE event_id = %s;
+                WHERE event_id = %s)
+                select * 
+                from aggregate_query
+                where aggregate_query.kill_points is not null;
                 """
         cursor.execute(query,(int(eID),))
         resultTeam = cursor.fetchone()
-        #TODO: Add case of query failure?
-        if not resultTeam:
-            return resultTeam
+
         query = """
                 INSERT INTO volleyball_event_team_stats(kill_points, attack_errors, assists, aces, service_errors, 
                 digs, blocks, blocking_errors,reception_errors,event_id,is_invalid)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
-        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),int(eID),))
+        if resultTeam:
+            cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
+            int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),int(eID),))
+        else:
+            cursor.execute(query,(0,0,0,0,0,0,0,0,0,int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
@@ -494,6 +499,7 @@ class VolleyballEventDAO:
         cursor = self.conn.cursor()
         #the first query collects the aggregate
         query = """
+                with aggregate_query as(
                 with valid_volleyball_events as
                 (SELECT *
                 FROM volleyball_event
@@ -503,13 +509,14 @@ class VolleyballEventDAO:
                 sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
                 sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors
                 from valid_volleyball_events
-                WHERE event_id = %s;
+                WHERE event_id = %s)
+                select
+                from aggregate_query
+                where aggregate_query.kill_points is not null;
                 """
         cursor.execute(query,(int(eID),))
         resultTeam = cursor.fetchone()
-        #TODO: Add case of query failure?
-        if not resultTeam:
-            return resultTeam
+        
         #the second query updates the volleyball_event_team_stats based on aggregate results
         query = """
                 UPDATE volleyball_event_team_stats
@@ -537,9 +544,11 @@ class VolleyballEventDAO:
                     volleyball_event_team_stats.event_id, volleyball_event_team_stats.id as volleyball_event_team_stats_id;
 
                 """
-        cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
-        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
-        int(eID),))
+        if resultTeam:
+            cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
+            int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),int(eID),))
+        else:
+            cursor.execute(query,(0,0,0,0,0,0,0,0,0,int(eID),))
         result = cursor.fetchone()
         if not result:
             return result

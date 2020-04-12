@@ -88,7 +88,7 @@ class FinalScoreDAO:
         cursor = self.conn.cursor()
         query = """
                 INSERT INTO final_score(local_score,opponent_score,event_id,is_invalid)
-                VALUES(%s,%s,%s,false,%s,%s) returning id;
+                VALUES(%s,%s,%s,false) returning id;
                 """
         cursor.execute(query,(int(local_score),int(opponent_score),int(eID),))
         fsID = cursor.fetchone()[0]

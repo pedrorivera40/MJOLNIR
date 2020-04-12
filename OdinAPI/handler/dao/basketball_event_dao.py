@@ -395,6 +395,7 @@ class BasketballEventDAO:
         #the first query collects the aggregate
         #DONE: needed to add subquery so we only aggregate from the valid events :)
         query = """
+                with aggregate_query as(
                 with valid_basketball_events as
                 (SELECT *
                 FROM basketball_event
@@ -406,22 +407,26 @@ class BasketballEventDAO:
                 sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,
                 sum(successful_free_throw) as successful_free_throw
                 from valid_basketball_events
-                WHERE event_id = %s;
+                WHERE event_id = %s)
+                select * 
+                from aggregate_query
+                where aggregate_query.points is not null;
                 """
         cursor.execute(query,(int(eID),))
         resultTeam = cursor.fetchone()
-        #TODO: Add case of query failure?
-        if not resultTeam:
-            return resultTeam
+       
         query = """
                 INSERT INTO basketball_event_team_stats(points,rebounds,assists,steals,blocks,turnovers,
                 field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
                 free_throw_attempt,successful_free_throw,event_id,is_invalid)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
-        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
-        int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
+        if resultTeam:
+            cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
+            int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
+            int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
+        else:
+            cursor.execute(query,(0,0,0,0,0,0,0,0,0,0,0,0,int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
@@ -528,6 +533,7 @@ class BasketballEventDAO:
         cursor = self.conn.cursor()
         #the first query collects the aggregate
         query = """
+                with aggregate_query as(
                 with valid_basketball_events as
                 (SELECT *
                 FROM basketball_event
@@ -539,13 +545,14 @@ class BasketballEventDAO:
                 sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,
                 sum(successful_free_throw) as successful_free_throw
                 from valid_basketball_events
-                WHERE event_id = %s;
+                WHERE event_id = %s)
+                select * 
+                from aggregate_query
+                where aggregate_query.points is not null;
                 """
         cursor.execute(query,(int(eID),))
         resultTeam = cursor.fetchone()
-        #TODO: Add case of query failure?
-        if not resultTeam:
-            return resultTeam
+  
         #the second query updates the basketball_event_team_stats based on aggregate results
         query = """
                 UPDATE basketball_event_team_stats
@@ -580,11 +587,13 @@ class BasketballEventDAO:
                     get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
                     get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
                     basketball_event_team_stats.event_id, basketball_event_team_stats.id as basketball_event_team_stats_id;
-
                 """
-        cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
-        int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
-        int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
+        if resultTeam:
+            cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
+            int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
+            int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
+        else:
+            cursor.execute(query,(0,0,0,0,0,0,0,0,0,0,0,0,int(eID),))
         result = cursor.fetchone()
         if not result:
             return result

@@ -386,7 +386,8 @@ class BaseballEventHandler(EventResultHandler):
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:
-                return jsonify(Error = "Baseball Event Final Score not found for the event: {}.".format(eID)),404
+                #return jsonify(Error = "Baseball Event Final Score not found for the event: {}.".format(eID)),404
+                final_score_result = [None,None]
             mappedResult = self.mapEventAllStatsToDict(team_result,all_stats_result, final_score_result)
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -502,11 +503,14 @@ class BaseballEventHandler(EventResultHandler):
                 return jsonify(ERROR="Unable to verify baseball event from DAO."), 500
 
         #update and validate Baseball Event Team Statistic
+        # If existing Team Statistics update, else create
         try:
-            team_result = dao.editTeamStatistics(eID)
-            if not result:
-                return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapEventAthleteStatsToDict(result)
+            if dao.getBaseballEventTeamStatsID(eID) or dao.getBaseballEventTeamStatsIDInvalid(eID):
+                team_result = dao.editTeamStatistics(eID)
+                if not team_result:
+                    return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
+            else:
+                dao.addTeamStatisticsAuto(eID)
         except:
             return jsonify(ERROR="Unable to verify baseball event team statistics from DAO."), 500
 
@@ -592,7 +596,7 @@ class BaseballEventHandler(EventResultHandler):
             try:
                 result = dao.editTeamStatistics(eID)
                 if not result:
-                    return jsonify(Error = "Team statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404  
+                    return jsonify(Error = "Team statistics Record not found for event id:{}.".format(eID)),404  
             except:
                 return jsonify(ERROR="Unable to verify baseball team event from DAO."), 500
             
@@ -678,7 +682,7 @@ class BaseballEventHandler(EventResultHandler):
             try:
                 result = dao.editTeamStatistics(eID)
                 if not result:
-                    return jsonify(Error = "Team statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404   
+                    return jsonify(Error = "Team statistics Record not found for event id:{}.".format(eID)),404   
             except:
                 return jsonify(ERROR="Unable to verify baseball team event from DAO."), 500
 
@@ -819,24 +823,56 @@ class BaseballEventHandler(EventResultHandler):
             # SUCCESS MESSAGE
             # return jsonify(Baseball_Event_Athlete_Statistics = "Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),201
 
-        # Create and Validate Final Score entry
+        #Check if existing invalid duplicate
+        invalid_duplicate = False
         try:
             fs_dao = FinalScoreDAO()
-            result = fs_dao.addFinalScore(eID,local_score, opponent_score)
-            if not result:
-                return jsonify(Error = "Problem inserting new final score record."),500
+            if fs_dao.getFinalScoreInvalid(eID):
+                invalid_duplicate = True
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
+        
+        #case with previously existing invalid entry, in that case update that entry
+        if invalid_duplicate:
+            try:
+                result = fs_dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
+                if not result:
+                    return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
+            except:
+                return jsonify(ERROR="Unable to verify final score from DAO."), 500
+        else:
+            # Create and Validate Final Score entry
+            try:
+                result = fs_dao.addFinalScore(eID,local_score, opponent_score)
+                if not result:
+                    return jsonify(Error = "Problem inserting new final score record."),500
+            except:
+                return jsonify(ERROR="Unable to verify final score from DAO."), 500
          
-
-        # Create and Validate new Baseball_Event team stats
+        #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
+        invalid_duplicate = False
         try:
-            result = dao.addTeamStatistics(eID,team_statistics['at_bats'],team_statistics['runs'],team_statistics['hits'],team_statistics['runs_batted_in'],
-                team_statistics['base_on_balls'],team_statistics['strikeouts'],team_statistics['left_on_base'])
-            if not result:
-                return jsonify(Error = "Problem inserting new team statistics record."),500
+            if dao.getBaseballEventTeamStatsIDInvalid(eID):
+                invalid_duplicate = True
         except:
-            return jsonify(ERROR="Unable to verify baseball event team statistics from DAO."), 500
+            return jsonify(ERROR="Unable to verify baseball_event_team_Stats from DAO."), 500
+        #the case of there already existing an entry, but marked as invalid
+        if invalid_duplicate:
+            try:
+                result = dao.editTeamStatistics(eID)
+                if not result:
+                    return jsonify(Error = "Team statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404  
+            except:
+                return jsonify(ERROR="Unable to verify baseball team event from DAO."), 500
+        else:
+            # Create and Validate new Baseball_Event team stats
+            try:
+                result = dao.addTeamStatistics(eID,team_statistics['at_bats'],team_statistics['runs'],team_statistics['hits'],team_statistics['runs_batted_in'],
+                    team_statistics['base_on_balls'],team_statistics['strikeouts'],team_statistics['left_on_base'])
+                if not result:
+                    return jsonify(Error = "Problem inserting new team statistics record."),500
+            except:
+                return jsonify(ERROR="Unable to verify baseball event team statistics from DAO."), 500
         fs_dao.commitChanges
         dao.commitChanges()
         return jsonify(Baseball_Event_Team_Stats = "Added new team statistics record with id:{} and individual statistics for event id:{}.".format(result,eID)),201
@@ -913,7 +949,7 @@ class BaseballEventHandler(EventResultHandler):
         #update and validate Baseball Event Team Statistic
         try:
             team_result = dao.editTeamStatistics(eID)
-            if not result:
+            if not team_result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
             mappedResult = self.mapEventAthleteStatsToDict(result)
         except:
@@ -1022,7 +1058,7 @@ class BaseballEventHandler(EventResultHandler):
         #update and validate Baseball Event Team Statistic
         try:
             team_result = dao.editTeamStatistics(eID)
-            if not result:
+            if not team_result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
         except:
             return jsonify(ERROR="Unable to verify baseball event team statistics from DAO."), 500
