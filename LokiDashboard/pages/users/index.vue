@@ -95,6 +95,7 @@
         <UpdatePermissionsModal
           :dialog.sync="dialogPermissions"
           :id="editedItem.id"
+          :username="editedItem.username"
         />
       </v-card>
     </div>

@@ -7,12 +7,14 @@
             User Permissions
           </v-toolbar-title>
         </v-toolbar>
-        <v-card-text>
+        <v-card-title class="display-1 text--secondary">
+          {{username}}'s System Permissions
+        </v-card-title>
+        <v-card-text >
           <!-- TODO change is loadingf to !isloading -->
-          <v-container v-if="isLoading && !!permissions[0]">
-            <p>{{ permissions }}</p>
+          <v-container class="pl-12" v-if="isLoading && !!permissions[0]">
             <v-row align="center">
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <h2 class="font-weight-regular" v-text="'Events:'"></h2>
               </v-col>
               <v-checkbox
@@ -32,7 +34,7 @@
               ></v-checkbox>
             </v-row>
             <v-row align="center">
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <h2 class="font-weight-regular" v-text="'PBP:'"></h2>
               </v-col>
               <v-checkbox
@@ -52,7 +54,7 @@
               ></v-checkbox>
             </v-row>
             <v-row align="center">
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <h2 class="font-weight-regular" v-text="'Statistics:'"></h2>
               </v-col>
               <v-checkbox
@@ -72,7 +74,7 @@
               ></v-checkbox>
             </v-row>
             <v-row align="center">
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <h2 class="font-weight-regular" v-text="'Users:'"></h2>
               </v-col>
               <v-checkbox
@@ -92,7 +94,7 @@
               ></v-checkbox>
             </v-row>
             <v-row align="center">
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <h2 class="font-weight-regular" v-text="'Profiles:'"></h2>
               </v-col>
               <v-checkbox
