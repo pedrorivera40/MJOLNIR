@@ -72,6 +72,7 @@
                       :athlete_name="athlete.name"
                       :athlete_img="athlete.img"
                       :athlete_number="athlete.number"
+                      :athlete_statistics="uprm_team_statistics"
                     />
                   </v-row>
                 </v-container>

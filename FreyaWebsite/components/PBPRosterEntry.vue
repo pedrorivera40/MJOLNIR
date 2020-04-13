@@ -12,7 +12,10 @@
           <v-card-title>#{{athlete_number}}. {{athlete_name}}</v-card-title>
         </v-row>
         <v-row justify="center">
-          <v-btn color="green" dark v-on="on">VER ESTADÍSTICAS</v-btn>
+          <v-btn color="green" dark @click="dialog = true">VER ESTADÍSTICAS</v-btn>
+          <v-dialog v-model="dialog" max-width="600px">
+            <VolleyballStatistics :volleyball_stats="athlete_statistics" />
+          </v-dialog>
         </v-row>
       </v-col>
     </v-row>
@@ -20,11 +23,20 @@
 </template>
 
 <script>
+import VolleyballStatistics from "../components/VolleyballStatistics";
+
 export default {
+  components: {
+    VolleyballStatistics
+  },
   props: {
     athlete_name: String,
     athlete_img: String,
-    athlete_number: Number
-  }
+    athlete_number: Number,
+    athlete_statistics: {}
+  },
+  data: () => ({
+    dialog: false
+  })
 };
 </script>
