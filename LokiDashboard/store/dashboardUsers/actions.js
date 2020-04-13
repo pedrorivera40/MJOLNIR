@@ -53,7 +53,6 @@ export default {
 
   async deleteUser({ commit, dispatch },payload) {
     try {
-      console.log(payload.id)
       await this.$axios.patch(`users/${payload.id}/remove`,)
       commit("DELETE_USER", payload.id)
       dispatch('notifications/setSnackbar', {text: `${payload.username} has been deleted.`, color: 'primary lighten-1'}, {root: true})
@@ -71,7 +70,6 @@ export default {
 
   async addUser({ commit, dispatch }, payload) {
     try {
-      console.log(payload)
       const response = await this.$axios.post(`users/`, payload)
       commit("ADD_USER", response.data.User)
       dispatch('notifications/setSnackbar', {text: `${payload.username} has been added to the system..`, color: 'primary lighten-1'}, {root: true})

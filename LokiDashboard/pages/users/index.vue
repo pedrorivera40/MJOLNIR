@@ -43,9 +43,20 @@
           </template>
 
           <template v-slot:item.password="{ item }">
-            <v-btn color="primary" outlined small @click="resetPassword(item)">
-              Reset
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  color="primary"
+                  outlined
+                  small
+                  v-on="on"
+                  @click="resetPassword(item)"
+                >
+                  Reset
+                </v-btn>
+              </template>
+              <span>Reset User Pasword</span>
+            </v-tooltip>
           </template>
 
           <template v-slot:item.actions="{ item }">
@@ -62,6 +73,7 @@
               </template>
               <span>Edit User Info</span>
             </v-tooltip>
+
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
@@ -176,7 +188,7 @@ export default {
       this.dialogDelete = true;
     },
     editUser(user) {
-      this.editedItemIndex = this.users.indexOf(user)
+      this.editedItemIndex = this.users.indexOf(user);
       this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
       this.dialogEdit = true;
     },
@@ -184,8 +196,9 @@ export default {
       this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
       this.dialogPermissions = true;
       this.getPermissions(user.id);
-    }, resetPassword(user) {
-      console.log('reset')
+    },
+    resetPassword(user) {
+      console.log("reset");
     }
   },
   computed: {

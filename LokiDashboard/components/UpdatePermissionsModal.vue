@@ -163,7 +163,6 @@ export default {
     async save() {
       this.isLoading = true
       const permissions = this.permissions
-      console.log(permissions)
       await this.setPermissions({id:this.id, permissions: permissions})
       this.isLoading = false
     },
