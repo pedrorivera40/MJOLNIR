@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-row justify="center">UPR-RP</v-row>
+        <v-row justify="center">UPRM</v-row>
         <v-row justify="center">20</v-row>
       </v-col>
       <v-col>
@@ -12,7 +12,7 @@
         <v-row justify="center">2 - 1</v-row>
       </v-col>
       <v-col>
-        <v-row justify="center">UPRM</v-row>
+        <v-row justify="center">UPR-RP</v-row>
         <v-row justify="center">25</v-row>
       </v-col>
     </v-row>

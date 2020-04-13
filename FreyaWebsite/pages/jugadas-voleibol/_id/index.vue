@@ -10,8 +10,8 @@
         <VolleyballScore></VolleyballScore>
       </v-row>
       <v-row></v-row>
-      <v-tabs align-with-title centered grow color="green">
-        <v-tabs-slider color="green" />
+      <v-tabs align-with-title centered grow :color="uprm_color">
+        <v-tabs-slider :color="uprm_color" />
         <v-tab>JUGADA A JUGADA</v-tab>
 
         <v-tab>ESTADÍSTICAS POR EQUIPO</v-tab>
@@ -21,10 +21,10 @@
         <v-tab-item>
           <v-timeline>
             <v-container v-for="action in actions" :key="action.id">
-              <v-timeline-item left v-if="action.team === opponent_team_name" :color="uprm_color">
+              <v-timeline-item right v-if="action.team === opponent_team_name" :color="uprm_color">
                 <v-row align="center" justify="center">{{action.text}}</v-row>
               </v-timeline-item>
-              <v-timeline-item right v-else :color="uprm_color">
+              <v-timeline-item left v-else :color="uprm_color">
                 <v-row align="center" justify="center">{{action.text}}</v-row>
               </v-timeline-item>
             </v-container>
@@ -34,10 +34,46 @@
         <v-tab-item>
           <v-spacer />
           <v-container>
-            <v-tabs centered color="green">
-              <v-tabs-slider color="green" />
-              <v-tab>{{opponent_team_name}}</v-tab>
+            <v-row justify="center">
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th class="text-left">EQUIPO</th>
+                      <th class="text-left">SET 1</th>
+                      <th class="text-left">SET 2</th>
+                      <th class="text-left">SET 3</th>
+                      <th class="text-left">SET 4</th>
+                      <th class="text-left">SET 5</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr :key="uprm_team_name">
+                      <td>{{ uprm_team_name }}</td>
+                      <td>{{ score.uprm_set1 }}</td>
+                      <td>{{ score.uprm_set2 }}</td>
+                      <td>{{ score.uprm_set3 }}</td>
+                      <td>{{ score.uprm_set4 }}</td>
+                      <td>{{ score.uprm_set5 }}</td>
+                    </tr>
+                    <tr :key="opponent_team_name">
+                      <td>{{ opponent_team_name }}</td>
+                      <td>{{ score.opp_set1 }}</td>
+                      <td>{{ score.opp_set2 }}</td>
+                      <td>{{ score.opp_set3 }}</td>
+                      <td>{{ score.opp_set4 }}</td>
+                      <td>{{ score.opp_set5 }}</td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-row>
+
+            <v-tabs centered :color="uprm_color">
+              <v-tabs-slider :color="uprm_color" />
+
               <v-tab>{{uprm_team_name}}</v-tab>
+              <v-tab>{{opponent_team_name}}</v-tab>
               <v-tab-item>
                 <VolleyballStatistics :volleyball_stats="uprm_team_statistics" />
               </v-tab-item>
@@ -50,21 +86,10 @@
         <v-tab-item>
           <v-spacer />
           <v-container>
-            <v-tabs centered color="green">
-              <v-tabs-slider color="green" />
-              <v-tab>{{opponent_team_name}}</v-tab>
-              <v-tab>{{uprm_team_name}}</v-tab>
-              <v-tab-item>
-                <v-container v-for="athlete in opp_roster" :key="athlete.number">
-                  <v-row justify="center">
-                    <PBPRosterEntry
-                      :athlete_name="athlete.name"
-                      :athlete_img="athlete.img"
-                      :athlete_number="athlete.number"
-                    />
-                  </v-row>
-                </v-container>
-              </v-tab-item>
+            <v-tabs centered :color="uprm_color">
+              <v-tabs-slider :color="uprm_color" />
+              <v-tab>{{ uprm_team_name }}</v-tab>
+              <v-tab>{{ opponent_team_name }}</v-tab>
               <v-tab-item>
                 <v-container v-for="athlete in uprm_roster" :key="athlete.number">
                   <v-row justify="center">
@@ -73,6 +98,20 @@
                       :athlete_img="athlete.img"
                       :athlete_number="athlete.number"
                       :athlete_statistics="uprm_team_statistics"
+                      :in_color="opp_color"
+                    />
+                  </v-row>
+                </v-container>
+              </v-tab-item>
+              <v-tab-item>
+                <v-container v-for="athlete in opp_roster" :key="athlete.number">
+                  <v-row justify="center">
+                    <PBPRosterEntry
+                      :athlete_name="athlete.name"
+                      :athlete_img="athlete.img"
+                      :athlete_number="athlete.number"
+                      :athlete_statistics="opp_team_statistics"
+                      :in_color="uprm_color"
                     />
                   </v-row>
                 </v-container>
@@ -152,8 +191,7 @@ export default {
         number: 11
       },
       {
-        img:
-          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
+        img: "",
         name: "Jose Juan Barea",
         number: 11
       },
@@ -214,10 +252,9 @@ export default {
         number: 11
       },
       {
-        img:
-          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
+        img: "",
         name: "Martin Lawrence",
-        number: 11
+        number: 15
       },
       {
         img:
