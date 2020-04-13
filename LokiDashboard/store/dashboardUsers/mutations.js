@@ -18,6 +18,14 @@ export default {
   DELETE_USER(state, id){
     state.users = state.users.filter(users => users.id !== id)
   },
+
+  ADD_USER(state, user) {
+    // Attempt to not modify state directly.
+    // const copy = state.users
+    // copy.push(user)
+    state.users.push(user)
+
+  },
   
   SET_LOADING(state, selector){
     if(selector==='users'){

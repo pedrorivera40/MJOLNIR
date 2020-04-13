@@ -95,6 +95,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import rules from "@/utils/validations";
 export default {
   name: "UpdateUserInfoModal",
@@ -112,33 +113,45 @@ export default {
       showP: false,
       showC: false,
       formTitle: "",
-      username_: "",
-      fullName_: "",
-      email_: "",
-      password_: "",
-      repeat_: "",
+      // TODO: REMOVE AFTER TESTS
+      username_: "someUsername",
+      fullName_: "This Is Myname",
+      email_: "1@1.com",
+      password_: "ninjaTurtles1!",
+      repeat_: "ninjaTurtles1!",
       isActive_: ""
     };
   },
   methods: {
+    ...mapActions({
+      addNewUser: "dashboardUsers/addUser"
+    }),
     close() {
       this.$emit("update:dialog", false); //this is to avoid mutation dialog prop directly when closing dialog.
       // This was to avoid having the user info set when clicking add user, after clicking on edit a user.
       // but it introduced a bug where validation was already showing errors. Fixed it with v-if on modal.
       // This would have also fixed the permissions issue, but loading screen took care of that
-      // this.username_ = ""; 
+      // this.username_ = "";
       // this.fullName_ = "";
       // this.email_ = "";
       // this.password_ = "";
       // this.repeat_ = "";
       // this.isActive_ = "";
     },
-    save() {
+    async save() {
       if (this.nameSelector === -1) {
-        return "New User";
+        const response = await this.addNewUser({
+          email: this.email_,
+          full_name: this.fullName_,
+          password: this.password_,
+          username: this.username_
+        });
+
+        if (response !== "error") { //so modal does not close when there is an error.
+          this.close();
+        }
       } else {
       }
-      this.close()
     },
     ...rules
   },

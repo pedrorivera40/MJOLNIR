@@ -7,10 +7,11 @@ export default {
       commit("DONE_LOADING", 'users')
 
     } catch (error) {
-      if(!!error.reponse.data){
+      if(!!error.response.data){
         dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
       }
-      dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
 
       commit("DONE_LOADING", 'users')
     }
@@ -24,10 +25,11 @@ export default {
       commit("DONE_LOADING", 'permission')
 
     } catch (error) {
-      if(!!error.reponse.data){
+      if(!!error.response.data){
         dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
       }
-      dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
 
       commit("DONE_LOADING", 'permission')
     }
@@ -39,10 +41,11 @@ export default {
       dispatch('notifications/setSnackbar', {text: 'User Permissions Saved.', color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
-      if(!!error.reponse.data){
+      if(!!error.response.data){
         dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
       }
-      dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
 
       commit("DONE_LOADING", 'permission')
     }
@@ -56,10 +59,31 @@ export default {
       dispatch('notifications/setSnackbar', {text: `${payload.username} has been deleted.`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
-      if(!!error.reponse.data){
+      if(!!error.response.data){
         dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
       }
-      dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+
+      commit("DONE_LOADING", 'permission')
+    }
+  },
+
+  async addUser({ commit, dispatch }, payload) {
+    try {
+      console.log(payload)
+      const response = await this.$axios.post(`users/`, payload)
+      console.log(response.data.User)
+      // commit("ADD_USER", response.data.User)
+      dispatch('notifications/setSnackbar', {text: `${payload.username} has been added to the system..`, color: 'primary lighten-1'}, {root: true})
+
+    } catch (error) {
+      if(!!error.response.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+        return 'error' //so modal does not close when an error happens.
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      }
 
       commit("DONE_LOADING", 'permission')
     }
