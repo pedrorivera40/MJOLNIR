@@ -3,13 +3,15 @@
     <v-app-bar app color="primary" dark clipped-left v-if="$auth.loggedIn">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
-      <v-toolbar-title>Huella Deportiva Dashboard</v-toolbar-title>
+      <v-toolbar-title class="headline font-weight-medium">
+        Huella Deportiva Dashboard
+      </v-toolbar-title>
 
       <v-spacer />
 
       <v-icon class="mr-2" @click="test">mdi-account-circle</v-icon>
 
-      <v-label dark v-if="user !== null">{{ user.username }}</v-label>
+      <span class="font-weight-medium" dark v-if="user !== null">{{ user.username }}</span>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn class="ml-2" @click="logout" v-on="on" icon>
