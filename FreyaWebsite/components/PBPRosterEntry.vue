@@ -15,7 +15,7 @@
         <v-row justify="center">
           <v-btn color="green" dark @click="dialog = true">VER ESTADÍSTICAS</v-btn>
           <v-dialog v-model="dialog" max-width="600px">
-            <PBPAthleteStatistics
+            <VolleyballPBPAthleteStatistics
               :athlete_name="athlete_name"
               :athlete_img="athlete_img"
               :athlete_number="athlete_number"
@@ -30,11 +30,11 @@
 </template>
 
 <script>
-import PBPAthleteStatistics from "../components/PBPAthleteStatistics";
+import VolleyballPBPAthleteStatistics from "../components/VolleyballPBPAthleteStatistics";
 
 export default {
   components: {
-    PBPAthleteStatistics
+    VolleyballPBPAthleteStatistics
   },
   props: {
     athlete_name: String,

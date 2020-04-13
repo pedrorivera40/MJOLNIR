@@ -22,10 +22,28 @@
           <v-timeline>
             <v-container v-for="action in actions" :key="action.id">
               <v-timeline-item right v-if="action.team === opponent_team_name" :color="uprm_color">
-                <v-row align="center" justify="center">{{action.text}}</v-row>
+                <VolleyballGameAction
+                  align="center"
+                  justify="center"
+                  :action_type="action.action_type"
+                  :message="action.text"
+                  :athlete_number="action.athlete_number"
+                  :athlete_name="action.athlete_name"
+                  :athlete_img="action.athlete_img"
+                  :in_color="opp_color"
+                />
               </v-timeline-item>
               <v-timeline-item left v-else :color="uprm_color">
-                <v-row align="center" justify="center">{{action.text}}</v-row>
+                <VolleyballGameAction
+                  align="center"
+                  justify="center"
+                  :action_type="action.action_type"
+                  :message="action.text"
+                  :athlete_number="action.athlete_number"
+                  :athlete_name="action.athlete_name"
+                  :athlete_img="action.athlete_img"
+                  :in_color="uprm_color"
+                />
               </v-timeline-item>
             </v-container>
           </v-timeline>
@@ -95,10 +113,10 @@
                   <v-row justify="center">
                     <PBPRosterEntry
                       :athlete_name="athlete.name"
-                      :athlete_img="athlete.img"
                       :athlete_number="athlete.number"
+                      :athlete_img="athlete.img"
                       :athlete_statistics="uprm_team_statistics"
-                      :in_color="opp_color"
+                      :in_color="uprm_color"
                     />
                   </v-row>
                 </v-container>
@@ -111,7 +129,7 @@
                       :athlete_img="athlete.img"
                       :athlete_number="athlete.number"
                       :athlete_statistics="opp_team_statistics"
-                      :in_color="uprm_color"
+                      :in_color="opp_color"
                     />
                   </v-row>
                 </v-container>
@@ -128,18 +146,47 @@
 import VolleyballScore from "../../../components/VolleyballScore";
 import VolleyballStatistics from "../../../components/VolleyballStatistics";
 import PBPRosterEntry from "../../../components/PBPRosterEntry";
+import VolleyballGameAction from "../../../components/VolleyballGameAction";
 
 export default {
   components: {
     VolleyballScore,
     VolleyballStatistics,
-    PBPRosterEntry
+    PBPRosterEntry,
+    VolleyballGameAction
   },
   data: () => ({
     sport_name: "Voleibol",
     uprm_team_name: "Tarzanes",
     opponent_team_name: "Gallitos",
-    actions: [{ id: 1, team: "Tarzanes", text: "SOMETHING" }],
+    actions: [
+      {
+        id: 1,
+        action_type: "Notification",
+        team: "Tarzanes",
+        text: "El partido comenzará dentro de 5 minutos."
+      },
+      {
+        id: 2,
+        action_type: "BlockPoint",
+        team: "Gallitos",
+        text: "El partido comenzará dentro de 5 minutos.",
+        athlete_number: 5,
+        athlete_name: "Martin Lawrence",
+        athlete_img:
+          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg"
+      },
+      {
+        id: 2,
+        action_type: "KillPoint",
+        team: "Tarzanes",
+        text: "El partido comenzará dentro de 5 minutos.",
+        athlete_number: 5,
+        athlete_name: "Jose Juan Barea",
+        athlete_img:
+          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png"
+      }
+    ],
     currentSet: 0,
     score: {
       uprm_set1: 0,
