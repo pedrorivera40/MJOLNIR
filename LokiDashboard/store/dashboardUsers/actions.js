@@ -72,7 +72,7 @@ export default {
     try {
       const response = await this.$axios.post(`users/`, payload)
       commit("ADD_USER", response.data.User)
-      dispatch('notifications/setSnackbar', {text: `${payload.username} has been added to the system..`, color: 'primary lighten-1'}, {root: true})
+      dispatch('notifications/setSnackbar', {text: `${payload.username} has been added to the system.`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
       if(!!error.response.data){
@@ -86,11 +86,11 @@ export default {
     }
   },
 
-  async resetPasswordAdmin({ commit, dispatch }, payload) {
+  async resetPasswordByAdmin({ commit, dispatch }, payload) {
     try {
-      const response = await this.$axios.post(`users/`, payload)
-      commit("ADD_USER", response.data.User)
-      dispatch('notifications/setSnackbar', {text: `${payload.username} has been added to the system..`, color: 'primary lighten-1'}, {root: true})
+      const response = await this.$axios.patch(`users/${payload.id}/reset`, payload)
+      console.log(response.data.User)
+      dispatch('notifications/setSnackbar', {text: `${payload.username}'s password has been reset`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
       if(!!error.response.data){

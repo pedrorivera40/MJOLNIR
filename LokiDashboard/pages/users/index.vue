@@ -122,6 +122,11 @@
           :id="editedItem.id"
           :username="editedItem.username"
         />
+        <PasswordResetModal
+          :dialog.sync="dialogPassword"
+          :id="editedItem.id"
+          :username="editedItem.username"
+        />
       </v-card>
     </div>
   </v-container>
@@ -132,6 +137,7 @@ import { mapActions, mapGetters } from "vuex";
 import DeleteUserModal from "@/components/DeleteUserModal";
 import UpdatePermissionsModal from "@/components/UpdatePermissionsModal";
 import UpdateUserModal from "@/components/UpdateUserInfoModal";
+import PasswordResetModal from "@/components/PasswordResetModal";
 export default {
   data() {
     return {
@@ -139,6 +145,7 @@ export default {
       dialogEdit: false,
       dialogDelete: false,
       dialogPermissions: false,
+      dialogPassword: false,
       headers: [
         {
           text: "ID",
@@ -185,7 +192,8 @@ export default {
   components: {
     DeleteUserModal,
     UpdatePermissionsModal,
-    UpdateUserModal
+    UpdateUserModal,
+    PasswordResetModal
   },
   methods: {
     ...mapActions({
@@ -210,7 +218,8 @@ export default {
       this.getPermissions(user.id);
     },
     resetPassword(user) {
-      console.log("reset");
+      this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+      this.dialogPassword = true;
     }
   },
   computed: {
