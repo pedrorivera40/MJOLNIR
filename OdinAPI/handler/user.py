@@ -187,12 +187,11 @@ class UserHandler:
         if user == None:
             # Login attempts do not increase because username does not exist.
             return jsonify(Error="Username or Password are incorrect."), 400
-
-        # get user id , whic is position 0 of the user array.
+        # get user id , whic is position 0 of the user tupple.
         duid = user[0] 
         attempts = dao.getLoginAttempts(duid)[0] #get current number of attempts
         
-        if attempts == 3: # If there are 3 failed login attempts, deactivate account.
+        if attempts == 3 or user[4] == False : # If there are 3 failed login attempts, deactivate account.
             dao.deactivateDashUserAccount(duid)
             return jsonify(Error='Account is locked, contact administrator.'), 401
 
