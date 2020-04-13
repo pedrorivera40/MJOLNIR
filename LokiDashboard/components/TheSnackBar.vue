@@ -6,7 +6,7 @@
       v-model="snackbar.showing"
       :timeout="snackbar.timeout"
       :color="snackbar.color"
-      :multiline="snackbar.multiline"
+      :multiLine="snackbar.multiline"
       :style="`bottom: ${(index * 60) + 40}px`"
     >
       {{snackbar.text}}
@@ -18,7 +18,7 @@
 <script>
   import { mapState, mapActions } from 'vuex';
   export default {
-    name: 'TheSnackbar',
+    name: 'TheSnackBar',
     computed: {
       ...mapState({
         snackbars: state => state.notifications.snackbars

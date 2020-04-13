@@ -175,10 +175,10 @@ def userByID(duid):
     if request.method == 'PATCH':
         ## For username change
         ## Check the request contains the right structure.
-        if 'username' not in req :
+        if 'username' not in req or 'full_name' not in req or 'email' not in req or 'is_active' not in req :
             return jsonify(Error='Bad Request'), 400
 
-        return handler.updateDashUserUsername(duid, req['username'])
+        return handler.updateDashUserInfo(duid, req['username'],req['full_name'], req['email'], req['is_active'])
 
 
 @app.route("/users/username/", methods=['POST'])

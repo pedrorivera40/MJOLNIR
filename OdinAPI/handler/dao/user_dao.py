@@ -198,7 +198,7 @@ class UserDAO:
         user = cursor.fetchone()
 
         return user
-    
+
     def getHashByUsername(self, username):
         """
         Gets a Dashboard user's hash given their username.
@@ -279,7 +279,7 @@ class UserDAO:
         self.commitChanges()
         return users
 
-    def updateDashUserUsername(self, duid, username):
+    def updateDashUserInfo(self, duid, username, full_name, email, is_active):
         """
         Updates the username for the dashboard user with the given ID.
 
@@ -289,29 +289,38 @@ class UserDAO:
         Args:
             duid: The ID of the user whose username must be updated.
             username: The new username for the dashboard user.
-
+            full_name: The new name for the dashboboard user.
+            email: The new email for the dashboboard user.
+            is_active: The new active status for the dashboard user.
         Returns:
             A list containing the response to the database query
             containing the matching record for the modified dashboard user.
         """
         cursor = self.conn.cursor()
         probeQuery = """
-                    Select case when (select count(*) from dashboard_user where username =%s AND is_invalid = FALSE) > 0
+                    Select case when (select count(*) from dashboard_user where id != %s AND email =%s AND is_invalid = FALSE) > 0
+                    then 'yes' else 'no' end as emailTest,
+                    case when (select count(*) from dashboard_user where id != %s AND username =%s AND is_invalid = FALSE) > 0
                     then 'yes' else 'no' end as usernameTest;
                     """
-        cursor.execute(probeQuery, (username,))
+        cursor.execute(probeQuery, (duid,email,duid,username,))
         conflicts = cursor.fetchone()
         if(conflicts[0] == 'yes'):
-            return 'UserError2'  # User with that username does not exist.
+            return 'UserError1'  # User with that email already exists in the system.
+        if(conflicts[1] == 'yes'):
+            return 'UserError2'  # User with that username already exists in the system.
 
         query = """
                 update dashboard_user
-                set username = %s
+                set username = %s,
+                full_name= %s,
+                email=%s,
+                is_active=%s
                 where id = %s
                 AND is_invalid = FALSE
                 returning id, username, full_name, email, is_active, is_invalid;
                 """
-        cursor.execute(query, (username, duid,))
+        cursor.execute(query, (username, full_name, email, is_active, duid,))
         users = cursor.fetchone()
         self.commitChanges()
         return users
@@ -460,7 +469,8 @@ class UserDAO:
                     values (%s,%s, %s)
                     returning id, user_id, permission_id, is_invalid
             """
-            cursor.execute(query, (duid, permission['permission_id'], permission['is_invalid'],))
+            cursor.execute(
+                query, (duid, permission['permission_id'], permission['is_invalid'],))
             queryResults.append(cursor.fetchone())
         self.commitChanges()
         return queryResults
@@ -496,7 +506,8 @@ class UserDAO:
                     AND permission_id = %s
                     returning permission_id, is_invalid
                     """
-            cursor.execute(query, (permission['is_invalid'],duid, permission['permission_id'],))
+            cursor.execute(
+                query, (permission['is_invalid'], duid, permission['permission_id'],))
             queryResults.append(cursor.fetchone())
         self.commitChanges()
         return queryResults
@@ -530,7 +541,7 @@ class UserDAO:
         self.commitChanges()
         return queryResults
 
-    def getLoginAttempts(self,duid):
+    def getLoginAttempts(self, duid):
         """
         Returns the login attempts for a user.
 
@@ -554,7 +565,7 @@ class UserDAO:
         attempts = cursor.fetchone()
         return attempts
 
-    def setLoginAttempts(self,duid, attempts):
+    def setLoginAttempts(self, duid, attempts):
         """
         Sets the value of login attempts for a user.
 
@@ -575,7 +586,7 @@ class UserDAO:
                 and is_invalid=False
                 returning login_attempts;
                 """
-        cursor.execute(query, (attempts,duid, ))
+        cursor.execute(query, (attempts, duid, ))
         attempts = cursor.fetchone()
         self.commitChanges()
         return attempts

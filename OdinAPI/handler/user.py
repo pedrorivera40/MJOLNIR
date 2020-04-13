@@ -44,8 +44,8 @@ class UserHandler:
         is then returned.
 
         Args:
-            firstName: The first name of the new dashboboard user.
-            lastName: The last name of the new dashboboard user.
+            username: The usernamename of the new dashboboard user.
+            full_name: The name of the new dashboboard user.
             email: The email of the new dashboboard user.
             password: The hash of the password for the new dashboboard user.
             
@@ -187,12 +187,11 @@ class UserHandler:
         if user == None:
             # Login attempts do not increase because username does not exist.
             return jsonify(Error="Username or Password are incorrect."), 400
-
-        # get user id , whic is position 0 of the user array.
+        # get user id , whic is position 0 of the user tupple.
         duid = user[0] 
         attempts = dao.getLoginAttempts(duid)[0] #get current number of attempts
         
-        if attempts == 3: # If there are 3 failed login attempts, deactivate account.
+        if attempts == 3 or user[4] == False : # If there are 3 failed login attempts, deactivate account.
             dao.deactivateDashUserAccount(duid)
             return jsonify(Error='Account is locked, contact administrator.'), 401
 
@@ -250,7 +249,7 @@ class UserHandler:
         dao.setLoginAttempts(duid,0)
         return jsonify(User=self.mapUserToDict(res)),201
 
-    def updateDashUserUsername(self, duid,username):
+    def updateDashUserInfo(self, duid,username, full_name,email,is_active):
         """
         Updates the username for the dashboard user with the given ID.
 
@@ -261,15 +260,19 @@ class UserHandler:
         Args:
             duid: The ID of the user whose username must be updated.
             username: The new username for the dashboard user.
-            
+            full_name: The new name for the dashboboard user.
+            email: The new email for the dashboboard user.
+            is_active: The new active status for the dashboard user.
         Returns:
             A JSON containing all the user with the updated dashboard user. 
         """
         dao = UserDAO()
-        res = dao.updateDashUserUsername(duid, username)
+        res = dao.updateDashUserInfo(duid, username, full_name,email,is_active)
         if res == None:
             return jsonify(Error='No user found in the system with that id.'), 404
-        if res == 'UserError2':
+        if res == 'UserError1':
+            return jsonify(Error='Email already taken.'), 400
+        elif res == 'UserError2':
             return jsonify(Error='Username already taken.'), 400
         else:
             return jsonify(User=self.mapUserToDict(res)),201
