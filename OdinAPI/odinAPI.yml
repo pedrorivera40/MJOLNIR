@@ -84,8 +84,8 @@ paths:
                 $ref: "#/components/schemas/Error"
 
     patch:
-      summary: "Update username"
-      description: "Update the username for the user with the given Id"
+      summary: "Update user information"
+      description: "Update the information for the user with the given Id"
       tags:
         - Users
       parameters:
@@ -99,7 +99,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UsernameChange"
+              $ref: "#/components/schemas/UserInfoChange"
       responses:
         "200":
           description: OK
@@ -362,6 +362,19 @@ components:
       properties:
         username:
           type: string
+    UserInfoChange:
+      type: object
+      properties:
+        username:
+          type: string
+        full_name:
+          type: string
+        email:
+          type: string
+        is_active:
+          type: string
+      xml:
+        name: User
     Email:
       type: object
       properties:
@@ -403,7 +416,7 @@ components:
       properties:
         username:
           type: string
-        full_naame:
+        full_name:
           type: string
         email:
           type: string
