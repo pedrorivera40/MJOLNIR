@@ -39,7 +39,9 @@
           :loading="isLoadingU"
         >
           <template v-slot:item.is_active="{ item }">
-            {{ setStatus(item.is_active) }}
+            <v-chip class="ma-2" small  :color="item.is_active ? 'primary lighten-2': ''">
+              {{ setStatus(item.is_active) }}
+            </v-chip>
           </template>
 
           <template v-slot:item.password="{ item }">
@@ -150,14 +152,13 @@ export default {
         {
           text: "ID",
           align: "start",
-          sortable: false,
           value: "id"
         },
         { text: "Full Name", value: "full_name" },
         { text: "Username", value: "username" },
         { text: "Email", value: "email" },
-        { text: "Account Status", value: "is_active" },
-        { text: "Password", value: "password" },
+        { text: "Account Status", align: "center", value: "is_active" },
+        { text: "Password",  value: "password" },
         { text: "Actions", value: "actions", sortable: false }
       ],
       editedItemIndex: -1,
