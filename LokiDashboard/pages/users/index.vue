@@ -6,7 +6,11 @@
         <v-card-title>
           <v-row>
             <v-col>
-              <v-btn color="primary_light" class="white--text">
+              <v-btn
+                color="primary_light"
+                class="white--text"
+                @click="editUser(editedItemIndex)"
+              >
                 <v-icon left>
                   mdi-plus
                 </v-icon>
@@ -49,7 +53,7 @@
               <template v-slot:activator="{ on }">
                 <v-icon
                   small
-                  class="mr-2"
+                  class="mr-2 table-actions"
                   v-on="on"
                   @click.stop="editUser(item)"
                 >
@@ -62,7 +66,7 @@
               <template v-slot:activator="{ on }">
                 <v-icon
                   small
-                  class="mr-2"
+                  class="mr-2 table-actions"
                   v-on="on"
                   @click="editPermissions(item)"
                 >
@@ -75,7 +79,7 @@
               <template v-slot:activator="{ on }">
                 <v-icon
                   small
-                  class="mr-2"
+                  class="mr-2 table-actions"
                   v-on="on"
                   @click.stop="deleteUser(item)"
                 >
@@ -92,12 +96,19 @@
           :username="editedItem.username"
           v-on:update:dialog="dialogDelete = $event"
         />
-        <UpdateUserModal :dialog.sync="dialogEdit" />
+        <UpdateUserModal
+          v-if="dialogEdit"
+          :nameSelector="editedItemIndex"
+          :dialog.sync="dialogEdit"
+          :username="editedItem.username"
+          :fullName="editedItem.full_name"
+          :email="editedItem.email"
+          :isActive="editedItem.is_active"
+        />
         <UpdatePermissionsModal
           :dialog.sync="dialogPermissions"
           :id="editedItem.id"
           :username="editedItem.username"
-          :nameSelector="editedItemIndex"
         />
       </v-card>
     </div>
@@ -165,13 +176,16 @@ export default {
       this.dialogDelete = true;
     },
     editUser(user) {
+      this.editedItemIndex = this.users.indexOf(user)
       this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
       this.dialogEdit = true;
     },
     editPermissions(user) {
       this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
       this.dialogPermissions = true;
-      this.getPermissions(user.id)
+      this.getPermissions(user.id);
+    }, resetPassword(user) {
+      console.log('reset')
     }
   },
   computed: {
@@ -187,12 +201,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/variables.scss";
 .wrapper {
   height: 100%;
 
   .content-area {
     height: 100%;
     width: 100%;
+
+    .table-actions {
+      &:hover {
+        color: $primary-color;
+      }
+    }
   }
 }
 </style>

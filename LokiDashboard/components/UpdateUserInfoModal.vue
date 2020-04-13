@@ -4,39 +4,90 @@
       <v-card>
         <v-toolbar flat color="primary_dark">
           <v-toolbar-title class="headline white--text">
-            {{setFormTitle}}
+            {{ setFormTitle }}
           </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-container v-model="valid">
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  label="Full Name*"
-                  required
-                  :rules="[required('name', 'Please input Full Name,')]"
-                />
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Email*" required :rules="[required('email', 'Please input email.'), emailFormat()]"></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Username*" required :rules="[required('username', 'Please input username.')]"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-switch
-                  v-model="isActive"
-                  :label="`Account Active: ${isActive.toString()}`"
-                ></v-switch>
-              </v-col>
-            </v-row>
+          <v-container>
+            <v-form v-model="valid">
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    label="Full Name*"
+                    v-model="fullName_"
+                    required
+                    :rules="[required('name', 'Please input Full Name,')]"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="email_"
+                    label="Email*"
+                    required
+                    :rules="[
+                      required('email', 'Please input email.'),
+                      emailFormat()
+                    ]"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="username_"
+                    label="Username*"
+                    required
+                    :rules="[required('username', 'Please input username.')]"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="password_"
+                    label="Password*"
+                    required
+                    :type="showP ? 'text' : 'password'"
+                    :append-icon="showP ? 'mdi-eye-off' : 'mdi-eye'"
+                    @click:append="showP = !showP"
+                    v-if="nameSelector === -1"
+                    :rules="[
+                      required('password'),
+                      minLength('password', 10),
+                      maxLength('password', 64),
+                      passwordFormat()
+                    ]"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="repeat_"
+                    label="Confirm Password*"
+                    required
+                    :type="showC ? 'text' : 'password'"
+                    :append-icon="showC ? 'mdi-eye-off' : 'mdi-eye'"
+                    @click:append="showC = !showC"
+                    v-if="nameSelector === -1"
+                    :rules="[
+                      required('password', 'Please confirm your password.'),
+                      passwordMatch(password_)
+                    ]"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-switch
+                    v-model="isActive_"
+                    :label="`Account Active`"
+                    v-if="nameSelector !== -1"
+                  ></v-switch>
+                </v-col>
+              </v-row>
+            </v-form>
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="close()">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="close()" :disabled="!valid">Save</v-btn>
+          <v-btn color="blue darken-1" text @click="save()" :disabled="!valid"
+            >Save</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -53,23 +104,54 @@ export default {
     fullName: String,
     email: String,
     isActive: Boolean,
-    nameSelector: Number,
-    
+    nameSelector: Number
   },
   data() {
     return {
       valid: false,
-      formTitle: '',
+      showP: false,
+      showC: false,
+      formTitle: "",
+      username_: "",
+      fullName_: "",
+      email_: "",
+      password_: "",
+      repeat_: "",
+      isActive_: ""
     };
   },
   methods: {
     close() {
-      this.$emit("update:dialog", false);
+      this.$emit("update:dialog", false); //this is to avoid mutation dialog prop directly when closing dialog.
+      // This was to avoid having the user info set when clicking add user, after clicking on edit a user.
+      // but it introduced a bug where validation was already showing errors. Fixed it with v-if on modal.
+      // This would have also fixed the permissions issue, but loading screen took care of that
+      // this.username_ = ""; 
+      // this.fullName_ = "";
+      // this.email_ = "";
+      // this.password_ = "";
+      // this.repeat_ = "";
+      // this.isActive_ = "";
     },
-    ...rules,
-  }, computed: {
-    setFormTitle(){
-      return this.nameSelector === -1 ? 'New User' : 'Edit User'
+    save() {
+      if (this.nameSelector === -1) {
+        return "New User";
+      } else {
+      }
+      this.close()
+    },
+    ...rules
+  },
+  computed: {
+    setFormTitle() {
+      if (this.nameSelector === -1) {
+        return "New User";
+      }
+      this.fullName_ = this.fullName;
+      this.email_ = this.email;
+      this.username_ = this.username;
+      this.isActive_ = this.isActive;
+      return "Edit User";
     }
   }
 };
