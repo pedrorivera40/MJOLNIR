@@ -23,6 +23,18 @@ export default {
     state.users.push(user)
 
   },
+
+  UPDATE_USER(state, user) {
+    //TODO TESTING if this triggers a refresh.
+    const index = state.users.findIndex(arruser => arruser.id === user.id )
+    if(index!==-1){
+      //Susbtitute the old user with the updated user.
+      state.users.splice(index, 1,user)
+    }
+    
+    
+
+  },
   
   SET_LOADING(state, selector){
     if(selector==='users'){

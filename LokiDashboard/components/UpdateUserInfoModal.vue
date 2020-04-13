@@ -113,7 +113,8 @@ export default {
     fullName: String,
     email: String,
     isActive: Boolean,
-    nameSelector: Number
+    nameSelector: Number,
+    id: Number
   },
   data() {
     return {
@@ -132,7 +133,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      addNewUser: "dashboardUsers/addUser"
+      addNewUser: "dashboardUsers/addUser",
+      editUser: "dashboardUsers/editUser"
     }),
     close() {
       this.$emit("update:dialog", false); //this is to avoid mutation dialog prop directly when closing dialog.
@@ -147,7 +149,7 @@ export default {
       // this.isActive_ = "";
     },
     async save() {
-      this.isLoading = true
+      this.isLoading = true;
       if (this.nameSelector === -1) {
         const response = await this.addNewUser({
           email: this.email_,
@@ -161,8 +163,19 @@ export default {
           this.close();
         }
       } else {
+        const response = await this.editUser({
+          email: this.email_,
+          full_name: this.fullName_,
+          username: this.username_,
+          is_active: this.isActive_,
+          id: this.id
+        });
+        if (response !== "error") {
+          //so modal does not close when there is an error.
+          this.close();
+        }
       }
-      this.isLoading = false
+      this.isLoading = false;
     },
     ...rules
   },

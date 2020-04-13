@@ -47,7 +47,6 @@ export default {
         dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
       }
 
-      commit("DONE_LOADING", 'permission')
     }
   },
 
@@ -64,7 +63,6 @@ export default {
         dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
       }
 
-      commit("DONE_LOADING", 'permission')
     }
   },
 
@@ -82,11 +80,28 @@ export default {
         dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
       }
 
-      commit("DONE_LOADING", 'permission')
     }
   },
 
-  async resetPasswordByAdmin({ commit, dispatch }, payload) {
+  async editUser({ commit, dispatch }, payload) {
+    try {
+      const response = await this.$axios.patch(`users/${payload.id}`, payload)
+      commit("UPDATE_USER", response.data.User)
+      dispatch('notifications/setSnackbar', {text: `${payload.username}'s information has been updated!`, color: 'primary lighten-1'}, {root: true})
+
+    } catch (error) {
+      console.log(error)
+      // if(!!error.response.data){
+      //   dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      //   return 'error' //so modal does not close when an error happens.
+      // } else {
+      //   dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      // }
+
+    }
+  },
+
+  async resetPasswordByAdmin({ dispatch }, payload) {
     try {
       const response = await this.$axios.patch(`users/${payload.id}/reset`, payload)
       console.log(response.data.User)
@@ -100,7 +115,6 @@ export default {
         dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
       }
 
-      commit("DONE_LOADING", 'permission')
     }
   },
   

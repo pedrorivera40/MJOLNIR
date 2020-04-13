@@ -118,6 +118,7 @@
           :fullName="editedItem.full_name"
           :email="editedItem.email"
           :isActive="editedItem.is_active"
+          :id="editedItem.id"
         />
         <UpdatePermissionsModal
           :dialog.sync="dialogPermissions"
