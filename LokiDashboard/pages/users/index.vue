@@ -170,6 +170,18 @@ export default {
       }
     };
   },
+  head() {
+    return {
+      title: "User Management",
+      meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: "Manage system users"
+        }
+      ]
+    };
+  },
   components: {
     DeleteUserModal,
     UpdatePermissionsModal,
