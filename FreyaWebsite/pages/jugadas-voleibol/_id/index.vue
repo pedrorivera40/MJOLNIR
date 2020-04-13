@@ -56,11 +56,24 @@
               <v-tab>{{uprm_team_name}}</v-tab>
               <v-tab-item>
                 <v-container v-for="athlete in opp_roster" :key="athlete.number">
-                  <PBPRosterEntry
-                    :athlete_name="athlete.name"
-                    :athlete_img="athlete.img"
-                    :athlete_number="athlete.number"
-                  />
+                  <v-row justify="center">
+                    <PBPRosterEntry
+                      :athlete_name="athlete.name"
+                      :athlete_img="athlete.img"
+                      :athlete_number="athlete.number"
+                    />
+                  </v-row>
+                </v-container>
+              </v-tab-item>
+              <v-tab-item>
+                <v-container v-for="athlete in uprm_roster" :key="athlete.number">
+                  <v-row justify="center">
+                    <PBPRosterEntry
+                      :athlete_name="athlete.name"
+                      :athlete_img="athlete.img"
+                      :athlete_number="athlete.number"
+                    />
+                  </v-row>
                 </v-container>
               </v-tab-item>
             </v-tabs>
@@ -127,13 +140,13 @@ export default {
     uprm_roster: [
       {
         img:
-          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
+          "https://scontent.fsig2-1.fna.fbcdn.net/v/t1.0-9/14202778_1104681222954044_4221871197184292482_n.jpg?_nc_cat=108&_nc_sid=e007fa&_nc_ohc=SkJYpfLrBpsAX_hQbOU&_nc_ht=scontent.fsig2-1.fna&oh=7cd68e75d22f20eaedb7423fbb516719&oe=5EB86212",
         name: "Jose Juan Barea",
         number: 11
       },
       {
         img:
-          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
+          "https://scontent.fsig2-1.fna.fbcdn.net/v/t1.0-9/14102251_1104681199620713_3292201927945481377_n.jpg?_nc_cat=110&_nc_sid=e007fa&_nc_ohc=ZdEZhrqoi18AX-4DRJc&_nc_ht=scontent.fsig2-1.fna&oh=3f4cdce453e1ad2a85ac6e44ee82c5c0&oe=5EB9FCD9",
         name: "Jose Juan Barea",
         number: 11
       },
@@ -171,44 +184,44 @@ export default {
     opp_roster: [
       {
         img:
-          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
-        name: "Bad Jose Juan Barea",
+          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
+        name: "MARTIN LAWRENCE",
         number: 11
       },
       {
         img:
-          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
-        name: "Bad Jose Juan Barea",
+          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
+        name: "Martin Lawrence",
         number: 11
       },
       {
         img:
-          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
-        name: "Bad Jose Juan Barea",
+          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
+        name: "Martin Lawrence",
         number: 11
       },
       {
         img:
-          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
-        name: "Bad Jose Juan Barea",
+          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
+        name: "Martin Lawrence",
         number: 11
       },
       {
         img:
-          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
-        name: "Bad Jose Juan Barea",
+          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
+        name: "Martin Lawrence",
         number: 11
       },
       {
         img:
-          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
-        name: "Bad Jose Juan Barea",
+          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
+        name: "Martin Lawrence",
         number: 11
       },
       {
         img:
-          "https://media.telemundodenver.com/2019/09/anonymous-trump.jpg?resize=850%2C478",
-        name: "Bad Jose Juan Barea",
+          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
+        name: "Martin Lawrence",
         number: 11
       }
     ],
