@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto"  max-width="400">
+  <v-card height="100%"  width="100%">
     <v-img
       v-if="img != ''"
       class="black--text"
@@ -14,7 +14,7 @@
       <div>UPRM vs {{opponentName}} </div>
     </v-card-text>
     <v-card-text class="text--primary">
-      <div>Punt {{localScore}} - {{opponentScore}} </div>
+      <div>Puntos {{localScore}} - {{opponentScore}} </div>
     </v-card-text>
      <v-card-text class="text--primary">
       <div>Resumen: {{eventSummary}} </div>

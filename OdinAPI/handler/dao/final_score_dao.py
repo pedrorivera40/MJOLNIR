@@ -31,7 +31,7 @@ class FinalScoreDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                SELECT local_score, opponent_score, opponent_name, opponent_color, 
+                SELECT local_score, opponent_score,
                 event_id, id as final_score_id
                 FROM final_score
                 WHERE event_id = %s and 
@@ -56,7 +56,7 @@ class FinalScoreDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                SELECT local_score, opponent_score, opponent_name, opponent_color, 
+                SELECT local_score, opponent_score, 
                 event_id, id as final_score_id
                 FROM final_score
                 WHERE event_id = %s and 
@@ -67,7 +67,7 @@ class FinalScoreDAO:
         return result
 
     #NEW: add final score
-    def addFinalScore(self,eID, local_score, opponent_score, opponent_name, opponent_color):
+    def addFinalScore(self,eID, local_score, opponent_score):
         """
         Adds a new sports-specific event final score with the provided information.
 
@@ -79,8 +79,7 @@ class FinalScoreDAO:
             eID: the ID of the event for which the final score record will be added.
             local_score: the final score of the local team for the event
             opponent_score: the final score of the opponent team for the event
-            opponent_name: name of the opponent team
-            opponent_color: color to be used for opponent team
+     
             
         Returns:
             A list containing the response to the database query
@@ -88,11 +87,10 @@ class FinalScoreDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO final_score(local_score,opponent_score,event_id,is_invalid,
-                opponent_name, opponent_color)
-                VALUES(%s,%s,%s,false,%s,%s) returning id;
+                INSERT INTO final_score(local_score,opponent_score,event_id,is_invalid)
+                VALUES(%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(int(local_score),int(opponent_score),int(eID),str(opponent_name),str(opponent_color),))
+        cursor.execute(query,(int(local_score),int(opponent_score),int(eID),))
         fsID = cursor.fetchone()[0]
         if not fsID:
             return fsID
@@ -100,7 +98,7 @@ class FinalScoreDAO:
         return fsID
 
     #NEW: edit final score for an event 
-    def editFinalScore(self,eID, local_score, opponent_score,opponent_name, opponent_color):
+    def editFinalScore(self,eID, local_score, opponent_score):
         """
         Updates the final score for the sports-specific event with the given IDs.
 
@@ -111,8 +109,7 @@ class FinalScoreDAO:
             eID: the ID of the event for which the final score record will be updated
             local_score: the local score to be updated
             opponent_score: the opponent score to be updated
-            opponent_name: name of the opponent team
-            opponent_color: color to be used for opponent team
+           
             
         Returns:
             A list containing the response to the database query
@@ -124,19 +121,15 @@ class FinalScoreDAO:
                 UPDATE final_score
                 SET local_score = %s,
                     opponent_score = %s,
-                    opponent_name = %s,
-                    opponent_color = %s,
                     is_invalid = false
                 WHERE event_id = %s 
                 RETURNING
                     local_score,
                     opponent_score,
-                    opponent_name,
-                    opponent_color, 
                     event_id, 
                     id as final_score_id;
                 """
-        cursor.execute(query,(int(local_score),int(opponent_score),str(opponent_name),str(opponent_color),int(eID),))
+        cursor.execute(query,(int(local_score),int(opponent_score),int(eID),))
         result = cursor.fetchone()
         if not result:
             return result
