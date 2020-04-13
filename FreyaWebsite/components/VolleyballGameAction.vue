@@ -1,14 +1,27 @@
 <template>
   <v-container>
-    <v-alert
-      v-if="action_type === notification"
-      border="bottom"
-      colored-border
-      icon="mdi-bell-outline"
-      elevation="2"
-      width="500px"
-    >{{ message }}</v-alert>
-    <v-card v-else width="500px">
+    <v-card v-if="action_type === notification" width="550px">
+      <v-toolbar :color="in_color" dark flat>
+        <v-row justify="center" align="center">
+          <v-card-title>{{ action_type }}</v-card-title>
+        </v-row>
+      </v-toolbar>
+      <v-row align="center">
+        <v-col :cols="4" justify="center">
+          <v-avatar size="100" class="mx-10">
+            <v-icon x-large :color="in_color" v-if="!athlete_img" height="100px">mdi-bell-outline</v-icon>
+          </v-avatar>
+        </v-col>
+        <v-col justify="center">
+          <v-row allign="center">
+            <v-col>
+              <v-card-title class="text-center" style="word-break: normal;">{{ message }}</v-card-title>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-card>
+    <v-card v-else width="550px">
       <v-toolbar :color="in_color" dark flat>
         <v-row justify="center" align="center">
           <v-card-title>{{ action_type }}</v-card-title>
@@ -24,7 +37,10 @@
         </v-col>
         <v-col allign="center">
           <v-row class="mx-10" justify="center">
-            <v-card-title>#{{athlete_number}}. {{athlete_name}}</v-card-title>
+            <v-card-title
+              class="text-center"
+              style="word-break: normal;"
+            >#{{athlete_number}}. {{athlete_name}}</v-card-title>
           </v-row>
         </v-col>
       </v-row>

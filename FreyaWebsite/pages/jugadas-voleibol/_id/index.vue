@@ -19,34 +19,41 @@
         <v-tab>ESTADÍSTICAS POR ATLETAS</v-tab>
 
         <v-tab-item>
-          <v-timeline>
-            <v-container v-for="action in actions" :key="action.id">
-              <v-timeline-item right v-if="action.team === opponent_team_name" :color="uprm_color">
-                <VolleyballGameAction
-                  align="center"
-                  justify="center"
-                  :action_type="action.action_type"
-                  :message="action.text"
-                  :athlete_number="action.athlete_number"
-                  :athlete_name="action.athlete_name"
-                  :athlete_img="action.athlete_img"
-                  :in_color="opp_color"
-                />
-              </v-timeline-item>
-              <v-timeline-item left v-else :color="uprm_color">
-                <VolleyballGameAction
-                  align="center"
-                  justify="center"
-                  :action_type="action.action_type"
-                  :message="action.text"
-                  :athlete_number="action.athlete_number"
-                  :athlete_name="action.athlete_name"
-                  :athlete_img="action.athlete_img"
-                  :in_color="uprm_color"
-                />
-              </v-timeline-item>
-            </v-container>
-          </v-timeline>
+          <v-container v-for="action in actions" :key="action.id">
+            <VolleyballGameAction
+              v-if="action.action_type === notification"
+              align="center"
+              justify="center"
+              :action_type="action.action_type"
+              :message="action.text"
+              :athlete_number="action.athlete_number"
+              :athlete_name="action.athlete_name"
+              :athlete_img="action.athlete_img"
+              in_color="gray"
+            />
+            <VolleyballGameAction
+              v-else-if="action.team === opponent_team_name"
+              align="center"
+              justify="center"
+              :action_type="action.action_type"
+              :message="action.text"
+              :athlete_number="action.athlete_number"
+              :athlete_name="action.athlete_name"
+              :athlete_img="action.athlete_img"
+              :in_color="opp_color"
+            />
+            <VolleyballGameAction
+              v-else
+              align="center"
+              justify="center"
+              :action_type="action.action_type"
+              :message="action.text"
+              :athlete_number="action.athlete_number"
+              :athlete_name="action.athlete_name"
+              :athlete_img="action.athlete_img"
+              :in_color="uprm_color"
+            />
+          </v-container>
         </v-tab-item>
 
         <v-tab-item>
@@ -181,7 +188,7 @@ export default {
         action_type: "KillPoint",
         team: "Tarzanes",
         text: "El partido comenzará dentro de 5 minutos.",
-        athlete_number: 5,
+        athlete_number: 11,
         athlete_name: "Jose Juan Barea",
         athlete_img:
           "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png"
@@ -518,7 +525,8 @@ export default {
       }
     ],
     uprm_color: "green",
-    opp_color: "red"
+    opp_color: "red",
+    notification: "Notification"
   })
 };
 </script>
