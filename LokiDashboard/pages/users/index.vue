@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    <h1>Usermanagement</h1>
+  <v-container class="wrapper">
+    <h1 class="primary_dark--text pl-3">Usermanagement</h1>
     <div class="content-area pa-4 pt-12">
       <v-card>
         <v-card-title>
@@ -124,7 +124,7 @@
         />
       </v-card>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
