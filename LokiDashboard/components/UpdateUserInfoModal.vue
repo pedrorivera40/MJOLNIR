@@ -84,10 +84,18 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="close()">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="save()" :disabled="!valid"
-            >Save</v-btn
+          <v-btn color="primary darken-1" text @click="close()">
+            Close
+          </v-btn>
+          <v-btn
+            color="primary darken-1"
+            text
+            @click="save()"
+            :disabled="!valid"
+            :loading="isLoading"
           >
+            Save
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -110,15 +118,15 @@ export default {
   data() {
     return {
       valid: false,
+      isLoading: false,
       showP: false,
       showC: false,
       formTitle: "",
-      // TODO: REMOVE AFTER TESTS
-      username_: "someUsername",
-      fullName_: "This Is Myname",
-      email_: "1@1.com",
-      password_: "ninjaTurtles1!",
-      repeat_: "ninjaTurtles1!",
+      username_: "",
+      fullName_: "",
+      email_: "",
+      password_: "",
+      repeat_: "",
       isActive_: ""
     };
   },
@@ -139,6 +147,7 @@ export default {
       // this.isActive_ = "";
     },
     async save() {
+      this.isLoading = true
       if (this.nameSelector === -1) {
         const response = await this.addNewUser({
           email: this.email_,
@@ -147,11 +156,13 @@ export default {
           username: this.username_
         });
 
-        if (response !== "error") { //so modal does not close when there is an error.
+        if (response !== "error") {
+          //so modal does not close when there is an error.
           this.close();
         }
       } else {
       }
+      this.isLoading = false
     },
     ...rules
   },
