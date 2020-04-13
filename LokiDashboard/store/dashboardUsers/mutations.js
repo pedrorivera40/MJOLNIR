@@ -20,9 +20,6 @@ export default {
   },
 
   ADD_USER(state, user) {
-    // Attempt to not modify state directly.
-    // const copy = state.users
-    // copy.push(user)
     state.users.push(user)
 
   },

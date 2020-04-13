@@ -73,8 +73,7 @@ export default {
     try {
       console.log(payload)
       const response = await this.$axios.post(`users/`, payload)
-      console.log(response.data.User)
-      // commit("ADD_USER", response.data.User)
+      commit("ADD_USER", response.data.User)
       dispatch('notifications/setSnackbar', {text: `${payload.username} has been added to the system..`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
