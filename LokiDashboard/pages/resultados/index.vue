@@ -472,7 +472,7 @@ export default {
 created(){
       this.buildTable()
       this.getSeasonData()
-      this.buildDefault()
+      //this.buildDefault()
     }, 
   methods: {
     buildDefault(){
