@@ -39,7 +39,7 @@ def token_check(func):
     by verifying each request provides a valid token.
     """
     @wraps(func)
-    def decorated():
+    def decorated(*args, **kwargs):
 
         # Extract token from auth header.
         token = request.headers.get('Authorization').split(' ')[1]
@@ -50,7 +50,7 @@ def token_check(func):
         if not verifyToken(token):
             return jsonify(Error="Token is invalid"), 403
         else:
-            return func()
+            return func(*args, **kwargs)
     return decorated
 
 
