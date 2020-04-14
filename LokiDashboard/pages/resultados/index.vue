@@ -62,7 +62,7 @@
                         <v-btn
                             color="primary_light"
                             class="white--text"
-                            @click="editUser(editedItemIndex)"
+                            @click="addAthleteStatistics(editedItemIndex)"
                         >
                             <v-icon left>
                             mdi-plus
@@ -106,12 +106,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="editUser(item)"
+                            @click.stop="editAthleteStatistics(item)"
                             >
                             mdi-pencil
                             </v-icon>
                         </template>
-                        <span>Edit User Statistics</span>
+                        <span>Editar Estadisticas de Atleta</span>
                         </v-tooltip>
                         <!-- <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -132,12 +132,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="deleteUser(item)"
+                            @click.stop="deleteAthleteStatistics(item)"
                             >
                             mdi-delete
                             </v-icon>
                         </template>
-                        <span>Delete User Statistics</span>
+                        <span>Eliminar Estadisticas De Atleta</span>
                         </v-tooltip>
                     </template>
                     </v-data-table>
@@ -158,12 +158,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="editUser(item)"
+                            @click.stop="editAthleteStatistics(item)"
                             >
                             mdi-pencil
                             </v-icon>
                         </template>
-                        <span>Edit User Statistics</span>
+                        <span>Editar Estadisticas de Atleta</span>
                         </v-tooltip>
                         <!-- <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -184,12 +184,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="deleteUser(item)"
+                            @click.stop="deleteAthleteStatistics(item)"
                             >
                             mdi-delete
                             </v-icon>
                         </template>
-                        <span>Delete User Statistics</span>
+                        <span>Eliminar Estadisticas De Atleta</span>
                         </v-tooltip>
                     </template>
                     </v-data-table>
@@ -210,12 +210,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="editUser(item)"
+                            @click.stop="editAthleteStatistics(item)"
                             >
                             mdi-pencil
                             </v-icon>
                         </template>
-                        <span>Edit User Statistics</span>
+                        <span>Editar Estadisticas de Atleta</span>
                         </v-tooltip>
                         <!-- <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -236,12 +236,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="deleteUser(item)"
+                            @click.stop="deleteAthleteStatistics(item)"
                             >
                             mdi-delete
                             </v-icon>
                         </template>
-                        <span>Delete User Statistics</span>
+                        <span>Eliminar Estadisticas De Atleta</span>
                         </v-tooltip>
                     </template>
                     </v-data-table>
@@ -262,12 +262,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="editUser(item)"
+                            @click.stop="editAthleteStatistics(item)"
                             >
                             mdi-pencil
                             </v-icon>
                         </template>
-                        <span>Edit User Statistics</span>
+                        <span>Editar Estadisticas de Atleta</span>
                         </v-tooltip>
                         <!-- <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -288,12 +288,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="deleteUser(item)"
+                            @click.stop="deleteAthleteStatistics(item)"
                             >
                             mdi-delete
                             </v-icon>
                         </template>
-                        <span>Delete User Statistics</span>
+                        <span>Eliminar Estadisticas De Atleta</span>
                         </v-tooltip>
                     </template>
                     </v-data-table>
@@ -307,12 +307,12 @@
                         <v-btn
                             color="primary_light"
                             class="white--text"
-                            @click="editUser(editedItemIndex)"
+                            @click="addAthleteStatistics(editedItemIndex)"
                         >
                             <v-icon left>
                             mdi-plus
                             </v-icon>
-                            Añadir Estadisticas de Equipo
+                            Añadir Estadisticas de Atleta
                         </v-btn>
                         <v-spacer />
                         </v-col>
@@ -338,12 +338,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="editUser(item)"
+                            @click.stop="editTeamStatistics(item)"
                             >
                             mdi-pencil
                             </v-icon>
                         </template>
-                        <span>Edit Team Statistics</span>
+                        <span>Editar Estadisticas de Equipo</span>
                         </v-tooltip>
                         <!-- <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -364,12 +364,12 @@
                             small
                             class="mr-2 table-actions"
                             v-on="on"
-                            @click.stop="deleteUser(item)"
+                            @click.stop="deleteTeamStatistics(item)"
                             >
                             mdi-delete
                             </v-icon>
                         </template>
-                        <span>Delete Team Statistics</span>
+                        <span>Eliminar Estadisticas De Equipo</span>
                         </v-tooltip>
                     </template>
                     </v-data-table>
@@ -612,14 +612,39 @@ created(){
     // setStatus(status) {
     //   return status ? "Active" : "Inactive";
     // },
-    deleteUser(user) {
-      this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-      this.dialogDelete = true;
+    deleteAthleteStatistics(user) {
+    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+    //   this.dialogDelete = true;
+      return
     },
-    editUser(user) {
-      this.editedItemIndex = this.users.indexOf(user)
-      this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-      this.dialogEdit = true;
+    deleteTeamStatistics(user) {
+    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+    //   this.dialogDelete = true;
+        return
+    },
+    editAthleteStatistics(user) {
+    //   this.editedItemIndex = this.users.indexOf(user)
+    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+    //   this.dialogEdit = true;
+        return
+    },
+    editTeamStatistics(user) {
+    //   this.editedItemIndex = this.users.indexOf(user)
+    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+    //   this.dialogEdit = true;
+        return
+    },
+    addAthleteStatistics(user) {
+    //   this.editedItemIndex = this.users.indexOf(user)
+    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+    //   this.dialogEdit = true;
+        return
+    },
+    addAthleteStatistics(user) {
+    //   this.editedItemIndex = this.users.indexOf(user)
+    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+    //   this.dialogEdit = true;
+        return
     },
     // editPermissions(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
@@ -633,7 +658,6 @@ created(){
         //console.log(this.season)
         // TODO: CHANGE SO NOT HARDCODED IDS
 		if(this.sport_id!=''){
-            console.log("How are you getting here when season is actually "+this.season)
             if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
                 this.payload_stats = {// payload_stats.Basketball_Event_Statistics.athlete_statistic.statistics.
                     "Basketball_Event_Statistics": {
