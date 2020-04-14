@@ -41,6 +41,7 @@
                 ]"
               />
             </v-form>
+            <v-checkbox v-model="sure" label="Update password?" />
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -52,7 +53,7 @@
             color="primary darken-1"
             text
             @click="save()"
-            :disabled="!valid"
+            :disabled="!(valid&&sure)"
             :loading="isLoading"
           >
             Save
@@ -79,6 +80,7 @@ export default {
   data() {
     return {
       valid: false,
+      sure:false,
       showNew: false,
       showConf: false,
       isLoading: false,
