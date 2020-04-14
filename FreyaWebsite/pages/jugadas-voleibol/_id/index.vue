@@ -9,7 +9,11 @@
       <v-row align="center" justify="center">
         <VolleyballScore></VolleyballScore>
       </v-row>
-      <v-row></v-row>
+      <v-row>
+        <v-col>
+          <v-divider class="mx-4" :inset="inset" horizontal></v-divider>
+        </v-col>
+      </v-row>
       <v-tabs align-with-title centered grow :color="uprm_color">
         <v-tabs-slider :color="uprm_color" />
         <v-tab>JUGADA A JUGADA</v-tab>
@@ -59,39 +63,51 @@
         <v-tab-item>
           <v-spacer />
           <v-container>
-            <v-row justify="center">
-              <v-simple-table>
-                <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <th class="text-left">EQUIPO</th>
-                      <th class="text-left">SET 1</th>
-                      <th class="text-left">SET 2</th>
-                      <th class="text-left">SET 3</th>
-                      <th class="text-left">SET 4</th>
-                      <th class="text-left">SET 5</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr :key="uprm_team_name">
-                      <td>{{ uprm_team_name }}</td>
-                      <td>{{ score.uprm_set1 }}</td>
-                      <td>{{ score.uprm_set2 }}</td>
-                      <td>{{ score.uprm_set3 }}</td>
-                      <td>{{ score.uprm_set4 }}</td>
-                      <td>{{ score.uprm_set5 }}</td>
-                    </tr>
-                    <tr :key="opponent_team_name">
-                      <td>{{ opponent_team_name }}</td>
-                      <td>{{ score.opp_set1 }}</td>
-                      <td>{{ score.opp_set2 }}</td>
-                      <td>{{ score.opp_set3 }}</td>
-                      <td>{{ score.opp_set4 }}</td>
-                      <td>{{ score.opp_set5 }}</td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
+            <v-row align="center" justify="center">
+              <v-card-title>ANOTACIONES POR SET</v-card-title>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-simple-table>
+                  <template v-slot:default>
+                    <thead>
+                      <tr>
+                        <th class="text-center">EQUIPO</th>
+                        <th class="text-center">SET 1</th>
+                        <th class="text-center">SET 2</th>
+                        <th class="text-center">SET 3</th>
+                        <th class="text-center">SET 4</th>
+                        <th class="text-center">SET 5</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr :key="uprm_team_name">
+                        <td class="text-center">{{ uprm_team_name }}</td>
+                        <td class="text-center">{{ score.uprm_set1 }}</td>
+                        <td class="text-center">{{ score.uprm_set2 }}</td>
+                        <td class="text-center">{{ score.uprm_set3 }}</td>
+                        <td class="text-center">{{ score.uprm_set4 }}</td>
+                        <td class="text-center">{{ score.uprm_set5 }}</td>
+                      </tr>
+                      <tr :key="opponent_team_name">
+                        <td class="text-center">{{ opponent_team_name }}</td>
+                        <td class="text-center">{{ score.opp_set1 }}</td>
+                        <td class="text-center">{{ score.opp_set2 }}</td>
+                        <td class="text-center">{{ score.opp_set3 }}</td>
+                        <td class="text-center">{{ score.opp_set4 }}</td>
+                        <td class="text-center">{{ score.opp_set5 }}</td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-divider class="mx-4" :inset="inset" horizontal></v-divider>
+              </v-col>
             </v-row>
 
             <v-tabs centered :color="uprm_color">

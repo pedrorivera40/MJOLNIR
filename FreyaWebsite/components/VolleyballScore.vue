@@ -2,18 +2,42 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-row justify="center">UPRM</v-row>
-        <v-row justify="center">20</v-row>
+        <v-row justify="center">
+          <h1 class="text-lg-center">UPRM</h1>
+        </v-row>
+        <v-row justify="center">
+          <v-card class="ma-3 pa-6" outlined tile>
+            <h1 class="text-lg-center">20</h1>
+          </v-card>
+        </v-row>
       </v-col>
       <v-col>
-        <v-row justify="center">CURRENT SET</v-row>
-        <v-row justify="center">1</v-row>
-        <v-row justify="center">SCORE</v-row>
-        <v-row justify="center">2 - 1</v-row>
+        <v-row justify="center">
+          <h2 class="text-md-center">MARCADOR</h2>
+        </v-row>
+        <v-row justify="center">
+          <v-card class="ma-3 pa-6" outlined tile>
+            <h1 class="text-md-center">2 - 1</h1>
+          </v-card>
+        </v-row>
+        <v-row justify="center">
+          <h2 class="text-md-center">SET</h2>
+        </v-row>
+        <v-row justify="center">
+          <v-card class="ma-3 pa-6" outlined tile>
+            <h1 class="text-md-center">4</h1>
+          </v-card>
+        </v-row>
       </v-col>
       <v-col>
-        <v-row justify="center">UPR-RP</v-row>
-        <v-row justify="center">25</v-row>
+        <v-row justify="center">
+          <h1 class="text-md-center">UPR-RP</h1>
+        </v-row>
+        <v-row justify="center">
+          <v-card class="ma-3 pa-6" outlined tile>
+            <h1 class="text-md-center">20</h1>
+          </v-card>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
