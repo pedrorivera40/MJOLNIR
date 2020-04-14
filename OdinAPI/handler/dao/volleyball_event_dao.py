@@ -386,11 +386,11 @@ class VolleyballEventDAO:
                 sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
                 sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors,
                 event.team_id
-                FROM volleyball_event
-                INNER JOIN event ON event.id = volleyball_event.event_id
+                FROM volleyball_event_team_stats
+                INNER JOIN event ON event.id = volleyball_event_team_stats.event_id
                 INNER JOIN team on team.id = event.team_id
                 WHERE team.sport_id = %s and team.season_year = %s and
-                (volleyball_event.is_invalid = false or volleyball_event.is_invalid is null)
+                (volleyball_event_team_stats.is_invalid = false or volleyball_event_team_stats.is_invalid is null)
                 GROUP BY event.team_id)
                 select 
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,

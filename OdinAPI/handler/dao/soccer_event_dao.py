@@ -378,15 +378,14 @@ class SoccerEventDAO:
                 sum(goal_attempts) as goal_attempts,sum(assists) as assists, sum(fouls) as fouls,sum(cards) as cards,
                 sum(successful_goals) as successful_goals,sum(tackles) as tackles,
                 event.team_id
-                FROM soccer_event
-                INNER JOIN event ON event.id = soccer_event.event_id
+                FROM soccer_event_team_stats
+                INNER JOIN event ON event.id = soccer_event_team_stats.event_id
                 INNER JOIN team on team.id = event.team_id
                 WHERE team.sport_id = %s and team.season_year = %s and
-                (soccer_event.is_invalid = false or soccer_event.is_invalid is null)
+                (soccer_event_team_stats.is_invalid = false or soccer_event_team_stats.is_invalid is null)
                 GROUP BY event.team_id)
                 select 
-                goal_attempts,assists,fouls,cards,successful_goals,tackles,
-                soccer_event.id as soccer_event_id,
+                goal_attempts,assists,fouls,cards,successful_goals,tackles
                 team_id
                 from aggregate_query
                 ;
