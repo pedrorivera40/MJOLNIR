@@ -265,9 +265,58 @@ class UserHandler:
             return jsonify(Error='No user found in the system with that id.'), 404
 
         # When password is reset, login attempts are set to 0
-        dao.activateDashUserAccount(duid)  # Set account active to true.
+        dao.deactivateDashUserAccount(duid)  # Set account active to false.
         dao.setLoginAttempts(duid, 0)
         return jsonify(User=self.mapUserToDict(res)), 201
+
+    def unlockDashUserAccount(self, username, password, new_password):
+        """
+        Updates the password for the dashboard user with the given ID.
+
+        Calls the UserDAO to update the password of a dashboard user. It then
+        maps the result to a JSON that contains the desired record. That JSON 
+        object is then returned.
+
+        Args:
+            duid: The ID of the user whose password must be updated.
+            password: The hash of the new password for the dashboboard user.
+
+        Returns:
+            A JSON containing all the user with the updated dashboard user.
+        """
+        if username == None or password == None or new_password == None:
+            return jsonify(Error="Request Parameters Undefined."), 400
+
+        dao = UserDAO()
+
+        #Verify if password matches the one on the database
+        fetchedHash = dao.getHashByUsername(username)
+        if fetchedHash == None: 
+            #username is incorrect 
+            return jsonify(Error="Username or Password are incorrect."), 400
+
+        mappedHash = self.mapHash(fetchedHash)
+        if not verifyHash(password, mappedHash['hash']):
+            #password is incorrect
+            return jsonify(Error="Username or Password are incorrect."), 400
+
+        # Verify the new password complies with the rules
+        if not rulesMatch(new_password):
+            return jsonify(Error="""Password should contain At least 1 upercase letter,
+            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
+            10 and 64 characters long."""), 400
+        
+        # If they do, hash password
+        hashedPassword = createHash(new_password)
+        
+        res = dao.updateDashUserPasswordByUsername(username, hashedPassword)
+        if res == None:
+            return jsonify(Error='No user found in the system with that id.'), 404
+        updatedUser = self.mapUserToDict(res)
+        # When password is reset, login attempts are set to 0
+        dao.activateDashUserAccount(updatedUser['id'])  # Set account active to true.
+        dao.setLoginAttempts(updatedUser['id'], 0)
+        return jsonify(User=updatedUser), 201
 
     def updateDashUserInfo(self, duid, username, full_name, email, is_active):
         """

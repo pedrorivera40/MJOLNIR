@@ -215,6 +215,17 @@ def passwordReset(duid):
             return jsonify(Error='Bad Request'), 400
         return handler.updateDashUserPassword(duid, req['password'])
 
+@app.route("/users/unlock", methods=['PATCH'])
+def accountUnlock():
+    handler = UserHandler()
+    req = request.json
+    if request.method == 'PATCH':
+        ## For acount unlock
+        ## Check the request contains the right structure.
+        if 'username' not in req or 'password' not in req or 'new_password' not in req :
+            return jsonify(Error='Bad Request'), 400
+        return handler.unlockDashUserAccount(req['username'], req['password'], req['new_password'])
+
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/toggleActive", methods=['PATCH'])
