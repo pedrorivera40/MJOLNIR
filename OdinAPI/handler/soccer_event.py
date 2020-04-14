@@ -649,7 +649,8 @@ class SoccerEventHandler(EventResultHandler):
                 if not team_result:
                     return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
             else:
-                dao.addTeamStatisticsAuto(eID)
+                dao.addTeamStatistics(eID,attributes['goal_attempts'],attributes['assists'],attributes['fouls'],attributes['cards'],
+                    attributes['successful_goals'],attributes['tackles'])
         except:
             return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
         

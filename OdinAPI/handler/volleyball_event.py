@@ -677,7 +677,8 @@ class VolleyballEventHandler(EventResultHandler):
                 if not team_result:
                     return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
             else:
-                dao.addTeamStatisticsAuto(eID)
+                dao.addTeamStatistics(eID,attributes['kill_points'],attributes['attack_errors'],attributes['assists'],attributes['aces'],
+                    attributes['service_errors'],attributes['digs'],attributes['blocks'],attributes['blocking_errors'],attributes['reception_errors'])
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
         

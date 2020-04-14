@@ -724,7 +724,9 @@ class BasketballEventHandler(EventResultHandler):
                 if not team_result:
                     return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
             else:
-                dao.addTeamStatisticsAuto(eID)
+                dao.addTeamStatistics(eID,attributes['points'],attributes['rebounds'],attributes['assists'],
+                    attributes['steals'],attributes['blocks'],attributes['turnovers'],attributes['field_goal_attempt'],attributes['successful_field_goal'],attributes['three_point_attempt'],
+                    attributes['successful_three_point'],attributes['free_throw_attempt'],attributes['successful_free_throw'])
         except:
             return jsonify(ERROR="Unable to verify basketball event team statistics from DAO."), 500
 
