@@ -436,13 +436,7 @@ export default {
     //     { text: "Actions", value: "actions", sortable: false }
     //   ],
       editedItemIndex: -1,
-      editedItem: {
-        full_name: "",
-        username: "",
-        email: "",
-        is_active: "",
-        id: 0
-      },
+      editedItem: '',
       defaultItem: {
         full_name: "",
         username: "",
@@ -478,9 +472,110 @@ export default {
 created(){
       this.buildTable()
       this.getSeasonData()
+      this.buildDefault()
     }, 
   methods: {
-
+    buildDefault(){
+        if (this.sport_id!=''){
+            if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+                this.editedItem = {
+                            "athlete_info": {
+                                "athlete_id": '',
+                                "basketball_event_id": '',
+                                "first_name": '',
+                                "last_names": '',
+                                "middle_name": '',
+                                "number": '',
+                                "profile_image_link":''
+                            },
+                            "statistics": {
+                                "assists":'',
+                                "blocks":'',
+                                "field_goal_attempt": '',
+                                "field_goal_percentage": '',
+                                "free_throw_attempt": '',
+                                "free_throw_percentage": '',
+                                "points":'',
+                                "rebounds": '',
+                                "steals": '',
+                                "successful_field_goal": '',
+                                "successful_free_throw": '',
+                                "successful_three_point": '',
+                                "three_point_attempt": '',
+                                "three_point_percentage": '',
+                                "turnovers": ''
+                            }
+                        }
+                }
+                else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                    this.editedItem = {
+                            "athlete_info": {
+                                "athlete_id": '',
+                                "first_name": '',
+                                "last_names": '',
+                                "middle_name": '',
+                                "number": '',
+                                "profile_image_link": '',
+                                "volleyball_event_id": ''
+                            },
+                            "statistics": {
+                                "aces": '',
+                                "assists":'',
+                                "attack_errors": '',
+                                "blocking_errors": '',
+                                "blocks": '',
+                                "digs": '',
+                                "kill_points": '',
+                                "reception_errors": '',
+                                "service_errors":''
+                            }
+                        }
+                }
+                else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                    this.editedItem = {
+                            "athlete_info": {
+                                "athlete_id": '',
+                                "first_name": '',
+                                "last_names": '',
+                                "middle_name": '',
+                                "number": '',
+                                "profile_image_link": '',
+                                "soccer_event_id": ''
+                            },
+                            "statistics": {
+                                "assists": '',
+                                "cards": '',
+                                "fouls": '',
+                                "goal_attempts": '',
+                                "successful_goals": '',
+                                "tackles": ''
+                            }
+                        }
+                }
+                else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                    this.editedItem = {
+                            "athlete_info": {
+                            "athlete_id": '',
+                            "baseball_event_id": '',
+                            "first_name": '',
+                            "last_names": '',
+                            "middle_name": '',
+                            "number": '',
+                            "profile_image_link": ''
+                            },
+                            "statistics": {
+                            "at_bats": '',
+                            "base_on_balls": '',
+                            "hits": '',
+                            "left_on_base": '',
+                            "runs": '',
+                            "runs_batted_in": '',
+                            "strikeouts":''
+                            }
+                        }
+                }
+            }
+    },
     buildTable(){
         // basketball
         if (this.sport_id!=''){
@@ -644,14 +739,44 @@ created(){
     //   return status ? "Active" : "Inactive";
     // },
     deleteAthleteStatistics(user) {
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogDelete = true;
-        console.log("Will Remove Athlete Statistics for("+user+")")
+       if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+            this.editedItemIndex = this.payload_stats.Basketball_Event_Statistics.athlete_statistic.indexOf(user)
+            this.editedItem = this.payload_stats.Basketball_Event_Statistics.athlete_statistic[this.editedItemIndex]
+        }
+        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+            this.editedItemIndex = this.payload_stats.Volleyball_Event_Statistics.athlete_statistic.indexOf(user)
+            this.editedItem = this.payload_stats.Volleyball_Event_Statistics.athlete_statistic[this.editedItemIndex]
+        }
+        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+            this.editedItemIndex = this.payload_stats.Soccer_Event_Statistics.athlete_statistic.indexOf(user)
+            this.editedItem = this.payload_stats.Soccer_Event_Statistics.athlete_statistic[this.editedItemIndex]
+        }
+        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+            this.editedItemIndex = this.payload_stats.Baseball_Event_Statistics.athlete_statistic.indexOf(user)
+            this.editedItem = this.payload_stats.Baseball_Event_Statistics.athlete_statistic[this.editedItemIndex]
+        }
+        //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+        //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
+        console.log(this.editedItem)
+        console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
     },
     deleteTeamStatistics(user) {
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogDelete = true;
-        return
+       if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+            this.editedItem = this.payload_stats.Basketball_Event_Statistics.event_info
+        }
+        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+           this.editedItem = this.payload_stats.Volleyball_Event_Statistics.event_info
+        }
+        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+            this.editedItem = this.payload_stats.Soccer_Event_Statistics.event_info
+        }
+        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+           this.editedItem = this.payload_stats.Baseball_Event_Statistics.event_info
+        }
+        //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+        //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
+        console.log(this.editedItem)
+        console.log("Will Remove Team Statistics for Event ID("+(this.editedItem.event_id)+").")
     },
     editAthleteStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
