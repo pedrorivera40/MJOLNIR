@@ -129,20 +129,6 @@ def auth():
         username = req['username']
         password = req['password'] # TODO: AES Encryption
         return handler.login(username, password)
-@app.route("/auth/user", methods=['GET'])
-def userSession():
-    if request.method == 'GET':
-        if 'username' in session:
-            return jsonify(User=session['username'])
-        return jsonify(Error='Could not get session')
-
-@app.route("/auth/drop", methods=['GET'])
-def dropSession():
-    if request.method == 'GET':
-        if 'username' in session:
-            session.pop('username', None)
-            return jsonify(Message='Session droped.')
-        return jsonify(Error='Could not drop session')
         
 
 ###########################################
