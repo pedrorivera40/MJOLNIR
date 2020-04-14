@@ -5,8 +5,8 @@ export default {
       const response = await this.$auth.loginWith('local', { data: credentials }) //returns auth data as json.
       const user = await this.$axios.post('users/username/', credentials) //call get user by username to set auth user.
       await this.$auth.setUser(user.data.User) // Set auth user.
-      
-      dispatch('getUserPermissions', user.data.User.id)
+
+      dispatch('getUserPermissions', response.data.auth.token)
       dispatch('notifications/setSnackbar', { text: 'Login Sucessfully' }, { root: true })
       commit("SET_USER_DATA", response.data)
     } catch (error) {
@@ -45,10 +45,12 @@ export default {
 
   },
 
-  async getUserPermissions({ commit, dispatch }, userID) {
+  async getUserPermissions({ commit, dispatch }, token) {
     try {
-      const response = await this.$axios.get(`/users/${userID}/permissions`)
-      commit("SET_USER_PERMISSIONS", response.data.Permissions)
+      // Extract permissions from jwt
+      const permissions = JSON.parse(atob(token.split('.')[1])).permissions
+      console.log(permissions)
+      commit("SET_USER_PERMISSIONS", permissions)
     } catch (error) {
       if (!!error.response) {
         dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
