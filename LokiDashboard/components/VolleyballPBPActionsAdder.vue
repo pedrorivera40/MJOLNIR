@@ -1,7 +1,22 @@
 <template>
   <v-row>
-    <v-col>
-      <v-card></v-card>
+    <v-col justify="center">
+      <v-card class="text-center mx-10" outlined>
+        <v-row justify="center">
+          <v-card-title>{{ opp_team_name }}</v-card-title>
+        </v-row>
+
+        <v-btn
+          class="ma-4"
+          v-for="athlete in opp_roster"
+          :key="athlete.number"
+          dark
+          color="#a89f9e"
+          @click.native="set_action_button(athlete.number)"
+          width="50"
+          height="50"
+        >{{athlete.number}}</v-btn>
+      </v-card>
     </v-col>
     <v-col>
       <v-row>
@@ -29,23 +44,32 @@
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-btn depressed dark color="black" width="300">NOTIFICACIÓN</v-btn>
+        <v-btn depressed dark color="#a89f9e" width="300">NOTIFICACIÓN</v-btn>
       </v-row>
     </v-col>
-    <v-col>
-      <v-card></v-card>
+    <v-col justify="center">
+      <v-card class="text-center mx-10" outlined>
+        <v-row justify="center">
+          <v-card-title>{{ opp_team_name }}</v-card-title>
+        </v-row>
+
+        <v-btn
+          class="ma-4"
+          v-for="athlete in opp_roster"
+          :key="athlete.number"
+          dark
+          color="#a89f9e"
+          @click.native="set_action_button(athlete.number)"
+          width="50"
+          height="50"
+        >{{athlete.number}}</v-btn>
+      </v-card>
     </v-col>
   </v-row>
 </template>
 
 <script>
 export default {
-  props: {
-    uprm_roster: [],
-    opp_roster: [],
-    uprm_team_name: String,
-    opp_team_name: String
-  },
   data: () => ({
     action_buttons: [
       { key: 1, action_type: "KillPoint", button_state: false },
@@ -58,7 +82,24 @@ export default {
       { key: 8, action_type: "BlockingError", button_state: false },
       { key: 9, action_type: "Dig", button_state: false },
       { key: 10, action_type: "ReceptionError", button_state: false }
-    ]
+    ],
+    uprm_roster: [],
+    opp_roster: [
+      { number: 11, name: "Fulano de Tal" },
+      { number: 1, name: "Don Perenzejo" },
+      { number: 21, name: "Juan del Pueblo" },
+      { number: 3, name: "Pepe El De La Esquina" },
+      { number: 4, name: "Gonzalo Duarte" },
+      { number: 2, name: "Martes Domingo" },
+      { number: 6, name: "Tomas Almibar" },
+      { number: 16, name: "Pepe Trueno" },
+      { number: 8, name: "Eli Nocente" },
+      { number: 9, name: "Armando Guerra" },
+      { number: 4, name: "Armando Pleito" },
+      { number: 15, name: "Sin Nom Bre" }
+    ],
+    uprm_team_name: "Tarzanes",
+    opp_team_name: "Gallitos"
   }),
   methods: {
     clear_action_buttons() {
