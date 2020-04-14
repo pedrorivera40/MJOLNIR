@@ -6,9 +6,25 @@
           <h1 class="text-lg-center">UPRM</h1>
         </v-row>
         <v-row justify="center">
-          <v-card class="ma-3 pa-6" outlined tile>
-            <h1 class="text-lg-center">20</h1>
-          </v-card>
+          <v-layout row wrap align-center>
+            <v-col class="text-right">
+              <v-btn class="ma-2" color="red" fab small dark>
+                <v-icon>mdi-minus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-layout>
+          <v-col>
+            <v-card class="ma-3 pa-6" outlined tile>
+              <h1 class="text-lg-center">20</h1>
+            </v-card>
+          </v-col>
+          <v-layout row wrap align-center>
+            <v-col class="text-left">
+              <v-btn class="ma-2" color="green" fab small dark>
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-layout>
         </v-row>
       </v-col>
       <v-col>
@@ -24,19 +40,49 @@
           <h2 class="text-md-center">SET</h2>
         </v-row>
         <v-row justify="center">
+          <v-layout row wrap align-center>
+            <v-col class="text-right">
+              <v-btn class="ma-2" color="red" fab small dark>
+                <v-icon>mdi-minus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-layout>
           <v-card class="ma-3 pa-6" outlined tile>
             <h1 class="text-md-center">4</h1>
           </v-card>
+          <v-layout row wrap align-center>
+            <v-col class="text-left">
+              <v-btn class="ma-2" color="green" fab small dark>
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-layout>
         </v-row>
       </v-col>
       <v-col>
         <v-row justify="center">
-          <h1 class="text-md-center">UPR-RP</h1>
+          <h1 class="text-lg-center">UPR-RP</h1>
         </v-row>
         <v-row justify="center">
-          <v-card class="ma-3 pa-6" outlined tile>
-            <h1 class="text-md-center">20</h1>
-          </v-card>
+          <v-layout row wrap align-center>
+            <v-col class="text-right">
+              <v-btn class="ma-2" color="red" fab small dark>
+                <v-icon>mdi-minus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-layout>
+          <v-col>
+            <v-card class="ma-3 pa-6" outlined tile>
+              <h1 class="text-lg-center">20</h1>
+            </v-card>
+          </v-col>
+          <v-layout row wrap align-center>
+            <v-col class="text-left">
+              <v-btn class="ma-2" color="green" fab small dark>
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-layout>
         </v-row>
       </v-col>
     </v-row>
