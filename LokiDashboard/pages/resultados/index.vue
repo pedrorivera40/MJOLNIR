@@ -646,7 +646,7 @@ created(){
     deleteAthleteStatistics(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogDelete = true;
-      return
+        console.log("Will Remove Athlete Statistics for("+user+")")
     },
     deleteTeamStatistics(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
