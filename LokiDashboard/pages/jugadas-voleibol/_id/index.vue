@@ -11,7 +11,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-divider class="mx-4" :inset="inset" horizontal></v-divider>
+          <v-divider class="mx-4" horizontal></v-divider>
         </v-col>
       </v-row>
       <v-tabs align-with-title centered grow :color="uprm_color">
@@ -23,6 +23,13 @@
         <v-tab>ESTADÍSTICAS POR ATLETAS</v-tab>
 
         <v-tab-item>
+          <v-row>
+            <VolleyballPBPActionsAdder />
+          </v-row>
+          <v-row>
+            <v-divider class="mx-4" horizontal></v-divider>
+          </v-row>
+
           <v-container v-for="action in actions" :key="action.id">
             <VolleyballGameAction
               v-if="action.action_type === notification"
@@ -106,7 +113,7 @@
 
             <v-row>
               <v-col>
-                <v-divider class="mx-4" :inset="inset" horizontal></v-divider>
+                <v-divider class="mx-4" horizontal></v-divider>
               </v-col>
             </v-row>
 
