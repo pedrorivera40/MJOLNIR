@@ -79,7 +79,7 @@
                 </v-col>
               </v-row>
             </v-form>
-            <v-checkbox v-model="reviewed" label="I have reviewed my changes." />
+            <v-checkbox v-model="reviewed" label="I have reviewed my changes*." />
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>

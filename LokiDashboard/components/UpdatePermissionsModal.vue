@@ -16,12 +16,12 @@
             v-if="!isLoadingP && permissions.length > 0"
           >
             <v-row align="center">
-              <v-col cols="12" sm="3">
+              <v-col cols="12" sm="4">
                 <h2 class="font-weight-medium" v-text="'Events:'"></h2>
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Write"
+                label="Add"
                 v-model="permissions[0].is_invalid"
               ></v-checkbox>
               <v-checkbox
@@ -36,12 +36,12 @@
               ></v-checkbox>
             </v-row>
             <v-row align="center">
-              <v-col cols="12" sm="3">
-                <h2 class="font-weight-medium" v-text="'PBP:'"></h2>
+              <v-col cols="12" sm="4">
+                <h2 class="font-weight-medium" v-text="'Play-By-Play:'"></h2>
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Write"
+                label="Add"
                 v-model="permissions[3].is_invalid"
               ></v-checkbox>
               <v-checkbox
@@ -56,12 +56,12 @@
               ></v-checkbox>
             </v-row>
             <v-row align="center">
-              <v-col cols="12" sm="3">
+              <v-col cols="12" sm="4">
                 <h2 class="font-weight-medium" v-text="'Statistics:'"></h2>
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Write"
+                label="Add"
                 v-model="permissions[6].is_invalid"
               ></v-checkbox>
               <v-checkbox
@@ -76,12 +76,12 @@
               ></v-checkbox>
             </v-row>
             <v-row align="center">
-              <v-col cols="12" sm="3">
+              <v-col cols="12" sm="4">
                 <h2 class="font-weight-medium" v-text="'Users:'"></h2>
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Write"
+                label="Add"
                 v-model="permissions[9].is_invalid"
               ></v-checkbox>
               <v-checkbox
@@ -96,12 +96,12 @@
               ></v-checkbox>
             </v-row>
             <v-row align="center">
-              <v-col cols="12" sm="3">
+              <v-col cols="12" sm="4">
                 <h2 class="font-weight-medium" v-text="'Profiles:'"></h2>
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Write"
+                label="Add"
                 v-model="permissions[12].is_invalid"
               ></v-checkbox>
               <v-checkbox
