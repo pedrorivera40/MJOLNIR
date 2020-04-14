@@ -24,6 +24,9 @@ class BaseballEventDAO:
         self.conn = psycopg2.connect(connection_url)
 
 #=============================//HELPERS//====================
+    def getCursor(self):
+        return self.conn.cursor()
+
     def getBaseballEventID(self,eID,aID):
         """
         Checks if baseball event exists.

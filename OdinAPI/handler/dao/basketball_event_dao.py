@@ -23,6 +23,9 @@ class BasketballEventDAO:
         self.conn = psycopg2.connect(connection_url)
 
 #=============================//HELPERS//====================
+    def getCursor(self):
+        return self.conn.cursor()
+
     def getBasketballEventID(self,eID,aID):
         """
         Checks if basketball event exists.
