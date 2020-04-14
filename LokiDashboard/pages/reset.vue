@@ -2,7 +2,7 @@
   <div class="wrapper d-flex align-center justify-center">
     <v-card width="500" class="elevation-12 mx-auto">
       <v-toolbar color="primary" dark flat>
-        <v-toolbar-title> Password Reset </v-toolbar-title>
+        <v-toolbar-title> Password activateAccount </v-toolbar-title>
         <v-spacer />
       </v-toolbar>
       <v-card-text>
@@ -72,7 +72,7 @@
           :disabled="!valid"
           color="primary_light"
           class="ma-5"
-          @click="reset({ username: username, password: repeat })"
+          @click="activateAccount({ username: username, password: repeat })"
         >
           Submit
         </v-btn>
@@ -102,7 +102,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      reset: "userAuth/reset"
+      activateAccount: "userAuth/activateAccount"
     })
   },
   computed: {
