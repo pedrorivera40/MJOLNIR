@@ -64,7 +64,7 @@
   <!-- WHEN WE GET HERE: we have the sport id. we have the event id. -->
   <v-card width="800" class="elevation-12 mx-auto">
     <v-toolbar color="green darken-1" dark flat>
-        <v-toolbar-title>Añadir Estadísticas Atleta {{sport}} - {{branch}}</v-toolbar-title>
+        <v-toolbar-title>Editar Estadísticas Atleta {{sport}} - {{branch}}</v-toolbar-title>
         <v-spacer />
     </v-toolbar>
     <v-card-text>            
