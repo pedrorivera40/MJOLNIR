@@ -42,6 +42,37 @@
       </v-card>
         
       </v-row>
+      <v-row justify="center" align="center">
+        <v-spacer/>
+        <v-spacer/>
+        <v-col>
+            <v-btn
+                color="primary_light"
+                class="white--text"
+                @click="addFinalScore()"
+            >
+                <v-icon left>
+                mdi-plus
+                </v-icon>
+                Añadir Puntuación Final
+            </v-btn>
+        </v-col>
+        
+        <v-col>
+            <v-btn
+                color="primary_light"
+                class="white--text"
+                @click="editFinalScore()"
+            >
+                <v-icon left>
+                mdi-pencil
+                </v-icon>
+                Editar Puntuación Final
+            </v-btn>
+        </v-col>
+        <v-spacer/>
+        <v-spacer/>
+    </v-row>   
     <v-tabs
               centered
           >
@@ -307,12 +338,12 @@
                         <v-btn
                             color="primary_light"
                             class="white--text"
-                            @click="addAthleteStatistics(editedItemIndex)"
+                            @click="addTeamStatistics(editedItemIndex)"
                         >
                             <v-icon left>
                             mdi-plus
                             </v-icon>
-                            Añadir Estadisticas de Atleta
+                            Añadir Estadisticas de Equipo
                         </v-btn>
                         <v-spacer />
                         </v-col>
@@ -626,7 +657,7 @@ created(){
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        return
+        this.$router.push('/resultados/individual/editar')
     },
     editTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
@@ -638,13 +669,19 @@ created(){
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        return
+        this.$router.push('/resultados/individual/crear')
     },
-    addAthleteStatistics(user) {
+    addTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
         return
+    },
+    addFinalScore() {
+        this.$router.push('/resultados/puntuacion/crear')
+    },
+    editFinalScore() {
+        this.$router.push('/resultados/puntuacion/editar')
     },
     // editPermissions(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
