@@ -896,6 +896,14 @@ class BaseballEventHandler(EventResultHandler):
                 return jsonify(Error = "Baseball Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
         except:
             return jsonify(ERROR="Unable to verify baseball event team stats from DAO."), 500
+
+        # Validate Avoid Duplication Final Score
+        try:
+            fs_dao = FinalScoreDAO()
+            if fs_dao.getFinalScore(eID):
+                return jsonify(Error = "Final Score Entry already exists for Event ID:{}".format(eID)),400
+        except:
+            return jsonify(ERROR="Unable to verify final score from DAO."), 500
          
         # Validate existing event
         
@@ -971,28 +979,28 @@ class BaseballEventHandler(EventResultHandler):
 
         #Check if existing invalid duplicate
         invalid_duplicate = False
-        try:
+        if True: #try:
             fs_dao = FinalScoreDAO()
             if fs_dao.getFinalScoreInvalid(eID):
                 invalid_duplicate = True
-        except:
+        else:#except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
         
         #case with previously existing invalid entry, in that case update that entry
         if invalid_duplicate:
-            try:
+            if True:#try:
                 result = fs_dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
                 if not result:
                     return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
-            except:
+            else:#except:
                 return jsonify(ERROR="Unable to verify final score from DAO."), 500
         else:
             # Create and Validate Final Score entry
-            try:
+            if True:#try:
                 result = fs_dao.addFinalScore(eID,local_score, opponent_score)
                 if not result:
                     return jsonify(Error = "Problem inserting new final score record."),500
-            except:
+            else:#except:
                 return jsonify(ERROR="Unable to verify final score from DAO."), 500
          
         #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
@@ -1019,7 +1027,7 @@ class BaseballEventHandler(EventResultHandler):
                     return jsonify(Error = "Problem inserting new team statistics record."),500
             except:
                 return jsonify(ERROR="Unable to verify baseball event team statistics from DAO."), 500
-        fs_dao.commitChanges
+        fs_dao.commitChanges()
         dao.commitChanges()
         return jsonify(Baseball_Event_Team_Stats = "Added new team statistics record with id:{} and individual statistics for event id:{}.".format(result,eID)),201
 

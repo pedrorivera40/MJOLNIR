@@ -884,6 +884,14 @@ class SoccerEventHandler(EventResultHandler):
                 return jsonify(Error = "Soccer Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
         except:
             return jsonify(ERROR="Unable to verify soccer event team stats from DAO."), 500
+
+        # Validate Avoid Duplication Final Score
+        try:
+            fs_dao = FinalScoreDAO()
+            if fs_dao.getFinalScore(eID):
+                return jsonify(Error = "Final Score Entry already exists for Event ID:{}".format(eID)),400
+        except:
+            return jsonify(ERROR="Unable to verify final score from DAO."), 500
          
         # Validate existing event
         
