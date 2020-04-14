@@ -20,9 +20,11 @@ export default {
   },
   async setUser({ commit }) {
     const user = JSON.parse(localStorage.getItem('user'))
+
+    const permissions = JSON.parse(localStorage.getItem('permissions'))
     await this.$auth.setUser(user)
 
-    commit("SET_USER_DATA_ON_RELOAD")
+    commit("SET_USER_DATA_ON_RELOAD", permissions)
   },
 
   async activateAccount({ commit, dispatch }, credentials) {

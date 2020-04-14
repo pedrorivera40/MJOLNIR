@@ -11,12 +11,13 @@ export default {
 
   SET_USER_PERMISSIONS(state, userPermissions) {
     //Set user data
-    state.permissions = userPermissions
-    localStorage.setItem('permissions', JSON.stringify(state.permissions))
+    state.userPermissions = userPermissions
+    localStorage.setItem('permissions', JSON.stringify(state.userPermissions))
   },
-  SET_USER_DATA_ON_RELOAD(state) {
+  SET_USER_DATA_ON_RELOAD(state, userPermissions) {
     //Set user data
     state.user = this.$auth.user
+    state.userPermissions = userPermissions
 
   },
   CLEAR_USER_DATA(state) {
