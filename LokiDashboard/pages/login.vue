@@ -32,7 +32,7 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <nuxt-link class="ml-6" to="/reset">
+        <nuxt-link class="ml-6" to="/activate">
           Activate account.
         </nuxt-link>
         <v-spacer />
