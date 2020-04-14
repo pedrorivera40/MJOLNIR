@@ -31,8 +31,13 @@
         <v-col :cols="3">
           <v-avatar size="100" class="mx-10">
             <v-icon x-large :color="in_color" v-if="!athlete_img" height="100px">mdi-account</v-icon>
-            <v-img v-else :src="athlete_img" alt="ATHLETE" height="100px" />
-            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+            <v-img v-else :src="athlete_img" alt="ATHLETE" height="100px">
+              <template v-slot:placeholder>
+                <v-layout fill-height align-center justify-center ma-0>
+                  <v-progress-circular indeterminate :color="in_color"></v-progress-circular>
+                </v-layout>
+              </template>
+            </v-img>
           </v-avatar>
         </v-col>
         <v-col allign="center">
@@ -53,7 +58,6 @@ export default {
   props: {
     action_type: String, // After this, the following props are optional depending on the action_type.
     message: String,
-    team: String,
     athlete_name: String,
     athlete_number: Number,
     athlete_img: String,
