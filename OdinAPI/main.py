@@ -39,7 +39,7 @@ def token_check(func):
     by verifying each request provides a valid token.
     """
     @wraps(func)
-    def decorated():
+    def decorated(*args, **kwargs):
 
         # Extract token from auth header.
         token = request.headers.get('Authorization').split(' ')[1]
@@ -50,7 +50,7 @@ def token_check(func):
         if not verifyToken(token):
             return jsonify(Error="Token is invalid"), 403
         else:
-            return func()
+            return func(*args, **kwargs)
     return decorated
 
 
@@ -129,26 +129,13 @@ def auth():
         username = req['username']
         password = req['password'] # TODO: AES Encryption
         return handler.login(username, password)
-@app.route("/auth/user", methods=['GET'])
-def userSession():
-    if request.method == 'GET':
-        if 'username' in session:
-            return jsonify(User=session['username'])
-        return jsonify(Error='Could not get session')
-
-@app.route("/auth/drop", methods=['GET'])
-def dropSession():
-    if request.method == 'GET':
-        if 'username' in session:
-            session.pop('username', None)
-            return jsonify(Message='Session droped.')
-        return jsonify(Error='Could not drop session')
         
 
 ###########################################
 #--------- Dashboard User Routes ---------#
 ###########################################
 @app.route("/users/", methods=['GET', 'POST'])
+@token_check
 def allUsers():
     handler = UserHandler()
     if request.method == 'GET':
@@ -166,6 +153,7 @@ def allUsers():
 
 
 @app.route("/users/<int:duid>", methods=['GET', 'PATCH'])
+@token_check
 def userByID(duid):
     handler = UserHandler()
     req = request.json
@@ -182,6 +170,7 @@ def userByID(duid):
 
 
 @app.route("/users/username/", methods=['POST'])
+@token_check
 def getUserByUsername():
     if request.method == 'POST':
         handler = UserHandler()
@@ -194,6 +183,7 @@ def getUserByUsername():
 
 
 @app.route("/users/email/", methods=['POST'])
+@token_check
 def getUserByEmail():
     if request.method == 'POST':
         handler = UserHandler()
@@ -205,6 +195,7 @@ def getUserByEmail():
 
 
 @app.route("/users/<int:duid>/reset", methods=['PATCH'])
+@token_check
 def passwordReset(duid):
     handler = UserHandler()
     req = request.json
@@ -215,9 +206,22 @@ def passwordReset(duid):
             return jsonify(Error='Bad Request'), 400
         return handler.updateDashUserPassword(duid, req['password'])
 
+@app.route("/users/activate", methods=['PATCH'])
+@token_check
+def accountUnlock():
+    handler = UserHandler()
+    req = request.json
+    if request.method == 'PATCH':
+        ## For acount unlock
+        ## Check the request contains the right structure.
+        if 'username' not in req or 'password' not in req or 'new_password' not in req :
+            return jsonify(Error='Bad Request'), 400
+        return handler.unlockDashUserAccount(req['username'], req['password'], req['new_password'])
+
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/toggleActive", methods=['PATCH'])
+@token_check
 def toggleActive(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
@@ -226,6 +230,7 @@ def toggleActive(duid):
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/remove", methods=['PATCH'])
+@token_check
 def removeUser(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
@@ -233,6 +238,7 @@ def removeUser(duid):
 
 
 @app.route("/users/<string:duid>/permissions",  methods=['GET', 'PATCH'])
+@token_check
 def userPermissions(duid):
     handler = UserHandler()
     if request.method == 'GET':

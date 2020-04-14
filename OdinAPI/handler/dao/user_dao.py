@@ -279,6 +279,36 @@ class UserDAO:
         self.commitChanges()
         return users
 
+    def updateDashUserPasswordByUsername(self, username, password):
+        """
+        Updates the password for the dashboard user with the given username and sets is_active status.
+
+        This function accepts a username and a password hash and uses them 
+        to update password in the record of the user with the matching ID.
+
+        Args:
+            username: The username of the user whose password must be updated.
+            password: Temporary password provided by the sistem admin.
+            new_password: New password set by the user.
+
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the modified dashboard user.
+        """
+        cursor = self.conn.cursor()
+        # TODO Check that user with that ID exists
+        query = """
+                update dashboard_user
+                set password_hash = %s
+                where username = %s
+                AND is_invalid = FALSE
+                returning id, username, full_name, email, is_active, is_invalid;
+                """
+        cursor.execute(query, (password, username,))
+        users = cursor.fetchone()
+        self.commitChanges()
+        return users
+
     def updateDashUserInfo(self, duid, username, full_name, email, is_active):
         """
         Updates the username for the dashboard user with the given ID.

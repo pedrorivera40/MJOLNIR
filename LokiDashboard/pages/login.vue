@@ -32,8 +32,8 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <nuxt-link class="ml-6" to="/reset">
-          Forgot Password?
+        <nuxt-link class="ml-6" to="/activate">
+          Activate account.
         </nuxt-link>
         <v-spacer />
         <v-btn
@@ -43,7 +43,7 @@
           color="primary_light"
           class="ma-5"
           @click="login({username: username, password: password})"
-        >Login</v-btn>
+        > Login </v-btn>
       </v-card-actions>
     </v-card>
   </div>

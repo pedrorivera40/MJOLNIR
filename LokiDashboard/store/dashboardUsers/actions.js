@@ -101,10 +101,10 @@ export default {
     }
   },
 
-  async resetPasswordByAdmin({ dispatch }, payload) {
+  async resetPasswordByAdmin({ commit, dispatch }, payload) {
     try {
       const response = await this.$axios.patch(`users/${payload.id}/reset`, payload)
-      console.log(response.data.User)
+      commit("UNLOCK_USER", response.data.User)
       dispatch('notifications/setSnackbar', {text: `${payload.username}'s password has been reset`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
