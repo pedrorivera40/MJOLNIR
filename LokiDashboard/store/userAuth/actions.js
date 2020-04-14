@@ -5,8 +5,8 @@ export default {
       const response = await this.$auth.loginWith('local', { data: credentials }) //returns the desired data as json.
       const user = await this.$axios.post('users/username/', credentials) //call get user by username to set auth user.
       await this.$auth.setUser(user.data.User) // Set auth user.
-      commit("SET_USER_DATA", response.data.User)
       dispatch('notifications/setSnackbar', { text: 'Login Sucessfully' }, { root: true })
+      commit("SET_USER_DATA", response.data.User)
     } catch (error) {
       if (!!error.response) {
         dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
@@ -22,28 +22,19 @@ export default {
   },
 
   async activateAccount({ commit, dispatch }, credentials) {
-    let id = ''
     try {
       commit("SET_LOADING")
-      const user = await this.$axios.post('users/username/', { username: credentials.username }) //call get user by username to set auth user.
-      id = user.data.User.id
-
-    } catch (error) {
-      if (!!error.response) {
-        dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
-        commit("DONE_LOADING")
-      }
-    }
-    try {
-      await this.$axios.patch(`users/${id}/reset`, { username: credentials.username, password: credentials.password }) //call get user by username to set auth user.
+      await this.$axios.patch(`users/activate`, { username: credentials.username, password: credentials.password, new_password: credentials.new_password }) //call get user by username to set auth user.
       commit("DONE_LOADING")
-      dispatch('notifications/setSnackbar', { text: 'Password changed successfully! Please login.' }, { root: true })
+      dispatch('login',{ username: credentials.username, password: credentials.new_password})
+      dispatch('notifications/setSnackbar', { text: 'Password changed successfully! Loggin in...' }, { root: true })
     } catch (error) {
       if (!!error.response) {
         dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
         commit("DONE_LOADING")
       }
     }
+    
   },
   logout({ commit }) {
     commit("CLEAR_USER_DATA")

@@ -72,7 +72,7 @@
           :disabled="!valid"
           color="primary_light"
           class="ma-5"
-          @click="activateAccount({ username: username, password: repeat })"
+          @click="activateAccount({ username: username, password: password, new_password: repeat })"
         >
           Submit
         </v-btn>
