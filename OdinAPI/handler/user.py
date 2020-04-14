@@ -271,15 +271,16 @@ class UserHandler:
 
     def unlockDashUserAccount(self, username, password, new_password):
         """
-        Updates the password for the dashboard user with the given ID.
+        Updates the password for the dashboard user with the given ID and sets is_active status.
 
-        Calls the UserDAO to update the password of a dashboard user. It then
-        maps the result to a JSON that contains the desired record. That JSON 
-        object is then returned.
+        Calls the UserDAO to update the password of a dashboard user and set its 
+        'is_active' status to true. It then maps the result to a JSON that contains 
+        the desired record. That JSON object is then returned.
 
         Args:
-            duid: The ID of the user whose password must be updated.
-            password: The hash of the new password for the dashboboard user.
+            username: The username of the user whose password must be updated.
+            password: Temporary password provided by the sistem admin.
+            new_password: New password set by the user.
 
         Returns:
             A JSON containing all the user with the updated dashboard user.

@@ -281,14 +281,15 @@ class UserDAO:
 
     def updateDashUserPasswordByUsername(self, username, password):
         """
-        Updates the password for the dashboard user with the given ID.
+        Updates the password for the dashboard user with the given username and sets is_active status.
 
-        This function accepts an ID and a password hash and uses them 
+        This function accepts a username and a password hash and uses them 
         to update password in the record of the user with the matching ID.
 
         Args:
-            duid: The ID of the user whose password must be updated.
-            password: The hash of the new password for the dashboboard user.
+            username: The username of the user whose password must be updated.
+            password: Temporary password provided by the sistem admin.
+            new_password: New password set by the user.
 
         Returns:
             A list containing the response to the database query
