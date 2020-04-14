@@ -193,6 +193,7 @@ class UserHandler:
         """
         if username == None or password == None:
             return jsonify(Error="Request Parameters Undefined."), 400
+
         dao = UserDAO()
 
         # get user by username
@@ -201,9 +202,11 @@ class UserHandler:
         # verify is user exists
         if user == None:
             # Login attempts do not increase because username does not exist.
-            return jsonify(Error="Username or Password are incorrect."), 400
+            return jsonify(Error="Username or Password are incorrect. user none"), 400
+
         # get user id , whic is position 0 of the user tupple.
         duid = user[0]
+
         # get current number of attempts
         attempts = dao.getLoginAttempts(duid)[0]
 
@@ -218,17 +221,17 @@ class UserHandler:
             return jsonify(Error="Username or Password are incorrect."), 400
 
         mappedHash = self.mapHash(fetchedHash)
+
+        userPermissions = self.getUserPermissions(duid, 'internal')
         # TODO AES encryption.
         if verifyHash(password, mappedHash['hash']):
             # User provided correct password
-            token = generateToken(username)
+            token = generateToken(username,userPermissions)
             loginInfo = {
                 'user': username,
                 'token': token
             }
-
             dao.setLoginAttempts(duid, 0)
-            session['username'] = loginInfo['user']
             return jsonify(auth=loginInfo), 201
 
         dao.setLoginAttempts(duid, attempts+1)
@@ -431,7 +434,7 @@ class UserHandler:
             mappedPermissions.append(self.mapPermissionsToDict(row))
         return jsonify(Permissions=mappedPermissions), 201
 
-    def getUserPermissions(self, duid):
+    def getUserPermissions(self, duid, selector):
         """
         Get permissions for a user.
 
@@ -439,7 +442,7 @@ class UserHandler:
 
         Args:
             duid: Id of the user whose permissions are to be fetched.
-
+            selector: Determines if the method will be used internally by handler or will be used to return a request response.
         Returns:
             A list of permission dictionnaries ordered by permission id in ascending fashion.
         """
@@ -453,4 +456,6 @@ class UserHandler:
         mappedPermissions = []
         for row in permisionsList:
             mappedPermissions.append(self.mapPermissionsToDict(row))
-        return jsonify(Permissions=mappedPermissions), 200
+        if selector == 'request':
+            return jsonify(Permissions=mappedPermissions), 200
+        return mappedPermissions
