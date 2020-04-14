@@ -215,7 +215,7 @@ def passwordReset(duid):
             return jsonify(Error='Bad Request'), 400
         return handler.updateDashUserPassword(duid, req['password'])
 
-@app.route("/users/unlock", methods=['PATCH'])
+@app.route("/users/activate", methods=['PATCH'])
 def accountUnlock():
     handler = UserHandler()
     req = request.json
