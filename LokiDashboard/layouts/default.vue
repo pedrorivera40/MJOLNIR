@@ -1,15 +1,17 @@
 <template>
-  <v-app>
+  <v-app class="backgrnd">
     <v-app-bar app color="primary" dark clipped-left v-if="$auth.loggedIn">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
-      <v-toolbar-title>Huella Deportiva Dashboard</v-toolbar-title>
+      <v-toolbar-title class="headline font-weight-medium">
+        Huella Deportiva Dashboard
+      </v-toolbar-title>
 
       <v-spacer />
 
-      <v-icon class="mr-2">mdi-account-circle</v-icon>
+      <v-icon class="mr-2" @click="test">mdi-account-circle</v-icon>
 
-      <v-label dark v-if="user!== null">{{user.username}}</v-label>
+      <span class="font-weight-medium" dark v-if="user !== null">{{ user.username }}</span>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn class="ml-2" @click="logout" v-on="on" icon>
@@ -30,11 +32,16 @@
     >
       <v-list dense>
         <v-list-item-group class="nav-links">
-          <v-list-item v-for="(item,index) in items" :key="index" :to="item.to" nuxt>
+          <v-list-item
+            v-for="(item, index) in items"
+            :key="index"
+            :to="item.to"
+            nuxt
+          >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>{{item.title}}</v-list-item-title>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -45,7 +52,7 @@
       </v-container>
     </v-content>
     <TheSnackBar />
-    <v-footer :fixed="fixed" app>
+    <v-footer color="grey lighten-3" :fixed="fixed" app>
       <v-spacer />
       <span>MJOLNIR &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
@@ -63,7 +70,7 @@ export default {
     return {
       displayUser: "",
       clipped: false,
-      drawer: true,
+      drawer: !this.$vuetify.breakpoint.smAndDown, //it breakpoint small and down, drawer hidden by default.
       fixed: false,
       items: [
         {
@@ -112,7 +119,10 @@ export default {
     ...mapActions({
       logout: "userAuth/logout",
       setUser: "userAuth/setUser"
-    })
+    }),
+    test() {
+      console.log(this.$vuetify.breakpoint);
+    }
   },
   computed: {
     ...mapGetters({
@@ -127,13 +137,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/variables.scss";
-.main-container {
-  height: 100%;
-}
-.nav-drawer {
-  .nav-links {
-    a {
-      color: $highlight-color;
+.backgrnd {
+  background-color: whitesmoke;
+  .main-container {
+    height: 100%;
+  }
+  .nav-drawer {
+    .nav-links {
+      a {
+        color: $highlight-color;
+      }
     }
   }
 }

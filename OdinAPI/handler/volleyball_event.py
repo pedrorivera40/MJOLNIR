@@ -677,7 +677,8 @@ class VolleyballEventHandler(EventResultHandler):
                 if not team_result:
                     return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
             else:
-                dao.addTeamStatisticsAuto(eID)
+                dao.addTeamStatistics(eID,attributes['kill_points'],attributes['attack_errors'],attributes['assists'],attributes['aces'],
+                    attributes['service_errors'],attributes['digs'],attributes['blocks'],attributes['blocking_errors'],attributes['reception_errors'])
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
         
@@ -921,6 +922,14 @@ class VolleyballEventHandler(EventResultHandler):
                 return jsonify(Error = "Volleyball Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team stats from DAO."), 500
+
+        # Validate Avoid Duplication Final Score
+        try:
+            fs_dao = FinalScoreDAO()
+            if fs_dao.getFinalScore(eID):
+                return jsonify(Error = "Final Score Entry already exists for Event ID:{}".format(eID)),400
+        except:
+            return jsonify(ERROR="Unable to verify final score from DAO."), 500
          
         # Validate existing event
         
@@ -1007,7 +1016,7 @@ class VolleyballEventHandler(EventResultHandler):
         #case with previously existing invalid entry, in that case update that entry
         if invalid_duplicate:
             try:
-                result = fs_dao.editFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
+                result = fs_dao.editFinalScoreAltCursor(eID,attributes['uprm_score'],attributes['opponent_score'],dao.getCursor())
                 if not result:
                     return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
             except:
@@ -1015,7 +1024,7 @@ class VolleyballEventHandler(EventResultHandler):
         else:
             # Create and Validate Final Score entry
             try:
-                result = fs_dao.addFinalScore(eID,local_score, opponent_score)
+                result = fs_dao.addFinalScoreAltCursor(eID,local_score, opponent_score,dao.getCursor())
                 if not result:
                     return jsonify(Error = "Problem inserting new final score record."),500
             except:
@@ -1045,7 +1054,6 @@ class VolleyballEventHandler(EventResultHandler):
                     return jsonify(Error = "Problem inserting new team statistics record."),500
             except:
                 return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
-        fs_dao.commitChanges
         dao.commitChanges()
         return jsonify(Volleyball_Event_Team_Stats = "Added new team statistics record with id:{} and individual statistics for event id:{}.".format(result,eID)),201
 

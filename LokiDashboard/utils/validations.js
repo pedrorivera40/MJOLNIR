@@ -16,6 +16,10 @@ const passwordFormat = () => {
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$/
   return v => regex.test(v) || "Password must contain at least: 1 upercase, 1 lowercase, 1 number, and 1 special character."
 }
+const emailFormat = () => {
+  let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return v => regex.test(v) || "Not a valid email format."
+}
 
 const passwordMatch = (password) => {
   return v => v === password || "Password does not match."
@@ -27,5 +31,6 @@ export default {
   minLength,
   maxLength,
   passwordFormat,
-  passwordMatch
+  passwordMatch,
+  emailFormat
 }

@@ -3,13 +3,14 @@ class EventDAO:
         #   id  date            is_local|venue      team_id
         #   3	"2020-03-30"	true	"Mangual"	1
         #   4	"2020-03-14"	true	"Espada"	1
-        valid_events = [3,4,5,6,7,8,9,10,11,12,13,14,15,21,22,23,24]
+        valid_events = [3,4,5,6,7,8,9,10,11,12,13,14,15,21,22,23,25]
+
         if eID in valid_events:
             return 1
         return None
 
     def getEventTeamByID(self,eID):
-        team1events =[3,4,5,6,21,22,23]
+        team1events =[3,4,5,6,21,22,23,25]
         team4events =[7,8]
         team5events =[]
         team7events =[10,11,12,15]

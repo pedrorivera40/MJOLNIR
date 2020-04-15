@@ -2,7 +2,7 @@
   <div class="wrapper d-flex align-center justify-center">
     <v-card width="500" class="elevation-12 mx-auto">
       <v-toolbar color="primary" dark flat>
-        <v-toolbar-title>Password Reset</v-toolbar-title>
+        <v-toolbar-title> Password activateAccount </v-toolbar-title>
         <v-spacer />
       </v-toolbar>
       <v-card-text>
@@ -22,33 +22,41 @@
               label="Current Password"
               name="current-password"
               prepend-icon="mdi-lock-clock"
-              :append-icon=" showCurr ? 'mdi-eye-off' : 'mdi-eye'"
+              :append-icon="showCurr ? 'mdi-eye-off' : 'mdi-eye'"
               :type="showCurr ? 'text' : 'password'"
               v-model="password"
-              @click:append="showCurr=!showCurr"
-              :rules="[required('password', 'You must input your current password.')]"
+              @click:append="showCurr = !showCurr"
+              :rules="[
+                required('password', 'You must input your current password.')
+              ]"
             />
             <v-text-field
               id="new-password"
               label="New Password"
               name="new-password"
               prepend-icon="mdi-lock"
-              :append-icon=" showNew ? 'mdi-eye-off' : 'mdi-eye'"
+              :append-icon="showNew ? 'mdi-eye-off' : 'mdi-eye'"
               :type="showNew ? 'text' : 'password'"
               v-model="newPassword"
-              @click:append="showNew=!showNew"
-              :rules="[required('password','You must input a new password.'),passwordFormat()]"
+              @click:append="showNew = !showNew"
+              :rules="[
+                required('password', 'You must input a new password.'),
+                passwordFormat()
+              ]"
             />
             <v-text-field
               id="confirm-password"
               label="Comfirm Password"
               name="confirm-password"
               prepend-icon="mdi-lock-check"
-              :append-icon=" showConf ? 'mdi-eye-off' : 'mdi-eye'"
+              :append-icon="showConf ? 'mdi-eye-off' : 'mdi-eye'"
               :type="showConf ? 'text' : 'password'"
               v-model="repeat"
-              @click:append="showConf=!showConf"
-              :rules="[required('password','You must confirm your new password.'),passwordMatch(newPassword)]"
+              @click:append="showConf = !showConf"
+              :rules="[
+                required('password', 'You must confirm your new password.'),
+                passwordMatch(newPassword)
+              ]"
             />
           </v-form>
         </v-container>
@@ -64,8 +72,10 @@
           :disabled="!valid"
           color="primary_light"
           class="ma-5"
-          @click="reset({username: username, password: repeat})"
-        >Submit</v-btn>
+          @click="activateAccount({ username: username, password: password, new_password: repeat })"
+        >
+          Submit
+        </v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -87,12 +97,12 @@ export default {
       password: "ninjaTurtles1!",
       newPassword: "",
       repeat: "",
-      ...rules,
+      ...rules
     };
   },
   methods: {
     ...mapActions({
-      reset: "userAuth/reset"
+      activateAccount: "userAuth/activateAccount"
     })
   },
   computed: {

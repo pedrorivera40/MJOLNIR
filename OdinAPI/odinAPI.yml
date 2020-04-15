@@ -84,8 +84,8 @@ paths:
                 $ref: "#/components/schemas/Error"
 
     patch:
-      summary: "Update username"
-      description: "Update the username for the user with the given Id"
+      summary: "Update user information"
+      description: "Update the information for the user with the given Id"
       tags:
         - Users
       parameters:
@@ -99,7 +99,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UsernameChange"
+              $ref: "#/components/schemas/UserInfoChange"
       responses:
         "200":
           description: OK
@@ -182,6 +182,32 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PasswordReset"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/activate:
+    patch:
+      summary: "Activate a user acount."
+      description: " Reset the password for the user with the 
+      given username and activate their account."
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountActivation"
       responses:
         "200":
           description: OK
@@ -362,6 +388,19 @@ components:
       properties:
         username:
           type: string
+    UserInfoChange:
+      type: object
+      properties:
+        username:
+          type: string
+        full_name:
+          type: string
+        email:
+          type: string
+        is_active:
+          type: string
+      xml:
+        name: User
     Email:
       type: object
       properties:
@@ -371,6 +410,15 @@ components:
       type: object
       properties:
         password:
+          type: string
+    AccountActivation:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        new_password:
           type: string
     Users:
       type: object
@@ -403,7 +451,7 @@ components:
       properties:
         username:
           type: string
-        full_naame:
+        full_name:
           type: string
         email:
           type: string

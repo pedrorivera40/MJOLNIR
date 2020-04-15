@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="backgrnd">
     <v-content>
       <v-container class="main-container">
         <nuxt />
@@ -20,13 +20,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/variables.scss";
-.main-container {
-  height: 100%;
-}
-.nav-drawer {
-  .nav-links {
-    a {
-      color: $highlight-color;
+.backgrnd {
+  background-color: whitesmoke;
+  .main-container {
+    height: 100%;
+  }
+  .nav-drawer {
+    .nav-links {
+      a {
+        color: $highlight-color;
+      }
     }
   }
 }
