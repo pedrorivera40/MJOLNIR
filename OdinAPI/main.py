@@ -40,7 +40,10 @@ def token_check(func):
     """
     @wraps(func)
     def decorated(*args, **kwargs):
-
+        
+        if request.headers.get('Authorization') == None:
+            return jsonify(Error='Token is missing'), 403
+        
         # Extract token from auth header.
         token = request.headers.get('Authorization').split(' ')[1]
 
@@ -207,7 +210,6 @@ def passwordReset(duid):
         return handler.updateDashUserPassword(duid, req['password'])
 
 @app.route("/users/activate", methods=['PATCH'])
-@token_check
 def accountUnlock():
     handler = UserHandler()
     req = request.json
@@ -242,7 +244,7 @@ def removeUser(duid):
 def userPermissions(duid):
     handler = UserHandler()
     if request.method == 'GET':
-        return handler.getUserPermissions(duid)
+        return handler.getUserPermissions(duid,'request')
     if request.method == 'PATCH':
         req = request.json
         ## Check the request contains the right structure.

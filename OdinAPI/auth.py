@@ -90,7 +90,7 @@ def verifyHash(password, storedHash):
 ###################################
 
 # Generates a new JWT token for the user with the secret key given and returns it.
-def generateToken(username):
+def generateToken(username, permissions):
     """
     Creates a new token for the user.
 
@@ -106,6 +106,7 @@ def generateToken(username):
     # Create a JWT token
     payload = {
         'user': username,
+        'permissions':permissions,
         'exp': datetime.datetime.utcnow()+datetime.timedelta(hours=3),
         'iat': datetime.datetime.utcnow()
     }
