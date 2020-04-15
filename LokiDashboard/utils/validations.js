@@ -26,11 +26,17 @@ const passwordMatch = (password) => {
 
 }
 
+const passwordDiffFromOld = (password) => {
+  return v => v !== password || "Password password can't be the same as the previous one."
+
+}
+
 export default {
   required,
   minLength,
   maxLength,
   passwordFormat,
   passwordMatch,
-  emailFormat
+  emailFormat,
+  passwordDiffFromOld
 }

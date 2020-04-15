@@ -41,7 +41,10 @@
               @click:append="showNew = !showNew"
               :rules="[
                 required('password', 'You must input a new password.'),
-                passwordFormat()
+                minLength('password', 10),
+                maxLength('password', 64),
+                passwordFormat(),
+                passwordDiffFromOld(password)
               ]"
             />
             <v-text-field
