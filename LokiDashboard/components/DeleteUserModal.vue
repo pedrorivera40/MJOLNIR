@@ -56,6 +56,7 @@ export default {
     ...mapActions({
       deleteUser: "dashboardUsers/deleteUser"
     }),
+    
     close() {
       this.terms = false;
       this.$emit("update:dialog", false);

@@ -1,4 +1,9 @@
 export default {
+  /**
+   * Action  to log a user into the system, and set their data in the store.
+   * @param {*} param0 destructuring of the vuex context object
+   * @param {*} credentials credentials passed in for the user.
+   */
   async login({ commit, dispatch }, credentials) {
     try {
       commit("SET_LOADING")
@@ -18,6 +23,11 @@ export default {
       }
     }
   },
+
+  /**
+   * Action to rehydrate a user's information after a reload.
+   * @param {*} param0 destructuring of vuex context object.
+   */
   async setUser({ commit }) {
     const user = JSON.parse(localStorage.getItem('user'))
 
@@ -27,6 +37,11 @@ export default {
     commit("SET_USER_DATA_ON_RELOAD", permissions)
   },
 
+  /**
+   * Action to activate an inactive acount by using a temporary password. 
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} credentials credentials passed in for the user.
+   */
   async activateAccount({ commit, dispatch }, credentials) {
     try {
       commit("SET_LOADING")
@@ -45,6 +60,11 @@ export default {
 
   },
 
+  /**
+   * Action to get the logged in user's system permissions.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} token Logged in user's auth token
+   */
   async getUserPermissions({ commit, dispatch }, token) {
     try {
       // Extract permissions from jwt
@@ -59,6 +79,11 @@ export default {
       }
     }
   },
+
+  /**
+   * Action to logout a user from the system and clear their data.
+   * @param {*} param0 destructuring of vuex context object
+   */
   logout({ commit }) {
     commit("CLEAR_USER_DATA")
   }
