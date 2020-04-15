@@ -980,28 +980,28 @@ class BaseballEventHandler(EventResultHandler):
 
         #Check if existing invalid duplicate
         invalid_duplicate = False
-        if True: #try:
+        try:
             fs_dao = FinalScoreDAO()
             if fs_dao.getFinalScoreInvalid(eID):
                 invalid_duplicate = True
-        else:#except:
+        except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
         
         #case with previously existing invalid entry, in that case update that entry
         if invalid_duplicate:
-            if True:#try:
+            try:
                 result = fs_dao.editFinalScoreAltCursor(eID,attributes['uprm_score'],attributes['opponent_score'],dao.getCursor())
                 if not result:
                     return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
-            else:#except:
+            except:
                 return jsonify(ERROR="Unable to verify final score from DAO."), 500
         else:
             # Create and Validate Final Score entry
-            if True:#try:
+            try:
                 result = fs_dao.addFinalScoreAltCursor(eID,local_score, opponent_score,dao.getCursor())
                 if not result:
                     return jsonify(Error = "Problem inserting new final score record."),500
-            else:#except:
+            except:
                 return jsonify(ERROR="Unable to verify final score from DAO."), 500
          
         #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
