@@ -43,4 +43,12 @@ doxypypy -a -c  $1
 \begin{DoxyCode}
 chmod +x py\_filter
 \end{DoxyCode}
- Now, go back to the Doxygen gui and click on the {\bfseries Run} tab, here click on the run button, once its done running it should have generated the documentation for the Project. And you can click on the Show H\+T\+ML output to view the generated files. 
+ Copy this file to your bin, so it is available system wide. 
+\begin{DoxyCode}
+sudo cp py\_filter /usr/bin/
+\end{DoxyCode}
+
+
+Now, go back to the Doxygen gui and click on the {\bfseries Run} tab, here click on the run button, once its done running it should have generated the documentation for the Project. And you can click on the Show H\+T\+ML output to view the generated files.
+
+You can now close the doxygen gui and select to save the configuration to generate a {\ttfamily Doxygen} file which will contain the doxygen configuration and can be opened in Doxygen G\+UI to do further edits. 

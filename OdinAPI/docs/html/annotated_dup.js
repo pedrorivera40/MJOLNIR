@@ -88,14 +88,17 @@ var annotated_dup =
       ] ]
     ] ],
     [ "tests", null, [
-      [ "test_10_user_set_permissions", null, [
-        [ "TestUserRoutes", "classtests_1_1test__10__user__set__permissions_1_1_test_user_routes.html", "classtests_1_1test__10__user__set__permissions_1_1_test_user_routes" ]
+      [ "test_10_add_get_user_permissions", null, [
+        [ "TestUserRoutes", "classtests_1_1test__10__add__get__user__permissions_1_1_test_user_routes.html", "classtests_1_1test__10__add__get__user__permissions_1_1_test_user_routes" ]
       ] ],
-      [ "test_11_remove_user_route", null, [
-        [ "TestUserRoutes", "classtests_1_1test__11__remove__user__route_1_1_test_user_routes.html", "classtests_1_1test__11__remove__user__route_1_1_test_user_routes" ]
+      [ "test_11_user_set_permissions", null, [
+        [ "TestUserRoutes", "classtests_1_1test__11__user__set__permissions_1_1_test_user_routes.html", "classtests_1_1test__11__user__set__permissions_1_1_test_user_routes" ]
       ] ],
-      [ "test_12_actions_on_removed_user", null, [
-        [ "TestUserRoutes", "classtests_1_1test__12__actions__on__removed__user_1_1_test_user_routes.html", "classtests_1_1test__12__actions__on__removed__user_1_1_test_user_routes" ]
+      [ "test_12_remove_user_route", null, [
+        [ "TestUserRoutes", "classtests_1_1test__12__remove__user__route_1_1_test_user_routes.html", "classtests_1_1test__12__remove__user__route_1_1_test_user_routes" ]
+      ] ],
+      [ "test_13_actions_on_removed_user", null, [
+        [ "TestUserRoutes", "classtests_1_1test__13__actions__on__removed__user_1_1_test_user_routes.html", "classtests_1_1test__13__actions__on__removed__user_1_1_test_user_routes" ]
       ] ],
       [ "test_1_add_new_user_route", null, [
         [ "TestUserRoutes", "classtests_1_1test__1__add__new__user__route_1_1_test_user_routes.html", "classtests_1_1test__1__add__new__user__route_1_1_test_user_routes" ]
@@ -106,23 +109,23 @@ var annotated_dup =
       [ "test_3_get_users_route", null, [
         [ "TestUserRoutes", "classtests_1_1test__3__get__users__route_1_1_test_user_routes.html", "classtests_1_1test__3__get__users__route_1_1_test_user_routes" ]
       ] ],
-      [ "test_4_login", null, [
-        [ "TestUserRoutes", "classtests_1_1test__4__login_1_1_test_user_routes.html", "classtests_1_1test__4__login_1_1_test_user_routes" ]
+      [ "test_4_activateUser_account", null, [
+        [ "TestUserRoutes", "classtests_1_1test__4__activate_user__account_1_1_test_user_routes.html", "classtests_1_1test__4__activate_user__account_1_1_test_user_routes" ]
       ] ],
-      [ "test_5_lockout", null, [
-        [ "TestUserRoutes", "classtests_1_1test__5__lockout_1_1_test_user_routes.html", "classtests_1_1test__5__lockout_1_1_test_user_routes" ]
+      [ "test_5_login", null, [
+        [ "TestUserRoutes", "classtests_1_1test__5__login_1_1_test_user_routes.html", "classtests_1_1test__5__login_1_1_test_user_routes" ]
       ] ],
-      [ "test_6_reset_invalid_password", null, [
-        [ "TestUserRoutes", "classtests_1_1test__6__reset__invalid__password_1_1_test_user_routes.html", "classtests_1_1test__6__reset__invalid__password_1_1_test_user_routes" ]
+      [ "test_6_lockout", null, [
+        [ "TestUserRoutes", "classtests_1_1test__6__lockout_1_1_test_user_routes.html", "classtests_1_1test__6__lockout_1_1_test_user_routes" ]
       ] ],
-      [ "test_7_reset_password_route", null, [
-        [ "TestUserRoutes", "classtests_1_1test__7__reset__password__route_1_1_test_user_routes.html", "classtests_1_1test__7__reset__password__route_1_1_test_user_routes" ]
+      [ "test_7_reset_invalid_password", null, [
+        [ "TestUserRoutes", "classtests_1_1test__7__reset__invalid__password_1_1_test_user_routes.html", "classtests_1_1test__7__reset__invalid__password_1_1_test_user_routes" ]
       ] ],
-      [ "test_8_toggle_active_state_route", null, [
-        [ "TestUserRoutes", "classtests_1_1test__8__toggle__active__state__route_1_1_test_user_routes.html", "classtests_1_1test__8__toggle__active__state__route_1_1_test_user_routes" ]
+      [ "test_8_reset_password_route", null, [
+        [ "TestUserRoutes", "classtests_1_1test__8__reset__password__route_1_1_test_user_routes.html", "classtests_1_1test__8__reset__password__route_1_1_test_user_routes" ]
       ] ],
-      [ "test_9_add_get_user_permissions", null, [
-        [ "TestUserRoutes", "classtests_1_1test__9__add__get__user__permissions_1_1_test_user_routes.html", "classtests_1_1test__9__add__get__user__permissions_1_1_test_user_routes" ]
+      [ "test_9_toggle_active_state_route", null, [
+        [ "TestUserRoutes", "classtests_1_1test__9__toggle__active__state__route_1_1_test_user_routes.html", "classtests_1_1test__9__toggle__active__state__route_1_1_test_user_routes" ]
       ] ]
     ] ]
 ];
