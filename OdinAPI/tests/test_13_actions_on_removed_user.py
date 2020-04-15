@@ -29,7 +29,7 @@ class TestUserRoutes(unittest.TestCase):
 
   def test_get_user_by_username_of_removed_user(self):
     # Make sure to put data of a removed user
-    response = self.client.post('/users/username/', data=json.dumps({'username': 'toriko'}),content_type='application/json',  follow_redirects=True)
+    response = self.client.post('/users/username/', data=json.dumps({'username': 'newUser19'}),content_type='application/json',  follow_redirects=True)
     self.assertEqual(response.status_code, 404)
     self.assertEqual(response.json['Error'], 'No user found in the system with that username.') # TODO add corresponding error message
 
@@ -40,8 +40,8 @@ class TestUserRoutes(unittest.TestCase):
 
   def test_add_new_user_with_username_of_removed_user(self):
     newUserOldUsername = {
-          'email' : 'newnewUser28@email.com',
-          'full_name' : 'Newnew User28',
+          'email' : 'newnewUser29@email.com',
+          'full_name' : 'Newnew User29',
           'username' : self.data['username'],
           'password' : 'ninjaTurtles1!'
     }

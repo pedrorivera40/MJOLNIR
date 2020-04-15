@@ -20,7 +20,7 @@ class TestUserRoutes(unittest.TestCase):
         loginInfo = {
           'username': self.data['username'],
           'password': self.data['password'],
-          'new_password': 'ninjaTurtles1!'
+          'new_password': 'ninjaTurtles2!'
         }
         response = self.client.patch('/users/activate', data=json.dumps(loginInfo), content_type='application/json',  follow_redirects=True)
         print(response.json)
