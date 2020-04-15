@@ -12,7 +12,7 @@
           :key="athlete.number"
           dark
           color="#a89f9e"
-          @click.native="set_action_button(athlete.number)"
+          @click.native="uprm_athlete_action(athlete.id)"
           width="50"
           height="50"
         >{{athlete.number}}</v-btn>
@@ -65,7 +65,7 @@
           :key="athlete.number"
           dark
           color="#a89f9e"
-          @click.native="set_action_button(athlete.number)"
+          @click.native="opp_athlete_action(athlete.number)"
           width="50"
           height="50"
         >{{athlete.number}}</v-btn>
@@ -173,6 +173,34 @@ export default {
           message: this.notification_text
         });
         this.notification_dialog = false;
+      }
+    },
+    uprm_athlete_action(id) {
+      let action = "";
+      for (let index in this.action_buttons) {
+        if (this.action_buttons[index].button_state === true) {
+          action = this.action_buttons[index].action_type;
+          this.action_buttons[index].button_state = false;
+        }
+      }
+      if (action === "") {
+        console.log("ERROR MUST BE DISPLAYED... NO ACTION PRESSED");
+      } else {
+        console.log({ athlete_id: id, action_type: action });
+      }
+    },
+    opp_athlete_action(number) {
+      let action = "";
+      for (let index in this.action_buttons) {
+        if (this.action_buttons[index].button_state === true) {
+          action = this.action_buttons[index].action_type;
+          this.action_buttons[index].button_state = false;
+        }
+      }
+      if (action === "") {
+        console.log("ERROR MUST BE DISPLAYED... NO ACTION PRESSED");
+      } else {
+        console.log({ athlete_id: number, action_type: action });
       }
     }
   }

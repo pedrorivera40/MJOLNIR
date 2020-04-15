@@ -23,13 +23,18 @@
         <v-tab>ESTADÍSTICAS POR ATLETAS</v-tab>
 
         <v-tab-item>
+          <v-row justify="center">
+            <v-card-title>Administrador de Jugadas</v-card-title>
+          </v-row>
           <v-row>
             <VolleyballPBPActionsAdder />
           </v-row>
           <v-row>
             <v-divider class="mx-4" horizontal></v-divider>
           </v-row>
-
+          <v-row justify="center">
+            <v-card-title>Lista de Jugadas</v-card-title>
+          </v-row>
           <v-container v-for="action in actions" :key="action.id">
             <VolleyballGameAction
               v-if="action.action_type === notification"
