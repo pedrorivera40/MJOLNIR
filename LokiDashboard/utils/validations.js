@@ -42,7 +42,7 @@ const teamRequired = (propertyType) => {
     //Will receive the id of the team which will be an integer larger than zero.
     return v >= 0 || `${propertyType} debes ser seleccionado`;
   }
-
+}
 const passwordDiffFromOld = (password) => {
   return v => v !== password || "Password password can't be the same as the previous one."
 
