@@ -79,6 +79,7 @@
                 </v-col>
               </v-row>
             </v-form>
+            <v-checkbox v-model="reviewed" label="I have reviewed my changes*." />
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>
@@ -91,7 +92,7 @@
             color="primary darken-1"
             text
             @click="save()"
-            :disabled="!valid"
+            :disabled="!(valid  && reviewed)"
             :loading="isLoading"
           >
             Save
@@ -122,6 +123,7 @@ export default {
       isLoading: false,
       showP: false,
       showC: false,
+      reviewed: false,
       formTitle: "",
       username_: "",
       fullName_: "",

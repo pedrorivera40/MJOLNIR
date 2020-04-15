@@ -196,6 +196,32 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /users/activate:
+    patch:
+      summary: "Activate a user acount."
+      description: " Reset the password for the user with the 
+      given username and activate their account."
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountActivation"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /users/{duid}/toggleActive:
     patch:
       summary: "Activate/Deactivate a user"
@@ -384,6 +410,15 @@ components:
       type: object
       properties:
         password:
+          type: string
+    AccountActivation:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        new_password:
           type: string
     Users:
       type: object
