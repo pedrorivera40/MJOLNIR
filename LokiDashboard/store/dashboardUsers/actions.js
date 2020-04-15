@@ -1,4 +1,9 @@
 export default {
+
+  /**
+   * Action to fetch all the system users from the database.
+   * @param {*} param0 destructuring of vuex context object
+   */
   async getUsers({ commit, dispatch }) {
     try {
       commit("SET_LOADING", 'users')
@@ -17,6 +22,11 @@ export default {
     }
   },
 
+  /**
+   * Action to fetch user permissions given thir ID.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} userID Id for the user whose permittions are being fetched.
+   */
   async getPermissions({ commit, dispatch }, userID) {
     try {
       commit("SET_LOADING", 'permission')
@@ -35,6 +45,11 @@ export default {
     }
   },
   
+  /**
+   * Action to set user permissions provided the user ID and a object with the permissions to be set.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object containing user Id and user permissions to set.
+   */
   async setPermissions({ commit, dispatch },payload) {
     try {
       await this.$axios.patch(`users/${payload.id}/permissions`, {permissions: payload.permissions})
@@ -50,6 +65,11 @@ export default {
     }
   },
 
+  /**
+   * Action to delete a user from the system given their ID.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object containing the user Id and their username.
+   */
   async deleteUser({ commit, dispatch },payload) {
     try {
       await this.$axios.patch(`users/${payload.id}/remove`,)
@@ -66,6 +86,11 @@ export default {
     }
   },
 
+  /**
+   * Action to add a new user to the system given their name, username, email, and password.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object containing the information of the user to be added.
+   */
   async addUser({ commit, dispatch }, payload) {
     try {
       const response = await this.$axios.post(`users/`, payload)
@@ -83,6 +108,11 @@ export default {
     }
   },
 
+  /**
+   * Action to edit a user's information given their id, name, username, emaul, and account active status.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object containing the information of the user to be edited.
+   */
   async editUser({ commit, dispatch }, payload) {
     try {
       const response = await this.$axios.patch(`users/${payload.id}`, payload)
@@ -101,6 +131,11 @@ export default {
     }
   },
 
+  /**
+   * Action that allows the admin to reset a user's password and set their active status to 0.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object ontaining the Id of the user being reset and their new password.
+   */
   async resetPasswordByAdmin({ commit, dispatch }, payload) {
     try {
       const response = await this.$axios.patch(`users/${payload.id}/reset`, payload)
@@ -117,8 +152,5 @@ export default {
 
     }
   },
-  
-  logout({ commit }) {
-    commit("CLEAR_USER_DATA")
-  }
+
 }
