@@ -1,0 +1,46 @@
+In order to generate class and method documentation for classes within Odin\+A\+PI you need to install Doxygen. It is a documenbtation generator much like Javadoc or J\+S\+Doc. In order to install it on your system run the following command\+: 
+\begin{DoxyCode}
+sudo apt-get install doxygen-gui
+\end{DoxyCode}
+ With that you are ready to use doxygen by runningh the command\+: {\ttfamily doxywizard}
+
+Note\+: You might need to install qt5 for doxywizard to run properly 
+\begin{DoxyCode}
+sudo apt-get install build-essential
+
+sudo apt-get install qtcreator
+
+sudo apt-get install qt5-default
+\end{DoxyCode}
+ \subsection*{Doxypypy}
+
+Now doxygen is not fully optimized to understand python docstring syntax. So you need to install a filter that propperly formats your python files, enter doxypypy. To install doxypypy from within your virtualenv run the following command\+: 
+\begin{DoxyCode}
+pip3 install doxypypy
+\end{DoxyCode}
+ More information on Doxypypy \href{!https://github.com/Feneric/doxypypy}{\tt here.}
+
+\subsection*{Getting doxypypy to work with doxygen}
+
+In order to get doxygen to work with doxypypy you must edit the {\ttfamily F\+I\+L\+T\+E\+R\+\_\+\+P\+A\+T\+T\+E\+R\+NS} option. To do so run the doxygen wizard, on the terminal run the following command\+: 
+\begin{DoxyCode}
+doxywizard
+\end{DoxyCode}
+ The Doxygen G\+UI should open in the {\bfseries Wizzard} tab. From here fill the information of the project.
+
+In {\bfseries Step 1\+:} write the project\textquotesingle{}s directory {\ttfamily $<$path/to$>$/\+M\+J\+O\+L\+N\+I\+R/\+Odin\+A\+PI}
+
+In {\bfseries Step 2\+:} Fill out the Projects information. In the field to specify the the directory to scan for source code, use Odin\+A\+PI by specifying is path like above. And select the option to scan recursively. In the field to specify the destination directory for the generated directories fill in {\ttfamily $<$path/to$>$/\+M\+J\+O\+L\+N\+I\+R/\+Odin\+A\+P\+I/docs}
+
+After that, go to the {\bfseries Expert} tab. Here in the {\bfseries Topics} pannel navigate to the {\itshape Input} section, in here look for the {\ttfamily F\+I\+L\+T\+E\+R\+\_\+\+P\+A\+T\+T\+E\+R\+NS} field and write in {\ttfamily $\ast$.py=py\+\_\+filter} and add it to the filters.
+
+Now in the projects root directory create a new file with the name {\ttfamily py\+\_\+filter}. Open it in an editor and write the following\+: 
+\begin{DoxyCode}
+#!/bin/bash
+doxypypy -a -c  $1
+\end{DoxyCode}
+ This is a bash script is the filter that formats python files passed in to an output understandable by doxygen. Save the file and close. Now you need to make it executable by running 
+\begin{DoxyCode}
+chmod +x py\_filter
+\end{DoxyCode}
+ Now, go back to the Doxygen gui and click on the {\bfseries Run} tab, here click on the run button, once its done running it should have generated the documentation for the Project. And you can click on the Show H\+T\+ML output to view the generated files. 
