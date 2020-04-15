@@ -23,12 +23,13 @@ class EventHandler:
         result['event_date'] = record[1]
         result['is_local'] = record[2]
         result['venue'] = record[3]
-        result['team_id'] = record[4]
+        result['team_id'] = record[4]        
         result['opponent_name'] = record[5]
         result['event_summary'] = record[6]
         result['sport_name'] = record[7]
         result['sport_img_url'] = record[8]
         result['branch'] = record[9]
+        result['team_season_year'] = record[10]
 
         if 'Voleibol' in record[7]:
             result['hasPBP'] = self._pbp_exists(record[0])

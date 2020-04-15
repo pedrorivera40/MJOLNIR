@@ -7,7 +7,7 @@
           <v-spacer />
         </v-toolbar>
         <v-card-title class="text--secondary">
-          Reset {{username}}'s password
+          Reset {{ username }}'s password
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -23,6 +23,8 @@
                 @click:append="showNew = !showNew"
                 :rules="[
                   required('password', 'You must input a new password.'),
+                  minLength('password', 10),
+                  maxLength('password', 64),
                   passwordFormat()
                 ]"
               />
@@ -53,7 +55,7 @@
             color="primary darken-1"
             text
             @click="save()"
-            :disabled="!(valid&&sure)"
+            :disabled="!(valid && sure)"
             :loading="isLoading"
           >
             Save
@@ -80,12 +82,12 @@ export default {
   data() {
     return {
       valid: false,
-      sure:false,
+      sure: false,
       showNew: false,
       showConf: false,
       isLoading: false,
-      newPassword: '',
-      repeat: '',
+      newPassword: "",
+      repeat: ""
     };
   },
   methods: {
@@ -101,10 +103,10 @@ export default {
       await this.resetPasswordByAdmin({
         id: this.id,
         username: this.username,
-        password: this.repeat,
-      })
+        password: this.repeat
+      });
       this.isLoading = false;
-      this.close()
+      this.close();
     }
   },
   computed: {
