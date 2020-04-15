@@ -19,10 +19,9 @@ class TestUserRoutes(unittest.TestCase):
     def test_sucessful_login(self):
         loginInfo = {
           'username': self.data['username'],
-          'password': self.data['password']
+          'password': 'ninjaTurtles1!'
         }
         response = self.client.post('/auth/', data=json.dumps(loginInfo), content_type='application/json',  follow_redirects=True)
-        print(response.json)
         token = response.json['auth']['token'].split(' ')[1]
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json['auth']['user'], self.data['username'])

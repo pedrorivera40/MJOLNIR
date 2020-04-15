@@ -25,6 +25,6 @@ class TestUserRoutes(unittest.TestCase):
         for number in [1,2,3]:
           response = self.client.post('/auth/', data=json.dumps(loginInfo), content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.json['Error'], 'Account is locked, contact administrator.')
+        self.assertEqual(response.json['Error'], 'Account is locked.')
 
 

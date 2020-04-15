@@ -202,7 +202,7 @@ class UserHandler:
         # verify is user exists
         if user == None:
             # Login attempts do not increase because username does not exist.
-            return jsonify(Error="Username or Password are incorrect. user none"), 400
+            return jsonify(Error="Username or Password are incorrect."), 400
 
         # get user id , whic is position 0 of the user tupple.
         duid = user[0]
