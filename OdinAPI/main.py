@@ -70,6 +70,9 @@ def athletes():
 
     elif request.method == 'GET':
         json = request.json
+        if not json:
+            return handler.getAllAthletes()    
+
         if not 'sID' in json:
             return jsonify(Error = "Bad Request"),400
 
@@ -1289,7 +1292,7 @@ def get_sport_info():
 def teamByYear():
     json = request.json
     handler = TeamHandler()
-    if request.method == 'GET':
+    if request.method == 'GET':        
         return handler.getTeamByYear(json['sport_id'],json['season_year'])
     if request.method == 'POST':
         return handler.addTeam(json['sport_id'],json['season_year'],json['team_image_url'])
