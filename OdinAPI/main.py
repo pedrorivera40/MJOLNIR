@@ -1671,14 +1671,23 @@ def get_sport_info():
 def teamByYear():
     json = request.json
     handler = TeamHandler()
-    if request.method == 'GET':        
-        return handler.getTeamByYear(json['sport_id'],json['season_year'])
-    if request.method == 'POST':
-        return handler.addTeam(json['sport_id'],json['season_year'],json['team_image_url'])
-    if request.method == 'PUT':
-        return handler.editTeamByYear(json['sport_id'],json['season_year'],json['team_image_url'])
-    if request.method == 'DELETE':
-        return handler.removeTeamByYear(json['sport_id'],json['season_year'])
+    if (request.method == 'GET' or request.method == 'PUT'):
+        #Validate GET/DELETE Request Body
+        if ('sport_id' not in json or 'season_year' not in json):
+             return jsonify(Error='Bad Request'),400
+        if request.method == 'GET':        
+            return handler.getTeamByYear(json['sport_id'],json['season_year'])
+        if request.method == 'DELETE':
+            return handler.removeTeamByYear(json['sport_id'],json['season_year'])
+    if (request.method == 'POST' or request.method == 'PUT'):
+        #Validate POST/PUT Request Body
+        if ('sport_id' not in json or 'season_year' not in json or 'team_image_url' not in json):
+             return jsonify(Error='Bad Request'),400
+        if request.method == 'POST':
+            return handler.addTeam(json['sport_id'],json['season_year'],json['team_image_url'])
+        if request.method == 'PUT':
+            return handler.editTeamByYear(json['sport_id'],json['season_year'],json['team_image_url'])
+    
     else:
         return jsonify(Error="Method not allowed."), 405
 
@@ -1699,8 +1708,19 @@ def teamMembers():
     json = request.json
     handler = TeamHandler()
     if request.method == 'GET':
+        #Validate GET Request Body
+        if ('team_id' not in json):
+             return jsonify(Error='Bad Request'),400
         return handler.getTeamMembersByID(json['team_id'])
     if request.method == 'POST':
+        #Validate POST Request Body
+        if ('team_id' not in json or 'team_members' not in json):
+             return jsonify(Error='Bad Request'),400
+        members_to_add = json['team_members']
+        #Validate Each Added Member ID
+        for member in members_to_add:
+            if ('athlete_id' not in member):
+                return jsonify(Error='Bad Request'),400
         return handler.addTeamMembers(json['team_id'],json['team_members'])
     else:
         return jsonify(Error="Method not allowed."), 405
@@ -1715,12 +1735,28 @@ def teamMembers():
 def teamMemberByIDs():
     json = request.json
     handler = TeamHandler()
+    if request.method == 'GET' or request.method == 'POST' or request.method == 'DELETE':
+        #Validate GET/POST/DELETE Request Body
+        if ('team_id' not in json or 'athlete_id' not in json):
+            return jsonify(Error='Bad Request'),400
+        if request.method == 'GET':
+            return handler.getTeamMemberByIDs(json['athlete_id'],json['team_id'])
+        if request.method == 'POST':
+            return handler.addTeamMember(json['athlete_id'],json['team_id'])
+        if request.method == 'DELETE':
+            return handler.removeTeamMember(json['athlete_id'],json['team_id'])
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+# {}
+#TODO: (Herbert) Check if need to remove route due to redundancy, wait for front end 
+@app.route("/teams/all/", methods = ['GET','POST','DELETE'])
+def getAllSports():
+    json = request.json
+    handler = TeamHandler()
     if request.method == 'GET':
-        return handler.getTeamMemberByIDs(json['athlete_id'],json['team_id'])
-    if request.method == 'POST':
-        return handler.addTeamMember(json['athlete_id'],json['team_id'])
-    if request.method == 'DELETE':
-        return handler.removeTeamMember(json['athlete_id'],json['team_id'])
+        return handler.getAllTeams()
     else:
         return jsonify(Error="Method not allowed."), 405
 

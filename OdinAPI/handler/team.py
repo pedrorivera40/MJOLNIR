@@ -214,7 +214,7 @@ class TeamHandler():
                 return jsonify(Error = "Teams not found."),404
             mappedResult =[]
             for team in result:
-                mappedResult.append(self.mapTeamBasicToDict(team))
+                mappedResult.append(self.mapTeamToDict(team))
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
         
