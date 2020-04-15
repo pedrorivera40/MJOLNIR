@@ -23,6 +23,9 @@ class BasketballEventDAO:
         self.conn = psycopg2.connect(connection_url)
 
 #=============================//HELPERS//====================
+    def getCursor(self):
+        return self.conn.cursor()
+
     def getBasketballEventID(self,eID,aID):
         """
         Checks if basketball event exists.
@@ -399,11 +402,11 @@ class BasketballEventDAO:
                 sum(points) as points,sum(rebounds) as rebounds,sum(assists) as assists,sum(steals) as steals,sum(blocks) as blocks,sum(turnovers) as turnovers,sum(field_goal_attempt) as field_goal_attempt,sum(successful_field_goal) as successful_field_goal,
                 sum(three_point_attempt) as three_point_attempt,sum(successful_three_point) as successful_three_point,sum(free_throw_attempt) as free_throw_attempt,sum(successful_free_throw) as successful_free_throw,
                 event.team_id
-                FROM basketball_event
-                INNER JOIN event ON event.id = basketball_event.event_id
+                FROM basketball_event_team_stats
+                INNER JOIN event ON event.id = basketball_event_team_stats.event_id
                 INNER JOIN team on team.id = event.team_id
                 WHERE team.sport_id = %s and team.season_year = %s and
-                (basketball_event.is_invalid = false or basketball_event.is_invalid is null)
+                (basketball_event_team_stats.is_invalid = false or basketball_event_team_stats.is_invalid is null)
                 GROUP BY event.team_id)
                 select 
                 points,rebounds,assists,steals,blocks,turnovers,field_goal_attempt,successful_field_goal,

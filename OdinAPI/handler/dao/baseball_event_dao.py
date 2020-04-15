@@ -24,6 +24,9 @@ class BaseballEventDAO:
         self.conn = psycopg2.connect(connection_url)
 
 #=============================//HELPERS//====================
+    def getCursor(self):
+        return self.conn.cursor()
+
     def getBaseballEventID(self,eID,aID):
         """
         Checks if baseball event exists.
@@ -377,14 +380,13 @@ class BaseballEventDAO:
                 with aggregate_query as(
                 SELECT
                 sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
-                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
-                from valid_baseball_softball_events,
+                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base,
                 event.team_id
-                FROM baseball_softball_event
-                INNER JOIN event ON event.id = baseball_softball_event.event_id
+                FROM baseball_softball_event_team_stats
+                INNER JOIN event ON event.id = baseball_softball_event_team_stats.event_id
                 INNER JOIN team on team.id = event.team_id
                 WHERE team.sport_id = %s and team.season_year = %s and
-                (baseball_softball_event.is_invalid = false or baseball_softball_event.is_invalid is null)
+                (baseball_softball_event_team_stats.is_invalid = false or baseball_softball_event_team_stats.is_invalid is null)
                 GROUP BY event.team_id)
                 select 
                 at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,
