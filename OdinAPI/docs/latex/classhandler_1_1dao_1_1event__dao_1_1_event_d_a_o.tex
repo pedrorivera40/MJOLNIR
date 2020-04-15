@@ -1,0 +1,189 @@
+\hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o}{}\section{handler.\+dao.\+event\+\_\+dao.\+Event\+D\+AO Class Reference}
+\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o}\index{handler.\+dao.\+event\+\_\+dao.\+Event\+D\+AO@{handler.\+dao.\+event\+\_\+dao.\+Event\+D\+AO}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a1c67394af1f87e5ac8eea5cfbdc18652}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a1c67394af1f87e5ac8eea5cfbdc18652}} 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_aea3ae629c4b67d1a36f88a8faa633b64}{get\+All\+Events} (self)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a9a546a3f9f5a5fff3bece5d2f7bc4ec1}{get\+Events\+By\+Team} (self, t\+ID)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a2d55d30055e25d450c1f2833143e4f39}{get\+Event\+By\+ID} (self, e\+ID)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a1f9f80d3b5442b3732c5cf63049cdd8c}{get\+Event\+Team\+By\+ID} (self, e\+ID)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a05ea963dea054f4258b89b6bcbf87945}{add\+Event} (self, t\+ID, event\+Date, is\+Local, venue, opponent\+Name, event\+Summary)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_af2b2e609a3c1ba67cbe472852bb46c60}{edit\+Event} (self, e\+ID, event\+Date, is\+Local, venue, opponent\+Name, event\+Summary)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a3d8c4ff8a724203eeacb90e6cb84450e}{remove\+Event} (self, e\+ID)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_ae7236c64bac6acc44feb3bc486a2c2a4}{commit\+Changes} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a18db499e8f41f67bb40bc8fbce49f187}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a18db499e8f41f67bb40bc8fbce49f187}} 
+{\bfseries conn}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a05ea963dea054f4258b89b6bcbf87945}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a05ea963dea054f4258b89b6bcbf87945}} 
+\index{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}!add\+Event@{add\+Event}}
+\index{add\+Event@{add\+Event}!handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{add\+Event()}{addEvent()}}
+{\footnotesize\ttfamily def handler.\+dao.\+event\+\_\+dao.\+Event\+D\+A\+O.\+add\+Event (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID,  }\item[{}]{event\+Date,  }\item[{}]{is\+Local,  }\item[{}]{venue,  }\item[{}]{opponent\+Name,  }\item[{}]{event\+Summary }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Adds a new event into the database with the information given.
+
+Uses the arguments given in order to perform an insert query on 
+the database.Then it returns the id of the newly added event in
+the datase.
+
+Args:
+    tID: The id of the team participating in the event.
+    eventDate: Date of the event.
+    isLocal: Designates if the game is local.
+    venue: The venue for the event.            
+    opponentName: The name of the opponent team.
+    eventSummary: A summary of the event.
+Returns:
+    The id of the newly added event.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_ae7236c64bac6acc44feb3bc486a2c2a4}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_ae7236c64bac6acc44feb3bc486a2c2a4}} 
+\index{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}!commit\+Changes@{commit\+Changes}}
+\index{commit\+Changes@{commit\+Changes}!handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{commit\+Changes()}{commitChanges()}}
+{\footnotesize\ttfamily def handler.\+dao.\+event\+\_\+dao.\+Event\+D\+A\+O.\+commit\+Changes (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Commits the changes done on the database after
+insertion and update queries have been done on the
+database.
+
+Uses the connection created when this EventDAO was
+instantiated to commit the changes performed on the datasase
+after insertion and update queries. 
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_af2b2e609a3c1ba67cbe472852bb46c60}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_af2b2e609a3c1ba67cbe472852bb46c60}} 
+\index{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}!edit\+Event@{edit\+Event}}
+\index{edit\+Event@{edit\+Event}!handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{edit\+Event()}{editEvent()}}
+{\footnotesize\ttfamily def handler.\+dao.\+event\+\_\+dao.\+Event\+D\+A\+O.\+edit\+Event (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{event\+Date,  }\item[{}]{is\+Local,  }\item[{}]{venue,  }\item[{}]{opponent\+Name,  }\item[{}]{event\+Summary }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Updates an existing event in the database.        
+
+Uses the arguments given in order to perform an update query on 
+the database with the id of the edit given.Then it returns
+the id of the newly updated event in the datase.
+
+Args:
+    eID: The id of event to be updated.
+    eventDate: Date of the event.
+    isLocal: Designates if the game is local.
+    venue: The venue for the event.            
+    opponentName: The name of the opponent team.
+    eventSummary: A summary of the event.            
+Returns:
+    The id of the newly updated event.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_aea3ae629c4b67d1a36f88a8faa633b64}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_aea3ae629c4b67d1a36f88a8faa633b64}} 
+\index{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}!get\+All\+Events@{get\+All\+Events}}
+\index{get\+All\+Events@{get\+All\+Events}!handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+All\+Events()}{getAllEvents()}}
+{\footnotesize\ttfamily def handler.\+dao.\+event\+\_\+dao.\+Event\+D\+A\+O.\+get\+All\+Events (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets all events in the database.
+
+Performs a query on the database in order to get all
+valid events in the database. It returns a list of the
+of the events with their information including their 
+sport, branch. It will also include the scores of an 
+event if they exist.
+Returns:
+    A list containing  all te valid events in the
+    database  with their information.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a2d55d30055e25d450c1f2833143e4f39}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a2d55d30055e25d450c1f2833143e4f39}} 
+\index{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}!get\+Event\+By\+ID@{get\+Event\+By\+ID}}
+\index{get\+Event\+By\+ID@{get\+Event\+By\+ID}!handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Event\+By\+I\+D()}{getEventByID()}}
+{\footnotesize\ttfamily def handler.\+dao.\+event\+\_\+dao.\+Event\+D\+A\+O.\+get\+Event\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets a single event in the database by the 
+id of the event given.
+
+Performs a query on the database in order to fetch
+a valid event in the database by the id given.
+
+Args:
+    eID: The id of the event to be fetched.
+Returns:
+    A list containing the information of the event in 
+    the database that has the id given.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a9a546a3f9f5a5fff3bece5d2f7bc4ec1}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a9a546a3f9f5a5fff3bece5d2f7bc4ec1}} 
+\index{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}!get\+Events\+By\+Team@{get\+Events\+By\+Team}}
+\index{get\+Events\+By\+Team@{get\+Events\+By\+Team}!handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Events\+By\+Team()}{getEventsByTeam()}}
+{\footnotesize\ttfamily def handler.\+dao.\+event\+\_\+dao.\+Event\+D\+A\+O.\+get\+Events\+By\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets all the events in the database of a  
+team by their id.
+
+Performs a query on the database in order to fetch
+all valid events of a team by their id. It returns 
+a list containing all the valid events of the team.
+
+Args:
+    tID: The id of the team participating in the events.
+
+Returns:
+    A list containing the all of the valid events in 
+    the database that have the team identified by their 
+    id as a participant.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a1f9f80d3b5442b3732c5cf63049cdd8c}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a1f9f80d3b5442b3732c5cf63049cdd8c}} 
+\index{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}!get\+Event\+Team\+By\+ID@{get\+Event\+Team\+By\+ID}}
+\index{get\+Event\+Team\+By\+ID@{get\+Event\+Team\+By\+ID}!handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Event\+Team\+By\+I\+D()}{getEventTeamByID()}}
+{\footnotesize\ttfamily def handler.\+dao.\+event\+\_\+dao.\+Event\+D\+A\+O.\+get\+Event\+Team\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Returns the team id of an existing event.
+
+Peforms a query in the database in order to 
+get the id of the team participating in the
+event identified by the eID given. Then it 
+returns the id of the team if the event is 
+valid and it exists.
+
+Args:
+    eID: The id of the event.
+Returns:
+    The id of the team participating in the
+    event.\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a3d8c4ff8a724203eeacb90e6cb84450e}\label{classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o_a3d8c4ff8a724203eeacb90e6cb84450e}} 
+\index{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}!remove\+Event@{remove\+Event}}
+\index{remove\+Event@{remove\+Event}!handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO@{handler\+::dao\+::event\+\_\+dao\+::\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{remove\+Event()}{removeEvent()}}
+{\footnotesize\ttfamily def handler.\+dao.\+event\+\_\+dao.\+Event\+D\+A\+O.\+remove\+Event (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Invalidates an event on the database.
+
+This method accepts the id of the event in order
+to set the is_invalid field to true in the database.
+This effectively acts as a removal of the event in 
+from the system.
+
+Args:
+    eID: The id of the event to invalidate.
+Returns
+    The id of the updated event record.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+handler/dao/event\+\_\+dao.\+py\end{DoxyCompactItemize}

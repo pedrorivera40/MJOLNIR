@@ -1,0 +1,308 @@
+\hypertarget{classhandler_1_1user_1_1_user_handler}{}\section{handler.\+user.\+User\+Handler Class Reference}
+\label{classhandler_1_1user_1_1_user_handler}\index{handler.\+user.\+User\+Handler@{handler.\+user.\+User\+Handler}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a563bf510a65aefcc2d6988d18fce087f}{map\+User\+To\+Dict} (self, record)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a68a4fcf8939d84849aa4b6bb63d25a65}{map\+Permissions\+To\+Dict} (self, record)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a6bebccaf5fa86ff02d81c65bff29ec87}{map\+Hash} (self, record)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a3d1e4cb462752aa66af5950b89c1feed}{add\+Dash\+User} (self, username, full\+Name, email, password)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a7fcf1c2f61bb89c83536a0066d089de1}{get\+All\+Dash\+Users} (self)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a8496fb014da7425079e6a2c02a5b6af6}{get\+Dash\+User\+By\+ID} (self, duid)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a70ef6b477b3320b72ffdd736df0f0f96}{get\+Dash\+User\+By\+Username} (self, username)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_ae8de510893a8c86cc173b55739143368}{get\+Dash\+User\+By\+Email} (self, email)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a83f742752a1b3d3bbf68c3cabc877f3c}{login} (self, username, password)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a56eaeae0434a67f7d99f4d7c670afdc9}{update\+Dash\+User\+Password} (self, duid, password)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_aa2de9a5da6421296215e75fafeb9b9d4}{unlock\+Dash\+User\+Account} (self, username, password, new\+\_\+password)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_ae252ab004847bf2c18292d5ff166a945}{update\+Dash\+User\+Info} (self, duid, username, full\+\_\+name, email, is\+\_\+active)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_aa98936c6961b8de393b8fd3f76882170}{toggle\+Dash\+User\+Active} (self, duid)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_ac698bb4b5305f31845db90f0932e95ad}{remove\+Dash\+User} (self, duid)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_a0c8766b4b476bc123a2306aeccd2b52c}{set\+User\+Permissions} (self, duid, permissions\+List)
+\item 
+def \hyperlink{classhandler_1_1user_1_1_user_handler_aa8e4dd85347c5126bb48383db010fa39}{get\+User\+Permissions} (self, duid, selector)
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a3d1e4cb462752aa66af5950b89c1feed}\label{classhandler_1_1user_1_1_user_handler_a3d1e4cb462752aa66af5950b89c1feed}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!add\+Dash\+User@{add\+Dash\+User}}
+\index{add\+Dash\+User@{add\+Dash\+User}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{add\+Dash\+User()}{addDashUser()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+add\+Dash\+User (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{username,  }\item[{}]{full\+Name,  }\item[{}]{email,  }\item[{}]{password }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Adds a new Dashboard user with the provided information.
+
+Calls the UserDAO to add a new dashboard user and maps the result to
+to a JSON that contains the desired record. That JSON object 
+is then returned.
+
+Args:
+    username: The usernamename of the new dashboboard user.
+    full_name: The name of the new dashboboard user.
+    email: The email of the new dashboboard user.
+    password: The hash of the password for the new dashboboard user.
+
+Returns:
+    A JSON containing all the user with the new dashboard user.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a7fcf1c2f61bb89c83536a0066d089de1}\label{classhandler_1_1user_1_1_user_handler_a7fcf1c2f61bb89c83536a0066d089de1}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!get\+All\+Dash\+Users@{get\+All\+Dash\+Users}}
+\index{get\+All\+Dash\+Users@{get\+All\+Dash\+Users}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+All\+Dash\+Users()}{getAllDashUsers()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+get\+All\+Dash\+Users (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets all dashboard users.
+
+Calls the UserDAO to get all users and maps the result to
+to a JSON that contains all the users in the system. That
+JSON object is then returned.
+
+Returns:
+    A JSON containing all the dashboard users in the system. 
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_ae8de510893a8c86cc173b55739143368}\label{classhandler_1_1user_1_1_user_handler_ae8de510893a8c86cc173b55739143368}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!get\+Dash\+User\+By\+Email@{get\+Dash\+User\+By\+Email}}
+\index{get\+Dash\+User\+By\+Email@{get\+Dash\+User\+By\+Email}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+Dash\+User\+By\+Email()}{getDashUserByEmail()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+get\+Dash\+User\+By\+Email (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{email }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets a single Dashboard user given their email.
+
+Calls the UserDAO to get a user by username and maps the result to
+to a JSON that contains the desired record. That JSON object 
+is then returned.
+
+Args:
+    email: The email of the dashboboard user that needs to be fetched.
+
+Returns:
+    A JSON containing all the user with the given email.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a8496fb014da7425079e6a2c02a5b6af6}\label{classhandler_1_1user_1_1_user_handler_a8496fb014da7425079e6a2c02a5b6af6}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!get\+Dash\+User\+By\+ID@{get\+Dash\+User\+By\+ID}}
+\index{get\+Dash\+User\+By\+ID@{get\+Dash\+User\+By\+ID}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+Dash\+User\+By\+I\+D()}{getDashUserByID()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+get\+Dash\+User\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets a single dashboard user given their ID.
+
+Calls the UserDAO to get a user by ID and maps the result to
+to a JSON that contains the desired record. That JSON object 
+is then returned.
+
+Args:
+    duid: The ID of the dashboboard user that needs to be fetched.
+
+Returns:
+    A JSON containing all the user with the given ID.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a70ef6b477b3320b72ffdd736df0f0f96}\label{classhandler_1_1user_1_1_user_handler_a70ef6b477b3320b72ffdd736df0f0f96}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!get\+Dash\+User\+By\+Username@{get\+Dash\+User\+By\+Username}}
+\index{get\+Dash\+User\+By\+Username@{get\+Dash\+User\+By\+Username}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+Dash\+User\+By\+Username()}{getDashUserByUsername()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+get\+Dash\+User\+By\+Username (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{username }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets a single Dashboard user given their username.
+
+Calls the UserDAO to get a user by username and maps the result to
+to a JSON that contains the desired record. That JSON object 
+is then returned.
+
+Args:
+    username: The username of the dashboboard user that needs to be fetched.
+
+Returns:
+    A JSON containing all the user with the given username.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_aa8e4dd85347c5126bb48383db010fa39}\label{classhandler_1_1user_1_1_user_handler_aa8e4dd85347c5126bb48383db010fa39}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!get\+User\+Permissions@{get\+User\+Permissions}}
+\index{get\+User\+Permissions@{get\+User\+Permissions}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+User\+Permissions()}{getUserPermissions()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+get\+User\+Permissions (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid,  }\item[{}]{selector }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get permissions for a user.
+
+Get the permissions of a user with the given permission ID.
+
+Args:
+    duid: Id of the user whose permissions are to be fetched.
+    selector: Determines if the method will be used internally by handler or will be used to return a request response.
+Returns:
+    A list of permission dictionnaries ordered by permission id in ascending fashion.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a83f742752a1b3d3bbf68c3cabc877f3c}\label{classhandler_1_1user_1_1_user_handler_a83f742752a1b3d3bbf68c3cabc877f3c}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!login@{login}}
+\index{login@{login}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{login()}{login()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+login (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{username,  }\item[{}]{password }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets a dashboard's user password hash given their username.
+
+Calls the UserDAO to get a user's password hash given their username 
+and maps the result to a JSON that contains the desired record. 
+That JSON object is then returned.
+
+Args:
+    username: The username of the dashboboard user that needs to be fetched.
+    password: The password of the dashboard user
+Returns:
+    A JSON containing all the user's hash.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a6bebccaf5fa86ff02d81c65bff29ec87}\label{classhandler_1_1user_1_1_user_handler_a6bebccaf5fa86ff02d81c65bff29ec87}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!map\+Hash@{map\+Hash}}
+\index{map\+Hash@{map\+Hash}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{map\+Hash()}{mapHash()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+map\+Hash (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{record }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Converts results returned by DAO into a dictionary.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a68a4fcf8939d84849aa4b6bb63d25a65}\label{classhandler_1_1user_1_1_user_handler_a68a4fcf8939d84849aa4b6bb63d25a65}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!map\+Permissions\+To\+Dict@{map\+Permissions\+To\+Dict}}
+\index{map\+Permissions\+To\+Dict@{map\+Permissions\+To\+Dict}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{map\+Permissions\+To\+Dict()}{mapPermissionsToDict()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+map\+Permissions\+To\+Dict (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{record }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Converts results returned by DAO into a dictionary.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a563bf510a65aefcc2d6988d18fce087f}\label{classhandler_1_1user_1_1_user_handler_a563bf510a65aefcc2d6988d18fce087f}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!map\+User\+To\+Dict@{map\+User\+To\+Dict}}
+\index{map\+User\+To\+Dict@{map\+User\+To\+Dict}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{map\+User\+To\+Dict()}{mapUserToDict()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+map\+User\+To\+Dict (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{record }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Converts a record returned by the DAO into a dictionary.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_ac698bb4b5305f31845db90f0932e95ad}\label{classhandler_1_1user_1_1_user_handler_ac698bb4b5305f31845db90f0932e95ad}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!remove\+Dash\+User@{remove\+Dash\+User}}
+\index{remove\+Dash\+User@{remove\+Dash\+User}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{remove\+Dash\+User()}{removeDashUser()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+remove\+Dash\+User (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Invalidates a user in the database.
+
+Calls the UserDAO to invalidate a dashboard user's account. It then
+maps the result to a JSON that contains the desired record. That JSON 
+object is then returned.
+
+Args:
+    duid: The ID of the user that will be invalidated.
+
+Returns:
+    A JSON containing all the user with the updated dashboard user.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a0c8766b4b476bc123a2306aeccd2b52c}\label{classhandler_1_1user_1_1_user_handler_a0c8766b4b476bc123a2306aeccd2b52c}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!set\+User\+Permissions@{set\+User\+Permissions}}
+\index{set\+User\+Permissions@{set\+User\+Permissions}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{set\+User\+Permissions()}{setUserPermissions()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+set\+User\+Permissions (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid,  }\item[{}]{permissions\+List }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Adds permissions to a user.
+
+This fucntion will go thorugh the permissions list and apply them to 
+the user with the specified duid.
+
+Args:
+    duid: The id of the user's whose permissions will be modified.
+    permissionsList: A list of the permissions to add to the user.
+
+Returns:
+    A list containing the response to the database query containing 
+    the matching record of modiffied user permissions.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_aa98936c6961b8de393b8fd3f76882170}\label{classhandler_1_1user_1_1_user_handler_aa98936c6961b8de393b8fd3f76882170}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!toggle\+Dash\+User\+Active@{toggle\+Dash\+User\+Active}}
+\index{toggle\+Dash\+User\+Active@{toggle\+Dash\+User\+Active}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{toggle\+Dash\+User\+Active()}{toggleDashUserActive()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+toggle\+Dash\+User\+Active (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Toggle the active status of a dashboard user.
+
+Calls the UserDAO to toggle a dashboard user account's active state. 
+It then maps the result to a JSON that contains the desired record. 
+That JSON object is then returned.
+
+Args:
+    duid: The ID of the user that will be toggled.
+
+Returns:
+    A JSON containing the updated dashboard user.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_aa2de9a5da6421296215e75fafeb9b9d4}\label{classhandler_1_1user_1_1_user_handler_aa2de9a5da6421296215e75fafeb9b9d4}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!unlock\+Dash\+User\+Account@{unlock\+Dash\+User\+Account}}
+\index{unlock\+Dash\+User\+Account@{unlock\+Dash\+User\+Account}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{unlock\+Dash\+User\+Account()}{unlockDashUserAccount()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+unlock\+Dash\+User\+Account (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{username,  }\item[{}]{password,  }\item[{}]{new\+\_\+password }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Updates the password for the dashboard user with the given ID and sets is_active status.
+
+Calls the UserDAO to update the password of a dashboard user and set its 
+'is_active' status to true. It then maps the result to a JSON that contains 
+the desired record. That JSON object is then returned.
+
+Args:
+    username: The username of the user whose password must be updated.
+    password: Temporary password provided by the sistem admin.
+    new_password: New password set by the user.
+
+Returns:
+    A JSON containing all the user with the updated dashboard user.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_ae252ab004847bf2c18292d5ff166a945}\label{classhandler_1_1user_1_1_user_handler_ae252ab004847bf2c18292d5ff166a945}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!update\+Dash\+User\+Info@{update\+Dash\+User\+Info}}
+\index{update\+Dash\+User\+Info@{update\+Dash\+User\+Info}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{update\+Dash\+User\+Info()}{updateDashUserInfo()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+update\+Dash\+User\+Info (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid,  }\item[{}]{username,  }\item[{}]{full\+\_\+name,  }\item[{}]{email,  }\item[{}]{is\+\_\+active }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Updates the username for the dashboard user with the given ID.
+
+Calls the UserDAO to update the username of a dashboard user. It then
+maps the result to a JSON that contains the desired record. That JSON 
+object is then returned.
+
+Args:
+    duid: The ID of the user whose username must be updated.
+    username: The new username for the dashboard user.
+    full_name: The new name for the dashboboard user.
+    email: The new email for the dashboboard user.
+    is_active: The new active status for the dashboard user.
+Returns:
+    A JSON containing all the user with the updated dashboard user. 
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1user_1_1_user_handler_a56eaeae0434a67f7d99f4d7c670afdc9}\label{classhandler_1_1user_1_1_user_handler_a56eaeae0434a67f7d99f4d7c670afdc9}} 
+\index{handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}!update\+Dash\+User\+Password@{update\+Dash\+User\+Password}}
+\index{update\+Dash\+User\+Password@{update\+Dash\+User\+Password}!handler\+::user\+::\+User\+Handler@{handler\+::user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{update\+Dash\+User\+Password()}{updateDashUserPassword()}}
+{\footnotesize\ttfamily def handler.\+user.\+User\+Handler.\+update\+Dash\+User\+Password (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid,  }\item[{}]{password }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Updates the password for the dashboard user with the given ID.
+
+Calls the UserDAO to update the password of a dashboard user. It then
+maps the result to a JSON that contains the desired record. That JSON 
+object is then returned.
+
+Args:
+    duid: The ID of the user whose password must be updated.
+    password: The hash of the new password for the dashboboard user.
+
+Returns:
+    A JSON containing all the user with the updated dashboard user.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+handler/user.\+py\end{DoxyCompactItemize}

@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="handler.dao.final_score\l_dao.FinalScoreDAO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o.html"];
+}

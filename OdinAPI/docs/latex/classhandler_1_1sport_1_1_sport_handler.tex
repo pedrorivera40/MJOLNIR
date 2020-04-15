@@ -1,0 +1,142 @@
+\hypertarget{classhandler_1_1sport_1_1_sport_handler}{}\section{handler.\+sport.\+Sport\+Handler Class Reference}
+\label{classhandler_1_1sport_1_1_sport_handler}\index{handler.\+sport.\+Sport\+Handler@{handler.\+sport.\+Sport\+Handler}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhandler_1_1sport_1_1_sport_handler_a72e5a6d4eb4f625284bd3fc8a19e54f9}\label{classhandler_1_1sport_1_1_sport_handler_a72e5a6d4eb4f625284bd3fc8a19e54f9}} 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self)
+\item 
+def \hyperlink{classhandler_1_1sport_1_1_sport_handler_a8bdc68a2a00be3fc4c66b75aea4abbc3}{get\+All\+Sports} (self)
+\item 
+def \hyperlink{classhandler_1_1sport_1_1_sport_handler_a5cd67d66c4b722c46da490fe63beff74}{get\+Sports\+By\+Branch} (self, branch)
+\item 
+def \hyperlink{classhandler_1_1sport_1_1_sport_handler_a18849851d8f9daf78e2e879ac9806a20}{get\+Sport\+By\+Id} (self, sport\+\_\+id)
+\item 
+def \hyperlink{classhandler_1_1sport_1_1_sport_handler_ad7fbc2c9ab7563cc23ca0b5a3d4820ab}{get\+Sport\+By\+Name} (self, sport\+\_\+name)
+\item 
+def \hyperlink{classhandler_1_1sport_1_1_sport_handler_ad83c6e5db6358cf97f46b04135100c53}{get\+Sport\+Categories\+Positions} (self)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}SportHandler - This class handles incomming requests from Odin API's gateway
+               by interacting with the SportDAO. It is responsible for read
+               operations corresponding to sports information including 
+               sport names, branches, categories, and positions.
+@author Pedro Luis Rivera Gomez
+\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhandler_1_1sport_1_1_sport_handler_a8bdc68a2a00be3fc4c66b75aea4abbc3}\label{classhandler_1_1sport_1_1_sport_handler_a8bdc68a2a00be3fc4c66b75aea4abbc3}} 
+\index{handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}!get\+All\+Sports@{get\+All\+Sports}}
+\index{get\+All\+Sports@{get\+All\+Sports}!handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}}
+\subsubsection{\texorpdfstring{get\+All\+Sports()}{getAllSports()}}
+{\footnotesize\ttfamily def handler.\+sport.\+Sport\+Handler.\+get\+All\+Sports (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets all sports supported within the system.
+This function fetches sport records from the DAO.
+
+Returns:
+    A JSON object that contains a list of sport entries.
+    Each sport entry follows the following format:
+{
+    "sport_id": SPORT_ID_VALUE,
+    "sport_name": SPORT_NAME_VALUE,
+    "sport_image_url": SPORT_IMAGE_URL_VALUE,
+    "branch_name": BRANCH_NAME_VALUE
+}
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1sport_1_1_sport_handler_a18849851d8f9daf78e2e879ac9806a20}\label{classhandler_1_1sport_1_1_sport_handler_a18849851d8f9daf78e2e879ac9806a20}} 
+\index{handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}!get\+Sport\+By\+Id@{get\+Sport\+By\+Id}}
+\index{get\+Sport\+By\+Id@{get\+Sport\+By\+Id}!handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}}
+\subsubsection{\texorpdfstring{get\+Sport\+By\+Id()}{getSportById()}}
+{\footnotesize\ttfamily def handler.\+sport.\+Sport\+Handler.\+get\+Sport\+By\+Id (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{sport\+\_\+id }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets sport entry for a given sport id.
+This function fetches the sport record corresponding to a given sport id from the DAO.
+
+Args
+    sport_id: integer corresponding to a sport id in the system
+
+Returns:
+    A JSON object with a list of sport entries.
+    Each entry follows the following format:
+{
+    "sport_id": SPORT_ID_VALUE,
+    "sport_name": SPORT_NAME_VALUE,
+    "sport_image_url": SPORT_IMAGE_URL_VALUE,
+    "branch_name": BRANCH_NAME_VALUE
+}
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1sport_1_1_sport_handler_ad7fbc2c9ab7563cc23ca0b5a3d4820ab}\label{classhandler_1_1sport_1_1_sport_handler_ad7fbc2c9ab7563cc23ca0b5a3d4820ab}} 
+\index{handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}!get\+Sport\+By\+Name@{get\+Sport\+By\+Name}}
+\index{get\+Sport\+By\+Name@{get\+Sport\+By\+Name}!handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}}
+\subsubsection{\texorpdfstring{get\+Sport\+By\+Name()}{getSportByName()}}
+{\footnotesize\ttfamily def handler.\+sport.\+Sport\+Handler.\+get\+Sport\+By\+Name (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{sport\+\_\+name }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets the sports within the system that correspond to a given names.
+This function fetches sport records corresponding to a given branch from the DAO.
+
+Args
+    sport_name: string corresponding to the sport name of interest
+
+Returns:
+    A JSON object that contains a list of sport entries.
+    Each sport entry follows the following format:
+{
+    "sport_id": SPORT_ID_VALUE,
+    "sport_name": SPORT_NAME_VALUE,
+    "sport_image_url": SPORT_IMAGE_URL_VALUE,
+    "branch_name": BRANCH_NAME_VALUE
+}
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1sport_1_1_sport_handler_ad83c6e5db6358cf97f46b04135100c53}\label{classhandler_1_1sport_1_1_sport_handler_ad83c6e5db6358cf97f46b04135100c53}} 
+\index{handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}!get\+Sport\+Categories\+Positions@{get\+Sport\+Categories\+Positions}}
+\index{get\+Sport\+Categories\+Positions@{get\+Sport\+Categories\+Positions}!handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}}
+\subsubsection{\texorpdfstring{get\+Sport\+Categories\+Positions()}{getSportCategoriesPositions()}}
+{\footnotesize\ttfamily def handler.\+sport.\+Sport\+Handler.\+get\+Sport\+Categories\+Positions (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get sports and their respective categories and positions if any.
+This function obtains sports, categories, and positions from the DAO.
+
+Returns:
+    A JSON object that follows the following structure:
+{
+    SPORT_NAME_1 : 
+    {
+        "sport_id" [SPORT_ID_1, SPORT_ID_2, ...],
+        "sport_image_url": [SPORT_IMAGE_URL_1, SPORT_IMAGE_URL_2, ...],
+        "position": [POSITION_NAME_1, POSITION_NAME_2, ...],
+        "category": [CATEGORY_NAME_1, CATEGORY_NAME_2, ...]
+    },
+    ...
+}
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1sport_1_1_sport_handler_a5cd67d66c4b722c46da490fe63beff74}\label{classhandler_1_1sport_1_1_sport_handler_a5cd67d66c4b722c46da490fe63beff74}} 
+\index{handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}!get\+Sports\+By\+Branch@{get\+Sports\+By\+Branch}}
+\index{get\+Sports\+By\+Branch@{get\+Sports\+By\+Branch}!handler\+::sport\+::\+Sport\+Handler@{handler\+::sport\+::\+Sport\+Handler}}
+\subsubsection{\texorpdfstring{get\+Sports\+By\+Branch()}{getSportsByBranch()}}
+{\footnotesize\ttfamily def handler.\+sport.\+Sport\+Handler.\+get\+Sports\+By\+Branch (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{branch }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets all sports supported within the system filtered by branch.
+This function fetches sport records corresponding to a given branch from the DAO.
+
+Args
+    branch: string corresponging to the sport branch
+
+Returns:
+    A JSON object that contains a list of sport entries.
+    Each sport entry follows the following format:
+{
+    "sport_id": SPORT_ID_VALUE,
+    "sport_name": SPORT_NAME_VALUE,
+    "sport_image_url": SPORT_IMAGE_URL_VALUE,
+    "branch_name": BRANCH_NAME_VALUE
+}
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+handler/sport.\+py\end{DoxyCompactItemize}

@@ -1,0 +1,197 @@
+\hypertarget{classhandler_1_1event_1_1_event_handler}{}\section{handler.\+event.\+Event\+Handler Class Reference}
+\label{classhandler_1_1event_1_1_event_handler}\index{handler.\+event.\+Event\+Handler@{handler.\+event.\+Event\+Handler}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a5e837eb3451d29138a27d95b1ed7575d}{map\+Event\+To\+Dict} (self, record)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a75d66da35627aebf7cc6cff5cb93f6e0}{map\+Event\+With\+Scores\+To\+Dict} (self, record)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a5ea11d438c3a6c39524dcde68f87a6c2}{get\+All\+Events} (self)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a0b5135c2269c49c58f165e428d7976fd}{get\+Events\+By\+Team} (self, t\+ID)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_ab5e4836ec9f0aea002d0be3f7227566e}{get\+Event\+By\+ID} (self, e\+ID)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a6c97fb08cd641f3d2dd07a6b5afc0a37}{add\+Event} (self, t\+ID, attributes)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a80dc5621cd54f90b135642db51183d7c}{edit\+Event} (self, e\+ID, attributes)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a511281731fc33fae52d80e432680692d}{remove\+Event} (self, e\+ID)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a75df7c2caab81a386ec89c6958070d35}{validate\+Attributes} (self, attributes)
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a6c97fb08cd641f3d2dd07a6b5afc0a37}\label{classhandler_1_1event_1_1_event_handler_a6c97fb08cd641f3d2dd07a6b5afc0a37}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!add\+Event@{add\+Event}}
+\index{add\+Event@{add\+Event}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{add\+Event()}{addEvent()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+add\+Event (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID,  }\item[{}]{attributes }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Adds a new event for a team with the information given.
+
+Calls a EventDAO to add a new event and maps the 
+result to a JSON object that contains the id of the newly added 
+event.
+
+Args:
+    tID: The id of the team that will participate in the event.
+    attributes: A list containing the attributes of the event to
+        be added.
+Returns:
+    A JSON object containing the id of the newly added event.\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a80dc5621cd54f90b135642db51183d7c}\label{classhandler_1_1event_1_1_event_handler_a80dc5621cd54f90b135642db51183d7c}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!edit\+Event@{edit\+Event}}
+\index{edit\+Event@{edit\+Event}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{edit\+Event()}{editEvent()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+edit\+Event (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{attributes }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Edits the attributes of an existing and valid event record with
+the given id.
+
+Calls the EventDAO to edit the athlete record. It then maps the result
+to a JSON that contains the desirerd record. The JSON object created is
+then returned to the caller.
+
+Args:
+    eID: The id of the event that is going to be edited.
+    attributes: The new attributes of the event to be edited.
+
+Returns:
+    A JSON object containing the information of the edited event.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a5ea11d438c3a6c39524dcde68f87a6c2}\label{classhandler_1_1event_1_1_event_handler_a5ea11d438c3a6c39524dcde68f87a6c2}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!get\+All\+Events@{get\+All\+Events}}
+\index{get\+All\+Events@{get\+All\+Events}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{get\+All\+Events()}{getAllEvents()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+get\+All\+Events (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets all events in the database.
+
+Calls the EventDAO to get a list of all the
+event records in the database and maps the result
+to a JSON that contains all those valid events.
+The JSON object is then returned to the caller.
+
+Returns:
+    A JSON containing all the valid events in the 
+    database.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_ab5e4836ec9f0aea002d0be3f7227566e}\label{classhandler_1_1event_1_1_event_handler_ab5e4836ec9f0aea002d0be3f7227566e}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!get\+Event\+By\+ID@{get\+Event\+By\+ID}}
+\index{get\+Event\+By\+ID@{get\+Event\+By\+ID}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{get\+Event\+By\+I\+D()}{getEventByID()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+get\+Event\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets a specified event by their id.
+
+Calls the EventDAO to get an event by their id 
+and maps the result to a JSON that contains the desired 
+record. The JSON object is then returned to the caller.
+
+Args:
+    eID: The id of the event that needs to be fetched.
+
+Returns:
+    A JSON containing the event with the given id.\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a0b5135c2269c49c58f165e428d7976fd}\label{classhandler_1_1event_1_1_event_handler_a0b5135c2269c49c58f165e428d7976fd}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!get\+Events\+By\+Team@{get\+Events\+By\+Team}}
+\index{get\+Events\+By\+Team@{get\+Events\+By\+Team}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{get\+Events\+By\+Team()}{getEventsByTeam()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+get\+Events\+By\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets all athletes belonging to a specific sport.
+
+Calls the EventDAO to get a list of all event records
+in which a specific team is a participant and maps the result 
+to a JSON that contains all those valid events in the 
+system. The JSON objects is then returned to the caller.
+
+Args:
+    tID: The id of the team that is a participant
+ in the events to be given.
+
+Returns:
+    A JSON containing all valid events that have the team
+    identified by the id given as a participant.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a5e837eb3451d29138a27d95b1ed7575d}\label{classhandler_1_1event_1_1_event_handler_a5e837eb3451d29138a27d95b1ed7575d}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!map\+Event\+To\+Dict@{map\+Event\+To\+Dict}}
+\index{map\+Event\+To\+Dict@{map\+Event\+To\+Dict}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{map\+Event\+To\+Dict()}{mapEventToDict()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+map\+Event\+To\+Dict (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{record }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Converts an event record returned by the Event DAO into a dictionary 
+and returns it.
+
+Creates a result dictionary an then maps the values from the record 
+list into the dictionary before sending it to the caller.
+
+Args:
+    record: An event record in the database with event information
+Returns:
+    A dictionay with the event information in the record list given
+    mapped in it.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a75d66da35627aebf7cc6cff5cb93f6e0}\label{classhandler_1_1event_1_1_event_handler_a75d66da35627aebf7cc6cff5cb93f6e0}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!map\+Event\+With\+Scores\+To\+Dict@{map\+Event\+With\+Scores\+To\+Dict}}
+\index{map\+Event\+With\+Scores\+To\+Dict@{map\+Event\+With\+Scores\+To\+Dict}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{map\+Event\+With\+Scores\+To\+Dict()}{mapEventWithScoresToDict()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+map\+Event\+With\+Scores\+To\+Dict (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{record }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Converts  an event record returned by the Event DAO into a dictionary 
+and returns it.This dictionary will dictionary will contain the local
+and opponent scores of an a event if they have them.
+
+Creates a result dictionary an then maps the values from the record 
+list into the dictionary before sending it to the caller. This dictonary 
+will contain the local and opponent scores of an event if the record has
+them.
+     
+Args:
+    record: An event record in the database with event information along with
+    local an opponent scores for an event if it exists.
+Returns:
+    A dictionay with the basic athlete information in the records list given as well
+    as athlete positions and categories, if the records list has them, mapped in it.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a511281731fc33fae52d80e432680692d}\label{classhandler_1_1event_1_1_event_handler_a511281731fc33fae52d80e432680692d}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!remove\+Event@{remove\+Event}}
+\index{remove\+Event@{remove\+Event}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{remove\+Event()}{removeEvent()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+remove\+Event (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Invalidates an event in the database. 
+
+Call the EventDAO to invalidate the event record. It then
+maps the result to a JSON object that contains the id of the 
+invalidated event. The JSON object is then returned to the caller.
+
+Args:
+    eID: The id of the event to be invalidated.
+
+Returns:
+    A JSON containing the id of the invalidated event.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a75df7c2caab81a386ec89c6958070d35}\label{classhandler_1_1event_1_1_event_handler_a75df7c2caab81a386ec89c6958070d35}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!validate\+Attributes@{validate\+Attributes}}
+\index{validate\+Attributes@{validate\+Attributes}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{validate\+Attributes()}{validateAttributes()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+validate\+Attributes (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{attributes }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Validates the attributes list given for the addEvent() and editEvent()
+functions.
+
+Args:
+    attributes: A list containing the attributes of an event to be added or 
+        edited.
+Returns:
+    A string with an error message if the validation fails an integer otherwise.        
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+handler/event.\+py\end{DoxyCompactItemize}

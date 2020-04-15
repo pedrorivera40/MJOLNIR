@@ -1,0 +1,183 @@
+\hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o}{}\section{handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+AO Class Reference}
+\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o}\index{handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+AO@{handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+AO}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a97dad29f4a4ee11022023a80376da101}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a97dad29f4a4ee11022023a80376da101}} 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a8694f4c5772c0c15fd5d50a91a4103dd}{get\+Final\+Score} (self, e\+ID)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a5236be2fb1a7a2d4a0ace18bf06f6fdd}{get\+Final\+Score\+Invalid} (self, e\+ID)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_ad354d1c7e7a59dca95a856268d17881f}{add\+Final\+Score} (self, e\+ID, local\+\_\+score, opponent\+\_\+score)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a3a0f69142e50d1193d01dad92e1e165f}{add\+Final\+Score\+Alt\+Cursor} (self, e\+ID, local\+\_\+score, opponent\+\_\+score, other\+\_\+cursor)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_ab1aa9c08ee3c3daf1b5dd0a482f40e24}{edit\+Final\+Score} (self, e\+ID, local\+\_\+score, opponent\+\_\+score)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_aafed0bf1088db869afca195a3a7e4fb2}{edit\+Final\+Score\+Alt\+Cursor} (self, e\+ID, local\+\_\+score, opponent\+\_\+score, other\+\_\+cursor)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a750aa3375dc03fbc85025476a9974349}{remove\+Final\+Score} (self, e\+ID)
+\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_af99181eb8ea45373a933a6c3a0bb65db}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_af99181eb8ea45373a933a6c3a0bb65db}} 
+def {\bfseries commit\+Changes} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a2cc4150a86f8f0d8aad3384c99e2d18b}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a2cc4150a86f8f0d8aad3384c99e2d18b}} 
+{\bfseries conn}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_ad354d1c7e7a59dca95a856268d17881f}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_ad354d1c7e7a59dca95a856268d17881f}} 
+\index{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}!add\+Final\+Score@{add\+Final\+Score}}
+\index{add\+Final\+Score@{add\+Final\+Score}!handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}}
+\subsubsection{\texorpdfstring{add\+Final\+Score()}{addFinalScore()}}
+{\footnotesize\ttfamily def handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+A\+O.\+add\+Final\+Score (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{local\+\_\+score,  }\item[{}]{opponent\+\_\+score }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Adds a new sports-specific event final score with the provided information.
+
+This function accepts an ID and score information 
+to perform a query to the database that adds a final score record 
+to the system with the provided information.
+
+Args:
+    eID: the ID of the event for which the final score record will be added.
+    local_score: the final score of the local team for the event
+    opponent_score: the final score of the opponent team for the event
+     
+    
+Returns:
+    A list containing the response to the database query
+    containing the matching record for the new final record entry. 
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a3a0f69142e50d1193d01dad92e1e165f}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a3a0f69142e50d1193d01dad92e1e165f}} 
+\index{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}!add\+Final\+Score\+Alt\+Cursor@{add\+Final\+Score\+Alt\+Cursor}}
+\index{add\+Final\+Score\+Alt\+Cursor@{add\+Final\+Score\+Alt\+Cursor}!handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}}
+\subsubsection{\texorpdfstring{add\+Final\+Score\+Alt\+Cursor()}{addFinalScoreAltCursor()}}
+{\footnotesize\ttfamily def handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+A\+O.\+add\+Final\+Score\+Alt\+Cursor (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{local\+\_\+score,  }\item[{}]{opponent\+\_\+score,  }\item[{}]{other\+\_\+cursor }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Adds a new sports-specific event final score with the provided information.
+
+This function accepts an ID and score information 
+to perform a query to the database that adds a final score record 
+to the system with the provided information.
+
+Args:
+    eID: the ID of the event for which the final score record will be added.
+    local_score: the final score of the local team for the event
+    opponent_score: the final score of the opponent team for the event
+     
+    
+Returns:
+    A list containing the response to the database query
+    containing the matching record for the new final record entry. 
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_ab1aa9c08ee3c3daf1b5dd0a482f40e24}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_ab1aa9c08ee3c3daf1b5dd0a482f40e24}} 
+\index{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}!edit\+Final\+Score@{edit\+Final\+Score}}
+\index{edit\+Final\+Score@{edit\+Final\+Score}!handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}}
+\subsubsection{\texorpdfstring{edit\+Final\+Score()}{editFinalScore()}}
+{\footnotesize\ttfamily def handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+A\+O.\+edit\+Final\+Score (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{local\+\_\+score,  }\item[{}]{opponent\+\_\+score }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Updates the final score for the sports-specific event with the given IDs.
+
+This function accepts an ID and the updated scores and uses them to update
+the final score entry of an event in the system
+
+Args:
+    eID: the ID of the event for which the final score record will be updated
+    local_score: the local score to be updated
+    opponent_score: the opponent score to be updated
+   
+    
+Returns:
+    A list containing the response to the database query
+    containing the matching record for the modified sports-specific
+    event final score.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_aafed0bf1088db869afca195a3a7e4fb2}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_aafed0bf1088db869afca195a3a7e4fb2}} 
+\index{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}!edit\+Final\+Score\+Alt\+Cursor@{edit\+Final\+Score\+Alt\+Cursor}}
+\index{edit\+Final\+Score\+Alt\+Cursor@{edit\+Final\+Score\+Alt\+Cursor}!handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}}
+\subsubsection{\texorpdfstring{edit\+Final\+Score\+Alt\+Cursor()}{editFinalScoreAltCursor()}}
+{\footnotesize\ttfamily def handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+A\+O.\+edit\+Final\+Score\+Alt\+Cursor (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{local\+\_\+score,  }\item[{}]{opponent\+\_\+score,  }\item[{}]{other\+\_\+cursor }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Updates the final score for the sports-specific event with the given IDs.
+
+This function accepts an ID and the updated scores and uses them to update
+the final score entry of an event in the system
+
+Args:
+    eID: the ID of the event for which the final score record will be updated
+    local_score: the local score to be updated
+    opponent_score: the opponent score to be updated
+   
+    
+Returns:
+    A list containing the response to the database query
+    containing the matching record for the modified sports-specific
+    event final score.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a8694f4c5772c0c15fd5d50a91a4103dd}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a8694f4c5772c0c15fd5d50a91a4103dd}} 
+\index{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}!get\+Final\+Score@{get\+Final\+Score}}
+\index{get\+Final\+Score@{get\+Final\+Score}!handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Final\+Score()}{getFinalScore()}}
+{\footnotesize\ttfamily def handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+A\+O.\+get\+Final\+Score (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets the final score for a given event. 
+
+This function uses an ID to perform a query to the database
+that gets the final score in the system that match the given ID.
+
+Args:
+    eID: The ID of the event of final score need to be fetched.
+    
+Returns:
+    A list containing the response to the database query
+    containing athe final score in the system containing 
+    the matching record for the given ID.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a5236be2fb1a7a2d4a0ace18bf06f6fdd}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a5236be2fb1a7a2d4a0ace18bf06f6fdd}} 
+\index{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}!get\+Final\+Score\+Invalid@{get\+Final\+Score\+Invalid}}
+\index{get\+Final\+Score\+Invalid@{get\+Final\+Score\+Invalid}!handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Final\+Score\+Invalid()}{getFinalScoreInvalid()}}
+{\footnotesize\ttfamily def handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+A\+O.\+get\+Final\+Score\+Invalid (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets the invalid final score for a given event. 
+
+This function uses an ID to perform a query to the database
+that gets the invalid final score in the system that match the given ID.
+
+Args:
+    eID: The ID of the event of final score need to be fetched.
+    
+Returns:
+   The id of the invalid event, if it exists. 
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a750aa3375dc03fbc85025476a9974349}\label{classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o_a750aa3375dc03fbc85025476a9974349}} 
+\index{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}!remove\+Final\+Score@{remove\+Final\+Score}}
+\index{remove\+Final\+Score@{remove\+Final\+Score}!handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO@{handler\+::dao\+::final\+\_\+score\+\_\+dao\+::\+Final\+Score\+D\+AO}}
+\subsubsection{\texorpdfstring{remove\+Final\+Score()}{removeFinalScore()}}
+{\footnotesize\ttfamily def handler.\+dao.\+final\+\_\+score\+\_\+dao.\+Final\+Score\+D\+A\+O.\+remove\+Final\+Score (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Invalidates a sports-specific event final score entry in the database.
+
+This function accepts an ID and uses it to set the valid field
+within the database as invalid, this acts as a deletion of the 
+final score entry from the system.
+
+Args:
+    eID: The ID of the event for which the final score will be invalidated.
+    
+Returns:
+    A list containing the response to the database query
+    containing the matching record for the modified 
+    final score entry.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+handler/dao/final\+\_\+score\+\_\+dao.\+py\end{DoxyCompactItemize}

@@ -1,0 +1,179 @@
+\hypertarget{classhandler_1_1athlete_1_1_athlete_handler}{}\section{handler.\+athlete.\+Athlete\+Handler Class Reference}
+\label{classhandler_1_1athlete_1_1_athlete_handler}\index{handler.\+athlete.\+Athlete\+Handler@{handler.\+athlete.\+Athlete\+Handler}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_a953b9be16453dce8e25f08d2c53413f0}{map\+Athlete\+To\+Dict} (self, record)
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_a53d7b2d7abc4fe899194f146763d3287}{map\+Athlete\+With\+Positions\+And\+Categories\+To\+Dict} (self, records)
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_aae7ac6fee7495a16818e09a8946ead32}{get\+All\+Athletes} (self)
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_af33bd416854d51f10a33aa264f1e3b2f}{get\+Athletes\+By\+Sport} (self, s\+ID)
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_a7261ed3d7231ef7bdb261863414be608}{get\+Athlete\+By\+ID} (self, a\+ID)
+\item 
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_ae32bb30286d76da5e4b5d17e211ce80b}\label{classhandler_1_1athlete_1_1_athlete_handler_ae32bb30286d76da5e4b5d17e211ce80b}} 
+def {\bfseries get\+Athlete\+By\+Name} (self, a\+F\+Name, a\+M\+Name, a\+L\+Name)
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_a08fe0c2dab373f26b69dbab68a1b2a72}{add\+Athlete} (self, s\+ID, attributes)
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_af2953ad06fe27a2bd718a83cde63272b}{edit\+Athlete} (self, a\+ID, attributes)
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_a9f3ea8fb6c3c156f89c2b2a5bda6e689}{remove\+Athlete} (self, a\+ID)
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a08fe0c2dab373f26b69dbab68a1b2a72}\label{classhandler_1_1athlete_1_1_athlete_handler_a08fe0c2dab373f26b69dbab68a1b2a72}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!add\+Athlete@{add\+Athlete}}
+\index{add\+Athlete@{add\+Athlete}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{add\+Athlete()}{addAthlete()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+add\+Athlete (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{attributes }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Adds a new athlete with the information given.
+
+Calls a AthleteDAO to add a new athlete and maps the 
+result to a JSON object that contains the id of the newly added 
+athlete.
+
+Args:
+    sID: The id of the sport in which the athlete participates.
+    attributes: A list containing the attributes of the athlete to
+        be added.
+Returns:
+    A JSON object containing the id of the newly added event.\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_af2953ad06fe27a2bd718a83cde63272b}\label{classhandler_1_1athlete_1_1_athlete_handler_af2953ad06fe27a2bd718a83cde63272b}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!edit\+Athlete@{edit\+Athlete}}
+\index{edit\+Athlete@{edit\+Athlete}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{edit\+Athlete()}{editAthlete()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+edit\+Athlete (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID,  }\item[{}]{attributes }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Edits the attributes of an existing and valid athlete record with
+the given id.
+
+Calls the AthleteDAO to edit the athlete record. It then maps the result
+to a JSON that contains the desired record. The JSON object created is
+then returned to the caller.
+
+Args:
+    aID: The id of the athlete that is going to be edited.
+    attributes: The new attributes of the athlete to be edited.
+
+Returns:
+    A JSON object containing the information of the edited athlete.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_aae7ac6fee7495a16818e09a8946ead32}\label{classhandler_1_1athlete_1_1_athlete_handler_aae7ac6fee7495a16818e09a8946ead32}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!get\+All\+Athletes@{get\+All\+Athletes}}
+\index{get\+All\+Athletes@{get\+All\+Athletes}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{get\+All\+Athletes()}{getAllAthletes()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+get\+All\+Athletes (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets all athletes in the database.
+Calls the AthletDAO to get a list of all athlete records
+maps the result to a JSON that contains all those valid athletes 
+in the database. The JSON objects is then returned to the caller.       
+
+Returns:
+    A JSON containing all valid athletes that are in the database.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a7261ed3d7231ef7bdb261863414be608}\label{classhandler_1_1athlete_1_1_athlete_handler_a7261ed3d7231ef7bdb261863414be608}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!get\+Athlete\+By\+ID@{get\+Athlete\+By\+ID}}
+\index{get\+Athlete\+By\+ID@{get\+Athlete\+By\+ID}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{get\+Athlete\+By\+I\+D()}{getAthleteByID()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+get\+Athlete\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets a specified athlete by their id.
+
+Calls the AthleteDAO to get an athlete by their id 
+and maps the result to a JSON that contains the desired 
+record. The JSON object is then returned to the caller.
+
+Args:
+    aID: The id of the athlete that needs to be fetched.
+
+Returns:
+    A JSON containing the athlete with the given id.\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_af33bd416854d51f10a33aa264f1e3b2f}\label{classhandler_1_1athlete_1_1_athlete_handler_af33bd416854d51f10a33aa264f1e3b2f}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!get\+Athletes\+By\+Sport@{get\+Athletes\+By\+Sport}}
+\index{get\+Athletes\+By\+Sport@{get\+Athletes\+By\+Sport}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{get\+Athletes\+By\+Sport()}{getAthletesBySport()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+get\+Athletes\+By\+Sport (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Gets all athletes belonging to a specific sport.
+
+Calls the AthletDAO to get a list of all athlete records
+that participate in a specific sport and maps the result 
+to a JSON that contains all those valid athletes in the 
+system. The JSON objects is then returned to the caller.
+
+Args:
+    sID: The id of the sport in which the athletes parcipate.
+
+Returns:
+    A JSON containing all valid athletes that participate in a
+    specified sport by the given sport id.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a953b9be16453dce8e25f08d2c53413f0}\label{classhandler_1_1athlete_1_1_athlete_handler_a953b9be16453dce8e25f08d2c53413f0}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!map\+Athlete\+To\+Dict@{map\+Athlete\+To\+Dict}}
+\index{map\+Athlete\+To\+Dict@{map\+Athlete\+To\+Dict}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{map\+Athlete\+To\+Dict()}{mapAthleteToDict()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+map\+Athlete\+To\+Dict (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{record }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Converts an athlete record returned by the Athlete DAO into a dictionary 
+and returns it.
+
+Creates a result dictionary an then maps the values from the record 
+list into the dictionary before sending it to the caller.
+
+Args:
+    record: An athlete record in the database with basic athlete information
+Returns:
+    A dictionay with the basic athlete information in the record list given
+    mapped in it.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a53d7b2d7abc4fe899194f146763d3287}\label{classhandler_1_1athlete_1_1_athlete_handler_a53d7b2d7abc4fe899194f146763d3287}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!map\+Athlete\+With\+Positions\+And\+Categories\+To\+Dict@{map\+Athlete\+With\+Positions\+And\+Categories\+To\+Dict}}
+\index{map\+Athlete\+With\+Positions\+And\+Categories\+To\+Dict@{map\+Athlete\+With\+Positions\+And\+Categories\+To\+Dict}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{map\+Athlete\+With\+Positions\+And\+Categories\+To\+Dict()}{mapAthleteWithPositionsAndCategoriesToDict()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+map\+Athlete\+With\+Positions\+And\+Categories\+To\+Dict (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{records }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Converts athlete records returned by the Athlete DAO into a dictionary 
+and returns it.This dictionary will contain the positions or categories
+of an athlete if they have them.
+
+Creates a result dictionary an then maps the values from the records 
+list into the dictionary before sending it to the caller. This dictonary 
+will contain positions or categories of an athlete if the records given have
+a sublist.
+     
+
+Args:
+    records: An athlete record list in the database with basic athlete information if
+     if contains a sublist then it has positions or categories of an athlete.
+Returns:
+    A dictionay with the basic athlete information in the records list given as well
+    as athlete positions and categories, if the records list has them, mapped in it.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a9f3ea8fb6c3c156f89c2b2a5bda6e689}\label{classhandler_1_1athlete_1_1_athlete_handler_a9f3ea8fb6c3c156f89c2b2a5bda6e689}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!remove\+Athlete@{remove\+Athlete}}
+\index{remove\+Athlete@{remove\+Athlete}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{remove\+Athlete()}{removeAthlete()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+remove\+Athlete (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Invalidates an athlete in the database.
+
+Call the AthleteDAO to invalidate the athlete record. It then
+maps the result to a JSON object that contains the id of the 
+invalidated athlete. The JSON object is then returned to the caller.
+
+Args:
+    aID: The id of the athlete to be invalidated.
+Returns:
+    A JSON containing the id of the invalidated athlete.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+handler/athlete.\+py\end{DoxyCompactItemize}

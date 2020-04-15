@@ -1,0 +1,329 @@
+\hypertarget{classuser_1_1_user_handler}{}\section{user.\+User\+Handler Class Reference}
+\label{classuser_1_1_user_handler}\index{user.\+User\+Handler@{user.\+User\+Handler}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classuser_1_1_user_handler_a74e5033271f5bd3a2e9e2e0a86ded938}\label{classuser_1_1_user_handler_a74e5033271f5bd3a2e9e2e0a86ded938}} 
+def \hyperlink{classuser_1_1_user_handler_a74e5033271f5bd3a2e9e2e0a86ded938}{map\+User\+To\+Dict} (self, record)
+\begin{DoxyCompactList}\small\item\em Converts a record returned by the D\+AO into a dictionary. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classuser_1_1_user_handler_a9f59c6c16649455a8b9c09c2ad263e7c}\label{classuser_1_1_user_handler_a9f59c6c16649455a8b9c09c2ad263e7c}} 
+def \hyperlink{classuser_1_1_user_handler_a9f59c6c16649455a8b9c09c2ad263e7c}{map\+Permissions\+To\+Dict} (self, record)
+\begin{DoxyCompactList}\small\item\em Converts results returned by D\+AO into a dictionary. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classuser_1_1_user_handler_a377752f91d54adcd299580464331111e}\label{classuser_1_1_user_handler_a377752f91d54adcd299580464331111e}} 
+def \hyperlink{classuser_1_1_user_handler_a377752f91d54adcd299580464331111e}{map\+Hash} (self, record)
+\begin{DoxyCompactList}\small\item\em Converts results returned by D\+AO into a dictionary. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_a1bb6eb54e9d789a656651ab012c25a8c}{add\+Dash\+User} (self, username, full\+Name, email, password)
+\begin{DoxyCompactList}\small\item\em Adds a new Dashboard user with the provided information. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_aea546371e9e8e2f96a5eb7c96b950062}{get\+All\+Dash\+Users} (self)
+\begin{DoxyCompactList}\small\item\em Gets all dashboard users. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_ad42271d6f499db1db53febb34a1f633f}{get\+Dash\+User\+By\+ID} (self, duid)
+\begin{DoxyCompactList}\small\item\em Gets a single dashboard user given their ID. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_a28c693c8d9c84ecde0151fdd97c69ee6}{get\+Dash\+User\+By\+Username} (self, username)
+\begin{DoxyCompactList}\small\item\em Gets a single Dashboard user given their username. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_af262a3beb9f7fffcf266e065edf7b810}{get\+Dash\+User\+By\+Email} (self, email)
+\begin{DoxyCompactList}\small\item\em Gets a single Dashboard user given their email. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_a36090fca15a4bd0e1f46970113fe4c5a}{login} (self, username, password)
+\begin{DoxyCompactList}\small\item\em Gets a dashboard\textquotesingle{}s user password hash given their username. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_afb658519400d44f533b521c52e8b7950}{update\+Dash\+User\+Password} (self, duid, password)
+\begin{DoxyCompactList}\small\item\em Updates the password for the dashboard user with the given ID. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_a89dae0de6917466d2e79ed8916baa997}{unlock\+Dash\+User\+Account} (self, username, password, new\+\_\+password)
+\begin{DoxyCompactList}\small\item\em Updates the password for the dashboard user with the given ID and sets is\+\_\+active status. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_ae7d63d12f70cd399b3fd9a5d5fd28d82}{update\+Dash\+User\+Info} (self, duid, username, full\+\_\+name, email, is\+\_\+active)
+\begin{DoxyCompactList}\small\item\em Updates the username for the dashboard user with the given ID. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_abbd281b19b1cb06e98de34ef756d9a17}{toggle\+Dash\+User\+Active} (self, duid)
+\begin{DoxyCompactList}\small\item\em Toggle the active status of a dashboard user. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_a9d7c736b2c572f595a2c32fb78d77590}{remove\+Dash\+User} (self, duid)
+\begin{DoxyCompactList}\small\item\em Invalidates a user in the database. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_a8560cf2f90768ffc9f1986518f50e675}{set\+User\+Permissions} (self, duid, permissions\+List)
+\begin{DoxyCompactList}\small\item\em Adds permissions to a user. \end{DoxyCompactList}\item 
+def \hyperlink{classuser_1_1_user_handler_a7a6ab368d3ebce72188e6ef10c438f96}{get\+User\+Permissions} (self, duid, selector)
+\begin{DoxyCompactList}\small\item\em Get permissions for a user. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classuser_1_1_user_handler_a1bb6eb54e9d789a656651ab012c25a8c}\label{classuser_1_1_user_handler_a1bb6eb54e9d789a656651ab012c25a8c}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!add\+Dash\+User@{add\+Dash\+User}}
+\index{add\+Dash\+User@{add\+Dash\+User}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{add\+Dash\+User()}{addDashUser()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+add\+Dash\+User (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{username,  }\item[{}]{full\+Name,  }\item[{}]{email,  }\item[{}]{password }\end{DoxyParamCaption})}
+
+
+
+Adds a new Dashboard user with the provided information. 
+
+Calls the User\+D\+AO to add a new dashboard user and maps the result to to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The usernamename of the new dashboboard user. \\
+\hline
+{\em full\+\_\+name} & The name of the new dashboboard user. \\
+\hline
+{\em email} & The email of the new dashboboard user. \\
+\hline
+{\em password} & The hash of the password for the new dashboboard user.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the user with the new dashboard user. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_aea546371e9e8e2f96a5eb7c96b950062}\label{classuser_1_1_user_handler_aea546371e9e8e2f96a5eb7c96b950062}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!get\+All\+Dash\+Users@{get\+All\+Dash\+Users}}
+\index{get\+All\+Dash\+Users@{get\+All\+Dash\+Users}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+All\+Dash\+Users()}{getAllDashUsers()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+get\+All\+Dash\+Users (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+Gets all dashboard users. 
+
+Calls the User\+D\+AO to get all users and maps the result to to a J\+S\+ON that contains all the users in the system. That J\+S\+ON object is then returned.
+
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the dashboard users in the system. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_af262a3beb9f7fffcf266e065edf7b810}\label{classuser_1_1_user_handler_af262a3beb9f7fffcf266e065edf7b810}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!get\+Dash\+User\+By\+Email@{get\+Dash\+User\+By\+Email}}
+\index{get\+Dash\+User\+By\+Email@{get\+Dash\+User\+By\+Email}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+Dash\+User\+By\+Email()}{getDashUserByEmail()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+get\+Dash\+User\+By\+Email (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{email }\end{DoxyParamCaption})}
+
+
+
+Gets a single Dashboard user given their email. 
+
+Calls the User\+D\+AO to get a user by username and maps the result to to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em email} & The email of the dashboboard user that needs to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the user with the given email. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_ad42271d6f499db1db53febb34a1f633f}\label{classuser_1_1_user_handler_ad42271d6f499db1db53febb34a1f633f}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!get\+Dash\+User\+By\+ID@{get\+Dash\+User\+By\+ID}}
+\index{get\+Dash\+User\+By\+ID@{get\+Dash\+User\+By\+ID}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+Dash\+User\+By\+I\+D()}{getDashUserByID()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+get\+Dash\+User\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid }\end{DoxyParamCaption})}
+
+
+
+Gets a single dashboard user given their ID. 
+
+Calls the User\+D\+AO to get a user by ID and maps the result to to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em duid} & The ID of the dashboboard user that needs to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the user with the given ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_a28c693c8d9c84ecde0151fdd97c69ee6}\label{classuser_1_1_user_handler_a28c693c8d9c84ecde0151fdd97c69ee6}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!get\+Dash\+User\+By\+Username@{get\+Dash\+User\+By\+Username}}
+\index{get\+Dash\+User\+By\+Username@{get\+Dash\+User\+By\+Username}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+Dash\+User\+By\+Username()}{getDashUserByUsername()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+get\+Dash\+User\+By\+Username (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{username }\end{DoxyParamCaption})}
+
+
+
+Gets a single Dashboard user given their username. 
+
+Calls the User\+D\+AO to get a user by username and maps the result to to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the dashboboard user that needs to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the user with the given username. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_a7a6ab368d3ebce72188e6ef10c438f96}\label{classuser_1_1_user_handler_a7a6ab368d3ebce72188e6ef10c438f96}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!get\+User\+Permissions@{get\+User\+Permissions}}
+\index{get\+User\+Permissions@{get\+User\+Permissions}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{get\+User\+Permissions()}{getUserPermissions()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+get\+User\+Permissions (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid,  }\item[{}]{selector }\end{DoxyParamCaption})}
+
+
+
+Get permissions for a user. 
+
+Get the permissions of a user with the given permission ID.
+
+
+\begin{DoxyParams}{Parameters}
+{\em duid} & Id of the user whose permissions are to be fetched. \\
+\hline
+{\em selector} & Determines if the method will be used internally by handler or will be used to return a request response. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of permission dictionnaries ordered by permission id in ascending fashion. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_a36090fca15a4bd0e1f46970113fe4c5a}\label{classuser_1_1_user_handler_a36090fca15a4bd0e1f46970113fe4c5a}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!login@{login}}
+\index{login@{login}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{login()}{login()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+login (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{username,  }\item[{}]{password }\end{DoxyParamCaption})}
+
+
+
+Gets a dashboard\textquotesingle{}s user password hash given their username. 
+
+Calls the User\+D\+AO to get a user\textquotesingle{}s password hash given their username and maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the dashboboard user that needs to be fetched. \\
+\hline
+{\em password} & The password of the dashboard user \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the user\textquotesingle{}s hash. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_a9d7c736b2c572f595a2c32fb78d77590}\label{classuser_1_1_user_handler_a9d7c736b2c572f595a2c32fb78d77590}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!remove\+Dash\+User@{remove\+Dash\+User}}
+\index{remove\+Dash\+User@{remove\+Dash\+User}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{remove\+Dash\+User()}{removeDashUser()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+remove\+Dash\+User (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid }\end{DoxyParamCaption})}
+
+
+
+Invalidates a user in the database. 
+
+Calls the User\+D\+AO to invalidate a dashboard user\textquotesingle{}s account. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em duid} & The ID of the user that will be invalidated.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the user with the updated dashboard user. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_a8560cf2f90768ffc9f1986518f50e675}\label{classuser_1_1_user_handler_a8560cf2f90768ffc9f1986518f50e675}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!set\+User\+Permissions@{set\+User\+Permissions}}
+\index{set\+User\+Permissions@{set\+User\+Permissions}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{set\+User\+Permissions()}{setUserPermissions()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+set\+User\+Permissions (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid,  }\item[{}]{permissions\+List }\end{DoxyParamCaption})}
+
+
+
+Adds permissions to a user. 
+
+This fucntion will go thorugh the permissions list and apply them to the user with the specified duid.
+
+
+\begin{DoxyParams}{Parameters}
+{\em duid} & The id of the user\textquotesingle{}s whose permissions will be modified. \\
+\hline
+{\em permissions\+List} & A list of the permissions to add to the user.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the matching record of modiffied user permissions. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_abbd281b19b1cb06e98de34ef756d9a17}\label{classuser_1_1_user_handler_abbd281b19b1cb06e98de34ef756d9a17}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!toggle\+Dash\+User\+Active@{toggle\+Dash\+User\+Active}}
+\index{toggle\+Dash\+User\+Active@{toggle\+Dash\+User\+Active}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{toggle\+Dash\+User\+Active()}{toggleDashUserActive()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+toggle\+Dash\+User\+Active (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid }\end{DoxyParamCaption})}
+
+
+
+Toggle the active status of a dashboard user. 
+
+Calls the User\+D\+AO to toggle a dashboard user account\textquotesingle{}s active state. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em duid} & The ID of the user that will be toggled.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the updated dashboard user. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_a89dae0de6917466d2e79ed8916baa997}\label{classuser_1_1_user_handler_a89dae0de6917466d2e79ed8916baa997}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!unlock\+Dash\+User\+Account@{unlock\+Dash\+User\+Account}}
+\index{unlock\+Dash\+User\+Account@{unlock\+Dash\+User\+Account}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{unlock\+Dash\+User\+Account()}{unlockDashUserAccount()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+unlock\+Dash\+User\+Account (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{username,  }\item[{}]{password,  }\item[{}]{new\+\_\+password }\end{DoxyParamCaption})}
+
+
+
+Updates the password for the dashboard user with the given ID and sets is\+\_\+active status. 
+
+Calls the User\+D\+AO to update the password of a dashboard user and set its \textquotesingle{}is\+\_\+active\textquotesingle{} status to true. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & The username of the user whose password must be updated. \\
+\hline
+{\em password} & Temporary password provided by the sistem admin. \\
+\hline
+{\em new\+\_\+password} & New password set by the user.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the user with the updated dashboard user. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_ae7d63d12f70cd399b3fd9a5d5fd28d82}\label{classuser_1_1_user_handler_ae7d63d12f70cd399b3fd9a5d5fd28d82}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!update\+Dash\+User\+Info@{update\+Dash\+User\+Info}}
+\index{update\+Dash\+User\+Info@{update\+Dash\+User\+Info}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{update\+Dash\+User\+Info()}{updateDashUserInfo()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+update\+Dash\+User\+Info (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid,  }\item[{}]{username,  }\item[{}]{full\+\_\+name,  }\item[{}]{email,  }\item[{}]{is\+\_\+active }\end{DoxyParamCaption})}
+
+
+
+Updates the username for the dashboard user with the given ID. 
+
+Calls the User\+D\+AO to update the username of a dashboard user. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em duid} & The ID of the user whose username must be updated. \\
+\hline
+{\em username} & The new username for the dashboard user. \\
+\hline
+{\em full\+\_\+name} & The new name for the dashboboard user. \\
+\hline
+{\em email} & The new email for the dashboboard user. \\
+\hline
+{\em is\+\_\+active} & The new active status for the dashboard user. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the user with the updated dashboard user. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classuser_1_1_user_handler_afb658519400d44f533b521c52e8b7950}\label{classuser_1_1_user_handler_afb658519400d44f533b521c52e8b7950}} 
+\index{user\+::\+User\+Handler@{user\+::\+User\+Handler}!update\+Dash\+User\+Password@{update\+Dash\+User\+Password}}
+\index{update\+Dash\+User\+Password@{update\+Dash\+User\+Password}!user\+::\+User\+Handler@{user\+::\+User\+Handler}}
+\subsubsection{\texorpdfstring{update\+Dash\+User\+Password()}{updateDashUserPassword()}}
+{\footnotesize\ttfamily def user.\+User\+Handler.\+update\+Dash\+User\+Password (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{duid,  }\item[{}]{password }\end{DoxyParamCaption})}
+
+
+
+Updates the password for the dashboard user with the given ID. 
+
+Calls the User\+D\+AO to update the password of a dashboard user. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em duid} & The ID of the user whose password must be updated. \\
+\hline
+{\em password} & The hash of the new password for the dashboboard user.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the user with the updated dashboard user. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+generate\+Docs/handler/user.\+py\end{DoxyCompactItemize}

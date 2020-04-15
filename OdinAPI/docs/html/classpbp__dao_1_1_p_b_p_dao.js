@@ -1,0 +1,27 @@
+var classpbp__dao_1_1_p_b_p_dao =
+[
+    [ "__init__", "classpbp__dao_1_1_p_b_p_dao.html#a5aac30804585d86dea92187134419440", null ],
+    [ "add_pbp_game_action", "classpbp__dao_1_1_p_b_p_dao.html#a47e93c06ed1fa6cbfbf5855d9a1a39cb", null ],
+    [ "adjust_score_by_differential", "classpbp__dao_1_1_p_b_p_dao.html#ac57355d705ed373c5fead79ab7cc6942", null ],
+    [ "adjust_score_by_set", "classpbp__dao_1_1_p_b_p_dao.html#a0a0a5eff321532b58f2b5b19cc34e01e", null ],
+    [ "create_pbp_seq", "classpbp__dao_1_1_p_b_p_dao.html#a24659fd140b68c143c515e66cb7fe0a1", null ],
+    [ "edit_pbp_game_action", "classpbp__dao_1_1_p_b_p_dao.html#af7d5dea8541dcbc6e628342639348ab0", null ],
+    [ "get_current_set", "classpbp__dao_1_1_p_b_p_dao.html#a46985b1c22d4980300f908c2db49b206", null ],
+    [ "get_opponent_roster", "classpbp__dao_1_1_p_b_p_dao.html#a9f186af1f2096fe3b99f9879f23ae139", null ],
+    [ "get_pbp_action", "classpbp__dao_1_1_p_b_p_dao.html#a07ed41192b71861825abd589afa3468c", null ],
+    [ "get_pbp_meta", "classpbp__dao_1_1_p_b_p_dao.html#a500e36abfe87b2e4e58399b7aaa1bd3f", null ],
+    [ "get_score_by_set", "classpbp__dao_1_1_p_b_p_dao.html#a567ccae5fcfef4a5cd823b54dc08b607", null ],
+    [ "get_uprm_roster", "classpbp__dao_1_1_p_b_p_dao.html#ae2289620b6388f40af706531c426dd69", null ],
+    [ "is_game_over", "classpbp__dao_1_1_p_b_p_dao.html#aca57263dabe181fb59c3933a983e4ea8", null ],
+    [ "pbp_exists", "classpbp__dao_1_1_p_b_p_dao.html#a3c7e7f7acea64362de4cebd496c44b1c", null ],
+    [ "pbp_game_action_exists", "classpbp__dao_1_1_p_b_p_dao.html#a0069d73a219fabe0090f126977908a93", null ],
+    [ "remove_opponent_athlete", "classpbp__dao_1_1_p_b_p_dao.html#a9e32c1a60a0b13a355855aa74fefc1ea", null ],
+    [ "remove_pbp_game_action", "classpbp__dao_1_1_p_b_p_dao.html#ae4ba298a1971c84388ff3841844ccaa5", null ],
+    [ "remove_pbp_seq", "classpbp__dao_1_1_p_b_p_dao.html#a7b3ded4ddfc48de0efd01aa2de100e78", null ],
+    [ "remove_uprm_athlete", "classpbp__dao_1_1_p_b_p_dao.html#ac5be7a7bd0f06912a3278ca59cad9515", null ],
+    [ "set_current_set", "classpbp__dao_1_1_p_b_p_dao.html#af97b1f7772f5b1c3d378693ac8c4264d", null ],
+    [ "set_opponent_athlete", "classpbp__dao_1_1_p_b_p_dao.html#ad6b803ab3414b4e4cb05dbcdc0c5df49", null ],
+    [ "set_opponent_color", "classpbp__dao_1_1_p_b_p_dao.html#a4e8b6442fe16bd7f06024be09dafc52f", null ],
+    [ "set_pbp_game_over", "classpbp__dao_1_1_p_b_p_dao.html#a3ab50080cd36624c6ea0652cb14d24dd", null ],
+    [ "set_uprm_athlete", "classpbp__dao_1_1_p_b_p_dao.html#a3f6520a448ebfd28b26164d1d2817134", null ]
+];

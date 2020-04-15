@@ -1,0 +1,347 @@
+\hypertarget{classteam_1_1_team_handler}{}\section{team.\+Team\+Handler Class Reference}
+\label{classteam_1_1_team_handler}\index{team.\+Team\+Handler@{team.\+Team\+Handler}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classteam_1_1_team_handler_a4f1381886cba417e92c8d36cfa86682f}\label{classteam_1_1_team_handler_a4f1381886cba417e92c8d36cfa86682f}} 
+def {\bfseries map\+Team\+To\+Dict} (self, record)
+\item 
+\mbox{\Hypertarget{classteam_1_1_team_handler_a28fe3f31a3f3e5e22fa058b862fd1df1}\label{classteam_1_1_team_handler_a28fe3f31a3f3e5e22fa058b862fd1df1}} 
+def {\bfseries map\+Team\+Members\+To\+Dict} (self, record)
+\item 
+\mbox{\Hypertarget{classteam_1_1_team_handler_a365472aad2e49afcf5113fc9b2507eda}\label{classteam_1_1_team_handler_a365472aad2e49afcf5113fc9b2507eda}} 
+def {\bfseries map\+Team\+Member\+To\+Dict} (self, record)
+\item 
+def \hyperlink{classteam_1_1_team_handler_a98e52997bda45bbd226d229bcb1a64bc}{get\+All\+Teams} (self)
+\begin{DoxyCompactList}\small\item\em Gets all the teams in the system. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a38b28e9dfb4201487c157ed15dca73f3}{get\+Teams} (self, s\+ID)
+\begin{DoxyCompactList}\small\item\em Gets all the teams in the system that match the given sport id. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a74614e57b5de837cd73ebebb2fd68d7e}{get\+Team\+By\+ID} (self, t\+ID)
+\begin{DoxyCompactList}\small\item\em Gets the team in the system that matches the given team id. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a130f48624c706c192f45929e26df86e4}{get\+Team\+By\+Year} (self, s\+ID, t\+Year)
+\begin{DoxyCompactList}\small\item\em Gets the team in the system that matches the given sport and season year. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a566b7fb7abd1e6b1140146223af1c150}{get\+Team\+Members\+By\+ID} (self, t\+ID)
+\begin{DoxyCompactList}\small\item\em Gets the team members in the system that match the given team. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a85091b1e4db82c9790eaf7f282aa526c}{get\+Team\+Member\+By\+I\+Ds} (self, a\+ID, t\+ID)
+\begin{DoxyCompactList}\small\item\em Gets the team member entry in the system that matches the given athlete and team. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a6bf3721236cf70ddb4e831e9024d4ba1}{add\+Team} (self, s\+ID, t\+Year, t\+Image\+Link)
+\begin{DoxyCompactList}\small\item\em Adds a new team with the provided information. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a4419dc986a6bdbaf36500820608ba8f1}{add\+Team\+Members} (self, t\+ID, t\+Roster)
+\begin{DoxyCompactList}\small\item\em Adds a new team member record with the provided information. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a5fcf9bfaaf2cd44d23c7934f0cbd369e}{add\+Team\+Member} (self, a\+ID, t\+ID)
+\begin{DoxyCompactList}\small\item\em Adds a new team member record with the provided information. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a1408abc9c6130b3b7187876ebcda2f5f}{edit\+Team} (self, t\+ID, t\+Image\+Link)
+\begin{DoxyCompactList}\small\item\em " Updates the team with the given ID. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_af700a4d0c3eaf91489450743ce0ebba2}{edit\+Team\+By\+Year} (self, s\+ID, t\+Year, t\+Image\+Link)
+\begin{DoxyCompactList}\small\item\em " Updates the team with the given ID. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_a7cc8136e302248a1ddcdef5c2d099de5}{remove\+Team} (self, t\+ID)
+\begin{DoxyCompactList}\small\item\em Invalidates a team record in the database based on the given ID. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_abf03ca844675d071f4afcbaaf098deb7}{remove\+Team\+By\+Year} (self, s\+ID, t\+Year)
+\begin{DoxyCompactList}\small\item\em Invalidates a team record in the database based on the given ID. \end{DoxyCompactList}\item 
+def \hyperlink{classteam_1_1_team_handler_ac1bc3a20efbfd07fe3796fa5880b26ba}{remove\+Team\+Member} (self, a\+ID, t\+ID)
+\begin{DoxyCompactList}\small\item\em Invalidates a team member record in the database based on the given ID. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a6bf3721236cf70ddb4e831e9024d4ba1}\label{classteam_1_1_team_handler_a6bf3721236cf70ddb4e831e9024d4ba1}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!add\+Team@{add\+Team}}
+\index{add\+Team@{add\+Team}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{add\+Team()}{addTeam()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+add\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{t\+Year,  }\item[{}]{t\+Image\+Link }\end{DoxyParamCaption})}
+
+
+
+Adds a new team with the provided information. 
+
+Calls the Team\+D\+AO to add a new team record and maps the result to to a J\+S\+ON. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s\+ID} & the sport id of the team to be added \\
+\hline
+{\em t\+Year} & the season year of the team to be added \\
+\hline
+{\em t\+Image\+Link} & the image link for the team\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the id for the new Team record. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a5fcf9bfaaf2cd44d23c7934f0cbd369e}\label{classteam_1_1_team_handler_a5fcf9bfaaf2cd44d23c7934f0cbd369e}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!add\+Team\+Member@{add\+Team\+Member}}
+\index{add\+Team\+Member@{add\+Team\+Member}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{add\+Team\+Member()}{addTeamMember()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+add\+Team\+Member (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID,  }\item[{}]{t\+ID }\end{DoxyParamCaption})}
+
+
+
+Adds a new team member record with the provided information. 
+
+Calls the Team\+D\+AO to add new team member records and maps the result to to a J\+S\+ON. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+ID} & the team to which member will be added \\
+\hline
+{\em athlete\+\_\+id} & the id of an athlete that will be added to the team \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing containing the id for the updated team. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a4419dc986a6bdbaf36500820608ba8f1}\label{classteam_1_1_team_handler_a4419dc986a6bdbaf36500820608ba8f1}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!add\+Team\+Members@{add\+Team\+Members}}
+\index{add\+Team\+Members@{add\+Team\+Members}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{add\+Team\+Members()}{addTeamMembers()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+add\+Team\+Members (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID,  }\item[{}]{t\+Roster }\end{DoxyParamCaption})}
+
+
+
+Adds a new team member record with the provided information. 
+
+Calls the Team\+D\+AO to add new team member records and maps the result to to a J\+S\+ON. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+ID} & the team to which members will be added t\+Roster\+: \\
+\hline
+{\em athlete\+\_\+id} & the id of an athlete that will be added to the team \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing containing the id for the updated team. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a1408abc9c6130b3b7187876ebcda2f5f}\label{classteam_1_1_team_handler_a1408abc9c6130b3b7187876ebcda2f5f}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!edit\+Team@{edit\+Team}}
+\index{edit\+Team@{edit\+Team}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{edit\+Team()}{editTeam()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+edit\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID,  }\item[{}]{t\+Image\+Link }\end{DoxyParamCaption})}
+
+
+
+" Updates the team with the given ID. 
+
+Calls the Team\+D\+AO to update the team record. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+ID} & the id of the team to be updated \\
+\hline
+{\em t\+Imagel\+I\+NK} & the updated image link\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the the updated entry. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_af700a4d0c3eaf91489450743ce0ebba2}\label{classteam_1_1_team_handler_af700a4d0c3eaf91489450743ce0ebba2}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!edit\+Team\+By\+Year@{edit\+Team\+By\+Year}}
+\index{edit\+Team\+By\+Year@{edit\+Team\+By\+Year}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{edit\+Team\+By\+Year()}{editTeamByYear()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+edit\+Team\+By\+Year (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{t\+Year,  }\item[{}]{t\+Image\+Link }\end{DoxyParamCaption})}
+
+
+
+" Updates the team with the given ID. 
+
+Calls the Team\+D\+AO to update the team record. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s\+ID} & the sport id of the team to be updated \\
+\hline
+{\em t\+Year} & the season year of the team to be updated \\
+\hline
+{\em t\+Imagel\+I\+NK} & the updated image link\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the the updated entry. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a98e52997bda45bbd226d229bcb1a64bc}\label{classteam_1_1_team_handler_a98e52997bda45bbd226d229bcb1a64bc}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!get\+All\+Teams@{get\+All\+Teams}}
+\index{get\+All\+Teams@{get\+All\+Teams}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{get\+All\+Teams()}{getAllTeams()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+get\+All\+Teams (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+Gets all the teams in the system. 
+
+Calls the Team\+D\+AO to get team entries and maps the result to a J\+S\+ON that contains all the teams in the system. That J\+S\+ON object is then returned.
+
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the teams in the system. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a74614e57b5de837cd73ebebb2fd68d7e}\label{classteam_1_1_team_handler_a74614e57b5de837cd73ebebb2fd68d7e}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!get\+Team\+By\+ID@{get\+Team\+By\+ID}}
+\index{get\+Team\+By\+ID@{get\+Team\+By\+ID}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{get\+Team\+By\+I\+D()}{getTeamByID()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+get\+Team\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets the team in the system that matches the given team id. 
+
+Calls the Team\+D\+AO to get the team entry and maps the result to a J\+S\+ON that contains the team in the system that matches the team ID. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+ID} & the ID of the team which will be returned\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the team. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a130f48624c706c192f45929e26df86e4}\label{classteam_1_1_team_handler_a130f48624c706c192f45929e26df86e4}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!get\+Team\+By\+Year@{get\+Team\+By\+Year}}
+\index{get\+Team\+By\+Year@{get\+Team\+By\+Year}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{get\+Team\+By\+Year()}{getTeamByYear()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+get\+Team\+By\+Year (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{t\+Year }\end{DoxyParamCaption})}
+
+
+
+Gets the team in the system that matches the given sport and season year. 
+
+Calls the Team\+D\+AO to get the team entry and maps the result to a J\+S\+ON that contains the team in the system that matches the sport and season. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s\+ID} & the ID of the sport of which the team will be returned \\
+\hline
+{\em t\+Year} & the season year from which the team will be returned\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the team. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a85091b1e4db82c9790eaf7f282aa526c}\label{classteam_1_1_team_handler_a85091b1e4db82c9790eaf7f282aa526c}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!get\+Team\+Member\+By\+I\+Ds@{get\+Team\+Member\+By\+I\+Ds}}
+\index{get\+Team\+Member\+By\+I\+Ds@{get\+Team\+Member\+By\+I\+Ds}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{get\+Team\+Member\+By\+I\+Ds()}{getTeamMemberByIDs()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+get\+Team\+Member\+By\+I\+Ds (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID,  }\item[{}]{t\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets the team member entry in the system that matches the given athlete and team. 
+
+Calls the Team\+D\+AO to get the team member entry and maps the result to a J\+S\+ON that contains the team member in the system that matches the athlete and team. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a\+ID} & the ID of the athlete from which the team member will be returned \\
+\hline
+{\em t\+ID} & the ID of the team from which the team member will be returned\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the team member. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a566b7fb7abd1e6b1140146223af1c150}\label{classteam_1_1_team_handler_a566b7fb7abd1e6b1140146223af1c150}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!get\+Team\+Members\+By\+ID@{get\+Team\+Members\+By\+ID}}
+\index{get\+Team\+Members\+By\+ID@{get\+Team\+Members\+By\+ID}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{get\+Team\+Members\+By\+I\+D()}{getTeamMembersByID()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+get\+Team\+Members\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets the team members in the system that match the given team. 
+
+Calls the Team\+D\+AO to get the team member entries and maps the result to a J\+S\+ON that contains the team members in the system that match the team id. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+ID} & the ID of the team of which members will be fetched\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the team members 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a38b28e9dfb4201487c157ed15dca73f3}\label{classteam_1_1_team_handler_a38b28e9dfb4201487c157ed15dca73f3}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!get\+Teams@{get\+Teams}}
+\index{get\+Teams@{get\+Teams}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{get\+Teams()}{getTeams()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+get\+Teams (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets all the teams in the system that match the given sport id. 
+
+Calls the Team\+D\+AO to get team entries and maps the result to a J\+S\+ON that contains all the teams in the system that match the sport ID. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s\+ID} & the ID of the sport of which the teams will be returned\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the teams in the system for that sport. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_a7cc8136e302248a1ddcdef5c2d099de5}\label{classteam_1_1_team_handler_a7cc8136e302248a1ddcdef5c2d099de5}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!remove\+Team@{remove\+Team}}
+\index{remove\+Team@{remove\+Team}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{remove\+Team()}{removeTeam()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+remove\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID }\end{DoxyParamCaption})}
+
+
+
+Invalidates a team record in the database based on the given ID. 
+
+Calls the Team\+D\+AO to invalidate a team record. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+ID} & the ID of the team for which the record will be invalidated.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the id of the invalidated record. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_abf03ca844675d071f4afcbaaf098deb7}\label{classteam_1_1_team_handler_abf03ca844675d071f4afcbaaf098deb7}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!remove\+Team\+By\+Year@{remove\+Team\+By\+Year}}
+\index{remove\+Team\+By\+Year@{remove\+Team\+By\+Year}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{remove\+Team\+By\+Year()}{removeTeamByYear()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+remove\+Team\+By\+Year (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{t\+Year }\end{DoxyParamCaption})}
+
+
+
+Invalidates a team record in the database based on the given ID. 
+
+Calls the Team\+D\+AO to invalidate a team record. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s\+ID} & the sport ID of the team for which the record will be invalidated. \\
+\hline
+{\em t\+Year} & the season year of the team for which the record will be invalidated.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the id of the invalidated record. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classteam_1_1_team_handler_ac1bc3a20efbfd07fe3796fa5880b26ba}\label{classteam_1_1_team_handler_ac1bc3a20efbfd07fe3796fa5880b26ba}} 
+\index{team\+::\+Team\+Handler@{team\+::\+Team\+Handler}!remove\+Team\+Member@{remove\+Team\+Member}}
+\index{remove\+Team\+Member@{remove\+Team\+Member}!team\+::\+Team\+Handler@{team\+::\+Team\+Handler}}
+\subsubsection{\texorpdfstring{remove\+Team\+Member()}{removeTeamMember()}}
+{\footnotesize\ttfamily def team.\+Team\+Handler.\+remove\+Team\+Member (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID,  }\item[{}]{t\+ID }\end{DoxyParamCaption})}
+
+
+
+Invalidates a team member record in the database based on the given ID. 
+
+Calls the Team\+D\+AO to invalidate a team member record. It then maps the result to a J\+S\+ON that contains the desired record. That J\+S\+ON object is then returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a\+ID} & the athlete ID of the team member for which the record will be invalidated. \\
+\hline
+{\em t\+ID} & the team ID of the team for which the record will be invalidated.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the id of the invalidated record. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+generate\+Docs/handler/team.\+py\end{DoxyCompactItemize}

@@ -1,0 +1,28 @@
+#!/bin/bash
+#doxypypy -a -c  $1
+doxypypy -a -c handler/athlete.py > generateDocs/handler/athlete.py
+doxypypy -a -c handler/baseball_event.py > generateDocs/handler/baseball_event.py
+doxypypy -a -c handler/basketball_event.py > generateDocs/handler/basketball_event.py
+doxypypy -a -c handler/event.py > generateDocs/handler/event.py 
+doxypypy -a -c handler/event_result.py > generateDocs/handler/event_result.py
+doxypypy -a -c handler/pbp_handler.py > generateDocs/handler/pbp_handler.py
+doxypypy -a -c handler/position.py > generateDocs/handler/position.py
+doxypypy -a -c handler/soccer_event.py > generateDocs/handler/soccer_event.py
+doxypypy -a -c handler/sport.py > generateDocs/handler/sport.py 
+doxypypy -a -c handler/team.py > generateDocs/handler/team.py 
+doxypypy -a -c handler/user.py > generateDocs/handler/user.py
+doxypypy -a -c handler/volleyball_event.py > generateDocs/handler/volleyball_event.py
+doxypypy -a -c handler/dao/athlete_dao.py > generateDocs/handler/dao/athlete_dao.py 
+doxypypy -a -c handler/dao/baseball_event_dao.py > generateDocs/handler/dao/baseball_event_dao.py 
+doxypypy -a -c handler/dao/basketball_event_dao.py > generateDocs/handler/dao/basketball_event_dao.py 
+doxypypy -a -c handler/dao/event_dao.py > generateDocs/handler/dao/event_dao.py 
+doxypypy -a -c handler/dao/final_score_dao.py > generateDocs/handler/dao/final_score_dao.py 
+doxypypy -a -c handler/dao/mock/event_dao.py > generateDocs/handler/dao/mock/event_dao.py 
+doxypypy -a -c handler/dao/mock_dao.py > generateDocs/handler/dao/mock_dao.py 
+doxypypy -a -c handler/dao/pbp_dao.py > generateDocs/handler/dao/pbp_dao.py 
+doxypypy -a -c handler/dao/position_dao.py > generateDocs/handler/dao/position_dao.py 
+doxypypy -a -c handler/dao/soccer_event_dao.py > generateDocs/handler/dao/soccer_event_dao.py 
+doxypypy -a -c handler/dao/sport_dao.py > generateDocs/handler/dao/sport_dao.py 
+doxypypy -a -c handler/dao/team_dao.py > generateDocs/handler/dao/team_dao.py 
+doxypypy -a -c handler/dao/user_dao.py > generateDocs/handler/dao/user_dao.py 
+doxypypy -a -c handler/dao/volleyball_event_dao.py > generateDocs/handler/dao/volleyball_event_dao.py 
