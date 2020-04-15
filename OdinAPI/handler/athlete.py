@@ -31,7 +31,8 @@ class AthleteHandler:
         result['yearOfStudy'] = record[10]
         result['yearsOfParticipation'] = record[11]
         result['profilePicLink'] = record[12]
-        result['sportName'] = record[13]        
+        result['sportName'] = record[13]
+        result['sportBranch'] = record[14]        
 
         return result
 
@@ -63,14 +64,37 @@ class AthleteHandler:
         positions = {}
         categories = {}
         for record in records:
-            if record[14]:#Holds the position of the athlete if not null.
-                positions.update(dict(((record[14],record[15]),)))
-            if record[16]:#Holds the category of the athlete if not null.
-                categories.update(dict(((record[16],record[17]),)))
+            if record[15]:#Holds the position of the athlete if not null.
+                positions.update(dict(((record[15],record[16]),)))
+            if record[17]:#Holds the category of the athlete if not null.
+                categories.update(dict(((record[17],record[18]),)))
         
         result.update(dict((('athlete_positions',positions),)))
         result.update(dict((('athlete_categories',categories),)))
         return result
+
+    def getAllAthletes(self):
+        """
+        Gets all athletes in the database.
+        Calls the AthletDAO to get a list of all athlete records
+        maps the result to a JSON that contains all those valid athletes 
+        in the database. The JSON objects is then returned to the caller.       
+        
+        Returns:
+            A JSON containing all valid athletes that are in the database.
+        """
+        try:
+            result = AthleteDAO().getAllAthletes()
+            if not result:
+                return jsonify(Error = "No athletes were found."),404
+            mappedResult = []
+            for athlete in result:
+                mappedResult.append(self.mapAthleteToDict(athlete))
+            return jsonify(Athletes = mappedResult),200
+
+
+        except:
+            jsonify(Error = "An error ocurred while fetching the athletes."),400
 
                 
     
