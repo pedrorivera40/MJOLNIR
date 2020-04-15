@@ -1,3 +1,9 @@
+/**
+ * Vuex store for sashboard users, with actions, mutations, getters and state.
+ * @module dashboardUsers
+ */
+
+
 export default ()=>({
   /**
    * State of user to be managed.
