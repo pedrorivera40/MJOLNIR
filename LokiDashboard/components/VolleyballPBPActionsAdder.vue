@@ -3,7 +3,7 @@
     <v-col justify="center">
       <v-card class="text-center mx-10" outlined>
         <v-row justify="center">
-          <v-card-title>{{ opp_team_name }}</v-card-title>
+          <v-card-title>{{ uprm_team_name }}</v-card-title>
         </v-row>
 
         <v-btn
@@ -44,7 +44,13 @@
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-btn depressed dark color="#a89f9e" width="300">NOTIFICACIÓN</v-btn>
+        <v-btn
+          depressed
+          dark
+          color="#a89f9e"
+          width="300"
+          @click.native="on_notification_pressed()"
+        >NOTIFICACIÓN</v-btn>
       </v-row>
     </v-col>
     <v-col justify="center">
@@ -64,6 +70,35 @@
           height="50"
         >{{athlete.number}}</v-btn>
       </v-card>
+      <v-dialog v-model="notification_dialog" persistent max-width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Enviar Notificación</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row allign="center">
+                <v-col>
+                  <v-text-field
+                    label="Texto de notificación *"
+                    required
+                    v-model="notification_text"
+                    counter="100"
+                    :rules="notification_rules"
+                    outlined
+                  ></v-text-field>
+                  <small>* Indica que es un valor requerido</small>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="notification_dialog = false">Cerrar</v-btn>
+            <v-btn color="primary" text @click.native="send_notification()">Enviar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -71,6 +106,13 @@
 <script>
 export default {
   data: () => ({
+    notification_dialog: false,
+    notification_text: "",
+    notification_rules: [
+      v =>
+        (v.length > 0 && v.length <= 100) ||
+        "Las notificaciones deben tener entre 1 y 100 caracteres."
+    ],
     action_buttons: [
       { key: 1, action_type: "KillPoint", button_state: false },
       { key: 2, action_type: "AttackError", button_state: false },
@@ -95,7 +137,7 @@ export default {
       { number: 16, name: "Pepe Trueno" },
       { number: 8, name: "Eli Nocente" },
       { number: 9, name: "Armando Guerra" },
-      { number: 4, name: "Armando Pleito" },
+      { number: 14, name: "Armando Pleito" },
       { number: 15, name: "Sin Nom Bre" }
     ],
     uprm_team_name: "Tarzanes",
@@ -114,6 +156,23 @@ export default {
         if (this.action_buttons[index].key === button_key) {
           this.action_buttons[index].button_state = true;
         }
+      }
+    },
+    on_notification_pressed() {
+      this.clear_action_buttons();
+      this.notification_text = "";
+      this.notification_dialog = true;
+    },
+    send_notification() {
+      if (
+        this.notification_text.length > 0 &&
+        this.notification_text.length <= 100
+      ) {
+        console.log({
+          action_type: "Notification",
+          message: this.notification_text
+        });
+        this.notification_dialog = false;
       }
     }
   }

@@ -196,7 +196,8 @@ export default {
         id: 1,
         action_type: "Notification",
         team: "Tarzanes",
-        text: "El partido comenzará dentro de 5 minutos."
+        text:
+          "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
       },
       {
         id: 2,
