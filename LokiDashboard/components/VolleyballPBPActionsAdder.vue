@@ -8,7 +8,7 @@
 
         <v-btn
           class="ma-4"
-          v-for="athlete in opp_roster"
+          v-for="athlete in uprm_roster"
           :key="athlete.number"
           dark
           color="#a89f9e"
@@ -125,7 +125,20 @@ export default {
       { key: 9, action_type: "Dig", button_state: false },
       { key: 10, action_type: "ReceptionError", button_state: false }
     ],
-    uprm_roster: [],
+    uprm_roster: [
+      { id: 1, number: 11, name: "Fulano de Tal" },
+      { id: 2, number: 1, name: "Don Perenzejo" },
+      { id: 3, number: 21, name: "Juan del Pueblo" },
+      { id: 4, number: 3, name: "Pepe El De La Esquina" },
+      { id: 5, number: 4, name: "Gonzalo Duarte" },
+      { id: 6, number: 2, name: "Martes Domingo" },
+      { id: 7, number: 6, name: "Tomas Almibar" },
+      { id: 8, number: 16, name: "Pepe Trueno" },
+      { id: 9, number: 8, name: "Eli Nocente" },
+      { id: 10, number: 9, name: "Armando Guerra" },
+      { id: 11, number: 14, name: "Armando Pleito" },
+      { id: 12, number: 15, name: "Sin Nom Bre" }
+    ],
     opp_roster: [
       { number: 11, name: "Fulano de Tal" },
       { number: 1, name: "Don Perenzejo" },
