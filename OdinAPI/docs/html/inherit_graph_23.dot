@@ -3,5 +3,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
   rankdir="LR";
-  Node0 [label="handler.dao.soccer\l_event_dao.SoccerEventDAO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html"];
+  Node0 [label="handler.position.Position\lHandler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classhandler_1_1position_1_1_position_handler.html"];
 }

@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['pbp_5fexists',['pbp_exists',['../classhandler_1_1dao_1_1pbp__dao_1_1_p_b_p_dao.html#ac288ed20d35ef9ececdb529a1d78bd18',1,'handler::dao::pbp_dao::PBPDao']]],
-  ['pbp_5fgame_5faction_5fexists',['pbp_game_action_exists',['../classhandler_1_1dao_1_1pbp__dao_1_1_p_b_p_dao.html#a8fba96941656e377125457deb83140d6',1,'handler::dao::pbp_dao::PBPDao']]],
-  ['pbpdao',['PBPDao',['../classhandler_1_1dao_1_1pbp__dao_1_1_p_b_p_dao.html',1,'handler.dao.pbp_dao.PBPDao'],['../classpbp__dao_1_1_p_b_p_dao.html',1,'pbp_dao.PBPDao']]],
-  ['positiondao',['PositionDAO',['../classhandler_1_1dao_1_1position__dao_1_1_position_d_a_o.html',1,'handler.dao.position_dao.PositionDAO'],['../classposition__dao_1_1_position_d_a_o.html',1,'position_dao.PositionDAO']]],
-  ['positionhandler',['PositionHandler',['../classposition_1_1_position_handler.html',1,'position.PositionHandler'],['../classhandler_1_1position_1_1_position_handler.html',1,'handler.position.PositionHandler']]]
+  ['setloginattempts',['setLoginAttempts',['../classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o.html#aec0187ac1e8c477a072a45b040edde2a',1,'handler::dao::user_dao::UserDAO']]],
+  ['setuserpermissions',['setUserPermissions',['../classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o.html#a95abcb468f166ca40e8624e926c0f650',1,'handler.dao.user_dao.UserDAO.setUserPermissions()'],['../classhandler_1_1user_1_1_user_handler.html#a0c8766b4b476bc123a2306aeccd2b52c',1,'handler.user.UserHandler.setUserPermissions()']]],
+  ['soccereventdao',['SoccerEventDAO',['../classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html',1,'handler::dao::soccer_event_dao']]],
+  ['soccereventhandler',['SoccerEventHandler',['../classhandler_1_1soccer__event_1_1_soccer_event_handler.html',1,'handler::soccer_event']]],
+  ['sportdao',['SportDAO',['../classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o.html',1,'handler::dao::sport_dao']]],
+  ['sporthandler',['SportHandler',['../classhandler_1_1sport_1_1_sport_handler.html',1,'handler::sport']]]
 ];

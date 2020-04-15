@@ -94,216 +94,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a72e5a6d4eb4f625284bd3fc8a19e54f9"><td class="memItemLeft" align="right" valign="top"><a id="a72e5a6d4eb4f625284bd3fc8a19e54f9"></a>
 def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self)</td></tr>
 <tr class="separator:a72e5a6d4eb4f625284bd3fc8a19e54f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bdc68a2a00be3fc4c66b75aea4abbc3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1sport_1_1_sport_handler.html#a8bdc68a2a00be3fc4c66b75aea4abbc3">getAllSports</a> (self)</td></tr>
+<tr class="memitem:a8bdc68a2a00be3fc4c66b75aea4abbc3"><td class="memItemLeft" align="right" valign="top"><a id="a8bdc68a2a00be3fc4c66b75aea4abbc3"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>getAllSports</b> (self)</td></tr>
 <tr class="separator:a8bdc68a2a00be3fc4c66b75aea4abbc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cd67d66c4b722c46da490fe63beff74"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1sport_1_1_sport_handler.html#a5cd67d66c4b722c46da490fe63beff74">getSportsByBranch</a> (self, branch)</td></tr>
+<tr class="memitem:a5cd67d66c4b722c46da490fe63beff74"><td class="memItemLeft" align="right" valign="top"><a id="a5cd67d66c4b722c46da490fe63beff74"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>getSportsByBranch</b> (self, branch)</td></tr>
 <tr class="separator:a5cd67d66c4b722c46da490fe63beff74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18849851d8f9daf78e2e879ac9806a20"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1sport_1_1_sport_handler.html#a18849851d8f9daf78e2e879ac9806a20">getSportById</a> (self, sport_id)</td></tr>
+<tr class="memitem:a18849851d8f9daf78e2e879ac9806a20"><td class="memItemLeft" align="right" valign="top"><a id="a18849851d8f9daf78e2e879ac9806a20"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>getSportById</b> (self, sport_id)</td></tr>
 <tr class="separator:a18849851d8f9daf78e2e879ac9806a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7fbc2c9ab7563cc23ca0b5a3d4820ab"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1sport_1_1_sport_handler.html#ad7fbc2c9ab7563cc23ca0b5a3d4820ab">getSportByName</a> (self, sport_name)</td></tr>
+<tr class="memitem:ad7fbc2c9ab7563cc23ca0b5a3d4820ab"><td class="memItemLeft" align="right" valign="top"><a id="ad7fbc2c9ab7563cc23ca0b5a3d4820ab"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>getSportByName</b> (self, sport_name)</td></tr>
 <tr class="separator:ad7fbc2c9ab7563cc23ca0b5a3d4820ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad83c6e5db6358cf97f46b04135100c53"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classhandler_1_1sport_1_1_sport_handler.html#ad83c6e5db6358cf97f46b04135100c53">getSportCategoriesPositions</a> (self)</td></tr>
+<tr class="memitem:ad83c6e5db6358cf97f46b04135100c53"><td class="memItemLeft" align="right" valign="top"><a id="ad83c6e5db6358cf97f46b04135100c53"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>getSportCategoriesPositions</b> (self)</td></tr>
 <tr class="separator:ad83c6e5db6358cf97f46b04135100c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><pre class="fragment">SportHandler - This class handles incomming requests from Odin API's gateway
-               by interacting with the SportDAO. It is responsible for read
-               operations corresponding to sports information including 
-               sport names, branches, categories, and positions.
-@author Pedro Luis Rivera Gomez
-</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8bdc68a2a00be3fc4c66b75aea4abbc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8bdc68a2a00be3fc4c66b75aea4abbc3">&#9670;&nbsp;</a></span>getAllSports()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def handler.sport.SportHandler.getAllSports </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<pre class="fragment">Gets all sports supported within the system.
-This function fetches sport records from the DAO.
-
-Returns:
-    A JSON object that contains a list of sport entries.
-    Each sport entry follows the following format:
-{
-    "sport_id": SPORT_ID_VALUE,
-    "sport_name": SPORT_NAME_VALUE,
-    "sport_image_url": SPORT_IMAGE_URL_VALUE,
-    "branch_name": BRANCH_NAME_VALUE
-}
-</pre> 
-</div>
-</div>
-<a id="a18849851d8f9daf78e2e879ac9806a20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a18849851d8f9daf78e2e879ac9806a20">&#9670;&nbsp;</a></span>getSportById()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def handler.sport.SportHandler.getSportById </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>sport_id</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<pre class="fragment">Gets sport entry for a given sport id.
-This function fetches the sport record corresponding to a given sport id from the DAO.
-
-Args
-    sport_id: integer corresponding to a sport id in the system
-
-Returns:
-    A JSON object with a list of sport entries.
-    Each entry follows the following format:
-{
-    "sport_id": SPORT_ID_VALUE,
-    "sport_name": SPORT_NAME_VALUE,
-    "sport_image_url": SPORT_IMAGE_URL_VALUE,
-    "branch_name": BRANCH_NAME_VALUE
-}
-</pre> 
-</div>
-</div>
-<a id="ad7fbc2c9ab7563cc23ca0b5a3d4820ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad7fbc2c9ab7563cc23ca0b5a3d4820ab">&#9670;&nbsp;</a></span>getSportByName()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def handler.sport.SportHandler.getSportByName </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>sport_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<pre class="fragment">Gets the sports within the system that correspond to a given names.
-This function fetches sport records corresponding to a given branch from the DAO.
-
-Args
-    sport_name: string corresponding to the sport name of interest
-
-Returns:
-    A JSON object that contains a list of sport entries.
-    Each sport entry follows the following format:
-{
-    "sport_id": SPORT_ID_VALUE,
-    "sport_name": SPORT_NAME_VALUE,
-    "sport_image_url": SPORT_IMAGE_URL_VALUE,
-    "branch_name": BRANCH_NAME_VALUE
-}
-</pre> 
-</div>
-</div>
-<a id="ad83c6e5db6358cf97f46b04135100c53"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad83c6e5db6358cf97f46b04135100c53">&#9670;&nbsp;</a></span>getSportCategoriesPositions()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def handler.sport.SportHandler.getSportCategoriesPositions </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<pre class="fragment">Get sports and their respective categories and positions if any.
-This function obtains sports, categories, and positions from the DAO.
-
-Returns:
-    A JSON object that follows the following structure:
-{
-    SPORT_NAME_1 : 
-    {
-        "sport_id" [SPORT_ID_1, SPORT_ID_2, ...],
-        "sport_image_url": [SPORT_IMAGE_URL_1, SPORT_IMAGE_URL_2, ...],
-        "position": [POSITION_NAME_1, POSITION_NAME_2, ...],
-        "category": [CATEGORY_NAME_1, CATEGORY_NAME_2, ...]
-    },
-    ...
-}
-</pre> 
-</div>
-</div>
-<a id="a5cd67d66c4b722c46da490fe63beff74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5cd67d66c4b722c46da490fe63beff74">&#9670;&nbsp;</a></span>getSportsByBranch()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def handler.sport.SportHandler.getSportsByBranch </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>branch</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<pre class="fragment">Gets all sports supported within the system filtered by branch.
-This function fetches sport records corresponding to a given branch from the DAO.
-
-Args
-    branch: string corresponging to the sport branch
-
-Returns:
-    A JSON object that contains a list of sport entries.
-    Each sport entry follows the following format:
-{
-    "sport_id": SPORT_ID_VALUE,
-    "sport_name": SPORT_NAME_VALUE,
-    "sport_image_url": SPORT_IMAGE_URL_VALUE,
-    "branch_name": BRANCH_NAME_VALUE
-}
-</pre> 
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>handler/sport.py</li>
 </ul>

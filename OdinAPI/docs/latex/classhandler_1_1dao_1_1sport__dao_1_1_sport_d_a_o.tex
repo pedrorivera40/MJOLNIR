@@ -3,17 +3,23 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_ab567cd3aaebb51e725487d35827e477e}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_ab567cd3aaebb51e725487d35827e477e}} 
 def \hyperlink{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_ab567cd3aaebb51e725487d35827e477e}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self)
+\begin{DoxyCompactList}\small\item\em Initialize postgre\+S\+QL db connection with psycopg2. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_af58d24d75719ac7ee7d12c6a07b7bd7c}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_af58d24d75719ac7ee7d12c6a07b7bd7c}} 
+def {\bfseries get\+All\+Sports} (self)
 \item 
-def \hyperlink{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_af58d24d75719ac7ee7d12c6a07b7bd7c}{get\+All\+Sports} (self)
+\mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a4035819643d6056291007c663cb4a3a2}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a4035819643d6056291007c663cb4a3a2}} 
+def {\bfseries get\+Sports\+By\+Branch} (self, branch)
 \item 
-def \hyperlink{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a4035819643d6056291007c663cb4a3a2}{get\+Sports\+By\+Branch} (self, branch)
+\mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5e661f49c07c8cbe8bad913645bd2890}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5e661f49c07c8cbe8bad913645bd2890}} 
+def {\bfseries get\+Sport\+By\+Id} (self, sport\+\_\+id)
 \item 
-def \hyperlink{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5e661f49c07c8cbe8bad913645bd2890}{get\+Sport\+By\+Id} (self, sport\+\_\+id)
+\mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5952bf283f850965aeef34189c4c3cfa}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5952bf283f850965aeef34189c4c3cfa}} 
+def {\bfseries get\+Sport\+By\+Name} (self, sport\+\_\+name)
 \item 
-def \hyperlink{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5952bf283f850965aeef34189c4c3cfa}{get\+Sport\+By\+Name} (self, sport\+\_\+name)
-\item 
-def \hyperlink{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a89205e68760e86f6a349a98ed49798d4}{get\+Sport\+Categories\+Positions} (self)
+\mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a89205e68760e86f6a349a98ed49798d4}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a89205e68760e86f6a349a98ed49798d4}} 
+def {\bfseries get\+Sport\+Categories\+Positions} (self)
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -22,107 +28,6 @@ def \hyperlink{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a89205e68760e86
 {\bfseries conn}
 \end{DoxyCompactItemize}
 
-
-\subsection{Detailed Description}
-\begin{DoxyVerb}SportDAO - This class implements a Data Access Object pattern to provide 
-           Odin API information regarding sports stored in the relational 
-           database.
-@author Pedro Luis Rivera Gomez
-\end{DoxyVerb}
- 
-
-\subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_ab567cd3aaebb51e725487d35827e477e}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_ab567cd3aaebb51e725487d35827e477e}} 
-\index{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}!\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}}
-\index{\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}!handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}}
-\subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
-{\footnotesize\ttfamily def handler.\+dao.\+sport\+\_\+dao.\+Sport\+D\+A\+O.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
-
-\begin{DoxyVerb}Initialize postgreSQL db connection with psycopg2.
-\end{DoxyVerb}
- 
-
-\subsection{Member Function Documentation}
-\mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_af58d24d75719ac7ee7d12c6a07b7bd7c}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_af58d24d75719ac7ee7d12c6a07b7bd7c}} 
-\index{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}!get\+All\+Sports@{get\+All\+Sports}}
-\index{get\+All\+Sports@{get\+All\+Sports}!handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}}
-\subsubsection{\texorpdfstring{get\+All\+Sports()}{getAllSports()}}
-{\footnotesize\ttfamily def handler.\+dao.\+sport\+\_\+dao.\+Sport\+D\+A\+O.\+get\+All\+Sports (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
-
-\begin{DoxyVerb}Gets all sports supported within the system.
-This function queries sports from the relational database.
-
-Returns:
-    A list of tuples which represent the response to the database query.
-    Each sport tuple follows the following structure:
-(sport_id, sport_name, sport_image_url, branch_name).
-\end{DoxyVerb}
- \mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5e661f49c07c8cbe8bad913645bd2890}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5e661f49c07c8cbe8bad913645bd2890}} 
-\index{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}!get\+Sport\+By\+Id@{get\+Sport\+By\+Id}}
-\index{get\+Sport\+By\+Id@{get\+Sport\+By\+Id}!handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}}
-\subsubsection{\texorpdfstring{get\+Sport\+By\+Id()}{getSportById()}}
-{\footnotesize\ttfamily def handler.\+dao.\+sport\+\_\+dao.\+Sport\+D\+A\+O.\+get\+Sport\+By\+Id (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{sport\+\_\+id }\end{DoxyParamCaption})}
-
-\begin{DoxyVerb}Fetches at most one sport record in the database corresponding to a given id.
-This function queries a sport given its id from the relational database.
-
-Args
-    sport_id: integer corresponding to a sport id in the relational database
-
-Returns:
-    A sport tuple follows the following structure:
-(sport_id, sport_name, sport_image_url, branch_name).
-\end{DoxyVerb}
- \mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5952bf283f850965aeef34189c4c3cfa}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a5952bf283f850965aeef34189c4c3cfa}} 
-\index{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}!get\+Sport\+By\+Name@{get\+Sport\+By\+Name}}
-\index{get\+Sport\+By\+Name@{get\+Sport\+By\+Name}!handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}}
-\subsubsection{\texorpdfstring{get\+Sport\+By\+Name()}{getSportByName()}}
-{\footnotesize\ttfamily def handler.\+dao.\+sport\+\_\+dao.\+Sport\+D\+A\+O.\+get\+Sport\+By\+Name (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{sport\+\_\+name }\end{DoxyParamCaption})}
-
-\begin{DoxyVerb}Fetches sport records from the database corresponding to a given sport name.
-This function queries sports given a sport name from the relational database.
-
-Args
-    sport_name: string corresponding to the sport name of interest
-
-Returns:
-    A list of tuples which represent the response to the database query.
-    Each sport tuple follows the following structure:
-(sport_id, sport_name, sport_image_url, branch_name).
-\end{DoxyVerb}
- \mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a89205e68760e86f6a349a98ed49798d4}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a89205e68760e86f6a349a98ed49798d4}} 
-\index{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}!get\+Sport\+Categories\+Positions@{get\+Sport\+Categories\+Positions}}
-\index{get\+Sport\+Categories\+Positions@{get\+Sport\+Categories\+Positions}!handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}}
-\subsubsection{\texorpdfstring{get\+Sport\+Categories\+Positions()}{getSportCategoriesPositions()}}
-{\footnotesize\ttfamily def handler.\+dao.\+sport\+\_\+dao.\+Sport\+D\+A\+O.\+get\+Sport\+Categories\+Positions (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
-
-\begin{DoxyVerb}Get records from the database corresponding to sports and their 
-respective categories and positions if any.
-This function queries sport categories and positions from the relational database.
-
-Returns:
-    A list of tuples which represent the response to the database query.
-    Each sport tuple follows the following structure:
-(sport_id, sport_name, sport_image_url, position_name, category_name).
-\end{DoxyVerb}
- \mbox{\Hypertarget{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a4035819643d6056291007c663cb4a3a2}\label{classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o_a4035819643d6056291007c663cb4a3a2}} 
-\index{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}!get\+Sports\+By\+Branch@{get\+Sports\+By\+Branch}}
-\index{get\+Sports\+By\+Branch@{get\+Sports\+By\+Branch}!handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO@{handler\+::dao\+::sport\+\_\+dao\+::\+Sport\+D\+AO}}
-\subsubsection{\texorpdfstring{get\+Sports\+By\+Branch()}{getSportsByBranch()}}
-{\footnotesize\ttfamily def handler.\+dao.\+sport\+\_\+dao.\+Sport\+D\+A\+O.\+get\+Sports\+By\+Branch (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{branch }\end{DoxyParamCaption})}
-
-\begin{DoxyVerb}Gets all sports supported within the system filtered by branch.
-This function queries sports by branch from the relational database.
-
-Args
-    branch: string corresponging to the sport branch
-
-Returns:
-    A list of tuples which represent the response to the database query.
-    Each sport tuple follows the following structure:
-(sport_id, sport_name, sport_image_url, branch_name).
-\end{DoxyVerb}
- 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 

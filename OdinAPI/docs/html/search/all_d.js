@@ -1,20 +1,9 @@
 var searchData=
 [
-  ['set_5fcurrent_5fset',['set_current_set',['../classhandler_1_1dao_1_1pbp__dao_1_1_p_b_p_dao.html#a4f1b438b7950a4faa505749891b52be3',1,'handler::dao::pbp_dao::PBPDao']]],
-  ['set_5fopponent_5fathlete',['set_opponent_athlete',['../classhandler_1_1dao_1_1pbp__dao_1_1_p_b_p_dao.html#a8fb43c276529f4747419d30551badba7',1,'handler::dao::pbp_dao::PBPDao']]],
-  ['set_5fopponent_5fcolor',['set_opponent_color',['../classhandler_1_1dao_1_1pbp__dao_1_1_p_b_p_dao.html#a46a33bcdaf5e87326884d2f05d3280a8',1,'handler::dao::pbp_dao::PBPDao']]],
-  ['set_5fpbp_5fgame_5fover',['set_pbp_game_over',['../classhandler_1_1dao_1_1pbp__dao_1_1_p_b_p_dao.html#a02048c0945e96af5c39c556f8786c8ce',1,'handler::dao::pbp_dao::PBPDao']]],
-  ['set_5fuprm_5fathlete',['set_uprm_athlete',['../classhandler_1_1dao_1_1pbp__dao_1_1_p_b_p_dao.html#a9796b031f3f16f8edd59b6b52ed18a39',1,'handler::dao::pbp_dao::PBPDao']]],
-  ['setloginattempts',['setLoginAttempts',['../classuser__dao_1_1_user_d_a_o.html#a7d79a2de0559bfaa08ff71e2b5695d3f',1,'user_dao.UserDAO.setLoginAttempts()'],['../classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o.html#aec0187ac1e8c477a072a45b040edde2a',1,'handler.dao.user_dao.UserDAO.setLoginAttempts()']]],
-  ['setopponentcolor',['setOpponentColor',['../classhandler_1_1pbp__handler_1_1_volleyball_p_b_p_handler.html#a001188443e41ef56a85e3ca54e51869c',1,'handler::pbp_handler::VolleyballPBPHandler']]],
-  ['setoppplayer',['setOppPlayer',['../classhandler_1_1pbp__handler_1_1_volleyball_p_b_p_handler.html#ab6f1cfbd5900c8264ebc3d56982d111d',1,'handler::pbp_handler::VolleyballPBPHandler']]],
-  ['setpbpsequenceover',['setPBPSequenceOver',['../classhandler_1_1pbp__handler_1_1_volleyball_p_b_p_handler.html#aadd6ddad362e098ade44269a18ba56fe',1,'handler::pbp_handler::VolleyballPBPHandler']]],
-  ['setuprmplayer',['setUPRMPlayer',['../classhandler_1_1pbp__handler_1_1_volleyball_p_b_p_handler.html#aa7e3f8cd0284a25bcc7aca460f280a67',1,'handler::pbp_handler::VolleyballPBPHandler']]],
-  ['setuserpermissions',['setUserPermissions',['../classuser__dao_1_1_user_d_a_o.html#a6492941e2e4292a808bdcbfa9c450d20',1,'user_dao.UserDAO.setUserPermissions()'],['../classuser_1_1_user_handler.html#a8560cf2f90768ffc9f1986518f50e675',1,'user.UserHandler.setUserPermissions()'],['../classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o.html#a95abcb468f166ca40e8624e926c0f650',1,'handler.dao.user_dao.UserDAO.setUserPermissions()'],['../classhandler_1_1user_1_1_user_handler.html#a0c8766b4b476bc123a2306aeccd2b52c',1,'handler.user.UserHandler.setUserPermissions()']]],
-  ['soccereventdao',['SoccerEventDAO',['../classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html',1,'handler.dao.soccer_event_dao.SoccerEventDAO'],['../classsoccer__event__dao_1_1_soccer_event_d_a_o.html',1,'soccer_event_dao.SoccerEventDAO']]],
-  ['soccereventhandler',['SoccerEventHandler',['../classhandler_1_1soccer__event_1_1_soccer_event_handler.html',1,'handler.soccer_event.SoccerEventHandler'],['../classsoccer__event_1_1_soccer_event_handler.html',1,'soccer_event.SoccerEventHandler']]],
-  ['sportdao',['SportDAO',['../classsport__dao_1_1_sport_d_a_o.html',1,'sport_dao.SportDAO'],['../classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o.html',1,'handler.dao.sport_dao.SportDAO']]],
-  ['sportexists',['sportExists',['../classhandler_1_1dao_1_1athlete__dao_1_1_athlete_d_a_o.html#acf5929b8fe16451d4dad25146d93e426',1,'handler::dao::athlete_dao::AthleteDAO']]],
-  ['sporthandler',['SportHandler',['../classsport_1_1_sport_handler.html',1,'sport.SportHandler'],['../classhandler_1_1sport_1_1_sport_handler.html',1,'handler.sport.SportHandler']]],
-  ['startpbpsequence',['startPBPSequence',['../classhandler_1_1pbp__handler_1_1_volleyball_p_b_p_handler.html#a728bf0cbfec68f2590d87e1b51c80d17',1,'handler::pbp_handler::VolleyballPBPHandler']]]
+  ['unlockdashuseraccount',['unlockDashUserAccount',['../classhandler_1_1user_1_1_user_handler.html#aa2de9a5da6421296215e75fafeb9b9d4',1,'handler::user::UserHandler']]],
+  ['updatedashuserinfo',['updateDashUserInfo',['../classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o.html#aecd7d28a6180b613a29020d8a36aa49d',1,'handler.dao.user_dao.UserDAO.updateDashUserInfo()'],['../classhandler_1_1user_1_1_user_handler.html#ae252ab004847bf2c18292d5ff166a945',1,'handler.user.UserHandler.updateDashUserInfo()']]],
+  ['updatedashuserpassword',['updateDashUserPassword',['../classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o.html#a5cb109c59e12af858342091c0bff278b',1,'handler.dao.user_dao.UserDAO.updateDashUserPassword()'],['../classhandler_1_1user_1_1_user_handler.html#a56eaeae0434a67f7d99f4d7c670afdc9',1,'handler.user.UserHandler.updateDashUserPassword()']]],
+  ['updatedashuserpasswordbyusername',['updateDashUserPasswordByUsername',['../classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o.html#a2defb0680d461acabaf05daf03214938',1,'handler::dao::user_dao::UserDAO']]],
+  ['userdao',['UserDAO',['../classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o.html',1,'handler::dao::user_dao']]],
+  ['userhandler',['UserHandler',['../classhandler_1_1user_1_1_user_handler.html',1,'handler::user']]]
 ];
