@@ -345,6 +345,8 @@ def teamEvents(tID):
 @app.route("/results/basketball/", methods = ['GET','POST'])
 def basketballStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
     if request.method == 'GET':
         #Validate Request for GET
@@ -403,6 +405,8 @@ def basketballStatistics():
 @app.route("/results/basketball/individual/", methods = ['GET','POST','PUT','DELETE'])
 def basketballAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
     
     if request.method == 'GET' or request.method == 'DELETE':
@@ -452,6 +456,8 @@ def basketballAthleteStatistics():
 @app.route("/results/basketball/team/", methods = ['GET','POST','PUT','DELETE'])
 def basketballTeamStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
     if request.method == 'GET' or request.method == 'DELETE' or request.method == 'PUT':
         #Validate GET/REMOVE/PUT requests
@@ -497,6 +503,8 @@ def basketballTeamStatistics():
 @app.route("/results/basketball/score/", methods = ['GET','POST','PUT','DELETE'])
 def basketballFinalScores():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
     if request.method == 'GET' or request.method == 'DELETE':
         #Validate GET/REMOVE requests
@@ -532,6 +540,8 @@ def basketballFinalScores():
 @app.route("/results/basketball/season/athlete_games/", methods = ['GET'])
 def basketballSeasonAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -550,6 +560,8 @@ def basketballSeasonAthleteStatistics():
 @app.route("/results/basketball/season/athlete_aggregate/", methods = ['GET'])
 def basketballAggregateAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -567,6 +579,8 @@ def basketballAggregateAthleteStatistics():
 @app.route("/results/basketball/season/all_athletes_aggregate/", methods = ['GET'])
 def basketballAggregateAllAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -584,6 +598,8 @@ def basketballAggregateAllAthleteStatistics():
 @app.route("/results/basketball/season/team_aggregate/", methods = ['GET'])
 def basketballAggregateTeamStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -767,6 +783,8 @@ def pbp_end():
 @app.route("/results/volleyball/", methods = ['GET','POST'])
 def volleyballStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         #Validate Request for GET
@@ -825,6 +843,8 @@ def volleyballStatistics():
 @app.route("/results/volleyball/individual/", methods = ['GET','POST','PUT','DELETE'])
 def volleyballAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
     if request.method == 'GET' or request.method == 'DELETE':
         #Validate GET/REMOVE requests
@@ -877,6 +897,8 @@ def volleyballAthleteStatistics():
 @app.route("/results/volleyball/team/", methods = ['GET','POST','PUT','DELETE'])
 def volleyballTeamStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
     if request.method == 'GET' or request.method == 'DELETE' or request.method == 'PUT':
         #Validate GET/REMOVE/PUT requests
@@ -919,6 +941,8 @@ def volleyballTeamStatistics():
 @app.route("/results/volleyball/score/", methods = ['GET','POST','PUT','DELETE'])
 def volleyballFinalScores():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
     if request.method == 'GET' or request.method == 'DELETE':
         #Validate GET/REMOVE requests
@@ -954,6 +978,8 @@ def volleyballFinalScores():
 @app.route("/results/volleyball/season/athlete_games/", methods = ['GET'])
 def volleyballSeasonAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -972,6 +998,8 @@ def volleyballSeasonAthleteStatistics():
 @app.route("/results/volleyball/season/athlete_aggregate/", methods = ['GET'])
 def volleyballAggregateAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -989,6 +1017,8 @@ def volleyballAggregateAthleteStatistics():
 @app.route("/results/volleyball/season/all_athletes_aggregate/", methods = ['GET'])
 def volleyballAggregateAllAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1006,6 +1036,8 @@ def volleyballAggregateAllAthleteStatistics():
 @app.route("/results/volleyball/season/team_aggregate/", methods = ['GET'])
 def volleyballAggregateTeamStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1073,6 +1105,8 @@ def volleyballAggregateTeamStatistics():
 @app.route("/results/soccer/", methods = ['GET','POST'])
 def soccerStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
     if request.method == 'GET':
         #Validate Request for GET
@@ -1126,6 +1160,8 @@ def soccerStatistics():
 @app.route("/results/soccer/individual/", methods = ['GET','POST','PUT','DELETE'])
 def soccerAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
     if request.method == 'GET' or request.method == 'DELETE':
         #Validate GET/REMOVE requests
@@ -1173,6 +1209,8 @@ def soccerAthleteStatistics():
 @app.route("/results/soccer/team/", methods = ['GET','POST','PUT','DELETE'])
 def soccerTeamStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
     if request.method == 'GET' or request.method == 'DELETE' or request.method == 'PUT':
         #Validate GET/REMOVE/PUT requests
@@ -1215,6 +1253,8 @@ def soccerTeamStatistics():
 @app.route("/results/soccer/score/", methods = ['GET','POST','PUT','DELETE'])
 def soccerFinalScores():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
     if request.method == 'GET' or request.method == 'DELETE':
         #Validate GET/REMOVE requests
@@ -1249,6 +1289,8 @@ def soccerFinalScores():
 @app.route("/results/soccer/season/athlete_games/", methods = ['GET'])
 def soccerSeasonAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1266,6 +1308,8 @@ def soccerSeasonAthleteStatistics():
 @app.route("/results/soccer/season/athlete_aggregate/", methods = ['GET'])
 def soccerAggregateAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1283,6 +1327,8 @@ def soccerAggregateAthleteStatistics():
 @app.route("/results/soccer/season/all_athletes_aggregate/", methods = ['GET'])
 def soccerAggregateAllAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1300,6 +1346,8 @@ def soccerAggregateAllAthleteStatistics():
 @app.route("/results/soccer/season/team_aggregate/", methods = ['GET'])
 def soccerAggregateTeamStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1370,6 +1418,8 @@ def soccerAggregateTeamStatistics():
 @app.route("/results/baseball/", methods = ['GET','POST'])
 def baseballStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
     if request.method == 'GET':
         #Validate Request for GET
@@ -1426,6 +1476,8 @@ def baseballStatistics():
 @app.route("/results/baseball/individual/", methods = ['GET','POST','PUT','DELETE'])
 def baseballAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
     if request.method == 'GET' or request.method == 'DELETE':
         #Validate GET/REMOVE requests
@@ -1476,6 +1528,8 @@ def baseballAthleteStatistics():
 @app.route("/results/baseball/team/", methods = ['GET','POST','PUT','DELETE'])
 def baseballTeamStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
     if request.method == 'GET' or request.method == 'DELETE' or request.method == 'PUT':
         #Validate GET/REMOVE/PUT requests
@@ -1518,6 +1572,8 @@ def baseballTeamStatistics():
 @app.route("/results/baseball/score/", methods = ['GET','POST','PUT','DELETE'])
 def baseballFinalScores():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
     if request.method == 'GET' or request.method == 'DELETE':
         #Validate GET/REMOVE requests
@@ -1553,6 +1609,8 @@ def baseballFinalScores():
 @app.route("/results/baseball/season/athlete_games/", methods = ['GET'])
 def baseballSeasonAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1572,6 +1630,8 @@ def baseballSeasonAthleteStatistics():
 @app.route("/results/baseball/season/athlete_aggregate/", methods = ['GET'])
 def baseballAggregateAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1589,6 +1649,8 @@ def baseballAggregateAthleteStatistics():
 @app.route("/results/baseball/season/all_athletes_aggregate/", methods = ['GET'])
 def baseballAggregateAllAthleteStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1606,6 +1668,8 @@ def baseballAggregateAllAthleteStatistics():
 @app.route("/results/baseball/season/team_aggregate/", methods = ['GET'])
 def baseballAggregateTeamStatistics():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
     if request.method == 'GET':
         #Validate GET requests
@@ -1671,6 +1735,8 @@ def get_sport_info():
 @app.route("/teams/", methods = ['GET','POST','PUT','DELETE'])
 def teamByYear():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = TeamHandler()
     if (request.method == 'GET' or request.method == 'PUT'):
         #Validate GET/DELETE Request Body
@@ -1707,6 +1773,8 @@ def teamByYear():
 @app.route("/teams/members/", methods = ['GET','POST'])
 def teamMembers():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = TeamHandler()
     if request.method == 'GET':
         #Validate GET Request Body
@@ -1735,6 +1803,8 @@ def teamMembers():
 @app.route("/teams/member/", methods = ['GET','POST','DELETE'])
 def teamMemberByIDs():
     json = request.json
+    if json is None:
+        return jsonify(Error='Bad Request'),400
     handler = TeamHandler()
     if request.method == 'GET' or request.method == 'POST' or request.method == 'DELETE':
         #Validate GET/POST/DELETE Request Body
@@ -1749,11 +1819,8 @@ def teamMemberByIDs():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-
-# {}
-#TODO: (Herbert) Check if need to remove route due to redundancy, wait for front end 
 @app.route("/teams/all/", methods = ['GET','POST','DELETE'])
-def getAllSports():
+def getAllTeams():
     json = request.json
     handler = TeamHandler()
     if request.method == 'GET':
