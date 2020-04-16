@@ -63,4 +63,26 @@ export default {
     SET_OPP_COLOR(state, color) {
         state.oppColor = color
     },
+
+    ADD_GAME_ACTION(state, key, value) {
+        state.gameActions.push([key, value]);
+    },
+
+    UPDATE_GAME_ACTION(state, key, value) {
+        for (index in state.gameActions) {
+            if (state.gameActions[index][0] === key) {
+                state.gameActions[index][1] = value;
+                break;
+            }
+        }
+    },
+
+    REMOVE_GAME_ACTION(state, key) {
+        for (index in state.gameActions) {
+            if (state.gameActions[index][0] === key) {
+                state.gameActions = state.gameActions.splice(index, index + 1);
+                break;
+            }
+        }
+    },
 }

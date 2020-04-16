@@ -562,21 +562,23 @@ export default {
   }),
   methods: {
     ...mapActions({
-      getSetScores: "volleyballPBP/getSetScores",
-      getCurrentSet: "volleyballPBP/getCurrentSet",
-      getUPRMRoster: "volleyballPBP/getUPRMRoster",
-      getOPPRoster: "volleyballPBP/getOPPRoster",
-      getGameOver: "volleyballPBP/getGameOver",
-      getOppColor: "volleyballPBP/getOppColor"
+      handleSetScores: "volleyballPBP/handleSetScores",
+      handleCurrentSet: "volleyballPBP/handleCurrentSet",
+      handleUPRMRoster: "volleyballPBP/handleUPRMRoster",
+      handleOPPRoster: "volleyballPBP/handleOPPRoster",
+      handleGameOver: "volleyballPBP/handleGameOver",
+      handleOppColor: "volleyballPBP/handleOppColor",
+      handleGameActions: "volleyballPBP/handleGameActions"
     })
   },
   mounted() {
-    this.getSetScores("unique-volleyball-game-id-1");
-    this.getCurrentSet("unique-volleyball-game-id-1");
-    this.getUPRMRoster("unique-volleyball-game-id-1");
-    this.getOPPRoster("unique-volleyball-game-id-1");
-    this.getGameOver("unique-volleyball-game-id-1");
-    this.getOppColor("unique-volleyball-game-id-1");
+    this.handleSetScores("unique-volleyball-game-id-1");
+    this.handleCurrentSet("unique-volleyball-game-id-1");
+    this.handleUPRMRoster("unique-volleyball-game-id-1");
+    this.handleOPPRoster("unique-volleyball-game-id-1");
+    this.handleGameOver("unique-volleyball-game-id-1");
+    this.handleOppColor("unique-volleyball-game-id-1");
+    this.handleGameActions("unique-volleyball-game-id-1");
   }
 };
 </script>
