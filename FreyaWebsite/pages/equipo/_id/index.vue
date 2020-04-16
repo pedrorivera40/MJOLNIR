@@ -30,20 +30,6 @@
             @input="getSeasonData"
           ></v-select>
         </v-col>
-        <v-col>
-          <v-row align="center"
-            justify="end">
-            <v-col md=3 align="end">
-              <v-btn class="mr-4" @click="goToEditTeam" color="green darken-1">Editar Equipo</v-btn>
-            </v-col>
-            <v-col md=3 align="end">
-              <v-btn class="mr-4" @click="removeTeam" color="green darken-1">Remover Equipo</v-btn>
-            </v-col>
-            <v-col md=3 align="end">
-              <v-btn class="mr-4" @click="goToCreateTeam" color="green darken-1">Añadir Equipo +</v-btn>
-            </v-col>
-          </v-row>
-        </v-col>
       </v-row>
 			<v-tabs
 					centered
@@ -103,12 +89,6 @@
 				</v-tab-item>
 
         <v-tab-item>
-          <v-row align="center"
-            justify="end">
-            <v-col md=3 align="end">
-              <v-btn class="mr-4" @click="goToAddMembers" color="green darken-1">Añadir Miembro +</v-btn>
-            </v-col>
-          </v-row>
           <v-row
           v-for="member in members.members" 
           :key='member.athlete_id'
@@ -137,14 +117,6 @@
                   :athlete_id="member.athlete_id"
                   :years_of_participation="member.years_of_participation"
                 />
-              </v-hover>
-            </v-col>
-            <v-col align="center" justify="center" sm=1>
-              <v-hover
-                v-slot:default="{ hover }"
-                close-delay="200"
-              >
-                <v-icon x-large color="red darken-2" @click="removeMember(member.athlete_id)">mdi-trash-can-outline </v-icon>
               </v-hover>
             </v-col>
           </v-row>
@@ -476,22 +448,6 @@ export default {
         this.sport_id = this.$route.params.id
         
       },
-      goToEditTeam(){
-            this.$router.push('/equipo/:id/editar/')
-        },
-      goToCreateTeam(){
-            this.$router.push('/equipo/:id/crear/')
-        },
-      goToAddMembers(){
-            this.$router.push('/equipo/:id/miembros/anadir/')
-        },
-      // TODO: Implement the removes so they probly create a pop up for confirmation?
-      removeMember(athlete_id){
-            console.log("Will Remove Athlete("+athlete_id+") from Team("+this.current_team.team_id+")")
-        },
-      removeTeam(){
-            console.log("Will Remove Team("+this.current_team.team_id+")")
-        },
       getMembersData(){
       
         if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
