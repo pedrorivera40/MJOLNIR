@@ -183,6 +183,7 @@ import VolleyballStatistics from "../../../components/VolleyballStatistics";
 import PBPRosterEntry from "../../../components/PBPRosterEntry";
 import VolleyballGameAction from "../../../components/VolleyballGameAction";
 import VolleyballPBPActionsAdder from "../../../components/VolleyballPBPActionsAdder";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -558,6 +559,18 @@ export default {
     uprm_color: "green",
     opp_color: "red",
     notification: "Notification"
-  })
+  }),
+  methods: {
+    ...mapActions({
+      getSetScores: "volleyballPBP/getSetScores",
+      getCurrentSet: "volleyballPBP/getCurrentSet",
+      getUPRMRoster: "volleyballPBP/getUPRMRoster"
+    })
+  },
+  mounted() {
+    this.getSetScores("unique-volleyball-game-id-1");
+    this.getCurrentSet("unique-volleyball-game-id-1");
+    this.getUPRMRoster("unique-volleyball-game-id-1");
+  }
 };
 </script>
