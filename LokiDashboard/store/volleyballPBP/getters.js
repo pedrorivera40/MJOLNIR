@@ -4,26 +4,31 @@ export default {
     currentSet: state => state.currentSet,
     // UPRM Sets Score.
     uprmSets: state => state.uprmSets,
-    // uprmSet1: state => state.uprmSet1,
-    // uprmSet2: state => state.uprmSet2,
-    // uprmSet3: state => state.uprmSet3,
-    // uprmSet4: state => state.uprmSet4,
-    // uprmSet5: state => state.uprmSet5,
     // Opponent Team Current Score.
     oppSets: state => state.oppSets,
-    // oppSet1: state => state.oppSet1,
-    // oppSet2: state => state.oppSet2,
-    // oppSet3: state => state.oppSet3,
-    // oppSet4: state => state.oppSet4,
-    // oppSet5: state => state.oppSet5,
-
     uprmRoster: state => state.uprmRoster,
     oppRoster: state => state.oppRoster,
     gameOver: state => state.gameOver,
     oppColor: state => state.oppColor,
     gameActions: state => state.gameActions,
-    // uprmScores: (state) => state.uprmScore,
-    // oppScores: (state) => state.oppScore,
+    currentUPRMSet: state => {
+        if (state.currentSet === 0) {
+            return 0;
+        } else {
+            return state.uprmSets[state.currentSet - 1];
+        }
+    },
+    currentOppSet: state => {
+        if (state.currentSet === 0) {
+            return 0;
+        } else {
+            return state.oppSets[state.currentSet - 1];
+        }
+    },
+    // uprmScore: (state) => {
+    //     state.uprmScore
+    // },
+    // oppScore: (state) => { state.oppScore },
     // uprmStatistics: state => state.uprmStatistics,
     // uprmAthleteStatistics: state => state.uprmAthleteStatistics, 
     // oppStatistics: state => state.oppStatistics, 

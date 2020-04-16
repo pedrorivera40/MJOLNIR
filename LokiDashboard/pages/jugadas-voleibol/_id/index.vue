@@ -13,8 +13,8 @@
           :uprm_score="0"
           :opp_score="0"
           :current_set="currentSet"
-          :current_uprm_score="0"
-          :current_opp_score="0"
+          :current_uprm_score="currentUPRMSet"
+          :current_opp_score="currentOppSet"
         />
       </v-row>
       <v-row>
@@ -205,35 +205,6 @@ export default {
     sport_name: "Voleibol",
     uprm_team_name: "Tarzanes",
     opponent_team_name: "Gallitos",
-    actions: [
-      {
-        id: 1,
-        action_type: "Notification",
-        team: "Tarzanes",
-        text:
-          "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
-      },
-      {
-        id: 2,
-        action_type: "BlockPoint",
-        team: "Gallitos",
-        text: "El partido comenzará dentro de 5 minutos.",
-        athlete_number: 5,
-        athlete_name: "Martin Lawrence",
-        athlete_img:
-          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg"
-      },
-      {
-        id: 2,
-        action_type: "KillPoint",
-        team: "Tarzanes",
-        text: "El partido comenzará dentro de 5 minutos.",
-        athlete_number: 11,
-        athlete_name: "Jose Juan Barea",
-        athlete_img:
-          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png"
-      }
-    ],
 
     uprm_team_statistics: {
       killPoints: 0,
@@ -577,20 +548,10 @@ export default {
   computed: {
     // Functions for getting values in the data models.
     ...mapGetters({
-      // uprmSet1: "volleyballPBP/uprmSet1",
-      // uprmSet2: "volleyballPBP/uprmSet2",
-      // uprmSet3: "volleyballPBP/uprmSet3",
-      // uprmSet4: "volleyballPBP/uprmSet4",
-      // uprmSet5: "volleyballPBP/uprmSet5",
-      // oppSet1: "volleyballPBP/oppSet1",
-      // oppSet2: "volleyballPBP/oppSet2",
-      // oppSet3: "volleyballPBP/oppSet3",
-      // oppSet4: "volleyballPBP/oppSet4",
-      // oppSet5: "volleyballPBP/oppSet5",
       uprmSets: "volleyballPBP/uprmSets",
       oppSets: "volleyballPBP/oppSets",
-      uprmSetScore: "volleyballPBP/uprmSetScore",
-      oppSetScore: "volleyballPBP/oppSetScore",
+      currentUPRMSet: "volleyballPBP/currentUPRMSet",
+      currentOppSet: "volleyballPBP/currentOppSet",
       currentSet: "volleyballPBP/currentSet",
       uprmRoster: "volleyballPBP/uprmRoster",
       oppRoster: "volleyballPBP/oppRoster",
@@ -600,22 +561,22 @@ export default {
     })
   },
   beforeMount() {
-    this.handleSetScores("unique-volleyball-game-id-1");
-    this.handleCurrentSet("unique-volleyball-game-id-1");
-    this.handleUPRMRoster("unique-volleyball-game-id-1");
-    this.handleOPPRoster("unique-volleyball-game-id-1");
-    this.handleGameOver("unique-volleyball-game-id-1");
-    this.handleOppColor("unique-volleyball-game-id-1");
-    this.handleGameActions("unique-volleyball-game-id-1");
+    this.handleSetScores(this.$route.params.id);
+    this.handleCurrentSet(this.$route.params.id);
+    this.handleUPRMRoster(this.$route.params.id);
+    this.handleOPPRoster(this.$route.params.id);
+    this.handleGameOver(this.$route.params.id);
+    this.handleOppColor(this.$route.params.id);
+    this.handleGameActions(this.$route.params.id);
   },
   beforeDestroy() {
-    this.detachSetScores("unique-volleyball-game-id-1");
-    this.detachCurrentSet("unique-volleyball-game-id-1");
-    this.detachUPRMRoster("unique-volleyball-game-id-1");
-    this.detachOPPRoster("unique-volleyball-game-id-1");
-    this.detachGameOver("unique-volleyball-game-id-1");
-    this.detachOppColor("unique-volleyball-game-id-1");
-    this.detachGameActions("unique-volleyball-game-id-1");
+    this.detachSetScores(this.$route.params.id);
+    this.detachCurrentSet(this.$route.params.id);
+    this.detachUPRMRoster(this.$route.params.id);
+    this.detachOPPRoster(this.$route.params.id);
+    this.detachGameOver(this.$route.params.id);
+    this.detachOppColor(this.$route.params.id);
+    this.detachGameActions(this.$route.params.id);
   }
 };
 </script>

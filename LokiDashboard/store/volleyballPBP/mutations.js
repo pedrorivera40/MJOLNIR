@@ -1,61 +1,26 @@
 export default {
 
+    // Modify UPRM Set Scores.
     UPDATE_UPRM_SET(state, entry) {
         state.uprmSets.splice(entry.set - 1, 1, entry.score);
     },
 
+    // Modify opponent Set Scores.
     UPDATE_OPP_SET(state, entry) {
         state.oppSets.splice(entry.set - 1, 1, entry.score);
     },
 
-    // UPDATE_UPRM_SET1(state, score) {
-    //     state.uprmSet1 = score;
-    // },
-
-    // UPDATE_UPRM_SET2(state, score) {
-    //     state.uprmSet2 = score;
-    // },
-
-    // UPDATE_UPRM_SET3(state, score) {
-    //     state.uprmSet3 = score;
-    // },
-
-    // UPDATE_UPRM_SET4(state, score) {
-    //     state.uprmSet4 = score;
-    // },
-
-    // UPDATE_UPRM_SET5(state, score) {
-    //     state.uprmSet5 = score;
-    // },
-
-    // UPDATE_OPP_SET1(state, score) {
-    //     state.oppSet1 = score;
-    // },
-
-    // UPDATE_OPP_SET2(state, score) {
-    //     state.oppSet2 = score;
-    // },
-
-    // UPDATE_OPP_SET3(state, score) {
-    //     state.oppSet3 = score;
-    // },
-
-    // UPDATE_OPP_SET4(state, score) {
-    //     state.oppSet4 = score;
-    // },
-
-    // UPDATE_OPP_SET5(state, score) {
-    //     state.oppSet5 = score;
-    // },
-
+    // Update current set value.
     UPDATE_CURRENT_SET(state, set) {
         state.currentSet = set
     },
 
+    // Insert athlete entry into UPRM roster.
     ADD_UPRM_ROSTER(state, athlete) {
         state.uprmRoster.push(athlete);
     },
 
+    // Update athlete entry from UPRM roster.
     UPDATE_UPRM_ROSTER(state, athlete) {
         for (let index in state.oppRoster) {
             if (state.uprmRoster[index].key === key) {
@@ -65,6 +30,7 @@ export default {
         }
     },
 
+    // Remove athlete entry from UPRM roster.
     REMOVE_UPRM_ROSTER(state, key) {
         for (let index in state.oppRoster) {
             if (state.uprmRoster[index].key === key) {
@@ -74,10 +40,12 @@ export default {
         }
     },
 
+    // Insert athlete entry into opponent roster.
     ADD_OPP_ROSTER(state, athlete) {
         state.oppRoster.push(athlete);
     },
 
+    // Update athlete entry from opponent roster.
     UPDATE_OPP_ROSTER(state, athlete) {
         for (let index in state.oppRoster) {
             if (state.oppRoster[index].key === key) {
@@ -87,6 +55,7 @@ export default {
         }
     },
 
+    // Remove athlete entry from opponent roster.
     REMOVE_OPP_ROSTER(state, key) {
         for (let index in state.oppRoster) {
             if (state.oppRoster[index].key === key) {
@@ -96,18 +65,22 @@ export default {
         }
     },
 
+    // Update game over state.
     SET_GAME_OVER(state, isOver) {
         state.gameOver = isOver
     },
 
+    // Update opponent color.
     SET_OPP_COLOR(state, color) {
         state.oppColor = color
     },
 
+    // Insert game action into actions list.
     ADD_GAME_ACTION(state, action) {
         state.gameActions.unshift(action);
     },
 
+    // Update value of existing action.
     UPDATE_GAME_ACTION(state, action) {
         for (let index in state.gameActions) {
             if (state.gameActions[index].key === action.key) {
@@ -117,6 +90,7 @@ export default {
         }
     },
 
+    // Remove entry from existing game actions.
     REMOVE_GAME_ACTION(state, key) {
         for (let index in state.gameActions) {
             if (state.gameActions[index].key === key) {
