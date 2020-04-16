@@ -120,7 +120,7 @@ export default {
     }),
 
     goToCreateAthlete(){
-        this.$router.push('/athlete/')
+        this.$router.push('/atleta/')
     },
 
     clearFilters(){

@@ -3,11 +3,18 @@
     <v-toolbar color="green darken-1" dark flat>
       <v-spacer />
       <v-toolbar-title>Evento</v-toolbar-title>
+      <v-progress-linear
+				:active="!ready"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>
       <v-spacer />
     </v-toolbar>
     <v-card-text>            
       
-      <v-form v-model="valid">
+      <v-form v-model="valid" v-if="formated()">
         <v-container>            
           <v-row>            
             <v-col
@@ -28,6 +35,7 @@
               full-width
               :landscape="$vuetify.breakpoint.smAndUp"
               :show-current="true"
+              color="green darken-1"
               class="mt-4"
               locale="es-419"
             ></v-date-picker>
@@ -151,7 +159,12 @@
             <v-spacer/>
             <v-spacer/>
             <v-col>
-              <v-btn color="green darken-1" dark class="mr-4" :disabled="!valid" @click="submit">Someter</v-btn>
+              <v-btn 
+                color="green darken-1" 
+                class="mr-4" 
+                :disabled="!valid" 
+                @click="submit">Someter
+              </v-btn>
               <v-btn @click="clear">Borrar</v-btn>
             </v-col>
           </v-row>
@@ -170,6 +183,7 @@
   export default {
     
     data: () => ({
+      ready : false,
       valid:false,
 			date:'', 
 			locality:'',
@@ -186,11 +200,7 @@
       
     }),
 
-    created(){
-      this.buildTeamsList(),      
-      this.constructDate()
-    },   
-  
+   
 
     methods: {
       ...rules,
@@ -203,10 +213,7 @@
         this.team = ''
         this.eventSummary = ''
         this.opponent_name = ''
-        this.constructDate()
-				
-
-      
+        this.resetDate()  
       },
       buildTeamsList(){
         for(let i = 0; i < this.teams.length; i ++)
@@ -217,8 +224,25 @@
 
         }
       },
+
+      formated(){
+        if(this.teams){
+          if(this.ready){
+            return true
+          }
+          else{
+            this.buildTeamsList()
+            this.resetDate()
+            this.ready = true
+          }
+
+        }
+        else{
+          return false
+        }
+      },
       
-      constructDate()
+      resetDate()
       {
         let time_zone_offset = new Date().getTimezoneOffset() * 60000
       

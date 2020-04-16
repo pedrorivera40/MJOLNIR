@@ -3,7 +3,15 @@
     <v-toolbar color="green darken-1" dark flat>
       <v-spacer />
       <v-toolbar-title>Evento</v-toolbar-title>
+			<v-progress-linear
+				:active="!ready"
+				inderterminate
+				absolute
+				bottom
+				color = "blue-grey lighten-1"
+			></v-progress-linear>			
       <v-spacer />
+
     </v-toolbar>
     <v-card-text>       
        

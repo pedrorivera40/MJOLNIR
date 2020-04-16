@@ -3,6 +3,13 @@
     <v-toolbar color="green darken-1" dark >
       <v-spacer />
       <v-toolbar-title>Editar Evento</v-toolbar-title>
+      <v-progress-linear
+				:active="!ready"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>	
       <v-spacer />
     </v-toolbar>
     <v-card-text>            
@@ -27,6 +34,7 @@
               full-width
               :landscape="$vuetify.breakpoint.smAndUp"
               :show-current="true"
+              color="green darken-1"
               class="mt-4"
               locale="es-419"
             ></v-date-picker>
@@ -149,13 +157,13 @@
             <v-col>
               <v-btn 
                 color="green darken-1" 
-                                 
+                class="mr-4"              
                 :disabled="!valid"
                 @click="submit"
               >
                 Someter
               </v-btn>
-              <v-btn @click="clear">Deshacer Cambios</v-btn>
+              <v-btn @click="clear">Borrar</v-btn>
             </v-col>
           </v-row>
           

@@ -20,6 +20,11 @@ const maxSummaryLength = (propertyType, maxSummaryLength) => {
   }
 }
 
+const nameFormat = () => {
+  let regex = /^[a-zA-Z '.-]*$/
+  return v => regex.test(v) || "El formato del nombre es incorrecto,"
+}
+
 const passwordFormat = () => {
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$/
   return v => regex.test(v) || "Password must contain at least: 1 upercase, 1 lowercase, 1 number, and 1 special character."
@@ -34,6 +39,16 @@ const passwordMatch = (password) => {
 
 }
 
+const generalPhrase = (propertyType) =>{
+    
+    let regex = /^[a-zA-Z0-9- ',.;:!]*$/
+    return v => regex.test(v) || `El formato de ${propertyType} es incorrecto.`
+  
+}
+const alphaSpaces = (propertyType) =>{
+  let regex = /^[a-zA-Z ]*$/
+  return v => regex.test(v) || `El formato de ${propertyType} es incorrecto.`
+}
 
 const teamRequired = (propertyType) => {
   return v => {
@@ -57,6 +72,9 @@ export default {
   passwordMatch,
   emailFormat,
   teamRequired,
+  nameFormat,
+  generalPhrase,
+  alphaSpaces,
   passwordDiffFromOld
 
 }

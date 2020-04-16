@@ -7,6 +7,13 @@
 		>
 			<v-spacer />
 			<v-toolbar-title> Perfil de Atleta </v-toolbar-title>
+			<v-progress-linear
+				:active="!ready"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>
 			<v-spacer />
 		</v-toolbar>
 		<v-container v-if="formated()">
