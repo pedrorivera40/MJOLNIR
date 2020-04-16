@@ -4,8 +4,40 @@ export default {
         state.uprmSet1 = score;
     },
 
+    UPDATE_UPRM_SET2(state, score) {
+        state.uprmSet2 = score;
+    },
+
+    UPDATE_UPRM_SET3(state, score) {
+        state.uprmSet3 = score;
+    },
+
+    UPDATE_UPRM_SET4(state, score) {
+        state.uprmSet4 = score;
+    },
+
+    UPDATE_UPRM_SET5(state, score) {
+        state.uprmSet5 = score;
+    },
+
     UPDATE_OPP_SET1(state, score) {
         state.oppSet1 = score;
+    },
+
+    UPDATE_OPP_SET2(state, score) {
+        state.oppSet2 = score;
+    },
+
+    UPDATE_OPP_SET3(state, score) {
+        state.oppSet3 = score;
+    },
+
+    UPDATE_OPP_SET4(state, score) {
+        state.oppSet4 = score;
+    },
+
+    UPDATE_OPP_SET5(state, score) {
+        state.oppSet5 = score;
     },
 
     UPDATE_CURRENT_SET(state, set) {

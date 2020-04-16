@@ -5,29 +5,19 @@ export default {
     // Set async function for handling Firebase set scores updates (each team has 5 set scores).
     async handleSetScores({ commit, dispatch }, event_id) {
         try {
-            await rtdb().ref("/v1/" + event_id + "/score/set" + 1 + "-uprm").on('value', function (snapshot) {
-                console.log(snapshot.val());
-                commit("UPDATE_UPRM_SET1", snapshot.val());
-                console.log(snapshot.val());
-            });
 
-            await rtdb().ref("/v1/" + event_id + "/score/set" + 1 + "-opponent").on('value', function (snapshot) {
-                console.log(snapshot.val());
-                commit("UPDATE_OPP_SET1", snapshot.val());
-                console.log(snapshot.val());
-            });
-            // for (let i = 1; i <= 5; i++) {
-            //     // Async functions for UPRM scores.
-            //     await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-uprm").on('value', function (snapshot) {
-            //         console.log(snapshot.val());
-            //         commit("UPDATE_UPRM_SET_SCORES", i, snapshot)
-            //         console.log(snapshot.val());
-            //     });
-            //     // Async functions for opponent scores.
-            //     await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-opponent").on('value', function (snapshot) {
-            //         commit("UPDATE_OPP_SET_SCORES", i, snapshot)
-            //     });
-            //}
+            for (let i = 1; i <= 5; i++) {
+                // Async functions for UPRM scores.
+                await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-uprm").on('value', function (snapshot) {
+                    console.log(snapshot.val());
+                    commit("UPDATE_UPRM_SET" + i, snapshot)
+                    console.log(snapshot.val());
+                });
+                // Async functions for opponent scores.
+                await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-opponent").on('value', function (snapshot) {
+                    commit("UPDATE_OPP_SET" + i, snapshot)
+                });
+            }
 
         } catch (error) {
             dispatch('notifications/setSnackbar', { text: "Unable to retrieve scores from RTDB.", color: "error" }, { root: true });
