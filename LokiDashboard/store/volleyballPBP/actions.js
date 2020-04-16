@@ -128,8 +128,10 @@ export default {
                 let action = snapshot.val();
                 action.key = snapshot.key;
                 commit("ADD_GAME_ACTION", action);
-                commit("UPDATE_UPRM_STATISTICS", action);
-                commit("UPDATE_OPP_STATISTICS", action);
+                commit("UPDATE_UPRM_STATISTICS");
+                commit("UPDATE_OPP_STATISTICS");
+                commit("UPDATE_UPRM_ATHLETE_STATISTICS");
+                commit("UPDATE_OPP_ATHLETE_STATISTICS");
             });
 
             // Handle roster updates.
@@ -137,15 +139,19 @@ export default {
                 let action = snapshot.val();
                 action.key = snapshot.key;
                 commit("UPDATE_GAME_ACTION", action);
-                commit("UPDATE_UPRM_STATISTICS", action);
-                commit("UPDATE_OPP_STATISTICS", action);
+                commit("UPDATE_UPRM_STATISTICS");
+                commit("UPDATE_OPP_STATISTICS");
+                commit("UPDATE_UPRM_ATHLETE_STATISTICS");
+                commit("UPDATE_OPP_ATHLETE_STATISTICS");
             });
 
             // Handle roster removals.
             await rtdb().ref("/v1/" + event_id + "/game-actions").on('child_removed', function (snapshot) {
                 commit("REMOVE_GAME_ACTION", snapshot.key);
-                commit("UPDATE_UPRM_STATISTICS", action);
-                commit("UPDATE_OPP_STATISTICS", action);
+                commit("UPDATE_UPRM_STATISTICS");
+                commit("UPDATE_OPP_STATISTICS");
+                commit("UPDATE_UPRM_ATHLETE_STATISTICS");
+                commit("UPDATE_OPP_ATHLETE_STATISTICS");
             });
 
         } catch (error) {
