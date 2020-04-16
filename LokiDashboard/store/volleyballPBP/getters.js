@@ -62,8 +62,7 @@ export default {
     },
     uprmStatistics: state => state.uprmStatistics,
     oppStatistics: state => state.oppStatistics,
-
-    // uprmAthleteStatistics: state => state.uprmAthleteStatistics, 
-    // oppAthleteStatistics: state => state.oppAthleteStatistics, 
+    uprmAthleteStatistics: state => state.uprmAthleteStatistics,
+    oppAthleteStatistics: state => state.oppAthleteStatistics,
 
 }

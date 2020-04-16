@@ -34,6 +34,6 @@ export default () => ({
         receptionErrors: 0
     }, // Keep collective opponent statistics for this match.
 
-    // uprmAthleteStatistics: {}, // For each UPRM athlete, keeps their individual stats for this match.
-    // oppAthleteStatistics: {}, // For each opponent athlete, keeps their individual stats for this match.
+    uprmAthleteStatistics: [], // For each UPRM athlete, keeps their individual stats for this match.
+    oppAthleteStatistics: [], // For each opponent athlete, keeps their individual stats for this match.
 })

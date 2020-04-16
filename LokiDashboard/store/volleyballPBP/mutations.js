@@ -100,6 +100,7 @@ export default {
         }
     },
 
+    // Update UPRM team statistics based on the game actions list.
     UPDATE_UPRM_STATISTICS(state) {
         let result = {
             killPoints: 0,
@@ -168,6 +169,7 @@ export default {
         state.uprmStatistics = result;
     },
 
+    // Update opponent team statistics based on the game actions list.
     UPDATE_OPP_STATISTICS(state) {
         let result = {
             killPoints: 0,
@@ -234,5 +236,171 @@ export default {
         }
 
         state.oppStatistics = result;
+    },
+
+    // Update UPRM athlete statistics based on the game actions list.
+    UPDATE_UPRM_ATHLETE_STATISTICS(state) {
+        let result = [];
+
+        for (let athlete in state.uprmRoster) {
+            result.push(
+                {
+                    athlete_number: athlete.number,
+                    killPoints: 0,
+                    aces: 0,
+                    blockPoints: 0,
+                    assists: 0,
+                    blocks: 0,
+                    digs: 0,
+                    attackErrors: 0,
+                    serviceErrors: 0,
+                    blockingErrors: 0,
+                    receptionErrors: 0
+                }
+            );
+        }
+
+        for (let index in state.gameActions) {
+            let currentAction = state.gameActions[index];
+            if (currentAction.team !== "uprm") {
+                continue;
+            }
+            let athlete_index = -1;
+            for (let athlete in state.uprmRoster) {
+                if (state.uprmRoster[athlete].number === currentAction.number) {
+                    athlete_index = athlete;
+                    break;
+                }
+            }
+            switch (currentAction.action_type) {
+                case "KillPoint":
+                    result[athlete_index].killPoints++;
+                    break;
+
+                case "Ace":
+                    result[athlete_index].aces++;
+                    break;
+
+                case "BlockPoint":
+                    result[athlete_index].blockPoints++;
+                    break;
+
+                case "Assist":
+                    result[athlete_index].assists++;
+                    break;
+
+                case "Block":
+                    result[athlete_index].blocks++;
+                    break;
+
+                case "Dig":
+                    result[athlete_index].digs++;
+                    break;
+
+                case "AttackError":
+                    result[athlete_index].attackErrors++;
+                    break;
+
+                case "ServiceError":
+                    result[athlete_index].serviceErrors++;
+                    break;
+
+                case "BlockingError":
+                    result[athlete_index].blockingErrors++;
+                    break;
+
+                case "ReceptionError":
+                    result[athlete_index].receptionErrors++;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        state.uprmAthleteStatistics = result;
+    },
+
+    // Update opponent athlete statistics based on the game actions list.
+    UPDATE_OPP_ATHLETE_STATISTICS(state) {
+        let result = [];
+
+        for (let athlete in state.oppRoster) {
+            result.push(
+                {
+                    athlete_number: athlete.number,
+                    killPoints: 0,
+                    aces: 0,
+                    blockPoints: 0,
+                    assists: 0,
+                    blocks: 0,
+                    digs: 0,
+                    attackErrors: 0,
+                    serviceErrors: 0,
+                    blockingErrors: 0,
+                    receptionErrors: 0
+                }
+            );
+        }
+
+        for (let index in state.gameActions) {
+            let currentAction = state.gameActions[index];
+            if (currentAction.team !== "opponent") {
+                continue;
+            }
+            let athlete_index = -1;
+            for (let athlete in state.oppRoster) {
+                if (state.oppRoster[athlete].number === currentAction.number) {
+                    athlete_index = athlete;
+                    break;
+                }
+            }
+            switch (currentAction.action_type) {
+                case "KillPoint":
+                    result[athlete_index].killPoints++;
+                    break;
+
+                case "Ace":
+                    result[athlete_index].aces++;
+                    break;
+
+                case "BlockPoint":
+                    result[athlete_index].blockPoints++;
+                    break;
+
+                case "Assist":
+                    result[athlete_index].assists++;
+                    break;
+
+                case "Block":
+                    result[athlete_index].blocks++;
+                    break;
+
+                case "Dig":
+                    result[athlete_index].digs++;
+                    break;
+
+                case "AttackError":
+                    result[athlete_index].attackErrors++;
+                    break;
+
+                case "ServiceError":
+                    result[athlete_index].serviceErrors++;
+                    break;
+
+                case "BlockingError":
+                    result[athlete_index].blockingErrors++;
+                    break;
+
+                case "ReceptionError":
+                    result[athlete_index].receptionErrors++;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        state.uprmAthleteStatistics = result;
     },
 }
