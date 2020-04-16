@@ -56,7 +56,7 @@ export default {
     },
 
     editAthlete() {
-      this.$router.push("/atleta/" + this.athleteID + "/edit");
+      this.$router.push("/atleta/" + this.athleteID + "/editar");
     },
     goToAthlete() {
       this.$router.push("/atleta/" + this.athleteID);

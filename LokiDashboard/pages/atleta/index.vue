@@ -1,390 +1,363 @@
 <template>
   <v-card width="800" class="elevation-12 mx-auto">
     <v-toolbar color="green darken-1" dark flat>
+      <v-spacer/>
       <v-toolbar-title>Atleta</v-toolbar-title>
+      <v-progress-linear
+				:active="!ready"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>	
       <v-spacer />
     </v-toolbar>
-    <v-card-text>            
-      <ValidationObserver ref="observer" v-slot="{ validate, reset }">
-        <form>
-          <v-container>
-            <v-row>
-              <v-col
-                cols="12"
-                md="2"
-              >
-                <ValidationProvider v-slot="{ errors }" name="Nombre" rules="required|alpha|max:20">
-                  <v-text-field
-                    v-model="first_name"          
-                    :error-messages="errors"
-                    :counter="20"
-                    label="Nombre"
-                    required
-                  ></v-text-field>
-                </ValidationProvider>
-              </v-col>
+    <v-card-text>           
+      
+      <v-form v-model="valid">
+        <v-container v-if="formated()">
+          <v-row>
+            <v-col
+              cols="12"
+              md="2"
+            >             
+              <v-text-field
+                v-model="first_name"          
+                
+                :counter="20"
+                label="Nombre"
+                required
+                :rules="[required('Nombre'),nameFormat('Nombre'),maxLength('Nombre',20)]"
+              ></v-text-field>              
+            </v-col>
 
-              <v-col
-                cols="12"
-                md="3"
-              >
-                <ValidationProvider v-slot="{ errors }" name="Segundo Nombre" rules="alpha">
-                  <v-text-field
-                    v-model="middle_name"
-                    :error-messages="errors"
-                    :counter="20"
-                    label="Segundo Nombre"
-                    required
-                  ></v-text-field>
-                </ValidationProvider>
-              </v-col>
+            <v-col
+              cols="12"
+              md="3"
+            >
+              <v-text-field
+                v-model="middle_name"                
+                :counter="20"
+                label="Segundo Nombre"
+                required
+                :rules="[nameFormat('Segundo Nombre'),maxSummaryLength('Segundo Nombre',20)]"
+              ></v-text-field>              
+            </v-col>
 
-              <v-col
-                cols="12"
-                md="4"
-              >
-                <ValidationProvider v-slot="{ errors }" name="Apellidos" rules="required|alpha_spaces|alpha_dash">
-                  <v-text-field
-                    v-model="last_names"
-                    :counter="40"
-                    :error-messages="errors"
-                    label="Apellidos"
-                    required
-                  ></v-text-field>
-                </ValidationProvider> 
-              </v-col>
-              
-               <v-col cols="12" sm="6" md="3">
-                <v-menu
-                  ref="menu"
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  :return-value.sync="date"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="290px"
-                >
-               
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="date"
-                      label="Fecha de nacimiento"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker v-model="date" no-title scrollable locale="es-419">
-                    <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                    <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-                  </v-date-picker>
-                </v-menu>
-              </v-col>  
-            </v-row>
-            
-            <ValidationProvider v-slot="{ errors }" name="Biografia" rules="max:1000">
-                <v-textarea
-                  v-model="short_bio"                      
-                  :counter="1000"
-                  :error-messages="errors"
-                  label="Biografia"
-                  auto-grow
-                  rows = "3"
-                  outlined
-                ></v-textarea>
-            </ValidationProvider>
-
-            <v-row>
-              <v-col
-                cols="1"
-                md="3"
-              >
-
-              <h2>Estatura:</h2>
-               
-              </v-col>
-
-              <v-col
-                cols="12"
-                md="4"
-              >
-                <v-select
-                  v-model="height_feet"
-                  :items="feet"
-                  label ="Pies"
-                  prepend-icon="mdi-human-male-height"
-                ></v-select>
-                 <v-select
-                  v-model="height_inches"
-                  :items="inches"
-                  label ="Pulgadas"
-                  prepend-icon="mdi-human-male-height"
-                ></v-select>
-              </v-col>
-            </v-row>
-
-            <v-row>
-
-              <v-col
-                cols="1"
-                md="3"
-              >
-
-              <h2>Educacion:</h2>
-               
-              </v-col>
-
-              <v-col
+            <v-col
               cols="12"
               md="4"
+            >              
+              <v-text-field
+                v-model="last_names"
+                :counter="40"                
+                label="Apellidos"
+                required
+                :rules="[required('Apellidos'),nameFormat('Apellidos'),maxLength('Apellidos',40)]"
+              ></v-text-field>              
+            </v-col>
+            
+              <v-col cols="12" sm="6" md="3">
+              <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="date"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
               >
-                <ValidationProvider v-slot="{ errors }" name="Programa de Estudio" rules="alpha_spaces">
+              
+                <template v-slot:activator="{ on }">
                   <v-text-field
-                    v-model="study_program"
-                    :error-messages="errors"                    
-                    label="Programa de Estudio"
-                    prepend-icon="mdi-school"
-                    required
+                    v-model="date"
+                    label="Fecha de nacimiento"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-on="on"
                   ></v-text-field>
-                </ValidationProvider>
-              </v-col>
-              
-              
+                </template>
+                <v-date-picker v-model="date" color = "green darken-1" no-title scrollable locale="es-419">
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                  <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                </v-date-picker>
+              </v-menu>
+            </v-col>  
+          </v-row>
+          
+          <v-row>
+            <v-col>
+              <v-textarea
+                v-model="short_bio"                      
+                :counter="1000"                
+                label="Biografía"
+                auto-grow
+                rows = "3"
+                outlined
+                :rules="[generalPhrase('Biografía'),maxSummaryLength('Biografía',1000)]"
+              ></v-textarea>
+            </v-col>
+          </v-row>
 
-              <v-col
+          <v-row>
+            <v-col
+              cols="1"
+              md="3"
+            >
+
+            <h2>Estatura:</h2>
+              
+            </v-col>
+
+            <v-col
               cols="12"
               md="4"
-              >
-                <ValidationProvider v-slot="{ errors }" name="Escuela de Precedencia" rules="alpha">
-                  <v-text-field
-                    v-model="school_of_precedence"
-                    :error-messages="errors"                    
-                    label="Escuela de Precedencia"
-                    prepend-icon="mdi-school-outline"
-                    required
-                  ></v-text-field>
-                </ValidationProvider>
-              </v-col>
-              
-            </v-row>
-
-            <v-row> 
-              
-              <v-col
-                cols="1"
-                md="3"
-              >
-
-              <h2>Deporte:</h2>
-               
-              </v-col>
-            
-
-              <v-col
-                cols="12" 
-                md="4"               
-              >
-                <ValidationProvider v-slot="{ errors }" name="Sport" rules="required">
-                  <v-select
-                    v-model="sport"
-                    :items="sports"
-                    :error-messages="errors"
-                    label ="Deporte"
-                    prepend-icon="mdi-volleyball"
-                  ></v-select>
-                </ValidationProvider>
-                
-                <ValidationProvider v-slot="{ errors }" name="Branch" rules="required">
-                  <v-select
-                    v-model="branch"
-                    :items="branches"
-                    :error-messages="errors"
-                    label ="Rama"
-                    prepend-icon="mdi-file-tree"
-                  ></v-select>
-                </ValidationProvider>
-
-              </v-col>              
-            </v-row>
-
-            <v-row>
-              <v-col
-                cols="12" 
-                md="4"               
-              >              
-                <div>                  
-                  <h2 v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'">
-                   
-                    Posiciones:
-
-                  </h2>
-                </div>
-
-                <div>                  
-                  <h2 v-if="getSport() == 'Atletismo'">
-                   
-                    Categorias:
-
-                  </h2>
-                </div>
-
-              </v-col>
-
-              <v-col
-                cols="12" 
-                md="4"               
-              > 
-              
-                <div v-for="(value,key) in sport_positions" :key="key" >
-                  <v-checkbox
-                    :input-value="value"
-                    :label="key"                    
-                    v-if="getSport()=='Voleibol' | getSport()=='Baloncesto'"                      
-                  ></v-checkbox>
-                </div>
-              
-                
-                <div v-for="(value,key) in sport_category" :key="key">
-                  <v-checkbox
-                    :input-value="value"
-                    :label="key"
-                    v-on:change="updateCategories(key,value)"
-                    v-if="getSport()=='Atletismo'"                      
-                  ></v-checkbox>
-                </div>
-
-              </v-col>                   
-            </v-row>  
-
-            <v-row> 
-
-              <v-col
-                cols="12" 
-                md="4"               
-              >              
-                <div>                  
-                  <h2 v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'">
-                   
-                    Numero del Atleta:
-
-                  </h2>
-                </div> 
-              </v-col>
-
-              <v-col
-                cols="12" 
-                md="4"               
-              >
+            >
+              <v-select
+                v-model="height_feet"
+                :items="feet"
+                label ="Pies"
+                prepend-icon="mdi-human-male-height"
+              ></v-select>
                 <v-select
-                  v-model="number"
-                  :items="numbers"
-                  label ="Numero del Athleta"
-                  prepend-icon="mdi-numeric-0-box"
-                  v-if="getSport() == 'Voleibol' | getSport() == 'Baloncesto'"
-                ></v-select>
+                v-model="height_inches"
+                :items="inches"
+                label ="Pulgadas"
+                prepend-icon="mdi-human-male-height"
+              ></v-select>
+            </v-col>
+          </v-row>
 
-              </v-col>
-            </v-row>            
+          <v-row>
 
-            <v-row>
+            <v-col
+              cols="1"
+              md="3"
+            >
 
-              <v-col
-                cols="1"
-                md="3"
-              >
+            <h2>Educación:</h2>
+              
+            </v-col>
 
-              <h2>Imagen de Perfil:</h2>
-               
-              </v-col>
-
-
-              <v-col
-              cols="12"
-              md="5"
-              >
-                <ValidationProvider v-slot="{ errors }" name="Enlace de Imagen de Perfil" rules="">
-                  <v-text-field
-                    v-model="profile_image_link"
-                    :error-messages="errors"                    
-                    label="Enlace de Imagen de Perfil"
-                    prepend-icon="mdi-link"
-                    required
-                  ></v-text-field>
-                </ValidationProvider>
-              </v-col>
-
-            </v-row>
-
-
-            <v-row>
-              <v-spacer/>
-              <v-spacer/>
-              <v-col>
-                <v-btn class="mr-4" @click="submit">submit</v-btn>
-                <v-btn @click="clear">clear</v-btn>
-              </v-col>
-            </v-row>
+            <v-col
+            cols="12"
+            md="4"
+            >              
+              <v-text-field
+                v-model="study_program"                                   
+                label="Programa de Estudio"
+                prepend-icon="mdi-school"
+                :rules="[alphaSpaces('Programa de Estudio')]"
+              ></v-text-field>
+              
+            </v-col>
             
-          </v-container>
-        </form>
-      </ValidationObserver>
+            <v-col
+              cols="12" 
+              md="4"               
+            >  
+              <v-select
+                v-model="year_of_study"
+                :items="yearsOfStudy"              
+                label ="Año de Estudio"                
+              ></v-select>
+            </v-col>      
+            
+            <v-col
+              cols="12"
+              md="3"
+            >
+            </v-col>
+            <v-col
+            cols="12"
+            md="4"
+            >             
+              <v-text-field
+                v-model="school_of_precedence"                                  
+                label="Escuela de Precedencia"
+                prepend-icon="mdi-school-outline"
+                :rules="[alphaSpaces('Programa de Estudio')]"
+              ></v-text-field>            
+            </v-col>
+            
+          </v-row>
+
+          <v-row> 
+            
+            <v-col
+              cols="1"
+              md="3"
+            >
+
+            <h2>Deporte:</h2>
+              
+            </v-col>
+          
+
+            <v-col
+              cols="12" 
+              md="4"               
+            >              
+              <v-select
+                v-model="sport"
+                :items="sportsList"               
+                label ="Deporte"
+                item-text="sportName"
+                item-value="id"
+                prepend-icon="mdi-volleyball"
+                v-on:change="setCategoriesAndPositions()"
+                :rules="[teamRequired('Deporte')]"
+              ></v-select>              
+            </v-col>
+
+            <v-col
+              cols="12" 
+              md="4"               
+            >  
+              <v-select
+                v-model="years_of_participation"
+                :items="yearsOfParticipation"              
+                label ="Años de Participación"                
+              ></v-select>
+            </v-col>              
+          </v-row>
+
+          <v-row>
+            <v-col
+              cols="12" 
+              md="4"               
+            >              
+              <div>                  
+                <h2 v-if="!isEmpty(sport_positions)">
+                  
+                  Posiciones:
+
+                </h2>
+              </div>
+
+              <div>                  
+                <h2 v-if="!isEmpty(sport_categories)">
+                  
+                  Categorías:
+
+                </h2>
+              </div>
+
+            </v-col>
+
+            <v-col
+              cols="12" 
+              md="4"               
+            > 
+            
+              <div v-for="(value,key) in sport_positions" :key="key" >
+                <v-checkbox
+                  :input-value="value"
+                  :label="key"                    
+                  v-on:change="updatePositons(key,value)"
+                  v-if="!isEmpty(sport_positions)"                                        
+                ></v-checkbox>
+              </div>
+            
+              
+              <div v-for="(value,key) in sport_categories" :key="key">
+                <v-checkbox
+                  :input-value="value"
+                  :label="key"
+                  v-on:change="updateCategories(key,value)"
+                  v-if="!isEmpty(sport_categories)"                      
+                ></v-checkbox>
+              </div>
+
+            </v-col>                   
+          </v-row>  
+
+          <v-row> 
+
+            <v-col
+              cols="12" 
+              md="4"               
+            >              
+              <div>                  
+                <h2 v-if="sportHasNumber">
+                  
+                  Número del Atleta:
+
+                </h2>
+              </div> 
+            </v-col>
+
+            <v-col
+              cols="12" 
+              md="4"               
+            >
+              <v-select
+                v-model="number"
+                :items="numbers"
+                label ="Número del Athleta"
+                prepend-icon="mdi-numeric-0-box"
+                v-if="sportHasNumber"
+              ></v-select>
+
+            </v-col>
+          </v-row>            
+
+          <v-row>
+
+            <v-col
+              cols="1"
+              md="3"
+            >
+
+            <h2>Imagen de Perfil:</h2>
+              
+            </v-col>
+
+
+            <v-col
+            cols="12"
+            md="5"
+            >             
+              <v-text-field
+                v-model="profile_image_link"                                
+                label="Enlace de Imagen de Perfil"
+                prepend-icon="mdi-link"
+                required
+              ></v-text-field>              
+            </v-col>
+
+          </v-row>
+
+
+          <v-row>
+            <v-spacer/>
+            <v-spacer/>
+            <v-col>
+              <v-btn :disabled="!valid" class="mr-4" color="green darken-1" @click="submit">Someter</v-btn>
+              <v-btn @click="clear">Borrar</v-btn>
+            </v-col>
+          </v-row>
+          
+        </v-container>
+      </v-form>      
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-  import { required, email, max, alpha_spaces, alpha, alpha_dash, regex,required_if } from 'vee-validate/dist/rules'
-  import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+  import rules from "../../utils/validations"
+  import sportsData from "../../data/athletePagesData/sports.json"
 
-  setInteractionMode('eager')
-
-  extend('required', {
-    ...required,
-    message: '{_field_} no puede estar vacio',
-  })
-
-  extend('max', {
-    ...max,
-    message: '{_field_} no puede contener mas de {length} caracteres',
-  })
-
-  extend('email', {
-    ...email,
-    message: 'Email must be valid',
-  })
-
-  extend('alpha',{
-    ...alpha,
-    message: "{_field_} solamente debe tener caracteres",
-  })
-
-  extend('alpha_spaces',{
-    ...alpha_spaces,
-    message: "{_field_} solamente debe contener caracters,guiones y/o espacios",
-  })
-  extend('alpha_dash',{
-    ...alpha_dash,
-    message: "{_field_} puede contener un guiones",
-  })
-  extend('regex',{
-    ...regex,
-    message:"El campos es invalido",
-  })
-  extend('required_if',{
-    ...required_if,
-    message:"La posicion es requerida para este deporte",
-  })
-  
 
   export default {
-    components: {
-      ValidationProvider,
-      ValidationObserver,
-    },
+    
     data: () => ({
+      
+      valid:false,
+      ready:false,
       selected_categories:[],
-      date: new Date().toISOString().substr(0,10),
+      date:'',
       menu: false,
       first_name: '',
       middle_name: '',
@@ -396,17 +369,23 @@
       date_of_birth:'',
       school_of_precedence:'',
       athlete_position:'',
-      sport_positions:{"Delantero":false,"Libero":true},
-      sport_category:{"100m":true,"200m":false,"300m":true},
+      year_of_study:'',
+      years_of_participation:'',
+      sport_positions:{},
+      sport_categories:{},
       number:'',
       profile_image_link:'',
       sport_id:0,
       sport:'',      
-      sports:['Voleibol','Baloncesto','Atletismo'],
+      sportsList:[],
+      sports:sportsData.Sports,
+      sportHasNumber:false,
       branch:'',
       branches:['Masculino','Femenino','Otro'],
-      feet: [4,5,6,7],
+      feet: [4,5,6,7],      
       inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0],
+      yearsOfStudy:[1,2,3,4,5,6,7,8,9,10],
+      yearsOfParticipation:[1,2,3,4],
       numbers:[0,1,2,3,4,5,6,7,8,9,10,11,12,
               13,14,15,16,17,18,19,20,21,22,
               23,24,25,26,27,28,29,30,31,32,
@@ -428,10 +407,15 @@
   
 
     methods: {
+      ...rules,
+
       submit () {
-        this.$refs.observer.validate()
+
+        console.log(this.sports)
+        
       },
       clear () {
+        
         this.first_name= '',
         this.middle_name= '',
         this.last_names='',
@@ -440,29 +424,103 @@
         this.height_inches='',
         this.study_program='', 
         this.date_of_birth='',
-        this.school_of_precedence='',
-        this.number=0,
+        this.school_of_precedence='',        
+        this.number='',
         this.profile_image_link='',
-        this.sport_id=0, 
-        this.sport ='', 
+        this.sportHasNumber=false         
+        this.sport ='' 
+        this.years_of_participation = ''
+        this.sport_positions = {}
+        this.sport_categories = {} 
+        this.resetDate()
         
-        this.$refs.observer.reset()
-      },
-      updateCategories(key,value){
-        console.log(key)
-        console.log(!value)
-        this.sport_category[key]=!value
-        console.log(this.sport_category)
-        
-      },
-      getVal(key)
-      {
-        return this.sport_category[key]
       },
 
-      getSport(){
-        return this.sport
+      updatePositons(key,value){
+        
+        this.sport_positions[key]=!value       
+      },
+      updateCategories(key,value){
+        
+        this.sport_categories[key]=!value       
+      },
+
+
+      
+
+      formated(){
+        if(this.sports){
+          if(this.ready){ return true }
+          
+          else{
+            
+            this.resetDate()
+            
+            for(let i = 0; i < this.sports.length; i++){
+              let sportObj = this.sports[i]
+              this.sportsList.push({'id':sportObj['sport_id'],'sportName':sportObj['sport_name']+'-'+sportObj['branch_name']})              
+            }
+            this.ready = true            
+          }
+        }
+        else
+          return false
+      },
+
+      setCategoriesAndPositions(){
+        this.sport_positions = {}
+        this.sport_categories = {}
+        for(let i = 0; i < this.sports.length; i++){
+            let sportObj = this.sports[i]
+            if(this.sport == sportObj['sport_id']){
+              let positions = sportObj['positions']
+              if(positions.length > 0){
+                for(let j = 0; j < positions.length; j++){
+                  this.sport_positions[positions[j]]=false;                   
+                }
+              }
+              let categories = sportObj['categories']
+              if(categories.length > 0){
+                for(let k = 0; k < categories.length; k++){
+                  this.sport_categories[categories[k]]=false;                   
+                }
+              }
+            }
+        }
+        this.sportNumber()
+        console.log(this.sport)
+        
+      },
+
+      isEmpty(obj){
+        for(let key in obj){
+          if(obj.hasOwnProperty(key))
+            return false
+        }
+        return true
+      },
+
+      sportNumber(){
+        const BALONCESTO_M = 1        
+        let sportsWithNumbers = [BALONCESTO_M]
+        if(this.sport != '')
+        {
+          for(let i = 0; i < sportsWithNumbers.length; i++){
+            if(this.sport == sportsWithNumbers[i]){
+              this.sportHasNumber = true
+              return;
+            }
+          }
+          this.sportHasNumber = false
+        }
+
+      },
+
+      resetDate(){
+        let time_zone_offset = new Date().getTimezoneOffset() * 60000      
+        this.date = new Date(Date.now() - time_zone_offset).toISOString().substring(0,10)
       }
+      
     },
   }
 </script>
