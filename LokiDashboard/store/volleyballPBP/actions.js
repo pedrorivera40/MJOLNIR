@@ -131,4 +131,87 @@ export default {
             dispatch('notifications/setSnackbar', { text: "Error retrieving game actions update from RTDB.", color: "error" }, { root: true });
         }
     },
+
+    // Detach async function for handling Firebase set scores updates (each team has 5 set scores).
+    async detachSetScores({ commit, dispatch }, event_id) {
+        try {
+            for (let i = 1; i <= 5; i++) {
+                // Async functions for UPRM scores.
+                await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-uprm").off();
+                // Async functions for opponent scores.
+                await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-opponent").off();
+            }
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Unable to retrieve scores from RTDB.", color: "error" }, { root: true });
+        }
+    },
+
+    // Detach async function for handling Firebase current set updates.
+    async detachCurrentSet({ commit, dispatch }, event_id) {
+        try {
+
+            await rtdb().ref("/v1/" + event_id + "/game-metadata/current-set").off();
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Unable to retrieve current set from RTDB.", color: "error" }, { root: true });
+        }
+    },
+
+    // Detach async function for handling Firebase UPRM roster updates.
+    async detachUPRMRoster({ commit, dispatch }, event_id) {
+        try {
+
+            // Handle roster additions.
+            await rtdb().ref("/v1/" + event_id + "/uprm-roster").off();
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Error detaching UPRM roster update from RTDB.", color: "error" }, { root: true });
+        }
+    },
+
+    // Detach async function for handling Firebase opponent roster updates.
+    async detachOPPRoster({ commit, dispatch }, event_id) {
+        try {
+
+            // Handle roster additions.
+            await rtdb().ref("/v1/" + event_id + "/opponent-roster").off();
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Error detaching opponent roster update from RTDB.", color: "error" }, { root: true });
+        }
+    },
+
+    // Detach async function for handling Firebase game-over updates.
+    async detachGameOver({ commit, dispatch }, event_id) {
+        try {
+
+            await rtdb().ref("/v1/" + event_id + "/game-metadata/game-over").off();
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Unable to detach game over from RTDB.", color: "error" }, { root: true });
+        }
+    },
+
+    // Detach async function for handling Firebase opponent color updates.
+    async detachOppColor({ commit, dispatch }, event_id) {
+        try {
+
+            await rtdb().ref("/v1/" + event_id + "/game-metadata/opp-color").off();;
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Unable detaching opponent color from RTDB.", color: "error" }, { root: true });
+        }
+    },
+
+    // Detach async function for handling Firebase game action updates.
+    async detachGameActions({ commit, dispatch }, event_id) {
+        try {
+
+            await rtdb().ref("/v1/" + event_id + "/game-actions").off();
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Error detaching game actions updates from RTDB.", color: "error" }, { root: true });
+        }
+    },
 }

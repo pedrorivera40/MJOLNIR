@@ -561,6 +561,7 @@ export default {
     notification: "Notification"
   }),
   methods: {
+    // Functions for init/detach callbacks for maintaining data models based on Firebase updates.
     ...mapActions({
       handleSetScores: "volleyballPBP/handleSetScores",
       handleCurrentSet: "volleyballPBP/handleCurrentSet",
@@ -568,10 +569,29 @@ export default {
       handleOPPRoster: "volleyballPBP/handleOPPRoster",
       handleGameOver: "volleyballPBP/handleGameOver",
       handleOppColor: "volleyballPBP/handleOppColor",
-      handleGameActions: "volleyballPBP/handleGameActions"
+      handleGameActions: "volleyballPBP/handleGameActions",
+      detachSetScores: "volleyballPBP/detachSetScores",
+      detachCurrentSet: "volleyballPBP/detachCurrentSet",
+      detachUPRMRoster: "volleyballPBP/detachUPRMRoster",
+      detachOPPRoster: "volleyballPBP/detachOPPRoster",
+      detachGameOver: "volleyballPBP/detachGameOver",
+      detachOppColor: "volleyballPBP/detachOppColor",
+      detachGameActions: "volleyballPBP/detachGameActions"
+    }),
+
+    // Functions for getting values in the data models.
+    ...mapGetters({
+      uprmSetScore: "volleyballPBP/uprmSetScore",
+      oppSetScore: "volleyballPBP/oppSetScore",
+      currentSet: "volleyballPBP/currentSet",
+      uprmRoster: "volleyballPBP/uprmRoster",
+      oppRoster: "volleyballPBP/oppRoster",
+      gameOver: "volleyballPBP/gameOver",
+      oppColor: "volleyballPBP/oppColor",
+      gameActions: "volleyballPBP/gameActions"
     })
   },
-  mounted() {
+  beforeMount() {
     this.handleSetScores("unique-volleyball-game-id-1");
     this.handleCurrentSet("unique-volleyball-game-id-1");
     this.handleUPRMRoster("unique-volleyball-game-id-1");
@@ -579,6 +599,15 @@ export default {
     this.handleGameOver("unique-volleyball-game-id-1");
     this.handleOppColor("unique-volleyball-game-id-1");
     this.handleGameActions("unique-volleyball-game-id-1");
+  },
+  beforeDestroy() {
+    this.detachSetScores("unique-volleyball-game-id-1");
+    this.detachCurrentSet("unique-volleyball-game-id-1");
+    this.detachUPRMRoster("unique-volleyball-game-id-1");
+    this.detachOPPRoster("unique-volleyball-game-id-1");
+    this.detachGameOver("unique-volleyball-game-id-1");
+    this.detachOppColor("unique-volleyball-game-id-1");
+    this.detachGameActions("unique-volleyball-game-id-1");
   }
 };
 </script>
