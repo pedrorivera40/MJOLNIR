@@ -60,7 +60,7 @@ export default {
         state.gameOver = isOver
     },
 
-    // SET_OPP_COLOR(state, color) {
-    //     state.oppColor = color
-    // },
+    SET_OPP_COLOR(state, color) {
+        state.oppColor = color
+    },
 }

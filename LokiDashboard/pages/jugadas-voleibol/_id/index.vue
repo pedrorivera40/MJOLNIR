@@ -566,7 +566,8 @@ export default {
       getCurrentSet: "volleyballPBP/getCurrentSet",
       getUPRMRoster: "volleyballPBP/getUPRMRoster",
       getOPPRoster: "volleyballPBP/getOPPRoster",
-      getGameOver: "volleyballPBP/getGameOver"
+      getGameOver: "volleyballPBP/getGameOver",
+      getOppColor: "volleyballPBP/getOppColor"
     })
   },
   mounted() {
@@ -575,6 +576,7 @@ export default {
     this.getUPRMRoster("unique-volleyball-game-id-1");
     this.getOPPRoster("unique-volleyball-game-id-1");
     this.getGameOver("unique-volleyball-game-id-1");
+    this.getOppColor("unique-volleyball-game-id-1");
   }
 };
 </script>

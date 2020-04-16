@@ -7,12 +7,10 @@ export default {
     uprmRoster: state => state.uprmRoster,
     oppRoster: state => state.oppRoster,
     gameOver: state => state.gameOver,
-
+    oppColor: state => state.oppColor,
     // uprmStatistics: state => state.uprmStatistics,
     // uprmAthleteStatistics: state => state.uprmAthleteStatistics, 
     // oppStatistics: state => state.oppStatistics, 
     // oppAthleteStatistics: state => state.oppAthleteStatistics, 
-
     // gameActions: state => state.gameActions, 
-    // oppColor: state => state.oppColor, 
 }

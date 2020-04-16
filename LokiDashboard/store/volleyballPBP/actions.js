@@ -96,4 +96,17 @@ export default {
             dispatch('notifications/setSnackbar', { text: "Unable to retrieve game over from RTDB.", color: "error" }, { root: true });
         }
     },
+
+    // Set async function for handling Firebase opponent color updates.
+    async getOppColor({ commit, dispatch }, event_id) {
+        try {
+
+            await rtdb().ref("/v1/" + event_id + "/game-metadata/opp-color").on('value', function (snapshot) {
+                commit("SET_OPP_COLOR", snapshot.val())
+            });
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Unable to retrieve opponent color from RTDB.", color: "error" }, { root: true });
+        }
+    },
 }
