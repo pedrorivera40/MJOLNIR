@@ -56,7 +56,7 @@
               :athlete_number="action.athlete_number"
               :athlete_name="action.athlete_name"
               :athlete_img="action.athlete_img"
-              :in_color="opp_color"
+              :in_color="oppColor()"
             />
             <VolleyballGameAction
               v-else
