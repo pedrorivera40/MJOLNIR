@@ -8,7 +8,7 @@
 				inderterminate
 				absolute
 				bottom
-				color = "blue-grey lighten-1"
+				color = "white"
 			></v-progress-linear>			
       <v-spacer />
 
