@@ -1,11 +1,11 @@
 export default {
 
-    UPDATE_UPRM_SET_SCORES(state, set, score) {
-        state.setScores.uprm[set] = score;
+    UPDATE_UPRM_SET1(state, score) {
+        state.uprmSet1 = score;
     },
 
-    UPDATE_OPP_SET_SCORES(state, set, score) {
-        state.setScores.opp[set] = score;
+    UPDATE_OPP_SET1(state, score) {
+        state.oppSet1 = score;
     },
 
     UPDATE_CURRENT_SET(state, set) {

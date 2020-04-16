@@ -12,7 +12,7 @@
           opp_team="UPRM-RP"
           :uprm_score="0"
           :opp_score="0"
-          :current_set="currentSet()"
+          :current_set="currentSet"
           :current_uprm_score="0"
           :current_opp_score="0"
         />
@@ -64,7 +64,7 @@
               :athlete_number="action.athlete_number"
               :athlete_name="action.athlete_name"
               :athlete_img="action.athlete_img"
-              :in_color="oppColor()"
+              :in_color="oppColor"
             />
             <VolleyballGameAction
               v-else
@@ -104,19 +104,19 @@
                     <tbody>
                       <tr :key="uprm_team_name">
                         <td class="text-center">{{ uprm_team_name }}</td>
-                        <td class="text-center">{{ score.uprm_set1 }}</td>
-                        <td class="text-center">{{ score.uprm_set2 }}</td>
-                        <td class="text-center">{{ score.uprm_set3 }}</td>
-                        <td class="text-center">{{ score.uprm_set4 }}</td>
-                        <td class="text-center">{{ score.uprm_set5 }}</td>
+                        <td class="text-center">{{ uprmSet1 }}</td>
+                        <!-- <td class="text-center">{{ scores.uprm[0] }}</td>
+                        <td class="text-center">{{ scores.uprm[0] }}</td>
+                        <td class="text-center">{{ scores.uprm[0] }}</td>
+                        <td class="text-center">{{ scores.uprm[0] }}</td>-->
                       </tr>
                       <tr :key="opponent_team_name">
                         <td class="text-center">{{ opponent_team_name }}</td>
-                        <td class="text-center">{{ score.opp_set1 }}</td>
-                        <td class="text-center">{{ score.opp_set2 }}</td>
-                        <td class="text-center">{{ score.opp_set3 }}</td>
-                        <td class="text-center">{{ score.opp_set4 }}</td>
-                        <td class="text-center">{{ score.opp_set5 }}</td>
+                        <!-- <td class="text-center">{{ scores.uprm[0] }}</td>
+                        <td class="text-center">{{ scores.uprm[0] }}</td>
+                        <td class="text-center">{{ scores.uprm[0] }}</td>
+                        <td class="text-center">{{ scores.uprm[0] }}</td>
+                        <td class="text-center">{{ scores.uprm[0] }}</td>-->
                       </tr>
                     </tbody>
                   </template>
@@ -172,7 +172,7 @@
                       :athlete_img="athlete.img"
                       :athlete_number="athlete.number"
                       :athlete_statistics="opp_team_statistics"
-                      :in_color="oppColor()"
+                      :in_color="oppColor"
                     />
                   </v-row>
                 </v-container>
@@ -205,6 +205,10 @@ export default {
     sport_name: "Voleibol",
     uprm_team_name: "Tarzanes",
     opponent_team_name: "Gallitos",
+    scores: {
+      uprm: [0, 0, 0, 0, 0],
+      opp: [0, 0, 0, 0, 0]
+    },
     actions: [
       {
         id: 1,
@@ -234,18 +238,7 @@ export default {
           "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png"
       }
     ],
-    score: {
-      uprm_set1: 0,
-      opp_set1: 0,
-      uprm_set2: 0,
-      opp_set2: 0,
-      uprm_set3: 0,
-      opp_set3: 0,
-      uprm_set4: 0,
-      opp_set4: 0,
-      uprm_set5: 0,
-      opp_set5: 0
-    },
+
     uprm_team_statistics: {
       killPoints: 0,
       aces: 0,
@@ -583,10 +576,15 @@ export default {
       detachGameOver: "volleyballPBP/detachGameOver",
       detachOppColor: "volleyballPBP/detachOppColor",
       detachGameActions: "volleyballPBP/detachGameActions"
-    }),
-
+    })
+  },
+  computed: {
     // Functions for getting values in the data models.
     ...mapGetters({
+      uprmSet1: "volleyballPBP/uprmSet1",
+      oppSet1: "volleyballPBP/oppSet1",
+      // uprmScores: "volleyballPBP/uprmScores",
+      // oppScores: "volleyballPBP/oppScores",
       uprmSetScore: "volleyballPBP/uprmSetScore",
       oppSetScore: "volleyballPBP/oppSetScore",
       currentSet: "volleyballPBP/currentSet",
