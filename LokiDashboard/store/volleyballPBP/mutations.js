@@ -56,9 +56,9 @@ export default {
         }
     },
 
-    // SET_GAME_OVER(state, isOver) {
-    //     state.gameOver = isOver
-    // },
+    SET_GAME_OVER(state, isOver) {
+        state.gameOver = isOver
+    },
 
     // SET_OPP_COLOR(state, color) {
     //     state.oppColor = color

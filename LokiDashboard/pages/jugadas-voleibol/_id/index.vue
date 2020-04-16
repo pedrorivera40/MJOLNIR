@@ -564,13 +564,17 @@ export default {
     ...mapActions({
       getSetScores: "volleyballPBP/getSetScores",
       getCurrentSet: "volleyballPBP/getCurrentSet",
-      getUPRMRoster: "volleyballPBP/getUPRMRoster"
+      getUPRMRoster: "volleyballPBP/getUPRMRoster",
+      getOPPRoster: "volleyballPBP/getOPPRoster",
+      getGameOver: "volleyballPBP/getGameOver"
     })
   },
   mounted() {
     this.getSetScores("unique-volleyball-game-id-1");
     this.getCurrentSet("unique-volleyball-game-id-1");
     this.getUPRMRoster("unique-volleyball-game-id-1");
+    this.getOPPRoster("unique-volleyball-game-id-1");
+    this.getGameOver("unique-volleyball-game-id-1");
   }
 };
 </script>

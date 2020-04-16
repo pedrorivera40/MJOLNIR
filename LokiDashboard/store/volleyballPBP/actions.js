@@ -58,7 +58,7 @@ export default {
         }
     },
 
-    // Set async function for handling Firebase UPRM roster updates.
+    // Set async function for handling Firebase opponent roster updates.
     async getOPPRoster({ commit, dispatch }, event_id) {
         try {
 
@@ -81,6 +81,19 @@ export default {
 
         } catch (error) {
             dispatch('notifications/setSnackbar', { text: "Error retrieving opponent roster update from RTDB.", color: "error" }, { root: true });
+        }
+    },
+
+    // Set async function for handling Firebase game-over updates.
+    async getGameOver({ commit, dispatch }, event_id) {
+        try {
+
+            await rtdb().ref("/v1/" + event_id + "/game-metadata/game-over").on('value', function (snapshot) {
+                commit("SET_GAME_OVER", snapshot.val())
+            });
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Unable to retrieve game over from RTDB.", color: "error" }, { root: true });
         }
     },
 }
