@@ -262,7 +262,7 @@ export default {
 									}
 								}
 							}
-							else if(this.athlete.athlete_categories)
+							if(this.athlete.athlete_categories)
 							{
 								this.athlete_categories = []
 								const entries = Object.entries(this.athlete.athlete_categories)

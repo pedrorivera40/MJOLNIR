@@ -7,6 +7,13 @@
 		>
 			<v-spacer />
 			<v-toolbar-title> Perfil de Atleta </v-toolbar-title>
+			<v-progress-linear
+				:active="!ready"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>
 			<v-spacer />
 		</v-toolbar>
 		<v-container v-if="formated()">
@@ -255,7 +262,7 @@ export default {
 									}
 								}
 							}
-							else if(this.athlete.athlete_categories)
+						  if(this.athlete.athlete_categories)
 							{
 								this.athlete_categories = []
 								const entries = Object.entries(this.athlete.athlete_categories)
