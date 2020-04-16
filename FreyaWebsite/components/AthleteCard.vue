@@ -1,15 +1,15 @@
 <template>
 
-<v-card  class="mx-auto" outlined>
-    <v-container  justify="space-around">
+<v-card  height="100%" width="100%" outlined>
+    <v-container >
       <v-row >
-        <v-col md="3">
+        <v-col  md=3>
           <v-avatar size="100">
-            <v-icon v-if="img == null" height="100"> mdi-account </v-icon>
+            <v-icon v-if="img == null" height="100px"> mdi-account </v-icon>
             <v-img v-else :src="img" height="100px" />
           </v-avatar>
         </v-col>
-         <v-col >
+         <v-col md=9>
           <v-card-title >  Nombre: {{firstName}} <br/> {{lastNames}}</v-card-title>
           <v-card-subtitle >
             Deporte: {{sportName}} 
