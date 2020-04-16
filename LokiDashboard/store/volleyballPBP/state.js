@@ -9,9 +9,31 @@ export default () => ({
     oppRoster: [], // List of opponent athletes for this match.
     gameOver: false, // Denotes if the game is over.
     oppColor: "", // Keeps track of the opponent team color (for UI purposes).
+    uprmStatistics: {
+        killPoints: 0,
+        aces: 0,
+        blockPoints: 0,
+        assists: 0,
+        blocks: 0,
+        digs: 0,
+        attackErrors: 0,
+        serviceErrors: 0,
+        blockingErrors: 0,
+        receptionErrors: 0
+    }, // Keep collective UPRM statistics for this match.
+    oppStatistics: {
+        killPoints: 0,
+        aces: 0,
+        blockPoints: 0,
+        assists: 0,
+        blocks: 0,
+        digs: 0,
+        attackErrors: 0,
+        serviceErrors: 0,
+        blockingErrors: 0,
+        receptionErrors: 0
+    }, // Keep collective opponent statistics for this match.
 
-    // uprmStatistics: {}, // Keep collective UPRM statistics for this match.
     // uprmAthleteStatistics: {}, // For each UPRM athlete, keeps their individual stats for this match.
-    // oppStatistics: {}, // Keep collective opponent statistics for this match.
     // oppAthleteStatistics: {}, // For each opponent athlete, keeps their individual stats for this match.
 })

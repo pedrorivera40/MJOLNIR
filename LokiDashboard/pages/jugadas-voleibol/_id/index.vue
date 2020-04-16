@@ -56,7 +56,7 @@
               in_color="gray"
             />
             <VolleyballGameAction
-              v-else-if="action.team === opponent_team_name"
+              v-else-if="action.team === opp_keyword"
               align="center"
               justify="center"
               :action_type="action.action_type"
@@ -205,6 +205,7 @@ export default {
     sport_name: "Voleibol",
     uprm_team_name: "Tarzanes",
     opponent_team_name: "Gallitos",
+    opp_keyword: "opponent",
 
     uprm_roster: [
       {
