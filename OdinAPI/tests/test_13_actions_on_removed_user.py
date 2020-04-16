@@ -114,19 +114,19 @@ class TestUserRoutes(unittest.TestCase):
       self.assertEqual(response.status_code, 404)
       self.assertEqual(response.json['Error'], 'No User found in the system with that id.')
 
-  # def test_add_new_user_with_username_of_removed_user(self):
-  #   newUserOldUsername = {
-  #         'email' : 'newnewUser37email.com',
-  #         'full_name' : 'Newnew User7',
-  #         'username' : self.data['username'],
-  #         'password' : 'ninjaTurtles1!'
-  #   }
-  #   id = newUserID + 1
-  #   response = self.client.post('/users/', data=json.dumps(newUserOldUsername),content_type='application/json', follow_redirects=True)
-  #   self.assertEqual(response.status_code, 201)
-  #   self.assertEqual(response.json['User']['email'], newUserOldUsername['email'])
-  #   self.assertEqual(response.json['User']['full_name'], newUserOldUsername['full_name'])
-  #   self.assertEqual(response.json['User']['id'], id)
-  #   self.assertEqual(response.json['User']['is_active'], False)
-  #   self.assertEqual(response.json['User']['is_invalid'], False)
-  #   self.assertEqual(response.json['User']['username'], newUserOldUsername['username'])
+  def test_add_new_user_with_username_of_removed_user(self):
+    newUserOldUsername = {
+          'email' : 'newnewUser37email.com',
+          'full_name' : 'Newnew User7',
+          'username' : self.data['username'],
+          'password' : 'ninjaTurtles1!'
+    }
+    id = newUserID + 1
+    response = self.client.post('/users/', data=json.dumps(newUserOldUsername),content_type='application/json', follow_redirects=True)
+    self.assertEqual(response.status_code, 201)
+    self.assertEqual(response.json['User']['email'], newUserOldUsername['email'])
+    self.assertEqual(response.json['User']['full_name'], newUserOldUsername['full_name'])
+    self.assertEqual(response.json['User']['id'], id)
+    self.assertEqual(response.json['User']['is_active'], False)
+    self.assertEqual(response.json['User']['is_invalid'], False)
+    self.assertEqual(response.json['User']['username'], newUserOldUsername['username'])
