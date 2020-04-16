@@ -1,229 +1,107 @@
 Running test_1_add_new_user_route
 **********************************
-F
-======================================================================
-FAIL: test_add_new_user (tests.test_1_add_new_user_route.TestUserRoutes)
+.
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_1_add_new_user_route.py", line 20, in test_add_new_user
-    self.assertEqual(response.status_code, 201)
-AssertionError: 400 != 201
+Ran 1 test in 6.060s
 
-----------------------------------------------------------------------
-Ran 1 test in 1.464s
-
-FAILED (failures=1)
+OK
 **********************************
 Running test_2_add_existent_user
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 0.859s
+Ran 2 tests in 2.256s
 
 OK
 **********************************
 Running test_3_get_users_route
 **********************************
-.FF...F
-======================================================================
-FAIL: test_get_user_by_email (tests.test_3_get_users_route.TestUserRoutes)
+.......
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_3_get_users_route.py", line 54, in test_get_user_by_email
-    self.assertEqual(response.status_code, 200)
-AssertionError: 404 != 200
+Ran 7 tests in 9.484s
 
-======================================================================
-FAIL: test_get_user_by_id (tests.test_3_get_users_route.TestUserRoutes)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_3_get_users_route.py", line 24, in test_get_user_by_id
-    self.assertEqual(response.status_code, 200)
-AssertionError: 404 != 200
-
-======================================================================
-FAIL: test_get_user_by_username (tests.test_3_get_users_route.TestUserRoutes)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_3_get_users_route.py", line 40, in test_get_user_by_username
-    self.assertEqual(response.json['User']['email'], self.data['email'])
-AssertionError: 'newnewUser35email.com' != 'newuser35@email.com'
-- newnewUser35email.com
-?    ^^^^
-+ newuser35@email.com
-?    ^     +
-
-
-----------------------------------------------------------------------
-Ran 7 tests in 3.693s
-
-FAILED (failures=3)
+OK
 **********************************
 Running test_4_activateUser_account
 **********************************
-E
-======================================================================
-ERROR: test_account_activation (tests.test_4_activateUser_account.TestUserRoutes)
+.
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_4_activateUser_account.py", line 26, in test_account_activation
-    self.assertEqual(response.json['User']['email'], self.data['email'])
-KeyError: 'User'
+Ran 1 test in 3.230s
 
-----------------------------------------------------------------------
-Ran 1 test in 0.441s
-
-FAILED (errors=1)
+OK
 **********************************
 Running test_5_login.
 **********************************
-.EF
-======================================================================
-ERROR: test_sucessful_login (tests.test_5_login.TestUserRoutes)
+./home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/.venv/lib/python3.7/site-packages/jwt/api_jwt.py:81: DeprecationWarning: It is strongly recommended that you pass in a value for the "algorithms" argument when calling decode(). This argument will be mandatory in a future version.
+  DeprecationWarning
+/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/.venv/lib/python3.7/site-packages/jwt/api_jws.py:145: DeprecationWarning: It is strongly recommended that you pass in a value for the "algorithms" argument when calling decode(). This argument will be mandatory in a future version.
+  DeprecationWarning
+..
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_5_login.py", line 25, in test_sucessful_login
-    token = response.json['auth']['token'].split(' ')[1]
-KeyError: 'auth'
+Ran 3 tests in 7.024s
 
-======================================================================
-FAIL: test_wrong_password_login (tests.test_5_login.TestUserRoutes)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_5_login.py", line 36, in test_wrong_password_login
-    self.assertEqual(response.status_code, 400)
-AssertionError: 401 != 400
-
-----------------------------------------------------------------------
-Ran 3 tests in 2.091s
-
-FAILED (failures=1, errors=1)
+OK
 **********************************
 Running test_6_lockout
 **********************************
 .
 ----------------------------------------------------------------------
-Ran 1 test in 2.474s
+Ran 1 test in 15.833s
 
 OK
 **********************************
 Running test_7_reset_invalid_password
 **********************************
-FF......
-======================================================================
-FAIL: test_reset_password_10_chars (tests.test_7_reset_invalid_password.TestUserRoutes)
+........
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_7_reset_invalid_password.py", line 19, in test_reset_password_10_chars
-    self.assertEqual(response.status_code, 201)
-AssertionError: 404 != 201
+Ran 8 tests in 3.290s
 
-======================================================================
-FAIL: test_reset_password_64_chars (tests.test_7_reset_invalid_password.TestUserRoutes)
-----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_7_reset_invalid_password.py", line 29, in test_reset_password_64_chars
-    self.assertEqual(response.status_code, 201)
-AssertionError: 404 != 201
-
-----------------------------------------------------------------------
-Ran 8 tests in 1.600s
-
-FAILED (failures=2)
+OK
 **********************************
 Running test_8_reset_password_route
 **********************************
-F.
-======================================================================
-FAIL: test_reset_password (tests.test_8_reset_password_route.TestUserRoutes)
+..
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_8_reset_password_route.py", line 20, in test_reset_password
-    self.assertEqual(response.status_code, 201)
-AssertionError: 404 != 201
+Ran 2 tests in 4.550s
 
-----------------------------------------------------------------------
-Ran 2 tests in 2.266s
-
-FAILED (failures=1)
+OK
 **********************************
 Running test_9_toggle_active_state_route
 **********************************
-F.
-======================================================================
-FAIL: test_toggle_active (tests.test_9_toggle_active_state_route.TestUserRoutes)
+..
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_9_toggle_active_state_route.py", line 21, in test_toggle_active
-    self.assertEqual(response.status_code, 201)
-AssertionError: 404 != 201
+Ran 2 tests in 2.000s
 
-----------------------------------------------------------------------
-Ran 2 tests in 1.686s
-
-FAILED (failures=1)
+OK
 **********************************
 Running test_10_add_get_user_permissions
 **********************************
-F.
-======================================================================
-FAIL: test_get_user_permissions (tests.test_10_add_get_user_permissions.TestUserRoutes)
-The add user permissions method is internal to the dao and is used when
+..
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_10_add_get_user_permissions.py", line 25, in test_get_user_permissions
-    self.assertEqual(response.status_code, 200)
-AssertionError: 404 != 200
+Ran 2 tests in 4.616s
 
-----------------------------------------------------------------------
-Ran 2 tests in 0.804s
-
-FAILED (failures=1)
+OK
 **********************************
 Running test_11_user_set_permissions
 **********************************
-F...
-======================================================================
-FAIL: test_set_user_permissions (tests.test_11_user_set_permissions.TestUserRoutes)
+....
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_11_user_set_permissions.py", line 81, in test_set_user_permissions
-    self.assertEqual(response.status_code, 201)
-AssertionError: 404 != 201
+Ran 4 tests in 4.567s
 
-----------------------------------------------------------------------
-Ran 4 tests in 0.855s
-
-FAILED (failures=1)
+OK
 **********************************
 Running test_12_remove_user_route
 **********************************
-F
-======================================================================
-FAIL: test_remove_user (tests.test_12_remove_user_route.TestUserRoutes)
+.
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_12_remove_user_route.py", line 22, in test_remove_user
-    self.assertEqual(response.status_code, 201)
-AssertionError: 404 != 201
+Ran 1 test in 1.206s
 
-----------------------------------------------------------------------
-Ran 1 test in 0.462s
-
-FAILED (failures=1)
+OK
 **********************************
 Running test_13_actions_on_removed_user
 **********************************
-F....
-======================================================================
-FAIL: test_add_new_user_with_username_of_removed_user (tests.test_13_actions_on_removed_user.TestUserRoutes)
+.....
 ----------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_13_actions_on_removed_user.py", line 50, in test_add_new_user_with_username_of_removed_user
-    self.assertEqual(response.status_code, 201)
-AssertionError: 400 != 201
+Ran 5 tests in 5.140s
 
-----------------------------------------------------------------------
-Ran 5 tests in 3.032s
-
-FAILED (failures=1)
+OK

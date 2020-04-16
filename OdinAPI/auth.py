@@ -27,10 +27,9 @@ def rulesMatch(password):
         password: password to be checked againt the regex.
     
     Returns:
-        A boolean to determine if the password complies or not.
+        A an object or None to determine if the password complies or not.
     """
     pw = password
-
     # set the rules for the regular expression
     reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$"
 
@@ -41,7 +40,9 @@ def rulesMatch(password):
     match = re.search(compiledReg, pw)
 
     # Return true if it matches false if it does not.
-    return match
+    if match:
+        return True
+    return False
 
 # Uses BCrypt hashing algorithm to hash a password given with
 # the amount of rounds specified in the gensalt() method

@@ -145,15 +145,15 @@ def auth():
 @app.route("/users/", methods=['GET', 'POST'])
 # @token_check
 def allUsers():
-    if request.json == None:
-        return jsonify(Error='Bad Request'), 400
+    
     handler = UserHandler()
     if request.method == 'GET':
         # For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
+        if request.json == None:
+            return jsonify(Error='Bad Request'), 400
         req = request.json
-
         ## Check the request contains the right structure.
         if 'username' not in req or 'full_name' not in req or 'email' not in req or 'password' not in req:
             return jsonify(Error='Bad Request'), 400
@@ -165,14 +165,14 @@ def allUsers():
 @app.route("/users/<int:duid>", methods=['GET', 'PATCH'])
 # @token_check
 def userByID(duid):
-    if request.json == None:
-        return jsonify(Error='Bad Request'), 400
     handler = UserHandler()
     req = request.json
     if request.method == 'GET':
         # For managing specific users
         return handler.getDashUserByID(duid)
     if request.method == 'PATCH':
+        if request.json == None:
+            return jsonify(Error='Bad Request'), 400
         ## For username change
         ## Check the request contains the right structure.
         if 'username' not in req or 'full_name' not in req or 'email' not in req or 'is_active' not in req :
@@ -259,12 +259,13 @@ def removeUser(duid):
 @app.route("/users/<string:duid>/permissions",  methods=['GET', 'PATCH'])
 # @token_check
 def userPermissions(duid):
-    if request.json == None:
-        return jsonify(Error='Bad Request'), 400
+    
     handler = UserHandler()
     if request.method == 'GET':
         return handler.getUserPermissions(duid,'request')
     if request.method == 'PATCH':
+        if request.json == None:
+            return jsonify(Error='Bad Request'), 400
         req = request.json
         ## Check the request contains the right structure.
         if 'permissions' not in req :
