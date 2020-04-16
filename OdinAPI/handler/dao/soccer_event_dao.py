@@ -388,7 +388,7 @@ class SoccerEventDAO:
                 (soccer_event_team_stats.is_invalid = false or soccer_event_team_stats.is_invalid is null)
                 GROUP BY event.team_id)
                 select 
-                goal_attempts,assists,fouls,cards,successful_goals,tackles
+                goal_attempts,assists,fouls,cards,successful_goals,tackles,
                 team_id
                 from aggregate_query
                 ;
