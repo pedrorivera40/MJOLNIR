@@ -322,11 +322,24 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team_members.id as team_members_id, team_members.team_id, team_members.athlete_id, 
-                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link
-                FROM team_members
+                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link,
+                athlete.height_inches, athlete.study_program, athlete.school_of_precedence, athlete.years_of_participation,
+                array_agg(position.name) as positions, array_agg(category.name) as categories
+				FROM team_members
                 INNER JOIN athlete on team_members.athlete_id = athlete.id
-                WHERE team_id = %s and
-                (team_members.is_invalid = false or team_members.is_invalid is Null);
+                FULL OUTER JOIN athlete_position on athlete.id = athlete_position.athlete_id
+               	FULL OUTER JOIN position on athlete_position.position_id = position.id
+				FULL OUTER JOIN athlete_category on athlete.id = athlete_category.athlete_id
+               	FULL OUTER JOIN category on athlete_category.category_id = category.id
+                WHERE 
+				team_id = %s and
+                (team_members.is_invalid = false or team_members.is_invalid is Null)
+				and
+				(athlete_position.is_invalid = false or athlete_position.is_invalid is Null)
+				GROUP BY team_members.id, team_members.team_id, team_members.athlete_id, 
+                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link,
+                athlete.height_inches, athlete.study_program, athlete.school_of_precedence, athlete.years_of_participation
+				;
                 """
         cursor.execute(query,(int(tID),))     
         result = []

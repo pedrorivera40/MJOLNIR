@@ -49,6 +49,12 @@ class TeamHandler():
         return result
 
     #NEW
+    """
+    team_members_id, team_id, athlete_id, 
+    first_name,middle_name,last_names, number, profile_image_link,
+    height_inches, study_program, school_of_precedence, years_of_participation,
+    positions[], categories[]
+    """
     def mapTeamMembersToDict(self,record):
 
         # {
@@ -62,6 +68,12 @@ class TeamHandler():
         #         "last_names":"Wayne",
         #         "number":27,
         #         "profile_image_link":"www.google.com",
+        #         "height_inches":70,
+        #         "study_program": "detective",
+        #         "school_of_precedence":"gotham high",
+        #         "years_of_participation":3,
+        #         "positions":["position1","position2"],
+        #         "categories":["category1","category2"]
         #     },
         #     {
         #         "team_member_id":2,
@@ -71,12 +83,30 @@ class TeamHandler():
         #         "last_names":"Kent",
         #         "number":3,
         #         "profile_image_link":"www.google.com",
+        #         "height_inches":70,
+        #         "study_program": "reporter",
+        #         "school_of_precedence":"smallville high",
+        #         "years_of_participation":3,
+        #         "positions":["position1","position2"],
+        #         "categories":["category1","category2"]
         #     }
         #     ]
         # }
 
         team_members = []
         for team_member in record:
+            positions_list = []
+            categories_list = []
+            for position in team_member[12]:
+                if position is not None:
+                    positions_list.append(position)
+            if len(positions_list) == 0:
+                positions_list = None
+            for category in team_member[13]:
+                if category is not None:
+                    categories_list.append(category)
+            if len(categories_list) == 0:
+                categories_list = None
             team_id = team_member[1]
             team_members.append(dict(
                 team_members_id = team_member[0], 
@@ -85,7 +115,13 @@ class TeamHandler():
                 middle_name = team_member[4], 
                 last_names = team_member[5], 
                 number = team_member[6], 
-                profile_image_link = team_member[7]
+                profile_image_link = team_member[7],
+                height_inches= team_member[8],
+                study_program= team_member[9],
+                school_of_precedence= team_member[10],
+                years_of_participation= team_member[11],
+                positions = positions_list,
+                categories = categories_list
                 ))
 
         result = dict(team_id = team_id, team_members = team_members)
@@ -319,6 +355,13 @@ class TeamHandler():
 
         return jsonify(Team = mappedResult)
     
+    """
+    team_members_id, team_id, athlete_id, 
+    first_name,middle_name,last_names, number, profile_image_link,
+    height_inches, study_program, school_of_precedence, years_of_participation,
+    positions[], categories[]
+    """
+
     def getTeamMembersByID(self, tID):
         """
         Gets the team members in the system that match the given team.  
