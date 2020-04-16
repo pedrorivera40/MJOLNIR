@@ -9,9 +9,7 @@ export default {
             for (let i = 1; i <= 5; i++) {
                 // Async functions for UPRM scores.
                 await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-uprm").on('value', function (snapshot) {
-                    console.log(snapshot.val());
                     commit("UPDATE_UPRM_SET" + i, snapshot)
-                    console.log(snapshot.val());
                 });
                 // Async functions for opponent scores.
                 await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-opponent").on('value', function (snapshot) {
@@ -117,17 +115,21 @@ export default {
 
             // Handle roster additions.
             await rtdb().ref("/v1/" + event_id + "/game-actions").on('child_added', function (snapshot) {
-                commit("ADD_GAME_ACTION", snapshot.key, snapshot.val());
+                let action = snapshot.val();
+                action.key = snapshot.key;
+                commit("ADD_GAME_ACTION", action);
             });
 
             // Handle roster updates.
             await rtdb().ref("/v1/" + event_id + "/game-actions").on('child_changed', function (snapshot) {
-                commit("UPDATE_GAME_ACTION", snapshot.key, snapshot.val())
+                let action = snapshot.val();
+                action.key = snapshot.key;
+                commit("UPDATE_GAME_ACTION", action);
             });
 
             // Handle roster removals.
             await rtdb().ref("/v1/" + event_id + "/game-actions").on('child_removed', function (snapshot) {
-                commit("REMOVE_GAME_ACTION", snapshot.key)
+                commit("REMOVE_GAME_ACTION", snapshot.key);
             });
 
         } catch (error) {

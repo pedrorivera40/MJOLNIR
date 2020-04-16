@@ -43,13 +43,13 @@
           <v-row justify="center">
             <v-card-title>Lista de Jugadas</v-card-title>
           </v-row>
-          <v-container v-for="action in actions" :key="action.id">
+          <v-container v-for="action in gameActions" :key="action.key">
             <VolleyballGameAction
               v-if="action.action_type === notification"
               align="center"
               justify="center"
               :action_type="action.action_type"
-              :message="action.text"
+              :message="action.message"
               :athlete_number="action.athlete_number"
               :athlete_name="action.athlete_name"
               :athlete_img="action.athlete_img"
@@ -205,10 +205,6 @@ export default {
     sport_name: "Voleibol",
     uprm_team_name: "Tarzanes",
     opponent_team_name: "Gallitos",
-    scores: {
-      uprm: [0, 0, 0, 0, 0],
-      opp: [0, 0, 0, 0, 0]
-    },
     actions: [
       {
         id: 1,

@@ -15,11 +15,12 @@ export default () => ({
     oppSet4: 0,
     oppSet5: 0,
 
+    gameActions: [], // List of game actions (notifications and plays...)
+
     uprmRoster: [], // List of UPRM athletes for this match.
     oppRoster: [], // List of opponent athletes for this match.
     gameOver: false, // Denotes if the game is over.
     oppColor: "", // Keeps track of the opponent team color (for UI purposes).
-    gameActions: [], // List of game actions (notifications and plays...)
 
     // uprmStatistics: {}, // Keep collective UPRM statistics for this match.
     // uprmAthleteStatistics: {}, // For each UPRM athlete, keeps their individual stats for this match.
