@@ -9,7 +9,8 @@
                             color="grey"
                             size="150"                                                                                                                                                                                    
                     >       
-                            <v-img :src="profile_image_link"></v-img>
+                            <v-icon v-if="profile_image_link == null" height="100"> mdi-account </v-icon>
+                            <v-img v-else :src="profile_image_link"/>
                                                                                             
                     </v-avatar> 																					
                 </v-col>
@@ -17,7 +18,7 @@
                     <h2>{{first_name}} {{middle_name}} {{last_names}} </h2>
                     <v-row>
                         <v-col md=5>
-                            <span class="text"><b>Estatura:</b> {{height_feet}}' {{height_inches}}" </span>
+                            <span class="text"><b>Estatura:</b>{{height_inches}}" </span>
                             <v-spacer/>	
                             <span class="text"><b>Programa de Estudio:</b> {{study_program}} </span>	
                             <v-spacer/>
@@ -28,8 +29,6 @@
 
                         <v-col md=4>
                             <v-spacer/>
-                            <span class="text"><b>Deporte:</b> {{sport}}</span>
-                            <v-spacer/>	
                             <span class="text"><b>Numero:</b> {{number}}</span>
                             <v-spacer/>
                             <h4> Posiciones: </h4>
@@ -61,18 +60,13 @@ export default {
       first_name: String,
       middle_name: String,
       last_names:String,
-      short_bio:String,
-      height_feet:String,
 	  height_inches:String,
       study_program:String,
-      date_of_birth:String,
       school_of_precedence:String,
       athlete_positions:[String],
       athlete_categories:[String],      
       number:String,
-      profile_image_link:String,
-      sport:String,    
-      branch:String, 
+      profile_image_link:String,  
       years_of_participation:String,
     },//end of data()
     methods:{

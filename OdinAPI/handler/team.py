@@ -44,11 +44,18 @@ class TeamHandler():
         team_info['sport_name'] = record[4]
         team_info['branch_id'] = record[5]
         team_info['branch_name'] = record[6]
+        team_info['about_team'] = record[7]
 
         result = dict(team_info = team_info)
         return result
 
     #NEW
+    """
+    team_members_id, team_id, athlete_id, 
+    first_name,middle_name,last_names, number, profile_image_link,
+    height_inches, study_program, school_of_precedence, years_of_participation,
+    positions[], categories[]
+    """
     def mapTeamMembersToDict(self,record):
 
         # {
@@ -62,6 +69,12 @@ class TeamHandler():
         #         "last_names":"Wayne",
         #         "number":27,
         #         "profile_image_link":"www.google.com",
+        #         "height_inches":70,
+        #         "study_program": "detective",
+        #         "school_of_precedence":"gotham high",
+        #         "years_of_participation":3,
+        #         "positions":["position1","position2"],
+        #         "categories":["category1","category2"]
         #     },
         #     {
         #         "team_member_id":2,
@@ -71,12 +84,30 @@ class TeamHandler():
         #         "last_names":"Kent",
         #         "number":3,
         #         "profile_image_link":"www.google.com",
+        #         "height_inches":70,
+        #         "study_program": "reporter",
+        #         "school_of_precedence":"smallville high",
+        #         "years_of_participation":3,
+        #         "positions":["position1","position2"],
+        #         "categories":["category1","category2"]
         #     }
         #     ]
         # }
 
         team_members = []
         for team_member in record:
+            positions_list = []
+            categories_list = []
+            for position in team_member[12]:
+                if position is not None:
+                    positions_list.append(position)
+            if len(positions_list) == 0:
+                positions_list = None
+            for category in team_member[13]:
+                if category is not None:
+                    categories_list.append(category)
+            if len(categories_list) == 0:
+                categories_list = None
             team_id = team_member[1]
             team_members.append(dict(
                 team_members_id = team_member[0], 
@@ -85,7 +116,13 @@ class TeamHandler():
                 middle_name = team_member[4], 
                 last_names = team_member[5], 
                 number = team_member[6], 
-                profile_image_link = team_member[7]
+                profile_image_link = team_member[7],
+                height_inches= team_member[8],
+                study_program= team_member[9],
+                school_of_precedence= team_member[10],
+                years_of_participation= team_member[11],
+                positions = positions_list,
+                categories = categories_list
                 ))
 
         result = dict(team_id = team_id, team_members = team_members)
@@ -319,6 +356,13 @@ class TeamHandler():
 
         return jsonify(Team = mappedResult)
     
+    """
+    team_members_id, team_id, athlete_id, 
+    first_name,middle_name,last_names, number, profile_image_link,
+    height_inches, study_program, school_of_precedence, years_of_participation,
+    positions[], categories[]
+    """
+
     def getTeamMembersByID(self, tID):
         """
         Gets the team members in the system that match the given team.  
@@ -400,7 +444,7 @@ class TeamHandler():
         return jsonify(Team = mappedResult)
     #===========================//II.POSTS//====================================
     #update: image link was missing? tRoster removed, separate
-    def addTeam(self,sID,tYear,tImageLink): 
+    def addTeam(self,sID,tYear,tImageLink,aboutTeam): 
         """
         Adds a new team with the provided information.
 
@@ -411,6 +455,7 @@ class TeamHandler():
             sID: the sport id of the team to be added
             tYear: the season year of the team to be added
             tImageLink: the image link for the team
+            aboutTeam: short description about team
             
         Returns:
             A JSON containing the id for the new Team record.
@@ -437,7 +482,7 @@ class TeamHandler():
             # edit team member
             team_id = invalid_duplicate[0]
             try: 
-                result = dao.editTeamByYear(sID,tYear,tImageLink)
+                result = dao.editTeamByYear(sID,tYear,tImageLink,aboutTeam)
                 if not result:
                     return jsonify(Error = "Problem updating team record."),500
             except:
@@ -447,7 +492,7 @@ class TeamHandler():
         else:
             #add the team
             try:
-                team_id = dao.addTeam(sID,tYear,tImageLink)
+                team_id = dao.addTeam(sID,tYear,tImageLink,aboutTeam)
                 if not team_id:
                     return jsonify(Error = "Problem inserting new team record."),500
             except:
@@ -606,7 +651,7 @@ class TeamHandler():
         return jsonify(Team = "Added athlete id:{} as a team member of team with id:{}".format(aID,tID,))
     #===========================//III.PUTS//====================================
 
-    def editTeam(self,tID,tImageLink):
+    def editTeam(self,tID,tImageLink,aboutTeam):
         """"
         Updates the team with the given ID.
 
@@ -617,6 +662,7 @@ class TeamHandler():
         Args:
             tID: the id of the team to be updated
             tImagelINK: the updated image link
+            aboutTeam: short description about team
             
         Returns:
             A JSON containing the the updated entry.
@@ -653,7 +699,7 @@ class TeamHandler():
         dao.commitChanges()
         return jsonify(Team = mappedResult)
 
-    def editTeamByYear(self,sID,tYear,tImageLink):
+    def editTeamByYear(self,sID,tYear,tImageLink,aboutTeam):
         """"
         Updates the team with the given ID.
 
@@ -683,7 +729,7 @@ class TeamHandler():
         
         #edit the team
         try:
-            team_id = dao.editTeamByYear(sID,tYear,tImageLink)
+            team_id = dao.editTeamByYear(sID,tYear,tImageLink,aboutTeam)
             if not team_id:
                 return jsonify(Error = "Problem updating team record."),500
 
