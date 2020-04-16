@@ -1665,7 +1665,8 @@ def get_sport_info():
 # {
 # "sport_id":1,
 # "season_year":"2020",
-# "team_image_url":"www.google.com"
+# "team_image_url":"www.google.com",
+# "about_team":"hello we are cool"
 # }
 @app.route("/teams/", methods = ['GET','POST','PUT','DELETE'])
 def teamByYear():
@@ -1681,12 +1682,12 @@ def teamByYear():
             return handler.removeTeamByYear(json['sport_id'],json['season_year'])
     if (request.method == 'POST' or request.method == 'PUT'):
         #Validate POST/PUT Request Body
-        if ('sport_id' not in json or 'season_year' not in json or 'team_image_url' not in json):
+        if ('sport_id' not in json or 'season_year' not in json or 'team_image_url' not in json or 'about_team' not in json):
              return jsonify(Error='Bad Request'),400
         if request.method == 'POST':
-            return handler.addTeam(json['sport_id'],json['season_year'],json['team_image_url'])
+            return handler.addTeam(json['sport_id'],json['season_year'],json['team_image_url'],json['about_team'])
         if request.method == 'PUT':
-            return handler.editTeamByYear(json['sport_id'],json['season_year'],json['team_image_url'])
+            return handler.editTeamByYear(json['sport_id'],json['season_year'],json['team_image_url'],json['about_team'])
     
     else:
         return jsonify(Error="Method not allowed."), 405
