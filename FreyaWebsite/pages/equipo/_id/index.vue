@@ -18,7 +18,7 @@
         </v-col>
       </v-row>
       <v-row align="center"
-      justify="center">
+      justify="start">
         <v-col md=3>
           <v-select
             v-model="season"
@@ -98,7 +98,7 @@
                 v-slot:default="{ hover }"
                 close-delay="200"
               >
-                <athlete_simple
+                <AthleteCardSimple
                   :first_name="member.first_name"
                   :middle_name="member.middle_name"
                   :last_names="member.last_names"
@@ -171,10 +171,23 @@
             </v-tab-item>
           </v-tabs>
 
-        <v-tab-item>
+        
         </v-tab-item>
-      </v-tab-item>
-			
+        <v-tab-item>
+          <v-row>
+            <v-col v-for="(value,key) in events" :key=key md="3">
+          
+            <EventCardSimple      
+              :eventID="value.id"     
+              :eventDate="value.event_date"
+              opponentName='UPRP'
+              :localScore='value.local_score'
+              :opponentScore='value.opponent_score' 
+              eventSummary="El evento fue entretinido"
+            />        
+            </v-col>
+          </v-row>
+        </v-tab-item>
 			</v-tabs>
 		</v-container>        
 			
@@ -182,12 +195,12 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import athlete_simple from '~/components/athlete_simple.vue'
+import EventCardSimple from '~/components/EventCardSimple'
+import AthleteCardSimple from '~/components/AthleteCardSimple.vue'
 export default {
   components: {
-    Logo,
-    athlete_simple
+    AthleteCardSimple,
+    EventCardSimple:EventCardSimple
   },
 
 
@@ -273,6 +286,7 @@ export default {
         ],
 
       current_team:'',
+      events:[],
 
       }),//end of data()
     
@@ -782,6 +796,75 @@ export default {
           this.team_statistics_per_season.push(current_team_stats.Baseball_Event_Season_Team_Statistics)
         }
       },
+      getEvents(){
+        this.events =  [
+        {
+          "branch": "masculino",
+          "event_date": "Wed, 01 Apr 2020 00:00:00 GMT",
+          "id": 5,
+          "is_local": true,
+          "local_score": 5073,
+          "opponent_color": null,
+          "opponent_name": null,
+          "opponent_score": 1,
+          "sport_name": "Baloncesto",
+          "team_id": 1,
+          "venue": "Mangual"
+        },
+        {
+          "branch": "masculino",
+          "event_date": "Mon, 20 Apr 2020 00:00:00 GMT",
+          "id": 6,
+          "is_local": true,
+          "local_score": 0,
+          "opponent_color": null,
+          "opponent_name": null,
+          "opponent_score": 0,
+          "sport_name": "Baloncesto",
+          "team_id": 1,
+          "venue": "Espada"
+        },
+        {
+          "branch": "masculino",
+          "event_date": "Mon, 23 Mar 2020 00:00:00 GMT",
+          "id": 3,
+          "is_local": false,
+          "local_score": 200,
+          "opponent_color": "red",
+          "opponent_name": null,
+          "opponent_score": 500,
+          "sport_name": "Baloncesto",
+          "team_id": 1,
+          "venue": "Mangual"
+        },
+        {
+          "branch": "masculino",
+          "event_date": "Mon, 16 Mar 2020 00:00:00 GMT",
+          "id": 17,
+          "is_local": false,
+          "local_score": null,
+          "opponent_color": "black",
+          "opponent_name": null,
+          "opponent_score": null,
+          "sport_name": "Baloncesto",
+          "team_id": 1,
+          "venue": "Choliseo"
+        },
+        {
+          "branch": "masculino",
+          "event_date": "Sat, 14 Mar 2020 00:00:00 GMT",
+          "id": 4,
+          "is_local": true,
+          "local_score": null,
+          "opponent_color": null,
+          "opponent_name": null,
+          "opponent_score": null,
+          "sport_name": "Baloncesto",
+          "team_id": 1,
+          "venue": "Espada"
+        }
+      ]
+      },
 			getSeasonData(){
         //console.log(this.season)
 				if(this.season!=''){
@@ -1041,7 +1124,7 @@ export default {
             }
           } 
           this.getMembersData()
-
+          this.getEvents()
 
         // <v-data-table 
         //   dense 

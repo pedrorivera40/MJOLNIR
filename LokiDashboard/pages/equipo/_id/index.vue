@@ -57,14 +57,6 @@
 						ATLETAS
 				</v-tab>
 
-				<v-tab>
-						ESTADÍSTICAS
-				</v-tab>
-
-        <v-tab>
-						EVENTOS
-				</v-tab>
-
 				<v-tab-item>
 				
 						<v-card class="mx-auto" outlined>								
@@ -118,7 +110,7 @@
                 v-slot:default="{ hover }"
                 close-delay="200"
               >
-                <athlete_simple
+                <AthleteCardSimple
                   :first_name="member.first_name"
                   :middle_name="member.middle_name"
                   :last_names="member.last_names"
@@ -149,59 +141,6 @@
             </v-col>
           </v-row>
         </v-tab-item>
-        
-				<v-tab-item>
-          <v-tabs
-              centered
-          >
-            <v-tabs-slider/>
-            <v-tab>
-                POR ATLETA
-            </v-tab>
-
-            <v-tab>
-                POR EQUIPO
-            </v-tab>
-
-            <!-- TODO: need to make it so the table "by athlete" has the season statistics OF EACH ATHLETE. Show athlete name and maaaybe pic. -->
-            <!-- TODO: need to make it so the table "by team" doesnt have date, just the general statistics of the team for the season. -->
-            <v-tab-item>				
-                <v-card flat>
-                  <!-- Basketball Table -->
-                  <v-data-table 
-                    dense 
-                    :headers="headers" 
-                    :items="statistics_per_season.season_stats" 
-                    item-key="season_stats" 
-                    class="elevation-1"								
-                    loading-text="Recolectando Data...Por favor espere"
-                    v-if="statistics_per_season != ''"
-                  >			
-                  </v-data-table>
-
-                </v-card>
-            
-            </v-tab-item>
-            <v-tab-item>
-              <v-card flat>
-                  <v-data-table 
-                    dense 
-                    :headers="team_headers" 
-                    :items="team_statistics_per_season" 
-                    item-key="team_statistics_per_season" 
-                    class="elevation-1"								
-                    loading-text="Recolectando Data...Por favor espere"
-                    v-if="team_statistics_per_season != ''"
-                  >			
-                  </v-data-table>
-
-                </v-card>
-            </v-tab-item>
-          </v-tabs>
-
-        <v-tab-item>
-        </v-tab-item>
-      </v-tab-item>
 			
 			</v-tabs>
 		</v-container>        
@@ -210,12 +149,12 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import athlete_simple from '~/components/athlete_simple.vue'
+import EventCard from '~/components/EventCard'
+import AthleteCardSimple from '~/components/AthleteCardSimple.vue'
 export default {
   components: {
-    Logo,
-    athlete_simple
+    AthleteCardSimple,
+    EventCard:EventCard
   },
 
 
@@ -299,9 +238,7 @@ export default {
             team_image_url: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53255400_2150742488347907_5032536115572113408_o.jpg?_nc_cat=110&_nc_sid=cdbe9c&_nc_oc=AQlAZzUmMDbfLqJXSfAOlDAoP7_pyp58sPqPJ1MLE9-JgUtmldcr3NEq3OcNJMZEgt8&_nc_ht=scontent-mia3-2.xx&oh=9ca5fa4bb6ee0bdc1acb52841855cf6f&oe=5EB61445',
           },
         ],
-
       current_team:'',
-
       }),//end of data()
     
     created(){
@@ -310,7 +247,6 @@ export default {
       this.buildDefaultValues()
       this.buildTable()
       this.getSeasonData()
-      
     }, 
 
 		methods: {
@@ -397,8 +333,8 @@ export default {
           {text: 'Reception Errors', value: 'Event_Statistics.reception_errors'},
     
           ]
-      }
-      else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+        }
+        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
           this.headers = 
           [
           {
@@ -426,8 +362,8 @@ export default {
           {text: 'Tackles', value: 'Event_Statistics.tackles'},
           
           ]
-      }
-      else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+        }
+        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
           this.headers = 
           [
           {
@@ -826,6 +762,7 @@ export default {
           this.team_statistics_per_season.push(current_team_stats.Baseball_Event_Season_Team_Statistics)
         }
       },
+     
 			getSeasonData(){
         //console.log(this.season)
 				if(this.season!=''){
@@ -1085,6 +1022,7 @@ export default {
             }
           } 
           this.getMembersData()
+          
 
 
         // <v-data-table 
