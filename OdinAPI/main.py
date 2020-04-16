@@ -126,6 +126,8 @@ def athletePositions(sid, aid):
 ###########################################
 @app.route("/auth/", methods=['POST'])
 def auth():
+    if request.json == None:
+        return jsonify(Error='Bad Request'), 400
     if request.method == 'POST':
         handler = UserHandler() 
         req = request.json
@@ -143,6 +145,8 @@ def auth():
 @app.route("/users/", methods=['GET', 'POST'])
 # @token_check
 def allUsers():
+    if request.json == None:
+        return jsonify(Error='Bad Request'), 400
     handler = UserHandler()
     if request.method == 'GET':
         # For user list display
@@ -161,6 +165,8 @@ def allUsers():
 @app.route("/users/<int:duid>", methods=['GET', 'PATCH'])
 # @token_check
 def userByID(duid):
+    if request.json == None:
+        return jsonify(Error='Bad Request'), 400
     handler = UserHandler()
     req = request.json
     if request.method == 'GET':
@@ -178,6 +184,8 @@ def userByID(duid):
 @app.route("/users/username/", methods=['POST'])
 # @token_check
 def getUserByUsername():
+    if request.json == None:
+        return jsonify(Error='Bad Request'), 400
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
@@ -191,6 +199,8 @@ def getUserByUsername():
 @app.route("/users/email/", methods=['POST'])
 # @token_check
 def getUserByEmail():
+    if request.json == None:
+        return jsonify(Error='Bad Request'), 400
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
@@ -203,6 +213,8 @@ def getUserByEmail():
 @app.route("/users/<int:duid>/reset", methods=['PATCH'])
 # @token_check
 def passwordReset(duid):
+    if request.json == None:
+        return jsonify(Error='Bad Request'), 400
     handler = UserHandler()
     req = request.json
     if request.method == 'PATCH':
@@ -214,8 +226,10 @@ def passwordReset(duid):
 
 @app.route("/users/activate", methods=['PATCH'])
 def accountUnlock():
-    handler = UserHandler()
+    if request.json == None:
+        return jsonify(Error='Bad Request'), 400
     req = request.json
+    handler = UserHandler()
     if request.method == 'PATCH':
         ## For acount unlock
         ## Check the request contains the right structure.
@@ -245,6 +259,8 @@ def removeUser(duid):
 @app.route("/users/<string:duid>/permissions",  methods=['GET', 'PATCH'])
 # @token_check
 def userPermissions(duid):
+    if request.json == None:
+        return jsonify(Error='Bad Request'), 400
     handler = UserHandler()
     if request.method == 'GET':
         return handler.getUserPermissions(duid,'request')
