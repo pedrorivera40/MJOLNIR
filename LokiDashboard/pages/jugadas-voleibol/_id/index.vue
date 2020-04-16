@@ -10,8 +10,8 @@
         <VolleyballScore
           uprm_team="UPRM"
           opp_team="UPRM-RP"
-          :uprm_score="0"
-          :opp_score="0"
+          :uprm_score="uprmScore"
+          :opp_score="oppScore"
           :current_set="currentSet"
           :current_uprm_score="currentUPRMSet"
           :current_opp_score="currentOppSet"
@@ -553,6 +553,8 @@ export default {
       currentUPRMSet: "volleyballPBP/currentUPRMSet",
       currentOppSet: "volleyballPBP/currentOppSet",
       currentSet: "volleyballPBP/currentSet",
+      uprmScore: "volleyballPBP/uprmScore",
+      oppScore: "volleyballPBP/oppScore",
       uprmRoster: "volleyballPBP/uprmRoster",
       oppRoster: "volleyballPBP/oppRoster",
       gameOver: "volleyballPBP/gameOver",
