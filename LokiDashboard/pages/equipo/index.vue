@@ -10,9 +10,12 @@
 			<v-spacer />
 		</v-toolbar>
 		<v-container>
-      <v-row align="center"
-      justify="center">
-        <h1>Tarzanes</h1>
+      <v-col>
+      </v-col>
+      <v-row align="center">
+        <v-col justify="center" align="center">
+          <h1>Tarzanes</h1>
+        </v-col>
       </v-row>
       <v-row align="center"
       justify="center">
@@ -80,8 +83,10 @@
                   </v-carousel>		
                 </v-row> -->
                 <v-row>
-                  <v-img :src="current_team.team_image_url" aspect-ratio="2"> 
-                  </v-img>
+                  <v-col>
+                    <v-img :src="current_team.team_image_url" aspect-ratio="2"> 
+                    </v-img>
+                  </v-col>
                 </v-row>
 								<v-row>
 									<v-col>
