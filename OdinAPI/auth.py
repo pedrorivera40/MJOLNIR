@@ -42,7 +42,7 @@ def rulesMatch(password):
     # Return true if it matches false if it does not.
     if match:
         return True
-    return False
+    return False  
 
 # Uses BCrypt hashing algorithm to hash a password given with
 # the amount of rounds specified in the gensalt() method
