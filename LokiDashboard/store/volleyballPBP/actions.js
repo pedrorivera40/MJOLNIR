@@ -40,17 +40,18 @@ export default {
 
             // Handle roster additions.
             await rtdb().ref("/v1/" + event_id + "/uprm-roster").on('child_added', function (snapshot) {
-                commit("ADD_UPRM_ROSTER", snapshot.val())
+                console.log(snapshot.key);
+                commit("ADD_UPRM_ROSTER", snapshot.key, snapshot.val())
             });
 
             // Handle roster updates.
             await rtdb().ref("/v1/" + event_id + "/uprm-roster").on('child_changed', function (snapshot) {
-                commit("UPDATE_UPRM_ROSTER", snapshot.val())
+                commit("UPDATE_UPRM_ROSTER", snapshot.key, snapshot.val())
             });
 
             // Handle roster removals.
             await rtdb().ref("/v1/" + event_id + "/uprm-roster").on('child_removed', function (snapshot) {
-                commit("REMOVE_UPRM_ROSTER", snapshot.val())
+                commit("REMOVE_UPRM_ROSTER", snapshot.key)
             });
 
         } catch (error) {
@@ -69,9 +70,7 @@ export default {
 
             // Handle roster updates.
             await rtdb().ref("/v1/" + event_id + "/opponent-roster").on('child_changed', function (snapshot) {
-                let id = snapshot.get();
-                let content = snapshot.val();
-                commit("UPDATE_OPP_ROSTER", snapshot.get())
+                commit("UPDATE_OPP_ROSTER", snapshot.val())
             });
 
             // Handle roster removals.
@@ -107,6 +106,30 @@ export default {
 
         } catch (error) {
             dispatch('notifications/setSnackbar', { text: "Unable to retrieve opponent color from RTDB.", color: "error" }, { root: true });
+        }
+    },
+
+    // Set async function for handling Firebase game action updates.
+    async getGameActions({ commit, dispatch }, event_id) {
+        try {
+
+            // Handle roster additions.
+            await rtdb().ref("/v1/" + event_id + "/game-actions").on('child_added', function (snapshot) {
+                commit("ADD_GAME_ACTION", snapshot.val());
+            });
+
+            // Handle roster updates.
+            await rtdb().ref("/v1/" + event_id + "/game-actions").on('child_changed', function (snapshot) {
+                commit("UPDATE_GAME_ACTION", snapshot.val())
+            });
+
+            // Handle roster removals.
+            await rtdb().ref("/v1/" + event_id + "/game-actions").on('child_removed', function (snapshot) {
+                commit("REMOVE_GAME_ACTION", snapshot.val())
+            });
+
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: "Error retrieving game actions update from RTDB.", color: "error" }, { root: true });
         }
     },
 }

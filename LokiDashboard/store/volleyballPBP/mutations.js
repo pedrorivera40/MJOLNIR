@@ -12,44 +12,44 @@ export default {
         state.currentSet = set
     },
 
-    ADD_UPRM_ROSTER(state, athlete) {
-        state.uprmRoster.push(athlete);
+    ADD_UPRM_ROSTER(state, key, value) {
+        state.uprmRoster.push([key, value]);
     },
 
-    UPDATE_UPRM_ROSTER(state, athlete) {
+    UPDATE_UPRM_ROSTER(state, key, value) {
         for (index in state.uprmRoster) {
-            if (state.uprmRoster[index].id === athlete.id) {
-                state.uprmRoster[index] = athlete;
+            if (state.uprmRoster[index][0] === key) {
+                state.uprmRoster[index][1] = value;
                 break;
             }
         }
     },
 
-    REMOVE_UPRM_ROSTER(state, athlete) {
+    REMOVE_UPRM_ROSTER(state, key) {
         for (index in state.uprmRoster) {
-            if (state.uprmRoster[index].id === athlete.id) {
+            if (state.uprmRoster[index][0] === key) {
                 state.uprmRoster = state.uprmRoster.splice(index, index + 1);
                 break;
             }
         }
     },
 
-    ADD_OPP_ROSTER(state, athlete) {
-        state.oppRoster.push(athlete);
+    ADD_OPP_ROSTER(state, key, value) {
+        state.oppRoster.push([key, value]);
     },
 
-    UPDATE_OPP_ROSTER(state, athlete) {
+    UPDATE_OPP_ROSTER(state, key, value) {
         for (index in state.oppRoster) {
-            if (state.oppRoster[index].id === athlete.id) {
-                state.oppRoster[index] = athlete;
+            if (state.oppRoster[index][0] === key) {
+                state.oppRoster[index][1] = value;
                 break;
             }
         }
     },
 
-    REMOVE_OPP_ROSTER(state, athlete) {
-        for (index in state.uprmRoster) {
-            if (state.oppRoster[index].id === athlete.id) {
+    REMOVE_OPP_ROSTER(state, key) {
+        for (index in state.oppRoster) {
+            if (state.oppRoster[index][0] === key) {
                 state.oppRoster = state.oppRoster.splice(index, index + 1);
                 break;
             }
