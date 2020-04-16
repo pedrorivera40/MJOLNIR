@@ -10,18 +10,17 @@
           </v-avatar>
         </v-col>
          <v-col md=9>
-          <v-card-title >  Nombre: {{firstName}} <br/> {{lastNames}}</v-card-title>
-          <v-card-subtitle >
+          <v-card-title>  Nombre: {{firstName}} <br/> {{lastNames}}</v-card-title>
+          <v-card-subtitle>
             Deporte: {{sportName}} 
           </v-card-subtitle>
-          <v-card-actions >
+          <v-card-actions>
             <v-btn  @click="goToAthlete">
               <v-icon> mdi-eye-plus-outline </v-icon>            
             </v-btn>       
           </v-card-actions>
         </v-col>
-      </v-row>      
-      
+      </v-row>     
       
     </v-container>
 

@@ -3,7 +3,7 @@
     <v-img
       v-if="img != ''"
       class="black--text"
-      width="300px"
+      width="400px"
       height="300px"
       :src="img"
     >
