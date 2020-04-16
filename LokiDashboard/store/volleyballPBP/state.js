@@ -2,21 +2,9 @@
 // TODO -> Add default team statistics JSON.
 export default () => ({
     currentSet: 0, // Current Volleyball game set (1, 2, 3, 4, 5).
-    // UPRM set scores.
-    uprmSet1: 0,
-    uprmSet2: 0,
-    uprmSet3: 0,
-    uprmSet4: 0,
-    uprmSet5: 0,
-    // Opponent set scores.
-    oppSet1: 0,
-    oppSet2: 0,
-    oppSet3: 0,
-    oppSet4: 0,
-    oppSet5: 0,
-
+    uprmSets: [0, 0, 0, 0, 0], // UPRM set scores.
+    oppSets: [0, 0, 0, 0, 0], // Opponent set scores.
     gameActions: [], // List of game actions (notifications and plays...)
-
     uprmRoster: [], // List of UPRM athletes for this match.
     oppRoster: [], // List of opponent athletes for this match.
     gameOver: false, // Denotes if the game is over.

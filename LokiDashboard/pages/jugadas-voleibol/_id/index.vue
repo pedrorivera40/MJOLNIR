@@ -104,19 +104,19 @@
                     <tbody>
                       <tr :key="uprm_team_name">
                         <td class="text-center">{{ uprm_team_name }}</td>
-                        <td class="text-center">{{ uprmSet1 }}</td>
-                        <td class="text-center">{{ uprmSet2 }}</td>
-                        <td class="text-center">{{ uprmSet3 }}</td>
-                        <td class="text-center">{{ uprmSet4 }}</td>
-                        <td class="text-center">{{ uprmSet5 }}</td>
+                        <td class="text-center">{{ uprmSets[0] }}</td>
+                        <td class="text-center">{{ uprmSets[1] }}</td>
+                        <td class="text-center">{{ uprmSets[2] }}</td>
+                        <td class="text-center">{{ uprmSets[3] }}</td>
+                        <td class="text-center">{{ uprmSets[4] }}</td>
                       </tr>
                       <tr :key="opponent_team_name">
                         <td class="text-center">{{ opponent_team_name }}</td>
-                        <td class="text-center">{{ oppSet1 }}</td>
-                        <td class="text-center">{{ oppSet2 }}</td>
-                        <td class="text-center">{{ oppSet3 }}</td>
-                        <td class="text-center">{{ oppSet4 }}</td>
-                        <td class="text-center">{{ oppSet5 }}</td>
+                        <td class="text-center">{{ oppSets[0] }}</td>
+                        <td class="text-center">{{ oppSets[1] }}</td>
+                        <td class="text-center">{{ oppSets[2] }}</td>
+                        <td class="text-center">{{ oppSets[3] }}</td>
+                        <td class="text-center">{{ oppSets[4] }}</td>
                       </tr>
                     </tbody>
                   </template>
@@ -577,16 +577,18 @@ export default {
   computed: {
     // Functions for getting values in the data models.
     ...mapGetters({
-      uprmSet1: "volleyballPBP/uprmSet1",
-      uprmSet2: "volleyballPBP/uprmSet2",
-      uprmSet3: "volleyballPBP/uprmSet3",
-      uprmSet4: "volleyballPBP/uprmSet4",
-      uprmSet5: "volleyballPBP/uprmSet5",
-      oppSet1: "volleyballPBP/oppSet1",
-      oppSet2: "volleyballPBP/oppSet2",
-      oppSet3: "volleyballPBP/oppSet3",
-      oppSet4: "volleyballPBP/oppSet4",
-      oppSet5: "volleyballPBP/oppSet5",
+      // uprmSet1: "volleyballPBP/uprmSet1",
+      // uprmSet2: "volleyballPBP/uprmSet2",
+      // uprmSet3: "volleyballPBP/uprmSet3",
+      // uprmSet4: "volleyballPBP/uprmSet4",
+      // uprmSet5: "volleyballPBP/uprmSet5",
+      // oppSet1: "volleyballPBP/oppSet1",
+      // oppSet2: "volleyballPBP/oppSet2",
+      // oppSet3: "volleyballPBP/oppSet3",
+      // oppSet4: "volleyballPBP/oppSet4",
+      // oppSet5: "volleyballPBP/oppSet5",
+      uprmSets: "volleyballPBP/uprmSets",
+      oppSets: "volleyballPBP/oppSets",
       uprmSetScore: "volleyballPBP/uprmSetScore",
       oppSetScore: "volleyballPBP/oppSetScore",
       currentSet: "volleyballPBP/currentSet",

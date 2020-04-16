@@ -9,11 +9,13 @@ export default {
             for (let i = 1; i <= 5; i++) {
                 // Async functions for UPRM scores.
                 await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-uprm").on('value', function (snapshot) {
-                    commit("UPDATE_UPRM_SET" + i, snapshot)
+                    let entry = { set: i, score: snapshot.val() };
+                    commit("UPDATE_UPRM_SET", entry)
                 });
                 // Async functions for opponent scores.
                 await rtdb().ref("/v1/" + event_id + "/score/set" + i + "-opponent").on('value', function (snapshot) {
-                    commit("UPDATE_OPP_SET" + i, snapshot)
+                    let entry = { set: i, score: snapshot.val() };
+                    commit("UPDATE_OPP_SET", entry)
                 });
             }
 
@@ -41,12 +43,16 @@ export default {
 
             // Handle roster additions.
             await rtdb().ref("/v1/" + event_id + "/uprm-roster").on('child_added', function (snapshot) {
-                commit("ADD_UPRM_ROSTER", snapshot.key, snapshot.val());
+                let athlete = snapshot.val();
+                athlete.key = snapshot.key;
+                commit("ADD_UPRM_ROSTER", athlete);
             });
 
             // Handle roster updates.
             await rtdb().ref("/v1/" + event_id + "/uprm-roster").on('child_changed', function (snapshot) {
-                commit("UPDATE_UPRM_ROSTER", snapshot.key, snapshot.val());
+                let athlete = snapshot.val();
+                athlete.key = snapshot.key;
+                commit("UPDATE_UPRM_ROSTER", athlete);
             });
 
             // Handle roster removals.
@@ -65,12 +71,16 @@ export default {
 
             // Handle roster additions.
             await rtdb().ref("/v1/" + event_id + "/opponent-roster").on('child_added', function (snapshot) {
-                commit("ADD_OPP_ROSTER", snapshot.key, snapshot.val());
+                let athlete = snapshot.val();
+                athlete.key = snapshot.key;
+                commit("ADD_OPP_ROSTER", athlete);
             });
 
             // Handle roster updates.
             await rtdb().ref("/v1/" + event_id + "/opponent-roster").on('child_changed', function (snapshot) {
-                commit("UPDATE_OPP_ROSTER", snapshot.key, snapshot.val());
+                let athlete = snapshot.val();
+                athlete.key = snapshot.key;
+                commit("UPDATE_OPP_ROSTER", athlete);
             });
 
             // Handle roster removals.
