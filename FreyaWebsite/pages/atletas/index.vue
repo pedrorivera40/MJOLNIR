@@ -63,7 +63,7 @@
   </v-row>
 
   <v-row v-else>
-    <v-col v-for="(value,key) in athletes" :key=key md="5">
+    <v-col v-for="(value,key) in athletes" :key=key md="3">
    
     <AthleteCard     
       :athleteID="value.id"  
