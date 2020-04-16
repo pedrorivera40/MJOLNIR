@@ -228,9 +228,9 @@ export default {
 
       sport:'Baloncesto',     
 			branch:'Masculino', 
-      sport_id:4,
+      sport_id:'',
 			season:'',
-			seasonsseasons:['2020'],
+			// seasonsseasons:['2020'],
       headers:[],
       team_headers:[],
       // [//Need to dynamically buid this after fetchin data.Might hardcode this depending on the sport.
@@ -273,6 +273,8 @@ export default {
       SOFTBALL_IDF: 16, 
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
+
+      
 
     //Get all teams from a given sport is necessary
     teams: [
@@ -475,15 +477,18 @@ export default {
       buildDefaultValues(){
         let currentYear = new Date(2023,8).getFullYear()
         this.defaultSelected.push({'season_year':currentYear})
+
+        this.sport_id = this.$route.params.id
+        
       },
       goToEditTeam(){
-            this.$router.push('/equipo/edit/')
+            this.$router.push('/equipo/:id/editar/')
         },
       goToCreateTeam(){
-            this.$router.push('/equipo/create/')
+            this.$router.push('/equipo/:id/crear/')
         },
       goToAddMembers(){
-            this.$router.push('/equipo/miembros/add/')
+            this.$router.push('/equipo/:id/miembros/anadir/')
         },
       // TODO: Implement the removes so they probly create a pop up for confirmation?
       removeMember(athlete_id){
