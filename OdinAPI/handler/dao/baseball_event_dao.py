@@ -333,8 +333,7 @@ class BaseballEventDAO:
                 with aggregate_query as(
                 SELECT
                 sum(at_bats) as at_bats,sum(runs) as runs, sum(hits) as hits,sum(runs_batted_in) as runs_batted_in,
-                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base
-                from valid_baseball_softball_events,
+                sum(base_on_balls) as base_on_balls,sum(strikeouts) as strikeouts,sum(left_on_base) as left_on_base,
                 baseball_softball_event.athlete_id
 
                 FROM baseball_softball_event
