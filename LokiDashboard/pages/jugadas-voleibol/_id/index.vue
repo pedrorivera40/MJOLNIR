@@ -7,7 +7,15 @@
     </v-toolbar>
     <v-container>
       <v-row align="center" justify="center">
-        <VolleyballScore></VolleyballScore>
+        <VolleyballScore
+          uprm_team="UPRM"
+          opp_team="UPRM-RP"
+          :uprm_score="0"
+          :opp_score="0"
+          :current_set="currentSet()"
+          :current_uprm_score="0"
+          :current_opp_score="0"
+        />
       </v-row>
       <v-row>
         <v-col>
@@ -164,7 +172,7 @@
                       :athlete_img="athlete.img"
                       :athlete_number="athlete.number"
                       :athlete_statistics="opp_team_statistics"
-                      :in_color="opp_color"
+                      :in_color="oppColor()"
                     />
                   </v-row>
                 </v-container>
@@ -226,7 +234,6 @@ export default {
           "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png"
       }
     ],
-    currentSet: 0,
     score: {
       uprm_set1: 0,
       opp_set1: 0,
@@ -557,7 +564,6 @@ export default {
       }
     ],
     uprm_color: "green",
-    opp_color: "red",
     notification: "Notification"
   }),
   methods: {
