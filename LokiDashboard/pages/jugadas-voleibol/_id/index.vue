@@ -136,10 +136,10 @@
               <v-tab>{{uprm_team_name}}</v-tab>
               <v-tab>{{opponent_team_name}}</v-tab>
               <v-tab-item>
-                <VolleyballStatistics :volleyball_stats="uprm_team_statistics" />
+                <VolleyballStatistics :volleyball_stats="uprmStatistics" />
               </v-tab-item>
               <v-tab-item>
-                <VolleyballStatistics :volleyball_stats="opp_team_statistics" />
+                <VolleyballStatistics :volleyball_stats="oppStatistics" />
               </v-tab-item>
             </v-tabs>
           </v-container>
@@ -158,7 +158,7 @@
                       :athlete_name="athlete.name"
                       :athlete_number="athlete.number"
                       :athlete_img="athlete.img"
-                      :athlete_statistics="uprm_team_statistics"
+                      :athlete_statistics="uprmStatistics"
                       :in_color="uprm_color"
                     />
                   </v-row>
@@ -171,7 +171,7 @@
                       :athlete_name="athlete.name"
                       :athlete_img="athlete.img"
                       :athlete_number="athlete.number"
-                      :athlete_statistics="opp_team_statistics"
+                      :athlete_statistics="oppStatistics"
                       :in_color="oppColor"
                     />
                   </v-row>
@@ -206,30 +206,6 @@ export default {
     uprm_team_name: "Tarzanes",
     opponent_team_name: "Gallitos",
 
-    uprm_team_statistics: {
-      killPoints: 0,
-      aces: 0,
-      blockPoints: 0,
-      assists: 0,
-      blocks: 0,
-      digs: 0,
-      attackErrors: 0,
-      serviceErrors: 0,
-      blockingErrors: 0,
-      receptionErrors: 0
-    },
-    opp_team_statistics: {
-      killPoints: 0,
-      aces: 0,
-      blockPoints: 0,
-      assists: 0,
-      blocks: 0,
-      digs: 0,
-      attackErrors: 0,
-      serviceErrors: 0,
-      blockingErrors: 0,
-      receptionErrors: 0
-    },
     uprm_roster: [
       {
         img:
@@ -559,7 +535,9 @@ export default {
       oppRoster: "volleyballPBP/oppRoster",
       gameOver: "volleyballPBP/gameOver",
       oppColor: "volleyballPBP/oppColor",
-      gameActions: "volleyballPBP/gameActions"
+      gameActions: "volleyballPBP/gameActions",
+      uprmStatistics: "volleyballPBP/uprmStatistics",
+      oppStatistics: "volleyballPBP/oppStatistics"
     })
   },
   beforeMount() {
