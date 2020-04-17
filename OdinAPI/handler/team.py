@@ -252,6 +252,8 @@ class TeamHandler():
             mappedResult =[]
             for team in result:
                 mappedResult.append(self.mapTeamToDict(team))
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
         
@@ -274,6 +276,8 @@ class TeamHandler():
         try:
             #TODO: validate sport
             pass
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify sport from DAO."), 500
 
@@ -285,6 +289,8 @@ class TeamHandler():
             mappedResult =[]
             for team in result:
                 mappedResult.append(self.mapTeamBasicToDict(team))
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
         
@@ -314,6 +320,8 @@ class TeamHandler():
             if not result:
                 return jsonify(Error = "Team not found with id:{}.".format(tID)),404
             mappedResult = self.mapTeamToDict(result)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
         
@@ -341,6 +349,8 @@ class TeamHandler():
             #TODO: validate sport
             #TODO: do we validate year? prob not, just an int. 
             pass
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify sport from DAO."), 500
 
@@ -351,6 +361,8 @@ class TeamHandler():
             if not result:
                 return jsonify(Error = "Team not found for Sport ID:{} and Season Year:{}.".format(sID,tYear)),404
             mappedResult = self.mapTeamToDict(result)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
 
@@ -382,6 +394,8 @@ class TeamHandler():
             dao = TeamDAO()
             if not dao.getTeamByID(tID):
                 return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
@@ -391,6 +405,8 @@ class TeamHandler():
             if not result:
                 return jsonify(Error = "Team with id:{} has no members".format(tID)),400
             mappedResult = self.mapTeamMembersToDict(result)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team members from DAO."), 500
         return jsonify(Team = mappedResult),200
@@ -415,6 +431,8 @@ class TeamHandler():
             dao = TeamDAO()
             if not dao.getTeamByID(tID):
                 return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
@@ -430,6 +448,8 @@ class TeamHandler():
             sID = dao.getTeamSportByID(tID)[0]
             if athlete_sport != sID:
                 return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
 
@@ -439,6 +459,8 @@ class TeamHandler():
             if not result:
                 return jsonify(Error = "Athlete with ID:{} does not belong to team with id:{} has no members".format(aID,tID)),400
             mappedResult = self.mapTeamMemberToDict(result)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team members from DAO."), 500
         return jsonify(Team = mappedResult),200
@@ -466,6 +488,8 @@ class TeamHandler():
             dao = TeamDAO()
             if dao.getTeamByYear(sID,tYear):
                 return jsonify(Error = "Team already exists for Sport ID:{} and Season Year:{}".format(sID,tYear)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
          
@@ -475,6 +499,8 @@ class TeamHandler():
         # add team member
         try:
             invalid_duplicate = dao.getTeamByYearInvalid(sID,tYear)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         #the case of there already existing an entry, but marked as invalid
@@ -485,6 +511,8 @@ class TeamHandler():
                 result = dao.editTeamByYear(sID,tYear,tImageLink,aboutTeam)
                 if not result:
                     return jsonify(Error = "Problem updating team record."),500
+            except TypeError:
+                return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify team from DAO."), 500
 
@@ -495,6 +523,8 @@ class TeamHandler():
                 team_id = dao.addTeam(sID,tYear,tImageLink,aboutTeam)
                 if not team_id:
                     return jsonify(Error = "Problem inserting new team record."),500
+            except TypeError:
+                return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify Team from DAO."), 500
             
@@ -523,6 +553,8 @@ class TeamHandler():
             dao = TeamDAO()
             if not dao.getTeamByID(tID):
                 return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
@@ -541,6 +573,8 @@ class TeamHandler():
                 sID = dao.getTeamSportByID(tID)[0]
                 if athlete_sport != sID:
                     return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
+            except TypeError:
+                return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify athlete from DAO."), 500
 
@@ -548,12 +582,16 @@ class TeamHandler():
             try:
                 if dao.getTeamMemberByIDs(aID,tID):
                     return jsonify(Error = "Team member with athlete id:{} already exists for team id:{}".format(aID,tID)),400
+            except TypeError:
+                return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
             # add team member
             try:
                 invalid_duplicate = dao.getTeamMemberByIDsInvalid(aID,tID)
+            except TypeError:
+                return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify Team Member from DAO."), 500
             #the case of there already existing an entry, but marked as invalid
@@ -563,6 +601,8 @@ class TeamHandler():
                     result = dao.editTeamMember(aID,tID)
                     if not result:
                         return jsonify(Error = "Problem updating team member record."),500
+                except TypeError:
+                    return jsonify(ERROR="Bad Request, Type Error."), 400
                 except:
                     return jsonify(ERROR="Unable to verify team member from DAO."), 500
             #normal add
@@ -571,6 +611,8 @@ class TeamHandler():
                     athlete_id = dao.addTeamMember(aID,tID)
                     if not athlete_id:
                         return jsonify(Error = "Problem inserting team member record."),500
+                except TypeError:
+                    return jsonify(ERROR="Bad Request, Type Error."), 400
                 except:
                     return jsonify(ERROR="Unable to verify team member from DAO."), 500
         
@@ -598,6 +640,8 @@ class TeamHandler():
             dao = TeamDAO()
             if not dao.getTeamByID(tID):
                 return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
@@ -613,6 +657,8 @@ class TeamHandler():
             sID = dao.getTeamSportByID(tID)[0]
             if athlete_sport != sID:
                 return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
 
@@ -620,12 +666,16 @@ class TeamHandler():
         try:
             if dao.getTeamMemberByIDs(aID,tID):
                 return jsonify(Error = "Team member with athlete id:{} already exists for team id:{}".format(aID,tID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
         # add team member
         try:
             invalid_duplicate =  dao.getTeamMemberByIDsInvalid(aID,tID)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team Member from DAO."), 500
         #the case of there already existing an entry, but marked as invalid
@@ -635,6 +685,8 @@ class TeamHandler():
                 result = dao.editTeamMember(aID,tID)
                 if not result:
                     return jsonify(Error = "Problem updating team member record."),500
+            except TypeError:
+                return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify team member from DAO."), 500
         #normal add
@@ -644,6 +696,8 @@ class TeamHandler():
                 result = dao.addTeamMember(aID,tID)
                 if not result:
                     return jsonify(Error = "Problem inserting team member record."),500
+            except TypeError:
+                return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify team member from DAO."), 500
     
@@ -673,6 +727,8 @@ class TeamHandler():
             dao = TeamDAO()
             if not dao.getTeamByYear(tID):
                 return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
          
@@ -686,6 +742,8 @@ class TeamHandler():
                 return jsonify(Error = "Problem updating team record."),500
 
             #mappedResult = self.mapTeamBasic(result)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         
@@ -694,6 +752,8 @@ class TeamHandler():
             #verify this works
             returnable = dao.getTeamByID(tID)
             mappedResult = self.mapTeamToDict(returnable)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         dao.commitChanges()
@@ -721,6 +781,8 @@ class TeamHandler():
             dao = TeamDAO()
             if not dao.getTeamByYear(sID,tYear):
                 return jsonify(Error = "Team does not exist for sport ID:{} and season year:{}".format(sID,tYear)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
          
@@ -734,6 +796,8 @@ class TeamHandler():
                 return jsonify(Error = "Problem updating team record."),500
 
             #mappedResult = self.mapTeamBasic(result)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         
@@ -742,6 +806,8 @@ class TeamHandler():
             #verify this works
             returnable = dao.getTeamByYear(sID,tYear)
             mappedResult = self.mapTeamToDict(returnable)
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         dao.commitChanges()
@@ -823,6 +889,8 @@ class TeamHandler():
             dao = TeamDAO()
             if not dao.getTeamByID(tID):
                 return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
          
@@ -834,6 +902,8 @@ class TeamHandler():
             team_id = dao.removeTeam(tID)
             if not team_id:
                 return jsonify(Error = "Problem removing team record."),500
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         
@@ -861,6 +931,8 @@ class TeamHandler():
             dao = TeamDAO()
             if not dao.getTeamByYear(sID,tYear):
                 return jsonify(Error = "Team does not exist for sport ID:{} and season year:{}".format(sID,tYear)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
          
@@ -872,6 +944,8 @@ class TeamHandler():
             team_id = dao.removeTeamByYear(sID,tYear)
             if not team_id:
                 return jsonify(Error = "Problem removing team record."),500
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         
@@ -900,6 +974,8 @@ class TeamHandler():
             dao = TeamDAO()
             if not dao.getTeamByID(tID):
                 return jsonify(Error = "Team does not exist for id:{}".format(tID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
@@ -916,6 +992,8 @@ class TeamHandler():
             sID = dao.getTeamSportByID(tID)[0]
             if athlete_sport != sID:
                 return jsonify(Error = "Athlete for ID:{} does not match team sport ID:{}.".format(aID,sID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
 
@@ -923,6 +1001,8 @@ class TeamHandler():
         try:
             if not dao.getTeamMemberByIDs(aID,tID):
                 return jsonify(Error = "Team member with athlete id:{} for team id:{} does not exist.".format(aID,tID)),400
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
 
@@ -931,6 +1011,8 @@ class TeamHandler():
             result = dao.removeTeamMember(aID,tID)
             if not result:
                 return jsonify(Error = "Problem removing team member record."),500
+        except TypeError:
+            return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team member from DAO."), 500
         
