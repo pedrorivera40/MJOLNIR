@@ -457,7 +457,7 @@ class TeamHandler():
         try:
             result = dao.getTeamMemberByIDs(aID,tID)
             if not result:
-                return jsonify(Error = "Athlete with ID:{} does not belong to team with id:{} has no members".format(aID,tID)),400
+                return jsonify(Error = "Athlete with ID:{} does not belong to team with id:{}".format(aID,tID)),400
             mappedResult = self.mapTeamMemberToDict(result)
         except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
