@@ -288,7 +288,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -300,7 +300,7 @@ class VolleyballEventHandler(EventResultHandler):
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
@@ -313,7 +313,7 @@ class VolleyballEventHandler(EventResultHandler):
             if not result:
                 return jsonify(Error = "Volleyball Event Statistics not found for the event: {} and the athlete id: {}.".format(eID,aID)),404
             mappedResult = self.mapEventAthleteStatsToDict(result)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -341,7 +341,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -354,7 +354,7 @@ class VolleyballEventHandler(EventResultHandler):
             if not result:
                 return jsonify(Error = "Volleyball Event Team Statistics not found for the event: {}".format(eID)),404
             mappedResult = self.mapEventTeamStatsToDict(result)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball_even_team_stats from DAO."), 500
@@ -384,7 +384,7 @@ class VolleyballEventHandler(EventResultHandler):
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
@@ -400,7 +400,7 @@ class VolleyballEventHandler(EventResultHandler):
             for athlete_statistics in result:                     
                 mappedResult.append(self.mapEventSeasonCollectionToDict(athlete_statistics))
             #print(mappedResult)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -432,7 +432,7 @@ class VolleyballEventHandler(EventResultHandler):
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
@@ -446,7 +446,7 @@ class VolleyballEventHandler(EventResultHandler):
                 return jsonify(Error = "Volleyball Event Statistics not found for the athlete id:{} in season year:{}.".format(aID,seasonYear)),404
             mappedResult = self.mapAthleteSeasonAggregate(result)
             #print(mappedResult)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -481,7 +481,7 @@ class VolleyballEventHandler(EventResultHandler):
             for athlete_statistics in result:                     
                 mappedResult.append(self.mapAthleteSeasonAggregate(athlete_statistics))
             #print(mappedResult)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -516,7 +516,7 @@ class VolleyballEventHandler(EventResultHandler):
             mappedResult = []
             mappedResult = self.mapTeamSeasonAggregate(result)
             #print(mappedResult)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team stats from DAO."), 500
@@ -549,7 +549,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -561,7 +561,7 @@ class VolleyballEventHandler(EventResultHandler):
             team_result = dao.getAllTeamStatisticsByEventID(eID)
             if not team_result:
                 return jsonify(Error = "Volleyball Event Team Statistics not found for the event: {}".format(eID)),404
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team stats from DAO."), 500
@@ -570,7 +570,7 @@ class VolleyballEventHandler(EventResultHandler):
             all_stats_result = dao.getAllStatisticsByEventID(eID)
             if not all_stats_result:
                 return jsonify(Error = "Volleyball Event Statistics not found for the event: {}.".format(eID)),404
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -582,7 +582,7 @@ class VolleyballEventHandler(EventResultHandler):
                 #return jsonify(Error = "Volleyball Event Statistics not found for the event: {}.".format(eID)),404
                 final_score_result = [None,None]
             mappedResult = self.mapEventAllStatsToDict(team_result,all_stats_result, final_score_result)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -622,7 +622,7 @@ class VolleyballEventHandler(EventResultHandler):
             dao = VolleyballEventDAO()
             if dao.getVolleyballEventID(eID,aID):
                 return jsonify(Error = "Volleyball Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),403 #TODO: Use 403 for duplicates
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event from DAO."), 500
@@ -633,7 +633,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -645,7 +645,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             t_dao = TeamDAO()
             tID = e_dao.getEventTeamByID(eID)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -656,7 +656,7 @@ class VolleyballEventHandler(EventResultHandler):
             sID = t_dao.getTeamSportByID(tID) 
             if sID != VOLLEYBALL_IDF and sID != VOLLEYBALL_IDM:
                 return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Volleyball.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -668,7 +668,7 @@ class VolleyballEventHandler(EventResultHandler):
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
@@ -678,7 +678,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             if not t_dao.getTeamMemberByIDs(aID,tID): #alternatively: t_dao.athleteBelongsToTeam(aID,tID)
                 return jsonify(Error = "Malformed Query, Athlete ID:{} does not belong to Team ID:{} from Event ID:{}.".format(aID,tID,eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -688,7 +688,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             if dao.getVolleyballEventIDInvalid(eID,aID):
                 invalid_duplicate = True
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event from DAO."), 500
@@ -701,7 +701,7 @@ class VolleyballEventHandler(EventResultHandler):
                 if not result:
                     return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
                 
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -712,7 +712,7 @@ class VolleyballEventHandler(EventResultHandler):
                     attributes['service_errors'],attributes['digs'],attributes['blocks'],attributes['blocking_errors'],attributes['reception_errors'])
                 if not result:
                     return jsonify(Error = "Problem inserting new statistics record."),500
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -727,7 +727,7 @@ class VolleyballEventHandler(EventResultHandler):
             else:
                 dao.addTeamStatistics(eID,attributes['kill_points'],attributes['attack_errors'],attributes['assists'],attributes['aces'],
                     attributes['service_errors'],attributes['digs'],attributes['blocks'],attributes['blocking_errors'],attributes['reception_errors'])
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
@@ -772,7 +772,7 @@ class VolleyballEventHandler(EventResultHandler):
             dao = VolleyballEventDAO()
             if dao.getVolleyballEventTeamStatsID(eID):
                 return jsonify(Error = "Volleyball Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event_team_stats from DAO."), 500
@@ -784,7 +784,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -795,7 +795,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             t_dao = TeamDAO()
             tID = e_dao.getEventTeamByID(eID)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -806,7 +806,7 @@ class VolleyballEventHandler(EventResultHandler):
             sID = t_dao.getTeamSportByID(tID)
             if sID != VOLLEYBALL_IDF and sID != VOLLEYBALL_IDM:
                 return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Volleyball.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -816,7 +816,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             if dao.getVolleyballEventTeamStatsIDInvalid(eID):
                 invalid_duplicate = True
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event_team_Stats from DAO."), 500
@@ -826,7 +826,7 @@ class VolleyballEventHandler(EventResultHandler):
                 result = dao.editTeamStatistics(eID)
                 if not result:
                     return jsonify(Error = "Team statistics Record not found for  event id:{}.".format(eID)),404  
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball team event from DAO."), 500
@@ -841,7 +841,7 @@ class VolleyballEventHandler(EventResultHandler):
                     attributes['service_errors'],attributes['digs'],attributes['blocks'],attributes['blocking_errors'],attributes['reception_errors'])
                 if not result:
                     return jsonify(Error = "Problem inserting new team statistics record."),500
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball_event_team_stats from DAO."), 500
@@ -871,7 +871,7 @@ class VolleyballEventHandler(EventResultHandler):
             dao = VolleyballEventDAO()
             if dao.getVolleyballEventTeamStatsID(eID):
                 return jsonify(Error = "Volleyball Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team sats from DAO."), 500
@@ -883,7 +883,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -894,7 +894,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             t_dao = TeamDAO()
             tID = e_dao.getEventTeamByID(eID)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -906,7 +906,7 @@ class VolleyballEventHandler(EventResultHandler):
             sID = t_dao.getTeamSportByID(tID)
             if sID != VOLLEYBALL_IDF and sID != VOLLEYBALL_IDM:
                 return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Volleyball.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -916,7 +916,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             if dao.getVolleyballEventTeamStatsIDInvalid(eID):
                 invalid_duplicate = True
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event_team_Stats from DAO."), 500
@@ -926,7 +926,7 @@ class VolleyballEventHandler(EventResultHandler):
                 result = dao.editTeamStatistics(eID)
                 if not result:
                     return jsonify(Error = "Team statistics Record not found for event id:{}.".format(eID)),404   
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball team event from DAO."), 500
@@ -940,7 +940,7 @@ class VolleyballEventHandler(EventResultHandler):
                 result = dao.addTeamStatisticsAuto(eID)
                 if not result:
                     return jsonify(Error = "Problem inserting new team statistics record."),500
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball event team stats from DAO."), 500
@@ -998,7 +998,7 @@ class VolleyballEventHandler(EventResultHandler):
             dao = VolleyballEventDAO()
             if dao.getVolleyballEventTeamStatsID(eID):
                 return jsonify(Error = "Volleyball Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team stats from DAO."), 500
@@ -1008,7 +1008,7 @@ class VolleyballEventHandler(EventResultHandler):
             fs_dao = FinalScoreDAO()
             if fs_dao.getFinalScore(eID):
                 return jsonify(Error = "Final Score Entry already exists for Event ID:{}".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -1020,7 +1020,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -1031,7 +1031,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             t_dao = TeamDAO()
             tID = e_dao.getEventTeamByID(eID)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -1043,7 +1043,7 @@ class VolleyballEventHandler(EventResultHandler):
             sID = t_dao.getTeamSportByID(tID) 
             if sID != VOLLEYBALL_IDF and sID != VOLLEYBALL_IDM:
                 return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Volleyball.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -1056,7 +1056,7 @@ class VolleyballEventHandler(EventResultHandler):
                 # Validate Avoid Duplication Volleyball Event Entry
                 if dao.getVolleyballEventID(eID,aID):
                     return jsonify(Error = "Volleyball Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),400
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -1069,7 +1069,7 @@ class VolleyballEventHandler(EventResultHandler):
                 athlete = a_dao.getAthleteByID(aID)
                 if not athlete:
                     return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify athlete from DAO."), 500
@@ -1079,7 +1079,7 @@ class VolleyballEventHandler(EventResultHandler):
             try:
                 if not t_dao.getTeamMemberByIDs(aID,tID): #alternatively: t_dao.athleteBelongsToTeam(aID,tID)
                     return jsonify(Error = "Malformed Query, Athlete ID:{} does not belong to Team ID:{} from Event ID:{}.".format(aID,tID,eID)),400
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify team from DAO."), 500
@@ -1090,7 +1090,7 @@ class VolleyballEventHandler(EventResultHandler):
                     statistics['service_errors'],statistics['digs'],statistics['blocks'],statistics['blocking_errors'],statistics['reception_errors'])
                 if not result:
                     return jsonify(Error = "Problem inserting new statistics record."),500
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -1106,7 +1106,7 @@ class VolleyballEventHandler(EventResultHandler):
             fs_dao = FinalScoreDAO()
             if fs_dao.getFinalScoreInvalid(eID):
                 invalid_duplicate = True
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -1117,7 +1117,7 @@ class VolleyballEventHandler(EventResultHandler):
                 result = fs_dao.editFinalScoreAltCursor(eID,attributes['uprm_score'],attributes['opponent_score'],dao.getCursor())
                 if not result:
                     return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -1127,7 +1127,7 @@ class VolleyballEventHandler(EventResultHandler):
                 result = fs_dao.addFinalScoreAltCursor(eID,local_score, opponent_score,dao.getCursor())
                 if not result:
                     return jsonify(Error = "Problem inserting new final score record."),500
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -1137,7 +1137,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             if dao.getVolleyballEventTeamStatsIDInvalid(eID):
                 invalid_duplicate = True
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event_team_Stats from DAO."), 500
@@ -1147,7 +1147,7 @@ class VolleyballEventHandler(EventResultHandler):
                 result = dao.editTeamStatistics(eID)
                 if not result:
                     return jsonify(Error = "Team statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404  
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball team event from DAO."), 500
@@ -1158,7 +1158,7 @@ class VolleyballEventHandler(EventResultHandler):
                         team_statistics['service_errors'],team_statistics['digs'],team_statistics['blocks'],team_statistics['blocking_errors'],team_statistics['reception_errors'])
                 if not result:
                     return jsonify(Error = "Problem inserting new team statistics record."),500
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
@@ -1202,7 +1202,7 @@ class VolleyballEventHandler(EventResultHandler):
             # TODO: what is the error code for this case, where it DOESNT exit?
             if not dao.getVolleyballEventID(eID,aID):
                 return jsonify(Error = "Volleyball Event Entry does not exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),400 
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event from DAO."), 500
@@ -1214,7 +1214,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -1226,7 +1226,7 @@ class VolleyballEventHandler(EventResultHandler):
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
@@ -1239,7 +1239,7 @@ class VolleyballEventHandler(EventResultHandler):
                     attributes['service_errors'],attributes['digs'],attributes['blocks'],attributes['blocking_errors'],attributes['reception_errors'])
             if not result:
                 return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -1250,7 +1250,7 @@ class VolleyballEventHandler(EventResultHandler):
             if not team_result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
             mappedResult = self.mapEventAthleteStatsToDict(result)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
@@ -1280,7 +1280,7 @@ class VolleyballEventHandler(EventResultHandler):
             dao = VolleyballEventDAO()
             if not dao.getVolleyballEventTeamStatsID(eID):
                 return jsonify(Error = "Volleyball Event Team Stats Entry does not exists for Event ID:{}".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball_event_team_stats from DAO."), 500
@@ -1292,7 +1292,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -1305,7 +1305,7 @@ class VolleyballEventHandler(EventResultHandler):
             if not result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
             mappedResult = self.mapEventTeamStatsToDict(result)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
@@ -1337,7 +1337,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -1350,7 +1350,7 @@ class VolleyballEventHandler(EventResultHandler):
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
@@ -1362,7 +1362,7 @@ class VolleyballEventHandler(EventResultHandler):
             result = dao.removeStatistics(eID,aID)
             if not result:
                 return jsonify(Error = "Statistics Record not found with event id:{} for athlete id:{}.".format(eID,aID)),404
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event from DAO."), 500
@@ -1372,7 +1372,7 @@ class VolleyballEventHandler(EventResultHandler):
             team_result = dao.editTeamStatistics(eID)
             if not team_result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team statistics from DAO."), 500
@@ -1403,7 +1403,7 @@ class VolleyballEventHandler(EventResultHandler):
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -1415,7 +1415,7 @@ class VolleyballEventHandler(EventResultHandler):
             result = dao.removeTeamStatistics(eID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found with event id:{}.".format(eID)),404
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify volleyball event team stats from DAO."), 500

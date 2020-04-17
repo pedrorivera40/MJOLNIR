@@ -142,7 +142,7 @@ class EventResultHandler:
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -154,7 +154,7 @@ class EventResultHandler:
             if not final_score_result:
                 return jsonify(Error = "Event Final Score not found for the event: {}.".format(eID)),404
             mappedResult = self.mapFinalScoreToDict(final_score_result)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -331,7 +331,7 @@ class EventResultHandler:
         try:
             if dao.getFinalScore(eID):
                 return jsonify(Error = "Event Final Score Entry already exists for Event ID:{}".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -342,7 +342,7 @@ class EventResultHandler:
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -351,7 +351,7 @@ class EventResultHandler:
         try:
             if dao.getFinalScoreInvalid(eID):
                 invalid_duplicate = True
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -363,7 +363,7 @@ class EventResultHandler:
                 if not result:
                     return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
                 mappedResult = self.mapFinalScoreToDict(result)
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -376,7 +376,7 @@ class EventResultHandler:
                 result = dao.addFinalScore(eID,attributes['uprm_score'],attributes['opponent_score'])
                 if not result:
                     return jsonify(Error = "Problem inserting new final score record."),500
-            except TypeError:
+            except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
                 return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -459,7 +459,7 @@ class EventResultHandler:
         try:
             if not dao.getFinalScore(eID):
                 return jsonify(Error = "Event Final Score Entry does not exist for Event ID:{}".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -470,7 +470,7 @@ class EventResultHandler:
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -482,7 +482,7 @@ class EventResultHandler:
             if not result:
                 return jsonify(Error = "Final Score Record not found for event id:{}.".format(eID)),404
             mappedResult = self.mapFinalScoreToDict(result)
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
@@ -541,7 +541,7 @@ class EventResultHandler:
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
@@ -553,7 +553,7 @@ class EventResultHandler:
             result = dao.removeFinalScore(eID)
             if not result:
                 return jsonify(Error = "Final Score Record not found with event id:{}.".format(eID)),404
-        except TypeError:
+        except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
             return jsonify(ERROR="Unable to verify final score from DAO."), 500
