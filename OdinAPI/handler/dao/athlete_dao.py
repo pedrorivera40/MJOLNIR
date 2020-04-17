@@ -108,29 +108,8 @@ class AthleteDAO:
             result = cursor.fetchall()            
             return result
         except:
-            return "A problem ocurred when fethching the athlete."
-    
-    #This function might not be required and therefore eliminated.
-    def getAthleteByName(self,aFName,aMName,aLName):
-        cursor = self.conn.cursor()
-        query = None
-        if not aMName:        
-            query = "select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.profile_image_link "\
-                    "from athlete as A "\
-                    "where A.first_name = %s "\
-                    "and A.last_names = %s"
-            cursor.execute(query,(aFName,aLName,))
-        else:
-            query = "select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.profile_image_link "\
-                    "from athlete as A "\
-                    "where A.first_name = %s "\
-                    "and A.middle_name = %s"\
-                    "and A.last_names = %s"
-            cursor.execute(query,(aFName,aMName,aLName,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
+            return "A problem ocurred when fethching the athlete."    
+  
 
     def addAthlete(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink):
         """
