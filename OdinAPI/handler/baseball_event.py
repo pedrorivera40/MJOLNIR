@@ -1059,16 +1059,40 @@ class BaseballEventHandler(EventResultHandler):
             except:
                 return jsonify(ERROR="Unable to verify team from DAO."), 500
          
-            # Create and Validate new Baseball_Event
+             #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
+            invalid_duplicate = False
             try:
-                result = dao.addStatistics(eID,aID,statistics['at_bats'],statistics['runs'],statistics['hits'],statistics['runs_batted_in'],
-                statistics['base_on_balls'],statistics['strikeouts'],statistics['left_on_base'])
-                if not result:
-                    return jsonify(Error = "Problem inserting new statistics record."),500
+                if dao.getBaseballEventIDInvalid(eID,aID):
+                    invalid_duplicate = True
             except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
-                return jsonify(ERROR="Unable to verify baseball event from DAO."), 500
+                return jsonify(ERROR="Unable to verify baseball_event from DAO."), 500
+            
+            #the case of there already existing an entry, but marked as invalid
+            if invalid_duplicate:
+                try:
+                    result = dao.editStatistics(eID,aID,statistics['at_bats'],statistics['runs'],statistics['hits'],statistics['runs_batted_in'],
+                    statistics['base_on_balls'],statistics['strikeouts'],statistics['left_on_base'])
+                    if not result:
+                        return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
+                    
+                except (TypeError, ValueError):
+                    return jsonify(ERROR="Bad Request, Type Error."), 400
+                except:
+                    return jsonify(ERROR="Unable to verify baseball event from DAO."), 500
+            else:
+
+                # Create and Validate new Baseball_Event
+                try:
+                    result = dao.addStatistics(eID,aID,statistics['at_bats'],statistics['runs'],statistics['hits'],statistics['runs_batted_in'],
+                    statistics['base_on_balls'],statistics['strikeouts'],statistics['left_on_base'])
+                    if not result:
+                        return jsonify(Error = "Problem inserting new statistics record."),500
+                except (TypeError, ValueError):
+                    return jsonify(ERROR="Bad Request, Type Error."), 400
+                except:
+                    return jsonify(ERROR="Unable to verify baseball event from DAO."), 500
          
       
             # SUCCESS MESSAGE

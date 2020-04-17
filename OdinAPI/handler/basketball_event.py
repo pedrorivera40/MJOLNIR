@@ -1160,9 +1160,9 @@ class BasketballEventHandler(EventResultHandler):
             #the case of there already existing an entry, but marked as invalid
             if invalid_duplicate:
                 try:
-                    result = dao.editStatistics(eID,aID,attributes['points'],attributes['rebounds'],attributes['assists'],
-                        attributes['steals'],attributes['blocks'],attributes['turnovers'],attributes['field_goal_attempt'],attributes['successful_field_goal'],attributes['three_point_attempt'],
-                        attributes['successful_three_point'],attributes['free_throw_attempt'],attributes['successful_free_throw'])
+                    result = dao.editStatistics(eID,aID,statistics['points'],statistics['rebounds'],statistics['assists'],
+                    statistics['steals'],statistics['blocks'],statistics['turnovers'],statistics['field_goal_attempt'],statistics['successful_field_goal'],statistics['three_point_attempt'],
+                    statistics['successful_three_point'],statistics['free_throw_attempt'],statistics['successful_free_throw'])
                     if not result:
                         return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
                     

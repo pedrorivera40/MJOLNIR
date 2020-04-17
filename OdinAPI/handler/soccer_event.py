@@ -1047,16 +1047,40 @@ class SoccerEventHandler(EventResultHandler):
             except:
                 return jsonify(ERROR="Unable to verify team from DAO."), 500
          
-            # Create and Validate new Soccer_Event
+             #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
+            invalid_duplicate = False
             try:
-                result = dao.addStatistics(eID,aID,statistics['goal_attempts'],statistics['assists'],statistics['fouls'],statistics['cards'],
-                    statistics['successful_goals'],statistics['tackles'])
-                if not result:
-                    return jsonify(Error = "Problem inserting new statistics record."),500
+                if dao.getSoccerEventIDInvalid(eID,aID):
+                    invalid_duplicate = True
             except (TypeError, ValueError):
                 return jsonify(ERROR="Bad Request, Type Error."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+                return jsonify(ERROR="Unable to verify soccer_event from DAO."), 500
+            
+            #the case of there already existing an entry, but marked as invalid
+            if invalid_duplicate:
+                try:
+                    result = dao.editStatistics(eID,aID,statistics['goal_attempts'],statistics['assists'],statistics['fouls'],statistics['cards'],
+                        statistics['successful_goals'],statistics['tackles'])
+                    if not result:
+                        return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
+                    
+                except (TypeError, ValueError):
+                    return jsonify(ERROR="Bad Request, Type Error."), 400
+                except:
+                    return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+            else:
+
+                # Create and Validate new Soccer_Event
+                try:
+                    result = dao.addStatistics(eID,aID,statistics['goal_attempts'],statistics['assists'],statistics['fouls'],statistics['cards'],
+                        statistics['successful_goals'],statistics['tackles'])
+                    if not result:
+                        return jsonify(Error = "Problem inserting new statistics record."),500
+                except (TypeError, ValueError):
+                    return jsonify(ERROR="Bad Request, Type Error."), 400
+                except:
+                    return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
          
       
             # SUCCESS MESSAGE
