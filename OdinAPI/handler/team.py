@@ -484,49 +484,49 @@ class TeamHandler():
         """
         
         # Validate Avoid Duplication Team
-        if True:#try:
+        try:
             dao = TeamDAO()
             if dao.getTeamByYear(sID,tYear):
                 return jsonify(Error = "Team already exists for Sport ID:{} and Season Year:{}".format(sID,tYear)),400
-        # except (TypeError, ValueError):
-        #     return jsonify(ERROR="Bad Request, Type Error."), 400
-        # except:
-        #     return jsonify(ERROR="Unable to verify Team from DAO."), 500
+        except (TypeError, ValueError):
+            return jsonify(ERROR="Bad Request, Type Error."), 400
+        except:
+            return jsonify(ERROR="Unable to verify Team from DAO."), 500
          
         #TODO: Validate Existing Duplicate, convert to update (need to create new DAO function)
         #TODO: Validate Sport (already done by validatig the athlete?)
         
         # add team member
-        if True:#try:
+        try:
             invalid_duplicate = dao.getTeamByYearInvalid(sID,tYear)
-        # except (TypeError, ValueError):
-        #     return jsonify(ERROR="Bad Request, Type Error."), 400
-        # except:
-        #     return jsonify(ERROR="Unable to verify Team from DAO."), 500
-        #the case of there already existing an entry, but marked as invalid
+        except (TypeError, ValueError):
+            return jsonify(ERROR="Bad Request, Type Error."), 400
+        except:
+            return jsonify(ERROR="Unable to verify Team from DAO."), 500
+        # the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
             # edit team member
             team_id = invalid_duplicate[0]
-            if True:#try: 
+            try: 
                 result = dao.editTeamByYear(sID,tYear,tImageLink,aboutTeam)
                 if not result:
                     return jsonify(Error = "Problem updating team record."),500
-            # except (TypeError, ValueError):
-            #     return jsonify(ERROR="Bad Request, Type Error."), 400
-            # except:
-            #     return jsonify(ERROR="Unable to verify team from DAO."), 500
+            except (TypeError, ValueError):
+                return jsonify(ERROR="Bad Request, Type Error."), 400
+            except:
+                return jsonify(ERROR="Unable to verify team from DAO."), 500
 
         #normal add
         else:
             #add the team
-            if True:#try:
+            try:
                 team_id = dao.addTeam(sID,tYear,tImageLink,aboutTeam)
                 if not team_id:
                     return jsonify(Error = "Problem inserting new team record."),500
-            # except (TypeError, ValueError):
-            #     return jsonify(ERROR="Bad Request, Type Error."), 400
-            # except:
-            #     return jsonify(ERROR="Unable to verify Team from DAO."), 500
+            except (TypeError, ValueError):
+                return jsonify(ERROR="Bad Request, Type Error."), 400
+            except:
+                return jsonify(ERROR="Unable to verify Team from DAO."), 500
             
         dao.commitChanges()
         # FIX BECAUSE IN CASE OF INVALID DID UPDATE AND DONT KNOW TEAM ID.
