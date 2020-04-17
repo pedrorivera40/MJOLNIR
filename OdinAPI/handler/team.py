@@ -255,7 +255,7 @@ class TeamHandler():
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
         
-        return jsonify(Teams = mappedResult)
+        return jsonify(Teams = mappedResult),200
 
     def getTeams(self,sID): 
         """
@@ -288,7 +288,7 @@ class TeamHandler():
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
         
-        return jsonify(Teams = mappedResult)
+        return jsonify(Teams = mappedResult),200
 
     # same info as getTeam, but different query
     def getTeamByID(self,tID): 
@@ -317,7 +317,7 @@ class TeamHandler():
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
         
-        return jsonify(Team = mappedResult)
+        return jsonify(Team = mappedResult),200
 
     # this one would be general team information, similar to get all teams but filtered by season
     #updated: dont need branch
@@ -354,7 +354,7 @@ class TeamHandler():
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
 
-        return jsonify(Team = mappedResult)
+        return jsonify(Team = mappedResult),200
     
     """
     team_members_id, team_id, athlete_id, 
@@ -393,7 +393,7 @@ class TeamHandler():
             mappedResult = self.mapTeamMembersToDict(result)
         except:
             return jsonify(ERROR="Unable to verify team members from DAO."), 500
-        return jsonify(Team = mappedResult)
+        return jsonify(Team = mappedResult),200
 
     def getTeamMemberByIDs(self,aID,tID):
         """
@@ -441,7 +441,7 @@ class TeamHandler():
             mappedResult = self.mapTeamMemberToDict(result)
         except:
             return jsonify(ERROR="Unable to verify team members from DAO."), 500
-        return jsonify(Team = mappedResult)
+        return jsonify(Team = mappedResult),200
     #===========================//II.POSTS//====================================
     #update: image link was missing? tRoster removed, separate
     def addTeam(self,sID,tYear,tImageLink,aboutTeam): 
@@ -575,7 +575,7 @@ class TeamHandler():
                     return jsonify(ERROR="Unable to verify team member from DAO."), 500
         
         dao.commitChanges()
-        return jsonify(Team = "Added new team members to team with id:{}".format(tID,))
+        return jsonify(Team = "Added new team members to team with id:{}".format(tID,)),201
     
     
     #NEW
@@ -648,7 +648,7 @@ class TeamHandler():
                 return jsonify(ERROR="Unable to verify team member from DAO."), 500
     
         dao.commitChanges()
-        return jsonify(Team = "Added athlete id:{} as a team member of team with id:{}".format(aID,tID,))
+        return jsonify(Team = "Added athlete id:{} as a team member of team with id:{}".format(aID,tID,)),201
     #===========================//III.PUTS//====================================
 
     def editTeam(self,tID,tImageLink,aboutTeam):
@@ -697,7 +697,7 @@ class TeamHandler():
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         dao.commitChanges()
-        return jsonify(Team = mappedResult)
+        return jsonify(Team = mappedResult),200
 
     def editTeamByYear(self,sID,tYear,tImageLink,aboutTeam):
         """"
@@ -745,7 +745,7 @@ class TeamHandler():
         except:
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         dao.commitChanges()
-        return jsonify(Team = mappedResult)
+        return jsonify(Team = mappedResult),200
 
     # #TODO: will remove, serves absolutely no purpose. 
     # #NEW

@@ -344,7 +344,10 @@ def teamEvents(tID):
 # }
 @app.route("/results/basketball/", methods = ['GET','POST'])
 def basketballStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
@@ -404,7 +407,10 @@ def basketballStatistics():
 # }
 @app.route("/results/basketball/individual/", methods = ['GET','POST','PUT','DELETE'])
 def basketballAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
@@ -455,7 +461,10 @@ def basketballAthleteStatistics():
 # }
 @app.route("/results/basketball/team/", methods = ['GET','POST','PUT','DELETE'])
 def basketballTeamStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
@@ -502,7 +511,10 @@ def basketballTeamStatistics():
 # }
 @app.route("/results/basketball/score/", methods = ['GET','POST','PUT','DELETE'])
 def basketballFinalScores():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
@@ -539,7 +551,10 @@ def basketballFinalScores():
 #TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/basketball/season/athlete_games/", methods = ['GET'])
 def basketballSeasonAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
@@ -559,7 +574,10 @@ def basketballSeasonAthleteStatistics():
 # }
 @app.route("/results/basketball/season/athlete_aggregate/", methods = ['GET'])
 def basketballAggregateAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
@@ -578,7 +596,10 @@ def basketballAggregateAthleteStatistics():
 # }
 @app.route("/results/basketball/season/all_athletes_aggregate/", methods = ['GET'])
 def basketballAggregateAllAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
@@ -597,7 +618,10 @@ def basketballAggregateAllAthleteStatistics():
 # }
 @app.route("/results/basketball/season/team_aggregate/", methods = ['GET'])
 def basketballAggregateTeamStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BasketballEventHandler()
@@ -782,7 +806,10 @@ def pbp_end():
 # }
 @app.route("/results/volleyball/", methods = ['GET','POST'])
 def volleyballStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
@@ -842,7 +869,10 @@ def volleyballStatistics():
 # }
 @app.route("/results/volleyball/individual/", methods = ['GET','POST','PUT','DELETE'])
 def volleyballAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
@@ -896,7 +926,10 @@ def volleyballAthleteStatistics():
 # }
 @app.route("/results/volleyball/team/", methods = ['GET','POST','PUT','DELETE'])
 def volleyballTeamStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
@@ -940,7 +973,10 @@ def volleyballTeamStatistics():
 # }
 @app.route("/results/volleyball/score/", methods = ['GET','POST','PUT','DELETE'])
 def volleyballFinalScores():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
@@ -977,7 +1013,10 @@ def volleyballFinalScores():
 #TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/volleyball/season/athlete_games/", methods = ['GET'])
 def volleyballSeasonAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
@@ -997,7 +1036,10 @@ def volleyballSeasonAthleteStatistics():
 # }
 @app.route("/results/volleyball/season/athlete_aggregate/", methods = ['GET'])
 def volleyballAggregateAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
@@ -1016,7 +1058,10 @@ def volleyballAggregateAthleteStatistics():
 # }
 @app.route("/results/volleyball/season/all_athletes_aggregate/", methods = ['GET'])
 def volleyballAggregateAllAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
@@ -1035,7 +1080,10 @@ def volleyballAggregateAllAthleteStatistics():
 # }
 @app.route("/results/volleyball/season/team_aggregate/", methods = ['GET'])
 def volleyballAggregateTeamStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = VolleyballEventHandler()
@@ -1104,7 +1152,10 @@ def volleyballAggregateTeamStatistics():
 # }
 @app.route("/results/soccer/", methods = ['GET','POST'])
 def soccerStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
@@ -1159,7 +1210,10 @@ def soccerStatistics():
 # }
 @app.route("/results/soccer/individual/", methods = ['GET','POST','PUT','DELETE'])
 def soccerAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
@@ -1208,7 +1262,10 @@ def soccerAthleteStatistics():
 # }
 @app.route("/results/soccer/team/", methods = ['GET','POST','PUT','DELETE'])
 def soccerTeamStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
@@ -1252,7 +1309,10 @@ def soccerTeamStatistics():
 # }
 @app.route("/results/soccer/score/", methods = ['GET','POST','PUT','DELETE'])
 def soccerFinalScores():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
@@ -1288,7 +1348,10 @@ def soccerFinalScores():
 #TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/soccer/season/athlete_games/", methods = ['GET'])
 def soccerSeasonAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
@@ -1307,7 +1370,10 @@ def soccerSeasonAthleteStatistics():
 # }
 @app.route("/results/soccer/season/athlete_aggregate/", methods = ['GET'])
 def soccerAggregateAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
@@ -1326,7 +1392,10 @@ def soccerAggregateAthleteStatistics():
 # }
 @app.route("/results/soccer/season/all_athletes_aggregate/", methods = ['GET'])
 def soccerAggregateAllAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
@@ -1345,7 +1414,10 @@ def soccerAggregateAllAthleteStatistics():
 # }
 @app.route("/results/soccer/season/team_aggregate/", methods = ['GET'])
 def soccerAggregateTeamStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = SoccerEventHandler()
@@ -1417,7 +1489,10 @@ def soccerAggregateTeamStatistics():
 # }
 @app.route("/results/baseball/", methods = ['GET','POST'])
 def baseballStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
@@ -1475,7 +1550,10 @@ def baseballStatistics():
 # }
 @app.route("/results/baseball/individual/", methods = ['GET','POST','PUT','DELETE'])
 def baseballAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
@@ -1527,7 +1605,10 @@ def baseballAthleteStatistics():
 # }
 @app.route("/results/baseball/team/", methods = ['GET','POST','PUT','DELETE'])
 def baseballTeamStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
@@ -1571,7 +1652,10 @@ def baseballTeamStatistics():
 # }
 @app.route("/results/baseball/score/", methods = ['GET','POST','PUT','DELETE'])
 def baseballFinalScores():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
@@ -1608,7 +1692,10 @@ def baseballFinalScores():
 #TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/baseball/season/athlete_games/", methods = ['GET'])
 def baseballSeasonAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
@@ -1629,7 +1716,10 @@ def baseballSeasonAthleteStatistics():
 # }
 @app.route("/results/baseball/season/athlete_aggregate/", methods = ['GET'])
 def baseballAggregateAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
@@ -1648,7 +1738,10 @@ def baseballAggregateAthleteStatistics():
 # }
 @app.route("/results/baseball/season/all_athletes_aggregate/", methods = ['GET'])
 def baseballAggregateAllAthleteStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
@@ -1667,7 +1760,10 @@ def baseballAggregateAllAthleteStatistics():
 # }
 @app.route("/results/baseball/season/team_aggregate/", methods = ['GET'])
 def baseballAggregateTeamStatistics():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = BaseballEventHandler()
@@ -1734,7 +1830,10 @@ def get_sport_info():
 # }
 @app.route("/teams/", methods = ['GET','POST','PUT','DELETE'])
 def teamByYear():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = TeamHandler()
@@ -1772,7 +1871,10 @@ def teamByYear():
 # }
 @app.route("/teams/members/", methods = ['GET','POST'])
 def teamMembers():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = TeamHandler()
@@ -1802,7 +1904,10 @@ def teamMembers():
 #TODO: (Herbert) Check if need to remove route due to redundancy, wait for front end 
 @app.route("/teams/member/", methods = ['GET','POST','DELETE'])
 def teamMemberByIDs():
-    json = request.json
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
     if json is None:
         return jsonify(Error='Bad Request'),400
     handler = TeamHandler()
@@ -1821,7 +1926,6 @@ def teamMemberByIDs():
 
 @app.route("/teams/all/", methods = ['GET','POST','DELETE'])
 def getAllTeams():
-    json = request.json
     handler = TeamHandler()
     if request.method == 'GET':
         return handler.getAllTeams()
