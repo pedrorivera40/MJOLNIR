@@ -46,6 +46,7 @@ export default {
                 let athlete = snapshot.val();
                 athlete.key = snapshot.key;
                 commit("ADD_UPRM_ROSTER", athlete);
+                commit("UPDATE_UPRM_ATHLETE_STATISTICS");
             });
 
             // Handle roster updates.
@@ -53,11 +54,13 @@ export default {
                 let athlete = snapshot.val();
                 athlete.key = snapshot.key;
                 commit("UPDATE_UPRM_ROSTER", athlete);
+                commit("UPDATE_UPRM_ATHLETE_STATISTICS");
             });
 
             // Handle roster removals.
             await rtdb().ref("/v1/" + event_id + "/uprm-roster").on('child_removed', function (snapshot) {
                 commit("REMOVE_UPRM_ROSTER", snapshot.key);
+                commit("UPDATE_UPRM_ATHLETE_STATISTICS");
             });
 
         } catch (error) {
@@ -74,6 +77,7 @@ export default {
                 let athlete = snapshot.val();
                 athlete.key = snapshot.key;
                 commit("ADD_OPP_ROSTER", athlete);
+                commit("UPDATE_OPP_ATHLETE_STATISTICS");
             });
 
             // Handle roster updates.
@@ -81,11 +85,13 @@ export default {
                 let athlete = snapshot.val();
                 athlete.key = snapshot.key;
                 commit("UPDATE_OPP_ROSTER", athlete);
+                commit("UPDATE_OPP_ATHLETE_STATISTICS");
             });
 
             // Handle roster removals.
             await rtdb().ref("/v1/" + event_id + "/opponent-roster").on('child_removed', function (snapshot) {
                 commit("REMOVE_OPP_ROSTER", snapshot.key);
+                commit("UPDATE_OPP_ATHLETE_STATISTICS");
             });
 
         } catch (error) {
@@ -243,4 +249,35 @@ export default {
             dispatch('notifications/setSnackbar', { text: "Error detaching game actions updates from RTDB.", color: "error" }, { root: true });
         }
     },
+
+    async getEvent({ commit, dispatch }, event_id) {
+        try {
+            const response = await this.$axios.get(`/events/${event_id}/`);
+            commit("SET_HAS_PBP", response.data.Event.hasPBP);
+            commit("SET_TEAM_ID", response.data.Event.team_id);
+            commit("SET_BRANCH", response.data.Event.branch);
+            commit("SET_OPPONENT_NAME", response.data.Event.opponent_name);
+            commit("SET_SPORT_NAME", response.data.Event.sport_name);
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
+    },
+
+    async getValidUPRMRoster({ commit, dispatch }, team_id) {
+        try {
+            const response = await this.$axios.get(`/teams/members/?team_id=${team_id}`);
+            commit("SET_VALID_UPRM_ROSTER", response.data.Team.team_members);
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
+    },
+
 }

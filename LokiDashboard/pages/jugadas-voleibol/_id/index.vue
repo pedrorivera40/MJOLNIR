@@ -8,8 +8,8 @@
     <v-container>
       <v-row align="center" justify="center">
         <VolleyballScore
-          uprm_team="UPRM"
-          opp_team="UPRM-RP"
+          :uprm_team="uprm_team_name"
+          :opp_team="opponentName"
           :uprm_score="uprmScore"
           :opp_score="oppScore"
           :current_set="currentSet"
@@ -110,8 +110,8 @@
                         <td class="text-center">{{ uprmSets[3] }}</td>
                         <td class="text-center">{{ uprmSets[4] }}</td>
                       </tr>
-                      <tr :key="opponent_team_name">
-                        <td class="text-center">{{ opponent_team_name }}</td>
+                      <tr :key="opponentName">
+                        <td class="text-center">{{ opponentName }}</td>
                         <td class="text-center">{{ oppSets[0] }}</td>
                         <td class="text-center">{{ oppSets[1] }}</td>
                         <td class="text-center">{{ oppSets[2] }}</td>
@@ -134,7 +134,7 @@
               <v-tabs-slider :color="uprm_color" />
 
               <v-tab>{{uprm_team_name}}</v-tab>
-              <v-tab>{{opponent_team_name}}</v-tab>
+              <v-tab>{{opponentName}}</v-tab>
               <v-tab-item>
                 <VolleyballStatistics :volleyball_stats="uprmStatistics" />
               </v-tab-item>
@@ -150,26 +150,40 @@
             <v-tabs centered :color="uprm_color">
               <v-tabs-slider :color="uprm_color" />
               <v-tab>{{ uprm_team_name }}</v-tab>
-              <v-tab>{{ opponent_team_name }}</v-tab>
+              <v-tab>{{ opponentName }}</v-tab>
               <v-tab-item>
-                <v-container v-for="athlete in uprm_roster" :key="athlete.number">
-                  <v-row justify="center">
-                    <PBPRosterEntry
-                      :athlete_name="athlete.name"
-                      :athlete_number="athlete.number"
-                      :athlete_img="athlete.img"
-                      :athlete_statistics="uprmStatistics"
-                      :in_color="uprm_color"
-                    />
-                  </v-row>
-                </v-container>
+                <v-simple-table>
+                  <template v-slot:default>
+                    <thead>
+                      <tr>
+                        <th class="text-center">Atleta</th>
+                        <th v-for="play in plays_map" :key="play" class="text-center">{{ play.esp }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="athlete in uprmAthleteStatistics" :key="athlete">
+                        <td class="text-left">#{{ athlete.number }}. {{ athlete.name }}</td>
+                        <td class="text-center">{{ athlete.killPoints }}</td>
+                        <td class="text-center">{{ athlete.attackErrors }}</td>
+                        <td class="text-center">{{ athlete.aces }}</td>
+                        <td class="text-center">{{ athlete.serviceErrors }}</td>
+                        <td class="text-center">{{ athlete.blocks }}</td>
+                        <td class="text-center">{{ athlete.blockingPoints }}</td>
+                        <td class="text-center">{{ athlete.blockingErrors }}</td>
+                        <td class="text-center">{{ athlete.assists }}</td>
+                        <td class="text-center">{{ athlete.digs }}</td>
+                        <td class="text-center">{{ athlete.receptionErrors }}</td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
               </v-tab-item>
               <v-tab-item>
-                <v-container v-for="athlete in opp_roster" :key="athlete.number">
+                <v-container v-for="athlete in uprmRoster" :key="athlete.number">
                   <v-row justify="center">
                     <PBPRosterEntry
-                      :athlete_name="athlete.name"
-                      :athlete_img="athlete.img"
+                      :athlete_name="athlete.first_name + ' ' + athlete.middle_name+ ' ' + athlete.last_names"
+                      :athlete_img="athlete.profile_image_link"
                       :athlete_number="athlete.number"
                       :athlete_statistics="oppStatistics"
                       :in_color="oppColor"
@@ -203,309 +217,30 @@ export default {
   },
   data: () => ({
     sport_name: "Voleibol",
-    uprm_team_name: "Tarzanes",
-    opponent_team_name: "Gallitos",
+    uprm_team_name: "UPRM",
     opp_keyword: "opponent",
 
-    uprm_roster: [
-      {
-        img:
-          "https://scontent.fsig2-1.fna.fbcdn.net/v/t1.0-9/14202778_1104681222954044_4221871197184292482_n.jpg?_nc_cat=108&_nc_sid=e007fa&_nc_ohc=SkJYpfLrBpsAX_hQbOU&_nc_ht=scontent.fsig2-1.fna&oh=7cd68e75d22f20eaedb7423fbb516719&oe=5EB86212",
-        name: "Jose Juan Barea",
-        number: 11
-      },
-      {
-        img:
-          "https://scontent.fsig2-1.fna.fbcdn.net/v/t1.0-9/14102251_1104681199620713_3292201927945481377_n.jpg?_nc_cat=110&_nc_sid=e007fa&_nc_ohc=ZdEZhrqoi18AX-4DRJc&_nc_ht=scontent.fsig2-1.fna&oh=3f4cdce453e1ad2a85ac6e44ee82c5c0&oe=5EB9FCD9",
-        name: "Jose Juan Barea",
-        number: 11
-      },
-      {
-        img: "",
-        name: "Jose Juan Barea",
-        number: 11
-      },
-      {
-        img:
-          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
-        name: "Jose Juan Barea",
-        number: 11
-      },
-      {
-        img:
-          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
-        name: "Jose Juan Barea",
-        number: 11
-      },
-      {
-        img:
-          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
-        name: "Jose Juan Barea",
-        number: 11
-      },
-      {
-        img:
-          "https://a.espncdn.com/combiner/i?img=/i/headshots/nba/players/full/3055.png",
-        name: "Jose Juan Barea",
-        number: 11
-      }
+    plays_map: [
+      { eng: "kills", esp: "Puntos de Ataque" },
+      { eng: "attackErrors", esp: "Errores de Ataque" },
+      { eng: "aces", esp: "Servicios Directos" },
+      { eng: "serviceError", esp: "Errores de Servicio" },
+      { eng: "blocks", esp: "Bloqueos" },
+      { eng: "blockingPoints", esp: "Puntos de Bloqueo" },
+      { eng: "blockingErrors", esp: "Errores de Bloqueo" },
+      { eng: "assists", esp: "Asistencias" },
+      { eng: "digs", esp: "Bompeos" },
+      { eng: "receptionErrors", esp: "Errores de Recepción" }
     ],
-    opp_roster: [
-      {
-        img:
-          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
-        name: "MARTIN LAWRENCE",
-        number: 11
-      },
-      {
-        img:
-          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
-        name: "Martin Lawrence",
-        number: 11
-      },
-      {
-        img:
-          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
-        name: "Martin Lawrence",
-        number: 11
-      },
-      {
-        img:
-          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
-        name: "Martin Lawrence",
-        number: 11
-      },
-      {
-        img:
-          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
-        name: "Martin Lawrence",
-        number: 11
-      },
-      {
-        img: "",
-        name: "Martin Lawrence",
-        number: 15
-      },
-      {
-        img:
-          "https://tvguide1.cbsistatic.com/i/2013/06/19/013edf20-d17d-4caf-85cb-2aa74c834221/948c49a5e70fc6efb5b10fdb2abe74ec/130619mag-martin-lawrence1.jpg",
-        name: "Martin Lawrence",
-        number: 11
-      }
-    ],
-    uprm_player_statistics: [
-      {
-        id: 12345,
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        id: 12345,
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        id: 12345,
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        id: 12345,
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        id: 12345,
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        id: 12345,
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        id: 12345,
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      }
-    ],
-    opp_player_statistics: [
-      {
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      },
-      {
-        name: "Jose Juan Barea",
-        number: 11,
-        killPoints: 0,
-        aces: 0,
-        blockPoints: 0,
-        assists: 0,
-        blocks: 0,
-        digs: 0,
-        attackErrors: 0,
-        serviceErrors: 0,
-        blockingErrors: 0,
-        receptionErrors: 0
-      }
-    ],
+
     uprm_color: "green",
     notification: "Notification"
   }),
   methods: {
     // Functions for init/detach callbacks for maintaining data models based on Firebase updates.
     ...mapActions({
+      getEvent: "volleyballPBP/getEvent",
+      getValidUPRMRoster: "volleyballPBP/getValidUPRMRoster",
       handleSetScores: "volleyballPBP/handleSetScores",
       handleCurrentSet: "volleyballPBP/handleCurrentSet",
       handleUPRMRoster: "volleyballPBP/handleUPRMRoster",
@@ -538,26 +273,45 @@ export default {
       oppColor: "volleyballPBP/oppColor",
       gameActions: "volleyballPBP/gameActions",
       uprmStatistics: "volleyballPBP/uprmStatistics",
-      oppStatistics: "volleyballPBP/oppStatistics"
+      oppStatistics: "volleyballPBP/oppStatistics",
+      uprmAthleteStatistics: "volleyballPBP/uprmAthleteStatistics",
+      oppAthleteStatistics: "volleyballPBP/oppAthleteStatistics",
+      sportName: "volleyballPBP/sportName",
+      hasPBP: "volleyballPBP/hasPBP",
+      teamId: "volleyballPBP/teamId",
+      validUPRMRoster: "volleyballPBP/validUPRMRoster",
+      branch: "volleyballPBP/branch",
+      opponentName: "volleyballPBP/opponentName"
     })
   },
   beforeMount() {
-    this.handleSetScores(this.$route.params.id);
-    this.handleCurrentSet(this.$route.params.id);
-    this.handleUPRMRoster(this.$route.params.id);
-    this.handleOPPRoster(this.$route.params.id);
-    this.handleGameOver(this.$route.params.id);
-    this.handleOppColor(this.$route.params.id);
-    this.handleGameActions(this.$route.params.id);
+    let event_id = this.$route.params.id;
+    this.getEvent(event_id).then(() => {
+      this.getValidUPRMRoster(this.teamId);
+      this.handleSetScores(event_id);
+      this.handleCurrentSet(event_id);
+      this.handleUPRMRoster(event_id);
+      this.handleOPPRoster(event_id);
+      this.handleGameOver(event_id);
+      this.handleOppColor(event_id);
+      this.handleGameActions(event_id);
+      if (this.branch === "masculino") {
+        this.uprm_team_name = "Tarzanes";
+      } else {
+        this.uprm_team_name = "Juanas";
+      }
+    });
   },
+
   beforeDestroy() {
-    this.detachSetScores(this.$route.params.id);
-    this.detachCurrentSet(this.$route.params.id);
-    this.detachUPRMRoster(this.$route.params.id);
-    this.detachOPPRoster(this.$route.params.id);
-    this.detachGameOver(this.$route.params.id);
-    this.detachOppColor(this.$route.params.id);
-    this.detachGameActions(this.$route.params.id);
+    let event_id = this.$route.params.id;
+    this.detachSetScores(event_id);
+    this.detachCurrentSet(event_id);
+    this.detachUPRMRoster(event_id);
+    this.detachOPPRoster(event_id);
+    this.detachGameOver(event_id);
+    this.detachOppColor(event_id);
+    this.detachGameActions(event_id);
   }
 };
 </script>

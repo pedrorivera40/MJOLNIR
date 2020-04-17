@@ -33,7 +33,13 @@ export default () => ({
         blockingErrors: 0,
         receptionErrors: 0
     }, // Keep collective opponent statistics for this match.
-
     uprmAthleteStatistics: [], // For each UPRM athlete, keeps their individual stats for this match.
     oppAthleteStatistics: [], // For each opponent athlete, keeps their individual stats for this match.
+    // TODO -> Implement functions for the following properties.
+    hasPBP: true,
+    sportName: "",
+    teamId: 0,
+    validUPRMRoster: [], // Lists all UPRM athletes for the corresponding event.
+    branch: "", // Sport branch (masculino, femenino, exhibición).
+    opponentName: "", // Name to be displayed in 
 })

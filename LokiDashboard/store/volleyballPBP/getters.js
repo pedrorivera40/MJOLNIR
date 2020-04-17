@@ -64,5 +64,10 @@ export default {
     oppStatistics: state => state.oppStatistics,
     uprmAthleteStatistics: state => state.uprmAthleteStatistics,
     oppAthleteStatistics: state => state.oppAthleteStatistics,
-
+    sportName: state => state.sportName,
+    hasPBP: state => state.hasPBP,
+    teamId: state => state.teamId,
+    validUPRMRoster: state => state.validUPRMRoster,
+    branch: state => state.branch,
+    opponentName: state => state.opponentName,
 }

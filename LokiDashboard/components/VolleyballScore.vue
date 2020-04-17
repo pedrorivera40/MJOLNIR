@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-row justify="center">
-          <h1 class="text-lg-center">UPRM</h1>
+          <h1 class="text-lg-center">{{ uprm_team }}</h1>
         </v-row>
         <v-row justify="center">
           <v-layout row wrap align-center>
@@ -61,7 +61,7 @@
       </v-col>
       <v-col>
         <v-row justify="center">
-          <h1 class="text-lg-center">UPR-RP</h1>
+          <h1 class="text-lg-center">{{ opp_team }}</h1>
         </v-row>
         <v-row justify="center">
           <v-layout row wrap align-center>

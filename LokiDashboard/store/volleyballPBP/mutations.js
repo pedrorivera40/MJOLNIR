@@ -245,10 +245,11 @@ export default {
         for (let athlete in state.uprmRoster) {
             result.push(
                 {
-                    athlete_number: athlete.number,
+                    name: state.uprmRoster[athlete].first_name + ' ' + state.uprmRoster[athlete].middle_name + ' ' + state.uprmRoster[athlete].last_names,
+                    number: state.uprmRoster[athlete].number,
                     killPoints: 0,
                     aces: 0,
-                    blockPoints: 0,
+                    blockingPoints: 0,
                     assists: 0,
                     blocks: 0,
                     digs: 0,
@@ -328,10 +329,11 @@ export default {
         for (let athlete in state.oppRoster) {
             result.push(
                 {
-                    athlete_number: athlete.number,
+                    name: state.oppRoster[athlete].first_name + ' ' + state.oppRoster[athlete].middle_name + ' ' + state.oppRoster[athlete].last_names,
+                    number: state.oppRoster[athlete].number,
                     killPoints: 0,
                     aces: 0,
-                    blockPoints: 0,
+                    blockingPoints: 0,
                     assists: 0,
                     blocks: 0,
                     digs: 0,
@@ -401,6 +403,30 @@ export default {
             }
         }
 
-        state.uprmAthleteStatistics = result;
+        state.oppAthleteStatistics = result;
+    },
+
+    SET_SPORT_NAME(state, name) {
+        state.sportName = name;
+    },
+
+    SET_HAS_PBP(state, value) {
+        state.hasPBP = value;
+    },
+
+    SET_TEAM_ID(state, id) {
+        state.teamId = id;
+    },
+
+    SET_VALID_UPRM_ROSTER(state, roster) {
+        state.validUPRMRoster = roster;
+    },
+
+    SET_BRANCH(state, branch) {
+        state.branch = branch;
+    },
+
+    SET_OPPONENT_NAME(state, name) {
+        state.opponentName = name;
     },
 }
