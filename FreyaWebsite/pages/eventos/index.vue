@@ -31,7 +31,7 @@
             <template v-slot:activator="{ on }">
               <v-text-field v-model="date" label="Fecha del Evento" readonly v-on="on"></v-text-field>
             </template>
-            <v-date-picker v-model="date" no-title scrollable locale="es-419">
+            <v-date-picker v-model="date" color="green darken-1" no-title scrollable locale="es-419">
               <v-spacer></v-spacer>
               <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
               <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
