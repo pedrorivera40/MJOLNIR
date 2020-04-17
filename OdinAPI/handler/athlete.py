@@ -313,7 +313,7 @@ class AthleteHandler:
             aCategories = attributes['categories']  
             
             #Regular Expressions for input validation
-            nameRegex = "^[a-zA-Z '.-]*$"
+            nameRegex = "^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$"
             phraseRegex = "^[a-zA-Z0-9- ',.;:!]*$"
             alphaSpaceRegex = "^[a-zA-Z ]*$"
             
@@ -324,14 +324,14 @@ class AthleteHandler:
               
    
              #Validation of inputs 
-            if not aFName or not isinstance(aFName,str) or len(aFName)<1 or len(aFName)>20 or not re.search(cNameReg,aFName):
+            if not aFName or not isinstance(aFName,str) or len(aFName)>20 or not re.search(cNameReg,aFName):
                 return "First name given does not follow the constraints."
 
             if aMName:                
-                if not isinstance(aMName,str) or len(aMName)<1 or len(aMName)>20 or not re.search(cNameReg,aMName):
+                if not isinstance(aMName,str) or len(aMName)>20 or not re.search(cNameReg,aMName):
                     return "Middle name given does not follow the constraints."
 
-            if not aLName or not isinstance(aLName,str) or len(aLName)<1 or len(aLName)>40 or not re.search(cNameReg,aLName):#Still need to validates all the characters in the last name string.
+            if not aLName or not isinstance(aLName,str) or len(aLName)>40 or not re.search(cNameReg,aLName):#Still need to validates all the characters in the last name string.
                 return "Last name given does not follow the constraints."
 
             if aBio:

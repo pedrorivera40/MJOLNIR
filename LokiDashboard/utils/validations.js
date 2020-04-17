@@ -21,7 +21,7 @@ const maxSummaryLength = (propertyType, maxSummaryLength) => {
 }
 
 const nameFormat = () => {
-  let regex = /^[a-zA-Z '.-]*$/
+  let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$/
   return v => regex.test(v) || "El formato del nombre es incorrecto,"
 }
 
