@@ -20,6 +20,7 @@ export default {
         commit("DONE_LOADING")
       } else {
         dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+        commit("DONE_LOADING")
       }
     }
   },
