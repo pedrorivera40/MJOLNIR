@@ -420,7 +420,9 @@ class UserHandler:
 
         for permission in permissionsList:  # If at least one of the parameters of one the indexes is None, scrap the request
             if 'permission_id' not in permission or 'is_invalid' not in permission:
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Bad Request.'), 400
+            if permission['permission_id'] == None or permission['is_invalid'] == None:
+                return jsonify(Error='Request Parameters Undefined.'), 400
 
         dao = UserDAO()
         resultList = dao.setUserPermissions(duid, permissionsList)

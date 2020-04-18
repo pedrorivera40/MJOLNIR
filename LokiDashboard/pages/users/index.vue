@@ -1,6 +1,6 @@
 <template>
   <v-container class="wrapper">
-    <h1 class="primary_dark--text pl-3">Usermanagement</h1>
+    <h1 class="primary_dark--text pl-3">User Management</h1>
     <div class="content-area pa-4 pt-12">
       <v-card>
         <v-card-title>
