@@ -169,6 +169,78 @@ class TestUserRoutes(unittest.TestCase):
         self.assertEqual(response.json['Error'], 'Bad Request.')
 
     def test_set_user_permissions_bad_parameters(self):
+        default_permissions = {"pissions": [
+                {
+                    "is_invalid": True,
+                    "permission_id": 13
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 14
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 15
+                },
+                {
+                    "is_invalid": True,
+                    "permission_id": 16
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 17
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 18
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 19
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 20
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 21
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 22
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 23
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 24
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 25
+                },
+                {
+                    "is_invalid": False,
+                    "permission_id": 26
+                },
+                {
+                    "is_invalid": True,
+                    "permission_id": 27
+                }]}
+        response = self.client.patch(f'/users/21/permissions', data=json.dumps(default_permissions), content_type='application/json',  follow_redirects=True)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['Error'], 'Bad Request.')
+        
+    def test_set_user_permissions_empty_parameters(self):
+        default_permissions = {"permissions": None}
+        response = self.client.patch(f'/users/21/permissions', data=json.dumps(default_permissions), content_type='application/json',  follow_redirects=None)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['Error'], 'Permissions cant be empty.')
+
+    def test_set_user_permissions_bad_parameters_inside_list(self):
         default_permissions = {"permissions": [
                 {
                     "ivalid": True,
@@ -234,7 +306,7 @@ class TestUserRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json['Error'], 'Bad Request.')
         
-    def test_set_user_permissions_empty_parameters(self):
+    def test_set_user_permissions_empty_parameters_inside_list(self):
         default_permissions = {"permissions": [
                 {
                     "is_invalid": None,
