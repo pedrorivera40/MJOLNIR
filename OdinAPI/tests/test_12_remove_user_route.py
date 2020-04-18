@@ -16,8 +16,6 @@ class TestUserRoutes(unittest.TestCase):
   ###########################################
 
   def test_remove_user(self):
-    #  TODO ADD a check to check if trying to remove an already removed user.
-    # TODO Make user inactive when removing the user.
     response = self.client.patch(f'/users/{newUserID}/remove',follow_redirects=True)
     self.assertEqual(response.status_code, 201)
     self.assertEqual(response.json['User']['email'], self.data['email'])
@@ -26,3 +24,8 @@ class TestUserRoutes(unittest.TestCase):
     self.assertEqual(response.json['User']['is_active'], False)
     self.assertEqual(response.json['User']['is_invalid'], True)
     self.assertEqual(response.json['User']['username'], self.data['username'])
+
+  def test_remove_user_inexistent_user(self):
+    response = self.client.patch(f'/users/666/remove',follow_redirects=True)
+    self.assertEqual(response.status_code, 404)
+    self.assertEqual(response.json['Error'], 'No user found in the system with that id.')
