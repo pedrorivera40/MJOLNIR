@@ -127,12 +127,12 @@ def athletePositions(sid, aid):
 @app.route("/auth/", methods=['POST'])
 def auth():
     if request.json == None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
         handler = UserHandler() 
         req = request.json
         if 'username' not in req or 'password' not in req:
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
             
         username = req['username']
         password = req['password'] # TODO: AES Encryption
@@ -143,7 +143,7 @@ def auth():
 #--------- Dashboard User Routes ---------#
 ###########################################
 @app.route("/users/", methods=['GET', 'POST'])
-# @token_check
+@token_check
 def allUsers():
     
     handler = UserHandler()
@@ -152,11 +152,11 @@ def allUsers():
         return handler.getAllDashUsers()
     if request.method == 'POST':
         if request.json == None:
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
         req = request.json
         ## Check the request contains the right structure.
         if 'username' not in req or 'full_name' not in req or 'email' not in req or 'password' not in req:
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
 
         # For account creation
         return handler.addDashUser(req['username'], req['full_name'], req['email'], req['password'])
@@ -172,11 +172,11 @@ def userByID(duid):
         return handler.getDashUserByID(duid)
     if request.method == 'PATCH':
         if request.json == None:
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
         ## For username change
         ## Check the request contains the right structure.
         if 'username' not in req or 'full_name' not in req or 'email' not in req or 'is_active' not in req :
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
 
         return handler.updateDashUserInfo(duid, req['username'],req['full_name'], req['email'], req['is_active'])
 
@@ -185,13 +185,13 @@ def userByID(duid):
 # @token_check
 def getUserByUsername():
     if request.json == None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
         ## Check the request contains the right structure.
         if 'username' not in req :
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
 
         return handler.getDashUserByUsername(req['username'])
 
@@ -200,13 +200,13 @@ def getUserByUsername():
 # @token_check
 def getUserByEmail():
     if request.json == None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
         handler = UserHandler()
         req = request.json
         ## Check the request contains the right structure.
         if 'email' not in req :
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
         return handler.getDashUserByEmail(req['email'])
 
 
@@ -214,27 +214,27 @@ def getUserByEmail():
 # @token_check
 def passwordReset(duid):
     if request.json == None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Bad Request.'), 400
     handler = UserHandler()
     req = request.json
     if request.method == 'PATCH':
         ## For password reset
         ## Check the request contains the right structure.
         if 'password' not in req :
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
         return handler.updateDashUserPassword(duid, req['password'])
 
 @app.route("/users/activate", methods=['PATCH'])
 def accountUnlock():
     if request.json == None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Bad Request.'), 400
     req = request.json
     handler = UserHandler()
     if request.method == 'PATCH':
         ## For acount unlock
         ## Check the request contains the right structure.
         if 'username' not in req or 'password' not in req or 'new_password' not in req :
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
         return handler.unlockDashUserAccount(req['username'], req['password'], req['new_password'])
 
 
@@ -265,7 +265,7 @@ def userPermissions(duid):
         return handler.getUserPermissions(duid,'request')
     if request.method == 'PATCH':
         if request.json == None:
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Bad Request.'), 400
         req = request.json
         ## Check the request contains the right structure.
         if 'permissions' not in req :
