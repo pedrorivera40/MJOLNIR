@@ -409,7 +409,7 @@ class AthleteDAO:
                 if not apID:
                     return 'Athlete position update failed.' 
             except:
-                return 'Was given wrong names for the positions.'
+                return 'The names of the positions given are incorrect.'
                 
         #If the categories were given then the categories of the athlete will be udpated.
         if aCategories and not aPositions:
@@ -419,7 +419,7 @@ class AthleteDAO:
                        from  category as C inner join sport as S on C.sport_id=S.id
                        where S.id = %s                       
                     """
-            cursor.execute(query,(result[10],))            
+            cursor.execute(query,(result[12],))            
         
             categories = []#List containing the categories of a sport
             for row in cursor:
@@ -510,17 +510,35 @@ class AthleteDAO:
         except:
             return "A problem ocurred when verifying the sport."
 
-    #This function migh be used later.
-    def _athleteExists(self,cursor,aID):
+    
+    def athleteExists(self,aID):
+        """
+        Confirms the existance of a an athlete by the athlete id
+        given.
+
+        Performs a simple fetch query to determine if 
+        the athlete given exists.
+
+        Args:           
+            sID: The id of the athlete being confirmed
+
+        Returns:
+            True if the athlete exists in the database, 
+            false otherwise.
+        """
+        cursor = self.conn.cursor()
         exists = True
         query = """select id
                    from athlete
                    where id=%s
                    and is_invalid=false
                 """
-        cursor.execute(query,(aID,))
-        if not cursor.fetchone():
-            exists = False
+        try:
+            cursor.execute(query,(aID,))
+            if not cursor.fetchone():
+                exists = False
+        except:
+            return False
         return exists
     
     def getAthleteSportByID(self,aID):

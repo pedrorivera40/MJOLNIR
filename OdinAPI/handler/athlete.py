@@ -116,8 +116,11 @@ class AthleteHandler:
             A JSON containing all valid athletes that participate in a
             specified sport by the given sport id.
         """
-        if not isinstance(sID,int):#Validate that the sport id is an integer.
-            return jsonify(Error = "The id of the sport must be an integer."),400
+        try:
+            if not isinstance(int(sID),int):#Validate that the sport id is an integer.
+                return jsonify(Error = "The id of the sport given is invalid."),400
+        except:
+            return jsonify(Error = "The id of the sport given is invalid."),400
 
         dao = AthleteDAO()
         try:            
@@ -190,6 +193,7 @@ class AthleteHandler:
 
         aPositions = attributes['positions']
         aCategories = attributes['categories']
+        
         try:            
             result = None
             if aPositions and not aCategories:                   
@@ -212,8 +216,8 @@ class AthleteHandler:
                 return jsonify(Error = result),400
 
             return jsonify(Athlete = "Added new athlete with id:{}.".format(result)),201
-        except:
-            return jsonify(Error = "Problem ocurred when adding a new athlete."),400
+        except Exception as e:
+            return jsonify(Error = "Problem ocurred when adding a new athlete." + str(e)),400
             
     def editAthlete(self,aID,attributes):
         """
@@ -232,15 +236,18 @@ class AthleteHandler:
         Returns:
             A JSON object containing the information of the edited athlete.
         """ 
-        if not isinstance(aID,int):
-            return jsonify(Error =  "The athlete id must be in integer."),400
+        if not isinstance(aID,int) or aID < 1:
+            return jsonify(Error =  "The athlete id given is invalid."),400
 
         validationResult = self._validateAttributes(attributes)
         if isinstance(validationResult,str):
-            return jsonify(Error = validationResult),400               
-       
-        try:            
-            result = AthleteDAO().editAthlete(aID,attributes['first_name'],attributes['middle_name'],attributes['last_names'],
+            return jsonify(Error = validationResult),400
+        
+        try: 
+            dao = AthleteDAO()                   
+            if not dao.athleteExists(aID):
+                return jsonify(Error = "Athlete with id:{} does not exist.".format(aID)),404           
+            result = dao.editAthlete(aID,attributes['first_name'],attributes['middle_name'],attributes['last_names'],
                                                 attributes['bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
                                                 attributes['school_of_precedence'],attributes['number'],attributes['year_of_study'],
                                                 attributes['years_of_participation'],attributes['profile_picture_link'],attributes['positions'],
@@ -265,13 +272,13 @@ class AthleteHandler:
         Returns:
             A JSON containing the id of the invalidated athlete.
         """
-        if not isinstance(aID,int):
-            return jsonify(Error =  "The athlete id must be in integer."),400
+        if not isinstance(aID,int) or aID < 1:
+            return jsonify(Error =  "The athlete id given is invalid"),400
         try:
-            dao = AthleteDAO()
-            result = dao.removeAthlete(aID)
-            if not result:
-                return jsonify(Error = "Athlete not found with id:{}.".format(aID)),404
+            dao = AthleteDAO()                              
+            if not dao.athleteExists(aID):
+                return jsonify(Error = "Athlete with id:{} does not exist.".format(aID)),404
+            result = dao.removeAthlete(aID)            
             return jsonify(Athlete = "Removed athlete with id:{}.".format(result)),200
         except:
             return jsonify(Error = "Problem ocurred when removing an athlete.")
@@ -339,12 +346,12 @@ class AthleteHandler:
                     return "Athlete bio given does not follow the constraints."
 
             if aHeight:
-                if not isinstance(aHeight,float) or aHeight < 48.0 or aHeight > 96.0:
+                if not isinstance(float(aHeight),float) or aHeight < 48.0 or aHeight > 96.0:
                     return "Invalid value for height given."
 
             if aStudyProgram:
                 if not isinstance(aStudyProgram,str) or not re.search(cAlphaSpaceReg,aStudyProgram):
-                    return "The study program given is not a string."
+                    return "The study program given does not follow the constraints."
 
             if aDateOfBirth:           
                 try:#Date format validation
@@ -352,7 +359,7 @@ class AthleteHandler:
                         return "The date of birth given is not valid."
                     parse(aDateOfBirth)
                 except:
-                    return "The date fo birth given is not valid."
+                    return "The date of birth given is not valid."
 
 
             if aSchoolOfPrecedence:
@@ -360,28 +367,31 @@ class AthleteHandler:
                     return "The input given for school of precedence is incorrect."
 
             if aNumber:
-                if not isinstance(aNumber,int) or aNumber < 0 or aNumber > 99:
-                    return "The number of the athlete must be an integer."
+                if not isinstance(int(aNumber),int) or aNumber < 0 or aNumber > 99:
+                    return "The number of the athlete given is not valid."
 
             if aYearOfStudy:
-                if not isinstance(aYearOfStudy,int) or aYearOfStudy < 1 or aYearOfStudy > 10:
-                    return "The number of the athlete must be an integer."
+                if not isinstance(int(aYearOfStudy),int) or aYearOfStudy < 1 or aYearOfStudy > 10:
+                    return "The year of study given is not valid."
 
             if aYearsOfParticipation:
-                if not isinstance(aYearsOfParticipation,int) or aYearsOfParticipation < 1 or aYearsOfParticipation > 4 :
-                    return "The number of the athlete must be an integer."
+                if not isinstance(int(aYearsOfParticipation),int) or aYearsOfParticipation < 1 or aYearsOfParticipation > 4 :
+                    return "The years of participation given is not valid."
 
             if aProfilePictureLink:
                 if not isinstance(aProfilePictureLink,str):
-                    return "The profile picture link must be a string."
+                    return "The profile picture link given is not valid."
 
             if aPositions:            
                 if not isinstance(aPositions,dict):
-                    return "Positions must be in dictionary."
+                    return "Positions given are not valid."
 
             if aCategories:
                 if not isinstance(aCategories,dict):
-                    return "Categories must be in dictionary."
+                    return "Categories given are not valid"
+
+            if aPositions and aCategories:
+                return "An athlete can't have  both positions and categories in a sport."
         except:
             return "Bad arguments given."  
 

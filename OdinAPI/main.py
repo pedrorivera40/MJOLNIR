@@ -79,7 +79,7 @@ def athletes():
         return handler.getAthletesBySport(json['sID'])
 
 
-@app.route("/athletes/<int:aid>/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route("/athletes/<int:aid>/", methods=['GET', 'PUT', 'DELETE'])
 def athleteByID(aid):
     handler = AthleteHandler()
     if request.method == 'GET':
