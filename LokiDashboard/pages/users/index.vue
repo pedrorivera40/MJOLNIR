@@ -68,6 +68,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"
+                  :disabled="item.username === $store.state.userAuth.user.username"
                   @click.stop="editUser(item)"
                 >
                   mdi-pencil
@@ -82,6 +83,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"
+                  :disabled="item.username === $store.state.userAuth.user.username"
                   @click="editPermissions(item)"
                 >
                   mdi-shield-lock
@@ -95,6 +97,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"
+                  :disabled="item.username === $store.state.userAuth.user.username"
                   @click.stop="deleteUser(item)"
                 >
                   mdi-delete
