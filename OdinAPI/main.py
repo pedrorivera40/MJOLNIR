@@ -262,8 +262,8 @@ def teamEvents(tID):
     if request.method == 'GET':
         return handler.getEventsByTeam(tID)
     elif request.method == 'POST':
-        json = request.json
-        if 'attributes' not in json:
+        json = request.json    
+        if not json or 'attributes' not in json:
             return jsonify(Error = "Bad arguments"),400
         return handler.addEvent(tID, json['attributes'])
 
