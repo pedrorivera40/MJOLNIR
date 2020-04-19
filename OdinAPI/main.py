@@ -19,6 +19,7 @@ from handler.sport import SportHandler
 from handler.pbp_handler import VolleyballPBPHandler
 from handler.match_based_event import MatchBasedEventHandler
 from handler.team import TeamHandler
+from handler.event_result import EventResultHandler
 
 
 ## Load environment variables
@@ -1787,14 +1788,21 @@ def matchbasedAthleteStatistics():
             return handler.getAllAthleteStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['athlete_id']),int(json['category_id']))
         except:
             return jsonify(Error = "Bad arguments"),400
+
     if request.method == 'POST':
+        if 'attributes' not in json:
+            return jsonify(Error = "Bad arguments"),400
+
         return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
+
     if request.method == 'PUT':
         if 'attributes' not in json:
-            return jsonify(Error = "Bad request"),400 
+            return jsonify(Error = "Bad arguments"),400 
         return handler.editStatistics(json['event_id'], json['athlete_id'], json['attributes'])
         
     if request.method == 'DELETE':
+        if 'category_id' not in json:
+            return jsonify(Error = "Bad arguments"),400
         return handler.removeStatistics(json['event_id'], json['athlete_id'],json['category_id'])
     
 
@@ -1817,8 +1825,11 @@ def matchbasedTeamStatistics():
         except:
             return jsonify(Error = "Bad arguments"),400
 
-    if request.method == 'POST':       
-            return handler.addTeamStatistics(json['event_id'], json['attributes'])        
+    if request.method == 'POST': 
+        if 'attributes' not in json:
+            return jsonify(Error = "Bad arguments"),400      
+        return handler.addTeamStatistics(json['event_id'], json['attributes'])
+
     if request.method == 'PUT':
         if 'category_id' not in json:
             return jsonify(Error = "Bad arguments"),400 
@@ -1835,21 +1846,45 @@ def matchbasedTeamStatistics():
 
 @app.route("/results/matchbased/score/", methods = ['GET','POST','PUT','DELETE'])
 def matchbasedFinalScores():
-    json = request.json
-    if not json:
-        return jsonify(Error = "Bad arguments"),400
-    #handler = MatchBasedEventHandler()
+    json = None
     if request.method == 'GET':
-        return #handler.getFinalScore(json['event_id'])
-    if request.method == 'POST':
-        return #handler.addFinalScore(json['event_id'], json['attributes'])
-    if request.method == 'PUT':
-        return #handler.editFinalScore(json['event_id'], json['attributes'])
-    if request.method == 'DELETE':
-        return #handler.removeFinalScore(json['event_id'])
+        json = request.args
     else:
-        return jsonify(Error="Method not allowed."), 405
+        json = request.json
 
+    if json is None:
+        return jsonify(Error='Bad Request'),400
+
+    handler = EventResultHandler()
+
+    if request.method == 'GET' or request.method == 'DELETE':
+       
+        if 'event_id' not in json:
+            return jsonify(Error='Bad Request'),400
+        try:
+            if request.method == 'GET':
+                return handler.getFinalScore(int(json['event_id']))
+            if request.method == 'DELETE':
+                return handler.removeFinalScore(int(json['event_id']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
+    if request.method == 'POST' or request.method == 'PUT':
+        
+        if 'event_id' not in json or 'attributes' not in json:
+            return jsonify(Error='Bad Request'),400
+        
+        specific_stats = json['attributes']
+
+        if ('uprm_score' not in specific_stats or 'opponent_score' not in specific_stats):
+                return jsonify(Error='Bad Request'),400
+        try:
+            if request.method == 'POST':
+                return handler.addFinalScore(json['event_id'], json['attributes'])
+            if request.method == 'PUT':
+                return handler.editFinalScore(json['event_id'], json['attributes'])
+        except:
+            return jsonify(Error = "Bad arguments"),400
+ 
 
 @app.route("/results/matchbased/season/athlete_games/", methods = ['GET'])
 def matchbasedSeasonAthleteStatistics():

@@ -24,7 +24,7 @@ class MatchBasedEventDAO:
     
 
     #=============================//HELPERS//====================
-    def getMatchBasedEventID(self,eID,aID):
+    def getMatchBasedEventID(self,eID,aID,cID):
         """
         Checks if match_based event exists.
 
@@ -34,6 +34,7 @@ class MatchBasedEventDAO:
         Args:
             eID: The ID of the event 
             aID: The ID of the athlete
+            cID: The ID of the category
             
         Returns:
             The id of the match_based event entry if it exists.
@@ -42,13 +43,13 @@ class MatchBasedEventDAO:
         query = """
                 SELECT id
                 FROM match_based_event
-                WHERE event_id = %s and athlete_id = %s and (is_invalid = false or is_invalid is Null);
+                WHERE event_id = %s and athlete_id = %s and category_id = %s and (is_invalid = false or is_invalid is Null);
                 """
-        cursor.execute(query,(int(eID),int(aID),))
+        cursor.execute(query,(int(eID),int(aID),cID,))
         result = cursor.fetchone()
         return result
     
-    def getMatchBasedEventIDInvalid(self,eID,aID):
+    def getMatchBasedEventIDInvalid(self,eID,aID,cID):
         """
         Checks if invalid match_based event exists.
 
@@ -58,7 +59,7 @@ class MatchBasedEventDAO:
         Args:
             eID: The ID of the event 
             aID: The ID of the athlete
-            
+            cID: The ID of the category
         Returns:
             The id of the invalid match_based event entry if it exists.
         """
@@ -66,9 +67,9 @@ class MatchBasedEventDAO:
         query = """
                 SELECT id
                 FROM match_based_event
-                WHERE event_id = %s and athlete_id = %s and (is_invalid = true);
+                WHERE event_id = %s and athlete_id = %s and category_id =%s and (is_invalid = true);
                 """
-        cursor.execute(query,(int(eID),int(aID),))
+        cursor.execute(query,(int(eID),int(aID),cID,))
         result = cursor.fetchone()
         return result
     
@@ -491,18 +492,21 @@ class MatchBasedEventDAO:
             A list containing the response to the database query
             containing the matching record for the new team statistics entry. 
         """
-        print('HERE!!')
+        
         cursor = self.conn.cursor()
         query = """
                 INSERT INTO match_based_event_team_stats(matches_played,matches_won,category_id,event_id,is_invalid)
                 VALUES(%s,%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(matches_played,matches_won,category_id,eID,))
-        tsID = cursor.fetchone()[0]
-        if not tsID:
+        try:
+            cursor.execute(query,(matches_played,matches_won,category_id,eID,))
+            tsID = cursor.fetchone()[0]
+            if not tsID:
+                return tsID
+            #self.commitChanges()
             return tsID
-        #self.commitChanges()
-        return tsID
+        except:
+            return None
     
     #NEW : aggregate statistics automatically and insert new team stats
     #TODO: name better. this method will take the aggregate and add the necessary team statistics
@@ -670,7 +674,7 @@ class MatchBasedEventDAO:
 
 #=============================//DELETE//=======================
      
-    #TODO: in handler must call update team statistics (auto) after this. 
+     
     def removeStatistics(self,eID,aID,cID):
         """
         Invalidates a match_based event statistics entry in the database.
@@ -694,12 +698,15 @@ class MatchBasedEventDAO:
                 WHERE event_id = %s  and athlete_id = %s and category_id=%s
                 RETURNING id;
                 """
-        cursor.execute(query,(eID,aID,cID))
-        result = cursor.fetchone()
-        if not result:
+        try:
+            cursor.execute(query,(eID,aID,cID))
+            result = cursor.fetchone()[0]
+            if not result:
+                return result      
+            
             return result
-        #self.commitChanges()
-        return result
+        except: 
+            return None
 
     #NEW : remove team statistics
     def removeTeamStatistics(self,eID,cID):
@@ -711,7 +718,8 @@ class MatchBasedEventDAO:
         team statistics entry from the system.
 
         Args:
-            eID: The ID of the event for which the team statistics will be invalidated.
+            eID: The ID of the event for which the team statistics will be invalidated. 
+            cID: The ID of the category of the event.
             
         Returns:
             A list containing the response to the database query
@@ -723,10 +731,11 @@ class MatchBasedEventDAO:
                 UPDATE match_based_event_team_stats
                 SET is_invalid = true
                 WHERE event_id = %s
+                and category_id = %s
                 RETURNING id;
                 """
         cursor.execute(query,(eID,cID,))
-        result = cursor.fetchone()
+        result = cursor.fetchone()[0]
         if not result:
             return result
         #self.commitChanges()

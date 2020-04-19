@@ -525,7 +525,7 @@ class MatchBasedEventHandler():
         dao = MatchBasedEventDAO()
 
         try:           
-            if dao.getMatchBasedEventID(eID,aID):
+            if dao.getMatchBasedEventID(eID,aID,attributes['category_id']):
                 return jsonify(Error = "Match Based Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),403 #TODO: Use 403 for duplicates
         except:
             return jsonify(ERROR="Unable to verify match_based_event from DAO."), 500
@@ -581,7 +581,7 @@ class MatchBasedEventHandler():
         #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
         invalid_duplicate = False
         try:
-            if dao.getMatchBasedEventIDInvalid(eID,aID):
+            if dao.getMatchBasedEventIDInvalid(eID,aID,attributes['category_id']):
                 invalid_duplicate = True
         except:
             return jsonify(ERROR="Unable to verify match_based_event from DAO."), 500
@@ -675,7 +675,8 @@ class MatchBasedEventHandler():
 
         # Validate that the event belongs to the correct sport.        
         try:
-            sID = t_dao.getTeamSportByID(tID)
+            sID = t_dao.getTeamSportByID(tID)[0]
+            
             if sID != TENNIS_IDM and sID != TENNIS_IDF and sID != TABLE_TENNIS_IDM and sID != TABLE_TENNIS_IDF:                
                 return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Match Based.".format(eID)),400
              
@@ -716,88 +717,7 @@ class MatchBasedEventHandler():
            
             dao.commitChanges()
             return jsonify(Match_Based_Event_Team_Stats = "Added new team statistics record with id:{} for event id:{}.".format(result,eID)),201
- 
-    
-    def addTeamStatisticsAuto(self,eID,cID):
-        """
-        Adds a new team statistics record with the provided information and an aggregate of existing information.
-
-        Calls the MatchBasedEventDAO to add a new team statistics record and maps the result to
-        to a JSON that contains the desired record. That JSON object 
-        is then returned.
-
-        Args:
-            eID: the ID of the event for which the statistics record will be added.
-            cID: The ID of the category which the statistics record will be added.
-            
-        Returns:
-            A JSON containing  the id for the new Match Based Event team statistics record.
-        """
-        if not isinstance(eID,int):
-            return jsonify(Error = "Bad arguments"),400
-
-        # Validate Avoid Duplication
-        dao = MatchBasedEventDAO()        
-        try:            
-            if dao.getMatchBasedEventTeamStatsID(eID,cID):
-                return jsonify(Error = "Match Based Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
-        except:
-            return jsonify(ERROR="Unable to verify match based event team sats from DAO."), 500
-         
-        # Validate existing event
-        e_dao = EventDAO()
-        try:            
-            event = e_dao.getEventByID(eID)
-            if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
-        except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
-         
-        # Get Event Team For Validation       
-        t_dao = TeamDAO()
-        try:            
-            tID = e_dao.getEventTeamByID(eID)
-        except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
-         
-
-        # Validate that the event belongs to the correct sport.        
-        try:
-            sID = t_dao.getTeamSportByID(tID)
-            if sID != TENNIS_IDM and sID != TENNIS_IDF and sID != TABLE_TENNIS_IDM and sID != TABLE_TENNIS_IDF:
-                return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Match Based.".format(eID)),400
-        except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
-         
-        #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
-        invalid_duplicate = False
-        try:
-            if dao.getMatchBasedEventTeamStatsIDInvalid(eID,cID):
-                invalid_duplicate = True
-        except:
-            return jsonify(ERROR="Unable to verify match_based_event_team_Stats from DAO."), 500
-        #the case of there already existing an entry, but marked as invalid
-        if invalid_duplicate:
-            try:
-                result = dao.editTeamStatistics(eID,cID)
-                if not result:
-                    return jsonify(Error = "Team statistics Record not found for the event id:{}.".format(eID)),404   
-            except:
-                return jsonify(ERROR="Unable to verify match based team event from DAO."), 500
-
-            mappedResult = self.mapEventTeamStatsToDict(result)
-            dao.commitChanges()
-            return jsonify(Match_Based_Event_Team_Stats = mappedResult),200
-        else:
-            # Create and Validate new Match_Based_Event team stats
-            try:
-                result = dao.addTeamStatisticsAuto(eID)
-                if not result:
-                    return jsonify(Error = "Problem inserting new team statistics record."),500
-            except:
-                return jsonify(ERROR="Unable to verify match based event team stats from DAO."), 500
-            dao.commitChanges()
-            return jsonify(Match_Based_Event_Team_Stats = "Added new team statistics record with id:{} for event id:{}.".format(result,eID)),201        
+           
 
     
     def addAllEventStatistics(self,eID,attributes):
@@ -816,7 +736,8 @@ class MatchBasedEventHandler():
                     matchesPlayed: Number of matches played by the athlete in the event.
                     matchesWon: Number of matches won by the athlete in the event.
                     category_id: The id of the category played by the athlete in the event.
-                team_statistics:
+                team_statistics: List containing various dictionary that follow the format below.
+
                     matchesPlayed: Number of matches played by the athlete in the event.
                     matchesWon: Number of matches won by the athlete in the event.
                     category_id: The id of the category played by the athlete in the event.                    
@@ -834,15 +755,16 @@ class MatchBasedEventHandler():
 
         local_score = attributes['uprm_score']     
         opponent_score = attributes['opponent_score']        
-        team_statistics = attributes['team_statistics']['match_based_statistics']
+        team_statistics = attributes['team_statistics']
         athlete_statistics = attributes['athlete_statistics']
         
         
         # Validate Avoid Duplication Team Stats
         dao = MatchBasedEventDAO()
-        try:            
-            if dao.getMatchBasedEventTeamStatsID(eID,attributes['category_id']):
-                return jsonify(Error = "Match Based Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
+        try:
+            for categories in team_statistics:     
+                if dao.getMatchBasedEventTeamStatsID(eID,categories['category_id']):
+                    return jsonify(Error = "Match Based Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
         except:
             return jsonify(ERROR="Unable to verify match based event team stats from DAO."), 500
          
@@ -866,22 +788,23 @@ class MatchBasedEventHandler():
 
         # Validate that the event belongs to the correct sport.        
         try:
-            sID = t_dao.getTeamSportByID(tID) 
-            if sID != BASKETBALL_IDF and sID != BASKETBALL_IDM:
+            sID = t_dao.getTeamSportByID(tID)[0]
+            if sID != TENNIS_IDM and sID != TENNIS_IDF and sID != TABLE_TENNIS_IDM and sID != TABLE_TENNIS_IDF :
                 return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Match Based.".format(eID)),400
             
-            if not self._validateCategory(sID,attributes['category_id']):
-                return jsonify(Error = "Bad request, category {} does not match the sport of the team.".format(attributes['category_id'])),400
+            for categories in team_statistics:   
+                if not self._validateCategory(sID,categories['category_id']):
+                    return jsonify(Error = "Bad request, category {} does not match the sport of the team.".format(attributes['category_id'])),400
         except:
             return jsonify(ERROR="Unable to verify team from DAO."), 500
          
         # Go through every set of athlete to add attributes for. 
         for athlete_attributes in athlete_statistics:
 
-            aID = athlete_attributes['athlete_id']
+            aID = athlete_attributes['athlete_id']            
             try:
                 # Validate Avoid Duplication Match Based Event Entry
-                if dao.getMatchBasedEventID(eID,aID):
+                if dao.getMatchBasedEventID(eID,aID,athlete_attributes['statistics']['match_based_statistics']['category_id']):
                     return jsonify(Error = "Match Based Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),400
             except:
                 return jsonify(ERROR="Unable to verify match based event from DAO."), 500
@@ -890,12 +813,12 @@ class MatchBasedEventHandler():
             statistics = athlete_attributes['statistics']['match_based_statistics']
             
             try:
-                a_dao = AthleteDAO()
+                a_dao = AthleteDAO()                
                 athlete = a_dao.getAthleteByID(aID)
                 if not athlete:
                     return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
-            except:
-                return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            except Exception as e:
+                return jsonify(ERROR="Unable to verify athlete from DAO." + str(e)), 500
          
             # Validate athlete belongs to team playing event           
             try:
@@ -925,12 +848,13 @@ class MatchBasedEventHandler():
 
         # Create and Validate new Match_Based_Event team stats
         try:
-            result = dao.addTeamStatistics(eID,team_statistics['mathces_played'],team_statistics['matches_won'],team_statistics['category_id'])
-                
-            if not result:
-                return jsonify(Error = "Problem inserting new team statistics record."),500
-        except:
-            return jsonify(ERROR="Unable to verify match based event team statistics from DAO."), 500
+            for teamStats in team_statistics:
+                result = dao.addTeamStatistics(eID,teamStats['matches_played'],teamStats['matches_won'],teamStats['category_id'])
+                    
+                if not result:
+                    return jsonify(Error = "Problem inserting new team statistics record."),500
+        except Exception as e:
+            return jsonify(ERROR="Unable to verify match based event team statistics from DAO." + str(e)), 500
         fs_dao.commitChanges() 
         dao.commitChanges()
         return jsonify(Match_Based_Event_Team_Stats = "Added new team statistics record with id:{} and individual statistics for event id:{}.".format(result,eID)),201
@@ -967,13 +891,14 @@ class MatchBasedEventHandler():
         dao = MatchBasedEventDAO()
         try:        
            
-            if not dao.getMatchBasedEventID(eID,aID):
+            if not dao.getMatchBasedEventID(eID,aID,attributes['category_id']):
                 return jsonify(Error = "Match Based Event Entry does not exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),404 
         except:
             return jsonify(ERROR="Unable to verify match_based_event from DAO."), 500
 
         # Validate existing event       
-        try:            
+        try:
+            e_dao = EventDAO()            
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -1101,15 +1026,14 @@ class MatchBasedEventHandler():
          
         # Remove Match_Based_Event Statistics and format returnabe
         
-        cID = None
+        
         try:
-            dao = MatchBasedEventDAO()
-            cID = dao.getAllAthleteStatisticsByEventID
+            dao = MatchBasedEventDAO()            
             result = dao.removeStatistics(eID,aID,cID)
             if not result:
                 return jsonify(Error = "Statistics Record not found with event id:{} for athlete id:{}.".format(eID,aID)),404
-        except:
-            return jsonify(ERROR="Unable to verify match based event from DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="Unable to verify match based event from DAO." + str(e)), 500
          
         #update and validate Match Based Event Team Statistic
         try:
@@ -1188,14 +1112,14 @@ class MatchBasedEventHandler():
         """
 
         if not isinstance(attributes,dict):
-            return False
-        
-        if not 'matches_played' in attributes:
-            return False
-        if not 'matches_won' in attributes:
-            return False
-        if not 'category_id' in attributes:
             return False        
+        
+        if 'matches_played' not in attributes:
+            return False
+        if 'matches_won' not in attributes:
+            return False
+        if 'category_id' not in attributes:
+            return False             
         
         if not isinstance(attributes['matches_played'],int):
             return False
@@ -1256,32 +1180,31 @@ class MatchBasedEventHandler():
         if  not 'team_statistics' in attributes:
             return False
 
-        team_statistics = attributes['athlete_statistics'] 
-        if not isinstance(team_statistics,dict):
+        team_statistics = attributes['team_statistics'] 
+        if not isinstance(team_statistics,list):
             return False
-        if not 'match_based_statistics' in team_statistics:
-            return False             
+           
+        for t_statistics in team_statistics:
+            match_based_statistics = t_statistics
+
+            if not isinstance(match_based_statistics,dict):
+                return False
+
+            if not 'matches_played' in match_based_statistics:
+                return False
+            if not 'matches_won' in match_based_statistics:
+                return False
+            if not 'category_id' in match_based_statistics:
+                return False  
+
+            if not isinstance(match_based_statistics['matches_played'],int):
+                return False
         
-        match_based_statistics = team_statistics['match_based_statistics']
-
-        if not isinstance(match_based_statistics,dict):
-            return False
-
-        if not 'matches_played' in match_based_statistics:
-            return False
-        if not 'matches_won' in match_based_statistics:
-            return False
-        if not 'category_id' in match_based_statistics:
-            return False  
-
-        if not isinstance(match_based_statistics['matches_played'],int):
-            return False
-    
-        if not isinstance(match_based_statistics['matches_won'],int):
-            return False
-        
-        if not isinstance(match_based_statistics['category_id'],int):
-            return False                                 
+            if not isinstance(match_based_statistics['matches_won'],int):
+                return False
+            
+            if not isinstance(match_based_statistics['category_id'],int):
+                return False                                 
             
         return True
 
@@ -1305,8 +1228,9 @@ class MatchBasedEventHandler():
             if category_id in CATEGORIES[sport]:
                 return True
         return False
-        
-        
+    
+
+   
         
 
 
