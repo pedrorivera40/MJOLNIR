@@ -125,13 +125,13 @@ export default {
       dispatch('notifications/setSnackbar', {text: `${payload.username}'s information has been updated!`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
-      console.log(error)
-      // if(!!error.response.data){
-      //   dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-      //   return 'error' //so modal does not close when an error happens.
-      // } else {
-      //   dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-      // }
+      // console.log(error)
+      if(!!error.response.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+        return 'error' //so modal does not close when an error happens.
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      }
 
     }
   },
