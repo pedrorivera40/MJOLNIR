@@ -23,7 +23,7 @@ let teamStats: VolleyballStatsEntry = new VolleyballStatsEntry();
 
 // Insert an invalid game action, and a notification. 
 updateVolleyballStats("AN_INVALID_GAME_ACTION", athlete1, teamStats);
-updateVolleyballStats("NOTIFICATION", athlete1, teamStats);
+updateVolleyballStats("Notification", athlete1, teamStats);
 
 // Obtain and display outputs of athlete1 and teamStats.
 const athlete1Output = athlete1.getJSON();
@@ -32,6 +32,7 @@ const teamStatsOutput = teamStats.getJSON();
 console.log(athlete1Output);
 console.log(teamStatsOutput);
 
+// Validate if the test passes.
 if (JSON.stringify(athlete1Output) === expectedOutput && JSON.stringify(teamStatsOutput) === expectedOutput) {
     console.log("UpdateVolleyballStatsBADTest: PASSED");
 } else {
