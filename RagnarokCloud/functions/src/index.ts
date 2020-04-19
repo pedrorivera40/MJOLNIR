@@ -160,7 +160,6 @@ export const updateVolleyballStats = function (actionType: string, playerStats:
     switch (actionType) {
 
         case VolleyballPlays.KillPoint:
-            console.log("HERE!");
             playerStats.kill();
             teamStats.kill();
             break;
