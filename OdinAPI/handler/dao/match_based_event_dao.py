@@ -143,7 +143,7 @@ class MatchBasedEventDAO:
         query = """
                 SELECT
                 A.id as A_id, A.first_name, A.middle_name, A.last_names, 
-                A.number, A.profile_image_link,M.matches_played,M.matches_won,C.name               
+                A.number, A.profile_image_link,M.matches_played,M.matches_won,C.name,               
                 M.event_id, M.id as match_based_event_id
                 FROM match_based_event as M INNER JOIN category as C ON M.category_id=C.id
                 INNER JOIN athlete as A ON A.id = M.athlete_id
@@ -213,15 +213,16 @@ class MatchBasedEventDAO:
         query = """
                 SELECT
                 matches_played,matches_won,C.name,event_id,
-                match_based_event_team_stats.id as match_based_event_team_stats_id
-                FROM match_based_event_team_stats INNER JOIN category as C on match_based_event_team_stats.category_id=C.id
+                match_based_event_team_stats.id as match_based_event_team_stats_id,event.opponent_name
+                FROM match_based_event_team_stats INNER JOIN category as C on match_based_event_team_stats.category_id=C.id INNER JOIN event on match_based_event_team_stats.event_id = event.id
                 WHERE event_id = %s  and category_id = %s and
                 (match_based_event_team_stats.is_invalid = false or match_based_event_team_stats.is_invalid is null);
                 """
         cursor.execute(query,(eID,cID,))
-        result = cursor.fetchone()    
-        if result:
-            if cID == TENNIS_CIDF_DOUBLE or cID == TENNIS_CIDM_DOUBLE or cID == TABLE_TENNIS_CIDF_DOUBLE or TABLE_TENNIS_CIDM_DOUBLE:
+        result = cursor.fetchone() 
+                  
+        if result:            
+            if cID == TENNIS_CIDF_DOUBLE or cID == TENNIS_CIDM_DOUBLE or cID == TABLE_TENNIS_CIDF_DOUBLE or cID == TABLE_TENNIS_CIDM_DOUBLE:               
                 result = list(result)
                 result[0] = int(result[0]/2)
                 result[1] = int(result[1]/2)
@@ -252,7 +253,7 @@ class MatchBasedEventDAO:
         query = """
                 SELECT
                 event.id as event_id, event.event_date,
-                matches_played,matches_won,C.name
+                matches_played,matches_won,C.name,
                 match_based_event.id as match_based_event_id,
                 match_based_event.athlete_id
                 FROM match_based_event INNER JOIN category as C on match_based_event.category_id=C.id
@@ -302,11 +303,11 @@ class MatchBasedEventDAO:
                 (match_based_event.is_invalid = false or match_based_event.is_invalid is null)                
                 GROUP BY match_based_event.athlete_id,match_based_event.category_id)
                 select 
-                matches_played, matches_won,C.name
+                matches_played, matches_won,C.name,
                 athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
                 INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
-                INNER JOIN category as C on aggregate_query.catergory_id = C.id
+                INNER JOIN category as C on aggregate_query.category_id = C.id
                 ;
                 """
         cursor.execute(query,(aID,seasonYear,))        
@@ -335,7 +336,7 @@ class MatchBasedEventDAO:
         query = """
                 with aggregate_query as(
                 SELECT
-                sum(mathes_played) as matches_played,sum(matches_won) as matches_won,
+                sum(matches_played) as matches_played,sum(matches_won) as matches_won,
                 match_based_event.athlete_id,match_based_event.category_id
 
                 FROM match_based_event
@@ -345,11 +346,11 @@ class MatchBasedEventDAO:
                 (match_based_event.is_invalid = false or match_based_event.is_invalid is null)
                 GROUP BY match_based_event.athlete_id, match_based_event.category_id)
                 select 
-                sum(mathes_played) as matches_played,sum(matches_won) as matches_won, category_name,
+                matches_played, matches_won, C.name,
                 athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
                 INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
-                INNER JOIN category as C on aggregate_query.catergory_id = C.id                
+                INNER JOIN category as C on aggregate_query.category_id = C.id                
                 ;
                 """
         cursor.execute(query,(int(sID),int(seasonYear),))        
@@ -386,15 +387,15 @@ class MatchBasedEventDAO:
                 match_based_event_team_stats.category_id,event.team_id
                 FROM match_based_event_team_stats 
                 INNER JOIN event ON event.id = match_based_event_team_stats.event_id
-                INNER JOIN team on team.id = event.team_id
+                INNER JOIN team ON team.id = event.team_id
                 WHERE team.sport_id = %s and team.season_year = %s and
                 (match_based_event_team_stats.is_invalid = false or match_based_event_team_stats.is_invalid is null) and
                 (match_based_event_team_stats.category_id = %s or match_based_event_team_stats.category_id = %s or match_based_event_team_stats.category_id = %s or match_based_event_team_stats.category_id = %s)
-                GROUP BY event.team_id,match_based_team_stats.category_id)
-                select 
-                matches_played,matches_won,C.name
+                GROUP BY event.team_id,match_based_event_team_stats.category_id)
+                SELECT 
+                matches_played,matches_won,C.name,
                 team_id
-                from aggregate_query INNER JOIN category as C ON aggregate_query.category_id=C.id
+                FROM aggregate_query INNER JOIN category as C ON aggregate_query.category_id=C.id
                 ;
                 """
         cursor.execute(solo_query,(sID,seasonYear,TENNIS_CIDM_SOLO,TENNIS_CIDF_SOLO,TABLE_TENNIS_CIDM_SOLO,TABLE_TENNIS_CIDF_SOLO,))        
@@ -405,18 +406,18 @@ class MatchBasedEventDAO:
                 with aggregate_query as(
                 SELECT
                 sum(matches_played) as matches_played,sum(matches_won) as matches_won,
-                C.name as category_name,event.team_id
-                FROM match_based_event_team_stats INNER JOIN category as C on match_based_event_team_stats.category_id=C.id
+                match_based_event_team_stats.category_id,event.team_id
+                FROM match_based_event_team_stats
                 INNER JOIN event ON event.id = match_based_event_team_stats.event_id
                 INNER JOIN team on team.id = event.team_id
                 WHERE team.sport_id = %s and team.season_year = %s and
                 (match_based_event_team_stats.is_invalid = false or match_based_event_team_stats.is_invalid is null) and
                 (match_based_event_team_stats.category_id = %s or match_based_event_team_stats.category_id = %s or match_based_event_team_stats.category_id = %s or match_based_event_team_stats.category_id = %s)
-                GROUP BY event.team_id,C.name)
+                GROUP BY event.team_id,match_based_event_team_stats.category_id)
                 select 
-                matches_played,matches_won,category_name
+                matches_played,matches_won,C.name,
                 team_id
-                from aggregate_query
+                from aggregate_query INNER JOIN category as C ON aggregate_query.category_id=C.id
                 ;
                 """
         cursor.execute(double_query,(sID,seasonYear,TENNIS_CIDM_DOUBLE,TENNIS_CIDF_DOUBLE,TABLE_TENNIS_CIDM_DOUBLE,TABLE_TENNIS_CIDF_DOUBLE,))        
@@ -730,6 +731,38 @@ class MatchBasedEventDAO:
             return result
         #self.commitChanges()
         return result
+
+
+    def getCategoriesOfTheEvent(self, eID):
+        """
+        Returns a list of categories that the event has.
+
+        Performs a fetch query on the database in order 
+        to collect the categories played in an event.
+
+        Args:
+            eID: The id of the event.
+
+        Returns:
+            A list containing the categories played in an event.    
+        """
+
+        cursor = self.conn.cursor()
+
+        query = """
+                select distinct category_id
+                from match_based_event 
+                where event_id = %s
+                and is_invalid = false
+                """
+        try:
+            cursor.execute(query,(eID,))
+            categories = []
+            for row in cursor:
+                categories.append(row[0])
+            return categories
+        except:
+            return []
 
 
         

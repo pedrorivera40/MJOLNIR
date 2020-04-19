@@ -96,7 +96,7 @@ class MatchBasedEventHandler():
     def mapAthleteSeasonAggregate(self, record):
         athlete_info = {}
         stat_info = {}
-        
+        print(record)
         athlete_info['athlete_id'] = record[3]
         athlete_info['first_name'] = record[4]
         athlete_info['middle_name'] = record[5]
@@ -124,16 +124,19 @@ class MatchBasedEventHandler():
         return result
 
 
-    def mapEventAllStatsToDict(self,team_record,athlete_records,final_record):
+    def mapEventAllStatsToDict(self,team_records,athlete_records,final_record):
         event_info = dict(
-            event_id = team_record[3],
-            match_based_event_team_stats_id = team_record[5]            
+            event_id = team_records[0][3],
+            match_based_event_team_stats_id = team_records[0][4]            
         )
-        match_based_statistics = dict(
-            matches_played = team_record[0],
-            matches_won = team_record[1],            
+        match_based_statistics = {}
+                               
+        
+        for teamResults in team_records:
+            match_based_statistics[teamResults[2]] = {'matches_played':teamResults[0],'matches_won':teamResults[1]}
            
-        )
+
+
         team_statistics = dict(match_based_statistics = match_based_statistics)
        
         athlete_statistics = []
@@ -158,7 +161,7 @@ class MatchBasedEventHandler():
         
         result = dict(event_info = event_info, team_statistics = team_statistics, 
         athlete_statistic = athlete_statistics, uprm_score = final_record[0], 
-        opponent_score = final_record[1],opponent_name = final_record[2])
+        opponent_score = final_record[1],opponent_name = team_records[0][5])#NOTE:This opponent name is not in final score dao.
         return result
 
 #===========================//HANDLERS//==================================
@@ -181,7 +184,7 @@ class MatchBasedEventHandler():
             A JSON containing all the statistics in the system for the specified event and athlete.
         """
 
-        #validate parameters given
+        #validate parameters given        
         if not isinstance(eID,int) or not isinstance(aID,int) or not self._validateMatchCategory(cID):
             return jsonify(Error = "Bad arguments"),400
 
@@ -237,7 +240,10 @@ class MatchBasedEventHandler():
         """
 
         #validate parameters given
-        if not isinstance(eID,int) or not self._validateMatchCategory(cID):
+        try:
+            if not isinstance(eID,int) or not self._validateMatchCategory(cID):
+                return jsonify(Error = "Bad arguments"),400
+        except:
             return jsonify(Error = "Bad arguments"),400
 
         #validate existing event
@@ -378,8 +384,8 @@ class MatchBasedEventHandler():
             for athlete_statistics in result:                     
                 mappedResult.append(self.mapAthleteSeasonAggregate(athlete_statistics))
             #print(mappedResult)
-        except:
-            return jsonify(ERROR="Unable to verify match_based event from DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="Unable to verify match_based event from DAO." + str(e)), 500
          
         return jsonify(Match_Based_Event_Season_Athlete_Statistics = mappedResult), 200
 
@@ -417,8 +423,8 @@ class MatchBasedEventHandler():
             else:
                 mappedResult = self.mapTeamSeasonAggregate(result)
             
-        except:
-            return jsonify(ERROR="Unable to verify match_based event team stats from DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="Unable to verify match_based event team stats from DAO." + str(e)), 500
          
         return jsonify(Match_Based_Event_Season_Team_Statistics = mappedResult), 200
 
@@ -439,8 +445,11 @@ class MatchBasedEventHandler():
         """
 
         #validate parameters given
+        
+        
         if not isinstance(eID,int):
             return jsonify(Error = "Bad arguments"),400
+       
 
         #validate existing event
         try:
@@ -453,30 +462,37 @@ class MatchBasedEventHandler():
 
         dao = MatchBasedEventDAO()
 
-        try:            
-            team_result = dao.getAllTeamStatisticsByEventID(eID)
-            if not team_result:
+        try:  
+            categoriesPlayed = dao.getCategoriesOfTheEvent(eID)
+            if not categoriesPlayed:
+                return jsonify(Error = "Match Based Event Team Statistics not found for the event: {}".format(eID)),404  
+
+            team_results = []
+            for category in categoriesPlayed:
+                team_results.append(dao.getAllTeamStatisticsByEventIdAndCategoryId(eID,category))
+            if not team_results:
                 return jsonify(Error = "Match Based Event Team Statistics not found for the event: {}".format(eID)),404
-        except:
-            return jsonify(ERROR="Unable to verify match based event team stats from DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="Unable to verify match based event team stats from DAO." + str(e)), 500
         
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
-            if not all_stats_result:
+            if not all_stats_result:            
                 return jsonify(Error = "Match Based Event Statistics not found for the event: {}.".format(eID)),404
-        except:
-            return jsonify(ERROR="Unable to verify match based event from DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="Unable to verify match based event from DAO." + str(e)), 500
          
         try:
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
-            if not final_score_result:
+            if not final_score_result:                
                 return jsonify(Error = "Match Based Event Statistics not found for the event: {}.".format(eID)),404
-            mappedResult = self.mapEventAllStatsToDict(team_result,all_stats_result, final_score_result)
+            #print(team_results)
+            mappedResult = self.mapEventAllStatsToDict(team_results,all_stats_result, final_score_result)
             return jsonify(Match_Based_Event_Statistics = mappedResult),200
 
-        except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="Unable to verify final score from DAO." + str(e)), 500
          
       
 
@@ -593,12 +609,10 @@ class MatchBasedEventHandler():
         # If existing Team Statistics update, else create
         try:
             if dao.getMatchBasedEventTeamStatsID(eID,attributes['category_id']) or dao.getMatchBasedEventTeamStatsIDInvalid(eID,attributes['category_id']):
-                print('HERE#')
                 team_result = dao.editTeamStatistics(eID,attributes['category_id'])
                 if not team_result:
                     return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            else: 
-                print('HERE!')               
+            else:                           
                 dao.addTeamStatistics(eID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])
         except Exception as e:
             return jsonify(ERROR="HERE Unable to verify match based event team statistics from DAO." + str(e)), 500       
@@ -885,7 +899,7 @@ class MatchBasedEventHandler():
          
             # Validate athlete belongs to team playing event           
             try:
-                if not t_dao.getTeamMemberByIDs(aID,tID): #alternatively: t_dao.athleteBelongsToTeam(aID,tID)
+                if not t_dao.getTeamMemberByIDs(aID,tID): 
                     return jsonify(Error = "Malformed Query, Athlete ID:{} does not belong to Team ID:{} from Event ID:{}.".format(aID,tID,eID)),400
             except:
                 return jsonify(ERROR="Unable to verify team from DAO."), 500

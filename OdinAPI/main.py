@@ -1746,12 +1746,21 @@ def getAllSports():
 
 @app.route("/results/matchbased/", methods = ['GET','POST'])
 def matchbasedStatistics():
-    json = request.json
-    handler = MatchBasedEventHandler()
-    if not json:
-        return jsonify(Error = "Bad arguments"),400
+    json = None
     if request.method == 'GET':
-        return handler.getAllStatisticsByEventID(json['event_id'])
+        json = request.args
+    elif request.method == 'POST':
+        json = request.json
+    
+    if not json or 'event_id' not in json:
+        return jsonify(Error = "Bad arguments"),400
+    
+    handler = MatchBasedEventHandler()  
+    if request.method == 'GET':        
+        try:
+            return handler.getAllStatisticsByEventID(int(json['event_id']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
         
     if request.method == 'POST':
         return handler.addAllEventStatistics(json['event_id'], json)
@@ -1761,46 +1770,74 @@ def matchbasedStatistics():
 
 @app.route("/results/matchbased/individual/", methods = ['GET','POST','PUT','DELETE'])
 def matchbasedAthleteStatistics():
-    json = request.json
-    if not json:
-        return jsonify("Error = Bad arguments"),400
-    handler = MatchBasedEventHandler()
+    json = None
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsByEventIdAndCategoryId(json['event_id'], json['athlete_id'],json['category_id'])
+        json = request.args
+    else:
+        json = request.json
+
+    
+    if not json or 'event_id' not in json or 'athlete_id' not in json:
+        return jsonify(Error = "Bad arguments"),400
+
+    handler = MatchBasedEventHandler()
+    
+    if request.method == 'GET':
+        try:            
+            return handler.getAllAthleteStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['athlete_id']),int(json['category_id']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
     if request.method == 'POST':
         return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
     if request.method == 'PUT':
+        if 'attributes' not in json:
+            return jsonify(Error = "Bad request"),400 
         return handler.editStatistics(json['event_id'], json['athlete_id'], json['attributes'])
         
     if request.method == 'DELETE':
         return handler.removeStatistics(json['event_id'], json['athlete_id'],json['category_id'])
-    else:
-        return jsonify(Error="Method not allowed."), 405
+    
 
 @app.route("/results/matchbased/team/", methods = ['GET','POST','PUT','DELETE'])
 def matchbasedTeamStatistics():
-    json = request.json
-    if not json:
-        return jsonify("Error = Bad arguments"),400
+    json = None
+    if request.method == 'GET':
+        json = request.args
+    else:
+        json = request.json
+
+    if not json or 'event_id' not in json:
+        return jsonify(Error = "Bad arguments"),400
 
     handler = MatchBasedEventHandler()
+
     if request.method == 'GET':
-        return handler.getAllTeamStatisticsByEventIdAndCategoryId(json['event_id'],json['category_id'])
+        try:           
+            return handler.getAllTeamStatisticsByEventIdAndCategoryId(int(json['event_id']),int(json['category_id']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
+
     if request.method == 'POST':       
             return handler.addTeamStatistics(json['event_id'], json['attributes'])        
     if request.method == 'PUT':
+        if 'category_id' not in json:
+            return jsonify(Error = "Bad arguments"),400 
+
         return handler.editTeamStatistics(json['event_id'],json['category_id'])
+
     if request.method == 'DELETE':
+        if 'category_id' not in json:
+            return jsonify(Error = "Bad arguments"),400 
+
         return handler.removeTeamStatistics(json['event_id'],json['category_id'])
-    else:
-        return jsonify(Error="Method not allowed."), 405
+    
 
 
 @app.route("/results/matchbased/score/", methods = ['GET','POST','PUT','DELETE'])
 def matchbasedFinalScores():
     json = request.json
     if not json:
-        return jsonify("Error = Bad arguments"),400
+        return jsonify(Error = "Bad arguments"),400
     #handler = MatchBasedEventHandler()
     if request.method == 'GET':
         return #handler.getFinalScore(json['event_id'])
@@ -1816,49 +1853,53 @@ def matchbasedFinalScores():
 
 @app.route("/results/matchbased/season/athlete_games/", methods = ['GET'])
 def matchbasedSeasonAthleteStatistics():
-    json = request.json
-    if not json:
+    json = request.args 
+    if not json or 'athlete_id' not in json or 'season_year' not in json:
         return jsonify("Error = Bad arguments"),400
-    handler = MatchBasedEventHandler()
+    
     if request.method == 'GET':
-        return handler.getAllAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
-    else:
-        return jsonify(Error="Method not allowed."), 405
+        try:
+            return MatchBasedEventHandler().getAllAthleteStatisticsPerSeason(int(json['athlete_id']), int(json['season_year']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
+
 
 
 @app.route("/results/matchbased/season/athlete_aggregate/", methods = ['GET'])
 def matchbasedAggregateAthleteStatistics():
-    json = request.json
-    if not json:
-        return jsonify("Error = Bad arguments"),400
-    handler = MatchBasedEventHandler()
+    json = request.args 
+    if not json or 'athlete_id' not in json or 'season_year' not in json:
+        return jsonify(Error = "Bad arguments"),400
+
     if request.method == 'GET':
-        return handler.getAggregatedAthleteStatisticsPerSeason(json['athlete_id'], json['season_year'])
-    else:
-        return jsonify(Error="Method not allowed."), 405
+        try:
+            return MatchBasedEventHandler().getAggregatedAthleteStatisticsPerSeason(int(json['athlete_id']),int(json['season_year']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
 
 @app.route("/results/matchbased/season/all_athletes_aggregate/", methods = ['GET'])
 def matchbasedAggregateAllAthleteStatistics():
-    json = request.json
-    if not json:
-        return jsonify("Error = Bad arguments"),400
-    handler = MatchBasedEventHandler()
-    if request.method == 'GET':
-        return handler.getAllAggregatedAthleteStatisticsPerSeason(json['sport_id'], json['season_year'])
-    else:
-        return jsonify(Error="Method not allowed."), 405
+    json = request.args
+    if not json or 'sport_id' not in json or 'season_year' not in json:
+        return jsonify(Error = "Bad arguments"),400
 
+    if request.method == 'GET':
+        try:
+            return MatchBasedEventHandler().getAllAggregatedAthleteStatisticsPerSeason(int(json['sport_id']),int(json['season_year']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
 
 @app.route("/results/matchbased/season/team_aggregate/", methods = ['GET'])
 def matchbasedAggregateTeamStatistics():
-    json = request.json
-    if not json:
-        return jsonify("Error = Bad arguments"),400
-    handler = MatchBasedEventHandler()
+    json = request.args
+    if not json or 'sport_id' not in json or 'season_year' not in json:
+        return jsonify(Error = "Bad arguments"),400
+   
     if request.method == 'GET':
-        return handler.getAggregatedTeamStatisticsPerSeason(json['sport_id'], json['season_year'])
-    else:
-        return jsonify(Error="Method not allowed."), 405
+        try:
+            return MatchBasedEventHandler().getAggregatedTeamStatisticsPerSeason(int(json['sport_id']),int(json['season_year']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
 
 
 
