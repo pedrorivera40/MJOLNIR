@@ -202,7 +202,7 @@ class UserHandler:
         # verify is user exists
         if user == None:
             # Login attempts do not increase because username does not exist.
-            return jsonify(Error="Username or Password are incorrect. user none"), 400
+            return jsonify(Error="Username or Password are incorrect."), 400
 
         # get user id , whic is position 0 of the user tupple.
         duid = user[0]
@@ -318,8 +318,9 @@ class UserHandler:
             return jsonify(Error='No user found in the system with that id.'), 404
         updatedUser = self.mapUserToDict(res)
         # When password is reset, login attempts are set to 0
-        dao.activateDashUserAccount(updatedUser['id'])  # Set account active to true.
+        updateActiveStatus = dao.activateDashUserAccount(updatedUser['id'])  # Set account active to true.
         dao.setLoginAttempts(updatedUser['id'], 0)
+        updatedUser = self.mapUserToDict(updateActiveStatus)
         return jsonify(User=updatedUser), 201
 
     def updateDashUserInfo(self, duid, username, full_name, email, is_active):
@@ -419,7 +420,9 @@ class UserHandler:
 
         for permission in permissionsList:  # If at least one of the parameters of one the indexes is None, scrap the request
             if 'permission_id' not in permission or 'is_invalid' not in permission:
-                return jsonify(Error='Bad Request  '), 400
+                return jsonify(Error='Bad Request.'), 400
+            if permission['permission_id'] == None or permission['is_invalid'] == None:
+                return jsonify(Error='Request Parameters Undefined.'), 400
 
         dao = UserDAO()
         resultList = dao.setUserPermissions(duid, permissionsList)
@@ -459,3 +462,4 @@ class UserHandler:
         if selector == 'request':
             return jsonify(Permissions=mappedPermissions), 200
         return mappedPermissions
+
