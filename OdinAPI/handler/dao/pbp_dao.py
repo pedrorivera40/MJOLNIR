@@ -22,6 +22,7 @@ class PBPDao:
         self._db_keywords = {
             "root": "/v1/",
             "meta": "/game-metadata",
+            "meta-key": "game-metadata",
             "uprm-roster": "/uprm-roster",
             "opp-roster": "/opponent-roster",
             "set": "/current-set",
@@ -48,12 +49,13 @@ class PBPDao:
         """
 
         event_node = {
-            self._db_keywords["meta"]: game_metadata,
+            self._db_keywords["meta-key"]: game_metadata,
             self._db_keywords["score-key"]: score_val
         }
 
-        path = self._db_keywords["root"] + int(event_id)
+        path = self._db_keywords["root"] + str(int(event_id))
         self._rtdb.reference(path).set(event_node)
+
 
     def remove_pbp_seq(self, event_id):
         """

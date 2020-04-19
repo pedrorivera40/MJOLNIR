@@ -1,7 +1,7 @@
 from re import search
 from flask import jsonify
 from .dao.pbp_dao import PBPDao as VolleyballPBPDao
-from.dao.mock.event_dao import _mockEventDAO as EventDAO
+from.mock.event_handler import _mockEventHandler as EventHandler
 
 
 class VolleyballPBPHandler:
@@ -372,15 +372,15 @@ class VolleyballPBPHandler:
         """
 
         try:
-            event_info = EventDAO().getEventById(event_id)
+            event_info, resp_code = EventHandler().getEventById(event_id)
+            event_info = event_info.json
 
-            if not event_info:
+            if not event_info.get("EVENT"):
                 return jsonify(ERROR="Invalid event."), 400
+            
+            event_info = event_info.get("EVENT")
 
-            if len(event_info) != 7:
-                return jsonify(ERROR="Invalid response from Event DAO."), 500
-
-            if event_info["sport_name"] != self._sport_keywords["sport"]:
+            if event_info.get("sport_name") != self._sport_keywords["sport"]:
                 return jsonify(ERROR="Sport does not match Volleyball."), 403
 
             pbp_dao = VolleyballPBPDao()
@@ -389,17 +389,18 @@ class VolleyballPBPHandler:
 
             # At this point, the event exists and does not have a PBP sequence.
             game_metadata = {
-                "game-ended": {"answer": "No"},
-                "sport": event_info[4],
+                "game-over": False,
+                "sport": self._sport_keywords["sport"],
             }
 
             pbp_dao.create_pbp_seq(
                 event_id, game_metadata, self._sport_keywords["score-val"])
-
-            return jsonify(MSG="PBP Sequence for " + id + " was successfully created"), 200
+            
+            return jsonify(MSG="PBP Sequence for " + str(event_id) + " was successfully created"), 200
 
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            print(str(e))
+            return jsonify(ERROR=str(e)), 500
 
     def removePBPSequence(self, event_id):
         try:
