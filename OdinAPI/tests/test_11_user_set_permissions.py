@@ -163,6 +163,6 @@ class TestUserRoutes(unittest.TestCase):
                     "permission_id": 27
                 }]}), content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['Error'], 'Bad Request')
+        self.assertEqual(response.json['Error'], 'Bad Request.')
 
 

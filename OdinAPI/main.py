@@ -143,7 +143,7 @@ def auth():
 #--------- Dashboard User Routes ---------#
 ###########################################
 @app.route("/users/", methods=['GET', 'POST'])
-@token_check
+# @token_check
 def allUsers():
     
     handler = UserHandler()

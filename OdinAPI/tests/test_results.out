@@ -1,8 +1,8 @@
 Running test_1_add_new_user_route
 **********************************
-.
+..
 ----------------------------------------------------------------------
-Ran 1 test in 6.060s
+Ran 2 tests in 3.343s
 
 OK
 **********************************
@@ -10,7 +10,7 @@ Running test_2_add_existent_user
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 2.256s
+Ran 2 tests in 0.983s
 
 OK
 **********************************
@@ -18,7 +18,7 @@ Running test_3_get_users_route
 **********************************
 .......
 ----------------------------------------------------------------------
-Ran 7 tests in 9.484s
+Ran 7 tests in 3.097s
 
 OK
 **********************************
@@ -26,19 +26,19 @@ Running test_4_activateUser_account
 **********************************
 .
 ----------------------------------------------------------------------
-Ran 1 test in 3.230s
+Ran 1 test in 1.137s
 
 OK
 **********************************
 Running test_5_login.
 **********************************
-./home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/.venv/lib/python3.7/site-packages/jwt/api_jwt.py:81: DeprecationWarning: It is strongly recommended that you pass in a value for the "algorithms" argument when calling decode(). This argument will be mandatory in a future version.
+../home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/.venv/lib/python3.7/site-packages/jwt/api_jwt.py:81: DeprecationWarning: It is strongly recommended that you pass in a value for the "algorithms" argument when calling decode(). This argument will be mandatory in a future version.
   DeprecationWarning
 /home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/.venv/lib/python3.7/site-packages/jwt/api_jws.py:145: DeprecationWarning: It is strongly recommended that you pass in a value for the "algorithms" argument when calling decode(). This argument will be mandatory in a future version.
   DeprecationWarning
 ..
 ----------------------------------------------------------------------
-Ran 3 tests in 7.024s
+Ran 4 tests in 4.660s
 
 OK
 **********************************
@@ -46,7 +46,7 @@ Running test_6_lockout
 **********************************
 .
 ----------------------------------------------------------------------
-Ran 1 test in 15.833s
+Ran 1 test in 6.116s
 
 OK
 **********************************
@@ -54,7 +54,7 @@ Running test_7_reset_invalid_password
 **********************************
 ........
 ----------------------------------------------------------------------
-Ran 8 tests in 3.290s
+Ran 8 tests in 1.852s
 
 OK
 **********************************
@@ -62,7 +62,7 @@ Running test_8_reset_password_route
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 4.550s
+Ran 2 tests in 1.600s
 
 OK
 **********************************
@@ -70,7 +70,7 @@ Running test_9_toggle_active_state_route
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 2.000s
+Ran 2 tests in 1.152s
 
 OK
 **********************************
@@ -78,30 +78,42 @@ Running test_10_add_get_user_permissions
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 4.616s
+Ran 2 tests in 0.970s
 
 OK
 **********************************
 Running test_11_user_set_permissions
 **********************************
-....
+...F
+======================================================================
+FAIL: test_set_user_permissions_invalid_format (tests.test_11_user_set_permissions.TestUserRoutes)
 ----------------------------------------------------------------------
-Ran 4 tests in 4.567s
+Traceback (most recent call last):
+  File "/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/tests/test_11_user_set_permissions.py", line 166, in test_set_user_permissions_invalid_format
+    self.assertEqual(response.json['Error'], 'Bad Request')
+AssertionError: 'Bad Request.' != 'Bad Request'
+- Bad Request.
+?            -
++ Bad Request
 
-OK
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.978s
+
+FAILED (failures=1)
 **********************************
 Running test_12_remove_user_route
 **********************************
-.
+..
 ----------------------------------------------------------------------
-Ran 1 test in 1.206s
+Ran 2 tests in 1.193s
 
 OK
 **********************************
 Running test_13_actions_on_removed_user
 **********************************
-.....
+.......
 ----------------------------------------------------------------------
-Ran 5 tests in 5.140s
+Ran 7 tests in 4.842s
 
 OK
