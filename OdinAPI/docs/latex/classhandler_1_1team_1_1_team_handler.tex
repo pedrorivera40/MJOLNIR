@@ -24,15 +24,15 @@ def \hyperlink{classhandler_1_1team_1_1_team_handler_a01c7ec029ad084fb936ef9c90e
 \begin{DoxyCompactList}\small\item\em Gets the team members in the system that match the given team. \end{DoxyCompactList}\item 
 def \hyperlink{classhandler_1_1team_1_1_team_handler_a1a00f6d69828c15ce2da7b4215c868cf}{get\+Team\+Member\+By\+I\+Ds} (self, a\+ID, t\+ID)
 \begin{DoxyCompactList}\small\item\em Gets the team member entry in the system that matches the given athlete and team. \end{DoxyCompactList}\item 
-def \hyperlink{classhandler_1_1team_1_1_team_handler_a5210c4faddfd528492c3ce454a1aed95}{add\+Team} (self, s\+ID, t\+Year, t\+Image\+Link)
+def \hyperlink{classhandler_1_1team_1_1_team_handler_aed8995a60a6cdee0c5b59f2cab85e3af}{add\+Team} (self, s\+ID, t\+Year, t\+Image\+Link, about\+Team)
 \begin{DoxyCompactList}\small\item\em Adds a new team with the provided information. \end{DoxyCompactList}\item 
 def \hyperlink{classhandler_1_1team_1_1_team_handler_ae689082bd35b83e30cac03ad19d79ba5}{add\+Team\+Members} (self, t\+ID, t\+Roster)
 \begin{DoxyCompactList}\small\item\em Adds a new team member record with the provided information. \end{DoxyCompactList}\item 
 def \hyperlink{classhandler_1_1team_1_1_team_handler_a1f3809c59410d793a9b5db0de1a3b6b8}{add\+Team\+Member} (self, a\+ID, t\+ID)
 \begin{DoxyCompactList}\small\item\em Adds a new team member record with the provided information. \end{DoxyCompactList}\item 
-def \hyperlink{classhandler_1_1team_1_1_team_handler_a9fc42144b674bd9901dd1100cd8e389e}{edit\+Team} (self, t\+ID, t\+Image\+Link)
+def \hyperlink{classhandler_1_1team_1_1_team_handler_a465fbb07ab9d8a5bcd3f53686da4e44b}{edit\+Team} (self, t\+ID, t\+Image\+Link, about\+Team)
 \begin{DoxyCompactList}\small\item\em " Updates the team with the given ID. \end{DoxyCompactList}\item 
-def \hyperlink{classhandler_1_1team_1_1_team_handler_afa5cdac4a2bf859601108dd7e3f7a045}{edit\+Team\+By\+Year} (self, s\+ID, t\+Year, t\+Image\+Link)
+def \hyperlink{classhandler_1_1team_1_1_team_handler_a750abdf0f56213c05a322db464353956}{edit\+Team\+By\+Year} (self, s\+ID, t\+Year, t\+Image\+Link, about\+Team)
 \begin{DoxyCompactList}\small\item\em " Updates the team with the given ID. \end{DoxyCompactList}\item 
 def \hyperlink{classhandler_1_1team_1_1_team_handler_abc55ff5f4532a8486f8c941876dc84ce}{remove\+Team} (self, t\+ID)
 \begin{DoxyCompactList}\small\item\em Invalidates a team record in the database based on the given ID. \end{DoxyCompactList}\item 
@@ -43,11 +43,11 @@ def \hyperlink{classhandler_1_1team_1_1_team_handler_aac0d812b5de7f390f36d125904
 
 
 \subsection{Member Function Documentation}
-\mbox{\Hypertarget{classhandler_1_1team_1_1_team_handler_a5210c4faddfd528492c3ce454a1aed95}\label{classhandler_1_1team_1_1_team_handler_a5210c4faddfd528492c3ce454a1aed95}} 
+\mbox{\Hypertarget{classhandler_1_1team_1_1_team_handler_aed8995a60a6cdee0c5b59f2cab85e3af}\label{classhandler_1_1team_1_1_team_handler_aed8995a60a6cdee0c5b59f2cab85e3af}} 
 \index{handler\+::team\+::\+Team\+Handler@{handler\+::team\+::\+Team\+Handler}!add\+Team@{add\+Team}}
 \index{add\+Team@{add\+Team}!handler\+::team\+::\+Team\+Handler@{handler\+::team\+::\+Team\+Handler}}
 \subsubsection{\texorpdfstring{add\+Team()}{addTeam()}}
-{\footnotesize\ttfamily def handler.\+team.\+Team\+Handler.\+add\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{t\+Year,  }\item[{}]{t\+Image\+Link }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily def handler.\+team.\+Team\+Handler.\+add\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{t\+Year,  }\item[{}]{t\+Image\+Link,  }\item[{}]{about\+Team }\end{DoxyParamCaption})}
 
 
 
@@ -61,7 +61,9 @@ Calls the Team\+D\+AO to add a new team record and maps the result to to a J\+S\
 \hline
 {\em t\+Year} & the season year of the team to be added \\
 \hline
-{\em t\+Image\+Link} & the image link for the team\\
+{\em t\+Image\+Link} & the image link for the team \\
+\hline
+{\em about\+Team} & short description about team\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -111,11 +113,11 @@ Calls the Team\+D\+AO to add new team member records and maps the result to to a
 \begin{DoxyReturn}{Returns}
 A J\+S\+ON containing containing the id for the updated team. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classhandler_1_1team_1_1_team_handler_a9fc42144b674bd9901dd1100cd8e389e}\label{classhandler_1_1team_1_1_team_handler_a9fc42144b674bd9901dd1100cd8e389e}} 
+\mbox{\Hypertarget{classhandler_1_1team_1_1_team_handler_a465fbb07ab9d8a5bcd3f53686da4e44b}\label{classhandler_1_1team_1_1_team_handler_a465fbb07ab9d8a5bcd3f53686da4e44b}} 
 \index{handler\+::team\+::\+Team\+Handler@{handler\+::team\+::\+Team\+Handler}!edit\+Team@{edit\+Team}}
 \index{edit\+Team@{edit\+Team}!handler\+::team\+::\+Team\+Handler@{handler\+::team\+::\+Team\+Handler}}
 \subsubsection{\texorpdfstring{edit\+Team()}{editTeam()}}
-{\footnotesize\ttfamily def handler.\+team.\+Team\+Handler.\+edit\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID,  }\item[{}]{t\+Image\+Link }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily def handler.\+team.\+Team\+Handler.\+edit\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID,  }\item[{}]{t\+Image\+Link,  }\item[{}]{about\+Team }\end{DoxyParamCaption})}
 
 
 
@@ -127,17 +129,19 @@ Calls the Team\+D\+AO to update the team record. It then maps the result to a J\
 \begin{DoxyParams}{Parameters}
 {\em t\+ID} & the id of the team to be updated \\
 \hline
-{\em t\+Imagel\+I\+NK} & the updated image link\\
+{\em t\+Imagel\+I\+NK} & the updated image link \\
+\hline
+{\em about\+Team} & short description about team\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 A J\+S\+ON containing the the updated entry. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classhandler_1_1team_1_1_team_handler_afa5cdac4a2bf859601108dd7e3f7a045}\label{classhandler_1_1team_1_1_team_handler_afa5cdac4a2bf859601108dd7e3f7a045}} 
+\mbox{\Hypertarget{classhandler_1_1team_1_1_team_handler_a750abdf0f56213c05a322db464353956}\label{classhandler_1_1team_1_1_team_handler_a750abdf0f56213c05a322db464353956}} 
 \index{handler\+::team\+::\+Team\+Handler@{handler\+::team\+::\+Team\+Handler}!edit\+Team\+By\+Year@{edit\+Team\+By\+Year}}
 \index{edit\+Team\+By\+Year@{edit\+Team\+By\+Year}!handler\+::team\+::\+Team\+Handler@{handler\+::team\+::\+Team\+Handler}}
 \subsubsection{\texorpdfstring{edit\+Team\+By\+Year()}{editTeamByYear()}}
-{\footnotesize\ttfamily def handler.\+team.\+Team\+Handler.\+edit\+Team\+By\+Year (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{t\+Year,  }\item[{}]{t\+Image\+Link }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily def handler.\+team.\+Team\+Handler.\+edit\+Team\+By\+Year (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{t\+Year,  }\item[{}]{t\+Image\+Link,  }\item[{}]{about\+Team }\end{DoxyParamCaption})}
 
 
 

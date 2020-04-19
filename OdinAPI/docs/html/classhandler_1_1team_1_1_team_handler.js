@@ -1,10 +1,10 @@
 var classhandler_1_1team_1_1_team_handler =
 [
-    [ "addTeam", "classhandler_1_1team_1_1_team_handler.html#a5210c4faddfd528492c3ce454a1aed95", null ],
+    [ "addTeam", "classhandler_1_1team_1_1_team_handler.html#aed8995a60a6cdee0c5b59f2cab85e3af", null ],
     [ "addTeamMember", "classhandler_1_1team_1_1_team_handler.html#a1f3809c59410d793a9b5db0de1a3b6b8", null ],
     [ "addTeamMembers", "classhandler_1_1team_1_1_team_handler.html#ae689082bd35b83e30cac03ad19d79ba5", null ],
-    [ "editTeam", "classhandler_1_1team_1_1_team_handler.html#a9fc42144b674bd9901dd1100cd8e389e", null ],
-    [ "editTeamByYear", "classhandler_1_1team_1_1_team_handler.html#afa5cdac4a2bf859601108dd7e3f7a045", null ],
+    [ "editTeam", "classhandler_1_1team_1_1_team_handler.html#a465fbb07ab9d8a5bcd3f53686da4e44b", null ],
+    [ "editTeamByYear", "classhandler_1_1team_1_1_team_handler.html#a750abdf0f56213c05a322db464353956", null ],
     [ "getAllTeams", "classhandler_1_1team_1_1_team_handler.html#acc2d42a1a0a2120c25425708fc3274e5", null ],
     [ "getTeamByID", "classhandler_1_1team_1_1_team_handler.html#ad8844435c8d6951748a7dc17702a2a19", null ],
     [ "getTeamByYear", "classhandler_1_1team_1_1_team_handler.html#a4ee11f08a2e69e4a250527c9fea26190", null ],

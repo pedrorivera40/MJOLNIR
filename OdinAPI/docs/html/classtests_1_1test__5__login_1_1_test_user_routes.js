@@ -1,6 +1,7 @@
 var classtests_1_1test__5__login_1_1_test_user_routes =
 [
     [ "setUp", "classtests_1_1test__5__login_1_1_test_user_routes.html#a1a60e73e587ad1e24703d02c913dab0a", null ],
+    [ "test_invalid_username__invalid_password_login", "classtests_1_1test__5__login_1_1_test_user_routes.html#acca8a2b3bba4b28b2e1c0485f35b1250", null ],
     [ "test_invalid_username_login", "classtests_1_1test__5__login_1_1_test_user_routes.html#a5d043d579b6f8497191d239cfc78b900", null ],
     [ "test_sucessful_login", "classtests_1_1test__5__login_1_1_test_user_routes.html#af73cbbcc4c437f887f38969205fc0978", null ],
     [ "test_wrong_password_login", "classtests_1_1test__5__login_1_1_test_user_routes.html#ac6b4bf9ad5f166d1cdcd371801c5371d", null ],

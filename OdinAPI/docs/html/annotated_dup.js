@@ -100,6 +100,12 @@ var annotated_dup =
       [ "test_13_actions_on_removed_user", null, [
         [ "TestUserRoutes", "classtests_1_1test__13__actions__on__removed__user_1_1_test_user_routes.html", "classtests_1_1test__13__actions__on__removed__user_1_1_test_user_routes" ]
       ] ],
+      [ "test_14_auth_module", null, [
+        [ "TestUserRoutes", "classtests_1_1test__14__auth__module_1_1_test_user_routes.html", "classtests_1_1test__14__auth__module_1_1_test_user_routes" ]
+      ] ],
+      [ "test_15_testing_invalid_requests", null, [
+        [ "TestUserRoutes", "classtests_1_1test__15__testing__invalid__requests_1_1_test_user_routes.html", "classtests_1_1test__15__testing__invalid__requests_1_1_test_user_routes" ]
+      ] ],
       [ "test_1_add_new_user_route", null, [
         [ "TestUserRoutes", "classtests_1_1test__1__add__new__user__route_1_1_test_user_routes.html", "classtests_1_1test__1__add__new__user__route_1_1_test_user_routes" ]
       ] ],

@@ -33,6 +33,8 @@ var hierarchy =
       [ "tests.test_11_user_set_permissions.TestUserRoutes", "classtests_1_1test__11__user__set__permissions_1_1_test_user_routes.html", null ],
       [ "tests.test_12_remove_user_route.TestUserRoutes", "classtests_1_1test__12__remove__user__route_1_1_test_user_routes.html", null ],
       [ "tests.test_13_actions_on_removed_user.TestUserRoutes", "classtests_1_1test__13__actions__on__removed__user_1_1_test_user_routes.html", null ],
+      [ "tests.test_14_auth_module.TestUserRoutes", "classtests_1_1test__14__auth__module_1_1_test_user_routes.html", null ],
+      [ "tests.test_15_testing_invalid_requests.TestUserRoutes", "classtests_1_1test__15__testing__invalid__requests_1_1_test_user_routes.html", null ],
       [ "tests.test_1_add_new_user_route.TestUserRoutes", "classtests_1_1test__1__add__new__user__route_1_1_test_user_routes.html", null ],
       [ "tests.test_2_add_existent_user.TestUserRoutes", "classtests_1_1test__2__add__existent__user_1_1_test_user_routes.html", null ],
       [ "tests.test_3_get_users_route.TestUserRoutes", "classtests_1_1test__3__get__users__route_1_1_test_user_routes.html", null ],
