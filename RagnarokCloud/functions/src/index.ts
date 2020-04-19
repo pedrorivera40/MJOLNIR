@@ -139,59 +139,73 @@ export class VolleyballStatsEntry {
 
 }
 
+export const enum VolleyballPlays {
+    KillPoint = "KillPoint",
+    AttackError = "AttackError",
+    Assist = "Assist",
+    Ace = "Ace",
+    ServiceError = "ServiceError",
+    Dig = "Dig",
+    Block = "Block",
+    BlockPoint = "BlockPoint",
+    BlockingError = "BlockingError",
+    ReceptionError = "ReceptionError"
+}
+
 // TODO -> Add documentation & TESTS.	
-const updateVolleyballStats = function (actionType: string, playerStats:
-    VolleyballStatsEntry, teamStats: VolleyballStatsEntry, player: string): void {
+export const updateVolleyballStats = function (actionType: string, playerStats:
+    VolleyballStatsEntry, teamStats: VolleyballStatsEntry): void {
 
     // Update player and team statistics based on the given action type.	
     switch (actionType) {
 
-        case "KillPoint":
+        case VolleyballPlays.KillPoint:
+            console.log("HERE!");
             playerStats.kill();
             teamStats.kill();
             break;
 
-        case "AttackError":
+        case VolleyballPlays.AttackError:
             playerStats.attackError();
             teamStats.attackError();
             break;
 
-        case "Assist":
+        case VolleyballPlays.Assist:
             playerStats.assist();
             teamStats.assist();
             break;
 
-        case "Ace":
+        case VolleyballPlays.Ace:
             playerStats.ace();
             teamStats.ace();
             break;
 
-        case "ServiceError":
+        case VolleyballPlays.ServiceError:
             playerStats.serviceError();
             teamStats.serviceError();
             break;
 
-        case "Dig":
+        case VolleyballPlays.Dig:
             playerStats.dig();
             teamStats.dig();
             break;
 
-        case "Block":
+        case VolleyballPlays.Block:
             playerStats.block();
             teamStats.block();
             break;
 
-        case "BlockPoint":
+        case VolleyballPlays.BlockPoint:
             playerStats.blockPoint();
             teamStats.blockPoint();
             break;
 
-        case "BlockingError":
+        case VolleyballPlays.BlockingError:
             playerStats.blockingError();
             teamStats.blockingError();
             break;
 
-        case "ReceptionError":
+        case VolleyballPlays.ReceptionError:
             playerStats.receptionError();
             teamStats.receptionError();
             break;
@@ -365,7 +379,7 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
                 // Update statistics only if it is a play corresponding to UPRM team.	
                 if (actionType !== "Notification" && team === "UPRM") {
                     const player: string = <string>gameAction.child("athlete-id").val();
-                    updateVolleyballStats(actionType, <VolleyballStatsEntry>uprmPlayerStats.get(player), uprmStats, player);
+                    updateVolleyballStats(actionType, <VolleyballStatsEntry>uprmPlayerStats.get(player), uprmStats);
                 }
             });
         }).catch(() => {
