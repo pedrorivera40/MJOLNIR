@@ -3,19 +3,20 @@ class EventDAO:
         #   id  date            is_local|venue      team_id
         #   3	"2020-03-30"	true	"Mangual"	1
         #   4	"2020-03-14"	true	"Espada"	1
-        valid_events = [3,4,5,6,7,8,9,10,11,12,13,14,15,21,22,23,25]
+        valid_events = [3,4,5,6,7,8,9,10,11,12,13,14,15,21,22,23,24,25,26]
 
         if eID in valid_events:
             return 1
         return None
 
     def getEventTeamByID(self,eID):
-        team1events =[3,4,5,6,21,22,23,25]
+        team1events =[3,4,5,6,21,22,23,25,26]
         team4events =[7,8]
         team5events =[]
         team7events =[10,11,12,15]
         team8events =[12,13,14]
         team14events = [24]
+        team15events = []
         if eID in team1events:
             return 1
         if eID in team4events:
@@ -28,6 +29,8 @@ class EventDAO:
             return 8
         if eID in team14events:
             return 14
+        if eID in team15events:
+            return 15
 
         else:
             return None
@@ -48,7 +51,7 @@ class TeamDAO:
             return 10
         if tID == 4 or tID == 5:
             return 12
-        if tID == 7:
+        if tID == 7 or tID == 15:
             return 11
         if tID == 8:
             return 16
@@ -75,13 +78,16 @@ class TeamDAO:
         if tID == 14:
             if aID == 104 or aID == 105:
                 return (aID, tID)
+        if tID == 15:
+            if aID == 106 or aID == 107 or aID ==108:
+                return (aID, tID)
         return None
             
 
 class AthleteDAO:
     def getAthleteByID(self,aID):
         # Many Athletes in system, gonna only demo a few.
-        valid_list = [1,3,4,5,7,8,9,10,11,12,13,15,16,70,71,72,73,74,75,76,104,105]
+        valid_list = [1,3,4,5,7,8,9,10,11,12,13,15,16,70,71,72,73,74,75,76,104,105,106,107,108]
         if aID in valid_list:
             # We dont care about value here, just that it returns 
             # something to prove it exists
@@ -94,6 +100,7 @@ class AthleteDAO:
         volleyball_athletes_f = [70,71]
         baseball_athletes_m = [104,105]
         softball_athletes_f = []
+        soccer_athletes_f = [73,74,106,107,108]
         if aID in basketball_athletes_m:
             return 1
         if aID in basketball_athletes_f:
@@ -106,5 +113,7 @@ class AthleteDAO:
             return 4
         if aID in softball_athletes_f:
             return 16
+        if aID in soccer_athletes_f:
+            return 11
         
             

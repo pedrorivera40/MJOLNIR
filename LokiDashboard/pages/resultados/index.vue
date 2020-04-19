@@ -85,7 +85,7 @@
                 POR EQUIPO
             </v-tab>
             <v-tab-item>
-                <v-card :v-if="isBasketballTable">
+                <v-card>
                     
                     <v-card-title>
                     <v-row>
@@ -450,7 +450,7 @@ export default {
       statistics_per_season:"",
       team_statistics:[],
       search_individual: "",
-      sport_id: 1,
+      sport_id: 2,
       sport_name: "Soccer",
       opponent_score:'',
       opponent_name:'',

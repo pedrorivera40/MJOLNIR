@@ -5,13 +5,12 @@
       <v-toolbar-title>Evento</v-toolbar-title>
 			<v-progress-linear
 				:active="!ready"
-				inderterminate
+				indeterminate
 				absolute
 				bottom
 				color = "white"
-			></v-progress-linear>			
-      <v-spacer />
-
+			></v-progress-linear>	
+      <v-spacer></v-spacer>
     </v-toolbar>
     <v-card-text>       
        

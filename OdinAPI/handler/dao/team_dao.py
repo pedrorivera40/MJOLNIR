@@ -201,7 +201,7 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team.id as team_id, team.sport_id, team.season_year, team.team_image_url, sport.name as sport_name,
-                branch.id as branch_id, branch.name as branch_name
+                branch.id as branch_id, branch.name as branch_name, team.about_team
                 FROM team
                 INNER JOIN sport on team.sport_id = sport.id
                 INNER JOIN branch on sport.branch_id = branch.id
@@ -232,7 +232,7 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team.id as team_id, team.sport_id, team.season_year, team.team_image_url, sport.name as sport_name,
-                branch.id as branch_id, branch.name as branch_name
+                branch.id as branch_id, branch.name as branch_name, team.about_team
                 FROM team
                 INNER JOIN sport on team.sport_id = sport.id
                 INNER JOIN branch on sport.branch_id = branch.id
@@ -262,7 +262,7 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team.id as team_id, team.sport_id, team.season_year, team.team_image_url, sport.name as sport_name,
-                branch.id as branch_id, branch.name as branch_name
+                branch.id as branch_id, branch.name as branch_name, team.about_team
                 FROM team
                 INNER JOIN sport on team.sport_id = sport.id
                 INNER JOIN branch on sport.branch_id = branch.id
@@ -322,11 +322,24 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team_members.id as team_members_id, team_members.team_id, team_members.athlete_id, 
-                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link
-                FROM team_members
+                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link,
+                athlete.height_inches, athlete.study_program, athlete.school_of_precedence, athlete.years_of_participation,
+                array_agg(position.name) as positions, array_agg(category.name) as categories
+				FROM team_members
                 INNER JOIN athlete on team_members.athlete_id = athlete.id
-                WHERE team_id = %s and
-                (team_members.is_invalid = false or team_members.is_invalid is Null);
+                FULL OUTER JOIN athlete_position on athlete.id = athlete_position.athlete_id
+               	FULL OUTER JOIN position on athlete_position.position_id = position.id
+				FULL OUTER JOIN athlete_category on athlete.id = athlete_category.athlete_id
+               	FULL OUTER JOIN category on athlete_category.category_id = category.id
+                WHERE 
+				team_id = %s and
+                (team_members.is_invalid = false or team_members.is_invalid is Null)
+				and
+				(athlete_position.is_invalid = false or athlete_position.is_invalid is Null)
+				GROUP BY team_members.id, team_members.team_id, team_members.athlete_id, 
+                athlete.first_name,athlete.middle_name,athlete.last_names, athlete.number, athlete.profile_image_link,
+                athlete.height_inches, athlete.study_program, athlete.school_of_precedence, athlete.years_of_participation
+				;
                 """
         cursor.execute(query,(int(tID),))     
         result = []
@@ -336,7 +349,7 @@ class TeamDAO:
 #=============================//POST//=======================
     
     #UPDATED: removed branch parameter. removed tRoster. whatever that was.
-    def addTeam(self,sID, tYear,tImageLink): #Adds a new Team record with the information given as parameters, and returns the id of the inserted record.
+    def addTeam(self,sID, tYear,tImageLink,aboutTeam): #Adds a new Team record with the information given as parameters, and returns the id of the inserted record.
         """
         Adds a new team record with the provided information.
 
@@ -348,16 +361,17 @@ class TeamDAO:
             sID: the id of the team to be added
             tYear: the season year of the team to be added
             tImageLink: the image link of the team to be added
+            aboutTeam: short info about the team
             
         Returns:
             the id of the added team. 
         """
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO team(sport_id,season_year,team_image_url,is_invalid)
-                VALUES(%s,%s,%s,false) returning id;
+                INSERT INTO team(sport_id,season_year,team_image_url,is_invalid,about_team)
+                VALUES(%s,%s,%s,false,%s) returning id;
                 """
-        cursor.execute(query,(int(sID),int(tYear),str(tImageLink),))
+        cursor.execute(query,(int(sID),int(tYear),str(tImageLink),str(aboutTeam),))
         tID = cursor.fetchone()[0]
         if not tID:
             return tID
@@ -394,7 +408,7 @@ class TeamDAO:
 #=============================//PUTS//=======================
 
     # TODO: Updated... not sure if we should allow Sport/season year update. roster aint a thing.
-    def editTeam(self,tID,tImageLink): #Edits a team record identified by tID and returns the updated record.  
+    def editTeam(self,tID,tImageLink,aboutTeam): #Edits a team record identified by tID and returns the updated record.  
         """
         Updates the entry for the team with the given information.
 
@@ -404,6 +418,7 @@ class TeamDAO:
         Args:
             tID: the ID of the team to be edited
             tImageLink: the url for the team image
+            about_team: short info about the team
             
         Returns:
             A list containing the response to the database query
@@ -413,6 +428,7 @@ class TeamDAO:
         query = """
                 UPDATE team
                 SET team_image_url = %s,
+                    about_team = %s
                     is_invalid = false
                 WHERE id = %s
                 RETURNING
@@ -421,7 +437,7 @@ class TeamDAO:
                     season_year, 
                     team_image_url;
                 """
-        cursor.execute(query,(str(tImageLink),int(tID),))
+        cursor.execute(query,(str(tImageLink),str(aboutTeam),int(tID),))
         result = cursor.fetchone()
         if not result:
             return result
@@ -429,7 +445,7 @@ class TeamDAO:
         return result
     
     # TODO: Updated... not sure if we should allow Sport/season year update. roster aint a thing.
-    def editTeamByYear(self,sID,tYear,tImageLink): #Edits a team record identified by tID and returns the updated record.  
+    def editTeamByYear(self,sID,tYear,tImageLink,aboutTeam): #Edits a team record identified by tID and returns the updated record.  
         """
         Updates the entry for the team with the given information.
 
@@ -439,6 +455,7 @@ class TeamDAO:
         Args:
             tID: the ID of the team to be edited
             tImageLink: the url for the team image
+            aboutTeam: short description about team
             
         Returns:
             A list containing the response to the database query
@@ -448,6 +465,7 @@ class TeamDAO:
         query = """
                 UPDATE team
                 SET team_image_url = %s,
+                    about_team = %s,
                     is_invalid = false
                 WHERE sport_id = %s and season_year = %s
                 RETURNING
@@ -456,7 +474,7 @@ class TeamDAO:
                     season_year, 
                     team_image_url;
                 """
-        cursor.execute(query,(str(tImageLink),int(sID),int(tYear),))
+        cursor.execute(query,(str(tImageLink),str(aboutTeam),int(sID),int(tYear),))
         result = cursor.fetchone()
         if not result:
             return result

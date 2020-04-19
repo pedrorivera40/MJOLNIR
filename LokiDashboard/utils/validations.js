@@ -35,9 +35,23 @@ const maxLength = (propertyType, maxLength) => {
   return v => v && v.length <= maxLength || `${propertyType} must be less than ${maxLength} characters`
 }
 
+
+const maxSummaryLength = (propertyType, maxSummaryLength) => {
+  return v => {
+    if(!v){ return true; }
+  
+  return v.length <= maxSummaryLength || `${propertyType} must be less than ${maxSummaryLength} characters`
+  }
+}
+
 /**
  * Validation fucntion that uses regex to establish the format for password within the syste.
  */
+const nameFormat = () => {
+  let regex = /^[a-zA-Z '.-]*$/
+  return v => regex.test(v) || "El formato del nombre es incorrecto,"
+}
+
 const passwordFormat = () => {
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$/
   return v => regex.test(v) || "Password must contain at least: 1 upercase, 1 lowercase, 1 number, and 1 special character."
@@ -60,6 +74,26 @@ const passwordMatch = (password) => {
 
 }
 
+const generalPhrase = (propertyType) =>{
+    
+    let regex = /^[a-zA-Z0-9- ',.;:!]*$/
+    return v => regex.test(v) || `El formato de ${propertyType} es incorrecto.`
+  
+}
+const alphaSpaces = (propertyType) =>{
+  let regex = /^[a-zA-Z ]*$/
+  return v => regex.test(v) || `El formato de ${propertyType} es incorrecto.`
+}
+
+const teamRequired = (propertyType) => {
+  return v => {
+    if(!v){ return `${propertyType} debes ser seleccionado`; }
+    
+    //Will receive the id of the team which will be an integer larger than zero.
+    return v >= 0 || `${propertyType} debes ser seleccionado`;
+  }
+}
+
 /**
  * Validation function to determine if temp password and new password are different.
  * @param {*} password password to differentiate from.
@@ -73,8 +107,14 @@ export default {
   required,
   minLength,
   maxLength,
+  maxSummaryLength,
   passwordFormat,
   passwordMatch,
   emailFormat,
+  teamRequired,
+  nameFormat,
+  generalPhrase,
+  alphaSpaces,
   passwordDiffFromOld
+
 }

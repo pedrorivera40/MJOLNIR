@@ -11,7 +11,14 @@
       transition="slide-x-transition"
       :close-on-content-click="false"
     >
-    <template v-slot:activator="{ on }">        
+    <template v-slot:activator="{ on }">
+        <v-btn
+          color="green darken-1"
+          @click="goToCreateAthlete"                   
+        >
+        <v-icon left >mdi-pen-plus</v-icon>
+          Nuevo Atleta
+        </v-btn>  
         <v-btn
           color="white"          
           v-on="on"         
@@ -112,7 +119,9 @@ export default {
       getAthletes: "athletes/getAthletes"
     }),
 
-    
+    goToCreateAthlete(){
+        this.$router.push('/atleta/')
+    },
 
     clearFilters(){
         

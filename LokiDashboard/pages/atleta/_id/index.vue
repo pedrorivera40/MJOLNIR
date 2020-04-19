@@ -7,9 +7,16 @@
 		>
 			<v-spacer />
 			<v-toolbar-title> Perfil de Atleta </v-toolbar-title>
+			<v-progress-linear
+				:active="!ready"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>
 			<v-spacer />
 		</v-toolbar>
-		<v-container>
+		<v-container v-if="formated()">
 			<v-tabs
 					centered
 			>
@@ -32,24 +39,24 @@
 										<v-avatar
 												class="profile"
 												color="grey"
-												size="200"
-																							
-																																															
+												size="200"																																														
 										>
-												<v-img src="https://i.pinimg.com/originals/27/f3/0e/27f30eb66f427ef0d6395f92576a0a7d.png"></v-img>
-																												
+											<v-icon v-if="profile_image_link == ''">mdi-account </v-icon>
+											<v-img v-else :src="profile_image_link"></v-img>																											
 										</v-avatar> 																					
 									</v-col>
 
 									<v-col md=5>
 										<h3>{{first_name}} {{middle_name}} {{last_names}} </h3>
+										<span class="text"><b>Fecha de Nacimiento:</b> {{date_of_birth}} </span>
+										<v-spacer/>	
 										<span class="text"><b>Estatura:</b> {{height_feet}}' {{height_inches}}" </span>
 										<v-spacer/>	
 										<span class="text"><b>Programa de Estudio:</b> {{study_program}} </span>	
 										<v-spacer/>
-										<span class="text"><b>Escuela de Precedencia:</b> {{school_of_precedence}} </span>							
+										<span class="text"><b>Año de Estudio:</b> {{years_of_study}}</span>
 										<v-spacer/>
-										<span class="text"><b>Numero:</b> {{number}} </span>		 																					
+										<span class="text"><b>Escuela de Precedencia:</b> {{school_of_precedence}} </span>							
 									</v-col>
 
 									<v-col md=4>
@@ -57,15 +64,24 @@
 										<span class="text"><b>Deporte:</b> {{sport}}</span>
 										<v-spacer/>	
 										<span class="text"><b>Rama:</b> {{branch}}</span>
-										<v-spacer/>
-										<h4> Posiciones: </h4>
-											
-										<div v-for="position in athlete_positions" v-bind:key="position.id">
-											<span class="text">{{position}}</span>
-										
+										<v-spacer/>									
+										<span class="text"><b>Años de Participación:</b> {{years_of_participation}}</span>
+										<v-spacer/>	
+										<span class="text"><b>Número:</b> {{number}} </span>										
+									</v-col>
 
-										</div>
+									<v-col v-if="athlete_positions !=''" md=3>
+											<h4> Posiciones: </h4>										
+											<div v-for="position in athlete_positions" v-bind:key="position.id">
+												<span class="text">{{position}}</span>
+											</div>
+									</v-col>
 
+									<v-col v-if="athlete_categories !=''" md=3>
+											<h4> 	Categorías: </h4>										
+											<div v-for="category in athlete_categories" v-bind:key="category.id">
+												<span class="text">{{category}}</span>
+											</div>
 									</v-col>
 								
 								</v-row>
@@ -124,29 +140,35 @@
 </template>
 
 <script>
+import { mapActions, mapGetters} from "vuex"
+
+
 export default {
 
     data: () =>({
     
       //NOTE: Using pre-written data for athlete with id:8,
       //      will need to fetch this data below from the API.
-      
-      first_name: 'Bruce',
-      middle_name: 'Batman',
-      last_names:'Wayne',
-      short_bio:'I am vengeance, I am the night.',
-      height_feet:7,
-			height_inches:0,
-		
-      study_program:'Forensics', 
-      date_of_birth:'1980-07-21',
-      school_of_precedence:'Gotham High',
-      athlete_positions:["Base","Escolta"],
-      athlete_categories:{},      
-      number:27,
-      profile_image_link:'https://i.pinimg.com/originals/27/f3/0e/27f30eb66f427ef0d6395f92576a0a7d.png',
-      sport:'Baloncesto',     
-			branch:'Masculino', 
+      ready: false,
+      first_name: '',
+      middle_name: '',
+			last_names:'',
+			date_of_birth:'',
+      short_bio:'',
+      height_feet:'',
+			height_inches:'',
+
+      study_program:'', 
+      date_of_birth:'',
+			school_of_precedence:'',
+			years_of_participation:'',
+			years_of_study:'',
+      athlete_positions:'',
+      athlete_categories:'',      
+      number:'',
+      profile_image_link:'',
+      sport:'',     
+			branch:'', 
 
 			season:'',
 			seasons:['2020'],
@@ -178,6 +200,93 @@ export default {
     }),//end of data()
 		
 		methods: {
+			...mapActions({
+				getAthleteByID:"athletes/getAthleteByID"
+			}),
+
+			formated(){
+				if(this.athlete){
+					if(this.ready){
+						return true
+					}
+					else{
+
+						if(!this.ready){
+
+							this.first_name = this.athlete.fName
+							this.last_names = this.athlete.lName	
+							if(this.athlete.mName)
+								this.middle_name = this.athlete.mName
+
+							this.sport = this.athlete.sportName
+							this.branch = this.athlete.sportBranch.charAt(0).toUpperCase() + this.athlete.sportBranch.slice(1)
+							
+							if(this.athlete.bio)
+								this.short_bio = this.athlete.bio
+
+							if(this.athlete.number)
+								this.number = this.athlete.number
+
+							if(this.athlete.height)
+							{
+								this.height_feet = Math.floor(this.athlete.height/12)
+								this.height_inches = this.athlete.height%12
+							}
+
+							if(this.athlete.profilePicLink)
+								this.profile_image_link = this.athlete.profilePicLink
+							
+
+							if(this.athlete.school)
+								this.school_of_precedence = this.athlete.school
+
+							if(this.athlete.sProgram)
+								this.study_program = this.athlete.sProgram
+							
+							if(this.athlete.yearOfStudy)
+								this.years_of_study = this.athlete.yearOfStudy
+							
+							if(this.athlete.yearsOfParticipation)
+								this.years_of_participation = this.athlete.yearsOfParticipation						
+							
+							if(this.athlete.dBirth)
+								this.date_of_birth= new Date(Date.parse(this.athlete.dBirth)).toISOString().substr(0,10)
+							
+							if(this.athlete.athlete_positions)
+							{
+								this.athlete_positions = []
+								const entries = Object.entries(this.athlete.athlete_positions)
+								for(const [name, value] of entries){
+									if(value){
+										this.athlete_positions.push(name)
+									}
+								}
+							}
+							if(this.athlete.athlete_categories)
+							{
+								this.athlete_categories = []
+								const entries = Object.entries(this.athlete.athlete_categories)
+								for(const [name, value] of entries){
+									if(value){
+										this.athlete_categories.push(name)
+									}
+								}
+							}					
+							
+
+							
+							this.ready = true
+						}
+					}
+				}
+				else
+				{
+					return false
+				}
+
+			},
+			
+
 			getSeasonData(){
 				if(this.season!=''){
 					//This line below will later be modified to fetch data from a file.
@@ -286,7 +395,18 @@ export default {
 								} 
 				}
 			}
+		},
+
+		computed: {
+			...mapGetters({
+				athlete:"athletes/athlete"
+			})
+		},
+
+		mounted(){
+			this.getAthleteByID(this.$route.params.id)
 		}
+
 		
 }
 </script>

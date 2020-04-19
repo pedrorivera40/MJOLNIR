@@ -11,8 +11,15 @@
       transition="slide-x-transition"
       :close-on-content-click="false"
     >
-      <template v-slot:activator="{ on }">        
-        <v-btn color="green darken-1" dark v-on="on">
+      <template v-slot:activator="{ on }">
+        <v-btn
+          color="green darken-1"
+          @click="goToCreateEvent"                   
+        >
+        <v-icon left >mdi-pen-plus</v-icon>
+          Nuevo Evento
+        </v-btn>          
+        <v-btn color="white"  v-on="on">
           <v-icon left>mdi-filter-variant</v-icon>Filtros
         </v-btn>
       </template>
@@ -116,7 +123,11 @@ export default {
   methods: {
     ...mapActions({
       getEvents: "events/getEvents"
-    }),    
+    }),
+    
+    goToCreateEvent(){
+      this.$router.push('/evento/')
+    },
 
     clearFilters() {
       this.date = "";
