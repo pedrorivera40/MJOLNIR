@@ -98,16 +98,6 @@ export default {
           title: "Events",
           to: "/events"
         },
-        {
-          icon: "mdi-strategy",
-          title: "Play By Play",
-          to: "/play-by-play"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "Inspire",
-          to: "/inspire"
-        }
       ],
       miniVariant: false,
       right: true,
