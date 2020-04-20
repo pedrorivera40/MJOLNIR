@@ -1,7 +1,9 @@
 {
     "_meta": {
         "hash": {
+
             "sha256": "e54c5a33ce17a3f173e1acceaf757ce59f859c6261288cfc8dd1e783d3f740c9"
+
         },
         "pipfile-spec": 6,
         "requires": {
@@ -132,6 +134,13 @@
             ],
             "index": "pypi",
             "version": "==2.8"
+        },
+        "doxypypy": {
+            "hashes": [
+                "sha256:627571455c537eb91d6998d95b32efc3c53562b2dbadafcb17e49593e0dae01b"
+            ],
+            "index": "pypi",
+            "version": "==0.8.8.6"
         },
         "firebase": {
             "hashes": [
