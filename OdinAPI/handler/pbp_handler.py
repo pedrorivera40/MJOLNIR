@@ -426,7 +426,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="PBP Sequence removed."), 200
 
         except Exception as e:
-            return jsonify(ERROR=e)
+            return jsonify(ERROR=str(e))
 
     def setOpponentColor(self, event_id, color):
         """
@@ -465,7 +465,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Color set."), 200
 
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            return jsonify(ERROR=str(e)), 500
 
     def setUPRMPlayer(self, event_id, player_info):
         """
@@ -500,7 +500,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Athlete information set in the system."), 200
 
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            return jsonify(ERROR=str(e)), 500
 
     def setOppPlayer(self, event_id,  player_info):
         """
@@ -536,7 +536,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Athlete information set in the system."), 200
 
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            return jsonify(ERROR=str(e)), 500
 
     def removeUPRMPlayer(self, event_id,  player_id):
         """
@@ -571,7 +571,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Athlete information removed from the system."), 200
 
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            return jsonify(ERROR=str(e)), 500
 
     def removeOppPlayer(self, event_id,  player_id):
         """
@@ -606,7 +606,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Athlete information removed from the system."), 200
 
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            return jsonify(ERROR=str(e)), 500
 
     def addPBPAction(self, event_id, action_data):
         """
@@ -634,7 +634,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Action added into the system."), 200
 
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            return jsonify(ERROR=str(e)), 500
 
     # TODO -> Edit to implement a similar approach to the addPBPAction method.
     def editPBPAction(self, event_id, action_id, new_action):
@@ -666,7 +666,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Edit game action success."), 200
 
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            return jsonify(ERROR=str(e)), 500
 
     # TODO -> Make it work same as add action (handle scoring actions...)
     def removePlayPBPAction(self, event_id, game_action_id):
@@ -694,7 +694,7 @@ class VolleyballPBPHandler:
 
             return jsonify(MSG="Removed game action"), 200
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            return jsonify(ERROR=str(e)), 500
 
     def setPBPSequenceOver(self, event_id):
         """
@@ -710,19 +710,24 @@ class VolleyballPBPHandler:
         """
 
         try:
+            # Validate event id is positive integer.
+            if not str(event_id).isdigit():
+                return jsonify(ERROR="Invalid event id (must be an integer)."), 400
+
             pbp_dao = VolleyballPBPDao()
-            event_dao = EventDAO()
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(ERROR="PBP sequence does not exist."), 403
 
-            # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
-            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
-            if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
-                return jsonify(ERROR="Not a volleyball event."), 403
+            meta = pbp_dao.get_pbp_meta(event_id)
+            if self._sport_keywords["sport"] != meta["sport"]:
+                return jsonify(ERROR="Not volleyball PBP sequence"), 403
 
-            if pbp_dao.pbp_exists(event_id):
-                pbp_dao.set_pbp_game_over(event_id)
-                return jsonify(MSG="Success."), 200
+            if pbp_dao.is_game_over(event_id):
+                return jsonify(ERROR="Volleyball game is already over."), 403
 
-            return jsonify(ERROR="Non-existing PBP Sequence."), 403
+            pbp_dao.set_pbp_game_over(event_id)
+            return jsonify(MSG="Volleyball game is over."), 200
 
         except Exception as e:
-            return jsonify(ERROR=e), 500
+            print(str(e))
+            return jsonify(ERROR=str(e)), 500

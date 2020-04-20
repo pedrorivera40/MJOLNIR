@@ -29,7 +29,7 @@ class PBPDao:
             "score": "/score",
             "actions": "/game-actions",
             "score-key": "score",
-            "over": "/game-ended",
+            "over": "/game-over",
             "answer": "/answer",
             "color": "/color"
         }
@@ -105,7 +105,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + \
+            str(int(event_id)) + \
             self._db_keywords["opp-roster"] + \
             "/" + athlete_entry["athlete_id"]
         self._rtdb.reference(path).set(athlete_entry)
@@ -124,7 +124,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + \
+            str(int(event_id)) + \
             self._db_keywords["uprm-roster"] + \
             "/" + athlete_id
         self._rtdb.reference(path).delete()
@@ -143,7 +143,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + \
+            str(int(event_id)) + \
             self._db_keywords["opp-roster"] + \
             "/" + athlete_id
         self._rtdb.reference(path).delete()
@@ -161,7 +161,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + self._db_keywords["uprm-roster"]
+            str(int(event_id)) + self._db_keywords["uprm-roster"]
         return self._rtdb.reference(path).get()
 
     def get_opponent_roster(self, event_id):
@@ -177,7 +177,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + self._db_keywords["opp-roster"]
+            str(int(event_id)) + self._db_keywords["opp-roster"]
         return self._rtdb.reference(path).get()
 
     def pbp_exists(self, event_id):
@@ -224,7 +224,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + self._db_keywords["set"]
+            str(int(event_id)) + self._db_keywords["set"]
 
         self._rtdb.reference(path).set(int(new_set))
 
@@ -241,7 +241,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + self._db_keywords["set"]
+            str(int(event_id)) + self._db_keywords["set"]
 
         return self._rtdb.reference(path).get()
 
@@ -251,7 +251,7 @@ class PBPDao:
             self._db_keywords["root"] + str(int(event_id)) + self._db_keywords["score"] + set_path).set(score)
 
     def get_score_by_set(self, event_id, set_path):
-        return self._rtdb.reference(self._db_keywords["root"] + int(event_id) + self._db_keywords["score"] + set_path).get()
+        return self._rtdb.reference(self._db_keywords["root"] + str(int(event_id)) + self._db_keywords["score"] + set_path).get()
 
     def adjust_score_by_set(self, event_id, set_path, adjust):
         current_score = int(self.get_score_by_set(event_id, set_path))
@@ -318,7 +318,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + self._db_keywords["actions"] + "/" + action_id
+            str(int(event_id)) + self._db_keywords["actions"] + "/" + action_id
 
         return self._rtdb.reference(path).get()
 
@@ -336,7 +336,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + self._db_keywords["actions"]
+            str(int(event_id)) + self._db_keywords["actions"]
 
         return self._rtdb.reference(path).push(action_content)
 
@@ -355,7 +355,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + self._db_keywords["actions"] + "/" + action_id
+            str(int(event_id)) + self._db_keywords["actions"] + "/" + action_id
 
         return self._rtdb.reference(path).set(action_content)
 
@@ -372,7 +372,7 @@ class PBPDao:
             void
         """
 
-        path = self._db_keywords["root"] + int(event_id) + \
+        path = self._db_keywords["root"] + str(int(event_id)) + \
             self._db_keywords["actions"] + "/" + action_id
 
         self._rtdb.reference(path).delete()
@@ -389,9 +389,9 @@ class PBPDao:
             Boolean result that determines if the game is over or not.
         """
 
-        path = self._db_keywords["root"] + int(event_id) + \
+        path = self._db_keywords["root"] + str(int(event_id)) + \
             self._db_keywords["meta"] + \
-            self._db_keywords["over"] + self._db_keywords["answer"]
+            self._db_keywords["over"]
 
         return self._rtdb.reference(path).get()
 
@@ -407,10 +407,10 @@ class PBPDao:
             void
         """
 
-        path = self._db_keywords["root"] + int(event_id) + \
+        path = self._db_keywords["root"] + str(int(event_id)) + \
             self._db_keywords["meta"] + self._db_keywords["over"]
 
-        self._rtdb.reference(path).set({"answer": True})
+        self._rtdb.reference(path).set(True)
 
 
 # if __name__ == '__main__':
