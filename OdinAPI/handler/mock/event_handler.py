@@ -23,6 +23,14 @@ class _mockEventHandler:
                 "venue": "Coliseo Rafael Mangual",  # col 4 -> venue
                 "date": "28-may-2020"  # col 5 -> date
             },
+            19: {
+                "branch": "femenino",  # col 0 -> event date
+                "is_local": "true",  # col 1 -> is local value
+                "opponent-name": "UPR-RP",  # col 2 -> opponent name
+                "sport_name": "Baloncesto",  # col 3 -> sport name
+                "venue": "Coliseo Rafael Mangual",  # col 4 -> venue
+                "date": "28-may-2020"  # col 5 -> date
+            },
         }
 
     def getEventById(self, id):

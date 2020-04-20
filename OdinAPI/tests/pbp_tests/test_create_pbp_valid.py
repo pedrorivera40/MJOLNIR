@@ -1,13 +1,9 @@
 import unittest
 import json
 from main import app
+from tests.pbp_tests.pbp_data import data
 
-data = {
-    "valid_id": { "event_id": 28},
-    "invalid_id": 99999
-}
-
-class TestCreatePBP(unittest.TestCase):
+class TestCreateVolleyballPBP(unittest.TestCase):
 
     # Setup mock client.
     def setUp(self):

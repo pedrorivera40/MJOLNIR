@@ -372,11 +372,15 @@ class VolleyballPBPHandler:
         """
 
         try:
+            # Validate event id is positive integer.
+            if not str(event_id).isdigit():
+                return jsonify(ERROR="Invalid event id (must be an integer)."), 400
+
             event_info, resp_code = EventHandler().getEventById(event_id)
             event_info = event_info.json
 
             if not event_info.get("EVENT"):
-                return jsonify(ERROR="Invalid event."), 400
+                return jsonify(ERROR="Event does not exist."), 400
             
             event_info = event_info.get("EVENT")
 
