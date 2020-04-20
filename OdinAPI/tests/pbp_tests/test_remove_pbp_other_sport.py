@@ -3,14 +3,14 @@ import json
 from main import app
 from tests.pbp_tests.pbp_data import data
 
-class TestCreateVolleyballPBP(unittest.TestCase):
+class TestRemoveVolleyballPBP(unittest.TestCase):
 
     # Setup mock client.
     def setUp(self):
         app.config['DEBUG'] = True
         self.client = app.test_client()
 
-    def test_create_pbp_other_sport(self):
+    def test_remove_pbp_other_sport(self):
         response = self.client.delete('/pbp',data=json.dumps(data["different_sport"]),content_type='application/json', follow_redirects=True)
         expected_msg = "Not volleyball PBP sequence"
         self.assertEqual(response.status_code, 403)

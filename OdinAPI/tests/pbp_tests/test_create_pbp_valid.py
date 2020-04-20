@@ -10,7 +10,7 @@ class TestCreateVolleyballPBP(unittest.TestCase):
         app.config['DEBUG'] = True
         self.client = app.test_client()
 
-    def test_create_pbp_valid_event(self):
+    def test_create_pbp_valid(self):
         response = self.client.post('/pbp',data=json.dumps(data["valid_id"]),content_type='application/json', follow_redirects=True)
         expected_msg = "PBP Sequence for " + str(data["valid_id"]["event_id"]) + " was successfully created"
         self.assertEqual(response.status_code, 200)
