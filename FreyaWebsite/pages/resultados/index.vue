@@ -190,7 +190,7 @@ export default {
       sport_id: 2,
       sport_name: "Soccer",
       opponent_score:'',
-      opponent_name:'',
+      opponent_name:"INTER SG", //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
       payload_stats:'',
       BASKETBALL_IDM: 1,
