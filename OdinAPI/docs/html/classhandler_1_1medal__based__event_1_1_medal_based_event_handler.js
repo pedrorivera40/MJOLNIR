@@ -1,0 +1,25 @@
+var classhandler_1_1medal__based__event_1_1_medal_based_event_handler =
+[
+    [ "addAllEventStatistics", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a84bd7872bd93c0f633664c4a36d08acd", null ],
+    [ "addStatistics", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a09b98e387d865f6bfb673f616ef36c39", null ],
+    [ "addTeamStatistics", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#aa4d7d8a26bce21c38aa206fd3e1160bb", null ],
+    [ "editStatistics", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a49e8685bb84e9b01dbb7fc776a0d0207", null ],
+    [ "editTeamStatistics", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a91c4d3b7dbdc2f105536420c6d9d75d8", null ],
+    [ "getAggregatedAthleteStatisticsPerSeason", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#aec588df72bb9e9caa0ff1f84348be2e5", null ],
+    [ "getAggregatedTeamStatisticsPerSeason", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a6471325297119ddb6400226fe9841caa", null ],
+    [ "getAllAggregatedAthleteStatisticsPerSeason", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#aa8fa362bc23391c161bf5686adb9a3b3", null ],
+    [ "getAllAthleteStatisticsByEventIdAndCategoryId", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#aca6e718ba806e512d839cc373e7ca438", null ],
+    [ "getAllAthleteStatisticsPerSeason", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a21feafbd098a3154cceb30850c5206a4", null ],
+    [ "getAllStatisticsByEventID", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a32e8ff028eb835d5a43c7b609774d696", null ],
+    [ "getAllTeamStatisticsByEventIdAndCategoryId", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a1eee8b54acc90b9bdae7ce8729f50b4f", null ],
+    [ "mapAthleteSeasonAggregate", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#abfd5c8c4402b050b89bb57bead849e3b", null ],
+    [ "mapEventAllStatsToDict", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a58bd406f91bb37943a57752a49dda9ff", null ],
+    [ "mapEventAthleteStatsToDict", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a24c5e875bba6ff38fe3cf841fe236d68", null ],
+    [ "mapEventSeasonCollectionToDict", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#ab259dbc41e43904e443d5f0ef58a3770", null ],
+    [ "mapEventTeamStatsToDict", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a97e6b6b11b72b27be1cc0416a0eaa6e0", null ],
+    [ "mapEventToDict", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#ac7365cc1743eb4fbbf6a031b42491604", null ],
+    [ "mapTeamSeasonAggregate", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#aa86f233489cc340ef75b448d93c1f5bd", null ],
+    [ "removeStatistics", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a51117abdc0177b596a519761717625f5", null ],
+    [ "removeTeamStatistics", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#ab8f6f7e19e058030b841467ea9df938a", null ],
+    [ "validateAttributes", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html#a2363b0df332c95dd09c18c6bd7ca71e0", null ]
+];
