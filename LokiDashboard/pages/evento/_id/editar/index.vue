@@ -205,12 +205,23 @@ export default {
 
     submit () { 
 
-      let jsonForRequest = {
+    
+      let event_attributes = {}
 
-        'attributes':[this.date,this.locality,this.venue,this.opponent_name,this.eventSummary]
+      event_attributes['event_date'] = this.date
 
-      }
-      console.log(jsonForRequest)
+     
+      event_attributes['is_local'] = this.locality    
+      
+    
+      event_attributes['team_id'] = this.team
+      event_attributes['opponent_name'] = this.opponent_name
+      event_attributes['event_summary'] = this.eventSummary
+
+      console.log("Editing event with id:" +  this.event.id + " with the following information:")
+      console.log(event_attributes)
+
+      this.$router.push('/eventos/')
            
      
     },

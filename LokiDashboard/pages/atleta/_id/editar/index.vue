@@ -359,12 +359,12 @@
       
       menu: false,
       first_name: '',
-      middle_name: '',
+      middle_name: null,
 			last_names:'',
 			date_of_birth:'',
       short_bio:'',
-      height_feet:'',
-			height_inches:'',
+      height_feet:Number,
+			height_inches:Number,
       study_program:'', 
       date_of_birth:'',
 			school_of_precedence:'',
@@ -372,7 +372,7 @@
 			years_of_study:'',
       athlete_positions:{},
       athlete_categories:{},      
-      number:'',
+      number:Number,
       profile_image_link:'',
       sport:'',     
 			branch:'',
@@ -412,6 +412,47 @@
 			}),
 
       submit () {
+
+        let athlete_attributes = {}
+        athlete_attributes['first_name'] = this.first_name
+        athlete_attributes['middle_name']  = this.middle_name
+        athlete_attributes['last_names'] = this.last_names
+        athlete_attributes['short_bio'] = this.short_bio
+        
+        if(this.height_feet != NaN & this.height_inches != NaN)
+          athlete_attributes['height'] = this.height_feet*12.0 + this.height_inches*1.0
+        else
+          athlete_attributes['height'] = null
+
+        athlete_attributes['study_program'] = this.study_program
+        athlete_attributes['date_of_birth'] = this.date
+        athlete_attributes['school_of_precedence'] = this.school_of_precedence
+        
+        if(this.number != NaN) 
+          athlete_attributes['number'] = this.number
+        else
+          athlete_attributes['number'] = null
+        
+        athlete_attributes['profile_image_link'] = this.profile_image_link
+
+        athlete_attributes['sport_id'] = this.sport
+
+        if(this.year_of_study != '')
+          athlete_attributes['year_of_study'] = this.year_of_study
+        else
+          athlete_attributes['year_of_study'] = null
+        
+        if(this.years_of_participation != '') 
+          athlete_attributes['years_of_participation'] = this.years_of_participation
+
+        athlete_attributes['positions'] = this.sport_positions
+
+        athlete_attributes['categories'] = this.sport_categories
+
+        console.log("Editing the athlete with id:" + this.athlete.id + " with the following information:")
+        console.log(athlete_attributes)
+
+        this.$router.push('/atletas/')
 
         
         
