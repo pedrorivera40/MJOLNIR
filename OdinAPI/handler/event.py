@@ -1,5 +1,7 @@
 from flask import jsonify
 from .dao.event_dao import EventDAO
+from dateutil.parser import parse
+import re
 
 class EventHandler:
 
@@ -102,7 +104,7 @@ class EventHandler:
     
     def getEventsByTeam(self,tID):
         """
-        Gets all athletes belonging to a specific sport.
+        Gets all events belonging to a specific team.
 
         Calls the EventDAO to get a list of all event records
         in which a specific team is a participant and maps the result 
@@ -117,10 +119,18 @@ class EventHandler:
             A JSON containing all valid events that have the team
             identified by the id given as a participant.
         """
-        if not isinstance(tID,int):
+        try:
+            if not isinstance(int(tID),int) or tID < 0:
+                return jsonify(Error = "Bad arguments in request"),400
+        except:
             return jsonify(Error = "Bad arguments in request"),400
         try:
-            result = EventDAO().getEventsByTeam(tID)
+            dao = EventDAO()
+            if not dao.teamExists(tID):
+                return jsonify(Error = "Team does not exist with id:{}".format(tID)),404
+
+            result = dao.getEventsByTeam(tID)
+
             if isinstance(result,str):
                 return jsonify(Error = result),400
             mappedResult = []
@@ -145,10 +155,17 @@ class EventHandler:
             A JSON containing the event with the given id.
 
         """
-        if not isinstance(eID,int):
-            return jsonify(Error = "Bad arguments in request"),400
         try:
-            result = EventDAO().getEventByID(eID)
+            if not isinstance(int(eID),int) or eID < 0:
+                return jsonify(Error = "Bad arguments in request"),400
+        except:
+            return jsonify(Error = "Bad arguments in request"),400
+
+        try:
+            dao = EventDAO()
+            if not dao.eventExists(eID):
+                return jsonify(Error = "Event does not exist with id:{}".format(eID)),404
+            result = dao.getEventByID(eID)
             if isinstance(result,str):
                 return jsonify(Error = result),400
             mappedResult = self.mapEventToDict(result)
@@ -174,17 +191,23 @@ class EventHandler:
             A JSON object containing the id of the newly added event.
 
         """
-        if not isinstance(tID,int) or not isinstance(attributes,list):
-            return jsonify(Error = "Bad arguments in request"),400
-
+        try:
+            if not isinstance(int(tID),int) or tID < 0 or not isinstance(attributes,dict):
+                return jsonify(Error = "Bad arguments in request"),400
+        except:
+            return jsonify(Error = "Bad arguments in request"),400    
         try:   
             
             attributesValidation = self.validateAttributes(attributes)
 
             if isinstance(attributesValidation,str):
                 return jsonify(Error = attributesValidation),400
+            
+            dao = EventDAO()
+            if not dao.teamExists(tID):
+                return jsonify(Error = "Team does not exist with id:{}".format(tID)),404
 
-            result = EventDAO().addEvent(tID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4])
+            result = dao.addEvent(tID,attributes['event_date'],attributes['is_local'],attributes['venue'],attributes['opponent_name'],attributes['event_summary'])
 
             if isinstance(result,str):
                 return jsonify(Error = result),400
@@ -210,7 +233,10 @@ class EventHandler:
         Returns:
             A JSON object containing the information of the edited event.
         """
-        if not isinstance(eID,int) or not isinstance(attributes,list):
+        try:
+            if not isinstance(int(eID),int) or eID < 0 or not isinstance(attributes,dict):
+                return jsonify(Error = "Bad arguments in request"),400
+        except:
             return jsonify(Error = "Bad arguments in request"),400
 
         try:   
@@ -219,8 +245,12 @@ class EventHandler:
 
             if isinstance(attributesValidation,str):
                 return jsonify(Error = attributesValidation),400
+            
+            dao = EventDAO()
+            if not dao.eventExists(eID):
+                return jsonify(Error = "Event does not exist with id:{}".format(eID)),404
 
-            result = EventDAO().editEvent(eID,attributes[0],attributes[1],attributes[2],attributes[3],attributes[4])
+            result = dao.editEvent(eID,attributes['event_date'],attributes['is_local'],attributes['venue'],attributes['opponent_name'],attributes['event_summary'])
 
             if isinstance(result,str):
                 return jsonify(Error = result),400
@@ -245,10 +275,18 @@ class EventHandler:
         Returns:
             A JSON containing the id of the invalidated event.
         """
-        if not isinstance(eID,int):
-            return jsonify(Error = "Bad arguments were given."),400
         try:
-            result = EventDAO().removeEvent(eID)
+            if not isinstance(int(eID),int) or eID < 0:
+                return jsonify(Error = "Bad arguments were given."),400
+        except:
+            return jsonify(Error = "Bad arguments in request"),400
+
+        try:
+            dao = EventDAO()
+            if not dao.eventExists(eID):
+                return jsonify(Error = "Event does not exist with id:{}".format(eID)),404
+
+            result = dao.removeEvent(eID)
 
             if isinstance(result,str):
                 return jsonify(Error = result),400
@@ -260,43 +298,58 @@ class EventHandler:
     
     def validateAttributes(self,attributes):
         """
-        Validates the attributes list given for the addEvent() and editEvent()
+        Validates the attributes dictionary given for the addEvent() and editEvent()
         functions.
 
         Args:
-            attributes: A list containing the attributes of an event to be added or 
+            attributes: A dictionary containing the attributes of an event to be added or 
                         edited.
         Returns:
             A string with an error message if the validation fails an integer otherwise.        
         """
-        if len(attributes) != 5:
-            return "Incorrect length of attributes were given."
+       
         try:
-            eventDate = attributes[0]
-            isLocal = attributes[1]
-            venue = attributes[2]            
-            opponentName = attributes[3]
-            eventSummary = attributes[4] 
+            eventDate = attributes['event_date']
+            isLocal = attributes['is_local']
+            venue = attributes['venue']            
+            opponentName = attributes['opponent_name']
+            eventSummary = attributes['event_summary'] 
+
+            #Regular Expressions for input validation            
+            phraseRegex = "^[a-zA-Z0-9- ',.;:!]*$"
+            alphaSpaceRegex = "^[a-zA-Z ]*$"
+            
+            #Compiled Regular Expressions            
+            cPhraseReg = re.compile(phraseRegex)
+            cAlphaSpaceReg = re.compile(alphaSpaceRegex)
 
             if not eventDate or not isinstance(eventDate,str):
                 return "Invalid date given."
+            
+            try:#Date format validation                    
+                parse(eventDate)
+            except:
+                return "The event date given is not valid."
 
-            if not isLocal or isinstance(isLocal,bool):
+            if not isLocal or not isinstance(bool(isLocal),bool):
                 return "Invalid locality given."
 
-            if venue and not isinstance(venue,str):
-                return "Invalid venue given."
+            if venue:
+                if not isinstance(venue,str) or not re.search(cAlphaSpaceReg,venue):
+                    return "Invalid venue given."
 
-            if opponentName and not isinstance(opponentName,str):
-                return "Invalid opponent name given."               
+            if opponentName:
+                if not isinstance(opponentName,str) or not re.search(cPhraseReg,opponentName):
+                    return "Invalid opponent name given."               
 
-            if eventSummary and not isinstance(eventSummary,str) and len(eventSummary)>250:
-                return "Invalid opponent color given."
+            if eventSummary:
+                if not isinstance(eventSummary,str) or len(eventSummary)>250:
+                    return "Invalid event summary given."
             
             return 1
 
         except:
-            return "Bad argument keys were given."  
+            return "Bad arguments were given." 
 
     def _pbp_exists(self,eID):
         """

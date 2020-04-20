@@ -73,6 +73,7 @@
                 v-model="venue"                                     
                 label="Lugar del Evento"
                 required
+                :rules="[alphaSpaces('Lugar del Evento')]"
               ></v-text-field>                
             </v-col>
           </v-row>
@@ -122,8 +123,9 @@
             >              
               <v-text-field
                 v-model="opponent_name"                                  
-                label="Oponente"
+                label="Nombre de Oponente"
                 required
+                :rules="[generalPhrase('Nombre de Oponente')]"
               ></v-text-field>
               
             </v-col>
@@ -149,7 +151,7 @@
                 auto-grow
                 rows = "2"
                 outlined
-                :rules="[minLength('Resumen',1),maxSummaryLength('Resumen',2)]"
+                :rules="[minLength('Resumen',1),maxSummaryLength('Resumen',250)]"
               ></v-textarea>                
             </v-col>
           </v-row>

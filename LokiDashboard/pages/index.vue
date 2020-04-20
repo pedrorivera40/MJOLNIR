@@ -10,9 +10,9 @@
       <div class="text-center">
         <h1 class="header my-12">Welcome to Huella Deportiva Dashboard!</h1>
         <logo />
-        <h2 class="my-6">Please, login to continue.</h2>
+        <h2 class="my-6">Please, proceed to the login page.</h2>
         <v-btn color="primary_dark" dark link to="/login">
-          Login
+          Continue
         </v-btn>
       </div>
     </v-flex>
