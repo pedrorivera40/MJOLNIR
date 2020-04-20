@@ -1,0 +1,26 @@
+var classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o =
+[
+    [ "__init__", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a54a7e5821b705a262b57a76dba3e4508", null ],
+    [ "addStatistics", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#acd35c968949cd0a32d124914433ec0d7", null ],
+    [ "addTeamStatistics", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a4648b391f6897b4e6d5a5802b5627511", null ],
+    [ "addTeamStatisticsAuto", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a626826bd1c94f9568e9a493690af2659", null ],
+    [ "commitChanges", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a3aad47d91ad279f8b4e0f0c008e68b5a", null ],
+    [ "editStatistics", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a8aac4d289e02c18f44c0780b5fdb5941", null ],
+    [ "editTeamStatistics", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#ab6748767a12639d8eb5aa014ccb5ad81", null ],
+    [ "editTeamStatisticsManual", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#af01eb5df6258e5f21a446a7460a8f575", null ],
+    [ "getAggregatedAthleteStatisticsPerSeason", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a06690eb7967d2674284ddf507e41c914", null ],
+    [ "getAggregatedTeamStatisticsPerSeason", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a02252b04134d696cadf040d9c0462e8c", null ],
+    [ "getAllAggregatedAthleteStatisticsPerSeason", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a163a639d8d5ec7cc4863c7512fea63c5", null ],
+    [ "getAllAthleteStatisticsByEventID", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a3027982b71e04d8fa14f40f5fa896fc9", null ],
+    [ "getAllAthleteStatisticsPerSeason", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a07e2fadc0c0308559a511fee558b2b2c", null ],
+    [ "getAllStatisticsByEventID", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a7fefc9189bb5e194897bf73d89324fe2", null ],
+    [ "getAllTeamStatisticsByEventID", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a07d3632ae537970ac89fc1eca8937df6", null ],
+    [ "getCursor", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a5eedeebc2382a169dde84736590b9bea", null ],
+    [ "getVolleyballEventID", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a98ba628ab39ff88b057cdc8b90941c9f", null ],
+    [ "getVolleyballEventIDInvalid", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#ac857bf28aa93ba2eddd0d8f1e4403464", null ],
+    [ "getVolleyballEventTeamStatsID", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#ade320af1759dd84bf615c88cd28126f8", null ],
+    [ "getVolleyballEventTeamStatsIDInvalid", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a9be2b3e3db29d818189bcd1c0cc3e16f", null ],
+    [ "removeStatistics", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a089bd6d6f2c2cb4bb1c7030d84859043", null ],
+    [ "removeTeamStatistics", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#a6a4b8d0782afa791f574c068bdbe1177", null ],
+    [ "conn", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html#afb1bee8481027eeea6414b005c481430", null ]
+];

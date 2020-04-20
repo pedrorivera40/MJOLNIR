@@ -8,7 +8,7 @@ var annotated_dup =
         [ "AthleteHandler", "classhandler_1_1athlete_1_1_athlete_handler.html", "classhandler_1_1athlete_1_1_athlete_handler" ]
       ] ],
       [ "baseball_event", null, [
-        [ "BaseballEventHandler", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html", null ]
+        [ "BaseballEventHandler", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html", "classhandler_1_1baseball__event_1_1_baseball_event_handler" ]
       ] ],
       [ "basketball_event", null, [
         [ "BasketballEventHandler", "classhandler_1_1basketball__event_1_1_basketball_event_handler.html", null ]
@@ -18,10 +18,10 @@ var annotated_dup =
           [ "AthleteDAO", "classhandler_1_1dao_1_1athlete__dao_1_1_athlete_d_a_o.html", "classhandler_1_1dao_1_1athlete__dao_1_1_athlete_d_a_o" ]
         ] ],
         [ "baseball_event_dao", null, [
-          [ "BaseballEventDAO", "classhandler_1_1dao_1_1baseball__event__dao_1_1_baseball_event_d_a_o.html", null ]
+          [ "BaseballEventDAO", "classhandler_1_1dao_1_1baseball__event__dao_1_1_baseball_event_d_a_o.html", "classhandler_1_1dao_1_1baseball__event__dao_1_1_baseball_event_d_a_o" ]
         ] ],
         [ "basketball_event_dao", null, [
-          [ "BasketballEventDAO", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html", null ]
+          [ "BasketballEventDAO", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o" ]
         ] ],
         [ "event_dao", null, [
           [ "EventDAO", "classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o.html", "classhandler_1_1dao_1_1event__dao_1_1_event_d_a_o" ]
@@ -29,9 +29,16 @@ var annotated_dup =
         [ "final_score_dao", null, [
           [ "FinalScoreDAO", "classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o.html", "classhandler_1_1dao_1_1final__score__dao_1_1_final_score_d_a_o" ]
         ] ],
+        [ "match_based_event_dao", null, [
+          [ "MatchBasedEventDAO", "classhandler_1_1dao_1_1match__based__event__dao_1_1_match_based_event_d_a_o.html", "classhandler_1_1dao_1_1match__based__event__dao_1_1_match_based_event_d_a_o" ]
+        ] ],
+        [ "medal_based_event_dao", null, [
+          [ "MedalBasedEventDAO", "classhandler_1_1dao_1_1medal__based__event__dao_1_1_medal_based_event_d_a_o.html", "classhandler_1_1dao_1_1medal__based__event__dao_1_1_medal_based_event_d_a_o" ]
+        ] ],
         [ "mock_dao", null, [
           [ "AthleteDAO", "classhandler_1_1dao_1_1mock__dao_1_1_athlete_d_a_o.html", "classhandler_1_1dao_1_1mock__dao_1_1_athlete_d_a_o" ],
           [ "EventDAO", "classhandler_1_1dao_1_1mock__dao_1_1_event_d_a_o.html", "classhandler_1_1dao_1_1mock__dao_1_1_event_d_a_o" ],
+          [ "SportDAO", "classhandler_1_1dao_1_1mock__dao_1_1_sport_d_a_o.html", "classhandler_1_1dao_1_1mock__dao_1_1_sport_d_a_o" ],
           [ "TeamDAO", "classhandler_1_1dao_1_1mock__dao_1_1_team_d_a_o.html", "classhandler_1_1dao_1_1mock__dao_1_1_team_d_a_o" ]
         ] ],
         [ "pbp_dao", null, [
@@ -41,7 +48,7 @@ var annotated_dup =
           [ "PositionDAO", "classhandler_1_1dao_1_1position__dao_1_1_position_d_a_o.html", "classhandler_1_1dao_1_1position__dao_1_1_position_d_a_o" ]
         ] ],
         [ "soccer_event_dao", null, [
-          [ "SoccerEventDAO", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html", null ]
+          [ "SoccerEventDAO", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o" ]
         ] ],
         [ "sport_dao", null, [
           [ "SportDAO", "classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o.html", "classhandler_1_1dao_1_1sport__dao_1_1_sport_d_a_o" ]
@@ -53,7 +60,7 @@ var annotated_dup =
           [ "UserDAO", "classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o.html", "classhandler_1_1dao_1_1user__dao_1_1_user_d_a_o" ]
         ] ],
         [ "volleyball_event_dao", null, [
-          [ "VolleyballEventDAO", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html", null ]
+          [ "VolleyballEventDAO", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o.html", "classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o" ]
         ] ]
       ] ],
       [ "event", null, [
@@ -62,8 +69,14 @@ var annotated_dup =
       [ "event_result", null, [
         [ "AthleteDAO", "classhandler_1_1event__result_1_1_athlete_d_a_o.html", "classhandler_1_1event__result_1_1_athlete_d_a_o" ],
         [ "EventDAO", "classhandler_1_1event__result_1_1_event_d_a_o.html", "classhandler_1_1event__result_1_1_event_d_a_o" ],
-        [ "EventResultHandler", "classhandler_1_1event__result_1_1_event_result_handler.html", null ],
+        [ "EventResultHandler", "classhandler_1_1event__result_1_1_event_result_handler.html", "classhandler_1_1event__result_1_1_event_result_handler" ],
         [ "TeamDAO", "classhandler_1_1event__result_1_1_team_d_a_o.html", "classhandler_1_1event__result_1_1_team_d_a_o" ]
+      ] ],
+      [ "match_based_event", null, [
+        [ "MatchBasedEventHandler", "classhandler_1_1match__based__event_1_1_match_based_event_handler.html", "classhandler_1_1match__based__event_1_1_match_based_event_handler" ]
+      ] ],
+      [ "medal_based_event", null, [
+        [ "MedalBasedEventHandler", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler.html", "classhandler_1_1medal__based__event_1_1_medal_based_event_handler" ]
       ] ],
       [ "pbp_handler", null, [
         [ "VolleyballPBPHandler", "classhandler_1_1pbp__handler_1_1_volleyball_p_b_p_handler.html", "classhandler_1_1pbp__handler_1_1_volleyball_p_b_p_handler" ]
@@ -72,7 +85,7 @@ var annotated_dup =
         [ "PositionHandler", "classhandler_1_1position_1_1_position_handler.html", "classhandler_1_1position_1_1_position_handler" ]
       ] ],
       [ "soccer_event", null, [
-        [ "SoccerEventHandler", "classhandler_1_1soccer__event_1_1_soccer_event_handler.html", null ]
+        [ "SoccerEventHandler", "classhandler_1_1soccer__event_1_1_soccer_event_handler.html", "classhandler_1_1soccer__event_1_1_soccer_event_handler" ]
       ] ],
       [ "sport", null, [
         [ "SportHandler", "classhandler_1_1sport_1_1_sport_handler.html", "classhandler_1_1sport_1_1_sport_handler" ]
@@ -84,7 +97,7 @@ var annotated_dup =
         [ "UserHandler", "classhandler_1_1user_1_1_user_handler.html", "classhandler_1_1user_1_1_user_handler" ]
       ] ],
       [ "volleyball_event", null, [
-        [ "VolleyballEventHandler", "classhandler_1_1volleyball__event_1_1_volleyball_event_handler.html", null ]
+        [ "VolleyballEventHandler", "classhandler_1_1volleyball__event_1_1_volleyball_event_handler.html", "classhandler_1_1volleyball__event_1_1_volleyball_event_handler" ]
       ] ]
     ] ],
     [ "tests", null, [
