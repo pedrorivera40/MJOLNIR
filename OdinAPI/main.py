@@ -1840,12 +1840,24 @@ def get_sports():
         if len(body) == 1:
 
             if 'branch' in body:
+                # Validate branch type.
+                if not isinstance(body['branch'], str):
+                    return jsonify(ERROR="Odin/sports: Malformed request, branch must be string."), 400
+
                 return handler.getSportsByBranch(body['branch'])
 
             if 'sport_name' in body:
+                # Validate sport_name type.
+                if not isinstance(body['sport_name'], str):
+                    return jsonify(ERROR="Odin/sports: Malformed request, sport_name must be string."), 400
+
                 return handler.getSportByName(body['sport_name'])
 
             if 'sport_id' in body:
+                # Validate sport_name type.
+                if not isinstance(body['sport_id'], int):
+                    return jsonify(ERROR="Odin/sports: Malformed request, sport_id must be string."), 400
+
                 return handler.getSportById(body['sport_id'])
 
         return jsonify(ERROR="Odin/sports: Malformed request, either branch or name is allowed."), 400
