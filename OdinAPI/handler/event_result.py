@@ -213,8 +213,9 @@ class EventResultHandler:
         """
 
         #validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -223,9 +224,10 @@ class EventResultHandler:
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
          
-        dao = FinalScoreDAO()
+        
         #get final score
         try:
+            dao = FinalScoreDAO()
             final_score_result = dao.getFinalScore(eID)
             if not final_score_result:
                 return jsonify(Error = "Event Final Score not found for the event: {}.".format(eID)),404
@@ -403,8 +405,9 @@ class EventResultHandler:
         """
 
         # Validate Avoid Duplication
-        dao = FinalScoreDAO()
+        
         try:
+            dao = FinalScoreDAO()
             if dao.getFinalScore(eID):
                 return jsonify(Error = "Event Final Score Entry already exists for Event ID:{}".format(eID)),400
         except (TypeError, ValueError):
@@ -531,8 +534,9 @@ class EventResultHandler:
             A JSON containing the final score with the updated entry.
         """
         # Validate Exists so can update
-        dao = FinalScoreDAO()
+        
         try:
+            dao = FinalScoreDAO()
             if not dao.getFinalScore(eID):
                 return jsonify(Error = "Event Final Score Entry does not exist for Event ID:{}".format(eID)),400
         except (TypeError, ValueError):
@@ -612,8 +616,9 @@ class EventResultHandler:
         """
 
         # Validate existing event
-        e_dao = EventDAO()
+        
         try:
+            e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
@@ -622,9 +627,18 @@ class EventResultHandler:
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
          
+        # Validate Exists so can remove
+        
+        try:
+            dao = FinalScoreDAO()
+            if not dao.getFinalScore(eID):
+                return jsonify(Error = "Event Final Score Entry does not exist for Event ID:{}".format(eID)),400
+        except (TypeError, ValueError):
+            return jsonify(ERROR="Bad Request, Type Error."), 400
+        except:
+            return jsonify(ERROR="Unable to verify final score from DAO."), 500
 
         # Remove Basketball_Event final score and format returnabe
-        dao = FinalScoreDAO()
         try:
             result = dao.removeFinalScore(eID)
             if not result:
