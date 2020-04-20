@@ -129,5 +129,17 @@ class AthleteDAO:
             return 16
         if aID in soccer_athletes_f:
             return 11
+
+class SportDAO:
+    def getSportById(self,sID):
+        # Many Athletes in system, gonna only demo a few.
+        valid_list = [18,16,17,13,14,15,7,1,2,12,10,5,3,11,4,9,8,6]
+        if sID in valid_list:
+            # We dont care about value here, just that it returns 
+            # something to prove it exists
+            return True
+        return False
+   
+        
         
             

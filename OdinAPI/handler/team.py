@@ -3,6 +3,7 @@ from flask import jsonify
 from .dao.team_dao import TeamDAO
 #from .dao.athlete_dao import AthleteDAO
 from .dao.mock_dao import AthleteDAO
+from .dao.mock_dao import SportDAO
 
 class TeamHandler():
     
@@ -483,6 +484,15 @@ class TeamHandler():
             A JSON containing the id for the new Team record.
         """
         
+        try:
+            s_dao = SportDAO()
+            if not s_dao.getSportById(sID):
+                return jsonify(Error = "Sport ID:{} does not exist".format(sID)),400
+        except (TypeError, ValueError):
+            return jsonify(ERROR="Bad Request, Type Error."), 400
+        except:
+            return jsonify(ERROR="Unable to verify Sport from DAO."), 500
+
         # Validate Avoid Duplication Team
         try:
             dao = TeamDAO()
@@ -496,7 +506,7 @@ class TeamHandler():
         #TODO: Validate Existing Duplicate, convert to update (need to create new DAO function)
         #TODO: Validate Sport (already done by validatig the athlete?)
         
-        # add team member
+        # add team (Check if previous existed)
         try:
             invalid_duplicate = dao.getTeamByYearInvalid(sID,tYear)
         except (TypeError, ValueError):
@@ -505,7 +515,7 @@ class TeamHandler():
             return jsonify(ERROR="Unable to verify Team from DAO."), 500
         # the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
-            # edit team member
+            # edit team (since previously existed)
             team_id = invalid_duplicate[0]
             try: 
                 result = dao.editTeamByYear(sID,tYear,tImageLink,aboutTeam)
