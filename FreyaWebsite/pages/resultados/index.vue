@@ -41,38 +41,7 @@
           </v-container>
       </v-card>
         
-      </v-row>
-      <v-row justify="center" align="center">
-        <v-spacer/>
-        <v-spacer/>
-        <v-col>
-            <v-btn
-                color="primary_light"
-                class="white--text"
-                @click="addFinalScore()"
-            >
-                <v-icon left>
-                mdi-plus
-                </v-icon>
-                Añadir Puntuación Final
-            </v-btn>
-        </v-col>
-        
-        <v-col>
-            <v-btn
-                color="primary_light"
-                class="white--text"
-                @click="editFinalScore()"
-            >
-                <v-icon left>
-                mdi-pencil
-                </v-icon>
-                Editar Puntuación Final
-            </v-btn>
-        </v-col>
-        <v-spacer/>
-        <v-spacer/>
-    </v-row>   
+      </v-row>   
     <v-tabs
               centered
           >
@@ -89,19 +58,6 @@
                     
                     <v-card-title>
                     <v-row>
-                        <v-col>
-                        <v-btn
-                            color="primary_light"
-                            class="white--text"
-                            @click="addAthleteStatistics(editedItemIndex)"
-                        >
-                            <v-icon left>
-                            mdi-plus
-                            </v-icon>
-                            Añadir Estadisticas de Atleta
-                        </v-btn>
-                        <v-spacer />
-                        </v-col>
                         <v-col cols="4">
                         <v-text-field
                             v-model="search_individual"
@@ -130,47 +86,7 @@
                     class="elevation-1"								
                     v-if="isBasketballTable"
                     >
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
+                    
                     </v-data-table>
                     <!-- VOLLEYBALL TABLE -->
                     <v-data-table
@@ -182,47 +98,6 @@
                     class="elevation-1"								
                     v-if="isVolleyballTable"
                     >
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
                     </v-data-table>
                     <!-- SOCCER TABLE -->
                     <v-data-table
@@ -234,47 +109,6 @@
                     class="elevation-1"								
                     v-if="isSoccerTable"
                     >
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
                     </v-data-table>
                     <!-- BASEBALL TABLE -->
                     <v-data-table
@@ -286,47 +120,7 @@
                     class="elevation-1"								
                     v-if="isBaseballTable"
                     >
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
+                    
                     </v-data-table>
                 </v-card>
             </v-tab-item>
@@ -345,47 +139,7 @@
                     v-if="payload_stats != ''"
                     >
                     
-                    <template v-slot:item.actions="{ item }">
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editTeamStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Equipo</span>
-                        </v-tooltip> -->
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteTeamStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Equipo</span>
-                        </v-tooltip>
-                    </template>
+                   
                     </v-data-table>
                 </v-card>
             </v-tab-item>
@@ -586,7 +340,6 @@ created(){
                 {text: 'Three Point Attempt', value: 'statistics.three_point_attempt'},
                 {text: 'Three Point Percentage(%)', value: 'statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'statistics.turnovers'},
-                { text: "Actions", value: "actions", sortable: false },
 
                 ]
                 this.team_headers = 
@@ -606,7 +359,6 @@ created(){
                 {text: 'Three Point Attempt', value: 'basketball_statistics.three_point_attempt'},
                 {text: 'Three Point Percentage(%)', value: 'basketball_statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'basketball_statistics.turnovers'},
-                { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
@@ -628,7 +380,6 @@ created(){
                 {text: 'Blocks', value: 'statistics.blocks'},
                 {text: 'Blocking Errors', value: 'statistics.blocking_errors'},
                 {text: 'Reception Errors', value: 'statistics.reception_errors'},
-                { text: "Actions", value: "actions", sortable: false },
 
                 ]
                 this.team_headers = 
@@ -642,7 +393,6 @@ created(){
                 {text: 'Blocks', value: 'volleyball_statistics.blocks'},
                 {text: 'Blocking Errors', value: 'volleyball_statistics.blocking_errors'},
                 {text: 'Reception Errors', value: 'volleyball_statistics.reception_errors'},
-                { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
@@ -661,7 +411,6 @@ created(){
                 {text: 'Cards', value: 'statistics.cards'},
                 {text: 'Successful Goals', value: 'statistics.successful_goals'},
                 {text: 'Tackles', value: 'statistics.tackles'},
-                { text: "Actions", value: "actions", sortable: false },
 
                 ]
                 this.team_headers = 
@@ -672,7 +421,6 @@ created(){
                 {text: 'Cards', value: 'soccer_statistics.cards'},
                 {text: 'Successful Goals', value: 'soccer_statistics.successful_goals'},
                 {text: 'Tackles', value: 'soccer_statistics.tackles'},
-                { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
@@ -692,7 +440,6 @@ created(){
                 {text: 'Base On Balls', value: 'statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'statistics.strikeouts'},
                 {text: 'Left On Base', value: 'statistics.left_on_base'},
-                { text: "Actions", value: "actions", sortable: false },
 
                 ]
                 this.team_headers = 
@@ -704,7 +451,6 @@ created(){
                 {text: 'Base On Balls', value: 'baseball_statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'baseball_statistics.strikeouts'},
                 {text: 'Left On Base', value: 'baseball_statistics.left_on_base'},
-                { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
@@ -1148,12 +894,6 @@ created(){
   .content-area {
     height: 100%;
     width: 100%;
-
-    .table-actions {
-      &:hover {
-        color: $primary-color;
-      }
-    }
   }
 }
 </style>

@@ -184,9 +184,21 @@
                 this.yearList.push(yearToAdd++)
             }
         },
-        submit () {
-            this.$refs.observer.validate()
-            this.goToTeam()
+        async submit () {
+            const isValid = await this.$refs.observer.validate()     
+            if  (!isValid){
+                //simply doesn't leave right now, think if want a box. 
+            }
+            else{
+               let payload_edit = {
+                    "sport_id":this.sport_id,
+                    "season_year":this.season_year,
+                    "team_image_url":this.team_image_url,
+                    "about_team": this.about_team
+                }
+                console.log(payload_edit)
+                this.goToTeam()
+            }
         },
         clear () {
             
