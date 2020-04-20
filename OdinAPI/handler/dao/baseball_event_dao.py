@@ -657,6 +657,63 @@ class BaseballEventDAO:
         #self.commitChanges()
         return result
 
+
+    def editTeamStatisticsManual(self,eID,at_bats,runs,hits,runs_batted_in,base_on_balls,strikeouts,left_on_base,):
+        """
+        Updates the team statistics for the baseball event with the given IDs.
+
+        This function accepts event ID and sports specific statistics and uses them 
+        to update the statistics in the record of the baseball event with the 
+        matching IDs.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be updated.
+           
+            at_bats:
+            runs:
+            hits:
+            runs_batted_in:
+            base_on_balls:
+            strikeouts:
+            left_on_base:
+            
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the modified baseball
+            event team statistics.
+        """
+        #NEW: will also have to update the team statistics
+        #TODO: update team statistic. simply call the outside dao?
+        cursor = self.conn.cursor()
+        query = """
+                UPDATE baseball_softball_event_team_stats
+                SET at_bats = %s,
+                    runs = %s,
+                    hits = %s,
+                    runs_batted_in = %s,
+                    base_on_balls = %s,
+                    strikeouts = %s,
+                    left_on_base = %s,
+                    is_invalid = false
+                WHERE event_id = %s 
+                RETURNING
+                    at_bats,
+                    runs,
+                    hits,
+                    runs_batted_in,
+                    base_on_balls,
+                    strikeouts,
+                    left_on_base,
+                    baseball_softball_event_team_stats.event_id, baseball_softball_event_team_stats.id as baseball_softball_event_team_stats_id;
+
+                """
+        cursor.execute(query,(int(at_bats),int(runs),int(hits),int(runs_batted_in),int(base_on_balls),int(strikeouts),int(left_on_base),int(eID),))
+        result = cursor.fetchone()
+        if not result:
+            return result
+        #self.commitChanges()
+        return result
+
 #=============================//DELETE//=======================
      
     #TODO: in handler must call update team statistics (auto) after this. 

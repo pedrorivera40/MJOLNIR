@@ -650,6 +650,58 @@ class SoccerEventDAO:
         #self.commitChanges()
         return result
 
+    def editTeamStatisticsManual(self,eID,goal_attempts,assists,fouls,cards,successful_goals,tackles,):
+        """
+        Updates the team statistics for the soccer event with the given IDs.
+
+        This function accepts event ID and sports specific statistics and uses them 
+        to update the statistics in the record of the soccer event with the 
+        matching IDs.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be updated.
+            goal_attempts:
+            assists:
+            fouls:
+            cards:
+            successful_goals:
+            tackles:
+            
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the modified soccer
+            event team  statistics.
+        """
+        #NEW: will also have to update the team statistics
+        #TODO: update team statistic. simply call the outside dao?
+        cursor = self.conn.cursor()
+        query = """
+                UPDATE soccer_event_team_stats
+                SET goal_attempts = %s,
+                    assists = %s,
+                    fouls = %s,
+                    cards = %s,
+                    successful_goals = %s,
+                    tackles = %s,
+                    is_invalid = false
+                WHERE event_id = %s  
+                RETURNING
+                    goal_attempts,
+                    assists,
+                    fouls,
+                    cards,
+                    successful_goals,
+                    tackles,
+                    soccer_event_team_stats.event_id, soccer_event_team_stats.id as soccer_event__team_statsid;
+
+                """
+        cursor.execute(query,(int(goal_attempts),int(assists),int(fouls),int(cards),int(successful_goals),int(tackles),int(eID),))
+        result = cursor.fetchone()
+        if not result:
+            return result
+        #self.commitChanges()
+        return result
+
 #=============================//DELETE//=======================
      
     #TODO: in handler must call update team statistics (auto) after this. 
