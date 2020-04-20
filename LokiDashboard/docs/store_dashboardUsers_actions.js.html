@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: store/dashboardUsers/actions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: store/dashboardUsers/actions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Vuex store for sashboard users, with actions, mutations, getters and state.
+ * @module dashboardUsers
+ */
+
+export default {
+
+  /**
+   * Action to fetch all the system users from the database.
+   * @param {*} param0 destructuring of vuex context object
+   */
+  async getUsers({ commit, dispatch }) {
+    try {
+      commit("SET_LOADING", 'users')
+      const response = await this.$axios.get('users/')
+      commit("SET_USERS", response.data.Users )
+      commit("DONE_LOADING", 'users')
+
+    } catch (error) {
+      if(!!error.response.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      }
+
+      commit("DONE_LOADING", 'users')
+    }
+  },
+
+  /**
+   * Action to fetch user permissions given thir ID.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} userID Id for the user whose permittions are being fetched.
+   */
+  async getPermissions({ commit, dispatch }, userID) {
+    try {
+      commit("SET_LOADING", 'permission')
+      const response = await this.$axios.get(`users/${userID}/permissions`)
+      commit("SET_PERMISSIONS", response.data.Permissions )
+      commit("DONE_LOADING", 'permission')
+
+    } catch (error) {
+      if(!!error.response.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      }
+
+      commit("DONE_LOADING", 'permission')
+    }
+  },
+  
+  /**
+   * Action to set user permissions provided the user ID and a object with the permissions to be set.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object containing user Id and user permissions to set.
+   */
+  async setPermissions({ commit, dispatch },payload) {
+    try {
+      await this.$axios.patch(`users/${payload.id}/permissions`, {permissions: payload.permissions})
+      dispatch('notifications/setSnackbar', {text: 'User Permissions Saved.', color: 'primary lighten-1'}, {root: true})
+
+    } catch (error) {
+      if(!!error.response.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      }
+
+    }
+  },
+
+  /**
+   * Action to delete a user from the system given their ID.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object containing the user Id and their username.
+   */
+  async deleteUser({ commit, dispatch },payload) {
+    try {
+      await this.$axios.patch(`users/${payload.id}/remove`,)
+      commit("DELETE_USER", payload.id)
+      dispatch('notifications/setSnackbar', {text: `${payload.username} has been deleted.`, color: 'primary lighten-1'}, {root: true})
+
+    } catch (error) {
+      if(!!error.response.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      }
+
+    }
+  },
+
+  /**
+   * Action to add a new user to the system given their name, username, email, and password.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object containing the information of the user to be added.
+   */
+  async addUser({ commit, dispatch }, payload) {
+    try {
+      const response = await this.$axios.post(`users/`, payload)
+      commit("ADD_USER", response.data.User)
+      dispatch('notifications/setSnackbar', {text: `${payload.username} has been added to the system.`, color: 'primary lighten-1'}, {root: true})
+
+    } catch (error) {
+      if(!!error.response.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+        return 'error' //so modal does not close when an error happens.
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      }
+
+    }
+  },
+
+  /**
+   * Action to edit a user's information given their id, name, username, emaul, and account active status.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object containing the information of the user to be edited.
+   */
+  async editUser({ commit, dispatch }, payload) {
+    try {
+      const response = await this.$axios.patch(`users/${payload.id}`, payload)
+      commit("UPDATE_USER", response.data.User)
+      dispatch('notifications/setSnackbar', {text: `${payload.username}'s information has been updated!`, color: 'primary lighten-1'}, {root: true})
+
+    } catch (error) {
+      console.log(error)
+      // if(!!error.response.data){
+      //   dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+      //   return 'error' //so modal does not close when an error happens.
+      // } else {
+      //   dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      // }
+
+    }
+  },
+
+  /**
+   * Action that allows the admin to reset a user's password and set their active status to 0.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} payload Object ontaining the Id of the user being reset and their new password.
+   */
+  async resetPasswordByAdmin({ commit, dispatch }, payload) {
+    try {
+      const response = await this.$axios.patch(`users/${payload.id}/reset`, payload)
+      commit("UNLOCK_USER", response.data.User)
+      dispatch('notifications/setSnackbar', {text: `${payload.username}'s password has been reset`, color: 'primary lighten-1'}, {root: true})
+
+    } catch (error) {
+      if(!!error.response.data){
+        dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+        return 'error' //so modal does not close when an error happens.
+      } else {
+        dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+      }
+
+    }
+  },
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dashboardUsers.html">dashboardUsers</a></li><li><a href="module-validations.html">validations</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isLoading">isLoading</a></li><li><a href="global.html#snackbars">snackbars</a></li><li><a href="global.html#user">user</a></li><li><a href="global.html#userPermissions">userPermissions</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Apr 15 2020 02:25:47 GMT-0400 (Atlantic Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

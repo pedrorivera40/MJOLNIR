@@ -693,6 +693,70 @@ class VolleyballEventDAO:
         #self.commitChanges()
         return result
 
+    def editTeamStatisticsManual(self,eID,kill_points, attack_errors, assists, aces, service_errors, 
+    digs, blocks, blocking_errors,reception_errors):
+        """
+        Updates the team statistics for the volleyball event with the given IDs.
+
+        This function accepts event ID and sports specific statistics and uses them 
+        to update the statistics in the record of the volleyball event with the 
+        matching IDs.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be updated.
+           
+            kill_points:
+            attack_errors:
+            assists:
+            aces:
+            service_errors:
+            digs:
+            blocks:
+            blocking_errors:
+            reception_errors:
+            
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the modified volleyball
+            event team statistics.
+        """
+        #NEW: will also have to update the team statistics
+        #TODO: update team statistic. simply call the outside dao?
+        cursor = self.conn.cursor()
+        query = """
+                UPDATE volleyball_event_team_stats
+                SET kill_points = %s,
+                    attack_errors = %s,
+                    assists = %s,
+                    aces = %s,
+                    service_errors = %s,
+                    digs = %s,
+                    blocks = %s,
+                    blocking_errors = %s,
+                    reception_errors = %s,
+                    is_invalid = false
+                WHERE event_id = %s 
+                RETURNING
+                    kill_points,
+                    attack_errors,
+                    assists,
+                    aces,
+                    service_errors,
+                    digs,
+                    blocks,
+                    blocking_errors,
+                    reception_errors,
+                    volleyball_event_team_stats.event_id, volleyball_event_team_stats.id as volleyball_event__team_statsid;
+
+                """
+        cursor.execute(query,(int(kill_points),int(attack_errors),int(assists),int(aces),int(service_errors),int(digs),int(blocks),
+        int(blocking_errors),int(reception_errors),int(eID),))
+        result = cursor.fetchone()
+        if not result:
+            return result
+        #self.commitChanges()
+        return result
+
 #=============================//DELETE//=======================
      
     #TODO: in handler must call update team statistics (auto) after this. 

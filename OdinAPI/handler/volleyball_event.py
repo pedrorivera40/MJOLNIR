@@ -823,7 +823,8 @@ class VolleyballEventHandler(EventResultHandler):
         #the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
             try:
-                result = dao.editTeamStatistics(eID)
+                result = dao.editTeamStatisticsManual(eID,attributes['kill_points'],attributes['attack_errors'],attributes['assists'],attributes['aces'],
+                    attributes['service_errors'],attributes['digs'],attributes['blocks'],attributes['blocking_errors'],attributes['reception_errors'])
                 if not result:
                     return jsonify(Error = "Team statistics Record not found for  event id:{}.".format(eID)),404  
             except (TypeError, ValueError):
@@ -1378,10 +1379,21 @@ class VolleyballEventHandler(EventResultHandler):
         except:
             return jsonify(ERROR="Unable to verify athlete from DAO."), 500
          
-        # Remove Volleyball_Event Statistics and format returnabe
+        # Validate Exists in order to remove
         
         try:
             dao = VolleyballEventDAO()
+            # TODO: what is the error code for this case, where it DOESNT exit?
+            if not dao.getVolleyballEventID(eID,aID):
+                return jsonify(Error = "Volleyball Event Entry does not exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),400 
+        except (TypeError, ValueError):
+            return jsonify(ERROR="Bad Request, Type Error."), 400
+        except:
+            return jsonify(ERROR="Unable to verify volleyball_event from DAO."), 500
+
+        # Remove Volleyball_Event Statistics and format returnabe
+        
+        try:
             result = dao.removeStatistics(eID,aID)
             if not result:
                 return jsonify(Error = "Statistics Record not found with event id:{} for athlete id:{}.".format(eID,aID)),404
@@ -1431,10 +1443,21 @@ class VolleyballEventHandler(EventResultHandler):
         except:
             return jsonify(ERROR="Unable to verify event from DAO."), 500
          
-        # Remove Volleyball_Event Team Statistics and format returnabe
+
+        # Validate exists so can remove
         
         try:
             dao = VolleyballEventDAO()
+            if not dao.getVolleyballEventTeamStatsID(eID):
+                return jsonify(Error = "Volleyball Event Team Stats Entry does not exists for Event ID:{}".format(eID)),400
+        except (TypeError, ValueError):
+            return jsonify(ERROR="Bad Request, Type Error."), 400
+        except:
+            return jsonify(ERROR="Unable to verify volleyball_event_team_stats from DAO."), 500
+
+        # Remove Volleyball_Event Team Statistics and format returnabe
+        
+        try:
             result = dao.removeTeamStatistics(eID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found with event id:{}.".format(eID)),404

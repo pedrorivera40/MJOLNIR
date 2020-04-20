@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: store/userAuth/actions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: store/userAuth/actions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>export default {
+  /**
+   * Action  to log a user into the system, and set their data in the store.
+   * @param {*} param0 destructuring of the vuex context object
+   * @param {*} credentials credentials passed in for the user.
+   */
+  async login({ commit, dispatch }, credentials) {
+    try {
+      commit("SET_LOADING")
+      const response = await this.$auth.loginWith('local', { data: credentials }) //returns auth data as json.
+      const user = await this.$axios.post('users/username/', credentials) //call get user by username to set auth user.
+      await this.$auth.setUser(user.data.User) // Set auth user.
+
+      dispatch('getUserPermissions', response.data.auth.token)
+      dispatch('notifications/setSnackbar', { text: 'Login Sucessfully' }, { root: true })
+      commit("SET_USER_DATA", response.data)
+    } catch (error) {
+      if (!!error.response) {
+        dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+        commit("DONE_LOADING")
+      } else {
+        dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+      }
+    }
+  },
+
+  /**
+   * Action to rehydrate a user's information after a reload.
+   * @param {*} param0 destructuring of vuex context object.
+   */
+  async setUser({ commit }) {
+    const user = JSON.parse(localStorage.getItem('user'))
+
+    const permissions = JSON.parse(localStorage.getItem('permissions'))
+    await this.$auth.setUser(user)
+
+    commit("SET_USER_DATA_ON_RELOAD", permissions)
+  },
+
+  /**
+   * Action to activate an inactive acount by using a temporary password. 
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} credentials credentials passed in for the user.
+   */
+  async activateAccount({ commit, dispatch }, credentials) {
+    try {
+      commit("SET_LOADING")
+      await this.$axios.patch(`users/activate`, { username: credentials.username, password: credentials.password, new_password: credentials.new_password }) //call get user by username to set auth user.
+      commit("DONE_LOADING")
+      dispatch('login', { username: credentials.username, password: credentials.new_password })
+      dispatch('notifications/setSnackbar', { text: 'Password changed successfully! Loggin in...' }, { root: true })
+    } catch (error) {
+      if (!!error.response) {
+        dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+        commit("DONE_LOADING")
+      } else {
+        dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+      }
+    }
+
+  },
+
+  /**
+   * Action to get the logged in user's system permissions.
+   * @param {*} param0 destructuring of vuex context object
+   * @param {*} token Logged in user's auth token
+   */
+  async getUserPermissions({ commit, dispatch }, token) {
+    try {
+      // Extract permissions from jwt
+      const permissions = JSON.parse(atob(token.split('.')[1])).permissions
+      console.log(permissions)
+      commit("SET_USER_PERMISSIONS", permissions)
+    } catch (error) {
+      if (!!error.response) {
+        dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+      } else {
+        dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+      }
+    }
+  },
+
+  /**
+   * Action to logout a user from the system and clear their data.
+   * @param {*} param0 destructuring of vuex context object
+   */
+  logout({ commit }) {
+    commit("CLEAR_USER_DATA")
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-dashboardUsers.html">dashboardUsers</a></li><li><a href="module-validations.html">validations</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isLoading">isLoading</a></li><li><a href="global.html#snackbars">snackbars</a></li><li><a href="global.html#user">user</a></li><li><a href="global.html#userPermissions">userPermissions</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Wed Apr 15 2020 02:25:47 GMT-0400 (Atlantic Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
