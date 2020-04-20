@@ -746,6 +746,82 @@ class BasketballEventDAO:
         #self.commitChanges()
         return result
 
+    #TODO: recal athlete will be validaded by handler
+    def editTeamStatisticsManual(self,eID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalAttempt, 
+    successfulFieldGoal,threePointAttempt,successfulThreePoint, freeThrowAttempt,successfulFreeThrow):
+        """
+        Updates the team statistics for the basketball event with the given IDs.
+
+        This function accepts event ID and sports specific statistics and uses them 
+        to update the statistics in the record of the basketball event with the 
+        matching IDs.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be updated.
+            points: number of points scored by the athlete in the event.
+            rebounds: number of rebounds attained by the athlete in the event.
+            assists: number of assists attained by the athlete in the event.
+            steals: number of steals attained by the athlete in the event.
+            blocks: number of blocks attained by the athlete in the event.
+            turnovers: number of turnovers attained by the athlete in the event.
+            fieldGoalAttempt: number of field goal attempts attained by the athlete in the event.
+            successfulFieldGoal: number of successful field goals attained by the athlete in the event.
+            threePointAttempt: number of three point attempts attained by the athlete in the event.
+            successfulThreePoint: number of successful three point shots attained by the athlete in the event.
+            freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
+            successfulFreeThrow: number of successful free throws attained by the athlete in the event.
+            
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the modified basketball
+            event team statistics.
+        """
+        #NEW: will also have to update the team statistics
+        #TODO: update team statistic. simply call the outside dao?
+        cursor = self.conn.cursor()
+        query = """
+                UPDATE basketball_event_team_stats
+                SET points = %s,
+                    rebounds = %s,
+                    assists = %s,
+                    steals = %s,
+                    blocks = %s,
+                    turnovers = %s,
+                    field_goal_attempt = %s,
+                    successful_field_goal = %s,
+                    three_point_attempt = %s,
+                    successful_three_point = %s,
+                    free_throw_attempt = %s,
+                    successful_free_throw = %s,
+                    is_invalid = false
+                WHERE event_id = %s
+                RETURNING
+                    points,
+                    rebounds,
+                    assists,
+                    steals,
+                    blocks,
+                    turnovers,
+                    field_goal_attempt,
+                    successful_field_goal,
+                    three_point_attempt,
+                    successful_three_point,
+                    free_throw_attempt,
+                    successful_free_throw,
+                    get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
+                    get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
+                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                    basketball_event_team_stats.event_id, basketball_event_team_stats.id as basketball_event_team_stats_id;
+                """
+        cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),int(turnovers),
+        int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),int(successfulThreePoint),
+        int(freeThrowAttempt),int(successfulFreeThrow),int(eID),))
+        result = cursor.fetchone()
+        if not result:
+            return result
+        #self.commitChanges()
+        return result
+
 
 #=============================//DELETE//=======================
      
