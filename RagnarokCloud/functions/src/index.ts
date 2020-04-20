@@ -155,10 +155,8 @@ export const enum VolleyballPlays {
 // TODO -> Add documentation & TESTS.	
 export const updateVolleyballStats = function (actionType: string, playerStats:
     VolleyballStatsEntry, teamStats: VolleyballStatsEntry): void {
-    console.log("ME LLAMARON!!!");
 
     // Update player and team statistics based on the given action type.	
-    console.log(actionType);
     switch (actionType) {
 
         case VolleyballPlays.KillPoint:
@@ -167,7 +165,6 @@ export const updateVolleyballStats = function (actionType: string, playerStats:
             break;
 
         case VolleyballPlays.AttackError:
-            console.log("YEYEYEYEYEYE")
             playerStats.attackError();
             teamStats.attackError();
             break;
@@ -283,9 +280,11 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
 
         // Read the latest data corrsponding to the state.
         let gameState: string = "";
+        let prevGameState: string = "";
 
         try {
-            gameState = change.after.child("answer").val()
+            gameState = change.after.child("answer").val();
+            prevGameState = change.before.child("answer").val();
         } catch (error) {
             console.log("volleyballGameSync Error: " + error);
             return null;
@@ -300,6 +299,11 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
         // If the game is not over, ignore/return.
         if (gameState === "No") {
             console.log("volleyballGameSync: Game is not over! " + gameState);
+            return null;
+        }
+
+        if (gameState === prevGameState) {
+            console.log("volleyballGameSync: Already sync! " + prevGameState);
             return null;
         }
 
@@ -367,7 +371,6 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
             // Insert athlete VolleyballStatsEntry into the uprmPlayerStats map.	
             snapshot.forEach((athleteSnap) => {
                 const athleteKey: string = <string>athleteSnap.key;
-                console.log("ADDING " + athleteKey);
                 uprmPlayerKeys.push(athleteKey);
                 uprmPlayerStats.push(new VolleyballStatsEntry());
             });
@@ -386,26 +389,24 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
             snapshot.forEach((gameAction) => {
 
                 const actionType: string = <string>gameAction.child("action_type").val();
-                console.log("main " + actionType);
 
                 // Update statistics only if it is a play corresponding to UPRM team.	
                 if (actionType !== "Notification") {
                     const team: string = <string>gameAction.child("team").val();
-                    console.log("team " + team)
-                    console.log("athlete " + gameAction.child("athlete_id").val());
 
                     if (team === "uprm") {
                         const player: string = <string>gameAction.child("athlete_id").val();
                         let index = -1;
                         for (let i = 0; i < uprmPlayerKeys.length; i++) {
-                            console.log("ATTEMPT " + uprmPlayerKeys[i] + " FINDING " + player);
                             if (uprmPlayerKeys[i] == player) {
-                                console.log("FOUND " + player);
                                 index = i;
                             }
                         }
-                        console.log(index);
-                        updateVolleyballStats(actionType, uprmPlayerStats[index], uprmStats);
+                        if (index >= 0) {
+                            updateVolleyballStats(actionType, uprmPlayerStats[index], uprmStats);
+                        } else {
+                            console.log("ATHLETE NOT FOUND " + player);
+                        }
                     }
                 }
             });
@@ -451,8 +452,7 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
         })
 
         // End of volleyballGameSync process.	
-        const answer = "No"
-        return change.after.ref.update({ answer });
+        return;
     });
 
 // postVolleyballResults(JSON.parse("{ \"val_1\": 23 }"));
