@@ -79,7 +79,7 @@
                             >
                                 <v-col                   
                                 >
-                                    <v-autocomplete
+                                    <!-- <v-autocomplete
                                         v-model="payload_stats.athlete_id"
                                         :items="sport_athletes"
                                         filled
@@ -118,7 +118,13 @@
                                             </v-list-item-content>
                                             </template>
                                         </template>
-                                    </v-autocomplete>  
+                                    </v-autocomplete>   -->
+                                        <v-chip>
+                                        <v-avatar left>
+                                            <v-img :src="current_athlete.profile_image_url"></v-img>
+                                        </v-avatar>
+                                       {{ current_athlete.athlete_name }}
+                                        </v-chip>
                                 </v-col>
                             </v-row>       
                         <v-row>
@@ -867,7 +873,7 @@
         
         //THE MAIN STATISTICS, SPORTS SPECIFIC
         payload_stats: '',
-        
+        current_athlete: '',
         //CONSTANTS:
         BASKETBALL_IDM: 1,
         BASKETBALL_IDF: 10,
@@ -954,6 +960,7 @@
     
     created(){
       this.initializeSportData()
+      this.current_athlete = this.sport_athletes[0]
     },
     methods: {
         initializeSportData(){
