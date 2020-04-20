@@ -155,8 +155,10 @@ export const enum VolleyballPlays {
 // TODO -> Add documentation & TESTS.	
 export const updateVolleyballStats = function (actionType: string, playerStats:
     VolleyballStatsEntry, teamStats: VolleyballStatsEntry): void {
+    console.log("ME LLAMARON!!!");
 
     // Update player and team statistics based on the given action type.	
+    console.log(actionType);
     switch (actionType) {
 
         case VolleyballPlays.KillPoint:
@@ -165,6 +167,7 @@ export const updateVolleyballStats = function (actionType: string, playerStats:
             break;
 
         case VolleyballPlays.AttackError:
+            console.log("YEYEYEYEYEYE")
             playerStats.attackError();
             teamStats.attackError();
             break;
@@ -217,12 +220,12 @@ export const updateVolleyballStats = function (actionType: string, playerStats:
     return;
 }
 
-const postVolleyballResults = async function (gameStatistics: JSON) {
-    // TODO -> Add authorization credentials for Odin API.
+export const postVolleyballResults = async function (gameStatistics: JSON) {
     // Prepare for POST request to Odin API with volleyball results.	
     // NOTE -> For testing purposes, this section uses the Echo API.	
-    const loginPath = "http://35.237.228.11:80/login/";
-    const volleyballPath = "http://35.237.228.11:80/mock_results/";
+    const loginPath = "http://35.243.230.237:80/login/";
+    const volleyballPath = "http://35.243.230.237:80/mock_results/";
+    // TODO -> Add authorization credentials for Odin API.
     const credentials = {
         'usr': 'usr1',
         'hash': 'something'
@@ -235,11 +238,11 @@ const postVolleyballResults = async function (gameStatistics: JSON) {
         url: loginPath,
         responseType: 'application/json',
         data: credentials,
-    }).then(function (response) {
+    }).then(function (response: any) {
         console.log(response.data);
         token = response.data['ACCESS']['token'];
         return true;
-    }).catch((error) => {
+    }).catch((error: any) => {
         console.log("postVolleyballResults login error: " + error);
     });
 
@@ -253,10 +256,10 @@ const postVolleyballResults = async function (gameStatistics: JSON) {
         headers: {
             'Authorization': token
         }
-    }).then(function (response) {
+    }).then(function (response: any) {
         console.log(response.data);
         return true;
-    }).catch((error) => {
+    }).catch((error: any) => {
         console.log("postVolleyballResults posting results error: " + error);
     });
 
@@ -264,7 +267,7 @@ const postVolleyballResults = async function (gameStatistics: JSON) {
 }
 
 // TODO -> Add cloud function documentation.	
-export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-metadata/game-ended")
+export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-metadata/game-over")
     .onUpdate(async (change, context) => {
 
         /* 	
@@ -282,10 +285,16 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
         let gameState: string = "";
 
         try {
-            gameState = change.after.child("answer").val();
+            gameState = change.after.child("answer").val()
         } catch (error) {
             console.log("volleyballGameSync Error: " + error);
             return null;
+        }
+
+        // If the game is not over, ignore/return.	
+        if (gameState === "No") {
+            // console.log("Game is not over!")	
+            return null
         }
 
         // If the game is not over, ignore/return.
@@ -349,7 +358,8 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
         */
 
         // Initialize Variables.	
-        let uprmPlayerStats: Map<string, VolleyballStatsEntry> = new Map();
+        let uprmPlayerStats: VolleyballStatsEntry[] = [];
+        let uprmPlayerKeys: string[] = [];
         let uprmStats: VolleyballStatsEntry = new VolleyballStatsEntry();
 
         // Retrieve UPRM roster from RTDB.	
@@ -357,13 +367,16 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
             // Insert athlete VolleyballStatsEntry into the uprmPlayerStats map.	
             snapshot.forEach((athleteSnap) => {
                 const athleteKey: string = <string>athleteSnap.key;
-                uprmPlayerStats.set(athleteKey, new VolleyballStatsEntry());
+                console.log("ADDING " + athleteKey);
+                uprmPlayerKeys.push(athleteKey);
+                uprmPlayerStats.push(new VolleyballStatsEntry());
             });
         }).catch(() => {
             console.log("volleyballGameSync Error: Unable to retrieve UPRM roster.");
             return null;
         });
 
+        console.log(uprmPlayerStats);
 
         // Retrieve game actions and per each game action modify uprmPlayerStats and uprmStats.	
         // The conditional branches in the following code segment follow the flowchart for the	
@@ -372,13 +385,28 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
             // Update uprmPlayerStats and uprmStats based on each volleyball play (from game actions).	
             snapshot.forEach((gameAction) => {
 
-                const actionType: string = <string>gameAction.child("action-type").val();
-                const team: string = <string>gameAction.child("team").val();
+                const actionType: string = <string>gameAction.child("action_type").val();
+                console.log("main " + actionType);
 
                 // Update statistics only if it is a play corresponding to UPRM team.	
-                if (actionType !== "Notification" && team === "UPRM") {
-                    const player: string = <string>gameAction.child("athlete-id").val();
-                    updateVolleyballStats(actionType, <VolleyballStatsEntry>uprmPlayerStats.get(player), uprmStats);
+                if (actionType !== "Notification") {
+                    const team: string = <string>gameAction.child("team").val();
+                    console.log("team " + team)
+                    console.log("athlete " + gameAction.child("athlete_id").val());
+
+                    if (team === "uprm") {
+                        const player: string = <string>gameAction.child("athlete_id").val();
+                        let index = -1;
+                        for (let i = 0; i < uprmPlayerKeys.length; i++) {
+                            console.log("ATTEMPT " + uprmPlayerKeys[i] + " FINDING " + player);
+                            if (uprmPlayerKeys[i] == player) {
+                                console.log("FOUND " + player);
+                                index = i;
+                            }
+                        }
+                        console.log(index);
+                        updateVolleyballStats(actionType, uprmPlayerStats[index], uprmStats);
+                    }
                 }
             });
         }).catch(() => {
@@ -388,14 +416,14 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
 
         // Prepare uprmPlayerStats to be added into the request payload.	
         let athleteStats: any = [];
-        uprmPlayerStats.forEach((stats: VolleyballStatsEntry, athleteId: string) => {
+        for (let i = 0; i < uprmPlayerKeys.length; i++) {
             athleteStats.push(
                 {
-                    "athlete_id": athleteId,
-                    "statistics": stats.getJSON()
+                    "athlete_id": uprmPlayerKeys[i],
+                    "statistics": uprmPlayerStats[i].getJSON()
                 }
             );
-        });
+        }
 
         /*	
             <Section 3>	
@@ -416,10 +444,15 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
         console.log(gameStatistics);
 
         // Send game statistics to Odin API.	
-        postVolleyballResults(gameStatistics)
+        postVolleyballResults(gameStatistics).then(() => {
+            console.log("POSTED");
+        }).catch(error => {
+            console.log(error);
+        })
 
         // End of volleyballGameSync process.	
-        return;
+        const answer = "No"
+        return change.after.ref.update({ answer });
     });
 
 // postVolleyballResults(JSON.parse("{ \"val_1\": 23 }"));
