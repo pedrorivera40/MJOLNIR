@@ -69,7 +69,7 @@ class PBPDao:
             void
         """
 
-        path = self._db_keywords["root"] + int(event_id)
+        path = self._db_keywords["root"] + str(int(event_id))
         return self._rtdb.reference(path).delete()
 
     def set_uprm_athlete(self, event_id, athlete_entry):
@@ -86,7 +86,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            int(event_id) + \
+            str(int(event_id)) + \
             self._db_keywords["uprm-roster"] + \
             "/" + athlete_entry["athlete_id"]
         self._rtdb.reference(path).set(athlete_entry)

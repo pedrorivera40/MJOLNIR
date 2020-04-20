@@ -395,6 +395,8 @@ class VolleyballPBPHandler:
             game_metadata = {
                 "game-over": False,
                 "sport": self._sport_keywords["sport"],
+                "current-set": 1,
+                "opp-color": ""
             }
 
             pbp_dao.create_pbp_seq(
@@ -408,12 +410,16 @@ class VolleyballPBPHandler:
 
     def removePBPSequence(self, event_id):
         try:
+            # Validate event id is positive integer.
+            if not str(event_id).isdigit():
+                return jsonify(ERROR="Invalid event id (must be an integer)."), 400
+
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
                 return jsonify(ERROR="PBP sequence does not exist."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
-            if meta["sport"] != meta["sport"]:
+            if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(ERROR="Not volleyball PBP sequence"), 403
 
             pbp_dao.remove_pbp_seq(event_id)
