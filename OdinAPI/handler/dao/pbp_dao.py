@@ -81,6 +81,7 @@ class PBPDao:
 
         Args
             event_id: integer corresponding to an event id.
+            athlete_entry: JSON corresponding to the athlete entry to be set in the RTDB.
 
         Returns:
             void
@@ -247,21 +248,73 @@ class PBPDao:
 
         return self._rtdb.reference(path).get()
 
-    # TODO -> Add documentation for this...
+    
     def _set_score_by_set(self, event_id, set_path, score):
+        """
+        Sets the score for a set or period for a PBP sequence.
+        This function updates the score for a given set or period value of a PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+            set_path: path that denotes the set (denoted by team and sport, i.e. set5-uprm for a volleyball game).
+            score: integer value to be set as new score.
+
+        Returns:
+            void
+        """
         self._rtdb.reference(
             self._db_keywords["root"] + str(int(event_id)) + self._db_keywords["score"] + set_path).set(score)
 
     def get_score_by_set(self, event_id, set_path):
+        """
+        Gets the score for a set or period for a PBP sequence.
+        This function retrieves and returns the score for a given set or period value of a PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+            set_path: path that denotes the set (denoted by team and sport, i.e. set5-uprm for a volleyball game).
+
+        Returns:
+            integer that denotes the score for a given set or game period.
+        """
+
         return self._rtdb.reference(self._db_keywords["root"] + str(int(event_id)) + self._db_keywords["score"] + set_path).get()
 
     def adjust_score_by_set(self, event_id, set_path, adjust):
+        """
+        Adjusts the score for a set or period for a PBP sequence.
+        This function updates the score for a given set or period value of a PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+            set_path: path that denotes the set (denoted by team and sport, i.e. set5-uprm for a volleyball game).
+            adjust: increment amount to be added to the current score.
+
+        Returns:
+            void
+        """
+
         current_score = int(self.get_score_by_set(event_id, set_path))
         if current_score + int(adjust) < 0:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
         self._set_score_by_set(event_id, set_path, current_score + int(adjust))
 
     def adjust_score_by_differential(self, event_id, path_dec, path_inc, difference):
+        """
+        Adjusts the score for a set or period for a PBP sequence for both teams.
+        This function updates the score for a given set or period value of a PBP 
+        sequence for both teams, increasing one and decreasing the other.
+
+        Args
+            event_id: integer corresponding to an event id.
+            path_dec: path that denotes the set to be decreased (denoted by team and sport, i.e. set5-uprm for a volleyball game).
+            path_inc: path that denotes the set to be incremented (denoted by team and sport, i.e. set5-uprm for a volleyball game).
+            difference: amount to be added and subtracted to the current score at path_inc and path_dec respectively. 
+
+        Returns:
+            void
+        """
+
         dec_score = int(self.get_score_by_set(event_id, path_dec))
         inc_score = int(self.get_score_by_set(event_id, path_inc))
 
@@ -275,6 +328,69 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + self._db_keywords["score"]
         self._rtdb.reference(path).update(update)
+
+    def adjust_score_by_play_edit(self, event_id, path_dec, path_inc, difference, action_id, new_action):
+        """
+        Adjusts the score for a set or period for a PBP sequence for both teams and adds a play.
+        This function updates the score of two teams for a given set or period value of a PBP 
+        sequence for both teams, increasing one and decreasing the other. Also inserts the game action.
+
+        Args
+            event_id: integer corresponding to an event id.
+            path_dec: path that denotes the set to be decreased (denoted by team and sport, i.e. set5-uprm for a volleyball game).
+            path_inc: path that denotes the set to be incremented (denoted by team and sport, i.e. set5-uprm for a volleyball game).
+            difference: amount to be added and subtracted to the current score at path_inc and path_dec respectively. 
+            action_id: integer that denotes the action id.
+            new_action: JSON object that denotes the action to be inserted.
+
+        Returns:
+            void
+        """
+
+        dec_score = int(self.get_score_by_set(event_id, path_dec))
+        inc_score = int(self.get_score_by_set(event_id, path_inc))
+        action_path = self._db_keywords["root"] + \
+            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(action_id))
+
+        if dec_score + int(difference) < 0 or inc_score + int(difference) < 0:
+            raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
+
+        update = {
+            (event_id + path_dec): dec_score - difference,
+            (event_id + path_inc): inc_score + difference,
+            action_path: new_action
+        }
+        self._rtdb.reference().update(update)
+
+    def adjust_score_by_play_edit_inc(self, event_id, path_inc, increment, action_id, new_action):
+        """
+        Adjusts the score for a set or period for a PBP sequence for a team and adds a play.
+        This function updates the score of two teams for a given set or period value of a PBP 
+        sequence for one team. Also inserts the game action.
+
+        Args
+            event_id: integer corresponding to an event id.
+            path_inc: path that denotes the set to be incremented (denoted by team and sport, i.e. set5-uprm for a volleyball game).
+            increment: amount to be added to the current score at path_inc. 
+            action_id: integer that denotes the action id.
+            new_action: JSON object that denotes the action to be inserted.
+
+        Returns:
+            void
+        """
+
+        inc_score = int(self.get_score_by_set(event_id, path_inc))
+        action_path = self._db_keywords["root"] + \
+            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(action_id))
+
+        if inc_score + int(increment) < 0:
+            raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
+
+        update = {
+            (event_id + path_inc): inc_score + difference,
+            action_path: new_action
+        }
+        self._rtdb.reference().update(update)
 
     def set_opponent_color(self, event_id, color):
         """
