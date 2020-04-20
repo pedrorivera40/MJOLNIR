@@ -2,6 +2,7 @@ from .config.fb_config import serv_path, rtdb_config
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+from time import time
 
 
 # TODO -> Add class documentation
@@ -15,8 +16,8 @@ class PBPDao:
 
     # Initialize Firebase Admin SDK and set Realtime Database instance.
     def __init__(self):
-        firebase_admin.initialize_app(
-            credentials.Certificate(serv_path), rtdb_config)
+        if not firebase_admin._apps:
+            firebase_admin.initialize_app(credentials.Certificate(serv_path), rtdb_config)
         self._rtdb = db
         # TODO -> Move this into the a separate file such as fb_config.py.
         self._db_keywords = {
@@ -25,7 +26,7 @@ class PBPDao:
             "meta-key": "game-metadata",
             "uprm-roster": "/uprm-roster",
             "opp-roster": "/opponent-roster",
-            "set": "/current-set",
+            "set": "/game-metadata/current-set",
             "score": "/score",
             "actions": "/game-actions",
             "score-key": "score",
@@ -336,9 +337,35 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            str(int(event_id)) + self._db_keywords["actions"]
+            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(time()))
 
-        return self._rtdb.reference(path).push(action_content)
+        return self._rtdb.reference(path).set(action_content)
+
+    def add_scoring_pbp_game_action(self, event_id, action_content, path_score, difference):
+        """
+        Adds a game action from PBP sequence, also edits the score.
+        This function inserts a particular game action into PBP sequence.
+
+        Args
+            event_id: integer corresponding to an event id.
+            action_content: JSON object corresponding to the new action content.
+
+        Returns:
+            ID corresponding to the newly inserted game action.
+        """
+        path_actions = self._db_keywords["root"] + \
+            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(time()))
+        current_score = int(self.get_score_by_set(event_id, path_score))
+
+        update_path_score = self._db_keywords["root"] + \
+            str(int(event_id)) + self._db_keywords["score"] + path_score
+
+        update = {
+            path_actions: action_content,
+            update_path_score: current_score + difference,
+        }
+        print(update)
+        return self._rtdb.reference().update(update)
 
     def edit_pbp_game_action(self, event_id, action_id, action_content):
         """
