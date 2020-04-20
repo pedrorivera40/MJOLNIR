@@ -42,7 +42,7 @@ class MedalBasedEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT id
-                FROM match_based_event
+                FROM individual_medal_event
                 WHERE event_id = %s and athlete_id = %s and category_id = %s and (is_invalid = false or is_invalid is Null);
                 """
         cursor.execute(query,(int(eID),int(aID),cID,))
@@ -66,7 +66,7 @@ class MedalBasedEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT id
-                FROM medal_based_event
+                FROM individual_medal_event
                 WHERE event_id = %s and athlete_id = %s and category_id =%s and (is_invalid = true);
                 """
         cursor.execute(query,(int(eID),int(aID),cID,))
@@ -90,7 +90,7 @@ class MedalBasedEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT id
-                FROM match_based_event_team_stats
+                FROM individual_medal_event_team_stats
                 WHERE event_id = %s and category_id =%s and (is_invalid = false or is_invalid is Null);
                 """
         cursor.execute(query,(eID,cID,))
@@ -115,7 +115,7 @@ class MedalBasedEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT id
-                FROM match_based_event_team_stats
+                FROM individual_medal_event_team_stats
                 WHERE event_id = %s and category_id=%s and (is_invalid = true);
                 """
         cursor.execute(query,(eID,cID,))
@@ -141,15 +141,16 @@ class MedalBasedEventDAO:
             the matching record for the given ID.
         """
         cursor = self.conn.cursor()       
-        query = """
+        query = """                
                 SELECT
                 A.id as A_id, A.first_name, A.middle_name, A.last_names, 
-                A.number, A.profile_image_link,M.matches_played,M.matches_won,C.name,               
-                M.event_id, M.id as match_based_event_id
-                FROM match_based_event as M INNER JOIN category as C ON M.category_id=C.id
-                INNER JOIN athlete as A ON A.id = M.athlete_id
-                WHERE event_id = %s and 
-                (M.is_invalid = false or M.is_invalid is null);
+                A.number, A.profile_image_link,M.type_of_medal,C.name,               
+                individual_medal_event.event_id, individual_medal_event.id as individual_medal_event_id
+                FROM individual_medal_event INNER JOIN category as C ON individual_medal_event.category_id=C.id
+                INNER JOIN medal as M  on individual_medal_event.medal_id = M.id
+                INNER JOIN athlete as A ON A.id = individual_medal_event.athlete_id
+                WHERE event_id = 36 and individual_medal_event.medal_id is not null and
+                (individual_medal_event.is_invalid = false);
                 """
         
         cursor.execute(query,(eID,))        
@@ -181,11 +182,12 @@ class MedalBasedEventDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT
-                matches_played,matches_won,C.name,event_id,athlete_id,
-                match_based_event.id as match_based_event_id
-                FROM match_based_event INNER JOIN category as C ON match_based_event.category_id=C.id
-                WHERE event_id = %s and athlete_id = %s and category_id=%s and 
-                (match_based_event.is_invalid = false or match_based_event.is_invalid is null);
+                M.type_of_medal,C.name,event_id,athlete_id,
+                individual_medal_event.id as individual_medal_event_id
+                FROM individual_medal_event INNER JOIN category as C ON individual_medal_event.category_id=C.id
+                INNER JOIN medal as M on M.id = individual_medal_event.medal_id
+                WHERE event_id = %s and athlete_id = %s and category_id=%s and individual_medal_event.medal_id is not null and
+                (individual_medal_event.is_invalid = false);
                 """
         cursor.execute(query,(eID,aID,cID))
         result = cursor.fetchone()
@@ -222,12 +224,7 @@ class MedalBasedEventDAO:
         cursor.execute(query,(eID,cID,))
         result = cursor.fetchone() 
                   
-        if result:            
-            if cID == TENNIS_CIDF_DOUBLE or cID == TENNIS_CIDM_DOUBLE or cID == TABLE_TENNIS_CIDF_DOUBLE or cID == TABLE_TENNIS_CIDM_DOUBLE:               
-                result = list(result)
-                result[0] = int(result[0]/2)
-                result[1] = int(result[1]/2)
-                result = tuple(result)
+       
         return result
 
 
@@ -254,14 +251,15 @@ class MedalBasedEventDAO:
         query = """
                 SELECT
                 event.id as event_id, event.event_date,
-                matches_played,matches_won,C.name,
-                match_based_event.id as match_based_event_id,
-                match_based_event.athlete_id
-                FROM match_based_event INNER JOIN category as C on match_based_event.category_id=C.id
-                INNER JOIN event ON event.id = match_based_event.event_id
+                M.type_of_medal,C.name,
+                individual_medal_event.id as individual_medal_event_id,
+                individual_medal_event.athlete_id
+                FROM individual_medal_event INNER JOIN category as C on individual_medal_event.category_id=C.id
+                INNER JOIN medal as M ON M.id = individual_medal_event.medal_id
+                INNER JOIN event ON event.id = individual_medal_event.event_id
                 INNER JOIN team on team.id = event.team_id
-                WHERE athlete_id = %s and team.season_year = %s and
-                (match_based_event.is_invalid = false or match_based_event.is_invalid is null);
+                WHERE athlete_id = 131 and team.season_year = 2020 and individual_medal_event.medal_id is not null and
+                individual_medal_event.is_invalid = false;
                 """
         cursor.execute(query,(aID,seasonYear,))        
         result = []
@@ -294,21 +292,22 @@ class MedalBasedEventDAO:
         query = """
                 with aggregate_query as(
                 SELECT
-                sum(matches_played) as matches_played,sum(matches_won) as matches_won,
-                match_based_event.athlete_id,match_based_event.category_id
+                count(medal_id) as medals_earned, individual_medal_event.medal_id as medal_id,
+                individual_medal_event.athlete_id,individual_medal_event.category_id
 
-                FROM match_based_event
-                INNER JOIN event ON event.id = match_based_event.event_id
+                FROM individual_medal_event
+                INNER JOIN event ON event.id = individual_medal_event.event_id
                 INNER JOIN team on team.id = event.team_id
-                WHERE athlete_id = %s and team.season_year = %s and
-                (match_based_event.is_invalid = false or match_based_event.is_invalid is null)                
-                GROUP BY match_based_event.athlete_id,match_based_event.category_id)
+                WHERE athlete_id = %s and team.season_year = %s and individual_medal_event.medal_id is not null and
+                individual_medal_event.is_invalid = false
+                GROUP BY individual_medal_event.athlete_id,individual_medal_event.medal_id, individual_medal_event.category_id)
                 select 
-                matches_played, matches_won,C.name,
+                medals_earned, type_of_medal,C.name,
                 athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
                 INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
-                INNER JOIN category as C on aggregate_query.category_id = C.id
+                INNER JOIN category as C on aggregate_query.category_id = C.id  
+                INNER JOIN medal as M on aggregate_query.medal_id = M.id
                 ;
                 """
         cursor.execute(query,(aID,seasonYear,))        
@@ -335,24 +334,25 @@ class MedalBasedEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                with aggregate_query as(
+                 with aggregate_query as(
                 SELECT
-                sum(matches_played) as matches_played,sum(matches_won) as matches_won,
-                match_based_event.athlete_id,match_based_event.category_id
+                count(medal_id) as medals_earned, individual_medal_event.medal_id as medal_id,
+                individual_medal_event.athlete_id,individual_medal_event.category_id
 
-                FROM match_based_event
-                INNER JOIN event ON event.id = match_based_event.event_id
+                FROM individual_medal_event
+                INNER JOIN event ON event.id = individual_medal_event.event_id
                 INNER JOIN team on team.id = event.team_id
-                WHERE team.sport_id = %s and team.season_year = %s and
-                (match_based_event.is_invalid = false or match_based_event.is_invalid is null)
-                GROUP BY match_based_event.athlete_id, match_based_event.category_id)
+                WHERE team.sport_id = %s and team.season_year = %s and individual_medal_event.medal_id is not null and
+                individual_medal_event.is_invalid = false
+                GROUP BY individual_medal_event.athlete_id,individual_medal_event.medal_id, individual_medal_event.category_id)
                 select 
-                matches_played, matches_won, C.name,
+                medals_earned, type_of_medal,C.name,
                 athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
                 INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
-                INNER JOIN category as C on aggregate_query.category_id = C.id                
-                ;
+                INNER JOIN category as C on aggregate_query.category_id = C.id  
+                INNER JOIN medal as M on aggregate_query.medal_id = M.id               
+                                ;
                 """
         cursor.execute(query,(int(sID),int(seasonYear),))        
         result = []
@@ -461,10 +461,10 @@ class MedalBasedEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO match_based_event(matches_played,matches_won,category_id,event_id,athlete_id,is_invalid)
-                VALUES(%s,%s,%s,%s,%s,false) returning id;
+                INSERT INTO individual_medal_event(event_id,athlete_id,category_id,medal_id,is_invalid)
+                VALUES(%s,%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(matches_played,matches_won,category_id,eID,aID,))
+        cursor.execute(query,(eID,aID,category_id,medal_id,))
         mbID = cursor.fetchone()[0]
         if not mbID:
             return mbID
@@ -493,11 +493,11 @@ class MedalBasedEventDAO:
         
         cursor = self.conn.cursor()
         query = """
-                INSERT INTO match_based_event_team_stats(matches_played,matches_won,category_id,event_id,is_invalid)
-                VALUES(%s,%s,%s,%s,false) returning id;
+                INSERT INTO individual_medal_team_stats(medal_id,category_id,event_id,is_invalid)
+                VALUES(%s,%s,%s,false) returning id;
                 """
         try:
-            cursor.execute(query,(matches_played,matches_won,category_id,eID,))
+            cursor.execute(query,(medal_id,category_id,eID,))
             tsID = cursor.fetchone()[0]
             if not tsID:
                 return tsID
@@ -533,17 +533,16 @@ class MedalBasedEventDAO:
         
         cursor = self.conn.cursor()
         query = """
-                UPDATE match_based_event
-                SET matches_played = %s,
-                    matches_won = %s,                    
+                UPDATE individual_medal_event
+                SET medal_id = %s,                                        
                     is_invalid = false
                 WHERE event_id = %s and athlete_id = %s and category_id = %s
                 RETURNING
-                    matches_won,matches_played,category_id,
-                    match_based_event.event_id, match_based_event.id as match_based_event_id, match_based_event.athlete_id;
+                    medal_id,category_id,
+                    event_id, individual_medal_event.id as medal_based_event_id,athlete_id;
 
                 """
-        cursor.execute(query,(matches_played,matches_won,eID,aID,category_id,))
+        cursor.execute(query,(medal_id,eID,aID,category_id,))
         result = cursor.fetchone()
         if not result:
             return result
@@ -574,10 +573,10 @@ class MedalBasedEventDAO:
                 with aggregate_query as(
                 with valid_match_based_events as
                 (SELECT *
-                FROM match_based_event
+                FROM individual_medal_event
                 WHERE (is_invalid=false or is_invalid is null))
                 select 
-                sum(matches_played) as matches_played,sum(matches_won) as matches_won
+                count(medal_id) as number of medal,sum(matches_won) as matches_won
                 from valid_match_based_events
                 WHERE event_id = %s and category_id=%s)
                 select * 
@@ -633,7 +632,7 @@ class MedalBasedEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                UPDATE match_based_event
+                UPDATE individual_medal_event
                 SET is_invalid = true
                 WHERE event_id = %s  and athlete_id = %s and category_id=%s
                 RETURNING id;
@@ -668,7 +667,7 @@ class MedalBasedEventDAO:
         """
         cursor = self.conn.cursor()
         query = """
-                UPDATE match_based_event_team_stats
+                UPDATE individual_medal_event_team_stats
                 SET is_invalid = true
                 WHERE event_id = %s
                 and category_id = %s
@@ -700,7 +699,7 @@ class MedalBasedEventDAO:
 
         query = """
                 select distinct category_id
-                from match_based_event 
+                from individual_based_event 
                 where event_id = %s
                 and is_invalid = false
                 """
