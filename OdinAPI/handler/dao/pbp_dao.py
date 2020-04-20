@@ -32,7 +32,7 @@ class PBPDao:
             "score-key": "score",
             "over": "/game-over",
             "answer": "/answer",
-            "color": "/color"
+            "color": "/opp-color"
         }
 
     def create_pbp_seq(self, event_id, game_metadata, score_val):

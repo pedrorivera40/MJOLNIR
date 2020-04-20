@@ -481,20 +481,17 @@ class VolleyballPBPHandler:
             if not search(self._sport_keywords["color-format"], color):
                 return jsonify(ERROR="Invalid color format."), 400
 
-            event_info = EventDAO().getEventById(event_id)
-
-            if not event_info:
-                return jsonify(ERROR="Invalid event."), 400
-
-            if len(event_info) != 7:
-                return jsonify(ERROR="Invalid response from Event DAO."), 500
-
-            if event_info["sport_name"] != self._sport_keywords["sport"]:
-                return jsonify(ERROR="Sport does not match Volleyball."), 403
+            # Validate event id is positive integer.
+            if not str(event_id).isdigit():
+                return jsonify(ERROR="Invalid event id (must be an integer)."), 400
 
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
                 return jsonify(ERROR="PBP sequence does not exist."), 403
+
+            meta = pbp_dao.get_pbp_meta(event_id)
+            if self._sport_keywords["sport"] != meta["sport"]:
+                return jsonify(ERROR="Not volleyball PBP sequence"), 403
 
             pbp_dao.set_opponent_color(event_id, color)
             return jsonify(MSG="Color set."), 200
