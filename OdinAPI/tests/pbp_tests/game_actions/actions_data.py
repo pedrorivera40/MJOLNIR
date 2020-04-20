@@ -125,5 +125,22 @@ data = {
     "invalid_pbp_to_remove2": {
         "event_id": 28,
         "action_id": 9999
+    },
+    "edit_valid_notification": {
+        "event_id": 28,
+        "action_id": 25,
+        "data": {
+            "action_type": "Notification",
+            "message": "I refuse to sleep..."
+        }
+    },
+    "edit_valid_score_to_error": {
+        "event_id": 28,
+        "action_id": 26,
+        "data": {
+            "action_type": "AttackError",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
     }
 }

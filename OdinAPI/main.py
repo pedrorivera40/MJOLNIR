@@ -683,13 +683,13 @@ def pbp_sequence():
     return handler.removePBPSequence(event_id)
 
 
-@app.route("/pbp/color", methods=['POST', 'PUT'])
+@app.route("/pbp/color", methods=['PUT'])
 def pbp_set_color():
     body = request.get_json()
     if len(body) == 2 and "color" in body and "event_id" in body:
         return VolleyballPBPHandler().setOpponentColor(body["event_id"], body["color"])
 
-    return jsonify(ERROR="Bad request, client must pass both event id and color within request body."), 400
+    return jsonify(ERROR="Bad request, client must pass both event id and hex color within request body."), 400
 
 
 @app.route("/pbp/roster", methods=['POST', 'PUT', 'DELETE'])

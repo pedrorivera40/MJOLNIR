@@ -5,7 +5,6 @@ from firebase_admin import db
 from time import time
 
 
-# TODO -> Add class documentation
 class PBPDao:
     '''
     PBPDao - This class implements a Data Access Object pattern to provide 
@@ -356,8 +355,8 @@ class PBPDao:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
 
         update = {
-            (event_id + path_dec): dec_score - difference,
-            (event_id + path_inc): inc_score + difference,
+            (str(int(event_id)) + path_dec): dec_score - difference,
+            (str(int(event_id)) + path_inc): inc_score + difference,
             action_path: new_action
         }
         self._rtdb.reference().update(update)
@@ -506,7 +505,6 @@ class PBPDao:
 
         path = self._db_keywords["root"] + \
             str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(action_id))
-
         return self._rtdb.reference(path).set(action_content)
 
     def remove_pbp_game_action(self, event_id, action_id):
@@ -543,7 +541,7 @@ class PBPDao:
             self._db_keywords["meta"] + \
             self._db_keywords["over"]
 
-        return self._rtdb.reference(path).get()
+        return self._rtdb.reference(path).get() == "Yes"
 
     def set_pbp_game_over(self, event_id):
         """
@@ -560,7 +558,7 @@ class PBPDao:
         path = self._db_keywords["root"] + str(int(event_id)) + \
             self._db_keywords["meta"] + self._db_keywords["over"]
 
-        self._rtdb.reference(path).set(True)
+        self._rtdb.reference(path).set("Yes")
 
 
 # if __name__ == '__main__':

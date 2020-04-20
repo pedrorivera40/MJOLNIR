@@ -209,7 +209,7 @@ class VolleyballPBPHandler:
         if not dao.pbp_game_action_exists(event_id, action_id):
             raise Exception("Action does not exist.")
 
-        if len(action) < 2 or len(action) > 3:
+        if len(new_action) < 2 or len(new_action) > 3:
             raise Exception("New action (data) must have 2 params for notification and 3 for game action.")
 
         # Every action must have a type.
@@ -231,7 +231,7 @@ class VolleyballPBPHandler:
         if are_same_type and prev_type == self._sport_keywords["notification"]:
             if len(new_action) != 2 or "message" not in new_action or not isinstance(new_action["message"], str) or len(new_action["message"]) < 1 or len(new_action["message"]) > 100:
                 raise Exception("Invalid new action format.")
-            dao.add_pbp_game_action(event_id, new_action)
+            dao.edit_pbp_game_action(event_id, action_id, new_action)
             return
 
         # If actions are not the same and one of them is notification. This operation is not allowed.
@@ -256,10 +256,10 @@ class VolleyballPBPHandler:
         if new_team not in self._sport_keywords["teams"]:
             raise Exception("Invalid team.")
 
-        if new_team == self._sport_keywords["teams"][0] and athlete_id not in dao.get_uprm_roster(event_id):
+        if new_team == self._sport_keywords["teams"][0] and str(int(athlete_id)) not in dao.get_uprm_roster(event_id):
             raise Exception("Athlete not in UPRM roster.")
 
-        if new_team == self._sport_keywords["teams"][1] and athlete_id not in dao.get_opponent_roster(event_id):
+        if new_team == self._sport_keywords["teams"][1] and str(int(athlete_id)) not in dao.get_opponent_roster(event_id):
             raise Exception("Athlete not in opponent roster.")
 
         # *** Case same type of play (scoring action), but a change is present. ***
@@ -712,12 +712,13 @@ class VolleyballPBPHandler:
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
                 return jsonify(ERROR="PBP Sequence does not exist."), 403
-
+            
             self._handle_pbp_edit_action(
                 event_id, action_id, new_action, pbp_dao)
             return jsonify(MSG="Edit game action success."), 200
 
         except Exception as e:
+            print(str(e))
             return jsonify(ERROR=str(e)), 500
 
 
