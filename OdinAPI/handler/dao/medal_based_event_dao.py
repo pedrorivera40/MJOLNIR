@@ -11,7 +11,7 @@ TABLE_TENNIS_CIDM_DOUBLE=8
 TABLE_TENNIS_CIDF_SOLO=10
 TABLE_TENNIS_CIDF_DOUBLE=4
 
-class MatchBasedEventDAO:
+class MedalBasedEventDAO:
 
     def __init__(self):
         connection_url = "dbname={} user={} password={} host ={} ".format(
@@ -24,12 +24,12 @@ class MatchBasedEventDAO:
     
 
     #=============================//HELPERS//====================
-    def getMatchBasedEventID(self,eID,aID,cID):
+    def getMedalBasedEventID(self,eID,aID,cID):
         """
-        Checks if match_based event exists.
+        Checks if medal_based event exists.
 
         This function uses IDs to perform a query to the database
-        that verifies if the Match Based Event exists.
+        that verifies if the Medal Based Event exists.
 
         Args:
             eID: The ID of the event 
@@ -37,7 +37,7 @@ class MatchBasedEventDAO:
             cID: The ID of the category
             
         Returns:
-            The id of the match_based event entry if it exists.
+            The id of the medal_based event entry if it exists.
         """
         cursor = self.conn.cursor()
         query = """
@@ -49,43 +49,43 @@ class MatchBasedEventDAO:
         result = cursor.fetchone()
         return result
     
-    def getMatchBasedEventIDInvalid(self,eID,aID,cID):
+    def getMedalBasedEventIDInvalid(self,eID,aID,cID):
         """
-        Checks if invalid match_based event exists.
+        Checks if invalid medal_based event exists.
 
         This function uses IDs to perform a query to the database
-        that verifies if the invalid MatchBased Event exists.
+        that verifies if the invalid MedalBased Event exists.
 
         Args:
             eID: The ID of the event 
             aID: The ID of the athlete
             cID: The ID of the category
         Returns:
-            The id of the invalid match_based event entry if it exists.
+            The id of the invalid medal_based event entry if it exists.
         """
         cursor = self.conn.cursor()
         query = """
                 SELECT id
-                FROM match_based_event
+                FROM medal_based_event
                 WHERE event_id = %s and athlete_id = %s and category_id =%s and (is_invalid = true);
                 """
         cursor.execute(query,(int(eID),int(aID),cID,))
         result = cursor.fetchone()
         return result
     
-    def getMatchBasedEventTeamStatsID(self,eID,cID):
+    def getMedalBasedEventTeamStatsID(self,eID,cID):
         """
-        Checks if match_based event team stats exist.
+        Checks if medal_based event team stats exist.
 
         This function uses IDs to perform a query to the database
-        that verifies if the MatchBased Event exists.
+        that verifies if the MedalBased Event exists.
 
         Args:
             eID: The ID of the event
             cID: The ID of the category of the event. 
             
         Returns:
-            The id of the match_based event team stats entry if it exists.
+            The id of the medal_based event team stats entry if it exists.
         """
         cursor = self.conn.cursor()
         query = """
@@ -98,19 +98,19 @@ class MatchBasedEventDAO:
         #print(result)
         return result
 
-    def getMatchBasedEventTeamStatsIDInvalid(self,eID,cID):
+    def getMedalBasedEventTeamStatsIDInvalid(self,eID,cID):
         """
-        Checks if invalid match_based event team stats exist.
+        Checks if invalid medal_based event team stats exist.
 
         This function uses IDs to perform a query to the database
-        that verifies if the invalid MatchBased Event exists.
+        that verifies if the invalid MedalBased Event exists.
 
         Args:
             eID: The ID of the event
             cID: The ID of the category of the event
             
         Returns:
-            The id of the invalid match_based event team stats entry if it exists.
+            The id of the invalid medal_based event team stats entry if it exists.
         """
         cursor = self.conn.cursor()
         query = """
@@ -324,7 +324,7 @@ class MatchBasedEventDAO:
         that gets the aggregated statistics in the system that match the given ID and season year.
 
         Args:
-            sID: the sport id for the match_based branch of which statistics need to be fetched
+            sID: the sport id for the medal_based branch of which statistics need to be fetched
             seasonYear: the season year of which statistics need to be fetched.
             
             
@@ -442,9 +442,9 @@ class MatchBasedEventDAO:
     
     
     
-    def addStatistics(self,eID,aID,matches_played,matches_won,category_id):
+    def addStatistics(self,eID,aID,category_id,medal_id):
         """
-        Adds a new match_based event statistics record with the provided information.
+        Adds a new medal_based event statistics record with the provided information.
 
         This function accepts two IDs and sports-specific statistics 
         to perform a query to the database that adds a new statistics record 
@@ -452,10 +452,9 @@ class MatchBasedEventDAO:
 
         Args:
             eID: the ID of the event for which the statistics record will be added.
-            aID: the ID of the athlete for which the statistics record will be added.
-            matchesPlayed: Number of matches played by the athlete in the event.
-            matchesWon: Number of matches won by the athlete in the event.
+            aID: the ID of the athlete for which the statistics record will be added.            
             category_id: The id of the category played by the athlete in the event.
+            medal_id: The id of the medal awarded.
         Returns:
             A list containing the response to the database query
             containing the matching record for the new statistics entry. 
@@ -473,20 +472,19 @@ class MatchBasedEventDAO:
         return mbID
 
     
-    #NEW: add team statistics aggregate passed by parameter
-    def addTeamStatistics(self,eID,matches_played,matches_won,category_id):
+   
+    def addTeamStatistics(self,eID,category_id,medal_id):
         """
-        Adds a new match_based event team statistics record with the provided information.
+        Adds a new medal_based event team statistics record with the provided information.
 
         This function accepts an ID and sports-specific statistics 
         to perform a query to the database that adds a new team statistics record 
         to the system with the provided information.
 
         Args:
-            eID: the ID of the event for which the team statistics record will be added.
-            matchesPlayed: Number of matches played by the athlete in the event.
-            matchesWon: Number of matches won by the athlete in the event.
+            eID: the ID of the event for which the team statistics record will be added.           
             category_id: The id of the category played by the athlete in the event.
+            medal_id: The id of the medal awarded.
             
         Returns:
             A list containing the response to the database query
@@ -506,30 +504,30 @@ class MatchBasedEventDAO:
             #self.commitChanges()
             return tsID
         except:
-            return None    
+            return None
     
+   
 
 #=============================//PUTS//=======================
 
     
-    def editStatistics(self,eID,aID,matches_played,matches_won,category_id):
+    def editStatistics(self,eID,aID,category_id,medal_id):
         """
-        Updates the statistics for the match_based event with the given IDs.
+        Updates the statistics for the medal_based event with the given IDs.
 
         This function accepts two IDs and sports specific statistics and uses them 
-        to update the statistics in the record of the match_based event with the 
+        to update the statistics in the record of the medal_based event with the 
         matching IDs.
 
         Args:
             eID: the ID of the event for which the statistics record will be updated.
-            aID: the ID of the athlete for which the statistics record will be updated.
-            matchesPlayed: Number of matches played by the athlete in the event.
-            matchesWon: Number of matches won by the athlete in the event.
+            aID: the ID of the athlete for which the statistics record will be updated.          
             category_id: The id of the category played by the athlete in the event.
+            medal_id: The id of the medal awarded.
             
         Returns:
             A list containing the response to the database query
-            containing the matching record for the modified match_based
+            containing the matching record for the modified medal_based
             event statistics.
         """
         
@@ -555,10 +553,10 @@ class MatchBasedEventDAO:
     #NEW: edit team statistics. automatically update based on aggregate. 
     def editTeamStatistics(self,eID,cID):
         """
-        Updates the statistics for the match_based event with the given IDs.
+        Updates the statistics for the medal_based event with the given IDs.
 
         This function accepts an ID and uses it to automatically update the 
-        team statistics in the record of the match_based event team stats with 
+        team statistics in the record of the medal_based event team stats with 
         the matching ID based on an aggregate of existing statistics.
 
         Args:
@@ -567,7 +565,7 @@ class MatchBasedEventDAO:
             
         Returns:
             A list containing the response to the database query
-            containing the matching record for the modified match_based
+            containing the matching record for the modified medal_based
             event team statistics.
         """
         cursor = self.conn.cursor()
@@ -589,7 +587,7 @@ class MatchBasedEventDAO:
         cursor.execute(query,(eID,cID))
         resultTeam = cursor.fetchone()
   
-        #the second query updates the match_based_event_team_stats based on aggregate results
+        #the second query updates the medal_based_event_team_stats based on aggregate results
         query = """
                 UPDATE match_based_event_team_stats
                 SET matches_played = %s,
@@ -619,7 +617,7 @@ class MatchBasedEventDAO:
      
     def removeStatistics(self,eID,aID,cID):
         """
-        Invalidates a match_based event statistics entry in the database.
+        Invalidates a medal_based event statistics entry in the database.
 
         This function accepts two IDs and uses them to set the valid field
         within the database as invalid, this acts as a deletion of the 
@@ -650,10 +648,10 @@ class MatchBasedEventDAO:
         except: 
             return None
 
-    #NEW : remove team statistics
+    
     def removeTeamStatistics(self,eID,cID):
         """
-        Invalidates a match_based event team statistics entry in the database.
+        Invalidates a medal_based event team statistics entry in the database.
 
         This function accepts an ID and uses it to set the valid field
         within the database as invalid, this acts as a deletion of the 
@@ -680,7 +678,7 @@ class MatchBasedEventDAO:
         result = cursor.fetchone()[0]
         if not result:
             return result
-        #self.commitChanges()
+       
         return result
 
 
@@ -723,7 +721,7 @@ class MatchBasedEventDAO:
         insertion and update queries have been done on the
         database.
         
-        Uses the connection created when this MatchBasedEventDAO was
+        Uses the connection created when this MedalBasedEventDAO was
         instantiated to commit the changes performed on the datasase
         after insertion and update queries. 
         """
