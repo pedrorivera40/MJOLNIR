@@ -332,23 +332,6 @@
             </v-tab-item>
             <v-tab-item>
                 <v-card>
-                    <v-card-title>
-                    <v-row>
-                        <v-col>
-                        <v-btn
-                            color="primary_light"
-                            class="white--text"
-                            @click="addTeamStatistics(editedItemIndex)"
-                        >
-                            <v-icon left>
-                            mdi-plus
-                            </v-icon>
-                            Añadir Estadisticas de Equipo
-                        </v-btn>
-                        <v-spacer />
-                        </v-col>
-                    </v-row>
-                    </v-card-title>
                     <!-- :headers="headers"
                     :items="users"
                     :search="search"
@@ -363,7 +346,7 @@
                     >
                     
                     <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
+                        <!-- <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
                             <v-icon
                             small
@@ -375,7 +358,7 @@
                             </v-icon>
                         </template>
                         <span>Editar Estadisticas de Equipo</span>
-                        </v-tooltip>
+                        </v-tooltip> -->
                         <!-- <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
                             <v-icon
@@ -453,7 +436,7 @@ export default {
       sport_id: 2,
       sport_name: "Soccer",
       opponent_score:'',
-      opponent_name:'',
+      opponent_name:"INTER SG", //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
       payload_stats:'',
       BASKETBALL_IDM: 1,

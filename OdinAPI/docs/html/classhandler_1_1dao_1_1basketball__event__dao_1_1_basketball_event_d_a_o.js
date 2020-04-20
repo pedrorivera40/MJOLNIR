@@ -1,0 +1,26 @@
+var classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o =
+[
+    [ "__init__", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#ace78a92edd3910bda7dc17a7f8541a81", null ],
+    [ "addStatistics", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a4027db3b1ac7c6d17dd12d015008f72a", null ],
+    [ "addTeamStatistics", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#aa2b00cf16db9ae95bfd522764d3cbf85", null ],
+    [ "addTeamStatisticsAuto", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a08c98e6cc60e289184f65d56bc5f3f14", null ],
+    [ "commitChanges", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a52abde828fc9186c9494842e27ec2570", null ],
+    [ "editStatistics", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a4d91c158960117f5f6c089f4674272cd", null ],
+    [ "editTeamStatistics", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a7dceee28749b88466cc112e6baa6a65d", null ],
+    [ "editTeamStatisticsManual", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#ae4da53a36598f6235bfe799577c41c0d", null ],
+    [ "getAggregatedAthleteStatisticsPerSeason", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#ac660899fcb4e4f8d782cf6963a6c9b91", null ],
+    [ "getAggregatedTeamStatisticsPerSeason", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#afc64d2c7c96fc004730856339137eec7", null ],
+    [ "getAllAggregatedAthleteStatisticsPerSeason", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a1e711ea382e54616539aa2249f4c5f75", null ],
+    [ "getAllAthleteStatisticsByEventID", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#ad880b1a4316cbfe009dc7b4628619862", null ],
+    [ "getAllAthleteStatisticsPerSeason", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a6344ff81a10cbf1393461dafdd22eb05", null ],
+    [ "getAllStatisticsByEventID", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a572761553d62ca0471a9d24078e81811", null ],
+    [ "getAllTeamStatisticsByEventID", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#ac0e9abba73e012d31064e6fa69a97f45", null ],
+    [ "getBasketballEventID", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a755fa580876dc7ba2ee3621153a36da3", null ],
+    [ "getBasketballEventIDInvalid", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a7f99ad79343a2952df00c0ad3b3674be", null ],
+    [ "getBasketballEventTeamStatsID", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#ae1c6d7feade360798e1439d870724af5", null ],
+    [ "getBasketballEventTeamStatsIDInvalid", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#ab4ea604d474379042c51ca75ff0aa4ed", null ],
+    [ "getCursor", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a851f99879770c7a53cb5bafafb63759b", null ],
+    [ "removeStatistics", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a174587db0a7e34ca1b475f21341a8244", null ],
+    [ "removeTeamStatistics", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#a53a9c4458e7f34993801713a0d8e622b", null ],
+    [ "conn", "classhandler_1_1dao_1_1basketball__event__dao_1_1_basketball_event_d_a_o.html#aac133a36e5c1484ff7df90ab0144f039", null ]
+];

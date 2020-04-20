@@ -71,7 +71,7 @@ export default {
     },//end of data()
     methods:{
         goToAthlete(){
-            this.$router.push('/atletas/'+this.athlete_id)
+            this.$router.push('/atleta/'+this.athlete_id)
         }
     }
 }

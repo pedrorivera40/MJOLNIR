@@ -73,6 +73,7 @@
                 v-model="venue"                                     
                 label="Lugar del Evento"
                 required
+                :rules="[alphaSpaces('Lugar del Evento')]"
               ></v-text-field>                
             </v-col>
           </v-row>
@@ -122,8 +123,9 @@
             >              
               <v-text-field
                 v-model="opponent_name"                                  
-                label="Oponente"
+                label="Nombre de Oponente"
                 required
+                :rules="[generalPhrase('Nombre de Oponente')]"
               ></v-text-field>
               
             </v-col>
@@ -149,7 +151,7 @@
                 auto-grow
                 rows = "2"
                 outlined
-                :rules="[minLength('Resumen',1),maxSummaryLength('Resumen',2)]"
+                :rules="[minLength('Resumen',1),maxSummaryLength('Resumen',250)]"
               ></v-textarea>                
             </v-col>
           </v-row>
@@ -191,7 +193,7 @@
 			venue:'',
 			teamSport:'',		
       opponent_name:'',
-      eventSummary:'',
+      eventSummary:null,
       yearList:[],
       year:'',
       team:'',
@@ -206,12 +208,30 @@
       ...rules,
 
       submit () {
-        console.log(this.team)
+
+        let event_attributes = {}
+
+        event_attributes['event_date'] = this.date
+
+        if(this.locality.localeCompare('Casa') == 0)
+          event_attributes['is_local'] = true
+        else if(this.locality.localeCompare('Afuera') == 0)
+          event_attributes['is_local'] = false
+        
+        event_attributes['team_id'] = this.team
+        event_attributes['opponent_name'] = this.opponent_name
+        event_attributes['event_summary'] = this.eventSummary
+
+        console.log("Creating a new event with the following information:")
+        console.log(event_attributes)
+
+        this.$router.push('/eventos/')
+        
       },
       clear () {
         this.locality =''
         this.team = ''
-        this.eventSummary = ''
+        this.eventSummary = null
         this.opponent_name = ''
         this.resetDate()  
       },

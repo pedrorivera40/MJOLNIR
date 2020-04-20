@@ -281,3 +281,65 @@ class EventDAO:
         """
         
         self.conn.commit()
+
+    def teamExists(self,tID):
+        """
+        Confirms the existance of a team by the team id
+        given.
+
+        Performs a simple fetch query to determine if 
+        the team given exists.
+
+        Args:           
+            tID: The id of the team being confirmed
+
+        Returns:
+            True if the team exists in the database, 
+            false otherwise.
+        """
+        cursor = self.conn.cursor()
+        exists = True
+        query = """select id
+                   from team
+                   where id=%s
+                   and is_invalid=false
+                """
+        try:
+            cursor.execute(query,(tID,))
+            if not cursor.fetchone():
+                exists = False
+        except:
+            return False
+        return exists
+
+    def eventExists(self,eID):
+        """
+        Confirms the existance of a event by the event id
+        given.
+
+        Performs a simple fetch query to determine if 
+        the event given exists.
+
+        Args:           
+            eID: The id of the event being confirmed
+
+        Returns:
+            True if the event exists in the database, 
+            false otherwise.
+        """
+        cursor = self.conn.cursor()
+        exists = True
+        query = """select id
+                   from event
+                   where id=%s
+                   and is_invalid=false
+                """
+        try:
+            cursor.execute(query,(eID,))
+            if not cursor.fetchone():
+                exists = False
+        except:
+            return False
+        return exists
+    
+    

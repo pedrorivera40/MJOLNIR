@@ -108,29 +108,8 @@ class AthleteDAO:
             result = cursor.fetchall()            
             return result
         except:
-            return "A problem ocurred when fethching the athlete."
-    
-    #This function might not be required and therefore eliminated.
-    def getAthleteByName(self,aFName,aMName,aLName):
-        cursor = self.conn.cursor()
-        query = None
-        if not aMName:        
-            query = "select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.profile_image_link "\
-                    "from athlete as A "\
-                    "where A.first_name = %s "\
-                    "and A.last_names = %s"
-            cursor.execute(query,(aFName,aLName,))
-        else:
-            query = "select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.profile_image_link "\
-                    "from athlete as A "\
-                    "where A.first_name = %s "\
-                    "and A.middle_name = %s"\
-                    "and A.last_names = %s"
-            cursor.execute(query,(aFName,aMName,aLName,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
+            return "A problem ocurred when fethching the athlete."    
+  
 
     def addAthlete(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink):
         """
@@ -430,7 +409,7 @@ class AthleteDAO:
                 if not apID:
                     return 'Athlete position update failed.' 
             except:
-                return 'Was given wrong names for the positions.'
+                return 'The names of the positions given are incorrect.'
                 
         #If the categories were given then the categories of the athlete will be udpated.
         if aCategories and not aPositions:
@@ -440,7 +419,7 @@ class AthleteDAO:
                        from  category as C inner join sport as S on C.sport_id=S.id
                        where S.id = %s                       
                     """
-            cursor.execute(query,(result[10],))            
+            cursor.execute(query,(result[12],))            
         
             categories = []#List containing the categories of a sport
             for row in cursor:
@@ -531,17 +510,35 @@ class AthleteDAO:
         except:
             return "A problem ocurred when verifying the sport."
 
-    #This function migh be used later.
-    def _athleteExists(self,cursor,aID):
+    
+    def athleteExists(self,aID):
+        """
+        Confirms the existance of a an athlete by the athlete id
+        given.
+
+        Performs a simple fetch query to determine if 
+        the athlete given exists.
+
+        Args:           
+            sID: The id of the athlete being confirmed
+
+        Returns:
+            True if the athlete exists in the database, 
+            false otherwise.
+        """
+        cursor = self.conn.cursor()
         exists = True
         query = """select id
                    from athlete
                    where id=%s
                    and is_invalid=false
                 """
-        cursor.execute(query,(aID,))
-        if not cursor.fetchone():
-            exists = False
+        try:
+            cursor.execute(query,(aID,))
+            if not cursor.fetchone():
+                exists = False
+        except:
+            return False
         return exists
     
     def getAthleteSportByID(self,aID):
