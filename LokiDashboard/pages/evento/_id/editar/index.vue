@@ -73,7 +73,7 @@
                 v-model="venue"                                    
                 label="Lugar del Evento"
                 required
-                :rules="[minLength('Lugar del Evento',5)]"
+                :rules="[alphaSpaces('Lugar del Evento')]"
               ></v-text-field>              
             </v-col>
           </v-row>
@@ -119,7 +119,7 @@
                 v-model="opponent_name"                                    
                 label="Oponente"
                 required
-                :rules="[minLength('Nombre de Oponente',2)]"
+                :rules="[generalPhrase('Nombre de Oponente')]"
               ></v-text-field>              
             </v-col>
           </v-row>

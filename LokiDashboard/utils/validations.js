@@ -48,7 +48,7 @@ const maxSummaryLength = (propertyType, maxSummaryLength) => {
  * Validation fucntion that uses regex to establish the format for password within the syste.
  */
 const nameFormat = () => {
-  let regex = /^[a-zA-Z '.-]*$/
+  let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$/
   return v => regex.test(v) || "El formato del nombre es incorrecto,"
 }
 
