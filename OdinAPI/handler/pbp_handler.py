@@ -56,6 +56,19 @@ class VolleyballPBPHandler:
             "color-format": "^#(?:[0-9a-fA-F]{1,2}){3}$"
         }
 
+    # def _can_play(self, event_id, team, difference, dao):
+
+    #     if team not in self._sport_keywords["teams"]
+
+    #     current_set = dao.get_current_set(event_id)
+    #     path_uprm = self._sport_keywords["uprm-sets"][current_set - 1]
+    #     path_opp = self._sport_keywords["opp-sets"][current_set - 1]
+    #     uprm_score = dao.get_score_by_set(event_id, path_uprm)
+    #     opp_score = dao.get_score_by_set(event_id, path_opp)
+
+    #     if team == "uprm":
+    #         if 
+
     def _get_direct_set_path(self, team, event_id, dao):
         """
         Internal method to determine set path directly depending on the action team.
@@ -102,26 +115,54 @@ class VolleyballPBPHandler:
         """
 
         # Initial validations.
-        if not dao.pbp_exists(event_id):
-            raise Exception("Invalid event id.")
+
+        if not isinstance(action, dict):
+            raise Exception("Action (data) must be given in the form of a dictionary.")
+
+        if len(action) < 2 or len(action) > 3:
+            raise Exception("Action (data) must have 2 params for notification and 3 for game action.")
 
         if dao.is_game_over(event_id):
             raise Exception("Event is over.")
 
-        action_type = action["action_type"]
-
-        if not action_type:
+        if not "action_type" in action:
             raise Exception("Invalid PBP action.")
+
+        action_type = action["action_type"]
 
         # Notifications are only posted. No score or set value needs to be modified from a notification.
         if action_type == self._sport_keywords["notification"]:
+            if len(action) != 2:
+                raise Exception("Notifications can only have action_type and message")
+
+            if "message" not in action:
+                raise Exception("Message missing.")
+
+            if not isinstance(action["message"], str):
+                raise Exception("Invalid message type.")
+
+            if len(action["message"]) < 1 or len(action["message"]) > 100:
+                raise Exception("Invalid message length (must be within 1 and 100 characters).")
+
             dao.add_pbp_game_action(event_id, action)
             return
+
+        # At this point, the remaining valid actions must have 3 arguments.
+        if len(action) != 3:
+            raise Exception("Invalid number of arguments for a game play or adjust.")
 
         # Adjust game actions modify the score of the direct team indicated in action["team"].
         # These are not added to the notifications feed (non-relational database).
         if action_type == self._sport_keywords["adjust"]:
+            # Validate team value is present.
+            if "team" not in action:
+                raise Exception("Team value not sent in action (data).")
+
             set_path = self._get_direct_set_path(action["team"], event_id, dao)
+            # Validate difference value is present.
+            if "difference" not in action:
+                raise Exception("Difference value not sent in action (data).")
+
             difference = int(action["difference"])
             dao.adjust_score_by_set(event_id, set_path, difference)
             return
@@ -130,7 +171,6 @@ class VolleyballPBPHandler:
                             or str(action["athlete_id"]) in dao.get_opponent_roster(event_id))
 
         # Scoring game actions modify athlete statistics and team score.
-        # TODO -> TEST THIS SECTION.
         if action_type in self._sport_keywords["scoring_actions"]:
 
             if is_valid_athlete:
@@ -327,31 +367,28 @@ class VolleyballPBPHandler:
             dao.edit_pbp_game_action(event_id, action_id, new_action)
             return
 
-        raise Exception("Unexpected PBP action")
+        raise Exception("Undefined Volleyball PBP Sequence Game Action.")
 
     def _handle_remove_pbp_action(self, event_id, action_id, dao):
         """
         Internal method for handling PBP actions removal and its effects over current score.
         """
 
-        if not dao.pbp_exists(event_id):
-            raise Exception("Event does not exist.")
-
         if dao.is_game_over(event_id):
             raise Exception("Event is over.")
 
         if not dao.pbp_game_action_exists(event_id, action_id):
             raise Exception("Action does not exist.")
-
+        
         action = dao.get_pbp_action(event_id, action_id)
-
+        
         # If it is a scoring action, direct team score must decrease by 1.
-        if action["type"] in self._sport_keywords["scoring_actions"]:
+        if action["action_type"] in self._sport_keywords["scoring_actions"]:
             path = self._get_direct_set_path(action["team"], event_id, dao)
             dao.adjust_score_by_set(event_id, path, -1)
 
         # If it is an error action, indirect score must decrease by 1.
-        elif action["type"] in self._sport_keywords["error_actions"]:
+        elif action["action_type"] in self._sport_keywords["error_actions"]:
             path = self._get_indirect_set_path(action["team"], event_id, dao)
             dao.adjust_score_by_set(event_id, path, -1)
 
@@ -650,7 +687,6 @@ class VolleyballPBPHandler:
 
         try:
             # Validate event id is positive integer.
-            print("1")
             if not str(event_id).isdigit():
                 return jsonify(ERROR="Invalid event id (must be an integer)."), 400
 
@@ -658,17 +694,12 @@ class VolleyballPBPHandler:
             if not action_data:
                 return jsonify(ERROR="Action data must be defined."), 403
 
-            print("2")
             # Validate event
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
                 return jsonify(ERROR="PBP Sequence does not exist."), 403
 
-            print("3")
-            print("here")
             self._handle_pbp_action(event_id, action_data, pbp_dao)
-            print("there")
-
             return jsonify(MSG="Action added into the system."), 200
 
         except Exception as e:
@@ -721,18 +752,19 @@ class VolleyballPBPHandler:
         """
 
         try:
-            event_dao = EventDAO()
-
-            # TODO -> check if it would be better adding another method in the DAO for getting sportByEventId.
-            # TODO -> make sure this alligns with the output of Event DAO (contact Luis).
-            if event_dao.getEventById(event_id)[4] != self._sport_keywords["sport"]:
-                return jsonify(ERROR="Not a volleyball event."), 403
-
-            event_dao = EventDAO()
-            self._handle_remove_pbp_action(event_id, game_action_id, event_dao)
-
+            # Validate event id is positive integer.
+            if not str(event_id).isdigit() or not str(game_action_id).isdigit():
+                return jsonify(ERROR="Invalid input, event id and action id (must be an integers)."), 400
+            
+            # Validate event
+            pbp_dao = VolleyballPBPDao()
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(ERROR="PBP Sequence does not exist."), 403
+            
+            self._handle_remove_pbp_action(event_id, game_action_id, pbp_dao)
             return jsonify(MSG="Removed game action"), 200
         except Exception as e:
+            print(str(e))
             return jsonify(ERROR=str(e)), 500
 
     def setPBPSequenceOver(self, event_id):

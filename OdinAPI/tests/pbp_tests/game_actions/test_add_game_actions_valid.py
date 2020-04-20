@@ -3,7 +3,7 @@ import json
 from main import app
 from tests.pbp_tests.game_actions.actions_data import data
 
-class TestEndVolleyballPBP(unittest.TestCase):
+class TestAddValidVolleyballPBP(unittest.TestCase):
 
     # Setup mock client.
     def setUp(self):
@@ -48,6 +48,12 @@ class TestEndVolleyballPBP(unittest.TestCase):
 
     def test_add_valid_error_opp(self):
         response = self.client.post('/pbp/actions',data=json.dumps(data["valid_error_opp"]),content_type='application/json', follow_redirects=True)
+        expected_msg = "Action added into the system."
+        self.assertEqual(response.status_code, 200)
+        self.assertMultiLineEqual(expected_msg, response.json["MSG"])
+
+    def test_valid_adjust(self):
+        response = self.client.post('/pbp/actions',data=json.dumps(data["valid_adjust"]),content_type='application/json', follow_redirects=True)
         expected_msg = "Action added into the system."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])

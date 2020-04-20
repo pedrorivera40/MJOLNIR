@@ -6,14 +6,14 @@ data = {
             "message": "This is a test notification. Hopefully it works."
         }
     },
-    "non_existing_notification": {
+    "non_existing_event_notification": {
         "event_id": 99999,
         "data": {
             "action_type": "Notification",
             "message": "This is a test notification. Hopefully it works."
         }
     },
-    "non_existing_notification": {
+    "non_valid_id_notification": {
         "event_id": "INVALID_EVENT",
         "data": {
             "action_type": "Notification",
@@ -88,20 +88,12 @@ data = {
             "athlete_id": 1587365468141
         }
     },
-    "invalid_play": {
-        "event_id": 99999,
-        "data": {
-            "action_type": "AttackError",
-            "team": "opponent",
-            "athlete_id": 1
-        }
-    },
     "more_params_play": {
         "event_id": 28,
         "data": {
             "action_type": "AttackError",
             "team": "opponent",
-            "athlete_id": 1,
+            "athlete_id": 1587365468141,
             "SOMETHING": "YEP SOMETHING...."
         }
     },
@@ -110,16 +102,28 @@ data = {
         "data": {
             "action_type": "SOMETHING",
             "team": "opponent",
-            "athlete_id": 1,
+            "athlete_id": 1587365468141,
         }
     },
-    "invalid_team_action_play": {
+
+    "valid_adjust": {
         "event_id": 28,
         "data": {
-            "action_type": "SOMETHING",
-            "team": "upra",
-            "athlete_id": 1,
+            "action_type": "ScoreAdjust",
+            "team": "opponent",
+            "difference": 5,
         }
     },
-    
+    "valid_to_remove": {
+        "event_id": 28,
+        "action_id": 25
+    },
+    "invalid_pbp_to_remove1": {
+        "event_id": 9999,
+        "action_id": 25
+    },
+    "invalid_pbp_to_remove2": {
+        "event_id": 28,
+        "action_id": 9999
+    }
 }

@@ -100,6 +100,7 @@ class PBPDao:
 
         Args
             event_id: integer corresponding to an event id.
+            athlete_entry: JSON corresponding to the athlete entry to be set in the RTDB.
 
         Returns:
             void
@@ -127,7 +128,7 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["uprm-roster"] + \
-            "/" + athlete_id
+            "/" + str(int(athlete_id))
         self._rtdb.reference(path).delete()
 
     def remove_opponent_athlete(self, event_id, athlete_id):
@@ -146,7 +147,7 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["opp-roster"] + \
-            "/" + athlete_id
+            "/" + str(int(athlete_id))
         self._rtdb.reference(path).delete()
 
     def get_uprm_roster(self, event_id):
@@ -264,6 +265,9 @@ class PBPDao:
         dec_score = int(self.get_score_by_set(event_id, path_dec))
         inc_score = int(self.get_score_by_set(event_id, path_inc))
 
+        if curredec_scorent_score + int(adjust) < 0 or inc_score + int(adjust):
+            raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
+
         update = {
             (event_id + path_dec): dec_score - difference,
             (event_id + path_inc): inc_score + difference,
@@ -319,7 +323,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            str(int(event_id)) + self._db_keywords["actions"] + "/" + action_id
+            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(action_id))
 
         return self._rtdb.reference(path).get()
 
@@ -357,6 +361,9 @@ class PBPDao:
             str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(time()))
         current_score = int(self.get_score_by_set(event_id, path_score))
 
+        if current_score + int(difference) < 0:
+            raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
+
         update_path_score = self._db_keywords["root"] + \
             str(int(event_id)) + self._db_keywords["score"] + path_score
 
@@ -382,7 +389,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            str(int(event_id)) + self._db_keywords["actions"] + "/" + action_id
+            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(action_id))
 
         return self._rtdb.reference(path).set(action_content)
 
@@ -400,7 +407,7 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + str(int(event_id)) + \
-            self._db_keywords["actions"] + "/" + action_id
+            self._db_keywords["actions"] + "/" + str(int(action_id))
 
         self._rtdb.reference(path).delete()
 
