@@ -1,0 +1,28 @@
+var classhandler_1_1event__result_1_1_event_result_handler =
+[
+    [ "addAllEventStatistics", "classhandler_1_1event__result_1_1_event_result_handler.html#aacc53c193c50a5e313257cc6b8e35adb", null ],
+    [ "addFinalScore", "classhandler_1_1event__result_1_1_event_result_handler.html#a3423bb310b04fdebdb59c50482cbeec4", null ],
+    [ "addStatistics", "classhandler_1_1event__result_1_1_event_result_handler.html#a9301cbd74cac9840cb8a0a4a81aaf813", null ],
+    [ "addTeamStatistics", "classhandler_1_1event__result_1_1_event_result_handler.html#a44792c12d19fda979c8723d3bdc183db", null ],
+    [ "addTeamStatisticsAuto", "classhandler_1_1event__result_1_1_event_result_handler.html#a583436934d6a30697d3f0df234460a15", null ],
+    [ "editFinalScore", "classhandler_1_1event__result_1_1_event_result_handler.html#af94a476f017668268ad9b6e550f9c944", null ],
+    [ "editStatistics", "classhandler_1_1event__result_1_1_event_result_handler.html#af2dd4f07340cb13d74ce942bca612389", null ],
+    [ "editTeamStatistics", "classhandler_1_1event__result_1_1_event_result_handler.html#af65308627db8d6605a4b438ef4f75174", null ],
+    [ "getAggregatedAthleteStatisticsPerSeason", "classhandler_1_1event__result_1_1_event_result_handler.html#a946c8456032be93aad1fd2c8e804ebec", null ],
+    [ "getAggregatedTeamStatisticsPerSeason", "classhandler_1_1event__result_1_1_event_result_handler.html#a1ed778ff72728bee8d68b58dd0b66763", null ],
+    [ "getAllAggregatedAthleteStatisticsPerSeason", "classhandler_1_1event__result_1_1_event_result_handler.html#ac8edd9568d02ac0db0746a48866fefec", null ],
+    [ "getAllAthleteStatisticsByEventId", "classhandler_1_1event__result_1_1_event_result_handler.html#a9dd07bb5cbde7d150d9d37d2e558c46f", null ],
+    [ "getAllAthleteStatisticsPerSeason", "classhandler_1_1event__result_1_1_event_result_handler.html#a33321729627e6c89b2fefd9a9f81c5d0", null ],
+    [ "getAllStatisticsByEventID", "classhandler_1_1event__result_1_1_event_result_handler.html#a0ab18f966bc1cb20c2efda7b917f6e31", null ],
+    [ "getAllTeamStatisticsByEventId", "classhandler_1_1event__result_1_1_event_result_handler.html#ab895fc012b431f69f4e43f117cc5d516", null ],
+    [ "getFinalScore", "classhandler_1_1event__result_1_1_event_result_handler.html#a32a3de5debe160b627747ea12989f32c", null ],
+    [ "mapEventAllStatsToDict", "classhandler_1_1event__result_1_1_event_result_handler.html#a91ce1e2792f100f49170a77bcf990af6", null ],
+    [ "mapEventAthleteStatsToDict", "classhandler_1_1event__result_1_1_event_result_handler.html#a6e58d54e7b0b45f8bde26d97151dfc58", null ],
+    [ "mapEventSeasonCollectionToDict", "classhandler_1_1event__result_1_1_event_result_handler.html#a50c877cc066579d3dd95fd0b5993e09e", null ],
+    [ "mapEventTeamStatsToDict", "classhandler_1_1event__result_1_1_event_result_handler.html#a02af2f69a205466694c15f80d70a8b3d", null ],
+    [ "mapEventToDict", "classhandler_1_1event__result_1_1_event_result_handler.html#a5cad47e285caab987b507a8b22bb1907", null ],
+    [ "mapFinalScoreToDict", "classhandler_1_1event__result_1_1_event_result_handler.html#a1cff4eb9aa6cf87f19eb4542b02cb6e7", null ],
+    [ "removeFinalScore", "classhandler_1_1event__result_1_1_event_result_handler.html#afda5b5b489168c47bad1456bfdbf536c", null ],
+    [ "removeStatistics", "classhandler_1_1event__result_1_1_event_result_handler.html#a149d5152b04f09f3d37856befac27e59", null ],
+    [ "removeTeamStatistics", "classhandler_1_1event__result_1_1_event_result_handler.html#a0b856e2602fd0c998b3229bd96950471", null ]
+];

@@ -1,26 +1,35 @@
 <template>
-  <v-app>
+  <v-app class="backgrnd">
     <v-content>
-    <v-container class="main-container">
-      <nuxt />
-    </v-container>
-  </v-content>
+      <v-container class="main-container">
+        <nuxt />
+      </v-container>
+    </v-content>
+    <TheSnackBar />
   </v-app>
 </template>
 
 <script>
-export default {};
+import TheSnackBar from "@/components/TheSnackBar";
+export default {
+  components: {
+    TheSnackBar,
+  }
+};
 </script>
 
 <style lang="scss" scoped>
 @import "../assets/variables.scss";
-.main-container {
-  height: 100%;
-}
-.nav-drawer {
-  .nav-links {
-    a {
-      color: $highlight-color;
+.backgrnd {
+  background-color: whitesmoke;
+  .main-container {
+    height: 100%;
+  }
+  .nav-drawer {
+    .nav-links {
+      a {
+        color: $highlight-color;
+      }
     }
   }
 }

@@ -27,10 +27,9 @@ def rulesMatch(password):
         password: password to be checked againt the regex.
     
     Returns:
-        A boolean to determine if the password complies or not.
+        A an object or None to determine if the password complies or not.
     """
     pw = password
-
     # set the rules for the regular expression
     reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$"
 
@@ -41,7 +40,9 @@ def rulesMatch(password):
     match = re.search(compiledReg, pw)
 
     # Return true if it matches false if it does not.
-    return match
+    if match:
+        return True
+    return False  
 
 # Uses BCrypt hashing algorithm to hash a password given with
 # the amount of rounds specified in the gensalt() method
@@ -90,7 +91,7 @@ def verifyHash(password, storedHash):
 ###################################
 
 # Generates a new JWT token for the user with the secret key given and returns it.
-def generateToken(username):
+def generateToken(username, permissions):
     """
     Creates a new token for the user.
 
@@ -106,6 +107,7 @@ def generateToken(username):
     # Create a JWT token
     payload = {
         'user': username,
+        'permissions':permissions,
         'exp': datetime.datetime.utcnow()+datetime.timedelta(hours=3),
         'iat': datetime.datetime.utcnow()
     }

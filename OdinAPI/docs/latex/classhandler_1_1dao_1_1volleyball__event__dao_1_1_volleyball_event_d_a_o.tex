@@ -1,0 +1,476 @@
+\hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o}{}\section{handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+AO Class Reference}
+\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o}\index{handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+AO@{handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+AO}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a54a7e5821b705a262b57a76dba3e4508}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a54a7e5821b705a262b57a76dba3e4508}} 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self)
+\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a5eedeebc2382a169dde84736590b9bea}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a5eedeebc2382a169dde84736590b9bea}} 
+def {\bfseries get\+Cursor} (self)
+\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a98ba628ab39ff88b057cdc8b90941c9f}{get\+Volleyball\+Event\+ID} (self, e\+ID, a\+ID)
+\begin{DoxyCompactList}\small\item\em Checks if volleyball event exists. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_ac857bf28aa93ba2eddd0d8f1e4403464}{get\+Volleyball\+Event\+I\+D\+Invalid} (self, e\+ID, a\+ID)
+\begin{DoxyCompactList}\small\item\em Checks if invalid volleyball event exists. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_ade320af1759dd84bf615c88cd28126f8}{get\+Volleyball\+Event\+Team\+Stats\+ID} (self, e\+ID)
+\begin{DoxyCompactList}\small\item\em Checks if volleyball event team stats exist. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a9be2b3e3db29d818189bcd1c0cc3e16f}{get\+Volleyball\+Event\+Team\+Stats\+I\+D\+Invalid} (self, e\+ID)
+\begin{DoxyCompactList}\small\item\em Checks if invalid volleyball event team stats exist. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a7fefc9189bb5e194897bf73d89324fe2}{get\+All\+Statistics\+By\+Event\+ID} (self, e\+ID)
+\begin{DoxyCompactList}\small\item\em Gets all the statistics per athlete for a given event. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a3027982b71e04d8fa14f40f5fa896fc9}{get\+All\+Athlete\+Statistics\+By\+Event\+ID} (self, e\+ID, a\+ID)
+\begin{DoxyCompactList}\small\item\em Gets all the statistics for a given athlete and event. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a07d3632ae537970ac89fc1eca8937df6}{get\+All\+Team\+Statistics\+By\+Event\+ID} (self, e\+ID)
+\begin{DoxyCompactList}\small\item\em Gets the team statistics for a given event. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a07e2fadc0c0308559a511fee558b2b2c}{get\+All\+Athlete\+Statistics\+Per\+Season} (self, a\+ID, season\+Year)
+\begin{DoxyCompactList}\small\item\em Gets all the statistics for a given athlete and season. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a06690eb7967d2674284ddf507e41c914}{get\+Aggregated\+Athlete\+Statistics\+Per\+Season} (self, a\+ID, season\+Year)
+\begin{DoxyCompactList}\small\item\em Gets the aggregated statistics for a given athlete and season. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a163a639d8d5ec7cc4863c7512fea63c5}{get\+All\+Aggregated\+Athlete\+Statistics\+Per\+Season} (self, s\+ID, season\+Year)
+\begin{DoxyCompactList}\small\item\em Gets all the aggregated statistics for a given athlete and season. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a02252b04134d696cadf040d9c0462e8c}{get\+Aggregated\+Team\+Statistics\+Per\+Season} (self, s\+ID, season\+Year)
+\begin{DoxyCompactList}\small\item\em Gets the aggregated team statistics for a given athlete and season. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_acd35c968949cd0a32d124914433ec0d7}{add\+Statistics} (self, e\+ID, a\+ID, kill\+\_\+points, attack\+\_\+errors, assists, aces, service\+\_\+errors, digs, blocks, blocking\+\_\+errors, reception\+\_\+errors)
+\begin{DoxyCompactList}\small\item\em Adds a new volleyball event statistics record with the provided information. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a4648b391f6897b4e6d5a5802b5627511}{add\+Team\+Statistics} (self, e\+ID, kill\+\_\+points, attack\+\_\+errors, assists, aces, service\+\_\+errors, digs, blocks, blocking\+\_\+errors, reception\+\_\+errors)
+\begin{DoxyCompactList}\small\item\em Adds a new volleyball event team statistics record with the provided information. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a626826bd1c94f9568e9a493690af2659}{add\+Team\+Statistics\+Auto} (self, e\+ID)
+\begin{DoxyCompactList}\small\item\em Adds a new volleyball event team statistics record with provided and existing information. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a8aac4d289e02c18f44c0780b5fdb5941}{edit\+Statistics} (self, e\+ID, a\+ID, kill\+\_\+points, attack\+\_\+errors, assists, aces, service\+\_\+errors, digs, blocks, blocking\+\_\+errors, reception\+\_\+errors)
+\begin{DoxyCompactList}\small\item\em Updates the statistics for the volleyball event with the given I\+Ds. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_ab6748767a12639d8eb5aa014ccb5ad81}{edit\+Team\+Statistics} (self, e\+ID)
+\begin{DoxyCompactList}\small\item\em Updates the statistics for the volleyball event with the given I\+Ds. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_af01eb5df6258e5f21a446a7460a8f575}{edit\+Team\+Statistics\+Manual} (self, e\+ID, kill\+\_\+points, attack\+\_\+errors, assists, aces, service\+\_\+errors, digs, blocks, blocking\+\_\+errors, reception\+\_\+errors)
+\begin{DoxyCompactList}\small\item\em Updates the team statistics for the volleyball event with the given I\+Ds. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a089bd6d6f2c2cb4bb1c7030d84859043}{remove\+Statistics} (self, e\+ID, a\+ID)
+\begin{DoxyCompactList}\small\item\em Invalidates a volleyball event statistics entry in the database. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a6a4b8d0782afa791f574c068bdbe1177}{remove\+Team\+Statistics} (self, e\+ID)
+\begin{DoxyCompactList}\small\item\em Invalidates a volleyball event team statistics entry in the database. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a3aad47d91ad279f8b4e0f0c008e68b5a}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a3aad47d91ad279f8b4e0f0c008e68b5a}} 
+def {\bfseries commit\+Changes} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_afb1bee8481027eeea6414b005c481430}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_afb1bee8481027eeea6414b005c481430}} 
+{\bfseries conn}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_acd35c968949cd0a32d124914433ec0d7}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_acd35c968949cd0a32d124914433ec0d7}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!add\+Statistics@{add\+Statistics}}
+\index{add\+Statistics@{add\+Statistics}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{add\+Statistics()}{addStatistics()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+add\+Statistics (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{a\+ID,  }\item[{}]{kill\+\_\+points,  }\item[{}]{attack\+\_\+errors,  }\item[{}]{assists,  }\item[{}]{aces,  }\item[{}]{service\+\_\+errors,  }\item[{}]{digs,  }\item[{}]{blocks,  }\item[{}]{blocking\+\_\+errors,  }\item[{}]{reception\+\_\+errors }\end{DoxyParamCaption})}
+
+
+
+Adds a new volleyball event statistics record with the provided information. 
+
+This function accepts two I\+Ds and sports-\/specific statistics to perform a query to the database that adds a new statistics record to the system with the provided information.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & the ID of the event for which the statistics record will be added. \\
+\hline
+{\em a\+ID} & the ID of the athlete for which the statistics record will be added. kill\+\_\+points\+: attack\+\_\+errors\+: assists\+: aces\+: service\+\_\+errors\+: digs\+: blocks\+: blocking\+\_\+errors\+: reception\+\_\+errors\+:\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the matching record for the new statistics entry. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a4648b391f6897b4e6d5a5802b5627511}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a4648b391f6897b4e6d5a5802b5627511}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!add\+Team\+Statistics@{add\+Team\+Statistics}}
+\index{add\+Team\+Statistics@{add\+Team\+Statistics}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{add\+Team\+Statistics()}{addTeamStatistics()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+add\+Team\+Statistics (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{kill\+\_\+points,  }\item[{}]{attack\+\_\+errors,  }\item[{}]{assists,  }\item[{}]{aces,  }\item[{}]{service\+\_\+errors,  }\item[{}]{digs,  }\item[{}]{blocks,  }\item[{}]{blocking\+\_\+errors,  }\item[{}]{reception\+\_\+errors }\end{DoxyParamCaption})}
+
+
+
+Adds a new volleyball event team statistics record with the provided information. 
+
+This function accepts an ID and sports-\/specific statistics to perform a query to the database that adds a new team statistics record to the system with the provided information.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & the ID of the event for which the team statistics record will be added. kill\+\_\+points\+: attack\+\_\+errors\+: assists\+: aces\+: service\+\_\+errors\+: digs\+: blocks\+: blocking\+\_\+errors\+: reception\+\_\+errors\+:\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the matching record for the new team statistics entry. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a626826bd1c94f9568e9a493690af2659}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a626826bd1c94f9568e9a493690af2659}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!add\+Team\+Statistics\+Auto@{add\+Team\+Statistics\+Auto}}
+\index{add\+Team\+Statistics\+Auto@{add\+Team\+Statistics\+Auto}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{add\+Team\+Statistics\+Auto()}{addTeamStatisticsAuto()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+add\+Team\+Statistics\+Auto (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+
+
+Adds a new volleyball event team statistics record with provided and existing information. 
+
+This function accepts an ID to perform a query to the database that adds a new team statistics record to the system with the provided information and an aggregate of existing information.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & the ID of the event for which the statistics record will be added\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the matching record for the new statistics entry. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a8aac4d289e02c18f44c0780b5fdb5941}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a8aac4d289e02c18f44c0780b5fdb5941}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!edit\+Statistics@{edit\+Statistics}}
+\index{edit\+Statistics@{edit\+Statistics}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{edit\+Statistics()}{editStatistics()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+edit\+Statistics (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{a\+ID,  }\item[{}]{kill\+\_\+points,  }\item[{}]{attack\+\_\+errors,  }\item[{}]{assists,  }\item[{}]{aces,  }\item[{}]{service\+\_\+errors,  }\item[{}]{digs,  }\item[{}]{blocks,  }\item[{}]{blocking\+\_\+errors,  }\item[{}]{reception\+\_\+errors }\end{DoxyParamCaption})}
+
+
+
+Updates the statistics for the volleyball event with the given I\+Ds. 
+
+This function accepts two I\+Ds and sports specific statistics and uses them to update the statistics in the record of the volleyball event with the matching I\+Ds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & the ID of the event for which the statistics record will be updated. \\
+\hline
+{\em a\+ID} & the ID of the athlete for which the statistics record will be updated. kill\+\_\+points\+: attack\+\_\+errors\+: assists\+: aces\+: service\+\_\+errors\+: digs\+: blocks\+: blocking\+\_\+errors\+: reception\+\_\+errors\+:\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the matching record for the modified volleyball event statistics. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_ab6748767a12639d8eb5aa014ccb5ad81}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_ab6748767a12639d8eb5aa014ccb5ad81}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!edit\+Team\+Statistics@{edit\+Team\+Statistics}}
+\index{edit\+Team\+Statistics@{edit\+Team\+Statistics}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{edit\+Team\+Statistics()}{editTeamStatistics()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+edit\+Team\+Statistics (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+
+
+Updates the statistics for the volleyball event with the given I\+Ds. 
+
+This function accepts an ID and uses it to automatically update the team statistics in the record of the volleyball event team stats with the matching ID based on an aggregate of existing statistics.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & the ID of the event for which the team statistics record will be updated\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the matching record for the modified volleyball event team statistics. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_af01eb5df6258e5f21a446a7460a8f575}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_af01eb5df6258e5f21a446a7460a8f575}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!edit\+Team\+Statistics\+Manual@{edit\+Team\+Statistics\+Manual}}
+\index{edit\+Team\+Statistics\+Manual@{edit\+Team\+Statistics\+Manual}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{edit\+Team\+Statistics\+Manual()}{editTeamStatisticsManual()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+edit\+Team\+Statistics\+Manual (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{kill\+\_\+points,  }\item[{}]{attack\+\_\+errors,  }\item[{}]{assists,  }\item[{}]{aces,  }\item[{}]{service\+\_\+errors,  }\item[{}]{digs,  }\item[{}]{blocks,  }\item[{}]{blocking\+\_\+errors,  }\item[{}]{reception\+\_\+errors }\end{DoxyParamCaption})}
+
+
+
+Updates the team statistics for the volleyball event with the given I\+Ds. 
+
+This function accepts event ID and sports specific statistics and uses them to update the statistics in the record of the volleyball event with the matching I\+Ds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & the ID of the event for which the statistics record will be updated. \begin{DoxyVerb}       kill_points:
+       attack_errors:
+       assists:
+       aces:
+       service_errors:
+       digs:
+       blocks:
+       blocking_errors:
+       reception_errors:
+\end{DoxyVerb}
+\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the matching record for the modified volleyball event team statistics. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a06690eb7967d2674284ddf507e41c914}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a06690eb7967d2674284ddf507e41c914}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+Aggregated\+Athlete\+Statistics\+Per\+Season@{get\+Aggregated\+Athlete\+Statistics\+Per\+Season}}
+\index{get\+Aggregated\+Athlete\+Statistics\+Per\+Season@{get\+Aggregated\+Athlete\+Statistics\+Per\+Season}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Aggregated\+Athlete\+Statistics\+Per\+Season()}{getAggregatedAthleteStatisticsPerSeason()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+Aggregated\+Athlete\+Statistics\+Per\+Season (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID,  }\item[{}]{season\+Year }\end{DoxyParamCaption})}
+
+
+
+Gets the aggregated statistics for a given athlete and season. 
+
+This function uses and ID and a year number to perform a query to the database that gets the aggregated statistics in the system that match the given ID and season year.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a\+ID} & The ID of the athlete of which statistics need to be fetched. \\
+\hline
+{\em season\+Year} & the season year of which statistics need to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the aggregated statistics in the system containing the matching record for the given ID and season year. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a02252b04134d696cadf040d9c0462e8c}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a02252b04134d696cadf040d9c0462e8c}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+Aggregated\+Team\+Statistics\+Per\+Season@{get\+Aggregated\+Team\+Statistics\+Per\+Season}}
+\index{get\+Aggregated\+Team\+Statistics\+Per\+Season@{get\+Aggregated\+Team\+Statistics\+Per\+Season}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Aggregated\+Team\+Statistics\+Per\+Season()}{getAggregatedTeamStatisticsPerSeason()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+Aggregated\+Team\+Statistics\+Per\+Season (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{season\+Year }\end{DoxyParamCaption})}
+
+
+
+Gets the aggregated team statistics for a given athlete and season. 
+
+This function uses and ID and a year number to perform a query to the database that gets the aggregated statistics in the system that match the given ID and season year.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s\+ID} & The ID of the sport of which statistics need to be fetched. \\
+\hline
+{\em season\+Year} & the season year of which statistics need to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the aggregated team statistics in the system containing the matching record for the given ID and season year. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a163a639d8d5ec7cc4863c7512fea63c5}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a163a639d8d5ec7cc4863c7512fea63c5}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+All\+Aggregated\+Athlete\+Statistics\+Per\+Season@{get\+All\+Aggregated\+Athlete\+Statistics\+Per\+Season}}
+\index{get\+All\+Aggregated\+Athlete\+Statistics\+Per\+Season@{get\+All\+Aggregated\+Athlete\+Statistics\+Per\+Season}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+All\+Aggregated\+Athlete\+Statistics\+Per\+Season()}{getAllAggregatedAthleteStatisticsPerSeason()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+All\+Aggregated\+Athlete\+Statistics\+Per\+Season (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{season\+Year }\end{DoxyParamCaption})}
+
+
+
+Gets all the aggregated statistics for a given athlete and season. 
+
+This function uses and ID and a year number to perform a query to the database that gets the aggregated statistics in the system that match the given ID and season year.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s\+ID} & the sport id for the volleyball branch of which statistics need to be fetched \\
+\hline
+{\em season\+Year} & the season year of which statistics need to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing all the aggregated statistics in the system containing the matching record for the season year. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a3027982b71e04d8fa14f40f5fa896fc9}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a3027982b71e04d8fa14f40f5fa896fc9}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+All\+Athlete\+Statistics\+By\+Event\+ID@{get\+All\+Athlete\+Statistics\+By\+Event\+ID}}
+\index{get\+All\+Athlete\+Statistics\+By\+Event\+ID@{get\+All\+Athlete\+Statistics\+By\+Event\+ID}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+All\+Athlete\+Statistics\+By\+Event\+I\+D()}{getAllAthleteStatisticsByEventID()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+All\+Athlete\+Statistics\+By\+Event\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{a\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets all the statistics for a given athlete and event. 
+
+This function uses two I\+Ds to perform a query to the database that gets all the statistics in the system that match the given I\+Ds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The ID of the event of which statistics need to be fetched. \\
+\hline
+{\em a\+ID} & The ID of the athlete of which statistics need to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing all the statistics in the system containing the matching record for the given I\+Ds. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a07e2fadc0c0308559a511fee558b2b2c}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a07e2fadc0c0308559a511fee558b2b2c}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+All\+Athlete\+Statistics\+Per\+Season@{get\+All\+Athlete\+Statistics\+Per\+Season}}
+\index{get\+All\+Athlete\+Statistics\+Per\+Season@{get\+All\+Athlete\+Statistics\+Per\+Season}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+All\+Athlete\+Statistics\+Per\+Season()}{getAllAthleteStatisticsPerSeason()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+All\+Athlete\+Statistics\+Per\+Season (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID,  }\item[{}]{season\+Year }\end{DoxyParamCaption})}
+
+
+
+Gets all the statistics for a given athlete and season. 
+
+This function uses and ID and a year number to perform a query to the database that gets all the statistics in the system that match the given ID and season year.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a\+ID} & The ID of the athlete of which statistics need to be fetched. \\
+\hline
+{\em season\+Year} & the season year of which statistics need to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing all the statistics in the system containing the matching record for the given ID and season year. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a7fefc9189bb5e194897bf73d89324fe2}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a7fefc9189bb5e194897bf73d89324fe2}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+All\+Statistics\+By\+Event\+ID@{get\+All\+Statistics\+By\+Event\+ID}}
+\index{get\+All\+Statistics\+By\+Event\+ID@{get\+All\+Statistics\+By\+Event\+ID}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+All\+Statistics\+By\+Event\+I\+D()}{getAllStatisticsByEventID()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+All\+Statistics\+By\+Event\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets all the statistics per athlete for a given event. 
+
+This function uses an ID to perform a query to the database that gets all the statistics in the system that match the given ID.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The ID of the event of which statistics need to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing all the statistics in the system containing the matching record for the given ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a07d3632ae537970ac89fc1eca8937df6}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a07d3632ae537970ac89fc1eca8937df6}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+All\+Team\+Statistics\+By\+Event\+ID@{get\+All\+Team\+Statistics\+By\+Event\+ID}}
+\index{get\+All\+Team\+Statistics\+By\+Event\+ID@{get\+All\+Team\+Statistics\+By\+Event\+ID}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+All\+Team\+Statistics\+By\+Event\+I\+D()}{getAllTeamStatisticsByEventID()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+All\+Team\+Statistics\+By\+Event\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets the team statistics for a given event. 
+
+This function uses an ID to perform a query to the database that gets all the statistics in the system that match the given ID.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The ID of the event of which team statistics need to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing all the statistics in the system containing the matching record for the given ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a98ba628ab39ff88b057cdc8b90941c9f}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a98ba628ab39ff88b057cdc8b90941c9f}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+Volleyball\+Event\+ID@{get\+Volleyball\+Event\+ID}}
+\index{get\+Volleyball\+Event\+ID@{get\+Volleyball\+Event\+ID}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Volleyball\+Event\+I\+D()}{getVolleyballEventID()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+Volleyball\+Event\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{a\+ID }\end{DoxyParamCaption})}
+
+
+
+Checks if volleyball event exists. 
+
+This function uses I\+Ds to perform a query to the database that verifies if the Volleyball Event exists.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The ID of the event \\
+\hline
+{\em a\+ID} & The ID of the athlete\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The id of the volleyball event entry if it exists. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_ac857bf28aa93ba2eddd0d8f1e4403464}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_ac857bf28aa93ba2eddd0d8f1e4403464}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+Volleyball\+Event\+I\+D\+Invalid@{get\+Volleyball\+Event\+I\+D\+Invalid}}
+\index{get\+Volleyball\+Event\+I\+D\+Invalid@{get\+Volleyball\+Event\+I\+D\+Invalid}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Volleyball\+Event\+I\+D\+Invalid()}{getVolleyballEventIDInvalid()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+Volleyball\+Event\+I\+D\+Invalid (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{a\+ID }\end{DoxyParamCaption})}
+
+
+
+Checks if invalid volleyball event exists. 
+
+This function uses I\+Ds to perform a query to the database that verifies if the invalid Volleyball Event exists.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The ID of the event \\
+\hline
+{\em a\+ID} & The ID of the athlete\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The id of the invalid volleyball event entry if it exists. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_ade320af1759dd84bf615c88cd28126f8}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_ade320af1759dd84bf615c88cd28126f8}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+Volleyball\+Event\+Team\+Stats\+ID@{get\+Volleyball\+Event\+Team\+Stats\+ID}}
+\index{get\+Volleyball\+Event\+Team\+Stats\+ID@{get\+Volleyball\+Event\+Team\+Stats\+ID}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Volleyball\+Event\+Team\+Stats\+I\+D()}{getVolleyballEventTeamStatsID()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+Volleyball\+Event\+Team\+Stats\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+
+
+Checks if volleyball event team stats exist. 
+
+This function uses I\+Ds to perform a query to the database that verifies if the Volleyball Event exists.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The ID of the event\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The id of the volleyball event team stats entry if it exists. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a9be2b3e3db29d818189bcd1c0cc3e16f}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a9be2b3e3db29d818189bcd1c0cc3e16f}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!get\+Volleyball\+Event\+Team\+Stats\+I\+D\+Invalid@{get\+Volleyball\+Event\+Team\+Stats\+I\+D\+Invalid}}
+\index{get\+Volleyball\+Event\+Team\+Stats\+I\+D\+Invalid@{get\+Volleyball\+Event\+Team\+Stats\+I\+D\+Invalid}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{get\+Volleyball\+Event\+Team\+Stats\+I\+D\+Invalid()}{getVolleyballEventTeamStatsIDInvalid()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+get\+Volleyball\+Event\+Team\+Stats\+I\+D\+Invalid (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+
+
+Checks if invalid volleyball event team stats exist. 
+
+This function uses I\+Ds to perform a query to the database that verifies if the invalid Volleyball Event exists.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The ID of the event\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The id of the invalid volleyball event team stats entry if it exists. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a089bd6d6f2c2cb4bb1c7030d84859043}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a089bd6d6f2c2cb4bb1c7030d84859043}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!remove\+Statistics@{remove\+Statistics}}
+\index{remove\+Statistics@{remove\+Statistics}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{remove\+Statistics()}{removeStatistics()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+remove\+Statistics (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID,  }\item[{}]{a\+ID }\end{DoxyParamCaption})}
+
+
+
+Invalidates a volleyball event statistics entry in the database. 
+
+This function accepts two I\+Ds and uses them to set the valid field within the database as invalid, this acts as a deletion of the statistics entry from the system.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The ID of the event for which the statistics will be invalidated. \\
+\hline
+{\em a\+ID} & The ID of the athlete for which the statistics will be invalidated.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the matching record for the modified statistics entry. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a6a4b8d0782afa791f574c068bdbe1177}\label{classhandler_1_1dao_1_1volleyball__event__dao_1_1_volleyball_event_d_a_o_a6a4b8d0782afa791f574c068bdbe1177}} 
+\index{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}!remove\+Team\+Statistics@{remove\+Team\+Statistics}}
+\index{remove\+Team\+Statistics@{remove\+Team\+Statistics}!handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO@{handler\+::dao\+::volleyball\+\_\+event\+\_\+dao\+::\+Volleyball\+Event\+D\+AO}}
+\subsubsection{\texorpdfstring{remove\+Team\+Statistics()}{removeTeamStatistics()}}
+{\footnotesize\ttfamily def handler.\+dao.\+volleyball\+\_\+event\+\_\+dao.\+Volleyball\+Event\+D\+A\+O.\+remove\+Team\+Statistics (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+
+
+Invalidates a volleyball event team statistics entry in the database. 
+
+This function accepts an ID and uses it to set the valid field within the database as invalid, this acts as a deletion of the team statistics entry from the system.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The ID of the event for which the team statistics will be invalidated.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list containing the response to the database query containing the matching record for the modified team statistics entry. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+handler/dao/volleyball\+\_\+event\+\_\+dao.\+py\end{DoxyCompactItemize}

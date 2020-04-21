@@ -1,0 +1,146 @@
+[
+      {
+        "team_info": {
+          "branch_id": 2,
+          "branch_name": "femenino",
+          "season_year": 2020,
+          "sport_id": 16,
+          "sport_name": "Softbol",
+          "team_id": 8,
+          "team_image_url": null
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 1,
+          "branch_name": "masculino",
+          "season_year": 1984,
+          "sport_id": 1,
+          "sport_name": "Baloncesto",
+          "team_id": 11,
+          "team_image_url": "www.1984.com"
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 1,
+          "branch_name": "masculino",
+          "season_year": 1982,
+          "sport_id": 1,
+          "sport_name": "Baloncesto",
+          "team_id": 10,
+          "team_image_url": "www.netflix.com"
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 1,
+          "branch_name": "masculino",
+          "season_year": 1980,
+          "sport_id": 1,
+          "sport_name": "Baloncesto",
+          "team_id": 9,
+          "team_image_url": "www.google.com"
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 1,
+          "branch_name": "masculino",
+          "season_year": 2020,
+          "sport_id": 1,
+          "sport_name": "Baloncesto",
+          "team_id": 1,
+          "team_image_url": "www.google.com"
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 1,
+          "branch_name": "masculino",
+          "season_year": 2020,
+          "sport_id": 2,
+          "sport_name": "Voleibol",
+          "team_id": 2,
+          "team_image_url": null
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 2,
+          "branch_name": "femenino",
+          "season_year": 2019,
+          "sport_id": 12,
+          "sport_name": "Voleibol",
+          "team_id": 5,
+          "team_image_url": null
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 2,
+          "branch_name": "femenino",
+          "season_year": 2020,
+          "sport_id": 12,
+          "sport_name": "Voleibol",
+          "team_id": 4,
+          "team_image_url": null
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 2,
+          "branch_name": "femenino",
+          "season_year": 2020,
+          "sport_id": 10,
+          "sport_name": "Baloncesto",
+          "team_id": 3,
+          "team_image_url": null
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 2,
+          "branch_name": "femenino",
+          "season_year": 2020,
+          "sport_id": 11,
+          "sport_name": "Fútbol",
+          "team_id": 7,
+          "team_image_url": null
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 1,
+          "branch_name": "masculino",
+          "season_year": 1982,
+          "sport_id": 4,
+          "sport_name": "Beisbol",
+          "team_id": 14,
+          "team_image_url": "www.1984.com"
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 1,
+          "branch_name": "masculino",
+          "season_year": 1984,
+          "sport_id": 4,
+          "sport_name": "Beisbol",
+          "team_id": 13,
+          "team_image_url": "www.1984.com"
+        }
+      },
+      {
+        "team_info": {
+          "branch_id": 1,
+          "branch_name": "masculino",
+          "season_year": 2020,
+          "sport_id": 9,
+          "sport_name": "Tenis de Campo",
+          "team_id": 12,
+          "team_image_url": null
+        }
+      }
+    ]
+  
