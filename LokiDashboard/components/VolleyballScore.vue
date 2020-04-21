@@ -8,7 +8,7 @@
         <v-row justify="center">
           <v-layout row wrap align-center>
             <v-col class="text-right">
-              <v-btn @click.native="on_uprm_score(-1)" class="ma-2" color="red" fab small dark>
+              <v-btn @click.native="sendAdjust(uprm, -1)" class="ma-2" color="red" fab small dark>
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
             </v-col>
@@ -20,7 +20,7 @@
           </v-col>
           <v-layout row wrap align-center>
             <v-col class="text-left">
-              <v-btn @click.native="on_uprm_score(1)" class="ma-2" color="green" fab small dark>
+              <v-btn @click.native="sendAdjust(uprm, 1)" class="ma-2" color="green" fab small dark>
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </v-col>
@@ -42,7 +42,7 @@
         <v-row justify="center">
           <v-layout row wrap align-center>
             <v-col class="text-right">
-              <v-btn @click.native="on_set_change(-1)" class="ma-2" color="red" fab small dark>
+              <v-btn @click.native="sendSetAdjust(-1)" class="ma-2" color="red" fab small dark>
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
             </v-col>
@@ -52,7 +52,7 @@
           </v-card>
           <v-layout row wrap align-center>
             <v-col class="text-left">
-              <v-btn @click.native="on_set_change(1)" class="ma-2" color="green" fab small dark>
+              <v-btn @click.native="sendSetAdjust(1)" class="ma-2" color="green" fab small dark>
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </v-col>
@@ -66,7 +66,7 @@
         <v-row justify="center">
           <v-layout row wrap align-center>
             <v-col class="text-right">
-              <v-btn @click.native="on_opp_score(-1)" class="ma-2" color="red" fab small dark>
+              <v-btn @click.native="sendAdjust(opp, -1)" class="ma-2" color="red" fab small dark>
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
             </v-col>
@@ -78,7 +78,7 @@
           </v-col>
           <v-layout row wrap align-center>
             <v-col class="text-left">
-              <v-btn @click.native="on_opp_score(1)" class="ma-2" color="green" fab small dark>
+              <v-btn @click.native="sendAdjust(opp, 1)" class="ma-2" color="green" fab small dark>
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </v-col>
@@ -99,17 +99,37 @@ export default {
     current_set: Number,
     current_uprm_score: Number, // Score of the current set for UPRM team.
     current_opp_score: Number // Score of the current set for opponent team.
+  },
+  data: () => ({
+    uprm: "uprm",
+    opp: "opponent"
+  }),
+  methods: {
+    sendAdjust(team_name, adjust_no) {
+      let payload = {
+        team: team_name,
+        action_type: "ScoreAdjust",
+        adjust: adjust_no
+      };
+      console.log(payload);
+    },
+
+    sendSetAdjust(adjust) {
+      let payload = {
+        set_adjust: adjust
+      };
+      console.log(payload);
+    },
+
+    on_uprm_score(change) {
+      this.current_uprm_score += change;
+    },
+    on_opp_score(change) {
+      this.current_opp_score += change;
+    },
+    on_set_change(change) {
+      this.current_set += change;
+    }
   }
-  // methods: {
-  //   on_uprm_score(change) {
-  //     this.current_uprm_score += change;
-  //   },
-  //   on_opp_score(change) {
-  //     this.current_opp_score += change;
-  //   },
-  //   on_set_change(change) {
-  //     this.current_set += change;
-  //   }
-  // }
 };
 </script>

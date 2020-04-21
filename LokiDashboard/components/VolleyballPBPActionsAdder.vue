@@ -199,7 +199,7 @@ export default {
       if (action === "") {
         console.log("ERROR MUST BE DISPLAYED... NO ACTION PRESSED");
       } else {
-        console.log({ athlete_id: id, action_type: action });
+        console.log({ athlete_id: id, action_type: action, team: "uprm" });
       }
     },
     opp_athlete_action(number) {
@@ -213,7 +213,11 @@ export default {
       if (action === "") {
         console.log("ERROR MUST BE DISPLAYED... NO ACTION PRESSED");
       } else {
-        console.log({ athlete_id: number, action_type: action });
+        console.log({
+          athlete_id: number,
+          action_type: action,
+          team: "opponent"
+        });
       }
     }
   }

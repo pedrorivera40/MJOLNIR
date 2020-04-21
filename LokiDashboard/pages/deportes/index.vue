@@ -14,7 +14,7 @@
         </div>
       </v-col>
     </v-row>
-    <v-tabs background-color="#f5f5f5" align-with-title centered grow>
+    <v-tabs v-if="!loading && !dialog" background-color="#f5f5f5" align-with-title centered grow>
       <v-tabs-slider />
       <v-tab>Rama Masculina</v-tab>
 
@@ -46,10 +46,6 @@
         </v-snackbar>
       </v-col>
     </v-row>
-
-    <v-row></v-row>
-
-    <v-row></v-row>
   </v-container>
 </template>
 
@@ -61,7 +57,7 @@ export default {
   },
   data() {
     return {
-      error_string: "This is a damn error",
+      error_string: "This emulates an error comming from the database",
       dialog: false,
       error_icon: "mdi-alert-circle-outline",
       page_title: "Deportes",

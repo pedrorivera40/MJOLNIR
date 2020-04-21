@@ -22,12 +22,12 @@
           </v-col>
           <v-col :cols="2" allign="center" justify="right">
             <v-row>
-              <v-btn class="ma-2" color="gray" fab small dark>
+              <v-btn class="ma-2" color="gray" fab small dark @click.native="edit_action()">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </v-row>
             <v-row>
-              <v-btn class="ma-2" color="red" fab small dark>
+              <v-btn class="ma-2" color="red" fab small dark @click.native="delete_action()">
                 <v-icon>mdi-trash-can</v-icon>
               </v-btn>
             </v-row>
@@ -63,12 +63,12 @@
           </v-col>
           <v-col :cols="2" allign="center" justify="right">
             <v-row>
-              <v-btn class="ma-2" color="gray" fab small dark>
+              <v-btn class="ma-2" color="gray" fab small dark @click.native="edit_action()">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </v-row>
             <v-row>
-              <v-btn class="ma-2" color="red" fab small dark>
+              <v-btn class="ma-2" color="red" fab small dark @click.native="delete_action()">
                 <v-icon>mdi-trash-can</v-icon>
               </v-btn>
             </v-row>
@@ -87,10 +87,20 @@ export default {
     athlete_name: String,
     athlete_number: Number,
     athlete_img: String,
-    in_color: String
+    in_color: String,
+    id: Number,
+    action_type: String
   },
   data: () => ({
     notification: "Notification" // ADD ACTION TYPES AND A DICTIONARY TO MAP THEM FROM ENGLISH TO SPANISH...
-  })
+  }),
+  methods: {
+    edit_action() {
+      console.log("NEED TO EDIT ACTION WITH ID = " + this.id);
+    },
+    delete_action() {
+      console.log("NEED TO DELETE ACTION WITH ID = " + this.id);
+    }
+  }
 };
 </script>
