@@ -453,109 +453,131 @@ export default {
   },
   
 created(){
-      this.buildTable()
-      this.getSeasonData()
+    this.buildDefaultValues()
+    this.buildTable()
+    this.getSeasonData()
+      
       //this.buildDefault()
     }, 
   methods: {
+    buildDefaultValues(){
+        this.event_id = this.$route.params.id
+        if (this.event_id == 1){
+            this.sport_id = this.BASKETBALL_IDM
+            this.sport_name = "Baloncesto"
+        }
+        else if (this.event_id == 2){
+            this.sport_id =  this.VOLLEYBALL_IDF 
+            this.sport_name = "Voleibol"
+        }
+        else if (this.event_id == 3){
+            this.sport_id =  this.SOCCER_IDF 
+            this.sport_name = "Futbol"
+        }
+        else if (this.event_id == 4){
+            this.sport_id =  this.BASEBALL_IDM
+            this.sport_name = "Beisbol"
+        }
+    },
+    //confirm why this method was deprecated
     buildDefault(){
         if (this.sport_id!=''){
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
                 this.editedItem = {
-                            "athlete_info": {
-                                "athlete_id": '',
-                                "basketball_event_id": '',
-                                "first_name": '',
-                                "last_names": '',
-                                "middle_name": '',
-                                "number": '',
-                                "profile_image_link":''
-                            },
-                            "statistics": {
-                                "assists":'',
-                                "blocks":'',
-                                "field_goal_attempt": '',
-                                "field_goal_percentage": '',
-                                "free_throw_attempt": '',
-                                "free_throw_percentage": '',
-                                "points":'',
-                                "rebounds": '',
-                                "steals": '',
-                                "successful_field_goal": '',
-                                "successful_free_throw": '',
-                                "successful_three_point": '',
-                                "three_point_attempt": '',
-                                "three_point_percentage": '',
-                                "turnovers": ''
-                            }
-                        }
+                    "athlete_info": {
+                        "athlete_id": '',
+                        "basketball_event_id": '',
+                        "first_name": '',
+                        "last_names": '',
+                        "middle_name": '',
+                        "number": '',
+                        "profile_image_link":''
+                    },
+                    "statistics": {
+                        "assists":'',
+                        "blocks":'',
+                        "field_goal_attempt": '',
+                        "field_goal_percentage": '',
+                        "free_throw_attempt": '',
+                        "free_throw_percentage": '',
+                        "points":'',
+                        "rebounds": '',
+                        "steals": '',
+                        "successful_field_goal": '',
+                        "successful_free_throw": '',
+                        "successful_three_point": '',
+                        "three_point_attempt": '',
+                        "three_point_percentage": '',
+                        "turnovers": ''
+                    }
                 }
-                else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                    this.editedItem = {
-                            "athlete_info": {
-                                "athlete_id": '',
-                                "first_name": '',
-                                "last_names": '',
-                                "middle_name": '',
-                                "number": '',
-                                "profile_image_link": '',
-                                "volleyball_event_id": ''
-                            },
-                            "statistics": {
-                                "aces": '',
-                                "assists":'',
-                                "attack_errors": '',
-                                "blocking_errors": '',
-                                "blocks": '',
-                                "digs": '',
-                                "kill_points": '',
-                                "reception_errors": '',
-                                "service_errors":''
-                            }
-                        }
+            }
+            else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                this.editedItem = {
+                    "athlete_info": {
+                        "athlete_id": '',
+                        "first_name": '',
+                        "last_names": '',
+                        "middle_name": '',
+                        "number": '',
+                        "profile_image_link": '',
+                        "volleyball_event_id": ''
+                    },
+                    "statistics": {
+                        "aces": '',
+                        "assists":'',
+                        "attack_errors": '',
+                        "blocking_errors": '',
+                        "blocks": '',
+                        "digs": '',
+                        "kill_points": '',
+                        "reception_errors": '',
+                        "service_errors":''
+                    }
                 }
-                else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                    this.editedItem = {
-                            "athlete_info": {
-                                "athlete_id": '',
-                                "first_name": '',
-                                "last_names": '',
-                                "middle_name": '',
-                                "number": '',
-                                "profile_image_link": '',
-                                "soccer_event_id": ''
-                            },
-                            "statistics": {
-                                "assists": '',
-                                "cards": '',
-                                "fouls": '',
-                                "goal_attempts": '',
-                                "successful_goals": '',
-                                "tackles": ''
-                            }
-                        }
+            }
+            else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                this.editedItem = {
+                    "athlete_info": {
+                        "athlete_id": '',
+                        "first_name": '',
+                        "last_names": '',
+                        "middle_name": '',
+                        "number": '',
+                        "profile_image_link": '',
+                        "soccer_event_id": ''
+                    },
+                    "statistics": {
+                        "assists": '',
+                        "cards": '',
+                        "fouls": '',
+                        "goal_attempts": '',
+                        "successful_goals": '',
+                        "tackles": ''
+                    }
                 }
-                else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                    this.editedItem = {
-                            "athlete_info": {
-                            "athlete_id": '',
-                            "baseball_event_id": '',
-                            "first_name": '',
-                            "last_names": '',
-                            "middle_name": '',
-                            "number": '',
-                            "profile_image_link": ''
-                            },
-                            "statistics": {
-                            "at_bats": '',
-                            "base_on_balls": '',
-                            "hits": '',
-                            "left_on_base": '',
-                            "runs": '',
-                            "runs_batted_in": '',
-                            "strikeouts":''
-                            }
+            }
+            else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                this.editedItem = {
+                        "athlete_info": {
+                        "athlete_id": '',
+                        "baseball_event_id": '',
+                        "first_name": '',
+                        "last_names": '',
+                        "middle_name": '',
+                        "number": '',
+                        "profile_image_link": ''
+                        },
+                        "statistics": {
+                        "at_bats": '',
+                        "base_on_balls": '',
+                        "hits": '',
+                        "left_on_base": '',
+                        "runs": '',
+                        "runs_batted_in": '',
+                        "strikeouts":''
                         }
+                    }
                 }
             }
     },

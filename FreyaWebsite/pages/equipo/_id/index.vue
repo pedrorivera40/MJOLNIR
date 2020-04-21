@@ -134,11 +134,28 @@
             <!-- TODO: need to make it so the table "by team" doesnt have date, just the general statistics of the team for the season. -->
             <v-tab-item>				
                 <v-card flat>
+                  <v-card-title>
+                    <v-row>
+                        <v-col cols="4">
+                        <v-text-field
+                            v-model="search_individual"
+                            append-icon="mdi-magnify"
+                            label="Búsqueda"
+                            rounded
+                            dense
+                            outlined
+                            single-line
+                            hide-details
+                        />
+                        </v-col>
+                    </v-row>
+                    </v-card-title>
                   <!-- Basketball Table -->
                   <v-data-table 
                     dense 
                     :headers="headers" 
                     :items="statistics_per_season.season_stats" 
+                    :search="search_individual"
                     item-key="season_stats" 
                     class="elevation-1"								
                     loading-text="Recolectando Data...Por favor espere"
@@ -253,6 +270,8 @@ export default {
       SOFTBALL_IDF: 16, 
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
+
+      search_individual: '',
 
       
 
