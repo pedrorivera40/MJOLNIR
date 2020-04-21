@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      error_string: "This is a damn error",
+      error_string: "This emulates an error comming from the database",
       dialog: false,
       error_icon: "mdi-alert-circle-outline",
       page_title: "Deportes Masculino",
@@ -117,7 +117,6 @@ export default {
   },
   methods: {
     redirect(sport_id) {
-      // This will throw 404. TODO -> Meet with Herbert for details about this page.
       this.$router.push("equipo/" + sport_id);
     }
   }

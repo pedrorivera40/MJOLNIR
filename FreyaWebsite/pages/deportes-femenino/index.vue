@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      error_string: "This is a damn error",
+      error_string: "This emulates an error comming from the database.",
       dialog: false,
       error_icon: "mdi-alert-circle-outline",
       page_title: "Deportes Femenino",
