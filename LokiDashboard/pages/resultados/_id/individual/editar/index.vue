@@ -64,7 +64,7 @@
   <!-- WHEN WE GET HERE: we have the sport id. we have the event id. -->
   <v-card width="800" class="elevation-12 mx-auto">
     <v-toolbar color="green darken-1" dark flat>
-        <v-toolbar-title>Editar Estadísticas Atleta {{sport}} - {{branch}}</v-toolbar-title>
+        <v-toolbar-title>Editar Estadísticas Atleta {{sport_name}} - {{branch}}</v-toolbar-title>
         <v-spacer />
     </v-toolbar>
     <v-card-text>            
@@ -850,9 +850,9 @@
         
         //WRITTEN TO/PARAMETERS:
         //Baloncesto
-        sport_id:1, //comes from route
+        sport_id:'', //comes from route
         // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
-        sport:'Baloncesto',    //would have to fetch using sport ID  
+        sport_name:'',    //would have to fetch using sport ID  
         branch:'Masculino',    //fetch using sport id and branch, or just getSport if it returns the name
         // //volleyball
         // sport_id:2,
@@ -869,7 +869,7 @@
 
 
         season_year:'',        //probably not neccessary, if so would obtain from the Event and its Team
-        event_id: 1, //This will come from route
+        event_id: '', //This will come from route
         
         //THE MAIN STATISTICS, SPORTS SPECIFIC
         payload_stats: '',
@@ -961,8 +961,28 @@
     created(){
       this.initializeSportData()
       this.current_athlete = this.sport_athletes[0]
+      this.buildDefaultValues()
     },
     methods: {
+        buildDefaultValues(){
+            this.event_id = this.$route.params.id
+            if (this.event_id == 1){
+                this.sport_id = this.BASKETBALL_IDM
+                this.sport_name = "Baloncesto"
+            }
+            else if (this.event_id == 2){
+                this.sport_id =  this.VOLLEYBALL_IDF 
+                this.sport_name = "Voleibol"
+            }
+            else if (this.event_id == 3){
+                this.sport_id =  this.SOCCER_IDF 
+                this.sport_name = "Futbol"
+            }
+            else if (this.event_id == 4){
+                this.sport_id =  this.BASEBALL_IDM
+                this.sport_name = "Beisbol"
+            }
+        },
         initializeSportData(){
         //console.log(this.season)
 		if(this.sport_id!=''){
@@ -1085,7 +1105,7 @@
              this.$router.push('/equipo/')
         },
         goToResults(){
-             this.$router.push('/resultados/')
+             this.$router.push("/resultados/"+this.event_id)
         }
     },
     computed: {

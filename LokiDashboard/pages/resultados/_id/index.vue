@@ -435,6 +435,7 @@ export default {
       search_individual: "",
       sport_id: '',
       sport_name: '',
+      event_id:'',
       opponent_score:'',
       opponent_name:"INTER SG", //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
@@ -787,7 +788,7 @@ created(){
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push("/resultados/"++"/individual/editar")
+        this.$router.push("/resultados/"+this.event_id+"/individual/editar")
     },
     editTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
@@ -799,7 +800,7 @@ created(){
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push('/resultados/individual/crear')
+        this.$router.push("/resultados/"+this.event_id+"/individual/crear")
     },
     addTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
@@ -808,10 +809,10 @@ created(){
         return
     },
     addFinalScore() {
-        this.$router.push('/resultados/puntuacion/crear')
+        this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
     },
     editFinalScore() {
-        this.$router.push('/resultados/puntuacion/editar')
+        this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
     },
     // editPermissions(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
