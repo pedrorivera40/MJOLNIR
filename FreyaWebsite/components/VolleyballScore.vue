@@ -3,11 +3,11 @@
     <v-row>
       <v-col>
         <v-row justify="center">
-          <h1 class="text-lg-center">UPRM</h1>
+          <h1 class="text-lg-center">{{ uprm_team }}</h1>
         </v-row>
         <v-row justify="center">
           <v-card class="ma-3 pa-6" outlined tile>
-            <h1 class="text-lg-center">20</h1>
+            <h1 class="text-lg-center">{{ current_uprm_score }}</h1>
           </v-card>
         </v-row>
       </v-col>
@@ -17,7 +17,7 @@
         </v-row>
         <v-row justify="center">
           <v-card class="ma-3 pa-6" outlined tile>
-            <h1 class="text-md-center">2 - 1</h1>
+            <h1 class="text-md-center">{{ uprm_score }} - {{ opp_score }}</h1>
           </v-card>
         </v-row>
         <v-row justify="center">
@@ -25,17 +25,17 @@
         </v-row>
         <v-row justify="center">
           <v-card class="ma-3 pa-6" outlined tile>
-            <h1 class="text-md-center">4</h1>
+            <h1 class="text-md-center">{{ current_set }}</h1>
           </v-card>
         </v-row>
       </v-col>
       <v-col>
         <v-row justify="center">
-          <h1 class="text-md-center">UPR-RP</h1>
+          <h1 class="text-lg-center">{{ opp_team }}</h1>
         </v-row>
         <v-row justify="center">
           <v-card class="ma-3 pa-6" outlined tile>
-            <h1 class="text-md-center">20</h1>
+            <h1 class="text-lg-center">{{ current_opp_score }}</h1>
           </v-card>
         </v-row>
       </v-col>
