@@ -1,6 +1,8 @@
 <template>
   <div class="wrapper">
     <h1>Resultados {{sport_name}}</h1>
+    <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
+    <h3>Evento de {{event_info.Event.event_date}}</h3>
     <div class="content-area pa-4 pt-12">
     <v-row align="center"
       justify="center">
@@ -436,6 +438,7 @@ export default {
       sport_id: '',
       sport_name: '',
       event_id:'',
+      event_info:'',
       opponent_score:'',
       opponent_name:"INTER SG", //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
@@ -464,21 +467,91 @@ created(){
     buildDefaultValues(){
         this.event_id = this.$route.params.id
         if (this.event_id == 1){
+            //Getting Sport Information
             this.sport_id = this.BASKETBALL_IDM
             this.sport_name = "Baloncesto"
+            //Getting Event Information
+            this.event_info = {
+                "Event": {
+                    "branch": "masculino",
+                    "event_date": "Sat, 19 Apr 2025 00:00:00 GMT",
+                    "event_summary": "Test Event #1: Using to Add All Stats",
+                    "id": 32,
+                    "is_local": true,
+                    "opponent_name": "Inter SG",
+                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/88207403_3003298336425647_2084912734775803904_o.jpg?_nc_cat=109&_nc_sid=e007fa&_nc_ohc=cPJHsQ73nbMAX988FmN&_nc_ht=scontent.fsig1-1.fna&oh=1ff606b6b98ae4bd4d211840ac373a2a&oe=5EAB30D6",
+                    "sport_name": "Baloncesto",
+                    "team_id": 25,
+                    "team_season_year": 2025,
+                    "venue": "Mangual"
+                }
+            }
         }
         else if (this.event_id == 2){
+            //Getting Sport Information
             this.sport_id =  this.VOLLEYBALL_IDF 
             this.sport_name = "Voleibol"
+            //Getting Event Information
+            this.event_info = {
+                "Event": {
+                    "branch": "femenino",
+                    "event_date": "Fri, 24 Apr 2020 00:00:00 GMT",
+                    "event_summary": null,
+                    "hasPBP": false,
+                    "id": 30,
+                    "is_local": true,
+                    "opponent_name": null,
+                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/70916818_2501810766574409_3176798918700695552_o.jpg?_nc_cat=102&_nc_sid=e007fa&_nc_ohc=Jokgru5MxFcAX-Iepr4&_nc_ht=scontent.fsig1-1.fna&oh=1e231a8b32569ced072a763ee0270c55&oe=5EA8EF86",
+                    "sport_name": "Voleibol",
+                    "team_id": 4,
+                    "team_season_year": 2020,
+                    "venue": null
+                }
+            }
         }
         else if (this.event_id == 3){
+            //Getting Sport Information
             this.sport_id =  this.SOCCER_IDF 
             this.sport_name = "Futbol"
+            //Getting Event Information
+            this.event_info = {
+                "Event": {
+                    "branch": "femenino",
+                    "event_date": "Wed, 01 Apr 2020 00:00:00 GMT",
+                    "event_summary": null,
+                    "id": 10,
+                    "is_local": true,
+                    "opponent_name": null,
+                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/88983239_2989638081125006_5994073246109007872_n.jpg?_nc_cat=104&_nc_sid=e007fa&_nc_ohc=eCtVJEHWHjEAX-4zKxa&_nc_ht=scontent.fsig1-1.fna&oh=b6e46d5ef1e373fa84c065ee433e784a&oe=5EAAE8DB",
+                    "sport_name": "Fútbol",
+                    "team_id": 7,
+                    "team_season_year": 2020,
+                    "venue": "Mangual"
+                }
+            }
         }
         else if (this.event_id == 4){
+            //Getting Sport Information
             this.sport_id =  this.BASEBALL_IDM
             this.sport_name = "Beisbol"
+            //Getting Event Information
+            this.event_info = {
+                "Event": {
+                    "branch": "femenino",
+                    "event_date": "Wed, 01 Apr 2020 00:00:00 GMT",
+                    "event_summary": null,
+                    "id": 13,
+                    "is_local": true,
+                    "opponent_name": null,
+                    "sport_img_url": "https://scontent.fsig2-1.fna.fbcdn.net/v/t1.0-9/57619118_2226257830796372_302697234753912832_o.jpg?_nc_cat=109&_nc_sid=e007fa&_nc_ohc=JOsXhrEM1tUAX8dDHSv&_nc_ht=scontent.fsig2-1.fna&oh=ca2da5e6e2342cfd795624cb292ee289&oe=5EB771E8",
+                    "sport_name": "Softbol",
+                    "team_id": 8,
+                    "team_season_year": 2020,
+                    "venue": "Mangual"
+                }
+            }
         }
+
     },
     //confirm why this method was deprecated
     buildDefault(){
