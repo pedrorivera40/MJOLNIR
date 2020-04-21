@@ -249,6 +249,12 @@ export default {
     ],
     actions: [
       {
+        id: 4,
+        action_type: "Notification",
+        team: "Tarzanes",
+        text: "El partido comenzará dentro de 5 minutos."
+      },
+      {
         id: 2,
         action_type: "BlockPoint",
         team: "Gallitos",
