@@ -220,7 +220,7 @@ export default {
   },
   data: () => ({
     error_string: "This emulates an error comming from the database",
-    loading: false,
+    loading: true,
     dialog: false,
     sport_name: "Voleibol",
     uprm_team_name: "Tarzanes",
