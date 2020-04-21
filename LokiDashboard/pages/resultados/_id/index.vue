@@ -433,8 +433,8 @@ export default {
       statistics_per_season:"",
       team_statistics:[],
       search_individual: "",
-      sport_id: 2,
-      sport_name: "Soccer",
+      sport_id: '',
+      sport_name: '',
       opponent_score:'',
       opponent_name:"INTER SG", //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
@@ -787,7 +787,7 @@ created(){
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push('/resultados/individual/editar')
+        this.$router.push("/resultados/"++"/individual/editar")
     },
     editTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
