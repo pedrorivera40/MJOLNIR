@@ -2,7 +2,7 @@
   <div class="wrapper">
     <h1>Resultados {{sport_name}}</h1>
     <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
-    <h3>Evento de {{event_info.Event.event_date}}</h3>
+    <h3>Evento de {{event_date}}</h3>
     <div class="content-area pa-4 pt-12">
     <v-row align="center"
       justify="center">
@@ -132,6 +132,7 @@
                     class="elevation-1"								
                     v-if="isBasketballTable"
                     >
+                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
                     <template v-slot:item.actions="{ item }">
                         <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -184,6 +185,7 @@
                     class="elevation-1"								
                     v-if="isVolleyballTable"
                     >
+                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
                     <template v-slot:item.actions="{ item }">
                         <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -236,6 +238,7 @@
                     class="elevation-1"								
                     v-if="isSoccerTable"
                     >
+                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
                     <template v-slot:item.actions="{ item }">
                         <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -288,6 +291,7 @@
                     class="elevation-1"								
                     v-if="isBaseballTable"
                     >
+                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
                     <template v-slot:item.actions="{ item }">
                         <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -438,6 +442,7 @@ export default {
       sport_id: '',
       sport_name: '',
       event_id:'',
+      event_date:'',
       event_info:'',
       opponent_score:'',
       opponent_name:"INTER SG", //TODO: MAKE THIS VALUE DYNAMIC
@@ -486,6 +491,7 @@ created(){
                     "venue": "Mangual"
                 }
             }
+            this.event_date = this.event_info.Event.event_date
         }
         else if (this.event_id == 2){
             //Getting Sport Information
@@ -508,6 +514,7 @@ created(){
                     "venue": null
                 }
             }
+            this.event_date = this.event_info.Event.event_date
         }
         else if (this.event_id == 3){
             //Getting Sport Information
@@ -529,6 +536,7 @@ created(){
                     "venue": "Mangual"
                 }
             }
+            this.event_date = this.event_info.Event.event_date
         }
         else if (this.event_id == 4){
             //Getting Sport Information
@@ -550,7 +558,9 @@ created(){
                     "venue": "Mangual"
                 }
             }
+            this.event_date = this.event_info.Event.event_date
         }
+        
 
     },
     //confirm why this method was deprecated
@@ -661,12 +671,13 @@ created(){
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
                 this.headers = 
                 [
-                {
-                    text:'Athlete',
-                    align: 'start',
-                    sortable: true,
-                    value: 'athlete_info.first_name'
-                },
+                // {
+                //     text:'Athlete',
+                //     align: 'start',
+                //     sortable: true,
+                //     value: 'athlete_info.first_name'
+                // },
+                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'Asistencias', value: 'statistics.assists'},
                 {text: 'Blocks', value: 'statistics.blocks'},
                 {text: 'Field Goal Attempt', value: 'statistics.field_goal_attempt'},
@@ -709,12 +720,13 @@ created(){
             else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
                 this.headers = 
                 [
-                {
-                    text:'Athlete',
-                    align: 'start',
-                    sortable: true,
-                    value: 'athlete_info.first_name'
-                },
+                // {
+                //     text:'Athlete',
+                //     align: 'start',
+                //     sortable: true,
+                //     value: 'athlete_info.first_name'
+                // },
+                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'Kill Points', value: 'statistics.kill_points'},
                 {text: 'Attack Errors', value: 'statistics.attack_errors'},
                 {text: 'Assists', value: 'statistics.assists'},
@@ -745,12 +757,13 @@ created(){
             else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
                 this.headers = 
                 [
-                {
-                    text:'Athlete',
-                    align: 'start',
-                    sortable: true,
-                    value: 'athlete_info.first_name'
-                },
+                // {
+                //     text:'Athlete',
+                //     align: 'start',
+                //     sortable: true,
+                //     value: 'athlete_info.first_name'
+                // },
+                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'Goal Attempts', value: 'statistics.goal_attempts'},
                 {text: 'Assists', value: 'statistics.assists'},
                 {text: 'Fouls', value: 'statistics.fouls'},
@@ -775,12 +788,13 @@ created(){
             else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
                 this.headers = 
                 [
-                {
-                    text:'Athlete',
-                    align: 'start',
-                    sortable: true,
-                    value: 'athlete_info.first_name'
-                },
+                // {
+                //     text:'Athlete',
+                //     align: 'start',
+                //     sortable: true,
+                //     value: 'athlete_info.first_name'
+                // },
+                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'At Bats', value: 'statistics.at_bats'},
                 {text: 'Runs', value: 'statistics.runs'},
                 {text: 'Hits', value: 'statistics.hits'},
