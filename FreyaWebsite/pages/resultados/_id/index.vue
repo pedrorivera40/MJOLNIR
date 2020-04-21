@@ -187,8 +187,9 @@ export default {
       statistics_per_season:"",
       team_statistics:[],
       search_individual: "",
-      sport_id: 2,
-      sport_name: "Soccer",
+      sport_id: '',
+      sport_name: '',
+      event_id:'',
       opponent_score:'',
       opponent_name:"INTER SG", //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
@@ -207,11 +208,31 @@ export default {
   },
   
 created(){
-      this.buildTable()
-      this.getSeasonData()
-      //this.buildDefault()
-    }, 
+    this.buildDefaultValues()
+    this.buildTable()
+    this.getSeasonData()
+    //this.buildDefault()
+}, 
   methods: {
+    buildDefaultValues(){
+        this.event_id = this.$route.params.id
+        if (this.event_id == 1){
+            this.sport_id = this.BASKETBALL_IDM
+            this.sport_name = "Baloncesto"
+        }
+        else if (this.event_id == 2){
+            this.sport_id =  this.VOLLEYBALL_IDF 
+            this.sport_name = "Voleibol"
+        }
+        else if (this.event_id == 3){
+            this.sport_id =  this.SOCCER_IDF 
+            this.sport_name = "Futbol"
+        }
+        else if (this.event_id == 4){
+            this.sport_id =  this.BASEBALL_IDM
+            this.sport_name = "Beisbol"
+        }
+    },
     buildDefault(){
         if (this.sport_id!=''){
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
@@ -459,84 +480,6 @@ created(){
         
     },
 
-
-    // ...mapActions({
-    //   getUsers: "dashboardUsers/getUsers",
-    //   getPermissions: "dashboardUsers/getPermissions"
-    // }),
-    // setStatus(status) {
-    //   return status ? "Active" : "Inactive";
-    // },
-    deleteAthleteStatistics(user) {
-       if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-            this.editedItemIndex = this.payload_stats.Basketball_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Basketball_Event_Statistics.athlete_statistic[this.editedItemIndex]
-        }
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-            this.editedItemIndex = this.payload_stats.Volleyball_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Volleyball_Event_Statistics.athlete_statistic[this.editedItemIndex]
-        }
-        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-            this.editedItemIndex = this.payload_stats.Soccer_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Soccer_Event_Statistics.athlete_statistic[this.editedItemIndex]
-        }
-        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-            this.editedItemIndex = this.payload_stats.Baseball_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Baseball_Event_Statistics.athlete_statistic[this.editedItemIndex]
-        }
-        //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-        //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
-        console.log(this.editedItem)
-        console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
-    },
-    deleteTeamStatistics(user) {
-       if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-            this.editedItem = this.payload_stats.Basketball_Event_Statistics.event_info
-        }
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-           this.editedItem = this.payload_stats.Volleyball_Event_Statistics.event_info
-        }
-        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-            this.editedItem = this.payload_stats.Soccer_Event_Statistics.event_info
-        }
-        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-           this.editedItem = this.payload_stats.Baseball_Event_Statistics.event_info
-        }
-        //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-        //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
-        console.log(this.editedItem)
-        console.log("Will Remove Team Statistics for Event ID("+(this.editedItem.event_id)+").")
-    },
-    editAthleteStatistics(user) {
-    //   this.editedItemIndex = this.users.indexOf(user)
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogEdit = true;
-        this.$router.push('/resultados/individual/editar')
-    },
-    editTeamStatistics(user) {
-    //   this.editedItemIndex = this.users.indexOf(user)
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogEdit = true;
-        return
-    },
-    addAthleteStatistics(user) {
-    //   this.editedItemIndex = this.users.indexOf(user)
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogEdit = true;
-        this.$router.push('/resultados/individual/crear')
-    },
-    addTeamStatistics(user) {
-    //   this.editedItemIndex = this.users.indexOf(user)
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogEdit = true;
-        return
-    },
-    addFinalScore() {
-        this.$router.push('/resultados/puntuacion/crear')
-    },
-    editFinalScore() {
-        this.$router.push('/resultados/puntuacion/editar')
-    },
     // editPermissions(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogPermissions = true;
