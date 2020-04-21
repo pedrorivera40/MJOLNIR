@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "963b475e0e943a9a34c85c4f72a1d4807e0d3011c1d417395a92c9dc16f92992"
+            "sha256": "507e6650293ca7a1df382b100c4577c557066fddca7e1aa45b11de0e1e0b6b38"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -132,6 +132,13 @@
             ],
             "index": "pypi",
             "version": "==2.8"
+        },
+        "doxypypy": {
+            "hashes": [
+                "sha256:627571455c537eb91d6998d95b32efc3c53562b2dbadafcb17e49593e0dae01b"
+            ],
+            "index": "pypi",
+            "version": "==0.8.8.6"
         },
         "firebase": {
             "hashes": [
@@ -416,6 +423,14 @@
             ],
             "index": "pypi",
             "version": "==2.4.4"
+        },
+        "python-dateutil": {
+            "hashes": [
+                "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c",
+                "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"
+            ],
+            "index": "pypi",
+            "version": "==2.8.1"
         },
         "python-dotenv": {
             "hashes": [

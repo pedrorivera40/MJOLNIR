@@ -1,0 +1,26 @@
+var classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o =
+[
+    [ "__init__", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a204f4df0eee422721d49ecde8338a216", null ],
+    [ "addStatistics", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a77bff928a92d95d753d7a96f8d5d2253", null ],
+    [ "addTeamStatistics", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#ae52586194d67b1cb7190947805ccb144", null ],
+    [ "addTeamStatisticsAuto", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a5e0ab1f0101b17bd786d41d424fd19d9", null ],
+    [ "commitChanges", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a706061250b664f015bd6c832d653923f", null ],
+    [ "editStatistics", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#af5db499bafc4bc551418eb8d7f3fce08", null ],
+    [ "editTeamStatistics", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a27b8ccd06f79155891d27762f753113f", null ],
+    [ "editTeamStatisticsManual", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a6562b7b676458565a51144139b7d6643", null ],
+    [ "getAggregatedAthleteStatisticsPerSeason", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#ab2cfce918ec805e7eab71acc5172aa86", null ],
+    [ "getAggregatedTeamStatisticsPerSeason", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a97953c45058d00a3ee288b84944f596c", null ],
+    [ "getAllAggregatedAthleteStatisticsPerSeason", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#aa1ebbf9509867d1da215d75065baa6d2", null ],
+    [ "getAllAthleteStatisticsByEventID", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#adbd71f58b07d602ada5bf42995d1c364", null ],
+    [ "getAllAthleteStatisticsPerSeason", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a63255f16ae44ee2964f47a8c73a0c342", null ],
+    [ "getAllStatisticsByEventID", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a57749c2c503be1b9696024682fd3b0fe", null ],
+    [ "getAllTeamStatisticsByEventID", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a2ec12ce0b813eb9cbfce32f4659e4498", null ],
+    [ "getCursor", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a55b786948c2c757d99ad265d7283b7d2", null ],
+    [ "getSoccerEventID", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a44e0dd9fc8e37cb38269659cdb0dc147", null ],
+    [ "getSoccerEventIDInvalid", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a73353319145f82f456e23a65574110ca", null ],
+    [ "getSoccerEventTeamStatsID", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a9ea8014593e4b0dd7c8e0d815ee9a45f", null ],
+    [ "getSoccerEventTeamStatsIDInvalid", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a7c19d8af145fc4d6dd81cc87f30e94b4", null ],
+    [ "removeStatistics", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#a72161d402ddb91ba5d2a500bfb96f48d", null ],
+    [ "removeTeamStatistics", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#ab5314993a7cd3d1ca3cd773826b5a1b1", null ],
+    [ "conn", "classhandler_1_1dao_1_1soccer__event__dao_1_1_soccer_event_d_a_o.html#aa27075666265b6b825d098518494bc85", null ]
+];

@@ -90,11 +90,6 @@ export default {
           icon: "mdi-calendar-multiple",
           title: "Events",
           to: "/events"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "Inspire",
-          to: "/inspire"
         }
       ],
       miniVariant: false,

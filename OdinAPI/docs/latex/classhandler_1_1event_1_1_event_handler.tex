@@ -1,0 +1,134 @@
+\hypertarget{classhandler_1_1event_1_1_event_handler}{}\section{handler.\+event.\+Event\+Handler Class Reference}
+\label{classhandler_1_1event_1_1_event_handler}\index{handler.\+event.\+Event\+Handler@{handler.\+event.\+Event\+Handler}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a5e837eb3451d29138a27d95b1ed7575d}\label{classhandler_1_1event_1_1_event_handler_a5e837eb3451d29138a27d95b1ed7575d}} 
+def {\bfseries map\+Event\+To\+Dict} (self, record)
+\item 
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a75d66da35627aebf7cc6cff5cb93f6e0}\label{classhandler_1_1event_1_1_event_handler_a75d66da35627aebf7cc6cff5cb93f6e0}} 
+def {\bfseries map\+Event\+With\+Scores\+To\+Dict} (self, record)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a5ea11d438c3a6c39524dcde68f87a6c2}{get\+All\+Events} (self)
+\begin{DoxyCompactList}\small\item\em Gets all events in the database. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a0b5135c2269c49c58f165e428d7976fd}{get\+Events\+By\+Team} (self, t\+ID)
+\begin{DoxyCompactList}\small\item\em Gets all events belonging to a specific team. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_ab5e4836ec9f0aea002d0be3f7227566e}{get\+Event\+By\+ID} (self, e\+ID)
+\begin{DoxyCompactList}\small\item\em Gets a specified event by their id. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a6c97fb08cd641f3d2dd07a6b5afc0a37}{add\+Event} (self, t\+ID, attributes)
+\begin{DoxyCompactList}\small\item\em Adds a new event for a team with the information given. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a80dc5621cd54f90b135642db51183d7c}\label{classhandler_1_1event_1_1_event_handler_a80dc5621cd54f90b135642db51183d7c}} 
+def {\bfseries edit\+Event} (self, e\+ID, attributes)
+\item 
+def \hyperlink{classhandler_1_1event_1_1_event_handler_a511281731fc33fae52d80e432680692d}{remove\+Event} (self, e\+ID)
+\begin{DoxyCompactList}\small\item\em Invalidates an event in the database. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a75df7c2caab81a386ec89c6958070d35}\label{classhandler_1_1event_1_1_event_handler_a75df7c2caab81a386ec89c6958070d35}} 
+def {\bfseries validate\+Attributes} (self, attributes)
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a6c97fb08cd641f3d2dd07a6b5afc0a37}\label{classhandler_1_1event_1_1_event_handler_a6c97fb08cd641f3d2dd07a6b5afc0a37}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!add\+Event@{add\+Event}}
+\index{add\+Event@{add\+Event}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{add\+Event()}{addEvent()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+add\+Event (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID,  }\item[{}]{attributes }\end{DoxyParamCaption})}
+
+
+
+Adds a new event for a team with the information given. 
+
+Calls a Event\+D\+AO to add a new event and maps the result to a J\+S\+ON object that contains the id of the newly added event.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+ID} & The id of the team that will participate in the event. \\
+\hline
+{\em attributes} & A list containing the attributes of the event to be added. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON object containing the id of the newly added event. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a5ea11d438c3a6c39524dcde68f87a6c2}\label{classhandler_1_1event_1_1_event_handler_a5ea11d438c3a6c39524dcde68f87a6c2}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!get\+All\+Events@{get\+All\+Events}}
+\index{get\+All\+Events@{get\+All\+Events}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{get\+All\+Events()}{getAllEvents()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+get\+All\+Events (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+Gets all events in the database. 
+
+Calls the Event\+D\+AO to get a list of all the event records in the database and maps the result to a J\+S\+ON that contains all those valid events. The J\+S\+ON object is then returned to the caller.
+
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all the valid events in the 
+
+database. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_ab5e4836ec9f0aea002d0be3f7227566e}\label{classhandler_1_1event_1_1_event_handler_ab5e4836ec9f0aea002d0be3f7227566e}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!get\+Event\+By\+ID@{get\+Event\+By\+ID}}
+\index{get\+Event\+By\+ID@{get\+Event\+By\+ID}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{get\+Event\+By\+I\+D()}{getEventByID()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+get\+Event\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets a specified event by their id. 
+
+Calls the Event\+D\+AO to get an event by their id and maps the result to a J\+S\+ON that contains the desired record. The J\+S\+ON object is then returned to the caller.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The id of the event that needs to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the event with the given id. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a0b5135c2269c49c58f165e428d7976fd}\label{classhandler_1_1event_1_1_event_handler_a0b5135c2269c49c58f165e428d7976fd}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!get\+Events\+By\+Team@{get\+Events\+By\+Team}}
+\index{get\+Events\+By\+Team@{get\+Events\+By\+Team}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{get\+Events\+By\+Team()}{getEventsByTeam()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+get\+Events\+By\+Team (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{t\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets all events belonging to a specific team. 
+
+Calls the Event\+D\+AO to get a list of all event records in which a specific team is a participant and maps the result to a J\+S\+ON that contains all those valid events in the system. The J\+S\+ON objects is then returned to the caller.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+ID} & The id of the team that is a participant in the events to be given.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all valid events that have the team identified by the id given as a participant. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1event_1_1_event_handler_a511281731fc33fae52d80e432680692d}\label{classhandler_1_1event_1_1_event_handler_a511281731fc33fae52d80e432680692d}} 
+\index{handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}!remove\+Event@{remove\+Event}}
+\index{remove\+Event@{remove\+Event}!handler\+::event\+::\+Event\+Handler@{handler\+::event\+::\+Event\+Handler}}
+\subsubsection{\texorpdfstring{remove\+Event()}{removeEvent()}}
+{\footnotesize\ttfamily def handler.\+event.\+Event\+Handler.\+remove\+Event (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{e\+ID }\end{DoxyParamCaption})}
+
+
+
+Invalidates an event in the database. 
+
+Call the Event\+D\+AO to invalidate the event record. It then maps the result to a J\+S\+ON object that contains the id of the invalidated event. The J\+S\+ON object is then returned to the caller.
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+ID} & The id of the event to be invalidated.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the id of the invalidated event. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+handler/event.\+py\end{DoxyCompactItemize}
