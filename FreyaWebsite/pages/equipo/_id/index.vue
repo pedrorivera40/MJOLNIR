@@ -6,7 +6,7 @@
 				flat
 		>
 			<v-spacer />
-			<v-toolbar-title>{{sport}}</v-toolbar-title>
+			<v-toolbar-title>{{sport_name}}</v-toolbar-title>
 			<v-spacer />
 		</v-toolbar>
 		<v-container>
@@ -224,7 +224,7 @@ export default {
     
       about_team:"Because he's the hero Gotham deserves, but not the one it needs right now, so we'll hunt him. Because he can take it, because he's not a hero. He's a silent guardian, a watchful protector, a Dark Knight.",
 
-      sport:'Baloncesto',     
+      sport_name:'',     
 			branch:'Masculino', 
       sport_id:'',
 			season:'',
@@ -473,6 +473,10 @@ export default {
         let currentYear = new Date(2023,8).getFullYear()
         this.defaultSelected.push({'season_year':currentYear})
         this.sport_id = this.$route.params.id
+        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_name = "Baloncesto"}
+        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_name = "Voleibol"}
+        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_name = "Futbol"}
+        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol"}
         
       },
       getMembersData(){
