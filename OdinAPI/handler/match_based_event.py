@@ -125,15 +125,21 @@ class MatchBasedEventHandler():
 
 
     def mapEventAllStatsToDict(self,team_records,athlete_records,final_record):
-        event_info = dict(
-            event_id = team_records[0][3],
-            match_based_event_team_stats_id = team_records[0][4]            
-        )
+
+        try:
+            event_info = dict(
+                event_id = team_records[0][3]                           
+            )
+        except:
+            event_info = dict(
+                event_id = team_records[3]                
+            )
+        
         match_based_statistics = {}
                                
         
         for teamResults in team_records:
-            match_based_statistics[teamResults[2]] = {'matches_played':teamResults[0],'matches_won':teamResults[1]}
+            match_based_statistics[teamResults[2]] = {'match_based_team_stats_id':teamResults[4],'matches_played':teamResults[0],'matches_won':teamResults[1]}
            
 
 
@@ -468,6 +474,7 @@ class MatchBasedEventHandler():
                 return jsonify(Error = "Match Based Event Team Statistics not found for the event: {}".format(eID)),404  
 
             team_results = []
+            print(categoriesPlayed)
             for category in categoriesPlayed:
                 team_results.append(dao.getAllTeamStatisticsByEventIdAndCategoryId(eID,category))
             if not team_results:
@@ -487,7 +494,9 @@ class MatchBasedEventHandler():
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:                
                 return jsonify(Error = "Match Based Event Statistics not found for the event: {}.".format(eID)),404
-            #print(team_results)
+            print(team_results)
+            print(final_score_result)
+            print(all_stats_result)
             mappedResult = self.mapEventAllStatsToDict(team_results,all_stats_result, final_score_result)
             return jsonify(Match_Based_Event_Statistics = mappedResult),200
 
@@ -704,7 +713,7 @@ class MatchBasedEventHandler():
             
             mappedResult = self.mapEventTeamStatsToDict(result)
             dao.commitChanges()
-            return jsonify(Match_Based_Event_Team_Stats = mappedResult),200
+            return jsonify(Match_Based_Event_Team_Stats = mappedResult),201
         else:
             # Create and Validate new Match_Based_Event team stats
             try:
