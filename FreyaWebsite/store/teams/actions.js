@@ -2,7 +2,10 @@ export default{
     async getTeamByYear({commit},sport_id, season_year){
         try{
             const response = await this.$axios.get('teams/?sport_id='+1+'&season_year='+2020)
+            console.log(response)
+            console.log(response.data)
             commit("SET_TEAM",response.data.Team)
+            
         }catch(error){
             // Verify if this is automatic or if this is only because of Luis' formatting?
             console.log(error.response.data.Error)
