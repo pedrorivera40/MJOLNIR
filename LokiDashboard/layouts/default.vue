@@ -80,23 +80,23 @@ export default {
         },
         {
           icon: "mdi-clipboard-account",
-          title: "User Management",
-          to: "/users"
+          title: "Manejo de Usuarios",
+          to: "/usuarios"
         },
         {
           icon: "mdi-account-group",
-          title: "Sports Teams",
-          to: "/teams"
+          title: "Equipos",
+          to: "/equipos"
         },
         {
           icon: "mdi-run",
-          title: "Athletes",
-          to: "/athletes"
+          title: "Atletas",
+          to: "/atletas"
         },
         {
           icon: "mdi-calendar-multiple",
-          title: "Events",
-          to: "/events"
+          title: "Eventos",
+          to: "/eventos"
         },
       ],
       miniVariant: false,
