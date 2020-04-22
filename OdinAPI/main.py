@@ -120,7 +120,7 @@ def auth():
 #--------- Dashboard User Routes ---------#
 ###########################################
 @app.route("/users/", methods=['GET', 'POST'])
-# @token_check
+@token_check
 def allUsers():
     
     handler = UserHandler()
@@ -140,7 +140,7 @@ def allUsers():
 
 
 @app.route("/users/<int:duid>", methods=['GET', 'PATCH'])
-# @token_check
+@token_check
 def userByID(duid):
     handler = UserHandler()
     req = request.json
@@ -159,7 +159,7 @@ def userByID(duid):
 
 
 @app.route("/users/username/", methods=['POST'])
-# @token_check
+@token_check
 def getUserByUsername():
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
@@ -174,7 +174,7 @@ def getUserByUsername():
 
 
 @app.route("/users/email/", methods=['POST'])
-# @token_check
+@token_check
 def getUserByEmail():
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
@@ -188,7 +188,7 @@ def getUserByEmail():
 
 
 @app.route("/users/<int:duid>/reset", methods=['PATCH'])
-# @token_check
+@token_check
 def passwordReset(duid):
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
@@ -217,7 +217,7 @@ def accountUnlock():
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/toggleActive", methods=['PATCH'])
-# @token_check
+@token_check
 def toggleActive(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
@@ -226,7 +226,7 @@ def toggleActive(duid):
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/remove", methods=['PATCH'])
-# @token_check
+@token_check
 def removeUser(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
@@ -234,7 +234,7 @@ def removeUser(duid):
 
 
 @app.route("/users/<string:duid>/permissions",  methods=['GET', 'PATCH'])
-# @token_check
+@token_check
 def userPermissions(duid):
     
     handler = UserHandler()
