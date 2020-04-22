@@ -10,7 +10,7 @@
       :style="`bottom: ${(index * 60) + 40}px`"
     >
       {{snackbar.text}}
-      <v-btn text @click="snackbar.showing = false">Close</v-btn>
+      <v-btn text @click="snackbar.showing = false">Cerrar</v-btn>
     </v-snackbar>
   </div>
 </template>
