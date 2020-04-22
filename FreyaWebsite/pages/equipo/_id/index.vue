@@ -9,7 +9,7 @@
 			<v-toolbar-title>{{sport_name}}</v-toolbar-title>
 			<v-spacer />
 		</v-toolbar>
-		<v-container>
+		<v-container v-if="formated()">
       <v-col>
       </v-col>
       <v-row align="center">
@@ -210,6 +210,9 @@
 <script>
 import EventCardSimple from '~/components/EventCardSimple'
 import AthleteCardSimple from '~/components/AthleteCardSimple.vue'
+
+import {mapActions,mapGetters} from "vuex"
+
 export default {
   components: {
     AthleteCardSimple,
@@ -315,6 +318,33 @@ export default {
     }, 
 
 		methods: {
+      ...mapActions({
+				getTeamByYear:"teams/getTeamByYear"
+      }),
+      
+    formated(){
+				if(this.athlete){
+					if(this.ready){
+						return true
+					}
+					else{
+
+						if(!this.ready){
+
+              this.current_team = this.team
+							
+							this.ready = true
+						}
+					}
+				}
+				else
+				{
+					return false
+				}
+
+			},
+
+
       buildTable(){
         // basketball
         if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF) {
@@ -901,7 +931,7 @@ export default {
                 }
               }
             }
-            this.current_team = team_query.Team.team_info
+            // this.current_team = team_query.Team.team_info
             this.members = {
               "Team": {
                 "team_id": 15,
@@ -970,7 +1000,7 @@ export default {
                 }
               }
             }
-            this.current_team = team_query.Team.team_info
+            // this.current_team = team_query.Team.team_info
             this.members = {
               "Team": {
                 "team_id": 15,
@@ -1039,7 +1069,7 @@ export default {
                 }
               }
             }
-            this.current_team = team_query.Team.team_info
+            // this.current_team = team_query.Team.team_info
             
       
             this.members = {
@@ -1128,7 +1158,7 @@ export default {
                 }
               }
             }
-            this.current_team = team_query.Team.team_info
+            // this.current_team = team_query.Team.team_info
             this.members = {
               "Team": {
                 "team_id": 15,
@@ -1200,6 +1230,19 @@ export default {
             
 				}
 			}
-    }
+    },
+
+    computed: {
+			...mapGetters({
+				team:"teams/team"
+			})
+		},
+
+		mounted(){
+      
+      console.log("YOOOOOOOOOO WTF WE HEEEEEEEEEEEERE",this.sport_id,this.season)
+      this.getTeamByYear(this.sport_id,this.season)
+      console.log(this.team)
+		}
 }
 </script>
