@@ -1,6 +1,6 @@
 <template>
   <v-container class="wrapper">
-    <h1 class="primary_dark--text pl-3">User Management</h1>
+    <h1 class="primary_dark--text pl-3">Manejo de Usuarios</h1>
     <div class="content-area pa-4 pt-12">
       <v-card>
         <v-card-title>
@@ -14,7 +14,7 @@
                 <v-icon left>
                   mdi-plus
                 </v-icon>
-                Add New User
+                Añadir Usuario
               </v-btn>
               <v-spacer />
             </v-col>
@@ -22,7 +22,7 @@
               <v-text-field
                 v-model="search"
                 append-icon="mdi-magnify"
-                label="Search"
+                label="Buscar"
                 rounded
                 dense
                 outlined
@@ -54,10 +54,10 @@
                   v-on="on"
                   @click="resetPassword(item)"
                 >
-                  Reset
+                  Restablecer
                 </v-btn>
               </template>
-              <span>Reset User Pasword</span>
+              <span>Restablecer contraseña</span>
             </v-tooltip>
           </template>
 
@@ -74,7 +74,7 @@
                   mdi-pencil
                 </v-icon>
               </template>
-              <span>Edit User Info</span>
+              <span>Editar información</span>
             </v-tooltip>
 
             <v-tooltip bottom>
@@ -89,7 +89,7 @@
                   mdi-shield-lock
                 </v-icon>
               </template>
-              <span>Edit User Permissions</span>
+              <span>Edit Permisos</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
@@ -103,7 +103,7 @@
                   mdi-delete
                 </v-icon>
               </template>
-              <span>Delete User</span>
+              <span>Borrar usuario</span>
             </v-tooltip>
           </template>
         </v-data-table>
@@ -158,12 +158,12 @@ export default {
           align: "start",
           value: "id"
         },
-        { text: "Full Name", value: "full_name" },
-        { text: "Username", value: "username" },
-        { text: "Email", value: "email" },
-        { text: "Account Status", align: "center", value: "is_active" },
-        { text: "Password",  value: "password" },
-        { text: "Actions", value: "actions", sortable: false }
+        { text: "Nombre Completo", value: "full_name" },
+        { text: "Nombre de Usuario", value: "username" },
+        { text: "Correo Electrónico", value: "email" },
+        { text: "Estatus de Cuenta", align: "center", value: "is_active" },
+        { text: "Contraseña",  value: "password" },
+        { text: "Acciones", value: "actions", sortable: false }
       ],
       editedItemIndex: -1,
       editedItem: {
@@ -206,7 +206,7 @@ export default {
       getPermissions: "dashboardUsers/getPermissions"
     }),
     setStatus(status) {
-      return status ? "Active" : "Inactive";
+      return status ? "Activa" : "Inactiva";
     },
     deleteUser(user) {
       this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
