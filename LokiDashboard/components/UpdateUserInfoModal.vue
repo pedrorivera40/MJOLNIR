@@ -22,10 +22,10 @@
                 <v-col cols="12">
                   <v-text-field
                     v-model="email_"
-                    label="Email*"
+                    label="Correo electrónico*"
                     required
                     :rules="[
-                      required('email', 'Por favor, ingrese su email.'),
+                      required('email', 'Por favor, ingrese su correo electrónico.'),
                       emailFormat()
                     ]"
                   ></v-text-field>
