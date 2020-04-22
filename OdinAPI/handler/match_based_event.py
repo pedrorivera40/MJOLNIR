@@ -95,8 +95,7 @@ class MatchBasedEventHandler():
 
     def mapAthleteSeasonAggregate(self, record):
         athlete_info = {}
-        stat_info = {}
-        print(record)
+        stat_info = {}        
         athlete_info['athlete_id'] = record[3]
         athlete_info['first_name'] = record[4]
         athlete_info['middle_name'] = record[5]
@@ -130,10 +129,12 @@ class MatchBasedEventHandler():
             event_info = dict(
                 event_id = team_records[0][3]                           
             )
+            opponent_name = team_records[0][5]
         except:
             event_info = dict(
                 event_id = team_records[3]                
             )
+            opponent_name = team_records[5]
         
         match_based_statistics = {}
                                
@@ -167,7 +168,7 @@ class MatchBasedEventHandler():
         
         result = dict(event_info = event_info, team_statistics = team_statistics, 
         athlete_statistic = athlete_statistics, uprm_score = final_record[0], 
-        opponent_score = final_record[1],opponent_name = team_records[0][5])#NOTE:This opponent name is not in final score dao.
+        opponent_score = final_record[1],opponent_name = opponent_name)#NOTE:This opponent name is not in final score dao.
         return result
 
 #===========================//HANDLERS//==================================
