@@ -2,24 +2,24 @@
   <div class="wrapper d-flex align-center justify-center">
     <v-card width="500" class="elevation-12 mx-auto">
       <v-toolbar color="primary" dark flat>
-        <v-toolbar-title> Password activateAccount </v-toolbar-title>
+        <v-toolbar-title> Activar Cuenta </v-toolbar-title>
         <v-spacer />
       </v-toolbar>
       <v-card-text>
         <v-container>
           <v-form v-model="valid">
             <v-text-field
-              label="Username"
+              label="Nombre de usuario"
               name="login"
               prepend-icon="mdi-account"
               type="text"
               v-model="username"
-              :rules="[required('username')]"
+              :rules="[required('username', 'Debe ingresar su nombre de usuario.')]"
             />
 
             <v-text-field
               id="current-password"
-              label="Current Password"
+              label="Contraseña Temporal"
               name="current-password"
               prepend-icon="mdi-lock-clock"
               :append-icon="showCurr ? 'mdi-eye-off' : 'mdi-eye'"
@@ -27,12 +27,12 @@
               v-model="password"
               @click:append="showCurr = !showCurr"
               :rules="[
-                required('password', 'You must input your current password.')
+                required('password', 'Debe ingresar la contraseña temporal.')
               ]"
             />
             <v-text-field
               id="new-password"
-              label="New Password"
+              label="Nueva Contraseña"
               name="new-password"
               prepend-icon="mdi-lock"
               :append-icon="showNew ? 'mdi-eye-off' : 'mdi-eye'"
@@ -40,7 +40,7 @@
               v-model="newPassword"
               @click:append="showNew = !showNew"
               :rules="[
-                required('password', 'You must input a new password.'),
+                required('password', 'Debe ingresasr una nueva contraseña.'),
                 minLength('password', 10),
                 maxLength('password', 64),
                 passwordFormat(),
@@ -49,7 +49,7 @@
             />
             <v-text-field
               id="confirm-password"
-              label="Comfirm Password"
+              label="Confirma la Contraseña"
               name="confirm-password"
               prepend-icon="mdi-lock-check"
               :append-icon="showConf ? 'mdi-eye-off' : 'mdi-eye'"
@@ -57,7 +57,7 @@
               v-model="repeat"
               @click:append="showConf = !showConf"
               :rules="[
-                required('password', 'You must confirm your new password.'),
+                required('password', 'Debe confirmar la nueva contraseña.'),
                 passwordMatch(newPassword)
               ]"
             />
@@ -66,7 +66,7 @@
       </v-card-text>
       <v-card-actions>
         <nuxt-link class="ml-6" to="/login">
-          Go Back
+          Regresar
         </nuxt-link>
         <v-spacer />
         <v-btn
@@ -77,7 +77,7 @@
           class="ma-5"
           @click="activateAccount({ username: username, password: password, new_password: repeat })"
         >
-          Submit
+          Someter
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -96,8 +96,8 @@ export default {
       showCurr: false,
       showNew: false,
       showConf: false,
-      username: "newUser27",
-      password: "ninjaTurtles1!",
+      username: "",
+      password: "",
       newPassword: "",
       repeat: "",
       ...rules
