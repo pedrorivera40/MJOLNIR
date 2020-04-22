@@ -9,7 +9,7 @@
         <v-container>
           <v-form v-model="valid">
             <v-text-field
-              label="Username"
+              label="Nombre de usuario"
               name="login"
               prepend-icon="mdi-account"
               type="text"
@@ -19,7 +19,7 @@
 
             <v-text-field
               id="password"
-              label="Password"
+              label="Contraseña"
               name="password"
               prepend-icon="mdi-lock"
               :append-icon=" show ? 'mdi-eye-off' : 'mdi-eye'"
@@ -32,8 +32,8 @@
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <nuxt-link class="ml-6" to="/activate">
-          Activate account.
+        <nuxt-link class="ml-6" to="/activar">
+          Activar cuenta.
         </nuxt-link>
         <v-spacer />
         <v-btn
