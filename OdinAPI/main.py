@@ -644,15 +644,24 @@ def basketballAggregateTeamStatistics():
 # ===================================================================================
 # ===================//END BASKETBALL RESULTS ROUTES//===============================
 # ===================================================================================
+
+
 #--------- PBP Routes ---------#
-@app.route("/pbp", methods=['POST', 'DELETE'])
-def pbp_sequence():
+@app.route("/pbp/<string:sport>", methods=['POST', 'DELETE'])
+def pbp_sequence(sport):
 
     body = request.get_json()
-    if len(body) != 1 or "event_id" not in body:
-        return jsonify("Bad request. ")
+    handler = None
 
-    handler = VolleyballPBPHandler()
+    # Assign proper handler.
+    if sport == "Voleibol":
+        handler = VolleyballPBPHandler()
+    else:
+        return jsonify(ERROR="Not valid sport for PBP sequences."), 400
+
+    if len(body) != 1 or "event_id" not in body:
+        return jsonify("Bad request.")
+
     event_id = body["event_id"]
     if request.method == 'POST':
         return handler.startPBPSequence(event_id)
@@ -660,34 +669,56 @@ def pbp_sequence():
     return handler.removePBPSequence(event_id)
 
 
-@app.route("/pbp_volleyball/set", methods=['PUT'])
-def volleyball_pbp_set_current_set():
+@app.route("/pbp/<string:sport>/set", methods=['PUT'])
+def volleyball_pbp_set_current_set(sport):
     body = request.get_json()
+    handler = None
+
+    # Assign proper handler.
+    if sport == "Voleibol":
+        handler = VolleyballPBPHandler()
+    else:
+        return jsonify(ERROR="Not valid sport for PBP sequences."), 400
+
     if len(body) == 2 and "adjust" in body and "event_id" in body:
-        return VolleyballPBPHandler().adjustCurrentSet(body["event_id"], body["adjust"])
+        return handler.adjustCurrentSet(body["event_id"], body["adjust"])
 
     return jsonify(ERROR="Bad request, client must pass both event id and hex color within request body."), 400
 
 
-@app.route("/pbp/color", methods=['PUT'])
-def pbp_set_color():
+@app.route("/pbp/<string:sport>/color", methods=['PUT'])
+def pbp_set_color(sport):
     body = request.get_json()
+    handler = None
+
+    # Assign proper handler.
+    if sport == "Voleibol":
+        handler = VolleyballPBPHandler()
+    else:
+        return jsonify(ERROR="Not valid sport for PBP sequences."), 400
+
     if len(body) == 2 and "color" in body and "event_id" in body:
-        return VolleyballPBPHandler().setOpponentColor(body["event_id"], body["color"])
+        return handler.setOpponentColor(body["event_id"], body["color"])
 
     return jsonify(ERROR="Bad request, client must pass both event id and hex color within request body."), 400
 
 
-@app.route("/pbp/roster", methods=['POST', 'PUT', 'DELETE'])
-def pbp_roster():
+@app.route("/pbp/<string:sport>/roster", methods=['POST', 'PUT', 'DELETE'])
+def pbp_roster(sport):
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
     body = request.get_json()
+    handler = None
+
+    # Assign proper handler.
+    if sport == "Voleibol":
+        handler = VolleyballPBPHandler()
+    else:
+        return jsonify(ERROR="Not valid sport for PBP sequences."), 400
 
     # Validate team is given within request body.
     if not "team" in body or not "event_id" in body:
         return jsonify(ERROR="Bad request. Values for team and event id must be included in request body."), 400
 
-    handler = VolleyballPBPHandler()
     team = body["team"]
     event_id = body["event_id"]
 
@@ -722,8 +753,8 @@ def pbp_roster():
     return jsonify(ERROR="Bad request. Team value invalid."), 400
 
 
-@app.route("/pbp/actions", methods=['POST', 'PUT', 'DELETE'])
-def pbp_actions():
+@app.route("/pbp/<string:sport>/actions", methods=['POST', 'PUT', 'DELETE'])
+def pbp_actions(sport):
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
     body = request.get_json()
 
@@ -732,7 +763,13 @@ def pbp_actions():
         return jsonify(ERROR="Bad request. Not event id found."), 400
 
     event_id = body["event_id"]
-    handler = VolleyballPBPHandler()
+
+    # Assign proper handler.
+    if sport == "Voleibol":
+        handler = VolleyballPBPHandler()
+    else:
+        return jsonify(ERROR="Not valid sport for PBP sequences."), 400
+
     if request.method == 'POST':
         # Validate action data is present in request body.
         if len(body) != 2 or "data" not in body:
@@ -754,13 +791,22 @@ def pbp_actions():
     return handler.removePlayPBPAction(event_id, body["action_id"])
 
 
-@app.route("/pbp/end", methods=['POST'])
-def pbp_end():
+@app.route("/pbp/<string:sport>/end", methods=['POST'])
+def pbp_end(sport):
     body = request.get_json()
+    handler = None
+
+    # Assign proper PBP handler.
+    if sport == "Voleibol":
+        handler = VolleyballPBPHandler()
+    else:
+        return jsonify(ERROR="Not valid sport for PBP sequences."), 400
+
     if len(body) == 1 and "event_id" in body:
-        return VolleyballPBPHandler().setPBPSequenceOver(body["event_id"])
+        return handler.setPBPSequenceOver(body["event_id"])
 
     return jsonify(ERROR="Bad request, client must pass event_id only, within the body."), 400
+
 
 # ===================================================================================
 # =======================//VOLLEYBALL RESULTS ROUTES//===============================

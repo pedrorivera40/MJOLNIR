@@ -518,6 +518,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Current set updated."), 200
 
         except Exception as e:
+            print(str(e))
             return jsonify(ERROR=str(e)), 500
 
     def setOpponentColor(self, event_id, color):
@@ -750,7 +751,7 @@ class VolleyballPBPHandler:
         """
         try:
             # Validate event id is positive integer.
-            if not str(event_id).isdigit() and str(event).isdigit():
+            if not str(event_id).isdigit() and str(event_id).isdigit():
                 return jsonify(ERROR="Invalid params, event id and action id (must be integers)."), 400
 
             # Validate action data has proper format. (TODO -> CHECK THIS!!!)
@@ -768,6 +769,7 @@ class VolleyballPBPHandler:
 
         except Exception as e:
             print(str(e))
+            print("DAMN")
             return jsonify(ERROR=str(e)), 500
 
     def removePlayPBPAction(self, event_id, game_action_id):
