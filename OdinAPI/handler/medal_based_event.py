@@ -7,14 +7,19 @@ from .dao.medal_based_event_dao import MedalBasedEventDAO
 
 
 
-#Constants
+#Sport Constants
+
 TENNIS_IDM = 9
 TENNIS_IDF = 18
 TABLE_TENNIS_IDM = 7
 TABLE_TENNIS_IDF = 15
 DANCE = 17
 ATHLETSISM = 8
-CATEGORIES = dict(TENNIS_IDM=[5,7],TENNIS_IDF=[11,6],TABLE_TENNIS_IDM=[3,8],TABLE_TENNIS_IDF=[4,10])
+#Category Constants
+M100 = 9
+M400 = 12
+
+CATEGORIES = dict(ATHLETSISM =[M100,M400])
 
 
 class MedalBasedEventHandler():
@@ -52,30 +57,26 @@ class MedalBasedEventHandler():
         stat_info = {}
         event_info = {}
 
-        stat_info['matches_played'] = record[0]
-        stat_info['matches_won'] = record[1]
-
-        event_info['category_name'] = record[2]        
-        event_info['event_id'] = record[3]
-        event_info['athlete_id'] = record[4]
-        event_info['match_based_event_id'] = record[5]
+        stat_info['medal_obtained'] = record[0]
+        event_info['category_name'] = record[1]        
+        event_info['event_id'] = record[2]
+        event_info['athlete_id'] = record[3]
+        event_info['medal_based_event_id'] = record[4]
         
         return dict(event_info= event_info, event_statistics = stat_info)
 
     # for team statistics
     def mapEventTeamStatsToDict(self,record):
-        stat_info = {}
-        event_info = {}
-
-        stat_info['matches_played'] = record[0]
-        stat_info['matches_won'] = record[1]
-
-        event_info['category_name'] = record[2]       
-        event_info['event_id'] = record[3]        
-        event_info['match_based_event_team_stats_id'] = record[4]
-
+        medal_based_statistics = {}
+        #print(record)
+        medal_based_statistics[record[0][2]] = []
+        medal_based_statistics['event_id'] = record[0][4]
+        for teamResults in record:
+            medal_based_statistics[teamResults[2]].append({'medals_earned':teamResults[0],'type_of_medal':teamResults[1],'team_stats_id':teamResults[3]})
         
-        return dict(event_info= event_info, event_statistics = stat_info)
+        print(medal_based_statistics)
+        
+        return dict(team_medal_based_statistics = medal_based_statistics)
         # UPRM_Score = final_record[0], Opponent_Score = final_record[1]
     
     def mapEventSeasonCollectionToDict(self,record):
@@ -86,12 +87,12 @@ class MedalBasedEventHandler():
        
         event_info['event_id'] = record[0]
         event_info['event_date'] = record[1]
-        event_info['category_name'] = record[4]
-        event_info['athlete_id'] = record[6]
-        event_info['match_based_event_id'] = record[5]
-
-        stat_info['matches_played'] = record[2]
-        stat_info['matches_won'] = record[3]
+        event_info['category_name'] = record[3]
+        event_info['athlete_id'] = record[5]
+        event_info['medal_based_event_id'] = record[4]
+        
+        stat_info['type of medal'] = record[2]
+        
 
         result = dict(Event = event_info, Event_Statistics = stat_info)
         return result
@@ -99,7 +100,7 @@ class MedalBasedEventHandler():
     def mapAthleteSeasonAggregate(self, record):
         athlete_info = {}
         stat_info = {}
-        print(record)
+        #print(record)
         athlete_info['athlete_id'] = record[3]
         athlete_info['first_name'] = record[4]
         athlete_info['middle_name'] = record[5]
@@ -107,8 +108,8 @@ class MedalBasedEventHandler():
         athlete_info['number'] = record[7]
         athlete_info['profile_image_link'] = record[8]
 
-        stat_info['matches_played'] = record[0]
-        stat_info['matches_won'] = record[1]
+        stat_info['medals_earned'] = record[0]
+        stat_info['type_of_medal'] = record[1]
         stat_info['category_name'] = record[2]
         
 
@@ -118,8 +119,8 @@ class MedalBasedEventHandler():
     def mapTeamSeasonAggregate(self, record):
         stat_info = {}
         
-        stat_info['matches_played'] = record[0]
-        stat_info['matches_won'] = record[1]
+        stat_info['medals_earned'] = record[0]
+        stat_info['type_of_medal'] = record[1]
         stat_info['category_name'] = record[2]
         
 
@@ -128,23 +129,41 @@ class MedalBasedEventHandler():
 
 
     def mapEventAllStatsToDict(self,team_records,athlete_records,final_record):
-        event_info = dict(
-            event_id = team_records[0][3],
-            match_based_event_team_stats_id = team_records[0][4]            
-        )
-        match_based_statistics = {}
+        
+        try:
+            opponent_name = athlete_records[0][10]
+            event_info = dict(
+                event_id = athlete_records[0][8],
+            )
+        except:
+            opponent_name = athlete_records[10]
+            event_info = dict(
+                event_id = athlete_records[8],
+            )
+        medal_based_statistics = {}
                                
         
+        
         for teamResults in team_records:
-            match_based_statistics[teamResults[2]] = {'matches_played':teamResults[0],'matches_won':teamResults[1]}
-           
+            try:
+                #print(teamResults)
+                if isinstance(teamResults[1],tuple):
+                    #print(teamResults)
+                    medal_based_statistics[teamResults[0][2]] = []
+                    for results in teamResults:
+                        print(results)
+                        medal_based_statistics[teamResults[0][2]].append({'medals_earned':results[0],'type_of_medal':results[1],'team_stats_id':results[3]})
+               
+            except:                 
+                medal_based_statistics[teamResults[0][2]] = {'medals_earned':teamResults[0][0],'type_of_medal':teamResults[0][1],'team_stats_id':teamResults[0][3]}
+        
+        
 
-
-        team_statistics = dict(match_based_statistics = match_based_statistics)
+        team_statistics = dict(medal_based_statistics = medal_based_statistics)
        
         athlete_statistics = []
 
-        for athlete_record in athlete_records:
+        for athlete_record in athlete_records:            
             athlete_info = dict(
                 athlete_id = athlete_record[0],
                 first_name = athlete_record[1],
@@ -152,19 +171,17 @@ class MedalBasedEventHandler():
                 last_names = athlete_record[3],    
                 number = athlete_record[4],
                 profile_image_link = athlete_record[5],
-                match_based_event_id = athlete_record[10]
+                match_based_event_id = athlete_record[9]
             )
             statistics = dict(
-                matches_played = athlete_record[6],
-                matches_won = athlete_record[7],
-                category_name = athlete_record[8]                
+                medal_earned = athlete_record[6],
+                category_name = athlete_record[7]                
             )
-
             athlete_statistics.append(dict(athlete_info = athlete_info, statistics = statistics))
-        
+       
         result = dict(event_info = event_info, team_statistics = team_statistics, 
         athlete_statistic = athlete_statistics, uprm_score = final_record[0], 
-        opponent_score = final_record[1],opponent_name = team_records[0][5])#NOTE:This opponent name is not in final score dao.
+        opponent_score = final_record[1],opponent_name = opponent_name)
         return result
 
 #===========================//HANDLERS//==================================
@@ -260,7 +277,10 @@ class MedalBasedEventHandler():
        
         try:
             dao = MedalBasedEventDAO()
-            result = dao.getAllTeamStatisticsByEventIdAndCategoryId(eID,cID)
+            team_results = dao.getAllTeamStatisticsByEventIdAndCategoryId(eID,cID)
+            result = []
+            for row in team_results:
+                result.append(row)
             if not result:
                 return jsonify(Error = "Medal Based Event Team Statistics not found for the event: {}".format(eID)),404
             mappedResult = self.mapEventTeamStatsToDict(result)
@@ -349,7 +369,9 @@ class MedalBasedEventHandler():
             result = dao.getAggregatedAthleteStatisticsPerSeason(aID,seasonYear)
             if not result:
                 return jsonify(Error = "Medal Based Event Statistics not found for the athlete id:{} in season year:{}.".format(aID,seasonYear)),404
-            mappedResult = self.mapAthleteSeasonAggregate(result)
+            mappedResult = []
+            for row in result:
+                mappedResult.append(self.mapAthleteSeasonAggregate(row))
             #print(mappedResult)
         except:
             return jsonify(ERROR="Unable to verify medal_based event from DAO."), 500
@@ -419,12 +441,10 @@ class MedalBasedEventHandler():
             result = dao.getAggregatedTeamStatisticsPerSeason(sID,seasonYear)
             if not result:
                 return jsonify(Error = "Medal Based Event Team Statistics not found for sport id:{} in season year:{}.".format(sID,seasonYear)),404
-            mappedResult = []
-            if len(result) == 2:#This has two lists
-                for row in result:
-                    mappedResult.append(self.mapTeamSeasonAggregate(row))
-            else:
-                mappedResult = self.mapTeamSeasonAggregate(result)
+            mappedResult = []            
+            for row in result:
+                mappedResult.append(self.mapTeamSeasonAggregate(row))
+            
             
         except Exception as e:
             return jsonify(ERROR="Unable to verify medal_based event team stats from DAO." + str(e)), 500
@@ -552,8 +572,8 @@ class MedalBasedEventHandler():
         # Validate that the event belongs to the correct sport and the category is correct.     
         try:
             sID = t_dao.getTeamSportByID(tID)[0] 
-            print(sID)
-            if sID != TENNIS_IDM and sID != TENNIS_IDF and sID != TABLE_TENNIS_IDM and sID != TABLE_TENNIS_IDF:
+            
+            if sID != ATHLETSISM:
                 return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Medal Based.".format(eID)),400
 
             if not self._validateCategory(sID,attributes['category_id']):
@@ -590,7 +610,7 @@ class MedalBasedEventHandler():
         #the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
             try:
-                result = dao.editStatistics(eID,aID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])
+                result = dao.editStatistics(eID,aID,attributes['category_id'],attributes['medal_id'])
                     
                 if not result:
                     return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
@@ -600,21 +620,23 @@ class MedalBasedEventHandler():
         else:
             # Create and Validate new Medal_Based_Event
             try:
-                result = dao.addStatistics(eID,aID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])                    
+                result = dao.addStatistics(eID,aID,attributes['category_id'],attributes['medal_id'])                    
                 if not result:
                     return jsonify(Error = "Problem inserting new statistics record."),500
-            except:
-                return jsonify(ERROR="Unable to verify medal based event from DAO."), 500
+            except Exception as e:
+                return jsonify(ERROR="Unable to verify medal based event from DAO." + str(e)), 500
         
         #update and validate Medal Based Event Team Statistic
         # If existing Team Statistics update, else create
         try:
             if dao.getMedalBasedEventTeamStatsID(eID,attributes['category_id']) or dao.getMedalBasedEventTeamStatsIDInvalid(eID,attributes['category_id']):
                 team_result = dao.editTeamStatistics(eID,attributes['category_id'])
+                print(team_result)
                 if not team_result:
                     return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
             else:                           
-                dao.addTeamStatistics(eID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])
+                team_result = dao.addTeamStatistics(eID,attributes['category_id'],attributes['medal_id'])
+                print(team_result)
         except Exception as e:
             return jsonify(ERROR="HERE Unable to verify medal based event team statistics from DAO." + str(e)), 500       
 
@@ -624,6 +646,7 @@ class MedalBasedEventHandler():
             dao.commitChanges()
             return jsonify(Medal_Based_Event_Athlete_Statistics = mappedResult),200
         else:
+           
             dao.commitChanges()
             return jsonify(Medal_Based_Event_Athlete_Statistics = "Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),201
 
@@ -677,7 +700,7 @@ class MedalBasedEventHandler():
         try:
             sID = t_dao.getTeamSportByID(tID)[0]
             
-            if sID != TENNIS_IDM and sID != TENNIS_IDF and sID != TABLE_TENNIS_IDM and sID != TABLE_TENNIS_IDF:                
+            if sID != ATHLETSISM:
                 return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Medal Based.".format(eID)),400
              
             if not self._validateCategory(sID,attributes['category_id']):
@@ -708,7 +731,7 @@ class MedalBasedEventHandler():
         else:
             # Create and Validate new Medal_Based_Event team stats
             try:
-                result = dao.addTeamStatistics(eID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])
+                result = dao.addTeamStatistics(eID,attributes['category_id'],attributes['medal_id'])
 
                 if not result:
                     return jsonify(Error = "Problem inserting new team statistics record."),500
@@ -746,7 +769,7 @@ class MedalBasedEventHandler():
         
         
 
-        if not isinstance(eID,int) or not self._validateStatisticsAttributes(attributes):
+        if not isinstance(eID,int): #or not self._validateStatisticsAttributes(attributes):
             return jsonify(Error = "Bad arguments"),400 
 
         local_score = attributes['uprm_score']     
@@ -785,7 +808,7 @@ class MedalBasedEventHandler():
         # Validate that the event belongs to the correct sport.        
         try:
             sID = t_dao.getTeamSportByID(tID)[0]
-            if sID != TENNIS_IDM and sID != TENNIS_IDF and sID != TABLE_TENNIS_IDM and sID != TABLE_TENNIS_IDF :
+            if sID != ATHLETSISM:
                 return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Medal Based.".format(eID)),400
             
             for categories in team_statistics:   
@@ -800,13 +823,16 @@ class MedalBasedEventHandler():
             aID = athlete_attributes['athlete_id']            
             try:
                 # Validate Avoid Duplication Medal Based Event Entry
-                if dao.getMedalBasedEventID(eID,aID,athlete_attributes['statistics']['match_based_statistics']['category_id']):
-                    return jsonify(Error = "Medal Based Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),400
+               
+                for stat in athlete_attributes['statistics']['medal_based_statistics']:
+                    if dao.getMedalBasedEventID(eID,aID,stat['category_id']):
+                        return jsonify(Error = "Medal Based Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),400
+                    
             except:
                 return jsonify(ERROR="Unable to verify medal based event from DAO."), 500
          
             # Validate existing athlete 
-            statistics = athlete_attributes['statistics']['match_based_statistics']
+            statistics = athlete_attributes['statistics']['medal_based_statistics']
             
             try:
                 a_dao = AthleteDAO()                
@@ -825,11 +851,12 @@ class MedalBasedEventHandler():
          
             # Create and Validate new Medal_Based_Event
             try:
-                result = dao.addStatistics(eID,aID,statistics['matches_played'],statistics['matches_won'],statistics['category_id'])               
-                if not result:
-                    return jsonify(Error = "Problem inserting new statistics record."),500
-            except:
-                return jsonify(ERROR="Unable to verify medal based event from DAO."), 500         
+                for medalStats in statistics:
+                    result = dao.addStatistics(eID,aID,medalStats['category_id'],medalStats['medal_id'])               
+                    if not result:
+                        return jsonify(Error = "Problem inserting new statistics record."),500
+            except Exception as e:
+                return jsonify(ERROR="Unable to verify medal based event from DAO." + str(e)), 500         
       
             
         # Create and Validate Final Score entry
@@ -845,7 +872,7 @@ class MedalBasedEventHandler():
         # Create and Validate new Medal_Based_Event team stats
         try:
             for teamStats in team_statistics:
-                result = dao.addTeamStatistics(eID,teamStats['matches_played'],teamStats['matches_won'],teamStats['category_id'])
+                result = dao.addTeamStatistics(eID,teamStats['category_id'],teamStats['medal_id'])
                     
                 if not result:
                     return jsonify(Error = "Problem inserting new team statistics record."),500
@@ -912,7 +939,7 @@ class MedalBasedEventHandler():
        
 
         try:            
-            result = dao.editStatistics(eID,aID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])               
+            result = dao.editStatistics(eID,aID,attributes['category_id'],attributes['medal_id'])               
             if not result:
                 return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
         except:
@@ -923,9 +950,10 @@ class MedalBasedEventHandler():
             team_result = dao.editTeamStatistics(eID,attributes['category_id'])
             if not team_result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
+            print('G')
             mappedResult = self.mapEventAthleteStatsToDict(result)
-        except:
-            return jsonify(ERROR="Unable to verify medal based event team statistics from DAO."), 500
+        except Exception as e:
+            return jsonify(ERROR="Unable to verify medal based event team statistics from DAO." + str(e)), 500
          
         dao.commitChanges()
         return jsonify(Medal_Based_Event_Athlete_Statistics = mappedResult),200
@@ -971,12 +999,12 @@ class MedalBasedEventHandler():
             result = dao.editTeamStatistics(eID,cID)
             if not result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapEventTeamStatsToDict(result)
-        except:
-            return jsonify(ERROR="Unable to verify medal based event team statistics from DAO."), 500
+            
+        except Exception as e:
+            return jsonify(ERROR="Unable to verify medal based event team statistics from DAO." + str(e)), 500
          
         dao.commitChanges()
-        return jsonify(Medal_Based_Event_Team_Stats = mappedResult),200
+        return jsonify(Medal_Based_Event_Team_Stats = "Edited the medal based event team stats with the following ids:{} ".format(result)),200
 
 #===========================//IV.REMOVE//====================================
     def removeStatistics(self,eID,aID,cID): # Instantiates a Medal Based Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
@@ -1108,18 +1136,13 @@ class MedalBasedEventHandler():
         if not isinstance(attributes,dict):
             return False        
         
-        if 'matches_played' not in attributes:
-            return False
-        if 'matches_won' not in attributes:
-            return False
+        if 'medal_id' not in attributes:
+            return False       
         if 'category_id' not in attributes:
             return False             
         
-        if not isinstance(attributes['matches_played'],int):
-            return False
-        
-        if not isinstance(attributes['matches_won'],int):
-            return False
+        if not isinstance(attributes['medal_id'],int) or attributes['medal_id'] < 0 or attributes['medal_id'] > 4:
+            return False  
         
         if not isinstance(attributes['category_id'],int):
             return False                                        
@@ -1204,8 +1227,8 @@ class MedalBasedEventHandler():
 
     def _validateCategory(self,sID,category_id):
 
-        if sID == TENNIS_IDM:
-            return category_id in CATEGORIES['TENNIS_IDM']                
+        if sID == ATHLETSISM:
+            return category_id in CATEGORIES['ATHLETSISM']                
 
         elif sID == TENNIS_IDF:
             return category_id in CATEGORIES['TENNIS_IDF']
