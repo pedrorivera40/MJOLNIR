@@ -170,7 +170,7 @@ class TeamDAO:
         cursor = self.conn.cursor()
         query = """
                 SELECT team.id as team_id, team.sport_id, team.season_year, team.team_image_url, sport.name as sport_name,
-                branch.id as branch_id, branch.name as branch_name
+                branch.id as branch_id, branch.name as branch_name, team.about_team
                 FROM team
                 INNER JOIN sport on team.sport_id = sport.id
                 INNER JOIN branch on sport.branch_id = branch.id

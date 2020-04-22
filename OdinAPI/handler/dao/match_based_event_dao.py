@@ -702,7 +702,7 @@ class MatchBasedEventDAO:
 
         query = """
                 select distinct category_id
-                from match_based_event 
+                from match_based_event_team_stats 
                 where event_id = %s
                 and is_invalid = false
                 """

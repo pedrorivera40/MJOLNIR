@@ -64,7 +64,7 @@
   <!-- WHEN WE GET HERE: we have the sport id. we have the event id. -->
   <v-card width="800" class="elevation-12 mx-auto">
     <v-toolbar color="green darken-1" dark flat>
-        <v-toolbar-title>Editar Estadísticas Atleta {{sport}} - {{branch}}</v-toolbar-title>
+        <v-toolbar-title>Añadir Estadísticas Atleta {{sport_name}} - {{branch}}</v-toolbar-title>
         <v-spacer />
     </v-toolbar>
     <v-card-text>            
@@ -79,7 +79,7 @@
                             >
                                 <v-col                   
                                 >
-                                    <!-- <v-autocomplete
+                                    <v-autocomplete
                                         v-model="payload_stats.athlete_id"
                                         :items="sport_athletes"
                                         filled
@@ -89,9 +89,6 @@
                                         item-text="athlete_name"
                                         item-value="athlete_id"
                                         required
-                                        disabled
-                                        readonly
-                                       
                                         >
                                         <template v-slot:selection="data">
                                             <v-chip
@@ -118,13 +115,7 @@
                                             </v-list-item-content>
                                             </template>
                                         </template>
-                                    </v-autocomplete>   -->
-                                        <v-chip>
-                                        <v-avatar left>
-                                            <v-img :src="current_athlete.profile_image_url"></v-img>
-                                        </v-avatar>
-                                       {{ current_athlete.athlete_name }}
-                                        </v-chip>
+                                    </v-autocomplete>  
                                 </v-col>
                             </v-row>       
                         <v-row>
@@ -295,7 +286,7 @@
                             >
                                 <ValidationProvider v-slot="{ errors }" name="Successful Free Throw" rules="numeric|required">
                                     <v-text-field
-                                        v-model="payload_stats.attributes.successful_free_throw"                      
+                                        v-model="payload_stats.attributes.successful_free_throws"                      
                                         :error-messages="errors"
                                         label="Tiro Libre"
                                         required
@@ -324,8 +315,6 @@
                                         item-text="athlete_name"
                                         item-value="athlete_id"
                                         required
-                                        readonly
-                                        disabled
                                         >
                                         <template v-slot:selection="data">
                                             <v-chip
@@ -501,8 +490,6 @@
                                         item-text="athlete_name"
                                         item-value="athlete_id"
                                         required
-                                        readonly
-                                        disabled
                                         >
                                         <template v-slot:selection="data">
                                             <v-chip
@@ -636,8 +623,7 @@
                                         label="Select"
                                         item-text="athlete_name"
                                         item-value="athlete_id"
-                                        readonly
-                                        disabled
+                                        required
                                         >
                                         <template v-slot:selection="data">
                                             <v-chip
@@ -850,9 +836,11 @@
         
         //WRITTEN TO/PARAMETERS:
         //Baloncesto
-        sport_id:1, //comes from route
+        
+        sport_id:'', //comes from route
         // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
-        sport:'Baloncesto',    //would have to fetch using sport ID  
+        sport_name:'',    //would have to fetch using sport ID  
+        event_id:'',
         branch:'Masculino',    //fetch using sport id and branch, or just getSport if it returns the name
         // //volleyball
         // sport_id:2,
@@ -873,7 +861,7 @@
         
         //THE MAIN STATISTICS, SPORTS SPECIFIC
         payload_stats: '',
-        current_athlete: '',
+        
         //CONSTANTS:
         BASKETBALL_IDM: 1,
         BASKETBALL_IDF: 10,
@@ -950,40 +938,56 @@
             }
         ],
         
-    
-    }),
 
-    mounted() {
-            this.payload_stats.athlete_id = 1
-        },
+    }),
                  
     
     created(){
-      this.initializeSportData()
-      this.current_athlete = this.sport_athletes[0]
+        this.buildDefaultValues()
+        this.initializeSportData()
+
     },
     methods: {
+        buildDefaultValues(){
+            this.event_id = this.$route.params.id
+            if (this.event_id == 1){
+                this.sport_id = this.BASKETBALL_IDM
+                this.sport_name = "Baloncesto"
+            }
+            else if (this.event_id == 2){
+                this.sport_id =  this.VOLLEYBALL_IDF 
+                this.sport_name = "Voleibol"
+            }
+            else if (this.event_id == 3){
+                this.sport_id =  this.SOCCER_IDF 
+                this.sport_name = "Futbol"
+            }
+            else if (this.event_id == 4){
+                this.sport_id =  this.BASEBALL_IDM
+                this.sport_name = "Beisbol"
+            }
+        },
         initializeSportData(){
         //console.log(this.season)
 		if(this.sport_id!=''){
             if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
                 this.payload_stats = {
                 "event_id":this.event_id,
-                "athlete_id":3,
+                "athlete_id":'',
                 "attributes":
                 {
-                    "points":1,
-                    "rebounds":2,
-                    "assists":3,
-                    "steals":4,
-                    "blocks":5,
-                    "turnovers":6,
-                    "field_goal_attempt":10,
-                    "successful_field_goal":5,
-                    "three_point_attempt":10,
-                    "successful_three_point":5,
-                    "free_throw_attempt":10,
-                    "successful_free_throw":5,
+                    "points":'',
+                    "rebounds":'',
+                    "assists":'',
+                    "steals":'',
+                    "blocks":'',
+                    "turnovers":'',
+                    "field_goal_attempt":'',
+                    "successful_field_goal":'',
+                    "three_point_attempt":'',
+                    "successful_three_point":'',
+                    "free_throw_attempt":'',
+                    "successful_free_throw":'',
                 }
                 }
                 
@@ -991,18 +995,18 @@
             else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
                 this.payload_stats = {       
                 "event_id": this.event_id,
-                "athlete_id":2,
+                "athlete_id":'',
                 "attributes":
                 {
-                    "kill_points":1,
-                    "attack_errors":2,
-                    "assists":3,
-                    "aces":4,
-                    "service_errors":5,
-                    "digs":6,
-                    "blocks":7,
-                    "blocking_errors":8,
-                    "reception_errors":9
+                    "kill_points":'',
+                    "attack_errors":'',
+                    "assists":'',
+                    "aces":'',
+                    "service_errors":'',
+                    "digs":'',
+                    "blocks":'',
+                    "blocking_errors":'',
+                    "reception_errors":''
                 }
                 }
                 
@@ -1010,31 +1014,31 @@
             else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
                 this.payload_stats = {
                 "event_id":this.event_id,
-                "athlete_id":3,
+                "athlete_id":'',
                 "attributes":
                 {
-                    "goal_attempts":10,
-                    "assists":2,
-                    "fouls":3,
-                    "cards":4,
-                    "successful_goals":5,
-                    "tackles":6
+                    "goal_attempts":'',
+                    "assists":'',
+                    "fouls":'',
+                    "cards":'',
+                    "successful_goals":'',
+                    "tackles":''
                 }
                 }   
             }
             else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
                 this.payload_stats = { 
                 "event_id": this.event_id,
-                "athlete_id":4,
+                "athlete_id":'',
                 "attributes":
                 {
-                    "at_bats":2,
-                    "runs":1,
-                    "hits":1,
-                    "runs_batted_in":1,
-                    "base_on_balls":1,
-                    "strikeouts":1,
-                    "left_on_base":1
+                    "at_bats":'',
+                    "runs":'',
+                    "hits":'',
+                    "runs_batted_in":'',
+                    "base_on_balls":'',
+                    "strikeouts":'',
+                    "left_on_base":''
                 }
                 }
             }
@@ -1082,10 +1086,10 @@
             return this.sport
         },
         goToTeam(){
-             this.$router.push('/equipo/')
+             this.$router.push("/equipo/")
         },
         goToResults(){
-             this.$router.push('/resultados/')
+             this.$router.push("/resultados/"+this.event_id)
         }
     },
     computed: {

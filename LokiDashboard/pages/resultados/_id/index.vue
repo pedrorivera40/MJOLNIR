@@ -1,6 +1,8 @@
 <template>
   <div class="wrapper">
     <h1>Resultados {{sport_name}}</h1>
+    <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
+    <h3>Evento de {{event_date}}</h3>
     <div class="content-area pa-4 pt-12">
     <v-row align="center"
       justify="center">
@@ -41,7 +43,38 @@
           </v-container>
       </v-card>
         
-      </v-row>   
+      </v-row>
+      <v-row justify="center" align="center">
+        <v-spacer/>
+        <v-spacer/>
+        <v-col>
+            <v-btn
+                color="primary_light"
+                class="white--text"
+                @click="addFinalScore()"
+            >
+                <v-icon left>
+                mdi-plus
+                </v-icon>
+                Añadir Puntuación Final
+            </v-btn>
+        </v-col>
+        
+        <v-col>
+            <v-btn
+                color="primary_light"
+                class="white--text"
+                @click="editFinalScore()"
+            >
+                <v-icon left>
+                mdi-pencil
+                </v-icon>
+                Editar Puntuación Final
+            </v-btn>
+        </v-col>
+        <v-spacer/>
+        <v-spacer/>
+    </v-row>   
     <v-tabs
               centered
           >
@@ -58,6 +91,19 @@
                     
                     <v-card-title>
                     <v-row>
+                        <v-col>
+                        <v-btn
+                            color="primary_light"
+                            class="white--text"
+                            @click="addAthleteStatistics(editedItemIndex)"
+                        >
+                            <v-icon left>
+                            mdi-plus
+                            </v-icon>
+                            Añadir Estadisticas de Atleta
+                        </v-btn>
+                        <v-spacer />
+                        </v-col>
                         <v-col cols="4">
                         <v-text-field
                             v-model="search_individual"
@@ -86,7 +132,48 @@
                     class="elevation-1"								
                     v-if="isBasketballTable"
                     >
-                    
+                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="editAthleteStatistics(item)"
+                            >
+                            mdi-pencil
+                            </v-icon>
+                        </template>
+                        <span>Editar Estadisticas de Atleta</span>
+                        </v-tooltip>
+                        <!-- <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click="editPermissions(item)"
+                            >
+                            mdi-shield-lock
+                            </v-icon>
+                        </template>
+                        <span>Edit User Permissions</span>
+                        </v-tooltip> -->
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="deleteAthleteStatistics(item)"
+                            >
+                            mdi-delete
+                            </v-icon>
+                        </template>
+                        <span>Eliminar Estadisticas De Atleta</span>
+                        </v-tooltip>
+                    </template>
                     </v-data-table>
                     <!-- VOLLEYBALL TABLE -->
                     <v-data-table
@@ -98,6 +185,48 @@
                     class="elevation-1"								
                     v-if="isVolleyballTable"
                     >
+                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="editAthleteStatistics(item)"
+                            >
+                            mdi-pencil
+                            </v-icon>
+                        </template>
+                        <span>Editar Estadisticas de Atleta</span>
+                        </v-tooltip>
+                        <!-- <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click="editPermissions(item)"
+                            >
+                            mdi-shield-lock
+                            </v-icon>
+                        </template>
+                        <span>Edit User Permissions</span>
+                        </v-tooltip> -->
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="deleteAthleteStatistics(item)"
+                            >
+                            mdi-delete
+                            </v-icon>
+                        </template>
+                        <span>Eliminar Estadisticas De Atleta</span>
+                        </v-tooltip>
+                    </template>
                     </v-data-table>
                     <!-- SOCCER TABLE -->
                     <v-data-table
@@ -109,6 +238,48 @@
                     class="elevation-1"								
                     v-if="isSoccerTable"
                     >
+                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="editAthleteStatistics(item)"
+                            >
+                            mdi-pencil
+                            </v-icon>
+                        </template>
+                        <span>Editar Estadisticas de Atleta</span>
+                        </v-tooltip>
+                        <!-- <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click="editPermissions(item)"
+                            >
+                            mdi-shield-lock
+                            </v-icon>
+                        </template>
+                        <span>Edit User Permissions</span>
+                        </v-tooltip> -->
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="deleteAthleteStatistics(item)"
+                            >
+                            mdi-delete
+                            </v-icon>
+                        </template>
+                        <span>Eliminar Estadisticas De Atleta</span>
+                        </v-tooltip>
+                    </template>
                     </v-data-table>
                     <!-- BASEBALL TABLE -->
                     <v-data-table
@@ -120,7 +291,48 @@
                     class="elevation-1"								
                     v-if="isBaseballTable"
                     >
-                    
+                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="editAthleteStatistics(item)"
+                            >
+                            mdi-pencil
+                            </v-icon>
+                        </template>
+                        <span>Editar Estadisticas de Atleta</span>
+                        </v-tooltip>
+                        <!-- <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click="editPermissions(item)"
+                            >
+                            mdi-shield-lock
+                            </v-icon>
+                        </template>
+                        <span>Edit User Permissions</span>
+                        </v-tooltip> -->
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="deleteAthleteStatistics(item)"
+                            >
+                            mdi-delete
+                            </v-icon>
+                        </template>
+                        <span>Eliminar Estadisticas De Atleta</span>
+                        </v-tooltip>
+                    </template>
                     </v-data-table>
                 </v-card>
             </v-tab-item>
@@ -139,7 +351,47 @@
                     v-if="payload_stats != ''"
                     >
                     
-                   
+                    <template v-slot:item.actions="{ item }">
+                        <!-- <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="editTeamStatistics(item)"
+                            >
+                            mdi-pencil
+                            </v-icon>
+                        </template>
+                        <span>Editar Estadisticas de Equipo</span>
+                        </v-tooltip> -->
+                        <!-- <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click="editPermissions(item)"
+                            >
+                            mdi-shield-lock
+                            </v-icon>
+                        </template>
+                        <span>Edit User Permissions</span>
+                        </v-tooltip> -->
+                        <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon
+                            small
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="deleteTeamStatistics(item)"
+                            >
+                            mdi-delete
+                            </v-icon>
+                        </template>
+                        <span>Eliminar Estadisticas De Equipo</span>
+                        </v-tooltip>
+                    </template>
                     </v-data-table>
                 </v-card>
             </v-tab-item>
@@ -187,8 +439,11 @@ export default {
       statistics_per_season:"",
       team_statistics:[],
       search_individual: "",
-      sport_id: 2,
-      sport_name: "Soccer",
+      sport_id: '',
+      sport_name: '',
+      event_id:'',
+      event_date:'',
+      event_info:'',
       opponent_score:'',
       opponent_name:"INTER SG", //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
@@ -207,109 +462,206 @@ export default {
   },
   
 created(){
-      this.buildTable()
-      this.getSeasonData()
+    this.buildDefaultValues()
+    this.buildTable()
+    this.getSeasonData()
+      
       //this.buildDefault()
     }, 
   methods: {
+    buildDefaultValues(){
+        this.event_id = this.$route.params.id
+        if (this.event_id == 1){
+            //Getting Sport Information
+            this.sport_id = this.BASKETBALL_IDM
+            this.sport_name = "Baloncesto"
+            //Getting Event Information
+            this.event_info = {
+                "Event": {
+                    "branch": "masculino",
+                    "event_date": "Sat, 19 Apr 2025 00:00:00 GMT",
+                    "event_summary": "Test Event #1: Using to Add All Stats",
+                    "id": 32,
+                    "is_local": true,
+                    "opponent_name": "Inter SG",
+                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/88207403_3003298336425647_2084912734775803904_o.jpg?_nc_cat=109&_nc_sid=e007fa&_nc_ohc=cPJHsQ73nbMAX988FmN&_nc_ht=scontent.fsig1-1.fna&oh=1ff606b6b98ae4bd4d211840ac373a2a&oe=5EAB30D6",
+                    "sport_name": "Baloncesto",
+                    "team_id": 25,
+                    "team_season_year": 2025,
+                    "venue": "Mangual"
+                }
+            }
+            this.event_date = this.event_info.Event.event_date
+        }
+        else if (this.event_id == 2){
+            //Getting Sport Information
+            this.sport_id =  this.VOLLEYBALL_IDF 
+            this.sport_name = "Voleibol"
+            //Getting Event Information
+            this.event_info = {
+                "Event": {
+                    "branch": "femenino",
+                    "event_date": "Fri, 24 Apr 2020 00:00:00 GMT",
+                    "event_summary": null,
+                    "hasPBP": false,
+                    "id": 30,
+                    "is_local": true,
+                    "opponent_name": null,
+                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/70916818_2501810766574409_3176798918700695552_o.jpg?_nc_cat=102&_nc_sid=e007fa&_nc_ohc=Jokgru5MxFcAX-Iepr4&_nc_ht=scontent.fsig1-1.fna&oh=1e231a8b32569ced072a763ee0270c55&oe=5EA8EF86",
+                    "sport_name": "Voleibol",
+                    "team_id": 4,
+                    "team_season_year": 2020,
+                    "venue": null
+                }
+            }
+            this.event_date = this.event_info.Event.event_date
+        }
+        else if (this.event_id == 3){
+            //Getting Sport Information
+            this.sport_id =  this.SOCCER_IDF 
+            this.sport_name = "Futbol"
+            //Getting Event Information
+            this.event_info = {
+                "Event": {
+                    "branch": "femenino",
+                    "event_date": "Wed, 01 Apr 2020 00:00:00 GMT",
+                    "event_summary": null,
+                    "id": 10,
+                    "is_local": true,
+                    "opponent_name": null,
+                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/88983239_2989638081125006_5994073246109007872_n.jpg?_nc_cat=104&_nc_sid=e007fa&_nc_ohc=eCtVJEHWHjEAX-4zKxa&_nc_ht=scontent.fsig1-1.fna&oh=b6e46d5ef1e373fa84c065ee433e784a&oe=5EAAE8DB",
+                    "sport_name": "Fútbol",
+                    "team_id": 7,
+                    "team_season_year": 2020,
+                    "venue": "Mangual"
+                }
+            }
+            this.event_date = this.event_info.Event.event_date
+        }
+        else if (this.event_id == 4){
+            //Getting Sport Information
+            this.sport_id =  this.BASEBALL_IDM
+            this.sport_name = "Beisbol"
+            //Getting Event Information
+            this.event_info = {
+                "Event": {
+                    "branch": "femenino",
+                    "event_date": "Wed, 01 Apr 2020 00:00:00 GMT",
+                    "event_summary": null,
+                    "id": 13,
+                    "is_local": true,
+                    "opponent_name": null,
+                    "sport_img_url": "https://scontent.fsig2-1.fna.fbcdn.net/v/t1.0-9/57619118_2226257830796372_302697234753912832_o.jpg?_nc_cat=109&_nc_sid=e007fa&_nc_ohc=JOsXhrEM1tUAX8dDHSv&_nc_ht=scontent.fsig2-1.fna&oh=ca2da5e6e2342cfd795624cb292ee289&oe=5EB771E8",
+                    "sport_name": "Softbol",
+                    "team_id": 8,
+                    "team_season_year": 2020,
+                    "venue": "Mangual"
+                }
+            }
+            this.event_date = this.event_info.Event.event_date
+        }
+        
+
+    },
+    //confirm why this method was deprecated
     buildDefault(){
         if (this.sport_id!=''){
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
                 this.editedItem = {
-                            "athlete_info": {
-                                "athlete_id": '',
-                                "basketball_event_id": '',
-                                "first_name": '',
-                                "last_names": '',
-                                "middle_name": '',
-                                "number": '',
-                                "profile_image_link":''
-                            },
-                            "statistics": {
-                                "assists":'',
-                                "blocks":'',
-                                "field_goal_attempt": '',
-                                "field_goal_percentage": '',
-                                "free_throw_attempt": '',
-                                "free_throw_percentage": '',
-                                "points":'',
-                                "rebounds": '',
-                                "steals": '',
-                                "successful_field_goal": '',
-                                "successful_free_throw": '',
-                                "successful_three_point": '',
-                                "three_point_attempt": '',
-                                "three_point_percentage": '',
-                                "turnovers": ''
-                            }
-                        }
+                    "athlete_info": {
+                        "athlete_id": '',
+                        "basketball_event_id": '',
+                        "first_name": '',
+                        "last_names": '',
+                        "middle_name": '',
+                        "number": '',
+                        "profile_image_link":''
+                    },
+                    "statistics": {
+                        "assists":'',
+                        "blocks":'',
+                        "field_goal_attempt": '',
+                        "field_goal_percentage": '',
+                        "free_throw_attempt": '',
+                        "free_throw_percentage": '',
+                        "points":'',
+                        "rebounds": '',
+                        "steals": '',
+                        "successful_field_goal": '',
+                        "successful_free_throw": '',
+                        "successful_three_point": '',
+                        "three_point_attempt": '',
+                        "three_point_percentage": '',
+                        "turnovers": ''
+                    }
                 }
-                else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                    this.editedItem = {
-                            "athlete_info": {
-                                "athlete_id": '',
-                                "first_name": '',
-                                "last_names": '',
-                                "middle_name": '',
-                                "number": '',
-                                "profile_image_link": '',
-                                "volleyball_event_id": ''
-                            },
-                            "statistics": {
-                                "aces": '',
-                                "assists":'',
-                                "attack_errors": '',
-                                "blocking_errors": '',
-                                "blocks": '',
-                                "digs": '',
-                                "kill_points": '',
-                                "reception_errors": '',
-                                "service_errors":''
-                            }
-                        }
+            }
+            else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                this.editedItem = {
+                    "athlete_info": {
+                        "athlete_id": '',
+                        "first_name": '',
+                        "last_names": '',
+                        "middle_name": '',
+                        "number": '',
+                        "profile_image_link": '',
+                        "volleyball_event_id": ''
+                    },
+                    "statistics": {
+                        "aces": '',
+                        "assists":'',
+                        "attack_errors": '',
+                        "blocking_errors": '',
+                        "blocks": '',
+                        "digs": '',
+                        "kill_points": '',
+                        "reception_errors": '',
+                        "service_errors":''
+                    }
                 }
-                else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                    this.editedItem = {
-                            "athlete_info": {
-                                "athlete_id": '',
-                                "first_name": '',
-                                "last_names": '',
-                                "middle_name": '',
-                                "number": '',
-                                "profile_image_link": '',
-                                "soccer_event_id": ''
-                            },
-                            "statistics": {
-                                "assists": '',
-                                "cards": '',
-                                "fouls": '',
-                                "goal_attempts": '',
-                                "successful_goals": '',
-                                "tackles": ''
-                            }
-                        }
+            }
+            else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                this.editedItem = {
+                    "athlete_info": {
+                        "athlete_id": '',
+                        "first_name": '',
+                        "last_names": '',
+                        "middle_name": '',
+                        "number": '',
+                        "profile_image_link": '',
+                        "soccer_event_id": ''
+                    },
+                    "statistics": {
+                        "assists": '',
+                        "cards": '',
+                        "fouls": '',
+                        "goal_attempts": '',
+                        "successful_goals": '',
+                        "tackles": ''
+                    }
                 }
-                else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                    this.editedItem = {
-                            "athlete_info": {
-                            "athlete_id": '',
-                            "baseball_event_id": '',
-                            "first_name": '',
-                            "last_names": '',
-                            "middle_name": '',
-                            "number": '',
-                            "profile_image_link": ''
-                            },
-                            "statistics": {
-                            "at_bats": '',
-                            "base_on_balls": '',
-                            "hits": '',
-                            "left_on_base": '',
-                            "runs": '',
-                            "runs_batted_in": '',
-                            "strikeouts":''
-                            }
+            }
+            else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                this.editedItem = {
+                        "athlete_info": {
+                        "athlete_id": '',
+                        "baseball_event_id": '',
+                        "first_name": '',
+                        "last_names": '',
+                        "middle_name": '',
+                        "number": '',
+                        "profile_image_link": ''
+                        },
+                        "statistics": {
+                        "at_bats": '',
+                        "base_on_balls": '',
+                        "hits": '',
+                        "left_on_base": '',
+                        "runs": '',
+                        "runs_batted_in": '',
+                        "strikeouts":''
                         }
+                    }
                 }
             }
     },
@@ -319,12 +671,13 @@ created(){
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
                 this.headers = 
                 [
-                {
-                    text:'Athlete',
-                    align: 'start',
-                    sortable: true,
-                    value: 'athlete_info.first_name'
-                },
+                // {
+                //     text:'Athlete',
+                //     align: 'start',
+                //     sortable: true,
+                //     value: 'athlete_info.first_name'
+                // },
+                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'Asistencias', value: 'statistics.assists'},
                 {text: 'Blocks', value: 'statistics.blocks'},
                 {text: 'Field Goal Attempt', value: 'statistics.field_goal_attempt'},
@@ -340,6 +693,7 @@ created(){
                 {text: 'Three Point Attempt', value: 'statistics.three_point_attempt'},
                 {text: 'Three Point Percentage(%)', value: 'statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'statistics.turnovers'},
+                { text: "Actions", value: "actions", sortable: false },
 
                 ]
                 this.team_headers = 
@@ -359,18 +713,20 @@ created(){
                 {text: 'Three Point Attempt', value: 'basketball_statistics.three_point_attempt'},
                 {text: 'Three Point Percentage(%)', value: 'basketball_statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'basketball_statistics.turnovers'},
+                { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
             else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
                 this.headers = 
                 [
-                {
-                    text:'Athlete',
-                    align: 'start',
-                    sortable: true,
-                    value: 'athlete_info.first_name'
-                },
+                // {
+                //     text:'Athlete',
+                //     align: 'start',
+                //     sortable: true,
+                //     value: 'athlete_info.first_name'
+                // },
+                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'Kill Points', value: 'statistics.kill_points'},
                 {text: 'Attack Errors', value: 'statistics.attack_errors'},
                 {text: 'Assists', value: 'statistics.assists'},
@@ -380,6 +736,7 @@ created(){
                 {text: 'Blocks', value: 'statistics.blocks'},
                 {text: 'Blocking Errors', value: 'statistics.blocking_errors'},
                 {text: 'Reception Errors', value: 'statistics.reception_errors'},
+                { text: "Actions", value: "actions", sortable: false },
 
                 ]
                 this.team_headers = 
@@ -393,24 +750,27 @@ created(){
                 {text: 'Blocks', value: 'volleyball_statistics.blocks'},
                 {text: 'Blocking Errors', value: 'volleyball_statistics.blocking_errors'},
                 {text: 'Reception Errors', value: 'volleyball_statistics.reception_errors'},
+                { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
             else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
                 this.headers = 
                 [
-                {
-                    text:'Athlete',
-                    align: 'start',
-                    sortable: true,
-                    value: 'athlete_info.first_name'
-                },
+                // {
+                //     text:'Athlete',
+                //     align: 'start',
+                //     sortable: true,
+                //     value: 'athlete_info.first_name'
+                // },
+                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'Goal Attempts', value: 'statistics.goal_attempts'},
                 {text: 'Assists', value: 'statistics.assists'},
                 {text: 'Fouls', value: 'statistics.fouls'},
                 {text: 'Cards', value: 'statistics.cards'},
                 {text: 'Successful Goals', value: 'statistics.successful_goals'},
                 {text: 'Tackles', value: 'statistics.tackles'},
+                { text: "Actions", value: "actions", sortable: false },
 
                 ]
                 this.team_headers = 
@@ -421,18 +781,20 @@ created(){
                 {text: 'Cards', value: 'soccer_statistics.cards'},
                 {text: 'Successful Goals', value: 'soccer_statistics.successful_goals'},
                 {text: 'Tackles', value: 'soccer_statistics.tackles'},
+                { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
             else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
                 this.headers = 
                 [
-                {
-                    text:'Athlete',
-                    align: 'start',
-                    sortable: true,
-                    value: 'athlete_info.first_name'
-                },
+                // {
+                //     text:'Athlete',
+                //     align: 'start',
+                //     sortable: true,
+                //     value: 'athlete_info.first_name'
+                // },
+                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'At Bats', value: 'statistics.at_bats'},
                 {text: 'Runs', value: 'statistics.runs'},
                 {text: 'Hits', value: 'statistics.hits'},
@@ -440,6 +802,7 @@ created(){
                 {text: 'Base On Balls', value: 'statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'statistics.strikeouts'},
                 {text: 'Left On Base', value: 'statistics.left_on_base'},
+                { text: "Actions", value: "actions", sortable: false },
 
                 ]
                 this.team_headers = 
@@ -451,6 +814,7 @@ created(){
                 {text: 'Base On Balls', value: 'baseball_statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'baseball_statistics.strikeouts'},
                 {text: 'Left On Base', value: 'baseball_statistics.left_on_base'},
+                { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
@@ -511,7 +875,7 @@ created(){
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push('/resultados/individual/editar')
+        this.$router.push("/resultados/"+this.event_id+"/individual/editar")
     },
     editTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
@@ -523,7 +887,7 @@ created(){
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push('/resultados/individual/crear')
+        this.$router.push("/resultados/"+this.event_id+"/individual/crear")
     },
     addTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
@@ -532,10 +896,10 @@ created(){
         return
     },
     addFinalScore() {
-        this.$router.push('/resultados/puntuacion/crear')
+        this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
     },
     editFinalScore() {
-        this.$router.push('/resultados/puntuacion/editar')
+        this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
     },
     // editPermissions(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
@@ -894,6 +1258,12 @@ created(){
   .content-area {
     height: 100%;
     width: 100%;
+
+    .table-actions {
+      &:hover {
+        color: $primary-color;
+      }
+    }
   }
 }
 </style>
