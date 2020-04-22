@@ -13,10 +13,10 @@
               <v-row>
                 <v-col cols="12">
                   <v-text-field
-                    label="Full Name*"
+                    label="Nombre completo*"
                     v-model="fullName_"
                     required
-                    :rules="[required('name', 'Please input Full Name,')]"
+                    :rules="[required('name', 'Por favor, ingrese su nombre completo.')]"
                   />
                 </v-col>
                 <v-col cols="12">
@@ -25,7 +25,7 @@
                     label="Email*"
                     required
                     :rules="[
-                      required('email', 'Please input email.'),
+                      required('email', 'Por favor, ingrese su email.'),
                       emailFormat()
                     ]"
                   ></v-text-field>
@@ -33,15 +33,15 @@
                 <v-col cols="12">
                   <v-text-field
                     v-model="username_"
-                    label="Username*"
+                    label="Nombre de usuario*"
                     required
-                    :rules="[required('username', 'Please input username.')]"
+                    :rules="[required('username', 'Por favor, ingrese su nombre de usuario.')]"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12">
                   <v-text-field
                     v-model="password_"
-                    label="Password*"
+                    label="Contraseña*"
                     required
                     :type="showP ? 'text' : 'password'"
                     :append-icon="showP ? 'mdi-eye-off' : 'mdi-eye'"
@@ -58,14 +58,14 @@
                 <v-col cols="12">
                   <v-text-field
                     v-model="repeat_"
-                    label="Confirm Password*"
+                    label="Confirmar contraseña*"
                     required
                     :type="showC ? 'text' : 'password'"
                     :append-icon="showC ? 'mdi-eye-off' : 'mdi-eye'"
                     @click:append="showC = !showC"
                     v-if="nameSelector === -1"
                     :rules="[
-                      required('password', 'Please confirm your password.'),
+                      required('password', 'Por favor, confirme su contraseña.'),
                       passwordMatch(password_)
                     ]"
                   ></v-text-field>
@@ -73,20 +73,20 @@
                 <v-col cols="12" sm="6">
                   <v-switch
                     v-model="isActive_"
-                    :label="`Account Active`"
+                    :label="`Cuenta activa`"
                     v-if="nameSelector !== -1"
                   ></v-switch>
                 </v-col>
               </v-row>
             </v-form>
-            <v-checkbox v-model="reviewed" label="I have reviewed my changes*." />
+            <v-checkbox v-model="reviewed" label="He revisado mis cambios*." />
           </v-container>
-          <small>*indicates required field</small>
+          <small>*indica un campo requerido.</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary darken-1" text @click="close()">
-            Close
+            Cerrar
           </v-btn>
           <v-btn
             color="primary darken-1"
@@ -95,7 +95,7 @@
             :disabled="!(valid  && reviewed)"
             :loading="isLoading"
           >
-            Save
+            Guardar
           </v-btn>
         </v-card-actions>
       </v-card>
