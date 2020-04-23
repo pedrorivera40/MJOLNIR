@@ -43,13 +43,13 @@
                 ]"
               />
             </v-form>
-            <v-checkbox v-model="sure" label="Update password?" />
+            <v-checkbox v-model="sure" label="Actualizar contraseña?" />
           </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary darken-1" text @click="close()">
-            Close
+            Cerrar
           </v-btn>
           <v-btn
             color="primary darken-1"
@@ -58,7 +58,7 @@
             :disabled="!(valid && sure)"
             :loading="isLoading"
           >
-            Save
+            Guardar
           </v-btn>
         </v-card-actions>
       </v-card>

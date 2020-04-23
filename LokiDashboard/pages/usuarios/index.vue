@@ -129,6 +129,7 @@
           :username="editedItem.username"
         />
         <PasswordResetModal
+          v-if="dialogPassword"
           :dialog.sync="dialogPassword"
           :id="editedItem.id"
           :username="editedItem.username"
