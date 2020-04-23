@@ -68,15 +68,15 @@
                     ></v-carousel-item>
                   </v-carousel>		
                 </v-row> -->
-                <v-row>
-                  <v-col>
-                    <v-img v-if="current_team.team_image_url" :src="current_team.team_image_url" aspect-ratio="2"> 
+                <v-row align = "center" justify = "center">
+                  <v-col justify = "center" align = "center">
+                    <v-icon v-if="current_team.team_image_url == null" height="100"> mdi-account-group  </v-icon>
+                    <v-img v-else :src="current_team.team_image_url" aspect-ratio="2"> 
                     </v-img>
                   </v-col>
                 </v-row>
 								<v-row>
-									<v-col>
-                    <!-- TODO: (herbert) Hide this if there is no about team. -->
+									<v-col v-if = "current_team.about_team">
 										<h2> Sobre el Equipo: </h2>
 										<p>
 											{{current_team.about_team}}
@@ -84,6 +84,13 @@
 									</v-col>
 								</v-row>
 							</v-container>
+              <v-container v-else>
+                <v-row align = "center" justify = "center">
+                  <v-col justify = "center" align = "center">
+                    <h2>No Team Found</h2>
+                  </v-col>
+                </v-row>
+              </v-container>
 						</v-card>
 						
 				</v-tab-item>
@@ -114,6 +121,13 @@
                     :years_of_participation="member.years_of_participation"
                   />
                 </v-hover>
+              </v-col>
+            </v-row>
+          </v-container>
+          <v-container v-else>
+            <v-row align = "center" justify = "center">
+              <v-col justify = "center" align = "center">
+                <h2>No Team Members Found</h2>
               </v-col>
             </v-row>
           </v-container>
