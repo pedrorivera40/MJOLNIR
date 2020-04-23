@@ -2,7 +2,7 @@
   <div class="wrapper d-flex align-center justify-center">
     <v-card width="500" class="elevation-12 mx-auto">
       <v-toolbar color="primary" dark flat>
-        <v-toolbar-title @click="setSnackbar({text:'hello'})">Login</v-toolbar-title>
+        <v-toolbar-title>Login</v-toolbar-title>
         <v-spacer />
       </v-toolbar>
       <v-card-text>
@@ -14,7 +14,7 @@
               prepend-icon="mdi-account"
               type="text"
               v-model="username"
-              :rules="[required('username')]"
+              :rules="[required('Nombre de usuario', 'Debe ingresar un nombre de usuario.')]"
             />
 
             <v-text-field
@@ -26,7 +26,7 @@
               :type="show ? 'text' : 'password'"
               v-model="password"
               @click:append="show=!show"
-              :rules="[required('password')]"
+              :rules="[required('Contraseña', 'Debe ingresar una contraseña.')]"
             />
           </v-form>
         </v-container>
@@ -59,8 +59,8 @@ export default {
     return {
       valid: false,
       show: false,
-      username: "newUser27",
-      password: "ninjaTurtles1!",
+      username: "",
+      password: "",
       ...rules,
     };
   },
