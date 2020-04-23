@@ -16,7 +16,7 @@
                     label="Nombre completo*"
                     v-model="fullName_"
                     required
-                    :rules="[required('name', 'Por favor, ingrese su nombre completo.')]"
+                    :rules="[required('Nombre', 'Por favor, ingrese su nombre completo.')]"
                   />
                 </v-col>
                 <v-col cols="12">
@@ -35,7 +35,11 @@
                     v-model="username_"
                     label="Nombre de usuario*"
                     required
-                    :rules="[required('username', 'Por favor, ingrese su nombre de usuario.')]"
+                    :rules="[
+                      required('Nombre de usuario', 'Por favor, ingrese su nombre de usuario.'),
+                      minLength('El nombre de usuario', 3),
+                      maxLength('El nombre de usuario', 20),
+                    ]"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12">
@@ -48,9 +52,9 @@
                     @click:append="showP = !showP"
                     v-if="nameSelector === -1"
                     :rules="[
-                      required('password'),
-                      minLength('password', 10),
-                      maxLength('password', 64),
+                      required('Contraseña'),
+                      minLength('La contraseña', 10),
+                      maxLength('La contraseña', 64),
                       passwordFormat()
                     ]"
                   ></v-text-field>
