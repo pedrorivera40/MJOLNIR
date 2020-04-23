@@ -124,6 +124,7 @@
           :id="editedItem.id"
         />
         <UpdatePermissionsModal
+          v-if="dialogPermissions"
           :dialog.sync="dialogPermissions"
           :id="editedItem.id"
           :username="editedItem.username"
