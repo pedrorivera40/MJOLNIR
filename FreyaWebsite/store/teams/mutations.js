@@ -12,6 +12,12 @@ export default{
     SET_TEAM_MEMBER(state,team_member){
         state.team_member = team_member
     },
+    SET_READY_MEMBERS(state){
+        state.readyForMembers = true
+    },
+    SET_WAITING_MEMBERS(state){
+        state.readyForMembers = false
+    },
 
     // SET_ATHLETE(state,athlete){
 	// 		state.athlete = athlete

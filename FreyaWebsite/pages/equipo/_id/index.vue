@@ -9,7 +9,7 @@
 			<v-toolbar-title>{{sport_name}}</v-toolbar-title>
 			<v-spacer />
 		</v-toolbar>
-		<v-container v-if="formated()">
+		<v-container>
       <v-col>
       </v-col>
       <v-row align="center">
@@ -31,7 +31,7 @@
           ></v-select>
         </v-col>
       </v-row>
-			<v-tabs
+			<v-tabs 
 					centered
 			>
 				<v-tabs-slider/>
@@ -52,9 +52,9 @@
 				</v-tab>
 
 				<v-tab-item>
-				
+
 						<v-card class="mx-auto" outlined>								
-							<v-container>
+							<v-container v-if="formated()">
                 <!-- <v-row>
                   <v-carousel
                   cycle
@@ -70,7 +70,7 @@
                 </v-row> -->
                 <v-row>
                   <v-col>
-                    <v-img :src="current_team.team_image_url" aspect-ratio="2"> 
+                    <v-img v-if="current_team.team_image_url" :src="current_team.team_image_url" aspect-ratio="2"> 
                     </v-img>
                   </v-col>
                 </v-row>
@@ -89,32 +89,34 @@
 				</v-tab-item>
 
         <v-tab-item>
-          <v-row
-          v-for="member in members.Team.team_members" 
-          :key='member.athlete_id'
-          align="center" justify="center"> 
-            <v-col >
-              <v-hover
-                v-slot:default="{ hover }"
-                close-delay="200"
-              >
-                <AthleteCardSimple
-                  :first_name="member.first_name"
-                  :middle_name="member.middle_name"
-                  :last_names="member.last_names"
-                  :height_inches="member.height_inches"
-                  :study_program="member.study_program"
-                  :school_of_precedence="member.school_of_precedence"
-                  :athlete_positions="member.athlete_positions"
-                  :athlete_categories="member.athlete_categories"   
-                  :number="member.number"
-                  :profile_image_link="member.profile_image_link"
-                  :athlete_id="member.athlete_id"
-                  :years_of_participation="member.years_of_participation"
-                />
-              </v-hover>
-            </v-col>
-          </v-row>
+          <v-container v-if="formated_members()">
+            <v-row
+            v-for="member in members" 
+            :key='member.athlete_id'
+            align="center" justify="center"> 
+              <v-col >
+                <v-hover
+                  v-slot:default="{ hover }"
+                  close-delay="200"
+                >
+                  <AthleteCardSimple
+                    :first_name="member.first_name"
+                    :middle_name="member.middle_name"
+                    :last_names="member.last_names"
+                    :height_inches="member.height_inches"
+                    :study_program="member.study_program"
+                    :school_of_precedence="member.school_of_precedence"
+                    :athlete_positions="member.athlete_positions"
+                    :athlete_categories="member.athlete_categories"   
+                    :number="member.number"
+                    :profile_image_link="member.profile_image_link"
+                    :athlete_id="member.athlete_id"
+                    :years_of_participation="member.years_of_participation"
+                  />
+                </v-hover>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-tab-item>
         
 				<v-tab-item>
@@ -226,7 +228,7 @@ export default {
       //      will need to fetch this data below from the API.
     
       about_team:"Because he's the hero Gotham deserves, but not the one it needs right now, so we'll hunt him. Because he can take it, because he's not a hero. He's a silent guardian, a watchful protector, a Dark Knight.",
-
+      ready:false,
       sport_name:'',     
 			branch:'Masculino', 
       sport_id:'',
@@ -304,45 +306,80 @@ export default {
         ],
 
       current_team:'',
+      current_team_id:'',
       events:[],
+      ready_for_members: false,
 
       }),//end of data()
     
     created(){
-      
+      this.current_team = null
+      this.team_members = null
       this.buildYearList()
       this.buildDefaultValues()
-      this.buildTable()
       this.getSeasonData()
+      this.buildTable()
+      
       
     }, 
 
 		methods: {
       ...mapActions({
-				getTeamByYear:"teams/getTeamByYear"
+        getTeamByYear:"teams/getTeamByYear",
+        getTeamMembers:"teams/getTeamMembers",
+        stopGetMembers:"teams/stopGetMembers"
       }),
       
-    formated(){
-				if(this.athlete){
-					if(this.ready){
-						return true
-					}
-					else{
+      formated(){
+        if(this.team){
+          this.current_team_id = this.team.team_info.team_id
+          this.current_team = this.team.team_info
+          
+          if(this.readyForMembers){
+            console.log("HEYO CURR TEAM",this.current_team)
+            console.log("HEYO TEAM",this.team)
+            this.getTeamMembers(this.current_team_id)
+            // this.ready_for_members = false
+          }
+          // this.readyForMembers = false
+          this.stopGetMembers()
+          return true
+        }
+        else{
+          this.team_members = null
+          return false
+        }
+      },
+      formated_members(){
+        if(this.team_members){
+          this.members = this.team_members.team_members
+          return true
+        }
+        else{
+          return false
+        }
+      },
 
-						if(!this.ready){
+      // // ORIGINAL LUIS ATHLETE VERSION
+      // formated(){
+			// 	if(this.athlete){
+			// 		if(this.ready){
+			// 			return true
+			// 		}
+			// 		else{
 
-              this.current_team = this.team
-							
-							this.ready = true
-						}
-					}
-				}
-				else
-				{
-					return false
-				}
+			// 			if(!this.ready){
 
-			},
+			// 				this.ready = true
+			// 			}
+			// 		}
+			// 	}
+			// 	else
+			// 	{
+			// 		return false
+			// 	}
+
+			// },
 
 
       buildTable(){
@@ -913,336 +950,71 @@ export default {
       ]
       },
 			getSeasonData(){
-        //console.log(this.season)
-				if(this.season!=''){
-          //This line below will later be modified to fetch data from a file.
-          if(this.season == 2020){
-            let team_query = {
-              "Team": {
-                "team_info": {
-                  "about_team": "The Final Fantasy is Now",
-                  "branch_id": 2,
-                  "branch_name": "femenino",
-                  "season_year": 2021,
-                  "sport_id": 11,
-                  "sport_name": "Fútbol",
-                  "team_id": 15,
-                  "team_image_url": "https://pbs.twimg.com/media/EQKeL5uXYAAPrfj.jpg"
-                }
-              }
-            }
-            // this.current_team = team_query.Team.team_info
-            this.members = {
-              "Team": {
-                "team_id": 15,
-                "team_members": [
-                  {
-                    "athlete_id": 106,
-                    "categories": null,
-                    "first_name": "Tifa",
-                    "height_inches": 74.0,
-                    "last_names": "Lockhart",
-                    "middle_name": null,
-                    "number": 7,
-                    "positions": null,
-                    "profile_image_link": "https://pbs.twimg.com/profile_images/378800000193616966/3c85c360c067b6fc5f2a573e9bc2a866.jpeg",
-                    "school_of_precedence": "Sector 7 High",
-                    "study_program": "Fighter",
-                    "team_members_id": 46,
-                    "years_of_participation": 3
-                  },
-                  {
-                    "athlete_id": 107,
-                    "categories": null,
-                    "first_name": "Aerith",
-                    "height_inches": 74.0,
-                    "last_names": "Gainsborough",
-                    "middle_name": null,
-                    "number": 5,
-                    "positions": null,
-                    "profile_image_link": "https://pbs.twimg.com/profile_images/422724697210384384/z32bHKph.jpeg",
-                    "school_of_precedence": "Sector 5 High",
-                    "study_program": "Healer",
-                    "team_members_id": 47,
-                    "years_of_participation": 1
-                  },
-                  {
-                    "athlete_id": 108,
-                    "categories": null,
-                    "first_name": "Jessie ",
-                    "height_inches": 74.0,
-                    "last_names": "Rasberry",
-                    "middle_name": null,
-                    "number": 1,
-                    "positions": null,
-                    "profile_image_link": "https://pbs.twimg.com/media/ELwsbrjUEAAP04Z.jpg?format=jpg&name=orig",
-                    "school_of_precedence": "Sector 7 High",
-                    "study_program": "Soldier",
-                    "team_members_id": 48,
-                    "years_of_participation": 2
-                  }
-                ]
-              }
-            }
-          }
-          else if(this.season == 2021){
-            let team_query = {
-              "Team": {
-                "team_info": {
-                  "about_team": "The Final Fantasy is Now",
-                  "branch_id": 2,
-                  "branch_name": "femenino",
-                  "season_year": 2021,
-                  "sport_id": 11,
-                  "sport_name": "Fútbol",
-                  "team_id": 15,
-                  "team_image_url": "https://pbs.twimg.com/media/EQKeL5uXYAAPrfj.jpg"
-                }
-              }
-            }
-            // this.current_team = team_query.Team.team_info
-            this.members = {
-              "Team": {
-                "team_id": 15,
-                "team_members": [
-                  {
-                    "athlete_id": 106,
-                    "categories": null,
-                    "first_name": "Tifa",
-                    "height_inches": 74.0,
-                    "last_names": "Lockhart",
-                    "middle_name": null,
-                    "number": 7,
-                    "positions": null,
-                    "profile_image_link": "https://pbs.twimg.com/profile_images/378800000193616966/3c85c360c067b6fc5f2a573e9bc2a866.jpeg",
-                    "school_of_precedence": "Sector 7 High",
-                    "study_program": "Fighter",
-                    "team_members_id": 46,
-                    "years_of_participation": 3
-                  },
-                  {
-                    "athlete_id": 107,
-                    "categories": null,
-                    "first_name": "Aerith",
-                    "height_inches": 74.0,
-                    "last_names": "Gainsborough",
-                    "middle_name": null,
-                    "number": 5,
-                    "positions": null,
-                    "profile_image_link": "https://pbs.twimg.com/profile_images/422724697210384384/z32bHKph.jpeg",
-                    "school_of_precedence": "Sector 5 High",
-                    "study_program": "Healer",
-                    "team_members_id": 47,
-                    "years_of_participation": 1
-                  },
-                  {
-                    "athlete_id": 108,
-                    "categories": null,
-                    "first_name": "Jessie ",
-                    "height_inches": 74.0,
-                    "last_names": "Rasberry",
-                    "middle_name": null,
-                    "number": 1,
-                    "positions": null,
-                    "profile_image_link": "https://pbs.twimg.com/media/ELwsbrjUEAAP04Z.jpg?format=jpg&name=orig",
-                    "school_of_precedence": "Sector 7 High",
-                    "study_program": "Soldier",
-                    "team_members_id": 48,
-                    "years_of_participation": 2
-                  }
-                ]
-              }
-            }
-          }
-          else if(this.season==2022){
-            let team_query ={
-              "Team": {
-                "team_info": {
-                  "about_team": "The Dark Knight's NBA Dream Team",
-                  "branch_id": 1,
-                  "branch_name": "masculino",
-                  "season_year": 2020,
-                  "sport_id": 1,
-                  "sport_name": "Baloncesto",
-                  "team_id": 1,
-                  "team_image_url": "https://comicvine1.cbsistatic.com/uploads/original/11138/111387409/7081408-8787124231-d9pmk.png"
-                }
-              }
-            }
-            // this.current_team = team_query.Team.team_info
-            
-      
-            this.members = {
-              "Team": {
-                "team_id": 1,
-                "team_members": [
-                  {
-                    "athlete_id": 8,
-                    "categories": null,
-                    "first_name": "Bruce",
-                    "height_inches": 84.0,
-                    "last_names": "Wayne",
-                    "middle_name": "Batman",
-                    "number": 27,
-                    "positions": [
-                      "Escolta",
-                      "Base"
-                    ],
-                    "profile_image_link": "https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/18056978_1321492691261909_7453541174330533269_n.jpg?_nc_cat=102&_nc_sid=8024bb&_nc_oc=AQmWfwxDy-LTXcZv4K0hcL8VNdr4F0JDlBW90Hq3YG157GtEuXYnB-AKL6hNki0uuh4&_nc_ht=scontent-mia3-2.xx&oh=6dc80a0cb41e6c693897b317148b3753&oe=5EB4AFCF",
-                    "school_of_precedence": "Gotham High",
-                    "study_program": "Forensics",
-                    "team_members_id": 13,
-                    "years_of_participation": null
-                  },
-                  {
-                    "athlete_id": 1,
-                    "categories": null,
-                    "first_name": "Kobe",
-                    "height_inches": null,
-                    "last_names": "Bryant",
-                    "middle_name": null,
-                    "number": 24,
-                    "positions": null,
-                    "profile_image_link": null,
-                    "school_of_precedence": null,
-                    "study_program": null,
-                    "team_members_id": 7,
-                    "years_of_participation": null
-                  },
-                  {
-                    "athlete_id": 4,
-                    "categories": null,
-                    "first_name": "Larry",
-                    "height_inches": null,
-                    "last_names": "Bird",
-                    "middle_name": null,
-                    "number": 33,
-                    "positions": null,
-                    "profile_image_link": null,
-                    "school_of_precedence": null,
-                    "study_program": null,
-                    "team_members_id": 10,
-                    "years_of_participation": null
-                  },
-                  {
-                    "athlete_id": 3,
-                    "categories": null,
-                    "first_name": "Lebron",
-                    "height_inches": null,
-                    "last_names": "James",
-                    "middle_name": null,
-                    "number": 23,
-                    "positions": null,
-                    "profile_image_link": null,
-                    "school_of_precedence": null,
-                    "study_program": null,
-                    "team_members_id": 8,
-                    "years_of_participation": null
-                  }
-                ]
-              }
-            }
-          } 
-          else if(this.season==2023){
-            let team_query = {
-              "Team": {
-                "team_info": {
-                  "about_team": "The Final Fantasy is Now",
-                  "branch_id": 2,
-                  "branch_name": "femenino",
-                  "season_year": 2021,
-                  "sport_id": 11,
-                  "sport_name": "Fútbol",
-                  "team_id": 15,
-                  "team_image_url": "https://pbs.twimg.com/media/EQKeL5uXYAAPrfj.jpg"
-                }
-              }
-            }
-            // this.current_team = team_query.Team.team_info
-            this.members = {
-              "Team": {
-                "team_id": 15,
-                "team_members": [
-                  {
-                    "athlete_id": 106,
-                    "categories": null,
-                    "first_name": "Tifa",
-                    "height_inches": 74.0,
-                    "last_names": "Lockhart",
-                    "middle_name": null,
-                    "number": 7,
-                    "positions": null,
-                    "profile_image_link": "https://pbs.twimg.com/profile_images/378800000193616966/3c85c360c067b6fc5f2a573e9bc2a866.jpeg",
-                    "school_of_precedence": "Sector 7 High",
-                    "study_program": "Fighter",
-                    "team_members_id": 46,
-                    "years_of_participation": 3
-                  },
-                  {
-                    "athlete_id": 107,
-                    "categories": null,
-                    "first_name": "Aerith",
-                    "height_inches": 74.0,
-                    "last_names": "Gainsborough",
-                    "middle_name": null,
-                    "number": 5,
-                    "positions": null,
-                    "profile_image_link": "https://pbs.twimg.com/profile_images/422724697210384384/z32bHKph.jpeg",
-                    "school_of_precedence": "Sector 5 High",
-                    "study_program": "Healer",
-                    "team_members_id": 47,
-                    "years_of_participation": 1
-                  },
-                  {
-                    "athlete_id": 108,
-                    "categories": null,
-                    "first_name": "Jessie ",
-                    "height_inches": 74.0,
-                    "last_names": "Rasberry",
-                    "middle_name": null,
-                    "number": 1,
-                    "positions": null,
-                    "profile_image_link": "https://pbs.twimg.com/media/ELwsbrjUEAAP04Z.jpg?format=jpg&name=orig",
-                    "school_of_precedence": "Sector 7 High",
-                    "study_program": "Soldier",
-                    "team_members_id": 48,
-                    "years_of_participation": 2
-                  }
-                ]
-              }
-            }
-          } 
+          this.team = null
+          this.team_members = null
+          this.current_team = null
+          this.members = null
+          // this.team = false
+          // this.ready = false
           this.getMembersData()
           this.getEvents()
-
-        // <v-data-table 
-        //   dense 
-        //   :headers="headers" 
-        //   :items="statistics_per_season.season" 
-        //   item-key="season" 
-        //   class="elevation-1"								
-        //   loading-text="Recolectando Data...Por favor espere"
-        //   v-if="statistics_per_season != ''"
-        // >			
-        // </v-data-table>
+          const team_params = {
+            sport_id: String(this.sport_id),
+            season_year: String(this.season)
+          }
+          console.log("At the index level inside the getSeasonData, request params look like",team_params)
+          // this.ready = false
+          // this.team = false
+          // this.ready_for_members = true
+          this.getTeamByYear(team_params)
+          
+          // this.formated()
+          // while(!this.team){
+          //   this.ready = false
+          // }
+          // if (this.team){
+          //       this.current_team = this.team.team_info
+          //       this.team = ''
+          //       this.ready = true
+          // }
 
           
             
-				}
+				
 			}
     },
 
     computed: {
+      // current_team: {
+      //   // getter
+      //   get: function () {
+      //     return this.team
+      //   },
+      //   // setter
+      //   set: function (newValue) {
+      //     var names = newValue.split(' ')
+      //     this.firstName = names[0]
+      //     this.lastName = names[names.length - 1]
+      //   }
+      // },
 			...mapGetters({
-				team:"teams/team"
+        team:"teams/team",
+        team_members:"teams/team_members",
+        readyForMembers:"teams/readyForMembers"
 			})
 		},
 
 		mounted(){
       
       console.log("YOOOOOOOOOO WTF WE HEEEEEEEEEEEERE",this.sport_id,this.season)
-      this.getTeamByYear(this.sport_id,this.season)
-      console.log(this.team)
+      console.log("The request will have:",this.sport_id,this.season)
+      const team_params = {
+        sport_id: String(this.sport_id),
+        season_year: String(this.season)
+      }
+      console.log("At the index level, request params look like",team_params)
+      this.getTeamByYear(team_params)
+      console.log("WE GOT THE TEAM BOI (from index):",this.team)
 		}
 }
 </script>
