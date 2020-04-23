@@ -10,7 +10,7 @@
  * @param {*} customErrorMessage Custom error message fro when the rule is not met.
  */
 const required = (propertyType, customErrorMessage) => { 
-  return v => v && v.length > 0 || customErrorMessage || `You must input a ${propertyType}`
+  return v => v && v.length > 0 || customErrorMessage || `Favor de ingresar ${propertyType}`
 }
 
 /**
@@ -44,14 +44,15 @@ const maxSummaryLength = (propertyType, maxSummaryLength) => {
   }
 }
 
-/**
- * Validation fucntion that uses regex to establish the format for password within the syste.
- */
+
 const nameFormat = () => {
   let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$/
   return v => regex.test(v) || "El formato del nombre es incorrecto,"
 }
 
+/**
+ * Validation fucntion that uses regex to establish the format for password within the syste.
+ */
 const passwordFormat = () => {
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$/
   return v => regex.test(v) || "La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número y 1 caracter especial."
