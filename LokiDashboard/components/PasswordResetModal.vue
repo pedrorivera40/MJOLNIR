@@ -3,18 +3,18 @@
     <v-dialog v-model="dialog" persistent max-width="480px">
       <v-card class="elevation-12 mx-auto">
         <v-toolbar color="primary" dark flat>
-          <v-toolbar-title>Password Reset</v-toolbar-title>
+          <v-toolbar-title>Restablecer Contraseña</v-toolbar-title>
           <v-spacer />
         </v-toolbar>
         <v-card-title class="text--secondary">
-          Reset {{ username }}'s password
+          Restablecer la contraseña para {{ username }}
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form v-model="valid">
               <v-text-field
                 id="new-password"
-                label="New Password"
+                label="Nueva contraseña"
                 name="new-password"
                 prepend-icon="mdi-lock"
                 :append-icon="showNew ? 'mdi-eye-off' : 'mdi-eye'"
@@ -22,9 +22,9 @@
                 v-model="newPassword"
                 @click:append="showNew = !showNew"
                 :rules="[
-                  required('password', 'You must input a new password.'),
-                  minLength('password', 10),
-                  maxLength('password', 64),
+                  required('contraseña', 'Por favor, ingrese una nueva contraseña.'),
+                  minLength('La contraseña', 10),
+                  maxLength('La contraseña', 64),
                   passwordFormat()
                 ]"
               />
@@ -38,7 +38,7 @@
                 v-model="repeat"
                 @click:append="showConf = !showConf"
                 :rules="[
-                  required('password', 'You must confirm your new password.'),
+                  required('contraseña', 'Por favor, confirme su nueva contraseña.'),
                   passwordMatch(newPassword)
                 ]"
               />

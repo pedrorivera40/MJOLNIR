@@ -52,7 +52,7 @@
                     @click:append="showP = !showP"
                     v-if="nameSelector === -1"
                     :rules="[
-                      required('Contraseña'),
+                      required('contraseña', 'Por favor, ingrese su contraseña.'),
                       minLength('La contraseña', 10),
                       maxLength('La contraseña', 64),
                       passwordFormat()
@@ -69,7 +69,7 @@
                     @click:append="showC = !showC"
                     v-if="nameSelector === -1"
                     :rules="[
-                      required('password', 'Por favor, confirme su contraseña.'),
+                      required('password', 'Por favor, confirme su nueva contraseña.'),
                       passwordMatch(password_)
                     ]"
                   ></v-text-field>

@@ -14,7 +14,7 @@
               prepend-icon="mdi-account"
               type="text"
               v-model="username"
-              :rules="[required('username', 'Debe ingresar su nombre de usuario.')]"
+              :rules="[required('username', 'Por favor, ingrese su nombre de usuario.')]"
             />
 
             <v-text-field
@@ -40,9 +40,9 @@
               v-model="newPassword"
               @click:append="showNew = !showNew"
               :rules="[
-                required('password', 'Debe ingresasr una nueva contraseña.'),
-                minLength('password', 10),
-                maxLength('password', 64),
+                required('password', 'Por favor, ingrese una nueva contraseña.'),
+                minLength('La contraseña', 10),
+                maxLength('La contraseña', 64),
                 passwordFormat(),
                 passwordDiffFromOld(password)
               ]"
@@ -57,7 +57,7 @@
               v-model="repeat"
               @click:append="showConf = !showConf"
               :rules="[
-                required('password', 'Debe confirmar la nueva contraseña.'),
+                required('contrseña', 'Por favor, confirme su nueva contraseña.'),
                 passwordMatch(newPassword)
               ]"
             />
