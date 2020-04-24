@@ -18,6 +18,24 @@ export default{
     SET_WAITING_MEMBERS(state){
         state.readyForMembers = false
     },
+    SET_READY_MEMBER_STATS(state){
+        state.readyForMemberStats = true
+    },
+    SET_WAITING_MEMBER_STATS(state){
+        state.readyForMemberStats = false
+    },
+    SET_READY_TEAM_STATS(state){
+        state.readyForTeamStats = true
+    },
+    SET_WAITING_TEAM_STATS(state){
+        state.readyForTeamStats = false
+    },
+    SET_MEMBER_STATISTICS(state,member_statistics){
+        state.member_statistics = member_statistics
+    },
+    SET_TEAM_STATISTICS(state,team_statistics){
+        state.team_statistics = team_statistics
+    },
 
     // SET_ATHLETE(state,athlete){
 	// 		state.athlete = athlete

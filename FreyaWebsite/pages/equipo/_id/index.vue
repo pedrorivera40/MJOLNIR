@@ -149,7 +149,7 @@
             <!-- TODO: need to make it so the table "by athlete" has the season statistics OF EACH ATHLETE. Show athlete name and maaaybe pic. -->
             <!-- TODO: need to make it so the table "by team" doesnt have date, just the general statistics of the team for the season. -->
             <v-tab-item>				
-                <v-card flat>
+                <v-card v-if="formated_member_stats()" flat>
                   <v-card-title>
                     <v-row>
                         <v-col cols="4">
@@ -170,7 +170,7 @@
                   <v-data-table 
                     dense 
                     :headers="headers" 
-                    :items="statistics_per_season.season_stats" 
+                    :items="statistics_per_season" 
                     :search="search_individual"
                     item-key="season_stats" 
                     class="elevation-1"								
@@ -184,7 +184,7 @@
             
             </v-tab-item>
             <v-tab-item>
-              <v-card flat>
+              <v-card v-if="formated_team_stats()" flat>
                   <v-data-table 
                     dense 
                     :headers="team_headers" 
@@ -277,7 +277,7 @@ export default {
       //IMPORTANT FOR METHODS:
       selected: '',
       statistics_per_season:'',
-      team_statistics_per_season:[],
+      team_statistics_per_season:'',
       members:'',
       yearList:[],  
       defaultSelected:[],
@@ -293,32 +293,6 @@ export default {
 
       search_individual: '',
 
-      
-
-    //Get all teams from a given sport is necessary
-    teams: [
-          {
-            team_id: 1,
-            season_year: 2020,
-            team_image_url: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/85226550_3003297953092352_1360046190787297280_o.jpg?_nc_cat=107&_nc_sid=cdbe9c&_nc_oc=AQmakM3rR18YLUFlI8ZRraQEU8mHM4f2V-1UI3Dv5eo-C3XwYGCO7mkelEfv3qWOem0&_nc_ht=scontent-mia3-2.xx&oh=1ef35fa1c82cd0fe716b8ccde133d9e7&oe=5EB4A8D7',
-          },
-          {
-            team_id: 2,
-            season_year: 2021,
-            team_image_url: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53308974_2150741998347956_5929499645469261824_o.jpg?_nc_cat=102&_nc_sid=cdbe9c&_nc_oc=AQkRydUsowo3pUMMVoN8KdZMqSWP60zWLGlFYgOQLJhN6eH2SAQB01cyGsigTmasvv0&_nc_ht=scontent-mia3-2.xx&oh=7fc8133a08a2c9e049dedbbc689d62a3&oe=5EB5C2E2',
-          },
-          {
-            team_id: 3,
-            season_year: 2022,
-            team_image_url: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/89775037_3018436938245120_7244710629703942144_o.jpg?_nc_cat=103&_nc_sid=cdbe9c&_nc_oc=AQm3OioI29F5kvicCjSrascjVapegmU7TrqInUzAdUK_Odqr1yFkNqxgzUcondMhuuo&_nc_ht=scontent-mia3-2.xx&oh=eb53711a5de3d73ace11e40f4f663c11&oe=5EB4540F',
-          },
-          {
-            team_id: 4,
-            season_year: 2023,
-            team_image_url: 'https://scontent-mia3-2.xx.fbcdn.net/v/t1.0-9/53255400_2150742488347907_5032536115572113408_o.jpg?_nc_cat=110&_nc_sid=cdbe9c&_nc_oc=AQlAZzUmMDbfLqJXSfAOlDAoP7_pyp58sPqPJ1MLE9-JgUtmldcr3NEq3OcNJMZEgt8&_nc_ht=scontent-mia3-2.xx&oh=9ca5fa4bb6ee0bdc1acb52841855cf6f&oe=5EB61445',
-          },
-        ],
-
       current_team:'',
       current_team_id:'',
       events:[],
@@ -327,8 +301,17 @@ export default {
       }),//end of data()
     
     created(){
+      this.setNullTeam()
+      this.setNullTeamMembers()
+      this.setNullMembersStats()
+      this.setNullTeamStats()
       this.current_team = null
-      this.team_members = null
+      this.members = null
+      this.statistics_per_season = null
+      this.team_statistics_per_season = null
+      
+      
+      
       this.buildYearList()
       this.buildDefaultValues()
       this.getSeasonData()
@@ -341,7 +324,15 @@ export default {
       ...mapActions({
         getTeamByYear:"teams/getTeamByYear",
         getTeamMembers:"teams/getTeamMembers",
-        stopGetMembers:"teams/stopGetMembers"
+        stopGetMembers:"teams/stopGetMembers",
+        stopGetMemberStats:"teams/stopGetMemberStats",
+        stopGetTeamStats:"teams/stopGetTeamStats",
+        getMemberStatistics:"teams/getMemberStatistics",
+        getTeamStatistics:"teams/getTeamStatistics",
+        setNullTeam:"teams/setNullTeam",
+        setNullTeamMembers:"teams/setNullTeamMembers",
+        setNullMembersStats:"teams/setNullMemberStats",
+        setNullTeamStats:"teams/setNullTeamStats",
       }),
       
       formated(){
@@ -350,8 +341,8 @@ export default {
           this.current_team = this.team.team_info
           
           if(this.readyForMembers){
-            console.log("HEYO CURR TEAM",this.current_team)
-            console.log("HEYO TEAM",this.team)
+            console.log("INDEX LEVEL LOCAL TEAM",this.current_team)
+            console.log("INDEX LEVEL QUERY TEAM",this.team)
             this.getTeamMembers(this.current_team_id)
             // this.ready_for_members = false
           }
@@ -367,12 +358,53 @@ export default {
       formated_members(){
         if(this.team_members){
           this.members = this.team_members.team_members
+          if(this.readyForMemberStats){
+            console.log("INDEX LEVEL QUERY MEMBERS:",this.team.members)
+            const team_params = {
+              sport_id: String(this.sport_id),
+              season_year: String(this.season)
+            }
+            console.log("INDEX LEVEL STAT PARAMS:",this.team_params)
+            this.getMemberStatistics(team_params)
+          }
+          this.stopGetMemberStats()
           return true
         }
         else{
           return false
         }
       },
+      formated_member_stats(){
+        if(this.member_statistics){
+          this.statistics_per_season = this.member_statistics.Basketball_Event_Season_Athlete_Statistics
+          if(this.readyForTeamStats){
+            console.log("INDEX LEVEL QUERY MEMBER STATS:",this.statistics_per_season)
+            const team_params = {
+              sport_id: String(this.sport_id),
+              season_year: String(this.season)
+            }
+            console.log("STRAIGHT FROM MEMBERS= STATS, PARAMS ARE:",this.team.members)
+            this.getTeamStatistics(team_params)
+          }
+          this.stopGetTeamStats()
+          return true
+        }
+        else{
+          return false
+        }
+      },
+
+      formated_team_stats(){
+        if(this.team_statistics){
+          console.log("//////=====HEWWO MISTER OBAMA=======////",this.team_statistics)
+          this.team_statistics_per_season = [this.team_statistics.Basketball_Event_Season_Team_Statistics]
+          return true
+        }
+        else{
+          return false
+        }
+      },
+
 
       // // ORIGINAL LUIS ATHLETE VERSION
       // formated(){
@@ -560,340 +592,11 @@ export default {
         else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol"}
         
       },
-      getMembersData(){
-      
-        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-
-          let current_stats = {
-            "Basketball_Event_Season_Athlete_Statistics": [
-              {
-                "Athlete": {
-                  "athlete_id": 1,
-                  "first_name": "Kobe",
-                  "last_names": "Bryant",
-                  "middle_name": null,
-                  "number": 24,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "assists": 8,
-                  "blocks": 8,
-                  "field_goal_attempt": 8,
-                  "field_goal_percentage": 100.0,
-                  "free_throw_attempt": 8,
-                  "free_throw_percentage": 100.0,
-                  "points": 8,
-                  "rebounds": 8,
-                  "steals": 8,
-                  "successful_field_goal": 8,
-                  "successful_free_throw": 8,
-                  "successful_three_point": 8,
-                  "three_point_attempt": 8,
-                  "three_point_percentage": 100.0,
-                  "turnovers": 8
-                }
-              },
-              {
-                "Athlete": {
-                  "athlete_id": 3,
-                  "first_name": "Lebron",
-                  "last_names": "James",
-                  "middle_name": null,
-                  "number": 23,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "assists": 23,
-                  "blocks": 5,
-                  "field_goal_attempt": 2,
-                  "field_goal_percentage": 50.0,
-                  "free_throw_attempt": 7,
-                  "free_throw_percentage": 100.0,
-                  "points": 78,
-                  "rebounds": 0,
-                  "steals": 2,
-                  "successful_field_goal": 1,
-                  "successful_free_throw": 7,
-                  "successful_three_point": 3,
-                  "three_point_attempt": 10,
-                  "three_point_percentage": 30.0,
-                  "turnovers": 43
-                }
-              },
-              {
-                "Athlete": {
-                  "athlete_id": 4,
-                  "first_name": "Larry",
-                  "last_names": "Bird",
-                  "middle_name": null,
-                  "number": 33,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "assists": 10,
-                  "blocks": 10,
-                  "field_goal_attempt": 10,
-                  "field_goal_percentage": 100.0,
-                  "free_throw_attempt": 10,
-                  "free_throw_percentage": 100.0,
-                  "points": 10,
-                  "rebounds": 10,
-                  "steals": 10,
-                  "successful_field_goal": 10,
-                  "successful_free_throw": 10,
-                  "successful_three_point": 10,
-                  "three_point_attempt": 10,
-                  "three_point_percentage": 100.0,
-                  "turnovers": 10
-                }
-              },
-              {
-                "Athlete": {
-                  "athlete_id": 8,
-                  "first_name": "Bruce",
-                  "last_names": "Wayne",
-                  "middle_name": "Batman",
-                  "number": 27,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "assists": 35,
-                  "blocks": 9,
-                  "field_goal_attempt": 137,
-                  "field_goal_percentage": 95.62043795620438,
-                  "free_throw_attempt": 41,
-                  "free_throw_percentage": 60.97560975609756,
-                  "points": 162,
-                  "rebounds": 26,
-                  "steals": 20,
-                  "successful_field_goal": 131,
-                  "successful_free_throw": 25,
-                  "successful_three_point": 50,
-                  "three_point_attempt": 55,
-                  "three_point_percentage": 90.9090909090909,
-                  "turnovers": 9
-                }
-              }
-            ]
-          }
-          this.statistics_per_season = {"season_stats":current_stats.Basketball_Event_Season_Athlete_Statistics}
-          
-        
-          let current_team_stats = {
-            "Basketball_Event_Season_Team_Statistics": {
-              "Event_Statistics": {
-                "assists": 2064,
-                "blocks": 2020,
-                "field_goal_attempt": 2145,
-                "field_goal_percentage": 99.67365967365967,
-                "free_throw_attempt": 2054,
-                "free_throw_percentage": 99.22103213242454,
-                "points": 2246,
-                "rebounds": 2032,
-                "steals": 2028,
-                "successful_field_goal": 2138,
-                "successful_free_throw": 2038,
-                "successful_three_point": 2059,
-                "three_point_attempt": 2071,
-                "three_point_percentage": 99.4205697730565,
-                "turnovers": 2058
-              },
-              "team_id": 1
-            }
-          }
-          this.team_statistics_per_season.push(current_team_stats.Basketball_Event_Season_Team_Statistics)
-        
-        }
-        if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-          let current_stats = {
-            "Volleyball_Event_Season_Athlete_Statistics": [
-              {
-                "Athlete": {
-                  "athlete_id": 71,
-                  "first_name": "Claire",
-                  "last_names": "Redfield",
-                  "middle_name": null,
-                  "number": null,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "aces": 3,
-                  "assists": 3,
-                  "attack_errors": 3,
-                  "blocking_errors": 3,
-                  "blocks": 3,
-                  "digs": 3,
-                  "kill_points": 3,
-                  "reception_errors": 3,
-                  "service_errors": 3
-                }
-              },
-              {
-                "Athlete": {
-                  "athlete_id": 70,
-                  "first_name": "Jill",
-                  "last_names": "Valentine",
-                  "middle_name": null,
-                  "number": null,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "aces": 1,
-                  "assists": 1,
-                  "attack_errors": 1,
-                  "blocking_errors": 1,
-                  "blocks": 1,
-                  "digs": 1,
-                  "kill_points": 1,
-                  "reception_errors": 1,
-                  "service_errors": 1
-                }
-              }
-            ]
-          }
-          this.statistics_per_season = {"season_stats":current_stats.Volleyball_Event_Season_Athlete_Statistics}
-          
-        
-          let current_team_stats = {
-            "Volleyball_Event_Season_Team_Statistics": {
-              "Event_Statistics": {
-                "aces": 1,
-                "assists": 1,
-                "attack_errors": 1,
-                "blocking_errors": 1,
-                "blocks": 1,
-                "digs": 1,
-                "kill_points": 1,
-                "reception_errors": 1,
-                "service_errors": 1
-              },
-              "team_id": 4
-            }
-          }
-          this.team_statistics_per_season.push(current_team_stats.Volleyball_Event_Season_Team_Statistics)
-        }
-        if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-          let current_stats = {
-            "Soccer_Event_Season_Athlete_Statistics": [
-              {
-                "Athlete": {
-                  "athlete_id": 73,
-                  "first_name": "Sheva",
-                  "last_names": "Alomar",
-                  "middle_name": null,
-                  "number": null,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "assists": 1,
-                  "cards": 1,
-                  "fouls": 1,
-                  "goal_attempts": 1,
-                  "successful_goals": 1,
-                  "tackles": 1
-                }
-              },
-              {
-                "Athlete": {
-                  "athlete_id": 74,
-                  "first_name": "Ada",
-                  "last_names": "Wong",
-                  "middle_name": null,
-                  "number": null,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "assists": 2,
-                  "cards": 2,
-                  "fouls": 2,
-                  "goal_attempts": 2,
-                  "successful_goals": 2,
-                  "tackles": 2
-                }
-              }
-            ]
-          }
-          this.statistics_per_season = {"season_stats":current_stats.Soccer_Event_Season_Athlete_Statistics}
-          
-        
-          let current_team_stats = {
-            "Soccer_Event_Season_Team_Statistics": {
-              "Event_Statistics": {
-                "assists": 10,
-                "cards": 10,
-                "fouls": 20,
-                "goal_attempts": 50,
-                "successful_goals": 30,
-                "tackles": 20
-              },
-              "team_id": 7
-            }
-          }
-          this.team_statistics_per_season.push(current_team_stats.Soccer_Event_Season_Team_Statistics)
-        }
-        if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-          let current_stats = {
-            "Baseball_Event_Season_Athlete_Statistics": [
-              {
-                "Athlete": {
-                  "athlete_id": 104,
-                  "first_name": "Leon ",
-                  "last_names": "Kennedy",
-                  "middle_name": null,
-                  "number": 2,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "at_bats": 1,
-                  "base_on_balls": 1,
-                  "hits": 1,
-                  "left_on_base": 1,
-                  "runs": 1,
-                  "runs_batted_in": 1,
-                  "strikeouts": 1
-                }
-              },
-              {
-                "Athlete": {
-                  "athlete_id": 105,
-                  "first_name": "Nemesis",
-                  "last_names": "Tyrant",
-                  "middle_name": null,
-                  "number": 3,
-                  "profile_image_link": null
-                },
-                "Event_Statistics": {
-                  "at_bats": 1,
-                  "base_on_balls": 1,
-                  "hits": 1,
-                  "left_on_base": 1,
-                  "runs": 1,
-                  "runs_batted_in": 1,
-                  "strikeouts": 1
-                }
-              }
-            ]
-          }
-          this.statistics_per_season = {"season_stats":current_stats.Baseball_Event_Season_Athlete_Statistics}
-          
-        
-          let current_team_stats = {
-            "Baseball_Event_Season_Team_Statistics": {
-              "Event_Statistics": {
-                "at_bats": 1,
-                "base_on_balls": 1,
-                "hits": 1,
-                "left_on_base": 1,
-                "runs": 1,
-                "runs_batted_in": 1,
-                "strikeouts": 1
-              },
-              "team_id": 14
-            }
-          }
-          this.team_statistics_per_season.push(current_team_stats.Baseball_Event_Season_Team_Statistics)
-        }
-      },
+      // getMembersData(){
+      //   // if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+      //   //   this.team_statistics_per_season.push(current_team_stats.Baseball_Event_Season_Team_Statistics)
+      //   // }
+      // },
       getEvents(){
         this.events =  [
         {
@@ -964,33 +667,28 @@ export default {
       ]
       },
 			getSeasonData(){
-          this.team = null
-          this.team_members = null
+          this.setNullTeam()
+          this.setNullTeamMembers()
+          this.setNullMembersStats()
+          this.setNullTeamStats()
           this.current_team = null
+          this.statistics_per_season = null
+          this.team_statistics_per_season = null
           this.members = null
+          
           // this.team = false
           // this.ready = false
-          this.getMembersData()
+          // this.getMembersData()
           this.getEvents()
           const team_params = {
             sport_id: String(this.sport_id),
             season_year: String(this.season)
           }
-          console.log("At the index level inside the getSeasonData, request params look like",team_params)
-          // this.ready = false
-          // this.team = false
-          // this.ready_for_members = true
-          this.getTeamByYear(team_params)
-          
-          // this.formated()
-          // while(!this.team){
-          //   this.ready = false
-          // }
-          // if (this.team){
-          //       this.current_team = this.team.team_info
-          //       this.team = ''
-          //       this.ready = true
-          // }
+          //console.log("At the index level inside the getSeasonData, request params look like",team_params)
+          this.getTeamByYear(team_params)   
+          // this.getMemberStatistics(team_params)    
+          // this.getTeamStatistics(team_params)   
+
 
           
             
@@ -1014,21 +712,27 @@ export default {
 			...mapGetters({
         team:"teams/team",
         team_members:"teams/team_members",
-        readyForMembers:"teams/readyForMembers"
-			})
-		},
+        readyForMembers:"teams/readyForMembers",
+        readyForMemberStats:"teams/readyForMemberStats",
+        readyForTeamStats:"teams/readyForTeamStats",
+        member_statistics:"teams/member_statistics",
+        team_statistics:"teams/team_statistics"
 
-		mounted(){
-      
-      console.log("YOOOOOOOOOO WTF WE HEEEEEEEEEEEERE",this.sport_id,this.season)
-      console.log("The request will have:",this.sport_id,this.season)
-      const team_params = {
-        sport_id: String(this.sport_id),
-        season_year: String(this.season)
-      }
-      console.log("At the index level, request params look like",team_params)
-      this.getTeamByYear(team_params)
-      console.log("WE GOT THE TEAM BOI (from index):",this.team)
+			})
 		}
+
+		// mounted(){
+      
+    
+    //   // // console.log("The request will have:",this.sport_id,this.season)
+    //   // const team_params = {
+    //   //   sport_id: String(this.sport_id),
+    //   //   season_year: String(this.season)
+    //   // }
+    //   // // console.log("At the index level, request params look like",team_params)
+    //   // this.getTeamByYear(team_params)
+      
+    //   // // console.log("WE GOT THE TEAM BOI (from index):",this.team)
+		// }
 }
 </script>
