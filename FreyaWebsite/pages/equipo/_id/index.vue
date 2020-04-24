@@ -148,30 +148,14 @@
 
             <!-- TODO: need to make it so the table "by athlete" has the season statistics OF EACH ATHLETE. Show athlete name and maaaybe pic. -->
             <!-- TODO: need to make it so the table "by team" doesnt have date, just the general statistics of the team for the season. -->
-            <v-tab-item>				
-                <v-card v-if="formated_member_stats()" flat>
-                  <v-card-title>
-                    <v-row>
-                        <v-col cols="4">
-                        <v-text-field
-                            v-model="search_individual"
-                            append-icon="mdi-magnify"
-                            label="Búsqueda"
-                            rounded
-                            dense
-                            outlined
-                            single-line
-                            hide-details
-                        />
-                        </v-col>
-                    </v-row>
-                    </v-card-title>
+            <v-tab-item>		
+              <v-container v-if="formated_member_stats()">		
+                <v-card flat>
                   <!-- Basketball Table -->
                   <v-data-table 
                     dense 
                     :headers="headers" 
                     :items="statistics_per_season" 
-                    :search="search_individual"
                     item-key="season_stats" 
                     class="elevation-1"								
                     loading-text="Recolectando Data...Por favor espere"
@@ -179,12 +163,20 @@
                   >		
                   <template #item.full_name="{ item }">{{ item.Athlete.first_name }} {{item.Athlete.middle_name}} {{ item.Athlete.last_names }}</template>	
                   </v-data-table>
-
                 </v-card>
+              </v-container>
+              <v-container v-else>
+                <v-row align = "center" justify = "center">
+                  <v-col justify = "center" align = "center">
+                    <h2>No Se Encontraron Estadisticas Individuales</h2>
+                  </v-col>
+                </v-row>
+              </v-container>
             
             </v-tab-item>
             <v-tab-item>
-              <v-card v-if="formated_team_stats()" flat>
+              <v-container v-if="formated_team_stats()">
+                <v-card flat>
                   <v-data-table 
                     dense 
                     :headers="team_headers" 
@@ -195,8 +187,15 @@
                     v-if="team_statistics_per_season != ''"
                   >			
                   </v-data-table>
-
                 </v-card>
+              </v-container>
+              <v-container v-else>
+                <v-row align = "center" justify = "center">
+                  <v-col justify = "center" align = "center">
+                    <h2>No Se Encontraron Estadisticas de Equipo</h2>
+                  </v-col>
+                </v-row>
+              </v-container>
             </v-tab-item>
           </v-tabs>
 
