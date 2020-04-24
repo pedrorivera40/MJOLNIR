@@ -66,7 +66,7 @@ def athletes():
     if request.method == 'POST':
         json = request.json
         if not 'sID' in json or not 'attributes' in json:
-            return jsonify(Error = "Bad Request"),400
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
 
         return handler.addAthlete(json['sID'], json['attributes'])
 
@@ -76,7 +76,7 @@ def athletes():
             return handler.getAllAthletes()    
 
         if not 'sID' in json:
-            return jsonify(Error = "Bad Request"),400
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
 
         return handler.getAthletesBySport(json['sID'])
 
@@ -89,7 +89,7 @@ def athleteByID(aid):
     elif request.method == 'PUT':
         json = request.json
         if 'attributes' not in json:
-            return jsonify(Error = "Bad Request"),400
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
 
         return handler.editAthlete(aid, json['attributes'])
         
@@ -120,7 +120,7 @@ def auth():
 #--------- Dashboard User Routes ---------#
 ###########################################
 @app.route("/users/", methods=['GET', 'POST'])
-# @token_check
+@token_check
 def allUsers():
     
     handler = UserHandler()
@@ -140,7 +140,7 @@ def allUsers():
 
 
 @app.route("/users/<int:duid>", methods=['GET', 'PATCH'])
-# @token_check
+@token_check
 def userByID(duid):
     handler = UserHandler()
     req = request.json
@@ -159,7 +159,7 @@ def userByID(duid):
 
 
 @app.route("/users/username/", methods=['POST'])
-# @token_check
+@token_check
 def getUserByUsername():
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
@@ -174,7 +174,7 @@ def getUserByUsername():
 
 
 @app.route("/users/email/", methods=['POST'])
-# @token_check
+@token_check
 def getUserByEmail():
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
@@ -188,7 +188,7 @@ def getUserByEmail():
 
 
 @app.route("/users/<int:duid>/reset", methods=['PATCH'])
-# @token_check
+@token_check
 def passwordReset(duid):
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
@@ -217,7 +217,7 @@ def accountUnlock():
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/toggleActive", methods=['PATCH'])
-# @token_check
+@token_check
 def toggleActive(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
@@ -226,7 +226,7 @@ def toggleActive(duid):
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/remove", methods=['PATCH'])
-# @token_check
+@token_check
 def removeUser(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
@@ -234,7 +234,7 @@ def removeUser(duid):
 
 
 @app.route("/users/<string:duid>/permissions",  methods=['GET', 'PATCH'])
-# @token_check
+@token_check
 def userPermissions(duid):
     
     handler = UserHandler()
@@ -269,7 +269,7 @@ def eventsById(eID):
     elif request.method == 'PUT':
         json = request.json        
         if 'attributes' not in json:
-            return jsonify(Error = "Bad arguments"),400            
+            return jsonify(Error = "Argumentos dados son incorrectos."),400            
         return handler.editEvent(eID, json['attributes'])
     elif request.method == 'DELETE':
         return handler.removeEvent(eID)
@@ -283,7 +283,7 @@ def teamEvents(tID):
     elif request.method == 'POST':
         json = request.json    
         if not json or 'attributes' not in json:
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
         return handler.addEvent(tID, json['attributes'])
 
 
