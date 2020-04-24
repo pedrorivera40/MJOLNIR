@@ -135,6 +135,7 @@ export default {
       team_statistics:'',
       search_individual: "",
       sport_id:'',
+      sport_route:'',
       sport_name: '',
       event_id:'',
     //   event_info:'',
@@ -153,21 +154,25 @@ export default {
       //season:''
       //INTEGRATION QUERY VARS
       ready_for_event:false,
-      ready_for_stats:false,
+      ready_for_stats:true,
     };
   },
   
 created(){
-    // this.clearEventInfo()
-    // this.clearAllStats()
+    this.ready_for_stats=true
+    this.clearEventInfo()
+    this.clearAllStats()
     this.event_id = this.$route.params.id
     console.log("[1] GOT EVENT ID",this.event_id)
     this.getEventInfo(this.event_id)
-    console.log("[2] GOT EVENT INGO",this.event_info)
+    console.log("[2] GOT EVENT INFO",this.event_info)
 
-    
-    this.getAllEventStatistics(this.event_id)
-    console.log("[4] GOT EVENT STATS",this.results_payload)
+    // const stat_params = {
+    //     event_id: String(this.event_id),
+    //     sport_route: String(this.sport_route)
+    // }
+    // this.getAllEventStatistics(this.stat_params)
+    // console.log("[4] GOT EVENT STATS",this.results_payload)
 
     // this.buildTable()
     // console.log("[3] BUILT TABLE",this.results_payload)
@@ -184,12 +189,23 @@ created(){
         console.log("the event info...(before)",this.results_payload)
         if(this.event_info){
             console.log("GETTING EVENT INFO (from formated method)",this.event_info)
-            this.sport_id = 1
-            // this.sport_id =  this.event_info.sport_id 
+            this.sport_id =  this.event_info.sport_id 
             this.sport_name = this.event_info.sport_name
             this.opponent_name = this.event_info.opponent_name
-            this.buildTable()
-            console.log("[3] BUILT TABLE",this.results_payload)
+
+            if (this.ready_for_stats){
+                this.buildTable()
+                console.log("[3] BUILT TABLE",this.results_payload)
+                this.buildDefaultValues()
+                const stat_params = {
+                    event_id: String(this.event_id),
+                    sport_route: String(this.sport_route)
+                }
+                console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
+                this.getAllEventStatistics(stat_params)
+                console.log("[4] GOT EVENT STATS",this.results_payload)
+                this.ready_for_stats = false
+            }
             return true
         }
         else{
@@ -198,11 +214,11 @@ created(){
     },
     formated_member_stats(){
         if(this.results_payload){
-            console.log("RESULTS PAYLOAD RECEIVED",this.results_payload)
+            console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
             if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
             else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
             else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
-            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Softball_Event_Statistics}
+            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
             else{
                 this.payload_stats = null
                 return false  
@@ -218,45 +234,21 @@ created(){
         }
     },
     buildDefaultValues(){
-        this.event_id = this.$route.params.id
-        if (this.event_id == 1 || this.event_id == 32){
-            //Getting Sport Information
-            this.sport_id = this.BASKETBALL_IDM
-            this.sport_name = "Baloncesto"
-            //Getting Event Information
-            this.event_info = {
-                "Event": {
-                    "branch": "masculino",
-                    "event_date": "Sat, 19 Apr 2025 00:00:00 GMT",
-                    "event_summary": "Test Event #1: Using to Add All Stats",
-                    "id": 32,
-                    "is_local": true,
-                    "opponent_name": "Inter SG",
-                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/88207403_3003298336425647_2084912734775803904_o.jpg?_nc_cat=109&_nc_sid=e007fa&_nc_ohc=cPJHsQ73nbMAX988FmN&_nc_ht=scontent.fsig1-1.fna&oh=1ff606b6b98ae4bd4d211840ac373a2a&oe=5EAB30D6",
-                    "sport_name": "Baloncesto",
-                    "team_id": 25,
-                    "team_season_year": 2025,
-                    "venue": "Mangual"
-                }
-            }
-        }
+        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}
+        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_route = "volleyball"}
+        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_route = "soccer"}
+        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_route = "baseball"}
+        else{this.sport_route = ''}
     },
-    buildDefault(){
-     
-    },
+
     buildTable(){
         console.log(this.payload_stats)
-        // basketball
+        
         if (this.sport_id!=''){
+            //Basketball
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
                 this.headers = 
                 [
-                // {
-                //     text:'Athlete',
-                //     align: 'start',
-                //     sortable: true,
-                //     value: 'athlete_info.first_name'
-                // },
                 {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'Asistencias', value: 'statistics.assists'},
                 {text: 'Blocks', value: 'statistics.blocks'},
@@ -295,15 +287,10 @@ created(){
 
                 ]
             }
+            //Volleyball
             else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
                 this.headers = 
                 [
-                // {
-                //     text:'Athlete',
-                //     align: 'start',
-                //     sortable: true,
-                //     value: 'athlete_info.first_name'
-                // },
                 {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'Kill Points', value: 'statistics.kill_points'},
                 {text: 'Attack Errors', value: 'statistics.attack_errors'},
@@ -330,15 +317,10 @@ created(){
 
                 ]
             }
+            //Soccer
             else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
                 this.headers = 
                 [
-                // {
-                //     text:'Athlete',
-                //     align: 'start',
-                //     sortable: true,
-                //     value: 'athlete_info.first_name'
-                // },
                 {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'Goal Attempts', value: 'statistics.goal_attempts'},
                 {text: 'Assists', value: 'statistics.assists'},
@@ -359,15 +341,10 @@ created(){
 
                 ]
             }
+            //Baseball
             else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
                 this.headers = 
                 [
-                // {
-                //     text:'Athlete',
-                //     align: 'start',
-                //     sortable: true,
-                //     value: 'athlete_info.first_name'
-                // },
                 {text: "Athlete", align:'start', sortable: true, value: "full_name" },
                 {text: 'At Bats', value: 'statistics.at_bats'},
                 {text: 'Runs', value: 'statistics.runs'},
@@ -390,151 +367,15 @@ created(){
 
                 ]
             }
-        }
-          
-        
+        } 
     },
-
-    // editPermissions(user) {
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogPermissions = true;
-    //   this.getPermissions(user.id);
-    // }, resetPassword(user) {
-    //   console.log('reset')
-    // },
-    // Herbert Functions
-    getSeasonData(){
-        //console.log(this.season)
-        // TODO: CHANGE SO NOT HARDCODED IDS
-		if(this.sport_id!=''){
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.payload_stats = {// payload_stats.Basketball_Event_Statistics.athlete_statistic.statistics.
-                    "Basketball_Event_Statistics": {
-                        "athlete_statistic": [
-                        {
-                            "athlete_info": {
-                                "athlete_id": 4,
-                                "basketball_event_id": 16,
-                                "first_name": "Larry",
-                                "last_names": "Bird",
-                                "middle_name": null,
-                                "number": 33,
-                                "profile_image_link": null
-                            },
-                            "statistics": {
-                                "assists": 2,
-                                "blocks": 2,
-                                "field_goal_attempt": 2,
-                                "field_goal_percentage": 100.0,
-                                "free_throw_attempt": 2,
-                                "free_throw_percentage": 100.0,
-                                "points": 2,
-                                "rebounds": 2,
-                                "steals": 2,
-                                "successful_field_goal": 2,
-                                "successful_free_throw": 2,
-                                "successful_three_point": 2,
-                                "three_point_attempt": 2,
-                                "three_point_percentage": 100.0,
-                                "turnovers": 2
-                            }
-                        },
-                        {
-                            "athlete_info": {
-                                "athlete_id": 8,
-                                "basketball_event_id": 17,
-                                "first_name": "Bruce",
-                                "last_names": "Wayne",
-                                "middle_name": "Batman",
-                                "number": 27,
-                                "profile_image_link": "dccomics.com"
-                            },
-                            "statistics": {
-                                "assists": 1,
-                                "blocks": 1,
-                                "field_goal_attempt": 1,
-                                "field_goal_percentage": 100.0,
-                                "free_throw_attempt": 1,
-                                "free_throw_percentage": 100.0,
-                                "points": 1,
-                                "rebounds": 1,
-                                "steals": 1,
-                                "successful_field_goal": 1,
-                                "successful_free_throw": 1,
-                                "successful_three_point": 1,
-                                "three_point_attempt": 1,
-                                "three_point_percentage": 100.0,
-                                "turnovers": 1
-                            }
-                        }
-                        ],
-                        "event_info": {
-                            "basketball_event_team_stats_id": 7,
-                            "event_id": 5
-                        },
-                        "opponent_score": 1,
-                        "team_statistics": {
-                            "basketball_statistics": {
-                                "assists": 500,
-                                "blocks": 500,
-                                "field_goal_attempt": 500,
-                                "field_goal_percentage": 100.0,
-                                "free_throw_attempt": 500,
-                                "free_throw_percentage": 100.0,
-                                "points": 500,
-                                "rebounds": 500,
-                                "steals": 500,
-                                "successful_field_goal": 500,
-                                "successful_free_throw": 500,
-                                "successful_three_point": 500,
-                                "three_point_attempt": 500,
-                                "three_point_percentage": 100.0,
-                                "turnovers": 500
-                            }
-                        },
-                        "uprm_score": 5073
-                    }   
-                }
-                this.team_statistics.push(this.payload_stats.Basketball_Event_Statistics.team_statistics)
-                this.opponent_score = (this.payload_stats.Basketball_Event_Statistics.opponent_score)
-                this.uprm_score = (this.payload_stats.Basketball_Event_Statistics.uprm_score)
-                // this.opponent_name = (this.payload_stats.Basketball_Event_Statistics.opponent_name)
-                
-            }
-        }
-            
-    }
   },
   computed: {
-    // ...mapGetters({
-    //   users: "dashboardUsers/users",
-    //   isLoadingU: "dashboardUsers/isLoadingU"
-    // })
-    // a computed getter
-    isBasketballTable: function () {
-      // `this` points to the vm instance
-      return (this.payload_stats != '' && (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF))
-    },
-    isVolleyballTable: function () {
-      // `this` points to the vm instance
-      return (this.payload_stats != '' && (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF))
-    },
-    isSoccerTable: function () {
-      // `this` points to the vm instance
-      return (this.payload_stats != '' && (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF))
-    },
-    isBaseballTable: function () {
-      // `this` points to the vm instance
-      return (this.payload_stats != '' && (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF))
-    },
     ...mapGetters({
         results_payload:"results/results_payload",
         event_info:"results/event_info"
 	})
   },
-//   mounted() {
-//     this.getUsers();
-//   }
 };
 </script>
 

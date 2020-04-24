@@ -1,14 +1,17 @@
 export default{
-    async getAllEventStatistics({commit},event_id){
+    async getAllEventStatistics({commit},stat_params){
         try{
+            console.log("At the request level we have the stat params ",stat_params)
+            let event_id = stat_params.event_id
+            let sport_route = stat_params.sport_route
             //console.log("At the request level we have:",event_id)
-            const response = await this.$axios.get('results/basketball/?event_id='+event_id)
+            const response = await this.$axios.get('results/'+sport_route+'/?event_id='+event_id)
             //console.log("GET ALL EVENT STATS",response)
             console.log("GET ALL EVENT STATS",response.data)
             commit("SET_RESULTS_PAYLOAD",response.data)
             
         }catch(error){
-            console.log("ERROR GETTING ALL EVENT STATS",event_id,error)
+            console.log("ERROR GETTING ALL EVENT STATS",stat_params,error)
             commit("SET_RESULTS_PAYLOAD",null)
         }
     },
