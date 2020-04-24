@@ -29,9 +29,11 @@ class EventHandler:
         result['opponent_name'] = record[5]
         result['event_summary'] = record[6]
         result['sport_name'] = record[7]
-        result['sport_img_url'] = record[8]
-        result['branch'] = record[9]
-        result['team_season_year'] = record[10]
+        result['sport_id'] = record[8]
+        result['sport_img_url'] = record[9]
+        result['branch'] = record[10]
+        result['team_season_year'] = record[11]
+        
 
         if 'Voleibol' in record[7]:
             result['hasPBP'] = self._pbp_exists(record[0])

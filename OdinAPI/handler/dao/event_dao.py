@@ -116,7 +116,7 @@ class EventDAO:
             the database that has the id given.
         """
         cursor = self.conn.cursor()
-        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.event_summary,S.name,S.sport_image_url,B.name,T.season_year
+        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.event_summary,S.name,S.id,S.sport_image_url,B.name,T.season_year
                    from (event as E inner join ((sport as S inner join branch as B on S.branch_id=B.id) inner join team as T on S.id=T.sport_id) on E.team_id=T.id)
                    where E.is_invalid=false
                    and T.is_invalid=false
