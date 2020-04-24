@@ -37,6 +37,7 @@ class EventDAO:
                    and (F.is_invalid=false
                    or F.is_invalid is null)
                 """
+        result = None
         try:
             cursor.execute(query)
             result = []#Will contain the event records
@@ -44,12 +45,16 @@ class EventDAO:
                 result.append(row)    
             
             if not result:#No valid event exist
-                return "There are no valid events."
-            
-            return result  
-        except:
-            return "A problem ocurred when fetching all events."    
-        
+                return  None
+
+            cursor.close()              
+        except Exception as e:
+            print(e)
+            return "Occurrió un error interno tratando de buscar todos los eventos."    
+        finally:
+            if self.conn is not None:
+                self._closeConnection()
+        return result
     
     def getEventsByTeam(self,tID):
         """
@@ -77,6 +82,7 @@ class EventDAO:
                    and (F.is_invalid=false
                    or F.is_invalid is null)
                 """
+        result = None
         try:
             cursor.execute(query,(tID,))
             result = []#Will contain the event records
@@ -84,11 +90,16 @@ class EventDAO:
                 result.append(row)    
             
             if not result:#No valid event exist
-                return "There are no valid events for that team."
+                return "Occurrió un error interno tratando de buscar los eventos de un equipo.\n Al parecer no hay eventos para ese equipo."
             
-            return result
-        except:
-            return "A problem ocurred when fetching the events of a team." 
+            cursor.close()
+        except Exception as e:
+            print(e)
+            return "Occurrió un error interno tratando de buscar los eventos de un equipo." 
+        finally:
+            if self.conn is not None:
+                self._closeConnection()
+        return result
 
     def getEventByID(self,eID):
         """
@@ -111,16 +122,20 @@ class EventDAO:
                    and T.is_invalid=false
                    and E.id=%s                  
                 """
+        result = None
         try:
             cursor.execute(query,(eID,))
-            result = cursor.fetchone()
-
-            if not result:#No valid event exist
-                return "The event does not exist."
+            result = cursor.fetchone()           
             
-            return result
-        except:
-            return "A problem ocurred when fetching the event."
+            cursor.close()
+        except Exception as e:
+            print(e)
+            return "Occurrió un error interno tratando de buscar un evento por su identificador."
+        finally:
+            if self.conn is not None:
+                self._closeConnection()
+        
+        return result
 
     def getEventTeamByID(self,eID):
         """
@@ -146,13 +161,18 @@ class EventDAO:
                    and T.is_invalid=false
                    and E.id=%s
                 """
+        tID = None
         try:
             cursor.execute(query,(eID,))
-            tID = cursor.fetchone()[0]    
-            
-            return tID
-        except:
-            return "A problem ocurred when fetching the team id."
+            tID = cursor.fetchone()[0]            
+            cursor.close()
+        except Exception as e:
+            print(e) 
+            tID = None
+        finally:
+            if self.conn is not None:
+                self._closeConnection()
+        return tID
 
     def addEvent(self,tID,eventDate,isLocal,venue,opponentName,eventSummary):
         """
@@ -179,19 +199,24 @@ class EventDAO:
                    returning id;
                 """
         
+        eID = None
         try:
             cursor.execute(query,(tID,eventDate,isLocal,venue,opponentName,eventSummary,))
             eID = cursor.fetchone()[0]
             if not eID:
-                return "Insert query failed."
+                return "Occurrió un error interno tratando de añadir un evento."
             
             self.commitChanges()
+            cursor.close()
+            
+        except Exception as e:
+            print(e)
+            return "Occurrió un error interno tratando de añadir un evento."
+        finally:
+            if self.conn is not None:
+                self._closeConnection()
 
-            return eID
-        except:
-            return "A problem ocurred when inserting the event."
-
-
+        return eID
        
     def editEvent(self,eID,eventDate,isLocal,venue,opponentName,eventSummary):
         """
@@ -222,19 +247,25 @@ class EventDAO:
                    and is_invalid=false                   
                    returning id;
                 """
+        eid = None
         try:
             cursor.execute(query,(eventDate,isLocal,venue,opponentName,eventSummary,eID,))
 
             eid = cursor.fetchone()[0]       
 
             if not eid:
-                return "The update query failed."
+                return "Occurrió un error interno tratando de eliminar un evento existente."
 
             self.commitChanges()
+            cursor.close()        
+        except Exception as e:
+            print(e)
+            return "Occurrió un error interno tratando de actualizar un evento existente."
+        finally:
+            if self.conn is not None:
+                self._closeConnection()
 
-            return eid
-        except:
-            return "A problem ocurred when updating the event."
+        return eid
     
     def removeEvent(self,eID):
         """
@@ -257,17 +288,21 @@ class EventDAO:
                    where id=%s
                    returning id;
                 """
+        eid = None
         try:            
             cursor.execute(query,(eID,))
             eid = cursor.fetchone()[0]
-
             if not eid:
-                return "The update query failed."
+                return "Occurrió un error interno tratando de eliminar un evento existente." 
             self.commitChanges()
-
-            return eid
-        except:
-            return "A problem ocurred when updating the event."
+            cursor.close()         
+        except Exception as e:
+            print(e)
+            return "Occurrió un error interno tratando de eliminar un evento existente."
+        finally:
+            if self.conn is not None:
+                self._closeConnection()       
+        return eid
 
     def commitChanges(self):
         """
@@ -308,8 +343,10 @@ class EventDAO:
             cursor.execute(query,(tID,))
             if not cursor.fetchone():
                 exists = False
-        except:
-            return False
+        except Exception as e:
+            print(e)            
+            exists = False
+            
         return exists
 
     def eventExists(self,eID):
@@ -338,8 +375,18 @@ class EventDAO:
             cursor.execute(query,(eID,))
             if not cursor.fetchone():
                 exists = False
-        except:
-            return False
+        except Exception as e:
+            print(e)
+            exists = False
+
         return exists
+
+    def _closeConnection(self):
+        """
+        Closes the connection to the database.
+
+        """
+        if self.conn is not None:
+            self.conn.close()
     
     

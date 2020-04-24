@@ -85,18 +85,18 @@ class AthleteHandler:
         Returns:
             A JSON containing all valid athletes that are in the database.
         """
+        dao = AthleteDAO()
         try:
-            result = AthleteDAO().getAllAthletes()
+            result = dao.getAllAthletes()
             if not result:
-                return jsonify(Error = "No athletes were found."),404
+                return jsonify(Error = "Ningún atleta fue encontrado."),404
             mappedResult = []
             for athlete in result:
                 mappedResult.append(self.mapAthleteToDict(athlete))
             return jsonify(Athletes = mappedResult),200
-
-
         except:
-            jsonify(Error = "An error ocurred while fetching the athletes."),400
+            dao._closeConnection()
+            return jsonify(Error = "Ocurrió un error, buscando a todos los atletas."),400
 
                 
     
@@ -118,21 +118,26 @@ class AthleteHandler:
         """
         try:
             if not isinstance(int(sID),int):#Validate that the sport id is an integer.
-                return jsonify(Error = "The id of the sport given is invalid."),400
+                return jsonify(Error = "El identificidador del deporte dado es invalido."),400            
         except:
-            return jsonify(Error = "The id of the sport given is invalid."),400
+            return jsonify(Error = "El identificador del deporte dado es invalido."),400
 
         dao = AthleteDAO()
         try:            
+            if not dao.sportExists(sID):
+                dao._closeConnection()
+                return jsonify(Error = "No existe ese deporte en el sistema."),404
+
             result = dao.getAthletesBySport(sID)
             if not result:
-                return jsonify(Error = "Athletes not found for the sport: {}.".format(sID)),404
+                return jsonify(Error = "Atletas no fueron encontrados para el deporte con el siguiente identifador: {}.".format(sID)),404
             mappedResult = []
             for athlete in result:   
                 mappedResult.append(self.mapAthleteWithPositionsAndCategoriesToDict(athlete))
             return jsonify(Atheletes = mappedResult), 200
         except:
-            return jsonify(Error = "An error ocurred while trying to get the athletes of a sport."),400
+            dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno buscando los atletas de un deporte."),500
     
     def getAthleteByID(self,aID):
         """
@@ -150,19 +155,21 @@ class AthleteHandler:
 
         """
         if not isinstance(aID,int):#Validate that the athlete id is an integer.
-            return jsonify(Error = "The id of the athlete must be an integer."),400
+            return jsonify(Error = "El identificidador del atleta dado es invalido."),400
 
         dao = AthleteDAO()
         try:  
-            
-            result = dao.getAthleteByID(aID)
-            if not result:
-                return jsonify(Error = "Athlete with aID:{} not found.".format(aID)),404
-            print(result)
+            if not dao.athleteExists(aID):
+                dao._closeConnection()
+                return jsonify(Error = "No existe un atleta con el siguiente identificador:{}".format(aID)),404
+
+            result = dao.getAthleteByID(aID)           
             mappedResult = self.mapAthleteWithPositionsAndCategoriesToDict(result)
             return jsonify(Athlete = mappedResult), 200
-        except:
-            return jsonify(Error = "An error ocurred while trying to get an athelte by id."),400
+        except Exception as e:
+            print(e)
+            dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno buscando un atleta por su identificador."),500
     
  
 
@@ -182,14 +189,19 @@ class AthleteHandler:
             A JSON object containing the id of the newly added event.
 
         """
-        if not isinstance(sID,int):#Validate that the sport id is an integer.
-            return jsonify(Error =  "The sport id must be in integer."),400
+        if not isinstance(sID,int):#Validate that the sport id is an integer.          
+            return jsonify(Error = "El identificidador del deporte dado es invalido."),400
 
         validationResult = self._validateAttributes(attributes)
         if isinstance(validationResult,str):
             return jsonify(Error = validationResult),400
         
         dao = AthleteDAO()
+
+        if not dao.sportExists(sID):
+            dao._closeConnection()
+            return jsonify(Error = "No existe ese deporte en el sistema."),404
+
 
         aPositions = attributes['positions']
         aCategories = attributes['categories']
@@ -213,11 +225,14 @@ class AthleteHandler:
                                             attributes['school_of_precedence'],attributes['number'],attributes['year_of_study'],
                                             attributes['years_of_participation'],attributes['profile_picture_link'])
             if isinstance(result,str):#If true, result will contain the error message.
+                dao._closeConnection()
                 return jsonify(Error = result),400
 
-            return jsonify(Athlete = "Added new athlete with id:{}.".format(result)),201
+            return jsonify(Athlete = "Un nuevo atleta fue añadido con el identificador:{}.".format(result)),201
         except Exception as e:
-            return jsonify(Error = "Problem ocurred when adding a new athlete." + str(e)),400
+            print(e)
+            dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno tratando de añadir un nuevo atleta."),500
             
     def editAthlete(self,aID,attributes):
         """
@@ -237,27 +252,33 @@ class AthleteHandler:
             A JSON object containing the information of the edited athlete.
         """ 
         if not isinstance(aID,int) or aID < 1:
-            return jsonify(Error =  "The athlete id given is invalid."),400
+             return jsonify(Error = "El identificidador del atleta dado es invalido."),400
 
         validationResult = self._validateAttributes(attributes)
         if isinstance(validationResult,str):
             return jsonify(Error = validationResult),400
         
+        dao = AthleteDAO()
         try: 
-            dao = AthleteDAO()                   
+                              
             if not dao.athleteExists(aID):
-                return jsonify(Error = "Athlete with id:{} does not exist.".format(aID)),404           
+                dao._closeConnection
+                return jsonify(Error = "No existe un atleta con el siguiente identificador:{}".format(aID)),404
+
             result = dao.editAthlete(aID,attributes['first_name'],attributes['middle_name'],attributes['last_names'],
                                                 attributes['bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
                                                 attributes['school_of_precedence'],attributes['number'],attributes['year_of_study'],
                                                 attributes['years_of_participation'],attributes['profile_picture_link'],attributes['positions'],
                                                 attributes['categories'])
             if isinstance(result,str):
-                    return jsonify(Error = result),400
+                    dao._closeConnection()
+                    return jsonify(Error = result),500
             
-            return jsonify(Athlete = "Edited athlete with id: {}".format(result)),200
+            return jsonify(Athlete = "Se editó el atleta con identificador: {}".format(result)),200
         except Exception as e:
-            return jsonify(Error = str(e)),400
+            print(e)
+            dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno tratando de editar un atleta existente"),500
     
     def removeAthlete(self,aID):
         """
@@ -273,15 +294,23 @@ class AthleteHandler:
             A JSON containing the id of the invalidated athlete.
         """
         if not isinstance(aID,int) or aID < 1:
-            return jsonify(Error =  "The athlete id given is invalid"),400
+           return jsonify(Error = "El identificidador del atleta dado es invalido."),400
+
+        dao = AthleteDAO()
         try:
-            dao = AthleteDAO()                              
+                                       
             if not dao.athleteExists(aID):
-                return jsonify(Error = "Athlete with id:{} does not exist.".format(aID)),404
-            result = dao.removeAthlete(aID)            
-            return jsonify(Athlete = "Removed athlete with id:{}.".format(result)),200
-        except:
-            return jsonify(Error = "Problem ocurred when removing an athlete.")
+                dao._closeConnection()            
+                return jsonify(Error = "No existe un atleta con el siguiente identificador:{}".format(aID)),404
+            result = dao.removeAthlete(aID)
+            if not result:
+                dao._closeConnection()
+                return jsonify(Error = "Occurrió un error interno tratando de remover un atleta existente"),500
+            return jsonify(Athlete = "Se removió el atleta con identficador:{}.".format(result)),200
+        except Exception as e:
+            print(e)
+            dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno tratando de remover un atleta existente"),500
 
     def _validateAttributes(self,attributes):
         """
@@ -296,12 +325,10 @@ class AthleteHandler:
         """
 
         if not isinstance(attributes,dict):
-            return "The attributes of the athlete must be in a list."
-        
+            return "Los attributos dados sen invalidos."       
         
         
         #Going to extract the inputs from the attributes dictonary.
-
         try:
             
             aFName = attributes['first_name']
@@ -332,70 +359,139 @@ class AthleteHandler:
    
              #Validation of inputs 
             if not aFName or not isinstance(aFName,str) or len(aFName)>20 or not re.search(cNameReg,aFName):
-                return "First name given does not follow the constraints."
+                return "El primer nombre dado es invalido."
 
             if aMName:                
                 if not isinstance(aMName,str) or len(aMName)>20 or not re.search(cNameReg,aMName):
-                    return "Middle name given does not follow the constraints."
+                    return "El segundo nombre dado es invalido."
 
             if not aLName or not isinstance(aLName,str) or len(aLName)>40 or not re.search(cNameReg,aLName):#Still need to validates all the characters in the last name string.
-                return "Last name given does not follow the constraints."
+                return "Los appellidos dados son invalidos."
 
             if aBio:
                 if not aBio or not isinstance(aBio,str) or len(aBio)>1000 or not re.search(cPhraseReg,aBio):
-                    return "Athlete bio given does not follow the constraints."
+                    return "Biografia de atleta es invalida"
 
             if aHeight:
                 if not isinstance(float(aHeight),float) or aHeight < 48.0 or aHeight > 96.0:
-                    return "Invalid value for height given."
+                    return "Altura dada es invalida."
 
             if aStudyProgram:
                 if not isinstance(aStudyProgram,str) or not re.search(cAlphaSpaceReg,aStudyProgram):
-                    return "The study program given does not follow the constraints."
+                    return "El programa de estudio dado es invalido."
 
             if aDateOfBirth:           
                 try:#Date format validation
                     if not isinstance(aDateOfBirth,str):
-                        return "The date of birth given is not valid."
+                        return "La fecha de nacimiento dada es invalida."
                     parse(aDateOfBirth)
                 except:
-                    return "The date of birth given is not valid."
+                    return "La fecha de nacimiento dada es invalida."
 
 
             if aSchoolOfPrecedence:
                 if not isinstance(aSchoolOfPrecedence,str) or not re.search(cAlphaSpaceReg,aSchoolOfPrecedence):
-                    return "The input given for school of precedence is incorrect."
+                    return "La escuela de precedencia dada es invalida."
 
             if aNumber:
                 if not isinstance(int(aNumber),int) or aNumber < 0 or aNumber > 99:
-                    return "The number of the athlete given is not valid."
+                    return "El número de atleta dado es invalido."
 
             if aYearOfStudy:
                 if not isinstance(int(aYearOfStudy),int) or aYearOfStudy < 1 or aYearOfStudy > 10:
-                    return "The year of study given is not valid."
+                    return "El año de estudio dado es invalido"
 
             if aYearsOfParticipation:
                 if not isinstance(int(aYearsOfParticipation),int) or aYearsOfParticipation < 1 or aYearsOfParticipation > 4 :
-                    return "The years of participation given is not valid."
+                    return "Los años de participación dados son invalidos."
 
             if aProfilePictureLink:
                 if not isinstance(aProfilePictureLink,str):
-                    return "The profile picture link given is not valid."
+                    return "Enlace de imagen de perfil es invalido."
 
             if aPositions:            
                 if not isinstance(aPositions,dict):
-                    return "Positions given are not valid."
+                    return "Posiciones dadas son invalidas."
 
             if aCategories:
                 if not isinstance(aCategories,dict):
-                    return "Categories given are not valid"
+                    return "Categorías dadas son invalidas."
 
             if aPositions and aCategories:
-                return "An athlete can't have  both positions and categories in a sport."
+                return "Un atleta no puede tener posiciones y categorías en un deporte."
         except:
-            return "Bad arguments given."  
+            return "Argumentos invalidos fueron dados."  
 
-        return 1            
+        return 1     
+
+    #NOTE: This will be moved to sport handler
+    def _sportsWithPositionAndCategories(self):
+
+        try:
+            
+            result = AthleteDAO().sportsWithPositionAndCategories()
+            if not result:
+                return jsonify(Error = "Error interno"),500
+            
+            return jsonify(Sports = self.mapSportsWithPositionsAndCategories(result)),200
+            
+        except Exception as e:
+            return jsonify(Error = str(e)),500
+                
+    #NOTE:This will be moved to sport handler
+    def mapSportsWithPositionsAndCategories(self,sportRecords):
+        mappedRecords = []
+        
+        for row in sportRecords:
+            result = {}
+            # Extract record attributes.
+            sport_id = row[0]
+            sport_name = row[1]
+            sport_branch = row[2]
+            position_name = row[3]
+            category_name = row[4]
+            print(row)
+            # Case: sport not already considered.
+            if not mappedRecords:
+                if sport_id not in result:
+                    
+                    result['sport_id'] = sport_id
+                    result['sport_name'] = sport_name
+                    result['branch_name'] = sport_branch if sport_branch else ''
+                    result['positions'] = [position_name] if position_name else []
+                    result['categories'] = [category_name] if category_name else []
+                    mappedRecords.append(result)
+                    continue
+            else:
+                flag = False
+                for record in mappedRecords:
+                    print(record)
+                    if sport_id == record['sport_id']:
+                        print('match found')
+                        if position_name and position_name not in record['positions']:
+                            record['positions'].append(position_name)
+
+                        if category_name and category_name not in record['categories']:
+                            print(record['categories'])
+                            record['categories'].append(category_name)
+                        
+                        flag = True
+                        break                       
+                        
+                if flag:
+                    continue
+
+                else:
+                    result['sport_id'] = sport_id
+                    result['sport_name'] = sport_name
+                    result['branch_name'] = sport_branch if sport_branch else ''
+                    result['positions'] = [position_name] if position_name else []
+                    result['categories'] = [category_name] if category_name else []
+                    mappedRecords.append(result)
+                    continue           
+
+        return mappedRecords
+
 
 
 

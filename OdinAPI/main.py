@@ -66,7 +66,7 @@ def athletes():
     if request.method == 'POST':
         json = request.json
         if not 'sID' in json or not 'attributes' in json:
-            return jsonify(Error = "Bad Request"),400
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
 
         return handler.addAthlete(json['sID'], json['attributes'])
 
@@ -76,7 +76,7 @@ def athletes():
             return handler.getAllAthletes()    
 
         if not 'sID' in json:
-            return jsonify(Error = "Bad Request"),400
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
 
         return handler.getAthletesBySport(json['sID'])
 
@@ -89,7 +89,7 @@ def athleteByID(aid):
     elif request.method == 'PUT':
         json = request.json
         if 'attributes' not in json:
-            return jsonify(Error = "Bad Request"),400
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
 
         return handler.editAthlete(aid, json['attributes'])
         
@@ -269,7 +269,7 @@ def eventsById(eID):
     elif request.method == 'PUT':
         json = request.json        
         if 'attributes' not in json:
-            return jsonify(Error = "Bad arguments"),400            
+            return jsonify(Error = "Argumentos dados son incorrectos."),400            
         return handler.editEvent(eID, json['attributes'])
     elif request.method == 'DELETE':
         return handler.removeEvent(eID)
@@ -283,7 +283,7 @@ def teamEvents(tID):
     elif request.method == 'POST':
         json = request.json    
         if not json or 'attributes' not in json:
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
         return handler.addEvent(tID, json['attributes'])
 
 
