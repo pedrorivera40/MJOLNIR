@@ -87,7 +87,7 @@
               <v-container v-else>
                 <v-row align = "center" justify = "center">
                   <v-col justify = "center" align = "center">
-                    <h2>No Team Found</h2>
+                    <h2>No Se Encontro Equipo</h2>
                   </v-col>
                 </v-row>
               </v-container>
@@ -127,7 +127,7 @@
           <v-container v-else>
             <v-row align = "center" justify = "center">
               <v-col justify = "center" align = "center">
-                <h2>No Team Members Found</h2>
+                <h2>No Se Encontraron Miembros de Equipo</h2>
               </v-col>
             </v-row>
           </v-container>
@@ -246,6 +246,7 @@ export default {
       sport_name:'',     
 			branch:'Masculino', 
       sport_id:'',
+      sport_route:'',
 			season:'',
 			// seasonsseasons:['2020'],
       headers:[],
@@ -362,7 +363,8 @@ export default {
             console.log("INDEX LEVEL QUERY MEMBERS:",this.team.members)
             const team_params = {
               sport_id: String(this.sport_id),
-              season_year: String(this.season)
+              season_year: String(this.season),
+              sport_route: String(this.sport_route)
             }
             console.log("INDEX LEVEL STAT PARAMS:",this.team_params)
             this.getMemberStatistics(team_params)
@@ -376,12 +378,20 @@ export default {
       },
       formated_member_stats(){
         if(this.member_statistics){
-          this.statistics_per_season = this.member_statistics.Basketball_Event_Season_Athlete_Statistics
+          if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.statistics_per_season = this.member_statistics.Basketball_Event_Season_Athlete_Statistics}
+          else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.statistics_per_season = this.member_statistics.Volleyball_Event_Season_Athlete_Statistics}
+          else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.statistics_per_season = this.member_statistics.Soccer_Event_Season_Athlete_Statistics}
+          else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.statistics_per_season = this.member_statistics.Baseball_Event_Season_Athlete_Statistics}
+          else{
+            this.statistics_per_season = null
+            return false  
+          }
           if(this.readyForTeamStats){
             console.log("INDEX LEVEL QUERY MEMBER STATS:",this.statistics_per_season)
             const team_params = {
               sport_id: String(this.sport_id),
-              season_year: String(this.season)
+              season_year: String(this.season),
+              sport_route: String(this.sport_route)
             }
             console.log("STRAIGHT FROM MEMBERS= STATS, PARAMS ARE:",this.team.members)
             this.getTeamStatistics(team_params)
@@ -396,8 +406,15 @@ export default {
 
       formated_team_stats(){
         if(this.team_statistics){
-          console.log("//////=====HEWWO MISTER OBAMA=======////",this.team_statistics)
-          this.team_statistics_per_season = [this.team_statistics.Basketball_Event_Season_Team_Statistics]
+          console.log("//////=====THIS IS A FUCKING TEST YO=======////",this.team_statistics)
+          if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Basketball_Event_Season_Team_Statistics]}
+          else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Volleyball_Event_Season_Team_Statistics]}
+          else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.team_statistics_per_season = [this.team_statistics.Soccer_Event_Season_Team_Statistics]}
+          else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Baseball_Event_Season_Team_Statistics]}
+          else{
+            this.team_statistics_per_season = null
+            return false
+          }
           return true
         }
         else{
@@ -586,10 +603,11 @@ export default {
         let currentYear = new Date(2023,8).getFullYear()
         this.defaultSelected.push({'season_year':currentYear})
         this.sport_id = this.$route.params.id
-        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_name = "Baloncesto"}
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_name = "Voleibol"}
-        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_name = "Futbol"}
-        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol"}
+        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_name = "Baloncesto", this.sport_route = "basketball"}
+        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_name = "Voleibol",this.sport_route = "volleyball"}
+        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_name = "Fútbol", this.sport_route = "soccer"}
+        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol", this.sport_route = "baseball"}
+        else{this.sport_name = '', this.sport_route = ''}
         
       },
       // getMembersData(){

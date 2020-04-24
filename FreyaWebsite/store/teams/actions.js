@@ -88,8 +88,9 @@ export default{
            
             let sport_id = team_params.sport_id
             let season_year = team_params.season_year
+            let sport_route = team_params.sport_route
             //console.log("At the request level we have:",sport_id,season_year)
-            const response = await this.$axios.get('/results/basketball/season/all_athletes_aggregate/?sport_id='+sport_id+'&season_year='+season_year)
+            const response = await this.$axios.get('/results/'+sport_route+'/season/all_athletes_aggregate/?sport_id='+sport_id+'&season_year='+season_year)
             //console.log("GET MEMBER STATS:",response)
             console.log("GET MEMBER STATS:",response.data)
             commit("SET_MEMBER_STATISTICS",response.data)
@@ -107,8 +108,9 @@ export default{
          
             let sport_id = team_params.sport_id
             let season_year = team_params.season_year
+            let sport_route = team_params.sport_route
             //console.log("At the request level we have:",sport_id,season_year)
-            const response = await this.$axios.get('/results/basketball/season/team_aggregate/?sport_id='+sport_id+'&season_year='+season_year)
+            const response = await this.$axios.get('/results/'+sport_route+'/season/team_aggregate/?sport_id='+sport_id+'&season_year='+season_year)
             //console.log("GET TEAM STATS:",response)
             console.log("GET TEAM STATS:",response.data)
             commit("SET_TEAM_STATISTICS",response.data)
