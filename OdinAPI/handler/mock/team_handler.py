@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 
 
-class _mockEventHandler:
+class _mockTeamHandler:
 
     def __init__(self):
         '''
