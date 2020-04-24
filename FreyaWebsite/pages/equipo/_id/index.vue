@@ -156,7 +156,7 @@
                     dense 
                     :headers="headers" 
                     :items="statistics_per_season" 
-                    item-key="season_stats" 
+                    item-key="statistics_per_season" 
                     class="elevation-1"								
                     loading-text="Recolectando Data...Por favor espere"
                     v-if="statistics_per_season != ''"

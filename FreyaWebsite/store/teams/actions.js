@@ -1,8 +1,8 @@
+
 export default{
     async getTeamByYear({commit},team_params){
         try{
             //console.log("GET TEAM: At actions level we have:",team_params)
-            
             let sport_id = team_params.sport_id
             let season_year = team_params.season_year
             //console.log("At the request level we have:",sport_id,season_year)
@@ -11,6 +11,7 @@ export default{
             console.log("GET TEAM",response.data)
             commit("SET_TEAM",response.data.Team)
             commit("SET_READY_MEMBERS")
+            // commit("SET_ATHLETE",null,{root:true})
             
         }catch(error){
             console.log("ERROR GETTING TEAM",team_params,error)
