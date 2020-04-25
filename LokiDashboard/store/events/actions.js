@@ -29,6 +29,20 @@ export default {
         }
     },
 
+    async getEventTeams({commit,dispatch}) {
+        try{
+            const response = await this.$axios.get('teams/all/')
+            commit("SET_EVENT_TEAMS",response.data.Teams)            
+
+        }catch(error){
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
+        }
+    },
+
     async addEvent({commit,dispatch},eventJSON){
         try{
             commit("SET_EVENTS",[])

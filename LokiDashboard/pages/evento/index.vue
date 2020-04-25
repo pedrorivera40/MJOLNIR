@@ -184,9 +184,8 @@
 
 <script>
 
-  import rules from "../../utils/validations"   
-  import teamsData from "../../data/eventsPagesData/teams.json"
-  import {mapActions} from "vuex"
+  import rules from "../../utils/validations"    
+  import {mapActions,mapGetters} from "vuex"
   export default {
     
     data: () => ({
@@ -204,7 +203,7 @@
       year:'',
       team:'',
       teamsList:[],     
-      teams:teamsData,      
+         
       
     }),
 
@@ -214,7 +213,8 @@
       ...rules,
 
       ...mapActions({
-        addEvent:"events/addEvent"
+        addEvent:"events/addEvent",
+        getEventTeams:"events/getEventTeams"
       }),
 
       submit () {        
@@ -237,6 +237,7 @@
         
       },
       clear () {
+        
         this.locality =''
         this.team = ''
         this.eventSummary = null
@@ -254,7 +255,7 @@
       },
 
       formated(){
-        if(this.teams){
+        if(this.teams.length > 0){
           if(this.ready){
             return true
           }
@@ -281,5 +282,17 @@
 
       
     },
+
+    computed: {
+		...mapGetters({
+			 teams:"events/event_teams"
+		}),
+		
+
+	},
+	mounted() {
+		this.getEventTeams();
+		
+	}
   }
 </script>

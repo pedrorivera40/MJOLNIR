@@ -8,5 +8,9 @@ export default {
         
         state.events = events
     },
+
+    SET_EVENT_TEAMS(state,event_teams){
+        state.event_teams = event_teams
+    },
     
 }
