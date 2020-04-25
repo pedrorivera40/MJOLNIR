@@ -577,18 +577,23 @@ class VolleyballPBPHandler:
             if not isinstance(event_id, int) or not isinstance(athlete_id, int):
                 return jsonify(ERROR="Values for event_id and athlete_id must be integer."), 400
 
-            event_info, resp_code = EventHandler().getEventById(event_id)
-            event_info = event_info.json
+            event_info = EventHandler().getEventById(event_id)
+            event_info = event_info[0].json
 
             if not event_info.get("EVENT"):
                 return jsonify(ERROR="Event does not exist."), 400
 
             event_info = event_info.get("EVENT")
-
             team_roster = TeamHandler().getTeamMembersByID(
                 event_info["team_id"])
 
+            team_roster = team_roster[0].json
+            if not team_roster.get("TEAM"):
+                return jsonify(ERROR="Unable to retrieve roster for event."), 400
+
+            team_roster = team_roster.get("TEAM")
             athlete_info = None
+
             for athlete in team_roster:
                 if athlete["athlete_id"] == athlete_id:
                     athlete_info = athlete
@@ -615,7 +620,8 @@ class VolleyballPBPHandler:
                 "number": athlete_info["number"],
                 "first_name": athlete_info["first_name"],
                 "middle_name": athlete_info["middle_name"],
-                "last_names": athlete_info["last_names"]
+                "last_names": athlete_info["last_names"],
+                "profile_image_link": athlete_info["profile_image_link"]
             }
 
             pbp_dao.set_uprm_athlete(event_id, player_info)
@@ -661,7 +667,6 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Athlete information set in the system."), 200
 
         except Exception as e:
-            print(str(e))
             return jsonify(ERROR=str(e)), 500
 
     def removeUPRMPlayer(self, event_id,  player_id):
@@ -688,7 +693,7 @@ class VolleyballPBPHandler:
             if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(ERROR="Not volleyball PBP sequence"), 403
 
-            if not player_id in pbp_dao.get_uprm_roster(event_id):
+            if not str(player_id) in pbp_dao.get_uprm_roster(event_id):
                 return jsonify(ERROR="Player does not exist."), 404
 
             pbp_dao.remove_uprm_athlete(event_id, player_id)
