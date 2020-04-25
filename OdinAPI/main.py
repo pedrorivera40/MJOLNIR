@@ -728,6 +728,8 @@ def pbp_roster(sport):
             return jsonify(ERROR="Bad request. Values for team, event id, and data must be included in request body."), 400
 
         data = body["data"]
+
+        # For UPRM, data is the athlete_id.
         if team == "uprm":
             return handler.setUPRMPlayer(event_id, data)
 

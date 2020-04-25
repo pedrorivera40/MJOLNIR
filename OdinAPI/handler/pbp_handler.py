@@ -561,13 +561,12 @@ class VolleyballPBPHandler:
 
     def setUPRMPlayer(self, event_id, athlete_id):
         """
-        Add an athlete to UPRM roster or updates its value if exists in the system.
+        Add an athlete to UPRM roster in the system.
         This function adds an athlete to UPRM roster given it's event_id.
-        If the athlete exists, it updates its information.
 
         Args
             event_id: integer corresponding to an event id.
-            athlete_id: integer corresponding to an athlete id.
+            athlete_id: integer corresponding to an event id.
 
         Returns:
             Response containing a MSG in case of success, or ERROR message in case of failure.
@@ -578,8 +577,14 @@ class VolleyballPBPHandler:
             if not isinstance(event_id, int) or not isinstance(athlete_id, int):
                 return jsonify(ERROR="Values for event_id and athlete_id must be integer."), 400
 
-            event_handler = EventHandler()
-            event_info = event_handler.getEventById(event_id)
+            event_info, resp_code = EventHandler().getEventById(event_id)
+            event_info = event_info.json
+
+            if not event_info.get("EVENT"):
+                return jsonify(ERROR="Event does not exist."), 400
+
+            event_info = event_info.get("EVENT")
+
             team_roster = TeamHandler().getTeamMembersByID(
                 event_info["team_id"])
 
@@ -599,7 +604,11 @@ class VolleyballPBPHandler:
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Not volleyball PBP sequence"), 403
+                return jsonify(ERROR="Not volleyball PBP sequence."), 403
+
+            uprm_roster = pbp_dao.get_uprm_roster(event_id)
+            if athlete_id in uprm_roster:
+                return jsonify(ERROR="Athlete already exists in UPRM's PBP roster."), 403
 
             player_info = {
                 "athlete_id": athlete_id,
