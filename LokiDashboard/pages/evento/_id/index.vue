@@ -23,138 +23,73 @@
 						:src="event.sport_img_url"
 					></v-img>
 				</v-row>
-				<v-row>
-						<v-col
-							cols="1"
-							md="3"
-						>	
 
-							<h2>Resumen de Evento:</h2>
-							
-						</v-col>
-
-						<v-col
-							cols="12"
-							md="9"
-						>
-						
-							<v-textarea
-								v-model="event.event_summary"    
-								
-								label="Resumen"
-								rows="2"
-								readonly
-								outlined
-							></v-textarea>
-							
-						</v-col>
-				</v-row>
-
-				<v-row>            
-					<v-col
-						cols="12"
-						md="3"
+				<v-row class="text-wrap">            
+					<v-col						
+						md="12"
 					>	
-
-					<h2>Fecha del Evento:</h2>						               
+				
+					<v-card-text>
+							<h2 class="text-wrap">Fecha del Evento:<wbr> {{date}}</h2>
+					</v-card-text>						               
 					</v-col>
 
-					<v-col
-						cols=12
-						md=2
-					>
-						<v-text-field
-							v-model="date"
-							label="Fecha"								
-							readonly
-												
-						></v-text-field>
-					</v-col>             
+				      
 				</v-row>
+				<v-row>
+					<v-col						
+						md="12"
+					>	
+					<v-card-text >
+							<h2>Equipo de UPRM: {{team}}</h2>							
+					</v-card-text>					
+					</v-col>					
+				</v-row>				
 
 				<v-row>
-					<v-col
-						cols="1"
-						md="3"
+					<v-col					
+						md="12"
 					>	
-
-					<h2>Localización:</h2>
-					
-					</v-col>
-
-					<v-col
-						cols="12"
-						md="3"
-					>							
-						<v-text-field
-							:value="getLocality()"							
-							label ="Localización"
-							readonly
-							
-						></v-text-field>						
-					</v-col>
-
-					<v-col
-						cols="12"
-						md="3"
+						<v-card-text >
+							<h2>Localización: {{getLocality()}}</h2>							
+						</v-card-text>	
+					</v-col>					
+				</v-row>
+				<v-row>			
+					<v-col						
+						md="12"
 					>						
-						<v-text-field
-							v-model="event.venue"									                    
-							label="Lugar del Evento"
-							readonly
-							
-						></v-text-field>							
+						<v-card-text >
+							<h2>Lugar del Evento: {{event.venue}}</h2>							
+						</v-card-text>								
 					</v-col>
+				</v-row>
+		
+
+				<v-row>
+					<v-col						
+						md="12"
+					>	
+						<v-card-text >
+							<h2>Nombre de Oponente: {{event.opponent_name}}</h2>							
+						</v-card-text>							
+						
+					</v-col>				
 				</v-row>
 
 				<v-row>
-					<v-col
-						cols="1"
-						md="3"
-					>	
-
-					<h2>Equipo de UPRM:</h2>
-						
-					</v-col>
-
-					<v-col
-						cols="1"
-						md="9"
-					>
-						<v-text-field
-								v-model="team"
-								label="Equipo"									
-								readonly                
-								
-						></v-text-field>
-					</v-col>
+						<v-col						
+							md="12"
+						>	
+							<v-card-text>
+								<h2>Resumen de Evento:</h2>
+								<p>
+								{{event.event_summary}}
+								</p>
+							</v-card-text>
+						</v-col>
 				</v-row>
-
-				<v-row>
-					<v-col
-						cols="1"
-						md="3"
-					>	
-
-						<h2>Nombre de Oponente:</h2>
-						
-					</v-col>
-
-					<v-col
-						cols="12"
-						md="4"
-					>
-						<v-text-field
-							v-if="event"
-							v-model="event.opponent_name"									                  
-							label="Oponente"
-							readonly
-							required
-						></v-text-field>
-					
-					</v-col>
-				</v-row>
-
+		
 
 				<v-row>
 					<v-spacer/>
@@ -224,7 +159,7 @@ export default {
 					else
 						this.locality = 'Afuera'
 					
-					this.team = "Deporte: " + this.event.sport_name + '-' + this.event.branch + " Temporada: " + this.event.team_season_year
+					this.team = this.event.sport_name + '-' + this.event.branch + '-'+ this.event.team_season_year
 					
 					this.ready = true
 				}
@@ -252,3 +187,12 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+h2{
+	font-weight: normal;
+	word-break: keep-all;	
+}
+
+
+</style>

@@ -8,8 +8,7 @@ export default{
 
         }catch(error){
             console.log(error.response.data.Error)
-
-            commit("DONE_LOADING",'users')
+           
         }
     },
 

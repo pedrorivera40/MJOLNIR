@@ -145,10 +145,8 @@ import { mapActions, mapGetters} from "vuex"
 
 export default {
 
-    data: () =>({
-    
-      //NOTE: Using pre-written data for athlete with id:8,
-      //      will need to fetch this data below from the API.
+    data: () =>({    
+     
       ready: false,
       first_name: '',
       middle_name: '',

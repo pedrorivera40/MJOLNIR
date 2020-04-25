@@ -368,7 +368,7 @@ class EventHandler:
             except:
                 return "Fecha del evento dada es invalida."
 
-            if not isLocal or not isinstance(bool(isLocal),bool):
+            if isLocal == None or not isinstance(bool(isLocal),bool):                
                 return "Localidad dada es invalida."
 
             if venue:
