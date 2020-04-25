@@ -23,4 +23,4 @@ class TestAddUPRMRosterVolleyballPBP(unittest.TestCase):
             data["invalid_uprm_roster2"]), content_type='application/json', follow_redirects=True)
         expected_msg = "Athlete does not exist in the event roster."
         self.assertEqual(response.status_code, 400)
-        self.assertMultiLineEqual(expected_msg, response.json["MSG"])
+        self.assertMultiLineEqual(expected_msg, response.json["ERROR"])

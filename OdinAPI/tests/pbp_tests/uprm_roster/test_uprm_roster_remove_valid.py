@@ -12,7 +12,7 @@ class TestRemoveUPRMRosterVolleyballPBP(unittest.TestCase):
         self.client = app.test_client()
 
     def test_uprm_roster_remove_valid(self):
-        response = self.client.post('/pbp/Voleibol/roster', data=json.dumps(
+        response = self.client.delete('/pbp/Voleibol/roster', data=json.dumps(
             data["valid_to_remove"]), content_type='application/json', follow_redirects=True)
         expected_msg = "Athlete information removed from the system."
         self.assertEqual(response.status_code, 200)

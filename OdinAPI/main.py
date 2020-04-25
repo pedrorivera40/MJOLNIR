@@ -703,7 +703,7 @@ def pbp_set_color(sport):
     return jsonify(ERROR="Bad request, client must pass both event id and hex color within request body."), 400
 
 
-@app.route("/pbp/<string:sport>/roster", methods=['POST', 'PUT', 'DELETE'])
+@app.route("/pbp/<string:sport>/roster", methods=['POST', 'DELETE'])
 def pbp_roster(sport):
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
     body = request.get_json()
@@ -722,7 +722,7 @@ def pbp_roster(sport):
     team = body["team"]
     event_id = body["event_id"]
 
-    if request.method == 'POST' or request.method == 'PUT':
+    if request.method == 'POST':
         # Validate data is present in body.
         if len(body) != 3 or not "data" in body:
             return jsonify(ERROR="Bad request. Values for team, event id, and data must be included in request body."), 400
