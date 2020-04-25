@@ -450,7 +450,7 @@ class AthleteHandler:
             sport_branch = row[2]
             position_name = row[3]
             category_name = row[4]
-            print(row)
+            #print(row)
             # Case: sport not already considered.
             if not mappedRecords:
                 if sport_id not in result:
@@ -463,11 +463,11 @@ class AthleteHandler:
                     mappedRecords.append(result)
                     continue
             else:
-                flag = False
+                foundMatch = False
                 for record in mappedRecords:
-                    print(record)
+                    #print(record)
                     if sport_id == record['sport_id']:
-                        print('match found')
+                        #print('match found')
                         if position_name and position_name not in record['positions']:
                             record['positions'].append(position_name)
 
@@ -475,10 +475,10 @@ class AthleteHandler:
                             print(record['categories'])
                             record['categories'].append(category_name)
                         
-                        flag = True
+                        foundMatch = True
                         break                       
                         
-                if flag:
+                if foundMatch:
                     continue
 
                 else:

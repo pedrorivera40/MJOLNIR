@@ -132,14 +132,15 @@ class SportDAO:
         Returns:
             A list of tuples which represent the response to the database query.
             Each sport tuple follows the following structure:
-                (sport_id, sport_name, sport_image_url, position_name, category_name).
+                (sport_id, sport_name, branch_name, position_name, category_name).
         """
 
         cursor = self.conn.cursor()
         query = '''
-                select S.id, S.name, S.sport_image_url, P.name as position_name, C.name as category_name
-                from (sport as S full join position as P on S.id = P.sport_id) 
-					  full join category as C on S.id = C.sport_id;
+                select S.id, S.name, B.name, P.name as position_name, C.name as category_name
+                from (sport as S inner join branch as B on S.branch_id = B.id)
+                full join position as P on S.id = P.sport_id
+                full join category as C on S.id = C.sport_id;
                 '''
 
         cursor.execute(query)
