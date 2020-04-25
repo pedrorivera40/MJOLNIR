@@ -181,7 +181,7 @@
 
   import rules from "../../utils/validations"   
   import teamsData from "../../data/eventsPagesData/teams.json"
-
+  import {mapActions} from "vuex"
   export default {
     
     data: () => ({
@@ -207,25 +207,29 @@
     methods: {
       ...rules,
 
+      ...mapActions({
+        addEvent:"events/addEvent"
+      }),
+
       submit () {
 
-        let event_attributes = {}
+        const event_attributes = {}
 
         event_attributes['event_date'] = this.date
 
         if(this.locality.localeCompare('Casa') == 0)
           event_attributes['is_local'] = true
         else if(this.locality.localeCompare('Afuera') == 0)
-          event_attributes['is_local'] = false
+          event_attributes['is_local'] = false        
         
-        event_attributes['team_id'] = this.team
+        event_attributes['venue'] = this.venue
         event_attributes['opponent_name'] = this.opponent_name
         event_attributes['event_summary'] = this.eventSummary
+        
+        const eventJSON = {'team_id':this.team,'attributes':event_attributes}
+        this.addEvent(eventJSON)
 
-        console.log("Creating a new event with the following information:")
-        console.log(event_attributes)
-
-        this.$router.push('/eventos/')
+       
         
       },
       clear () {
