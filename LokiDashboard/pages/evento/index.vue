@@ -17,8 +17,7 @@
       <v-form v-model="valid" v-if="formated()">
         <v-container>            
           <v-row>            
-            <v-col
-              cols="1"
+            <v-col             
               md="3"
             >	
 
@@ -27,7 +26,6 @@
             </v-col>
 
             <v-col
-              cols="12"
               
             >
             <v-date-picker
@@ -43,9 +41,24 @@
             </v-col>
           </v-row>
 
+          <v-row>            
+            <v-col             
+              md="3"
+            >	
+
+            <h2>Hora del Evento:</h2>
+              
+            </v-col>
+
+            <v-col>                  
+            
+             <v-time-picker v-model="time" color="green darken-1"></v-time-picker>
+              
+            </v-col>
+          </v-row>
+
           <v-row>
-            <v-col
-              cols="1"
+            <v-col            
               md="3"
             >	
 
@@ -53,8 +66,7 @@
             
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="3"
             >                
               <v-select
@@ -65,8 +77,7 @@
               ></v-select>                
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="4"
             >          
               <v-text-field
@@ -79,8 +90,7 @@
           </v-row>
 
           <v-row >
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >	
 
@@ -88,8 +98,7 @@
               
             </v-col>
 
-            <v-col 
-              cols="1"
+            <v-col             
               md="9"
               
             >               
@@ -108,8 +117,7 @@
           </v-row>
 
           <v-row>
-            <v-col
-              cols="1"
+            <v-col             
               md="3"
             >	
 
@@ -117,8 +125,7 @@
               
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col             
               md="4"
             >              
               <v-text-field
@@ -131,8 +138,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >	
 
@@ -140,8 +146,7 @@
               
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="9"
             >                
               <v-textarea
@@ -187,7 +192,8 @@
     data: () => ({
       ready : false,
       valid:false,
-			date:'', 
+      date:'',
+      time:'', 
 			locality:'',
 			localities:['Casa','Afuera'],
 			venue:'',
@@ -211,11 +217,11 @@
         addEvent:"events/addEvent"
       }),
 
-      submit () {
-
+      submit () {        
+        
         const event_attributes = {}
 
-        event_attributes['event_date'] = this.date
+        event_attributes['event_date'] = this.date + ' ' + this.time
 
         if(this.locality.localeCompare('Casa') == 0)
           event_attributes['is_local'] = true
@@ -227,9 +233,7 @@
         event_attributes['event_summary'] = this.eventSummary
         
         const eventJSON = {'team_id':this.team,'attributes':event_attributes}
-        this.addEvent(eventJSON)
-
-       
+        this.addEvent(eventJSON)     
         
       },
       clear () {
@@ -269,8 +273,9 @@
       resetDate()
       {
         let time_zone_offset = new Date().getTimezoneOffset() * 60000
-      
-        this.date = new Date(Date.now() - time_zone_offset).toISOString().substring(0,10)
+        const newDate =  new Date(Date.now() - time_zone_offset)
+        this.date = newDate.toISOString().substring(0,10)
+        this.time = newDate.getUTCHours()+':'+newDate.getUTCMinutes()
         
       }
 

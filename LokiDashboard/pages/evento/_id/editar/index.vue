@@ -15,7 +15,15 @@
     <v-card-text>            
       
       <v-form v-model="valid" v-if="formated()">
-        <v-container>            
+        <v-container>  
+
+          <v-row>
+            <v-col> 	
+
+              <h2>Equipo de UPRM: {{team}}</h2>
+              
+            </v-col>        
+          </v-row>          
           <v-row>            
             <v-col              
               md="12"
@@ -41,13 +49,23 @@
             </v-col>
           </v-row>
 
-          <v-row>
-            <v-col> 	
-
-              <h2>Equipo de UPRM: {{team}}</h2>
+          <v-row>            
+            <v-col>
+            <h2>Hora del Evento:</h2>
               
-            </v-col>        
+            </v-col>
           </v-row>
+          <v-row>
+            <v-col>                  
+            
+             <v-time-picker 
+              v-model="time" 
+              :landscape="$vuetify.breakpoint.mdAndUp"
+              color="green darken-1"
+              ></v-time-picker>
+              
+            </v-col>
+          </v-row>          
 
           <v-row>
             <v-col              
@@ -164,7 +182,8 @@ export default {
   data: () => ({
     ready:false,
     valid:false,
-    date:'', 
+    date:'',     
+    time:'',
     locality:Boolean,
     localities:[{'text':'Casa','value':true},{'text':'Afuera','value':false}],
     venue:'',
@@ -191,7 +210,7 @@ export default {
     
       const event_attributes = {}
 
-      event_attributes['event_date'] = this.date    
+      event_attributes['event_date'] = this.date + ' ' + this.time
       event_attributes['is_local'] = this.locality      
       event_attributes['venue'] = this.venue
       event_attributes['opponent_name'] = this.opponent_name
@@ -224,8 +243,14 @@ export default {
 					return true
 				}
 				else{
-					this.date = new Date(Date.parse(this.event.event_date)).toISOString().substr(0,10)
-            
+          
+          let eventDate = new Date(Date.parse(this.event.event_date))
+          this.date = eventDate.toISOString().substr(0,10)
+          
+          this.time = eventDate.getUTCHours() + ':' + eventDate.getUTCMinutes()
+          
+
+
           this.locality = this.event.is_local
 				
 					this.team = this.event.sport_name + '-' + this.event.branch + '-' + this.event.team_season_year		

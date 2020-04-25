@@ -15,7 +15,7 @@ export default {
         }
     },
 
-    async getEventByID({commit},eid) {
+    async getEventByID({commit,dispatch},eid) {
         try{
             const response = await this.$axios.get('events/'+eid+'/')
             commit("SET_EVENT",response.data.Event)            
@@ -35,7 +35,7 @@ export default {
             
             const response = await this.$axios.post('events/team/'+eventJSON.team_id+'/',eventJSON)
             dispatch('notifications/setSnackbar', {text: response.data.Event, color: 'success'}, {root: true})
-            //this.$router.push('/eventos/')
+            this.$router.push('/eventos/')
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})

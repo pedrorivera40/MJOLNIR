@@ -24,18 +24,28 @@
 					></v-img>
 				</v-row>
 
-				<v-row class="text-wrap">            
+				<v-row>            
 					<v-col						
 						md="12"
 					>	
 				
 					<v-card-text>
-							<h2 class="text-wrap">Fecha del Evento:<wbr> {{date}}</h2>
+							<h2>Fecha del Evento:<wbr> {{date}}</h2>
 					</v-card-text>						               
-					</v-col>
-
-				      
+					</v-col>			      
 				</v-row>
+
+				<v-row>            
+					<v-col						
+						md="12"
+					>	
+				
+					<v-card-text>
+							<h2>Hora del Evento:<wbr> {{time}}</h2>
+					</v-card-text>						               
+					</v-col>			      
+				</v-row>
+				
 				<v-row>
 					<v-col						
 						md="12"
@@ -117,7 +127,9 @@ export default {
 		
 		team:'',
 		locality:'',		
-		ready:false,		   
+		ready:false,
+		time:'',
+		date:''		   
 		
 	}),
 
@@ -152,7 +164,26 @@ export default {
 					return true
 				}
 				else{
-					this.date = new Date(Date.parse(this.event.event_date)).toISOString().substr(0,10)
+					let eventDate = new Date(Date.parse(this.event.event_date))
+					this.date = eventDate.toISOString().substr(0,10)
+					let hours = eventDate.getUTCHours()
+					let minutes = eventDate.getUTCMinutes()
+					
+					let amPM = null
+					if(hours > 12){
+						amPM = 'PM'
+						hours -= 12
+					}
+					else if(hours < 12)
+						amPM = 'AM'
+
+					if(minutes < 10)
+						this.time = hours + ":0"+minutes + amPM
+					else if(minutes >=10)
+						this.time = hours + ":" +minutes + amPM
+						
+				 	
+				
 					if(this.event.is_local)
 						this.locality = 'Casa'
 				
