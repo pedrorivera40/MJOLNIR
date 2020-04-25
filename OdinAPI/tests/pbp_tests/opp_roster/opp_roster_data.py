@@ -17,7 +17,7 @@ data = {
     },
     "valid_to_remove": {
         "event_id": 28,
-        "athlete_id": 12,
+        "athlete_id": 15,
         "team": "opponent"
     },
     "invalid_to_remove1": {

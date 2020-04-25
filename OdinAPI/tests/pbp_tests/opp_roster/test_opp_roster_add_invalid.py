@@ -1,7 +1,7 @@
 import unittest
 import json
 from main import app
-from tests.pbp_tests.uprm_roster.uprm_roster_data import data
+from tests.pbp_tests.opp_roster.opp_roster_data import data
 
 
 class TestAddOppRosterVolleyballPBP(unittest.TestCase):
@@ -15,5 +15,5 @@ class TestAddOppRosterVolleyballPBP(unittest.TestCase):
         response = self.client.post('/pbp/Voleibol/roster', data=json.dumps(
             data["invalid_data1"]), content_type='application/json', follow_redirects=True)
         expected_msg = "PBP sequence does not exist."
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])

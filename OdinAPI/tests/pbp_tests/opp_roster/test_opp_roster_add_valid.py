@@ -1,7 +1,7 @@
 import unittest
 import json
 from main import app
-from tests.pbp_tests.uprm_roster.uprm_roster_data import data
+from tests.pbp_tests.opp_roster.opp_roster_data import data
 
 
 class TestAddOppRosterVolleyballPBP(unittest.TestCase):

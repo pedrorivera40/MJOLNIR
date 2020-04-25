@@ -661,6 +661,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Athlete information set in the system."), 200
 
         except Exception as e:
+            print(str(e))
             return jsonify(ERROR=str(e)), 500
 
     def removeUPRMPlayer(self, event_id,  player_id):
@@ -720,7 +721,7 @@ class VolleyballPBPHandler:
             if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(ERROR="Not volleyball PBP sequence"), 403
 
-            if not player_id in pbp_dao.get_opponent_roster(event_id):
+            if not str(player_id) in pbp_dao.get_opponent_roster(event_id):
                 return jsonify(ERROR="Player does not exist."), 404
 
             pbp_dao.remove_opponent_athlete(event_id, player_id)

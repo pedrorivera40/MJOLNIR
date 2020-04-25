@@ -89,7 +89,7 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["uprm-roster"] + \
-            "/" + athlete_entry["athlete_id"]
+            "/" + str(int(athlete_entry["athlete_id"]))
         self._rtdb.reference(path).set(athlete_entry)
 
     def set_opponent_athlete(self, event_id, athlete_entry):
@@ -109,7 +109,7 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["opp-roster"] + \
-            "/" + athlete_entry["number"]
+            "/" + str(int(athlete_entry["number"]))
         self._rtdb.reference(path).set(athlete_entry)
 
     def remove_uprm_athlete(self, event_id, athlete_id):
