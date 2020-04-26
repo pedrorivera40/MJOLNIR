@@ -337,4 +337,20 @@ data = {
             "team": "opponent"
         }
     },
+    "edit_invalid_notification1": {
+        "event_id": 9999999,
+        "action_id": 32,
+        "data": {
+            "action_type": "Notification",
+            "message": "Hopefully this one doesn't work.",
+        }
+    },
+    "edit_invalid_notification2": {
+        "event_id": 28,
+        "action_id": 9999999,
+        "data": {
+            "action_type": "Notification",
+            "message": "Hopefully this one doesn't work either.",
+        }
+    },
 }

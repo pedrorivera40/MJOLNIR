@@ -30,7 +30,7 @@ class PBPDao:
             "score": "/score",
             "actions": "/game-actions",
             "score-key": "score",
-            "over": "/game-over",
+            "over": "/game-over/answer",
             "answer": "/answer",
             "color": "/opp-color"
         }
@@ -494,7 +494,7 @@ class PBPDao:
             path_actions: action_content,
             update_path_score: current_score + difference,
         }
-        print(update)
+
         return self._rtdb.reference().update(update)
 
     def edit_pbp_game_action(self, event_id, action_id, action_content):
