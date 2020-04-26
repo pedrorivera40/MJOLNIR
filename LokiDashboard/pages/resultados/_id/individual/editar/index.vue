@@ -959,9 +959,12 @@
                  
     
     created(){
-      this.initializeSportData()
-      this.current_athlete = this.sport_athletes[0]
-      this.buildDefaultValues()
+        this.buildDefaultValues()
+        this.initializeSportData()
+        console.log(this.payload_stats)
+        console.log(this.sport_id)
+        this.current_athlete = this.sport_athletes[0]
+      
     },
     methods: {
         buildDefaultValues(){
@@ -1083,6 +1086,8 @@
         
         clear () {
             this.initializeSportData()
+            console.log(this.sport_id)
+            console.log(this.payload_stats)
             // TODO: (Herbert) Check how this works
             this.$refs.observer.reset()
         },
