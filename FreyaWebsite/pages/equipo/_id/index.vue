@@ -243,6 +243,7 @@ export default {
       about_team:"Because he's the hero Gotham deserves, but not the one it needs right now, so we'll hunt him. Because he can take it, because he's not a hero. He's a silent guardian, a watchful protector, a Dark Knight.",
       ready:false,
       sport_name:'',     
+      //TODO: Check remove/change branch to dynamic (if necessary)
 			branch:'Masculino', 
       sport_id:'',
       sport_route:'',
@@ -609,11 +610,6 @@ export default {
         else{this.sport_name = '', this.sport_route = ''}
         
       },
-      // getMembersData(){
-      //   // if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-      //   //   this.team_statistics_per_season.push(current_team_stats.Baseball_Event_Season_Team_Statistics)
-      //   // }
-      // },
       getEvents(){
         this.events =  [
         {
@@ -692,10 +688,7 @@ export default {
           this.statistics_per_season = null
           this.team_statistics_per_season = null
           this.members = null
-          
-          // this.team = false
-          // this.ready = false
-          // this.getMembersData()
+    
           this.getEvents()
           const team_params = {
             sport_id: String(this.sport_id),
@@ -705,11 +698,6 @@ export default {
           this.getTeamByYear(team_params)   
           // this.getMemberStatistics(team_params)    
           // this.getTeamStatistics(team_params)   
-
-
-          
-            
-				
 			}
     },
 
