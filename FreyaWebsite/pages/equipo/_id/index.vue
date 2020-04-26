@@ -27,6 +27,8 @@
             :items="yearList" 
             label ="Temporada"
             prepend-icon="mdi-calendar-blank-multiple"
+            :disabled = "loadingQuery"
+            :loading = "loadingQuery"
             @input="getSeasonData"
           ></v-select>
         </v-col>
@@ -291,6 +293,7 @@ export default {
         stopGetMembers:"teams/stopGetMembers",
         stopGetMemberStats:"teams/stopGetMemberStats",
         stopGetTeamStats:"teams/stopGetTeamStats",
+        setQueryLoading:"teams/setQueryLoading",
         getMemberStatistics:"teams/getMemberStatistics",
         getTeamStatistics:"teams/getTeamStatistics",
         setNullTeam:"teams/setNullTeam",
@@ -643,6 +646,7 @@ export default {
       ]
       },
 			getSeasonData(){
+          this.setQueryLoading()
           this.setNullTeam()
           this.setNullTeamMembers()
           this.setNullMembersStats()
@@ -683,8 +687,10 @@ export default {
         readyForMembers:"teams/readyForMembers",
         readyForMemberStats:"teams/readyForMemberStats",
         readyForTeamStats:"teams/readyForTeamStats",
+        loadingQuery:"teams/loadingQuery",
         member_statistics:"teams/member_statistics",
         team_statistics:"teams/team_statistics"
+        
 
 			})
 		}

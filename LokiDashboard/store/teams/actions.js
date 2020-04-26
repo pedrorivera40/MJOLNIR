@@ -55,6 +55,13 @@ export default{
             console.log("ERROR SETTING STATE VARIABLE FOR TEAM STATS",error)
         }
     },
+    async setQueryLoading({commit}){
+        try{
+            commit("SET_QUERY_LOADING")
+        }catch(error){
+            console.log("ERROR SETTING STATE VARIABLE FOR LOADING QUERY",error)
+        }
+    },
     async setNullTeam({commit}){
         try{
             commit("SET_TEAM",null)
@@ -115,7 +122,8 @@ export default{
             //console.log("GET TEAM STATS:",response)
             console.log("GET TEAM STATS:",response.data)
             commit("SET_TEAM_STATISTICS",response.data)
-            
+            //TODO: LIKELY MOVE FROM HERE SINCE DASHBOARD ENDS EARLIER
+            commit("SET_QUERY_DONE")
         }catch(error){
       
             console.log("ERROR GETTING TEAM STATISTICS",team_params,error)

@@ -8,7 +8,8 @@ export default{
     isLoadingT: state => state.isLoadingT,
     readyForMembers: state => state.readyForMembers,
     readyForMemberStats: state => state.readyForMemberStats,
-    readyForTeamStats: state => state.readyForTeamStats
+    readyForTeamStats: state => state.readyForTeamStats,
+    loadingQuery: state => state.loadingQuery
     // athlete: state => state.athlete,
     // athletes: state => state.athletes,
     // isLoadingA: state => state.isLoadingA,

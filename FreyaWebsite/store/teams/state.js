@@ -9,6 +9,7 @@ export default() =>({
     readyForMembers: false,
     readyForMemberStats: false,
     readyForTeamStats: false,
+    loadingQuery:false,
 
     // athlete: null,
     // athletes: [],

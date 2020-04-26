@@ -357,8 +357,8 @@ export default {
 			...mapGetters({
         team:"teams/team",
         team_members:"teams/team_members",
-        readyForMembers:"teams/readyForMembers"
-        // readyForMemberStats:"teams/readyForMemberStats",
+        readyForMembers:"teams/readyForMembers",
+        readyForMemberStats:"teams/readyForMemberStats",
         // readyForTeamStats:"teams/readyForTeamStats",
         // member_statistics:"teams/member_statistics",
         // team_statistics:"teams/team_statistics"

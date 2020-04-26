@@ -30,6 +30,12 @@ export default{
     SET_WAITING_TEAM_STATS(state){
         state.readyForTeamStats = false
     },
+    SET_QUERY_LOADING(state){
+        state.loadingQuery = true
+    },
+    SET_QUERY_DONE(state){
+        state.loadingQuery = false
+    },
     SET_MEMBER_STATISTICS(state,member_statistics){
         state.member_statistics = member_statistics
     },
