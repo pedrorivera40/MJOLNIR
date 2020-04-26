@@ -17,6 +17,7 @@ export default{
             console.log("ERROR GETTING TEAM",team_params,error)
             commit("SET_TEAM",null)
             commit("SET_TEAM_MEMBERS",null)
+            commit("SET_QUERY_DONE")
         }
     },
     async getTeamMembers({commit},team_id){
@@ -28,10 +29,14 @@ export default{
             console.log("GET MEMBERS:",response.data)
             commit("SET_TEAM_MEMBERS",response.data.Team)
             commit("SET_READY_MEMBER_STATS")
+            //TODO: LIKELY MOVE FROM HERE SINCE DASHBOARD ENDS EARLIER
+            commit("SET_QUERY_DONE")
             
         }catch(error){
             console.log("ERROR GETTING TEAM MEMBERS",team_id,error)
             commit("SET_TEAM_MEMBERS",null)
+            commit("SET_WAITING_MEMBERS")
+            commit("SET_QUERY_DONE")
         }
     },
     async stopGetMembers({commit}){
@@ -122,8 +127,7 @@ export default{
             //console.log("GET TEAM STATS:",response)
             console.log("GET TEAM STATS:",response.data)
             commit("SET_TEAM_STATISTICS",response.data)
-            //TODO: LIKELY MOVE FROM HERE SINCE DASHBOARD ENDS EARLIER
-            commit("SET_QUERY_DONE")
+            
         }catch(error){
       
             console.log("ERROR GETTING TEAM STATISTICS",team_params,error)
