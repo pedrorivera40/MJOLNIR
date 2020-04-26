@@ -46,45 +46,58 @@ class SportHandler:
         to a sport name along its corresponding ids, categories, and positions if any.
         '''
 
-        result = {}
+        mapped_records = []
+        
         for row in sport_rows:
-
-            if len(row) != 5:
-                raise Exception(
-                    "SportHandler Error: invalid sport row length.")
-
+            result = {}
             # Extract record attributes.
             sport_id = row[0]
             sport_name = row[1]
-            sport_image_url = row[2]
+            sport_branch = row[2]
             position_name = row[3]
             category_name = row[4]
-
+            #print(row)
             # Case: sport not already considered.
-            if sport_name not in result:
-                result[sport_name] = {
-                    "sport_id": [sport_id],
-                    "sport_image_url": [sport_image_url] if sport_image_url else [],
-                    "position": [position_name] if position_name else [],
-                    "category": [category_name] if category_name else []
-                }
-                continue
+            if not mapped_records:
+                if sport_id not in result:
+                    
+                    result['sport_id'] = sport_id
+                    result['sport_name'] = sport_name
+                    result['branch_name'] = sport_branch if sport_branch else ''
+                    result['positions'] = [position_name] if position_name else []
+                    result['categories'] = [category_name] if category_name else []
+                    mapped_records.append(result)
+                    continue
+            else:
+                foundMatch = False
+                for record in mapped_records:
+                    #print(record)
+                    if sport_id == record['sport_id']:
+                        #print('match found')
+                        if position_name and position_name not in record['positions']:
+                            record['positions'].append(position_name)
 
-            # Case: sport exist, but there is at least an attribute that changes.
-            # Approach: For the remaining attributes, if its value is not present then add it into result.
-            if sport_id not in result[sport_name]["sport_id"]:
-                result[sport_name]["sport_id"].append(sport_id)
+                        if category_name and category_name not in record['categories']:
+                            #print(record['categories'])
+                            record['categories'].append(category_name)
+                        
+                        foundMatch = True
+                        break                       
+                        
+                if foundMatch:
+                    continue
 
-            if sport_image_url and sport_image_url not in result[sport_name]["sport_image_url"]:
-                result[sport_name]["sport_image_url"].append(sport_image_url)
+                else:
+                    result['sport_id'] = sport_id
+                    result['sport_name'] = sport_name
+                    result['branch_name'] = sport_branch if sport_branch else ''
+                    result['positions'] = [position_name] if position_name else []
+                    result['categories'] = [category_name] if category_name else []
+                    mapped_records.append(result)
+                    continue           
 
-            if position_name and position_name not in result[sport_name]["position"]:
-                result[sport_name]["position"].append(position_name)
+        return mapped_records
 
-            if category_name and category_name not in result[sport_name]["category"]:
-                result[sport_name]["category"].append(category_name)
-
-        return result
 
     def getAllSports(self):
         """
@@ -204,11 +217,11 @@ class SportHandler:
 
         Returns:
             A JSON object that follows the following structure:
-                {
-                    SPORT_NAME_1 : 
+                {                 
                     {
-                        "sport_id" [SPORT_ID_1, SPORT_ID_2, ...],
-                        "sport_image_url": [SPORT_IMAGE_URL_1, SPORT_IMAGE_URL_2, ...],
+                        "sport_id" : SPORT_ID,
+                        "sport_name": 'SPORT_NAME',
+                        "branch_name": 'BRANCH_NAME',
                         "position": [POSITION_NAME_1, POSITION_NAME_2, ...],
                         "category": [CATEGORY_NAME_1, CATEGORY_NAME_2, ...]
                     },

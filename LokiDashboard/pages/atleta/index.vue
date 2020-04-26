@@ -16,24 +16,33 @@
       
       <v-form v-model="valid">
         <v-container v-if="formated()">
-          <v-row>
-            <v-col
-              cols="12"
-              md="2"
+          <v-row justify="start">
+          <v-col              
+              md="3"
+          >
+
+            <h2>Nombre:</h2>
+              
+          </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col        
+              md="6"
             >             
               <v-text-field
                 v-model="first_name"          
                 
                 :counter="20"
-                label="Nombre"
+                label="Primer Nombre"
                 required
-                :rules="[required('Nombre'),nameFormat('Nombre'),maxLength('Nombre',20)]"
+                :rules="[required('Primer Nombre'),nameFormat('Primer Nombre'),maxLength('Nombre',20)]"
               ></v-text-field>              
             </v-col>
+          </v-row>
 
-            <v-col
-              cols="12"
-              md="3"
+          <v-row justify="center">
+            <v-col              
+              md="6"
             >
               <v-text-field
                 v-model="middle_name"                
@@ -43,10 +52,11 @@
                 :rules="[nameFormat('Segundo Nombre'),maxSummaryLength('Segundo Nombre',20)]"
               ></v-text-field>              
             </v-col>
+          </v-row>
 
-            <v-col
-              cols="12"
-              md="4"
+          <v-row justify="center">
+            <v-col              
+              md=6    
             >              
               <v-text-field
                 v-model="last_names"
@@ -56,8 +66,17 @@
                 :rules="[required('Apellidos'),nameFormat('Apellidos'),maxLength('Apellidos',40)]"
               ></v-text-field>              
             </v-col>
-            
-              <v-col cols="12" sm="6" md="3">
+          </v-row>
+
+          <v-row justify="start">
+          <v-col>        
+
+            <h2>Fecha de Nacimiento:</h2>
+              
+          </v-col>
+          </v-row>
+          <v-row justify="center" >
+              <v-col sm="6"  md="4">
               <v-menu
                 ref="menu"
                 v-model="menu"
@@ -71,7 +90,7 @@
                 <template v-slot:activator="{ on }">
                   <v-text-field
                     v-model="date"
-                    label="Fecha de nacimiento"
+                    label="Fecha"
                     prepend-icon="mdi-calendar"
                     readonly
                     v-on="on"
@@ -84,6 +103,14 @@
                 </v-date-picker>
               </v-menu>
             </v-col>  
+          </v-row>
+
+          <v-row justify="start">
+          <v-col>        
+
+            <h2>Biografía:</h2>
+              
+          </v-col>
           </v-row>
           
           <v-row>
@@ -100,18 +127,17 @@
             </v-col>
           </v-row>
 
-          <v-row>
-            <v-col
-              cols="1"
+          <v-row justify="start">
+            <v-col              
               md="3"
             >
 
             <h2>Estatura:</h2>
               
             </v-col>
-
-            <v-col
-              cols="12"
+          </v-row>
+          <v-row justify="center">
+            <v-col              
               md="4"
             >
               <v-select
@@ -120,6 +146,10 @@
                 label ="Pies"
                 prepend-icon="mdi-human-male-height"
               ></v-select>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col md="4">         
                 <v-select
                 v-model="height_inches"
                 :items="inches"
@@ -129,20 +159,20 @@
             </v-col>
           </v-row>
 
-          <v-row>
+          <v-row justify="start">
 
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >
 
             <h2>Educación:</h2>
               
             </v-col>
+          </v-row>
 
-            <v-col
-            cols="12"
-            md="4"
+          <v-row justify="center">
+            <v-col            
+              md="4"
             >              
               <v-text-field
                 v-model="study_program"                                   
@@ -152,26 +182,23 @@
               ></v-text-field>
               
             </v-col>
-            
-            <v-col
-              cols="12" 
+          </v-row>
+
+          <v-row justify="center">
+            <v-col              
               md="4"               
             >  
               <v-select
                 v-model="year_of_study"
-                :items="yearsOfStudy"              
+                :items="yearsOfStudy"
+                prepend-icon="mdi-chair-school"              
                 label ="Año de Estudio"                
               ></v-select>
-            </v-col>      
-            
-            <v-col
-              cols="12"
-              md="3"
-            >
-            </v-col>
-            <v-col
-            cols="12"
-            md="4"
+            </v-col>                  
+          </v-row>
+          <v-row justify="center"> 
+            <v-col            
+              md="4"
             >             
               <v-text-field
                 v-model="school_of_precedence"                                  
@@ -183,21 +210,21 @@
             
           </v-row>
 
-          <v-row> 
+          <v-row justify="start"> 
             
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >
 
             <h2>Deporte:</h2>
               
             </v-col>
-          
+          </v-row>
 
-            <v-col
-              cols="12" 
-              md="4"               
+          <v-row justify="center">
+
+            <v-col             
+              md="6"               
             >              
               <v-select
                 v-model="sport"
@@ -210,22 +237,22 @@
                 :rules="[teamRequired('Deporte')]"
               ></v-select>              
             </v-col>
-
-            <v-col
-              cols="12" 
-              md="4"               
+          </v-row>
+          <v-row justify="center">
+            <v-col               
+              md="6"               
             >  
               <v-select
                 v-model="years_of_participation"
                 :items="yearsOfParticipation"              
-                label ="Años de Participación"                
+                label ="Años de Participación"
+                prepend-icon="mdi-seal"                
               ></v-select>
             </v-col>              
           </v-row>
 
-          <v-row>
-            <v-col
-              cols="12" 
+          <v-row justify="start">
+            <v-col               
               md="4"               
             >              
               <div>                  
@@ -245,15 +272,16 @@
               </div>
 
             </v-col>
+          </v-row>
 
-            <v-col
-              cols="12" 
+          <v-row justify="center">
+            <v-col              
               md="4"               
             > 
             
               <div v-for="(value,key) in sport_positions" :key="key" >
                 <v-checkbox
-                  :input-value="value"
+                  :input-value="!value"
                   :label="key"                    
                   v-on:change="updatePositons(key,value)"
                   v-if="!isEmpty(sport_positions)"                                        
@@ -263,7 +291,7 @@
               
               <div v-for="(value,key) in sport_categories" :key="key">
                 <v-checkbox
-                  :input-value="value"
+                  :input-value="!value"
                   :label="key"
                   v-on:change="updateCategories(key,value)"
                   v-if="!isEmpty(sport_categories)"                      
@@ -273,10 +301,9 @@
             </v-col>                   
           </v-row>  
 
-          <v-row> 
+          <v-row justify="start"> 
 
-            <v-col
-              cols="12" 
+            <v-col              
               md="4"               
             >              
               <div>                  
@@ -287,9 +314,10 @@
                 </h2>
               </div> 
             </v-col>
+          </v-row>
 
-            <v-col
-              cols="12" 
+          <v-row justify="center">
+            <v-col               
               md="4"               
             >
               <v-select
@@ -303,21 +331,21 @@
             </v-col>
           </v-row>            
 
-          <v-row>
+          <v-row justify="start">
 
-            <v-col
-              cols="1"
+            <v-col             
               md="3"
             >
 
             <h2>Imagen de Perfil:</h2>
               
             </v-col>
+          </v-row>
 
+          <v-row justify="center">
 
-            <v-col
-            cols="12"
-            md="5"
+            <v-col            
+              md="5"
             >             
               <v-text-field
                 v-model="profile_image_link"                                
@@ -346,9 +374,8 @@
 </template>
 
 <script>
-  import rules from "../../utils/validations"
-  import sportsData from "../../data/athletePagesData/sports.json"
-
+  import rules from "../../utils/validations"  
+  import {mapActions,mapGetters} from "vuex"
 
   export default {
     
@@ -363,8 +390,8 @@
       middle_name: null,
       last_names:'',
       short_bio:null,
-      height_feet:Number,
-      height_inches:Number,
+      height_feet:'',
+      height_inches:'',
       study_program:'', 
       date_of_birth:'',
       school_of_precedence:'',
@@ -373,12 +400,11 @@
       years_of_participation:'',
       sport_positions:{},
       sport_categories:{},
-      number:Number,
+      number:'',
       profile_image_link:'',
       sport_id:0,
       sport:'',      
-      sportsList:[],
-      sports:sportsData.Sports,
+      sportsList:[],     
       sportHasNumber:false,
       branch:'',
       branches:['Masculino','Femenino','Otro'],
@@ -409,14 +435,19 @@
     methods: {
       ...rules,
 
+      ...mapActions({
+        getAthleteSports:"athletes/getAthleteSports",
+        addAthlete:"athletes/addAthlete"
+      }),
+
       submit () {
-        let athlete_attributes = {}
+        const athlete_attributes = {}
         athlete_attributes['first_name'] = this.first_name
         athlete_attributes['middle_name']  = this.middle_name
         athlete_attributes['last_names'] = this.last_names
         athlete_attributes['short_bio'] = this.short_bio
 
-        if(this.height_feet != NaN && this.height_inches != NaN)
+        if(this.height_feet != '' && this.height_inches != '')
           athlete_attributes['height'] = this.height_feet*12.0 + this.height_inches
         else
           athlete_attributes['height'] = null
@@ -425,14 +456,14 @@
         athlete_attributes['date_of_birth'] = this.date
         athlete_attributes['school_of_precedence'] = this.school_of_precedence
         
-        if(this.number != NaN) 
+        if(this.number != '') 
           athlete_attributes['number'] = this.number
         else
           athlete_attributes['number'] = null
         
-        athlete_attributes['profile_image_link'] = this.profile_image_link
+        athlete_attributes['profile_picture_link'] = this.profile_image_link
 
-        athlete_attributes['sport_id'] = this.sport
+        
 
         if(this.year_of_study != '')
           athlete_attributes['year_of_study'] = this.year_of_study
@@ -448,8 +479,8 @@
 
         console.log("Creating a new athlete with the following information:")
         console.log(athlete_attributes)
-
-        this.$router.push('/atletas/')
+        const athleteJSON ={'sID':this.sport,'attributes':athlete_attributes}
+        this.addAthlete(athleteJSON)
         
       },
       clear () {
@@ -458,8 +489,8 @@
         this.middle_name= null,
         this.last_names='',
         this.short_bio=null,
-        this.height_feet=Number,
-        this.height_inches=Number,
+        this.height_feet='',
+        this.height_inches='',
         this.study_program='', 
         this.date_of_birth='',
         this.school_of_precedence='',        
@@ -475,18 +506,20 @@
 
       updatePositons(key,value){
         
-        this.sport_positions[key]=!value       
+        this.sport_positions[key]=!value 
+        console.log(this.sport_positions)      
       },
       updateCategories(key,value){
         
         this.sport_categories[key]=!value       
+        console.log(this.sport_categories)
       },
 
 
       
 
       formated(){
-        if(this.sports){
+        if(this.sports.length > 0){
           if(this.ready){ return true }
           
           else{
@@ -513,13 +546,13 @@
               let positions = sportObj['positions']
               if(positions.length > 0){
                 for(let j = 0; j < positions.length; j++){
-                  this.sport_positions[positions[j]]=false;                   
+                  this.sport_positions[positions[j]]=true;                   
                 }
               }
               let categories = sportObj['categories']
               if(categories.length > 0){
                 for(let k = 0; k < categories.length; k++){
-                  this.sport_categories[categories[k]]=false;                   
+                  this.sport_categories[categories[k]]=true;                   
                 }
               }
             }
@@ -559,5 +592,15 @@
       }
       
     },
+
+    computed:{
+      ...mapGetters({
+        sports:"athletes/athlete_sports"
+      }),
+    },
+    mounted(){
+      this.getAthleteSports();
+    }
+    
   }
 </script>
