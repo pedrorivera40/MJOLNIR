@@ -55,19 +55,6 @@
 
 						<v-card class="mx-auto" outlined>								
 							<v-container v-if="formated()">
-                <!-- <v-row>
-                  <v-carousel
-                  cycle
-                  hide-delimiters
-                  show-arrows-on-hover
-                  >
-                    <v-carousel-item
-                      v-for="(team,i) in teams"
-                      :key="i"
-                      :src="team.team_image_url"
-                    ></v-carousel-item>
-                  </v-carousel>		
-                </v-row> -->
                 <v-row align = "center" justify = "center">
                   <v-col justify = "center" align = "center">
                     <v-icon v-if="current_team.team_image_url == null" height="100"> mdi-account-group  </v-icon>
@@ -248,33 +235,9 @@ export default {
       sport_id:'',
       sport_route:'',
 			season:'',
-			// seasonsseasons:['2020'],
+      //For table
       headers:[],
       team_headers:[],
-      // [//Need to dynamically buid this after fetchin data.Might hardcode this depending on the sport.
-			// 	{
-			// 		text:'Event Date',
-			// 		align: 'start',
-			// 		sortable: true,
-			// 		value:"Event.event_date"
-			// 	},
-			// 	{text: 'Assists', value: 'Event_Statistics.assists'},
-			// 	{text: 'Blocks', value: 'Event_Statistics.blocks'},
-			// 	{text: 'Field Goal Attempt', value: 'Event_Statistics.field_goal_attempt'},
-			// 	{text: 'Field Goal Percentage(%)', value: 'Event_Statistics.field_goal_percentage'},
-			// 	{text: 'Free Throw Attempt', value: 'Event_Statistics.free_throw_attempt'},
-			// 	{text: 'Free Throw Percentage(%)', value: 'Event_Statistics.free_throw_percentage'},
-			// 	{text: 'Points', value: 'Event_Statistics.points'},
-			// 	{text: 'Rebounds', value: 'Event_Statistics.rebounds'},
-			// 	{text: 'Steals', value: 'Event_Statistics.steals'},
-			// 	{text: 'Successful Field Goal', value: 'Event_Statistics.successful_field_goal'},
-			// 	{text: 'Successful Free Throw', value: 'Event_Statistics.successful_free_throw'},
-			// 	{text: 'Successful Three Point', value: 'Event_Statistics.successful_three_point'},
-			// 	{text: 'Three Point Attempt', value: 'Event_Statistics.three_point_attempt'},
-			// 	{text: 'Three Point Percentage(%)', value: 'Event_Statistics.three_point_percentage'},
-			// 	{text: 'Turnovers', value: 'Event_Statistics.turnovers'},
-
-      // ],
       //IMPORTANT FOR METHODS:
       selected: '',
       statistics_per_season:'',

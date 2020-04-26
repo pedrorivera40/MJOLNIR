@@ -61,19 +61,6 @@
 				
 						<v-card class="mx-auto" outlined>								
 							<v-container v-if="formated()">
-                <!-- <v-row>
-                  <v-carousel
-                  cycle
-                  hide-delimiters
-                  show-arrows-on-hover
-                  >
-                    <v-carousel-item
-                      v-for="(team,i) in teams"
-                      :key="i"
-                      :src="team.team_image_url"
-                    ></v-carousel-item>
-                  </v-carousel>		
-                </v-row> -->
                 <v-row align = "center" justify = "center">
                   <v-col justify = "center" align = "center">
                     <v-icon v-if="current_team.team_image_url == null" height="100"> mdi-account-group  </v-icon>
@@ -193,33 +180,9 @@ export default {
       sport_id:'',
       sport_route:'',
 			season:'',
-			// seasonsseasons:['2020'],
+      //For table
       headers:[],
       team_headers:[],
-      // [//Need to dynamically buid this after fetchin data.Might hardcode this depending on the sport.
-			// 	{
-			// 		text:'Event Date',
-			// 		align: 'start',
-			// 		sortable: true,
-			// 		value:"Event.event_date"
-			// 	},
-			// 	{text: 'Assists', value: 'Event_Statistics.assists'},
-			// 	{text: 'Blocks', value: 'Event_Statistics.blocks'},
-			// 	{text: 'Field Goal Attempt', value: 'Event_Statistics.field_goal_attempt'},
-			// 	{text: 'Field Goal Percentage(%)', value: 'Event_Statistics.field_goal_percentage'},
-			// 	{text: 'Free Throw Attempt', value: 'Event_Statistics.free_throw_attempt'},
-			// 	{text: 'Free Throw Percentage(%)', value: 'Event_Statistics.free_throw_percentage'},
-			// 	{text: 'Points', value: 'Event_Statistics.points'},
-			// 	{text: 'Rebounds', value: 'Event_Statistics.rebounds'},
-			// 	{text: 'Steals', value: 'Event_Statistics.steals'},
-			// 	{text: 'Successful Field Goal', value: 'Event_Statistics.successful_field_goal'},
-			// 	{text: 'Successful Free Throw', value: 'Event_Statistics.successful_free_throw'},
-			// 	{text: 'Successful Three Point', value: 'Event_Statistics.successful_three_point'},
-			// 	{text: 'Three Point Attempt', value: 'Event_Statistics.three_point_attempt'},
-			// 	{text: 'Three Point Percentage(%)', value: 'Event_Statistics.three_point_percentage'},
-			// 	{text: 'Turnovers', value: 'Event_Statistics.turnovers'},
-
-      // ],
       //IMPORTANT FOR METHODS:
       selected: '',
       statistics_per_season:'',
@@ -327,213 +290,13 @@ export default {
       formated_members(){
         if(this.team_members){
           this.members = this.team_members.team_members
-          // if(this.readyForMemberStats){
-          //   console.log("INDEX LEVEL QUERY MEMBERS:",this.team.members)
-          //   const team_params = {
-          //     sport_id: String(this.sport_id),
-          //     season_year: String(this.season),
-          //     sport_route: String(this.sport_route)
-          //   }
-          //   console.log("INDEX LEVEL STAT PARAMS:",this.team_params)
-          //   this.getMemberStatistics(team_params)
-          // }
-          // this.stopGetMemberStats()
           return true
         }
         else{
           return false
         }
       },
-      // formated_member_stats(){
-      //   if(this.member_statistics){
-      //     if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.statistics_per_season = this.member_statistics.Basketball_Event_Season_Athlete_Statistics}
-      //     else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.statistics_per_season = this.member_statistics.Volleyball_Event_Season_Athlete_Statistics}
-      //     else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.statistics_per_season = this.member_statistics.Soccer_Event_Season_Athlete_Statistics}
-      //     else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.statistics_per_season = this.member_statistics.Baseball_Event_Season_Athlete_Statistics}
-      //     else{
-      //       this.statistics_per_season = null
-      //       return false  
-      //     }
-      //     if(this.readyForTeamStats){
-      //       console.log("INDEX LEVEL QUERY MEMBER STATS:",this.statistics_per_season)
-      //       const team_params = {
-      //         sport_id: String(this.sport_id),
-      //         season_year: String(this.season),
-      //         sport_route: String(this.sport_route)
-      //       }
-      //       console.log("STRAIGHT FROM MEMBERS= STATS, PARAMS ARE:",this.team.members)
-      //       this.getTeamStatistics(team_params)
-      //     }
-      //     this.stopGetTeamStats()
-      //     return true
-      //   }
-      //   else{
-      //     return false
-      //   }
-      // },
-
-      // formated_team_stats(){
-      //   if(this.team_statistics){
-      //     console.log("//////=====THIS IS A FUCKING TEST YO=======////",this.team_statistics)
-      //     if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Basketball_Event_Season_Team_Statistics]}
-      //     else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Volleyball_Event_Season_Team_Statistics]}
-      //     else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.team_statistics_per_season = [this.team_statistics.Soccer_Event_Season_Team_Statistics]}
-      //     else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Baseball_Event_Season_Team_Statistics]}
-      //     else{
-      //       this.team_statistics_per_season = null
-      //       return false
-      //     }
-      //     return true
-      //   }
-      //   else{
-      //     return false
-      //   }
-      // },
-      buildTable(){
-        // basketball
-        if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF) {
       
-          this.headers = 
-          [
-          {
-            text:'Athlete',
-            align: 'start',
-            sortable: true,
-            value: 'Athlete.first_name'
-          },
-          {text: 'Assists', value: 'Event_Statistics.assists'},
-          {text: 'Blocks', value: 'Event_Statistics.blocks'},
-          {text: 'Field Goal Attempt', value: 'Event_Statistics.field_goal_attempt'},
-          {text: 'Field Goal Percentage(%)', value: 'Event_Statistics.field_goal_percentage'},
-          {text: 'Free Throw Attempt', value: 'Event_Statistics.free_throw_attempt'},
-          {text: 'Free Throw Percentage(%)', value: 'Event_Statistics.free_throw_percentage'},
-          {text: 'Points', value: 'Event_Statistics.points'},
-          {text: 'Rebounds', value: 'Event_Statistics.rebounds'},
-          {text: 'Steals', value: 'Event_Statistics.steals'},
-          {text: 'Successful Field Goal', value: 'Event_Statistics.successful_field_goal'},
-          {text: 'Successful Free Throw', value: 'Event_Statistics.successful_free_throw'},
-          {text: 'Successful Three Point', value: 'Event_Statistics.successful_three_point'},
-          {text: 'Three Point Attempt', value: 'Event_Statistics.three_point_attempt'},
-          {text: 'Three Point Percentage(%)', value: 'Event_Statistics.three_point_percentage'},
-          {text: 'Turnovers', value: 'Event_Statistics.turnovers'},
-
-        ]
-        this.team_headers = 
-          [
-          {text: 'Assists', value: 'Event_Statistics.assists'},
-          {text: 'Blocks', value: 'Event_Statistics.blocks'},
-          {text: 'Field Goal Attempt', value: 'Event_Statistics.field_goal_attempt'},
-          {text: 'Field Goal Percentage(%)', value: 'Event_Statistics.field_goal_percentage'},
-          {text: 'Free Throw Attempt', value: 'Event_Statistics.free_throw_attempt'},
-          {text: 'Free Throw Percentage(%)', value: 'Event_Statistics.free_throw_percentage'},
-          {text: 'Points', value: 'Event_Statistics.points'},
-          {text: 'Rebounds', value: 'Event_Statistics.rebounds'},
-          {text: 'Steals', value: 'Event_Statistics.steals'},
-          {text: 'Successful Field Goal', value: 'Event_Statistics.successful_field_goal'},
-          {text: 'Successful Free Throw', value: 'Event_Statistics.successful_free_throw'},
-          {text: 'Successful Three Point', value: 'Event_Statistics.successful_three_point'},
-          {text: 'Three Point Attempt', value: 'Event_Statistics.three_point_attempt'},
-          {text: 'Three Point Percentage(%)', value: 'Event_Statistics.three_point_percentage'},
-          {text: 'Turnovers', value: 'Event_Statistics.turnovers'},
-
-        ]
-        }
-        else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-          this.headers = 
-          [
-          {
-              text:'Athlete',
-              align: 'start',
-              sortable: true,
-              value: 'Athlete.first_name'
-          },
-          {text: 'Kill Points', value: 'Event_Statistics.kill_points'},
-          {text: 'Attack Errors', value: 'Event_Statistics.attack_errors'},
-          {text: 'Assists', value: 'Event_Statistics.assists'},
-          {text: 'Aces', value: 'Event_Statistics.aces'},
-          {text: 'Service Errors', value: 'Event_Statistics.service_errors'},
-          {text: 'Digs', value: 'Event_Statistics.digs'},
-          {text: 'Blocks', value: 'Event_Statistics.blocks'},
-          {text: 'Blocking Errors', value: 'Event_Statistics.blocking_errors'},
-          {text: 'Reception Errors', value: 'Event_Statistics.reception_errors'},
-
-
-          ]
-          this.team_headers = 
-          [
-          {text: 'Kill Points', value: 'Event_Statistics.kill_points'},
-          {text: 'Attack Errors', value: 'Event_Statistics.attack_errors'},
-          {text: 'Assists', value: 'Event_Statistics.assists'},
-          {text: 'Aces', value: 'Event_Statistics.aces'},
-          {text: 'Service Errors', value: 'Event_Statistics.service_errors'},
-          {text: 'Digs', value: 'Event_Statistics.digs'},
-          {text: 'Blocks', value: 'Event_Statistics.blocks'},
-          {text: 'Blocking Errors', value: 'Event_Statistics.blocking_errors'},
-          {text: 'Reception Errors', value: 'Event_Statistics.reception_errors'},
-    
-          ]
-        }
-        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-          this.headers = 
-          [
-          {
-              text:'Athlete',
-              align: 'start',
-              sortable: true,
-              value: 'Athlete.first_name'
-          },
-          {text: 'Goal Attempts', value: 'Event_Statistics.goal_attempts'},
-          {text: 'Assists', value: 'Event_Statistics.assists'},
-          {text: 'Fouls', value: 'Event_Statistics.fouls'},
-          {text: 'Cards', value: 'Event_Statistics.cards'},
-          {text: 'Successful Goals', value: 'Event_Statistics.successful_goals'},
-          {text: 'Tackles', value: 'Event_Statistics.tackles'},
-
-
-          ]
-          this.team_headers = 
-          [
-          {text: 'Goal Attempts', value: 'Event_Statistics.goal_attempts'},
-          {text: 'Assists', value: 'Event_Statistics.assists'},
-          {text: 'Fouls', value: 'Event_Statistics.fouls'},
-          {text: 'Cards', value: 'Event_Statistics.cards'},
-          {text: 'Successful Goals', value: 'Event_Statistics.successful_goals'},
-          {text: 'Tackles', value: 'Event_Statistics.tackles'},
-          
-          ]
-        }
-        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-          this.headers = 
-          [
-          {
-              text:'Athlete',
-              align: 'start',
-              sortable: true,
-              value: 'Athlete.first_name'
-          },
-          {text: 'At Bats', value: 'Event_Statistics.at_bats'},
-          {text: 'Runs', value: 'Event_Statistics.runs'},
-          {text: 'Hits', value: 'Event_Statistics.hits'},
-          {text: 'Runs Batted In', value: 'Event_Statistics.runs_batted_in'},
-          {text: 'Base On Balls', value: 'Event_Statistics.base_on_balls'},
-          {text: 'Strikeouts', value: 'Event_Statistics.strikeouts'},
-          {text: 'Left On Base', value: 'Event_Statistics.left_on_base'},
-        
-          ]
-          this.team_headers = 
-          [
-          {text: 'At Bats', value: 'Event_Statistics.at_bats'},
-          {text: 'Runs', value: 'Event_Statistics.runs'},
-          {text: 'Hits', value: 'Event_Statistics.hits'},
-          {text: 'Runs Batted In', value: 'Event_Statistics.runs_batted_in'},
-          {text: 'Base On Balls', value: 'Event_Statistics.base_on_balls'},
-          {text: 'Strikeouts', value: 'Event_Statistics.strikeouts'},
-          {text: 'Left On Base', value: 'Event_Statistics.left_on_base'},
-          
-          ]
-        }
-      },
-
       buildYearList(){
         let yearToAdd = 2020
         let currentYear = new Date(2023,8).getFullYear()
