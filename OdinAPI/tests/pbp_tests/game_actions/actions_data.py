@@ -114,6 +114,13 @@ data = {
             "difference": 5,
         }
     },
+    "content_to_valid_edit": {
+        "path": "v1/28/game-actions/25",
+        "data": {
+            "action_type": "Notification",
+            "message": "This is a test notification. Hopefully it works."
+        }
+    },
     "valid_to_remove": {
         "event_id": 28,
         "action_id": 25
@@ -134,7 +141,17 @@ data = {
             "message": "I refuse to sleep..."
         }
     },
-    "edit_valid_score_to_error": {
+    "path_to_score_to_error": "v1/28/game-actions/26",
+    "score_to_be_changed1": {
+        "event_id": 28,
+        "action_id": 26,
+        "data": {
+            "action_type": "KillPoint",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_score_to_error_uprm": {
         "event_id": 28,
         "action_id": 26,
         "data": {
@@ -142,5 +159,182 @@ data = {
             "athlete_id": 111,
             "team": "uprm"
         }
-    }
+    },
+    "edit_valid_score_to_error_opp": {
+        "event_id": 28,
+        "action_id": 26,
+        "data": {
+            "action_type": "AttackError",
+            "athlete_id": 1587365468141,
+            "team": "opponent"
+        }
+    },
+    "path_to_score_to_score": "v1/28/game-actions/27",
+    "score_to_be_changed2": {
+        "event_id": 28,
+        "action_id": 27,
+        "data": {
+            "action_type": "KillPoint",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_score_to_score_uprm": {
+        "event_id": 28,
+        "action_id": 27,
+        "data": {
+            "action_type": "Ace",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_score_to_score_opp": {
+        "event_id": 28,
+        "action_id": 27,
+        "data": {
+            "action_type": "Ace",
+            "athlete_id": 1587365468141,
+            "team": "opponent"
+        }
+    },
+    "path_to_personal_to_personal": "v1/28/game-actions/28",
+    "personal_to_be_changed2": {
+        "event_id": 28,
+        "action_id": 28,
+        "data": {
+            "action_type": "Assist",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_personal_to_personal_uprm": {
+        "event_id": 28,
+        "action_id": 28,
+        "data": {
+            "action_type": "Block",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_personal_to_personal_opp": {
+        "event_id": 28,
+        "action_id": 28,
+        "data": {
+            "action_type": "Block",
+            "athlete_id": 1587365468141,
+            "team": "opponent"
+        }
+    },
+    "path_to_error_to_error": "v1/28/game-actions/29",
+    "error_to_be_changed2": {
+        "event_id": 28,
+        "action_id": 29,
+        "data": {
+            "action_type": "AttackError",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_error_to_error_uprm": {
+        "event_id": 28,
+        "action_id": 29,
+        "data": {
+            "action_type": "BlockingError",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_error_to_error_opp": {
+        "event_id": 28,
+        "action_id": 29,
+        "data": {
+            "action_type": "BlockingError",
+            "athlete_id": 1587365468141,
+            "team": "opponent"
+        }
+    },
+    "path_to_error_to_score": "v1/28/game-actions/30",
+    "error_to_be_changed3": {
+        "event_id": 28,
+        "action_id": 30,
+        "data": {
+            "action_type": "AttackError",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_error_to_score_uprm": {
+        "event_id": 28,
+        "action_id": 30,
+        "data": {
+            "action_type": "Ace",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_error_to_score_opp": {
+        "event_id": 28,
+        "action_id": 30,
+        "data": {
+            "action_type": "Ace",
+            "athlete_id": 1587365468141,
+            "team": "opponent"
+        }
+    },
+    "path_to_error_to_personal": "v1/28/game-actions/31",
+    "error_to_be_changed3": {
+        "event_id": 28,
+        "action_id": 31,
+        "data": {
+            "action_type": "AttackError",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_error_to_personal_uprm": {
+        "event_id": 28,
+        "action_id": 31,
+        "data": {
+            "action_type": "Assist",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_error_to_personal_opp": {
+        "event_id": 28,
+        "action_id": 31,
+        "data": {
+            "action_type": "Assist",
+            "athlete_id": 1587365468141,
+            "team": "opponent"
+        }
+    },
+    "path_to_personal_to_error": "v1/28/game-actions/32",
+    "personal_to_be_changed3": {
+        "event_id": 28,
+        "action_id": 32,
+        "data": {
+            "action_type": "Assist",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_personal_to_error_uprm": {
+        "event_id": 28,
+        "action_id": 32,
+        "data": {
+            "action_type": "ReceptionError",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_personal_to_error_opp": {
+        "event_id": 28,
+        "action_id": 32,
+        "data": {
+            "action_type": "ReceptionError",
+            "athlete_id": 1587365468141,
+            "team": "opponent"
+        }
+    },
 }

@@ -316,7 +316,7 @@ class PBPDao:
         dec_score = int(self.get_score_by_set(event_id, path_dec))
         inc_score = int(self.get_score_by_set(event_id, path_inc))
 
-        if curredec_scorent_score + int(adjust) < 0 or inc_score + int(adjust):
+        if dec_score - int(difference) < 0 or inc_score + int(difference) < 0:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
 
         update = {
@@ -344,19 +344,19 @@ class PBPDao:
         Returns:
             void
         """
-
+        event_id = str(int(event_id))
         dec_score = int(self.get_score_by_set(event_id, path_dec))
         inc_score = int(self.get_score_by_set(event_id, path_inc))
         action_path = self._db_keywords["root"] + \
-            str(int(event_id)) + \
+            event_id + \
             self._db_keywords["actions"] + "/" + str(int(action_id))
 
         if dec_score + int(difference) < 0 or inc_score + int(difference) < 0:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
 
         update = {
-            (str(int(event_id)) + path_dec): dec_score - difference,
-            (str(int(event_id)) + path_inc): inc_score + difference,
+            (self._db_keywords["root"] + event_id + self._db_keywords["score"] + path_dec): dec_score - difference,
+            (self._db_keywords["root"] + event_id + self._db_keywords["score"] + path_inc): inc_score + difference,
             action_path: new_action
         }
         self._rtdb.reference().update(update)
@@ -383,11 +383,15 @@ class PBPDao:
             str(int(event_id)) + \
             self._db_keywords["actions"] + "/" + str(int(action_id))
 
+        path_score = self._db_keywords["root"] + \
+            str(int(event_id)) + \
+            self._db_keywords["score"] + "/" + str(path_inc)
+
         if inc_score + int(increment) < 0:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
 
         update = {
-            (event_id + path_inc): inc_score + difference,
+            path_score: inc_score + increment,
             action_path: new_action
         }
         self._rtdb.reference().update(update)
@@ -562,7 +566,6 @@ class PBPDao:
 
         path = self._db_keywords["root"] + str(int(event_id)) + \
             self._db_keywords["meta"] + self._db_keywords["over"]
-
         self._rtdb.reference(path).set("Yes")
 
 

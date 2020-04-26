@@ -232,7 +232,11 @@ class VolleyballPBPHandler:
         new_type = new_action["action_type"]
 
         # Variables to be used depending on the edit type.
-        are_same_type = (prev_type == new_type)
+        are_same_type = (
+            prev_type in self._sport_keywords["scoring_actions"] and new_type in self._sport_keywords["scoring_actions"]
+            or prev_type in self._sport_keywords["personal_actions"] and new_type in self._sport_keywords["personal_actions"]
+            or prev_type in self._sport_keywords["error_actions"] and new_type in self._sport_keywords["error_actions"]
+            or prev_type == "Notification" and new_type == "Notification")
 
         # Notifications are only posted. No score or set value needs to be modified from a notification.
         if are_same_type and prev_type == self._sport_keywords["notification"]:
@@ -801,6 +805,7 @@ class VolleyballPBPHandler:
             return jsonify(MSG="Edit game action success."), 200
 
         except Exception as e:
+            print(str(e))
             return jsonify(ERROR=str(e)), 500
 
     def removePlayPBPAction(self, event_id, game_action_id):
