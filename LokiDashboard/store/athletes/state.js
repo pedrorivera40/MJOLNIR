@@ -1,5 +1,5 @@
 export default() =>({
     athlete: null,
     athletes: [],
-    isLoadingA: false,
+    athlete_sports:[],
 })

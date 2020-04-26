@@ -210,18 +210,18 @@ class AthleteHandler:
             result = None
             if aPositions and not aCategories:                   
                 result = dao.addAthleteWithPosition(sID,attributes['first_name'],attributes['middle_name'],attributes['last_names'],
-                                                    attributes['bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
+                                                    attributes['short_bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
                                                     attributes['school_of_precedence'],attributes['number'],attributes['year_of_study'],
                                                     attributes['years_of_participation'],attributes['profile_picture_link'],aPositions)
             elif not aPositions and aCategories:                 
                 result = dao.addAthleteWithCategory(sID,attributes['first_name'],attributes['middle_name'],attributes['last_names'],
-                                                        attributes['bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
+                                                        attributes['short_bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
                                                         attributes['school_of_precedence'],attributes['number'],attributes['year_of_study'],
                                                         attributes['years_of_participation'],attributes['profile_picture_link'],aCategories)
 
             else:
                 result = dao.addAthlete(sID,attributes['first_name'],attributes['middle_name'],attributes['last_names'],
-                                            attributes['bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
+                                            attributes['short_bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
                                             attributes['school_of_precedence'],attributes['number'],attributes['year_of_study'],
                                             attributes['years_of_participation'],attributes['profile_picture_link'])
             if isinstance(result,str):#If true, result will contain the error message.
@@ -266,7 +266,7 @@ class AthleteHandler:
                 return jsonify(Error = "No existe un atleta con el siguiente identificador:{}".format(aID)),404
 
             result = dao.editAthlete(aID,attributes['first_name'],attributes['middle_name'],attributes['last_names'],
-                                                attributes['bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
+                                                attributes['short_bio'],attributes['height'],attributes['study_program'],attributes['date_of_birth'],
                                                 attributes['school_of_precedence'],attributes['number'],attributes['year_of_study'],
                                                 attributes['years_of_participation'],attributes['profile_picture_link'],attributes['positions'],
                                                 attributes['categories'])
@@ -325,7 +325,7 @@ class AthleteHandler:
         """
 
         if not isinstance(attributes,dict):
-            return "Los attributos dados sen invalidos."       
+            return "Los attributos dados son invalidos."       
         
         
         #Going to extract the inputs from the attributes dictonary.
@@ -334,7 +334,7 @@ class AthleteHandler:
             aFName = attributes['first_name']
             aMName = attributes['middle_name']
             aLName = attributes['last_names']
-            aBio = attributes['bio']
+            aBio = attributes['short_bio']
             aHeight = attributes['height']
             aStudyProgram = attributes['study_program']
             aDateOfBirth = attributes['date_of_birth']
@@ -419,7 +419,8 @@ class AthleteHandler:
 
             if aPositions and aCategories:
                 return "Un atleta no puede tener posiciones y categorías en un deporte."
-        except:
+        except Exception as e:
+            print(e)
             return "Argumentos invalidos fueron dados."  
 
         return 1     

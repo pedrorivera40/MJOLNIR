@@ -16,24 +16,33 @@
       
       <v-form v-model="valid">
         <v-container v-if="formated()">
-          <v-row>
-            <v-col
-              cols="12"
-              md="2"
+          <v-row justify="start">
+            <v-col              
+                md="3"
+            >
+
+              <h2>Nombre:</h2>
+                
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col        
+              md="6"
             >             
               <v-text-field
                 v-model="first_name"          
                 
                 :counter="20"
-                label="Nombre"
+                label="Primer Nombre"
                 required
-                :rules="[required('Nombre'),nameFormat('Nombre'),maxLength('Nombre',20)]"
+                :rules="[required('Primer Nombre'),nameFormat('Primer Nombre'),maxLength('Nombre',20)]"
               ></v-text-field>              
             </v-col>
+          </v-row>
 
-            <v-col
-              cols="12"
-              md="3"
+          <v-row justify="center">
+            <v-col              
+              md="6"
             >
               <v-text-field
                 v-model="middle_name"                
@@ -43,10 +52,11 @@
                 :rules="[nameFormat('Segundo Nombre'),maxSummaryLength('Segundo Nombre',20)]"
               ></v-text-field>              
             </v-col>
+          </v-row>
 
-            <v-col
-              cols="12"
-              md="4"
+          <v-row justify="center">
+            <v-col              
+              md=6    
             >              
               <v-text-field
                 v-model="last_names"
@@ -56,8 +66,17 @@
                 :rules="[required('Apellidos'),nameFormat('Apellidos'),maxLength('Apellidos',40)]"
               ></v-text-field>              
             </v-col>
-            
-              <v-col cols="12" sm="6" md="3">
+          </v-row>
+
+          <v-row justify="start">
+          <v-col>        
+
+            <h2>Fecha de Nacimiento:</h2>
+              
+          </v-col>
+          </v-row>
+          <v-row justify="center" >
+              <v-col sm="6"  md="4">
               <v-menu
                 ref="menu"
                 v-model="menu"
@@ -71,7 +90,7 @@
                 <template v-slot:activator="{ on }">
                   <v-text-field
                     v-model="date_of_birth"
-                    label="Fecha de nacimiento"
+                    label="Fecha"
                     prepend-icon="mdi-calendar"
                     readonly
                     v-on="on"
@@ -84,6 +103,14 @@
                 </v-date-picker>
               </v-menu>
             </v-col>  
+          </v-row>
+
+          <v-row justify="start">
+          <v-col>        
+
+            <h2>Biografía:</h2>
+              
+          </v-col>
           </v-row>
           
           <v-row>
@@ -100,18 +127,17 @@
             </v-col>
           </v-row>
 
-          <v-row>
-            <v-col
-              cols="1"
+          <v-row justify="start">
+            <v-col              
               md="3"
             >
 
             <h2>Estatura:</h2>
               
             </v-col>
-
-            <v-col
-              cols="12"
+          </v-row>
+          <v-row justify="center">
+            <v-col              
               md="4"
             >
               <v-select
@@ -120,6 +146,10 @@
                 label ="Pies"
                 prepend-icon="mdi-human-male-height"
               ></v-select>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col md="4">         
                 <v-select
                 v-model="height_inches"
                 :items="inches"
@@ -129,20 +159,20 @@
             </v-col>
           </v-row>
 
-          <v-row>
+          <v-row justify="start">
 
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >
 
             <h2>Educación:</h2>
               
             </v-col>
+          </v-row>
 
-            <v-col
-            cols="12"
-            md="4"
+          <v-row justify="center">
+            <v-col            
+              md="4"
             >              
               <v-text-field
                 v-model="study_program"                                   
@@ -152,26 +182,23 @@
               ></v-text-field>
               
             </v-col>
-            
-            <v-col
-              cols="12" 
+          </v-row>
+
+          <v-row justify="center">
+            <v-col              
               md="4"               
             >  
               <v-select
-                v-model="years_of_study"
-                :items="yearsOfStudy"              
+                v-model="year_of_study"
+                :items="yearsOfStudy"
+                prepend-icon="mdi-chair-school"              
                 label ="Año de Estudio"                
               ></v-select>
-            </v-col>      
-            
-            <v-col
-              cols="12"
-              md="3"
-            >
-            </v-col>
-            <v-col
-            cols="12"
-            md="4"
+            </v-col>                  
+          </v-row>
+          <v-row justify="center"> 
+            <v-col            
+              md="4"
             >             
               <v-text-field
                 v-model="school_of_precedence"                                  
@@ -183,46 +210,32 @@
             
           </v-row>
 
-          <v-row> 
+          <v-row justify="start"> 
             
-            <v-col
-              cols="1"
-              md="3"
+            <v-col              
+              md="12"
             >
 
-            <h2>Deporte:</h2>
+            <h2>Deporte:{{sport}}</h2>
               
             </v-col>
-          
-            <v-col
-              cols="12"
-              md=5
-            >
-            <v-text-field
-              v-model="sport"
-              readonly
-              disabled
-            ></v-text-field>
-            
-            </v-col>
+          </v-row>
 
-           
-
-            <v-col
-              cols="12" 
-              md="4"               
+          <v-row justify="center">
+            <v-col               
+              md="6"               
             >  
               <v-select
                 v-model="years_of_participation"
                 :items="yearsOfParticipation"              
-                label ="Años de Participación"                
+                label ="Años de Participación"
+                prepend-icon="mdi-seal"                
               ></v-select>
             </v-col>              
           </v-row>
 
-          <v-row>
-            <v-col
-              cols="12" 
+          <v-row justify="start">
+            <v-col               
               md="4"               
             >              
               <div>                  
@@ -242,15 +255,16 @@
               </div>
 
             </v-col>
+          </v-row>
 
-            <v-col
-              cols="12" 
+          <v-row justify="center">
+            <v-col              
               md="4"               
             > 
             
               <div v-for="(value,key) in athlete_positions" :key="key" >
                 <v-checkbox
-                  :input-value="value"
+                  :input-value="!value"
                   :label="key"                    
                   v-on:change="updatePositons(key,value)"
                   v-if="!isEmpty(athlete_positions)"                                        
@@ -259,9 +273,8 @@
             
               
               <div v-for="(value,key) in athlete_categories" :key="key">
-                
                 <v-checkbox
-                  :input-value="value"
+                  :input-value="!value"
                   :label="key"
                   v-on:change="updateCategories(key,value)"
                   v-if="!isEmpty(athlete_categories)"                      
@@ -271,10 +284,9 @@
             </v-col>                   
           </v-row>  
 
-          <v-row> 
+          <v-row justify="start"> 
 
-            <v-col
-              cols="12" 
+            <v-col              
               md="4"               
             >              
               <div>                  
@@ -285,9 +297,10 @@
                 </h2>
               </div> 
             </v-col>
+          </v-row>
 
-            <v-col
-              cols="12" 
+          <v-row justify="center">
+            <v-col               
               md="4"               
             >
               <v-select
@@ -301,21 +314,21 @@
             </v-col>
           </v-row>            
 
-          <v-row>
+          <v-row justify="start">
 
-            <v-col
-              cols="1"
+            <v-col             
               md="3"
             >
 
             <h2>Imagen de Perfil:</h2>
               
             </v-col>
+          </v-row>
 
+          <v-row justify="center">
 
-            <v-col
-            cols="12"
-            md="5"
+            <v-col            
+              md="5"
             >             
               <v-text-field
                 v-model="profile_image_link"                                
@@ -363,16 +376,15 @@
 			last_names:'',
 			date_of_birth:'',
       short_bio:'',
-      height_feet:Number,
-			height_inches:Number,
-      study_program:'', 
-      date_of_birth:'',
+      height_feet:'',
+			height_inches:'',
+      study_program:'',       
 			school_of_precedence:'',
 			years_of_participation:'',
-			years_of_study:'',
-      athlete_positions:{},
-      athlete_categories:{},      
-      number:Number,
+			year_of_study:'',
+      athlete_positions:null,
+      athlete_categories:null,      
+      number:'',
       profile_image_link:'',
       sport:'',     
 			branch:'',
@@ -408,34 +420,38 @@
       ...rules,
 
       ...mapActions({
-				getAthleteByID:"athletes/getAthleteByID"
+        getAthleteByID:"athletes/getAthleteByID",
+        editAthlete:"athletes/editAthlete"
 			}),
 
       submit () {
 
-        let athlete_attributes = {}
+        const athlete_attributes = {}
         athlete_attributes['first_name'] = this.first_name
         athlete_attributes['middle_name']  = this.middle_name
         athlete_attributes['last_names'] = this.last_names
         athlete_attributes['short_bio'] = this.short_bio
         
-        if(this.height_feet != NaN & this.height_inches != NaN)
+        
+        if(this.height_feet != '' & this.height_inches != '')
           athlete_attributes['height'] = this.height_feet*12.0 + this.height_inches*1.0
         else
           athlete_attributes['height'] = null
 
+        
+
         athlete_attributes['study_program'] = this.study_program
-        athlete_attributes['date_of_birth'] = this.date
+        athlete_attributes['date_of_birth'] = this.date_of_birth
         athlete_attributes['school_of_precedence'] = this.school_of_precedence
         
-        if(this.number != NaN) 
+        if(this.number != '') 
           athlete_attributes['number'] = this.number
         else
           athlete_attributes['number'] = null
         
-        athlete_attributes['profile_image_link'] = this.profile_image_link
+        athlete_attributes['profile_picture_link'] = this.profile_image_link
 
-        athlete_attributes['sport_id'] = this.sport
+        
 
         if(this.year_of_study != '')
           athlete_attributes['year_of_study'] = this.year_of_study
@@ -445,86 +461,90 @@
         if(this.years_of_participation != '') 
           athlete_attributes['years_of_participation'] = this.years_of_participation
 
-        athlete_attributes['positions'] = this.sport_positions
+        athlete_attributes['positions'] = this.athlete_positions
 
-        athlete_attributes['categories'] = this.sport_categories
+        athlete_attributes['categories'] = this.athlete_categories
 
-        console.log("Editing the athlete with id:" + this.athlete.id + " with the following information:")
+        const athleteJSON = {'athlete_id': this.athlete.id,'attributes':athlete_attributes}
+
+        //console.log("Editing the athlete with id:" + this.athlete.id + " with the following information:")
         console.log(athlete_attributes)
 
-        this.$router.push('/atletas/')
+        this.editAthlete(athleteJSON)
 
         
         
       },
       clear () {
         
-        	this.first_name = this.athlete.fName
-							this.last_names = this.athlete.lName	
-							if(this.athlete.mName)
-								this.middle_name = this.athlete.mName
+        this.first_name = this.athlete.fName
+        this.last_names = this.athlete.lName	
+        if(this.athlete.mName)
+          this.middle_name = this.athlete.mName
 
-							this.sport = this.athlete.sportName + '-' + this.athlete.sportBranch.charAt(0).toUpperCase() + this.athlete.sportBranch.slice(1)
-							
-							
-							if(this.athlete.bio)
-								this.short_bio = this.athlete.bio
-
-							if(this.athlete.number){
-                this.number = this.athlete.number
-                this.sportHasNumber = true
-              }
-
-							if(this.athlete.height)
-							{
-								this.height_feet = Math.floor(this.athlete.height/12)
-								this.height_inches = this.athlete.height%12
-							}
-
-							if(this.athlete.profilePicLink)
-								this.profile_image_link = this.athlete.profilePicLink
-							
-
-							if(this.athlete.school)
-								this.school_of_precedence = this.athlete.school
-
-							if(this.athlete.sProgram)
-								this.study_program = this.athlete.sProgram
-							
-							if(this.athlete.yearOfStudy)
-								this.years_of_study = this.athlete.yearOfStudy
-							
-							if(this.athlete.yearsOfParticipation)
-								this.years_of_participation = this.athlete.yearsOfParticipation						
-							
-							if(this.athlete.dBirth)
-								this.date_of_birth= new Date(Date.parse(this.athlete.dBirth)).toISOString().substr(0,10)
-							
-							if(this.athlete.athlete_positions)
-							{
-								this.athlete_positions={}
-								const entries = Object.entries(this.athlete.athlete_positions)
-								for(const [name, value] of entries){
-									
-										this.athlete_positions[name] = value
-									
-								}
-							}
-							if(this.athlete.athlete_categories)
-							{
-                this.athlete_categories={}
-                
-								const entries = Object.entries(this.athlete.athlete_categories)
-								for(const [name, value] of entries){
-									
-										this.athlete_categories[name]=value
-									
-                }
-                
-							}					
+        this.sport = this.athlete.sportName + '-' + this.athlete.sportBranch.charAt(0).toUpperCase() + this.athlete.sportBranch.slice(1)
         
-       console.log(this.athlete_positions)
-       console.log(this.athlete_categories)
+        
+        if(this.athlete.bio)
+          this.short_bio = this.athlete.bio
+
+        if(this.athlete.number){
+          this.number = this.athlete.number
+          this.sportHasNumber = true
+        }
+
+        if(this.athlete.height)
+        {
+          this.height_feet = Math.floor(this.athlete.height/12)
+          this.height_inches = this.athlete.height%12
+        }
+        else{
+          this.height_feet = ''
+          this.height_inches = ''
+        }
+
+        if(this.athlete.profilePicLink)
+          this.profile_image_link = this.athlete.profilePicLink
+        
+
+        if(this.athlete.school)
+          this.school_of_precedence = this.athlete.school
+
+        if(this.athlete.sProgram)
+          this.study_program = this.athlete.sProgram
+        
+        if(this.athlete.yearOfStudy)
+          this.year_of_study = this.athlete.yearOfStudy
+        
+        if(this.athlete.yearsOfParticipation)
+          this.years_of_participation = this.athlete.yearsOfParticipation						
+        
+        if(this.athlete.dBirth)
+          this.date_of_birth= new Date(Date.parse(this.athlete.dBirth)).toISOString().substr(0,10)
+        
+        if(this.athlete.athlete_positions)
+        {
+          this.athlete_positions={}
+          const entries = Object.entries(this.athlete.athlete_positions)
+          for(const [name, value] of entries){
+            
+              this.athlete_positions[name] = value
+            
+          }
+        }
+        if(this.athlete.athlete_categories)
+        {
+          this.athlete_categories={}
+          
+          const entries = Object.entries(this.athlete.athlete_categories)
+          for(const [name, value] of entries){
+            
+              this.athlete_categories[name]=value
+            
+          }
+          
+        }	     
+       
       },
 
       updatePositons(key,value){
@@ -540,7 +560,7 @@
       
 
       formated(){
-        if(this.athlete){
+        if(this.athlete != null){
 					if(this.ready){
 						return true
 					}
@@ -581,7 +601,7 @@
 								this.study_program = this.athlete.sProgram
 							
 							if(this.athlete.yearOfStudy)
-								this.years_of_study = this.athlete.yearOfStudy
+								this.year_of_study = this.athlete.yearOfStudy
 							
 							if(this.athlete.yearsOfParticipation)
 								this.years_of_participation = this.athlete.yearsOfParticipation						
@@ -591,7 +611,7 @@
 							
 							if(this.athlete.athlete_positions)
 							{
-								
+								this.athlete_positions = {}
 								const entries = Object.entries(this.athlete.athlete_positions)
 								for(const [name, value] of entries){
 									
@@ -601,7 +621,7 @@
 							}
 							if(this.athlete.athlete_categories)
 							{
-                
+                  this.athlete_categories = {}
                
 								const entries = Object.entries(this.athlete.athlete_categories)
 								for(const [name, value] of entries){

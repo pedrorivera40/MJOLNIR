@@ -255,7 +255,7 @@ export default {
 								this.athlete_positions = []
 								const entries = Object.entries(this.athlete.athlete_positions)
 								for(const [name, value] of entries){
-									if(value){
+									if(!value){
 										this.athlete_positions.push(name)
 									}
 								}
@@ -265,7 +265,7 @@ export default {
 								this.athlete_categories = []
 								const entries = Object.entries(this.athlete.athlete_categories)
 								for(const [name, value] of entries){
-									if(value){
+									if(!value){
 										this.athlete_categories.push(name)
 									}
 								}
