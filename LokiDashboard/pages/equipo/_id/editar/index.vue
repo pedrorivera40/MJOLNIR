@@ -34,6 +34,7 @@
                                     readonly                   
                                     solo                   
                                     prepend-icon="mdi-calendar-blank-multiple"
+                                    :rules="[required('Temporada')]"
                                 ></v-text-field>  
                             </v-col>
                         </v-row>    
@@ -186,9 +187,8 @@
         clear () {
             
             this.about_team='',
-            this.team_image_url='',
+            this.team_image_url=''
             // TODO: (Herbert) Check how this works
-            this.$refs.observer.reset()
         },
         goToTeam(){
              this.$router.push('/equipo/'+sport_id)

@@ -154,23 +154,31 @@ export default{
     },
     async editTeam({commit,dispatch},teamJSON){
         try{
-            // {
-            //     "sport_id":1,
-            //     "season_year":"1942",
-            //     "team_image_url":"https://comicvine1.cbsistatic.com/uploads/original/11138/111387409/7081408-8787124231-d9pmk.png",
-            //     "about_team": "I was Updated Yay!"
-            //     }
             // commit("SET_ATHLETES",[])
             const response = await this.$axios.put('teams/',teamJSON)
             // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
             
-            //TODO: need to check how to get route params from here (sport_id), it's not working.
-            // --> basically, cant do the route params form here of course, but can pass them as a modified json? 
-            // --> should not be neccessary. the source is the same anyway
             let sport_id = teamJSON.sport_id
             this.$router.push('/equipo/'+sport_id)
         }catch(error){
-            console.log("ERROR GETTING TEAM",teamJSON,error)
+            console.log("ERROR PUTTING TEAM",teamJSON,error)
+            // if(!!error.response.data){
+            //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            // }else{
+            //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            // }
+        }
+    },
+    async postTeam({commit,dispatch},teamJSON){
+        try{
+            // commit("SET_ATHLETES",[])
+            const response = await this.$axios.post('teams/',teamJSON)
+            // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
+            
+            let sport_id = teamJSON.sport_id
+            this.$router.push('/equipo/'+sport_id)
+        }catch(error){
+            console.log("ERROR POSTING TEAM",teamJSON,error)
             // if(!!error.response.data){
             //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
             // }else{
