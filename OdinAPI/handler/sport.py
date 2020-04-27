@@ -137,7 +137,7 @@ class SportHandler:
 
             if len(sports) == 0:
                 return jsonify(ERROR="SportHandler.getSportsByBranch - sport data not found."), 400
-            
+
         except:
             return jsonify(ERROR="SportHandler.getSportsByBranch - unable to obtain sports from DAO."), 500
 

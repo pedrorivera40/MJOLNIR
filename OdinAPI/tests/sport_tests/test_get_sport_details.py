@@ -2,6 +2,7 @@ import unittest
 import json
 from main import app
 
+
 class TestGetAllSports(unittest.TestCase):
 
     # Setup mock client.
@@ -10,6 +11,7 @@ class TestGetAllSports(unittest.TestCase):
         self.client = app.test_client()
 
     def test_get_sports_details_good(self):
-        response = self.client.get('/sports/details',data=json.dumps({}),content_type='application/json', follow_redirects=True)
+        response = self.client.get('/sports/details', data=json.dumps(
+            {}), content_type='application/json', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
         print(response.json)

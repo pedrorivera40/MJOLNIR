@@ -254,7 +254,7 @@ data = {
         }
     },
     "path_to_error_to_score": "v1/28/game-actions/30",
-    "error_to_be_changed3": {
+    "error_to_be_changed4": {
         "event_id": 28,
         "action_id": 30,
         "data": {
@@ -277,6 +277,34 @@ data = {
         "action_id": 30,
         "data": {
             "action_type": "Ace",
+            "athlete_id": 1587365468141,
+            "team": "opponent"
+        }
+    },
+    "path_to_score_to_personal": "v1/28/game-actions/40",
+    "score_to_be_changed5": {
+        "event_id": 28,
+        "action_id": 40,
+        "data": {
+            "action_type": "KillPoint",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_score_to_personal_uprm1": {
+        "event_id": 28,
+        "action_id": 40,
+        "data": {
+            "action_type": "Assist",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_score_to_personal_opp1": {
+        "event_id": 28,
+        "action_id": 40,
+        "data": {
+            "action_type": "Assist",
             "athlete_id": 1587365468141,
             "team": "opponent"
         }
@@ -351,6 +379,34 @@ data = {
         "data": {
             "action_type": "Notification",
             "message": "Hopefully this one doesn't work either.",
+        }
+    },
+    "path_to_personal_to_score": "v1/28/game-actions/47",
+    "personal_to_be_changed24": {
+        "event_id": 28,
+        "action_id": 47,
+        "data": {
+            "action_type": "Assist",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_personal_to_score_uprm": {
+        "event_id": 28,
+        "action_id": 47,
+        "data": {
+            "action_type": "ReceptionError",
+            "athlete_id": 111,
+            "team": "uprm"
+        }
+    },
+    "edit_valid_personal_to_score_opp": {
+        "event_id": 28,
+        "action_id": 47,
+        "data": {
+            "action_type": "ReceptionError",
+            "athlete_id": 1587365468141,
+            "team": "opponent"
         }
     },
 }

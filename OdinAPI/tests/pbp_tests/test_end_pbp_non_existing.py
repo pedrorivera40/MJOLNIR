@@ -11,7 +11,7 @@ class TestEndVolleyballPBP(unittest.TestCase):
         app.config['DEBUG'] = True
         self.client = app.test_client()
 
-    def test_end_pbp_invalid(self):
+    def test_end_pbp_non_existing(self):
         response = self.client.post('/pbp/Voleibol/end', data=json.dumps(
             data["non_exists_id"]), content_type='application/json', follow_redirects=True)
         expected_msg = "PBP sequence does not exist."
