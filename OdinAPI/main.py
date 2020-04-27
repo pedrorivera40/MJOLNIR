@@ -75,10 +75,10 @@ def athletes():
         if not json:
             return handler.getAllAthletes()    
 
-        if not 'sID' in json:
+        if not 'sID' in json or not 'tID' in json:
             return jsonify(Error = "Argumentos dados son incorrectos."),400
 
-        return handler.getAthletesBySport(json['sID'])
+        return handler.getAthletesBySportAndNotInTeam(json['sID'],json['tID'])
 
 
 @app.route("/athletes/<int:aid>/", methods=['GET', 'PUT', 'DELETE'])
