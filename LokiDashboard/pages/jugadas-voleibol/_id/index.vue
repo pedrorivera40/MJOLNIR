@@ -189,7 +189,7 @@
                       :athlete_img="athlete.img"
                       :athlete_number="athlete.number"
                       :athlete_statistics="uprm_team_statistics"
-                      :in_color="oppColor"
+                      :in_color="opp_color"
                     />
                   </v-row>
                 </v-container>
