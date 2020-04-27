@@ -163,9 +163,14 @@ export default{
             // commit("SET_ATHLETES",[])
             const response = await this.$axios.put('teams/',teamJSON)
             // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
+            
+            //TODO: need to check how to get route params from here (sport_id), it's not working.
+            // --> basically, cant do the route params form here of course, but can pass them as a modified json? 
+            // --> should not be neccessary. the source is the same anyway
+            let sport_id = teamJSON.sport_id
             this.$router.push('/equipo/'+sport_id)
         }catch(error){
-            console.log("ERROR GETTING TEAM",team_params,error)
+            console.log("ERROR GETTING TEAM",teamJSON,error)
             // if(!!error.response.data){
             //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
             // }else{

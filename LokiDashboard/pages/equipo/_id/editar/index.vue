@@ -125,6 +125,7 @@
       
       
     created(){
+        this.setNullTeam()
         this.ready_for_edit = true
         this.buildDefaultValues()
         this.setQueryLoading()
@@ -141,7 +142,8 @@
         ...mapActions({
             getTeamByYearSimple:"teams/getTeamByYearSimple",
             setQueryLoading:"teams/setQueryLoading",
-            editTeam:"teams/editTeam"
+            editTeam:"teams/editTeam",
+            setNullTeam:"teams/setNullTeam"
         }),
 
         formated(){
