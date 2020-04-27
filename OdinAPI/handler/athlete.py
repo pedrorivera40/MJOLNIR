@@ -134,7 +134,7 @@ class AthleteHandler:
             mappedResult = []
             for athlete in result:   
                 mappedResult.append(self.mapAthleteWithPositionsAndCategoriesToDict(athlete))
-            return jsonify(Atheletes = mappedResult), 200
+            return jsonify(Athletes = mappedResult), 200
         except:
             dao._closeConnection()
             return jsonify(Error = "Occurrió un error interno buscando los atletas de un deporte."),500
