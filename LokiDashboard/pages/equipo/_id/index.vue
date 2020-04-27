@@ -322,13 +322,13 @@ export default {
         
       },
       goToEditTeam(){
-            this.$router.push('/equipo/:id/editar/')
+            this.$router.push('/equipo/'+this.sport_id+'/editar/')
         },
       goToCreateTeam(){
-            this.$router.push('/equipo/:id/crear/')
+            this.$router.push('/equipo/'+this.sport_id+'/crear/')
         },
       goToAddMembers(){
-            this.$router.push('/equipo/:id/miembros/anadir/')
+            this.$router.push('/equipo/'+this.sport_id+'/miembros/anadir/')
         },
       // TODO: Implement the removes so they probly create a pop up for confirmation?
       removeMember(athlete_id){

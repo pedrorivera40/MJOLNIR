@@ -49,4 +49,11 @@ export default{
     DONE_LOADING(state){
 			state.isLoadingT = false
     }
+
+
+    //edit team route
+    
+    //create team route
+
+    //create member route
 }

@@ -1,12 +1,11 @@
 <template>
   <v-card width="800" class="elevation-12 mx-auto">
     <v-toolbar color="green darken-1" dark flat>
-        <v-toolbar-title>Editar Equipo {{sport}} - {{branch}}</v-toolbar-title>
+        <v-toolbar-title>Editar Equipo {{sport_name}} - {{branch}}</v-toolbar-title>
         <v-spacer />
     </v-toolbar>
-    <v-card-text>            
-      <ValidationObserver ref="observer" v-slot="{ validate, reset }">
-        <form>
+    <v-card-text>             
+        <v-form v-if="formated()" v-model="valid">
             <v-container>  
                 <v-row>
                     <v-col>
@@ -47,17 +46,13 @@
                             align ="center"
                             justify = "center"
                             >
-                            <v-col  
-                            >
-                                <ValidationProvider v-slot="{ errors }" name="Enlace de Imagen de Equipo" rules="">
-                                    <v-text-field
-                                        v-model="team_image_url"
-                                        :error-messages="errors"                    
-                                        label="Enlace de Imagen de Equipo"
-                                        prepend-icon="mdi-link"
-                                        required
-                                    ></v-text-field>
-                                </ValidationProvider>
+                            <v-col>
+                                <v-text-field
+                                    v-model="team_image_url"
+                                    :error-messages="errors"                    
+                                    label="Enlace de Imagen de Equipo"
+                                    prepend-icon="mdi-link"
+                                ></v-text-field>                           
                             </v-col>
                         </v-row>
                     </v-col>
@@ -70,18 +65,16 @@
                 justify = "center"
                 >
                     <v-col             
-                    >
-                        <ValidationProvider v-slot="{ errors }" name="SobreEquipo" rules="max:1000">
-                            <v-textarea
-                                v-model="about_team"                      
-                                :counter="1000"
-                                :error-messages="errors"
-                                label="Breve Descripcion Del Equipo"
-                                auto-grow
-                                rows = "3"
-                                outlined
-                            ></v-textarea>
-                        </ValidationProvider>
+                    >  
+                        <v-textarea
+                            v-model="about_team"                      
+                            :counter="1000"
+                            :error-messages="errors"
+                            label="Breve Descripcion Del Equipo"
+                            auto-grow
+                            rows = "3"
+                            :rules="[generalPhrase('Breve Descripcion Del Equipo'),maxSummaryLength('Breve Descripcion Del Equipo',1000)]"
+                        ></v-textarea>
                     </v-col>
                 </v-row>
 
@@ -89,144 +82,122 @@
                     <v-spacer/>
                     <v-spacer/>
                     <v-col>
-                        <v-btn class="mr-4" @click="submit">submit</v-btn>
+                        <v-btn :disabled="!valid" class="mr-4" @click="submit">submit</v-btn>
                         <v-btn @click="clear">clear</v-btn>
                     </v-col>
                 </v-row>   
             </v-container>
-        </form>
-      </ValidationObserver>
+        </v-form>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-    import { required, email, max, alpha_spaces, alpha, alpha_dash, regex,required_if } from 'vee-validate/dist/rules'
-    import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
-
-  setInteractionMode('eager')
-
-  extend('required', {
-    ...required,
-    message: '{_field_} no puede estar vacio',
-  })
-
-  extend('max', {
-    ...max,
-    message: '{_field_} no puede contener mas de {length} caracteres',
-  })
-
-  extend('email', {
-    ...email,
-    message: 'Email must be valid',
-  })
-
-  extend('alpha',{
-    ...alpha,
-    message: "{_field_} solamente debe tener caracteres",
-  })
-
-  extend('alpha_spaces',{
-    ...alpha_spaces,
-    message: "{_field_} solamente debe contener caracters,guiones y/o espacios",
-  })
-  extend('alpha_dash',{
-    ...alpha_dash,
-    message: "{_field_} puede contener un guiones",
-  })
-  extend('regex',{
-    ...regex,
-    message:"El campos es invalido",
-  })
-  extend('required_if',{
-    ...required_if,
-    message:"La posicion es requerida para este deporte",
-  })
-  
+    import rules from "../../../../utils/validations"  
+    import {mapActions,mapGetters} from "vuex"
 
   export default {
     components: {
-        ValidationProvider,
-        ValidationObserver,
+    
     },
-    data: () => ({
-        date: new Date().toISOString().substr(0,10),
-        menu: false,
-        
-        about_team:"We are the best team of 2023!",
-        
-        team_image_url:"https://pbs.twimg.com/media/DUOPKlWU0AEGY0S.jpg:large",
-        sport_id:0,
+    data: () => ({   
+        //For Validation
+        valid:false,
+
+
+        sport_route:'',
         // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
-        sport:'Baloncesto',      
-        sports:['Voleibol','Baloncesto','Atletismo'],
+        //USED FOR TEAM SUBMISSION:
+        sport_id:'',
+        sport_name:'',
         branch:'Masculino',
-        branches:['Masculino','Femenino','Otro'],
-      
-        season_year:2023,
-        yearList:[],
-    }),
+        // TODO: FIX ROUTE PARAMS. TEMPORARILY SELECTED LIKE THIS. NEED TO SOMEHOW GET IT FROM OTHER ROUTE.
+        season_year:2020,
+        team_image_url:'',
+        about_team:'',
+        
+        //PAYLOAD
+        current_team:'',
+        current_team_id:'',
+        ready_for_edit:'',
+    }), 
            
       
       
     created(){
-        this.buildYearList()
+        this.ready_for_edit = true
+        this.buildDefaultValues()
+        this.setQueryLoading()
+        const team_params = {
+          sport_id: String(this.sport_id),
+          season_year: String(this.season_year)
+        }
+        this.getTeamByYearSimple(team_params)
     }, 
 
     methods: {
-        buildYearList(){
-            let yearToAdd = 2020
-            let currentYear = new Date(2023,8).getFullYear()
-            this.season = currentYear
-            
-            while(yearToAdd <= currentYear)
-            {
-                this.yearList.push(yearToAdd++)
-            }
-        },
-        async submit () {
-            const isValid = await this.$refs.observer.validate()     
-            if  (!isValid){
-                //simply doesn't leave right now, think if want a box. 
+        ...rules,
+
+        ...mapActions({
+            getTeamByYearSimple:"teams/getTeamByYearSimple",
+            setQueryLoading:"teams/setQueryLoading",
+            editTeam:"teams/editTeam"
+        }),
+
+        formated(){
+            if(this.team){
+                console.log("im out here waddup the ready is",this.ready_for_edit)
+                if(this.ready_for_edit){
+                    console.log("got in whats up")
+                    this.current_team_id = this.team.team_info.team_id
+                    this.about_team = this.team.team_info.about_team
+                    this.team_image_url = this.team.team_info.team_image_url
+                    this.ready_for_edit = false
+                }
+                return true
             }
             else{
-               let payload_edit = {
-                    "sport_id":this.sport_id,
-                    "season_year":this.season_year,
-                    "team_image_url":this.team_image_url,
-                    "about_team": this.about_team
-                }
-                console.log(payload_edit)
-                this.goToTeam()
+                return false
             }
+        },
+
+        buildDefaultValues(){
+            this.sport_id = this.$route.params.id
+            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_name = "Baloncesto", this.sport_route = "basketball"}
+            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_name = "Voleibol",this.sport_route = "volleyball"}
+            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_name = "Fútbol", this.sport_route = "soccer"}
+            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol", this.sport_route = "baseball"}
+            else{this.sport_name = '', this.sport_route = ''}
+        },
+        async submit () {
+            let payload_edit = {
+                "sport_id":this.sport_id,
+                "season_year":this.season_year,
+                "team_image_url":this.team_image_url,
+                "about_team": this.about_team
+            }
+            console.log(payload_edit)
+            this.editTeam(payload_edit)
+            // this.goToTeam()
+            // }
         },
         clear () {
             
             this.about_team='',
             this.team_image_url='',
-            
             // TODO: (Herbert) Check how this works
             this.$refs.observer.reset()
         },
-        updateCategories(key,value){
-            console.log(key)
-            console.log(!value)
-            this.sport_category[key]=!value
-            console.log(this.sport_category)
-            
-        },
-        getVal(key)
-        {
-            return this.sport_category[key]
-        },
-
-        getSport(){
-            return this.sport
-        },
         goToTeam(){
-             this.$router.push('/equipo/')
+             this.$router.push('/equipo/'+sport_id)
         }
     },
+    computed: {
+	    ...mapGetters({
+            team:"teams/team",
+            loadingQuery:"teams/loadingQuery"
+        })
+    }
   }
     // The Only Arguments we need. 
     //{

@@ -10,4 +10,9 @@ export default{
     readyForMemberStats: state => state.readyForMemberStats,
     readyForTeamStats: state => state.readyForTeamStats,
     loadingQuery: state => state.loadingQuery
+    //edit team route
+    
+    //create team route
+
+    //create member route
 }
