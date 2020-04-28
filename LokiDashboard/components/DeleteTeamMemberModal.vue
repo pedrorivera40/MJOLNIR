@@ -65,7 +65,6 @@ export default {
       const payload = {
         team_id: this.team_id,
         athlete_id: this.athlete_id
-        
       };
       await this.setQueryLoading();
       await this.removeTeamMember(payload);

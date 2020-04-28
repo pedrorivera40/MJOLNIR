@@ -140,17 +140,23 @@
 
 
 
-    // created(){
-    //     // this.setNullTeam()
-    //     // this.ready_for_edit = true
-    //     // this.buildDefaultValues()
-    //     // this.setQueryLoading()
-    //     // const team_params = {
-    //     //   sport_id: String(this.sport_id),
-    //     //   season_year: String(this.season_year)
-    //     // }
-    //     // this.getTeamByYearSimple(team_params)
-    // },
+    created(){
+        if (this.about_team == null){
+            this.about_team = ''
+        }
+        if (this.team_image_url == null){
+            this.team_image_url = ''
+        }
+        // this.setNullTeam()
+        // this.ready_for_edit = true
+        // this.buildDefaultValues()
+        // this.setQueryLoading()
+        // const team_params = {
+        //   sport_id: String(this.sport_id),
+        //   season_year: String(this.season_year)
+        // }
+        // this.getTeamByYearSimple(team_params)
+    },
 
     methods: {
         ...rules,
@@ -196,7 +202,7 @@
                 "sport_id":Number(this.sport_id),
                 "season_year":Number(this.season_year),
                 "team_image_url":this.team_image_url,
-                "about_team": this.about_team
+                "about_team":this.about_team
             }
             console.log(payload_edit)
             await this.setQueryLoading()

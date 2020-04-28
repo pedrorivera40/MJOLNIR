@@ -75,13 +75,13 @@
                 <v-container v-if="formated()">
                   <v-row align = "center" justify = "center">
                     <v-col justify = "center" align = "center">
-                      <v-icon v-if="current_team.team_image_url == null" height="100"> mdi-account-group  </v-icon>
+                      <v-icon v-if="(current_team.team_image_url == null)||(current_team.team_image_url == '')" height="100"> mdi-account-group  </v-icon>
                       <v-img v-else :src="current_team.team_image_url" aspect-ratio="2"> 
                       </v-img>
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col v-if = "current_team.about_team">
+                    <v-col v-if ="(current_team.about_team != null)&&(current_team.about_team != '')">
                       <h2> Sobre el Equipo: </h2>
                       <p>
                         {{current_team.about_team}}
@@ -187,6 +187,12 @@
         :athlete_id="athlete_id_deletion"
         :team_id="current_team_id"
       />
+      <DeleteTeamModal
+        v-if="dialogDeleteTeam"
+        :dialog.sync="dialogDeleteTeam"
+        :sport_id="sport_id"
+        :season_year="season"
+      />
     </v-card>
     </div>
 </v-container>
@@ -199,6 +205,7 @@ import AddTeamModal from '@/components/AddTeamModal'
 import AddTeamMembersModal from '@/components/AddTeamMembersModal'
 import UpdateTeamModal from '@/components/UpdateTeamModal'
 import DeleteTeamMemberModal from '@/components/DeleteTeamMemberModal'
+import DeleteTeamModal from '@/components/DeleteTeamModal'
 import {mapActions,mapGetters} from "vuex"
 
 export default {
@@ -208,7 +215,8 @@ export default {
     AddTeamModal,
     AddTeamMembersModal,
     UpdateTeamModal,
-    DeleteTeamMemberModal
+    DeleteTeamMemberModal,
+    DeleteTeamModal
   },
 
 
@@ -367,7 +375,8 @@ export default {
         this.dialogDeleteTeamMember = true;
         },
       removeTeamLocal(){
-            console.log("Will Remove Team("+this.current_team.team_id+")")
+            // console.log("Will Remove Team("+this.current_team.team_id+")")
+            this.dialogDeleteTeam = true;
         },
      
 			getSeasonData(){
