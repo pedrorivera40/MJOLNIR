@@ -39,7 +39,7 @@
               <v-btn class="mr-4" @click="goToEditTeam" color="green darken-1">Editar Equipo</v-btn>
             </v-col>
             <v-col md=3 align="end">
-              <v-btn class="mr-4" @click="removeTeam" color="green darken-1">Remover Equipo</v-btn>
+              <v-btn class="mr-4" @click="removeTeamLocal" color="green darken-1">Remover Equipo</v-btn>
             </v-col>
             <v-col md=3 align="end">
               <v-btn class="mr-4" @click="goToCreateTeam" color="green darken-1">Añadir Equipo +</v-btn>
@@ -128,7 +128,7 @@
                   v-slot:default="{ hover }"
                   close-delay="200"
                 >
-                  <v-icon x-large color="red darken-2" @click="removeMember(member.athlete_id)">mdi-trash-can-outline </v-icon>
+                  <v-icon x-large color="red darken-2" @click="removeTeamMemberLocal(member.athlete_id)">mdi-trash-can-outline </v-icon>
                 </v-hover>
               </v-col>
             </v-row>
@@ -268,6 +268,8 @@ export default {
         setNullTeamMembers:"teams/setNullTeamMembers",
         setNullMembersStats:"teams/setNullMemberStats",
         setNullTeamStats:"teams/setNullTeamStats",
+        removeTeam:"teams/removeTeam",
+        removeTeamMember:"teams/removeTeamMember"
       }),
       
       formated(){
@@ -331,10 +333,10 @@ export default {
             this.$router.push('/equipo/'+this.sport_id+'/miembros/anadir/')
         },
       // TODO: Implement the removes so they probly create a pop up for confirmation?
-      removeMember(athlete_id){
+      removeTeamMemberLocal(athlete_id){
             console.log("Will Remove Athlete("+athlete_id+") from Team("+this.current_team.team_id+")")
         },
-      removeTeam(){
+      removeTeamLocal(){
             console.log("Will Remove Team("+this.current_team.team_id+")")
         },
      
