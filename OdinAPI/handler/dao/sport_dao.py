@@ -94,7 +94,7 @@ class SportDAO:
                 from sport as S inner join branch as B on S.branch_id = B.id
                 where S.id = %s;
                 '''
-
+        
         cursor.execute(query, (sport_id,))
         return cursor.fetchone()
 

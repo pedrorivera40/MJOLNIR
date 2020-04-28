@@ -3,6 +3,7 @@ import json
 from main import app
 from tests.pbp_tests.pbp_data import data
 
+
 class TestSetColorVolleyballPBP(unittest.TestCase):
 
     # Setup mock client.
@@ -11,16 +12,19 @@ class TestSetColorVolleyballPBP(unittest.TestCase):
         self.client = app.test_client()
 
     def test_set_valid_color(self):
-        response = self.client.put('/pbp/color',data=json.dumps(data["valid_color"]),content_type='application/json', follow_redirects=True)
+        response = self.client.put('/pbp/Voleibol/color', data=json.dumps(
+            data["valid_color"]), content_type='application/json', follow_redirects=True)
         expected_msg = "Color set."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
     def test_set_invalid_color(self):
-        response = self.client.put('/pbp/color',data=json.dumps(data["invalid_color"]),content_type='application/json', follow_redirects=True)
+        response = self.client.put('/pbp/Voleibol/color', data=json.dumps(
+            data["invalid_color"]), content_type='application/json', follow_redirects=True)
         expected_msg = "Invalid color format."
         self.assertEqual(response.status_code, 400)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
+
 
 if __name__ == "__main__":
     unittest.main()

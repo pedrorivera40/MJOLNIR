@@ -1,17 +1,17 @@
 import unittest
 import json
 from main import app
-from tests.pbp_tests.uprm_roster.uprm_roster_data import data
+from tests.pbp_tests.opp_roster.opp_roster_data import data
 
 
-class TestRemoveUPRMRosterVolleyballPBP(unittest.TestCase):
+class TestRemoveOppRosterVolleyballPBP(unittest.TestCase):
 
     # Setup mock client.
     def setUp(self):
         app.config['DEBUG'] = True
         self.client = app.test_client()
 
-    def test_uprm_roster_remove_valid(self):
+    def test_opp_roster_remove_valid1(self):
         response = self.client.delete('/pbp/Voleibol/roster', data=json.dumps(
             data["valid_to_remove"]), content_type='application/json', follow_redirects=True)
         expected_msg = "Athlete information removed from the system."

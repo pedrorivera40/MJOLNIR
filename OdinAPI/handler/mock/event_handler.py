@@ -1,35 +1,51 @@
 from flask import Flask, jsonify
 
+
 class _mockEventHandler:
 
     def __init__(self):
         '''
-        Initialize mock collection for the EventDAO mock class.
+        Initialize collection for the Event Handler mock class.
         '''
         self.records = {
             28: {
-                "branch": "femenino",  # col 0 -> event date
-                "is_local": "true",  # col 1 -> is local value
-                "opponent-name": "UPR-RP",  # col 2 -> opponent name
-                "sport_name": "Voleibol",  # col 3 -> sport name
-                "venue": "Coliseo Rafael Mangual",  # col 4 -> venue
-                "date": "28-may-2020"  # col 5 -> date
+                "id": 28,
+                "event_date": "28-may-2020",
+                "is_local": "true",
+                "venue": "Coliseo Rafael Mangual",
+                "team_id": 10,
+                "opponent_name": "Jerezanas",
+                "event_summary": "I do not want to write anything.",
+                "sport_name": "Voleibol",
+                "sport_img_url": "Here goes a photo",
+                "branch": "femenino",
+                "team_season_year": "2020"
             },
             29: {
-                "branch": "femenino",  # col 0 -> event date
-                "is_local": "true",  # col 1 -> is local value
-                "opponent-name": "UPR-RP",  # col 2 -> opponent name
-                "sport_name": "Voleibol",  # col 3 -> sport name
-                "venue": "Coliseo Rafael Mangual",  # col 4 -> venue
-                "date": "28-may-2020"  # col 5 -> date
+                "id": 29,
+                "event_date": "28-may-2020",
+                "is_local": "true",
+                "venue": "Coliseo Rafael Mangual",
+                "team_id": 10,
+                "opponent_name": "Jerezanas",
+                "event_summary": "I do not want to write anything.",
+                "sport_name": "Voleibol",
+                "sport_img_url": "Here goes a photo",
+                "branch": "femenino",
+                "team_season_year": "2020"
             },
-            19: {
-                "branch": "femenino",  # col 0 -> event date
-                "is_local": "true",  # col 1 -> is local value
-                "opponent-name": "UPR-RP",  # col 2 -> opponent name
-                "sport_name": "Baloncesto",  # col 3 -> sport name
-                "venue": "Coliseo Rafael Mangual",  # col 4 -> venue
-                "date": "28-may-2020"  # col 5 -> date
+            19: {  # 4
+                "id": 19,
+                "event_date": "28-may-2020",
+                "is_local": "true",
+                "venue": "Coliseo Rafael Mangual",
+                "team_id": 10,
+                "opponent_name": "Jerezanas",
+                "event_summary": "I do not want to write anything.",
+                "sport_name": "Baloncesto",
+                "sport_img_url": "Here goes a photo",
+                "branch": "femenino",
+                "team_season_year": "2020"
             },
         }
 
