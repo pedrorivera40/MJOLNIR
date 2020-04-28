@@ -44,6 +44,7 @@
                                                 :items="yearList"
                                                 label ="Año de Temporada"
                                                 prepend-icon="mdi-calendar-blank-multiple"
+                                                :rules="[required('Temporada')]"
                                             ></v-select>
                                         </v-col>
                                     </v-row>    
@@ -131,9 +132,6 @@
         // season_year: Number
         // year_list: Array
       },
-    components: {
-       
-    },
     data: () => ({
         //For Validation
         valid:false,

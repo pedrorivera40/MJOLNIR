@@ -1,5 +1,6 @@
 
 export default{
+    //this one is meant to be done in order with the other set of queries
     async getTeamByYear({commit},team_params){
         try{
             //console.log("GET TEAM: At actions level we have:",team_params)
@@ -136,6 +137,7 @@ export default{
             commit("SET_QUERY_DONE")
         }
     },
+    //THe diffrence is in that query is done after getting team and thats it
     async getTeamByYearSimple({commit},team_params){
         try{
             console.log("GET TEAM: At actions level we have:",team_params)
@@ -162,10 +164,11 @@ export default{
             
             let sport_id = teamJSON.sport_id
             commit("SET_QUERY_DONE")
-            this.$router.push('/equipo/'+sport_id)
+            // this.$router.push('/equipo/'+sport_id)
         }catch(error){
-            console.log("ERROR PUTTING TEAM",teamJSON,error)
             commit("SET_QUERY_DONE")
+            console.log("ERROR PUTTING TEAM",teamJSON,error)
+            
             // if(!!error.response.data){
             //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
             // }else{
@@ -181,7 +184,7 @@ export default{
             
             let sport_id = teamJSON.sport_id
             commit("SET_QUERY_DONE")
-            this.$router.push('/equipo/'+sport_id)
+            // this.$router.push('/equipo/'+sport_id)
         }catch(error){
             commit("SET_QUERY_DONE")
             console.log("ERROR POSTING TEAM",teamJSON,error)
@@ -207,7 +210,7 @@ export default{
             let sport_id = 1
             // let sport_id = memberJSON.sport_id
             commit("SET_QUERY_DONE")
-            this.$router.push('/equipo/'+sport_id)
+            // this.$router.push('/equipo/'+sport_id)
         }catch(error){
             commit("SET_QUERY_DONE")
             console.log("ERROR POSTING TEAM MEMBERS",membersJSON,error)

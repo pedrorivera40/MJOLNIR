@@ -167,6 +167,14 @@
         :dialog.sync="dialogAddTeam"
         :sport_id="sport_id"
       />
+      <UpdateTeamModal
+        v-if="dialogEditTeam"
+        :dialog.sync="dialogEditTeam"
+        :sport_id="sport_id"
+        :season_year="season"
+        :about_team="current_team.about_team"
+        :team_image_url="current_team.team_image_url"
+      />
     </v-card>
     </div>
 </v-container>
@@ -201,7 +209,7 @@ export default {
       //NOTE: Using pre-written data for athlete with id:8,
       //      will need to fetch this data below from the API.
     
-      about_team:"Because he's the hero Gotham deserves, but not the one it needs right now, so we'll hunt him. Because he can take it, because he's not a hero. He's a silent guardian, a watchful protector, a Dark Knight.",
+      // about_team:"Because he's the hero Gotham deserves, but not the one it needs right now, so we'll hunt him. Because he can take it, because he's not a hero. He's a silent guardian, a watchful protector, a Dark Knight.",
 
       sport_name:'',    
       //TODO: Check remove/change branch to dynamic (if necessary) 
@@ -326,10 +334,11 @@ export default {
         
       },
       goToEditTeam(){
-            this.$router.push('/equipo/'+this.sport_id+'/editar/')
+        this.dialogEditTeam = true;
+            // this.$router.push('/equipo/'+this.sport_id+'/editar/')
         },
       goToCreateTeam(){
-          this.dialogAddTeam = true;
+        this.dialogAddTeam = true;
             // this.$router.push('/equipo/'+this.sport_id+'/crear/')
         },
       goToAddMembers(){
