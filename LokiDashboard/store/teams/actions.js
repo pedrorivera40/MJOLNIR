@@ -113,6 +113,7 @@ export default{
          
             console.log("ERROR GETTING MEMBER STATISTICS",team_params,error)
             commit("SET_MEMBER_STATISTICS",null)
+            commit("SET_QUERY_DONE")
         }
     },
     async getTeamStatistics({commit},team_params){
@@ -132,6 +133,7 @@ export default{
       
             console.log("ERROR GETTING TEAM STATISTICS",team_params,error)
             commit("SET_TEAM_STATISTICS",null)
+            commit("SET_QUERY_DONE")
         }
     },
     async getTeamByYearSimple({commit},team_params){
@@ -159,9 +161,11 @@ export default{
             // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
             
             let sport_id = teamJSON.sport_id
+            commit("SET_QUERY_DONE")
             this.$router.push('/equipo/'+sport_id)
         }catch(error){
             console.log("ERROR PUTTING TEAM",teamJSON,error)
+            commit("SET_QUERY_DONE")
             // if(!!error.response.data){
             //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
             // }else{
@@ -176,8 +180,10 @@ export default{
             // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
             
             let sport_id = teamJSON.sport_id
+            commit("SET_QUERY_DONE")
             this.$router.push('/equipo/'+sport_id)
         }catch(error){
+            commit("SET_QUERY_DONE")
             console.log("ERROR POSTING TEAM",teamJSON,error)
             // if(!!error.response.data){
             //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
@@ -200,8 +206,10 @@ export default{
             //be a json inside a json or something. oh well. 
             let sport_id = 1
             // let sport_id = memberJSON.sport_id
+            commit("SET_QUERY_DONE")
             this.$router.push('/equipo/'+sport_id)
         }catch(error){
+            commit("SET_QUERY_DONE")
             console.log("ERROR POSTING TEAM MEMBERS",membersJSON,error)
             // if(!!error.response.data){
             //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
