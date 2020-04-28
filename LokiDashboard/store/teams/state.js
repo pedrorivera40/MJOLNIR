@@ -12,6 +12,7 @@ export default() =>({
     readyForMemberStats: false,
     readyForTeamStats: false,
     loadingQuery:false,
+    sport_athletes: null,
 
     //edit team route
 

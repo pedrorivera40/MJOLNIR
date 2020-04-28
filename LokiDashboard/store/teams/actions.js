@@ -186,5 +186,87 @@ export default{
             // }
         }
     },
+    async addMembers({commit,dispatch},membersJSON){
+        try{
+            // {
+            //     "team_id":1,
+            //     "athlete_id":8
+            // }
+            // commit("SET_ATHLETES",[])
+            const response = await this.$axios.post('teams/members/',membersJSON)
+            // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
+            
+            //TODO: how to dynamically check the sport id if not a param? it'd have to be a param, would 
+            //be a json inside a json or something. oh well. 
+            let sport_id = 1
+            // let sport_id = memberJSON.sport_id
+            this.$router.push('/equipo/'+sport_id)
+        }catch(error){
+            console.log("ERROR POSTING TEAM MEMBERS",membersJSON,error)
+            // if(!!error.response.data){
+            //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            // }else{
+            //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            // }
+        }
+    },
+    async getSportAthletes({commit},sport_id){
+        try{
+            console.log("GET ATHLETES: At actions level we have:",sport_id)
+            console.log("At the request level we have:",sport_id)
+            const response = await this.$axios.get('athletes/?sID='+sport_id)
+            console.log("GET ATHLETES",response)
+            console.log("GET ATHLETES",response.data)
+            commit("SET_SPORT_ATHLETES",response.data.Atheletes)
+            commit("SET_QUERY_DONE")
+            
+        }catch(error){
+            console.log("ERROR GETTING SPORT ATHLETES",sport_id,error)
+            commit("SET_SPORT_ATHLETES",null)
+            commit("SET_QUERY_DONE")
+        }
+    },
+    async setSportAthletesNull({commit}){
+        try{
+            commit("SET_SPORT_ATHLETES",null)
+            commit("SET_QUERY_DONE")
+            
+        }catch(error){
+            console.log("ERROR SETTING SPORT ATHLETES NULL",error)
+            commit("SET_SPORT_ATHLETES",null)
+            commit("SET_QUERY_DONE")
+        }
+    },
+    async removeTeam({commit},teamJSON){
+        try{
+            console.log("REMOVE ATHLETES: At actions level we have:",teamJSON)
+            const response = await this.$axios.remove('teams/',teamJSON)
+            // console.log("REMOVE ATHLETES",response)
+            // console.log("REMOVE ATHLETES",response.data)
+            // commit("SET_TEAM",null)
+            commit("SET_QUERY_DONE")
+            
+        }catch(error){
+            console.log("ERROR REMOVING TEAM",teamJSON,error)
+            // commit("SET_TEAM",null)
+            commit("SET_QUERY_DONE")
+        }
+    },
+    async removeTeamMember({commit},memberJSON){
+        try{
+            console.log("REMOVE ATHLETES: At actions level we have:",memberJSON)
+            const response = await this.$axios.remove('teams/member/',memberJSON)
+            // console.log("REMOVE ATHLETES",response)
+            // console.log("REMOVE ATHLETES",response.data)
+            // commit("SET_TEAM_MEMBER",null)
+            commit("SET_QUERY_DONE")
+            
+        }catch(error){
+            console.log("ERROR REMOVING TEAM",memberJSON,error)
+            // commit("SET_TEAM_MEMBER",null)
+            commit("SET_QUERY_DONE")
+        }
+    },
+    
 }
 

@@ -149,9 +149,9 @@
 
         formated(){
             if(this.team){
-                console.log("im out here waddup the ready is",this.ready_for_edit)
+                // console.log("im out here waddup the ready is",this.ready_for_edit)
                 if(this.ready_for_edit){
-                    console.log("got in whats up")
+                    // console.log("got in whats up")
                     this.current_team_id = this.team.team_info.team_id
                     this.about_team = this.team.team_info.about_team
                     this.team_image_url = this.team.team_info.team_image_url
