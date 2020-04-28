@@ -32,7 +32,7 @@ class TestUserRoutes(unittest.TestCase):
   def test_get_user_by_inexistent_id(self):
     response = self.client.get('/users/2200000000', follow_redirects=True)
     self.assertEqual(response.status_code, 404)
-    self.assertEqual(response.json['Error'], 'No user found in the system with that id.') # TODO add corresponding error message
+    self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.') # TODO add corresponding error message
 
   def test_get_user_by_username(self):
     response = self.client.post('/users/username/', data=json.dumps({'username': self.data['username']}),content_type='application/json',  follow_redirects=True)
@@ -47,7 +47,7 @@ class TestUserRoutes(unittest.TestCase):
   def test_get_user_by_inexistent_username(self):
       response = self.client.post('/users/username/', data=json.dumps({'username': 'thisDoesNotExists'}), content_type='application/json', follow_redirects=True)
       self.assertEqual(response.status_code, 404)
-      self.assertEqual(response.json['Error'], 'No user found in the system with that username.')
+      self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese nombre de usuario.')
 
   def test_get_user_by_email(self):
     response = self.client.post('/users/email/', data=json.dumps({'email' : self.data['email']}), content_type='application/json',  follow_redirects=True)
@@ -62,4 +62,4 @@ class TestUserRoutes(unittest.TestCase):
   def test_get_user_by_inexistent_email(self):
         response = self.client.post('/users/email/', data=json.dumps({'email': 'thisDoesNotExists'}), content_type='application/json', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No user found in the system with that email.')
+        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese correo electrónico.')

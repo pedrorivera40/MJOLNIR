@@ -30,4 +30,4 @@ class TestUserRoutes(unittest.TestCase):
     # TODO add a check for when you are trying to activate a non existent user.
     response = self.client.patch(f'/users/8878787/toggleActive',follow_redirects=True)
     self.assertEqual(response.status_code, 404)
-    self.assertEqual(response.json['Error'], 'No user found in the system with that id.')
+    self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')

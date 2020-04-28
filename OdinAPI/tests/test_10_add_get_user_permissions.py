@@ -34,6 +34,6 @@ class TestUserRoutes(unittest.TestCase):
 
         response = self.client.get(f'/users/9874/permissions', content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No User found in the system with that id.')
+        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
 
