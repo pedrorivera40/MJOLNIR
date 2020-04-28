@@ -11,9 +11,6 @@ class SportHandler:
     @author Pedro Luis Rivera Gomez
     '''
 
-    def __init__(self):
-        self._dao = SportDAO()
-
     def _build_sport_row_dict(self, sport_row):
         '''
         Internal method for building a dictionary per sport row obtained from DAO.
@@ -117,11 +114,11 @@ class SportHandler:
 
         sports = []
         try:
-            print(1)
-            sport_rows = self._dao.getAllSports()
-            print(2, sport_rows)
+            sport_rows = SportDAO().getAllSports()
             sports = self._build_sport_dict(sport_rows)
-            print(3)
+
+            if len(sports) == 0:
+                return jsonify(ERROR="SportHandler.getAllSports - sport data not found."), 400
         except:
             return jsonify(ERROR="SportHandler.getAllSports - unable to obtain sports from DAO."), 500
 
@@ -148,8 +145,12 @@ class SportHandler:
 
         sports = []
         try:
-            sport_rows = self._dao.getSportsByBranch(branch)
+            sport_rows = SportDAO().getSportsByBranch(branch)
             sports = self._build_sport_dict(sport_rows)
+
+            if len(sports) == 0:
+                return jsonify(ERROR="SportHandler.getSportsByBranch - sport data not found."), 400
+
         except:
             return jsonify(ERROR="SportHandler.getSportsByBranch - unable to obtain sports from DAO."), 500
 
@@ -175,8 +176,10 @@ class SportHandler:
         """
         sport = {}
         try:
-            sport_row = self._dao.getSportById(sport_id)
+            sport_row = SportDAO().getSportById(sport_id)
             sport = self._build_sport_row_dict(sport_row)
+            if len(sport) == 0:
+                return jsonify(ERROR="SportHandler.getSportById - sport not found."), 400
         except:
             return jsonify(ERROR="SportHandler.getSportById - unable to obtain sport from DAO."), 500
 
@@ -203,8 +206,10 @@ class SportHandler:
 
         sports = {}
         try:
-            sport_rows = self._dao.getSportByName(sport_name)
+            sport_rows = SportDAO().getSportByName(sport_name)
             sports = self._build_sport_dict(sport_rows)
+            if len(sports) == 0:
+                return jsonify(ERROR="SportHandler.getSportByName - sport not found."), 400
         except:
             return jsonify(ERROR="SportHandler.getSportByName - unable to obtain sports from DAO."), 500
 
@@ -231,8 +236,10 @@ class SportHandler:
 
         sports = {}
         try:
-            sport_rows = self._dao.getSportCategoriesPositions()
+            sport_rows = SportDAO().getSportCategoriesPositions()
             sports = self._build_sport_category_position(sport_rows)
+            if len(sports) == 0:
+                return jsonify(ERROR="SportHandler.getSportCategoriesPositions - sport data not found."), 400
         except:
             return jsonify(ERROR="SportHandler.getSportCategoriesPositions - unable to obtain sports from DAO."), 500
 

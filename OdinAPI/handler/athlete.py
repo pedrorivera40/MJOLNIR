@@ -100,41 +100,48 @@ class AthleteHandler:
 
                 
     
-    def getAthletesBySport(self,sID):
+    def getAthletesBySportAndNotInTeam(self,sID,tID):
         """
-        Gets all athletes belonging to a specific sport.
+        Gets all athletes belonging to a specific sport and not
+        int the team given..
 
         Calls the AthletDAO to get a list of all athlete records
-        that participate in a specific sport and maps the result 
-        to a JSON that contains all those valid athletes in the 
-        system. The JSON objects is then returned to the caller.
+        that participate in a specific sport,that don't belong to 
+        the team given, and maps the result to a JSON that contains 
+        all those valid athletes in the system. The JSON objects is 
+        then returned to the caller.
         
         Args:
             sID: The id of the sport in which the athletes parcipate.
+            tID; The id of the team in which the athletes will not belong
+                 to.
         
         Returns:
             A JSON containing all valid athletes that participate in a
-            specified sport by the given sport id.
+            specified sport by the given sport id and not in the team
+            by the given team id.
         """
         try:
-            if not isinstance(int(sID),int):#Validate that the sport id is an integer.
-                return jsonify(Error = "El identificidador del deporte dado es invalido."),400            
+            if not isinstance(int(sID),int) or not isinstance(int(tID),int):#Validate that the sport id is an integer.
+                return jsonify(Error = "El identificidador del deporte o equipo dado es invalido."),400            
         except:
-            return jsonify(Error = "El identificador del deporte dado es invalido."),400
+            return jsonify(Error = "El identificador del deporte o equipo dado es invalido."),400
 
         dao = AthleteDAO()
         try:            
-            if not dao.sportExists(sID):
+            if not dao.sportExists(sID) or not dao.teamExists(tID):
                 dao._closeConnection()
                 return jsonify(Error = "No existe ese deporte en el sistema."),404
 
-            result = dao.getAthletesBySport(sID)
+        
+
+            result = dao.getAthletesBySportAndNotInTeam(sID,tID)
             if not result:
                 return jsonify(Error = "Atletas no fueron encontrados para el deporte con el siguiente identifador: {}.".format(sID)),404
             mappedResult = []
             for athlete in result:   
                 mappedResult.append(self.mapAthleteWithPositionsAndCategoriesToDict(athlete))
-            return jsonify(Atheletes = mappedResult), 200
+            return jsonify(Athletes = mappedResult), 200
         except:
             dao._closeConnection()
             return jsonify(Error = "Occurrió un error interno buscando los atletas de un deporte."),500
@@ -318,7 +325,7 @@ class AthleteHandler:
         functions.
 
         Args:
-            attributes: A dictionary containing the attributes of an athelete to be added or 
+            attributes: A dictionary containing the attributes of an athlete to be added or 
                         edited.
         Returns:
             A string with an error message if the validation fails an integer otherwise.        

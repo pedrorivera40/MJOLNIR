@@ -16,7 +16,8 @@ class PBPDao:
     # Initialize Firebase Admin SDK and set Realtime Database instance.
     def __init__(self):
         if not firebase_admin._apps:
-            firebase_admin.initialize_app(credentials.Certificate(serv_path), rtdb_config)
+            firebase_admin.initialize_app(
+                credentials.Certificate(serv_path), rtdb_config)
         self._rtdb = db
         # TODO -> Move this into the a separate file such as fb_config.py.
         self._db_keywords = {
@@ -29,7 +30,7 @@ class PBPDao:
             "score": "/score",
             "actions": "/game-actions",
             "score-key": "score",
-            "over": "/game-over",
+            "over": "/game-over/answer",
             "answer": "/answer",
             "color": "/opp-color"
         }
@@ -55,7 +56,6 @@ class PBPDao:
 
         path = self._db_keywords["root"] + str(int(event_id))
         self._rtdb.reference(path).set(event_node)
-
 
     def remove_pbp_seq(self, event_id):
         """
@@ -89,7 +89,7 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["uprm-roster"] + \
-            "/" + athlete_entry["athlete_id"]
+            "/" + str(int(athlete_entry["athlete_id"]))
         self._rtdb.reference(path).set(athlete_entry)
 
     def set_opponent_athlete(self, event_id, athlete_entry):
@@ -109,7 +109,7 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["opp-roster"] + \
-            "/" + athlete_entry["athlete_id"]
+            "/" + str(int(athlete_entry["number"]))
         self._rtdb.reference(path).set(athlete_entry)
 
     def remove_uprm_athlete(self, event_id, athlete_id):
@@ -247,7 +247,6 @@ class PBPDao:
 
         return self._rtdb.reference(path).get()
 
-    
     def _set_score_by_set(self, event_id, set_path, score):
         """
         Sets the score for a set or period for a PBP sequence.
@@ -317,7 +316,7 @@ class PBPDao:
         dec_score = int(self.get_score_by_set(event_id, path_dec))
         inc_score = int(self.get_score_by_set(event_id, path_inc))
 
-        if curredec_scorent_score + int(adjust) < 0 or inc_score + int(adjust):
+        if dec_score - int(difference) < 0 or inc_score + int(difference) < 0:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
 
         update = {
@@ -345,18 +344,19 @@ class PBPDao:
         Returns:
             void
         """
-
+        event_id = str(int(event_id))
         dec_score = int(self.get_score_by_set(event_id, path_dec))
         inc_score = int(self.get_score_by_set(event_id, path_inc))
         action_path = self._db_keywords["root"] + \
-            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(action_id))
+            event_id + \
+            self._db_keywords["actions"] + "/" + str(int(action_id))
 
         if dec_score + int(difference) < 0 or inc_score + int(difference) < 0:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
 
         update = {
-            (str(int(event_id)) + path_dec): dec_score - difference,
-            (str(int(event_id)) + path_inc): inc_score + difference,
+            (self._db_keywords["root"] + event_id + self._db_keywords["score"] + path_dec): dec_score - difference,
+            (self._db_keywords["root"] + event_id + self._db_keywords["score"] + path_inc): inc_score + difference,
             action_path: new_action
         }
         self._rtdb.reference().update(update)
@@ -380,13 +380,18 @@ class PBPDao:
 
         inc_score = int(self.get_score_by_set(event_id, path_inc))
         action_path = self._db_keywords["root"] + \
-            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(action_id))
+            str(int(event_id)) + \
+            self._db_keywords["actions"] + "/" + str(int(action_id))
+
+        path_score = self._db_keywords["root"] + \
+            str(int(event_id)) + \
+            self._db_keywords["score"] + "/" + str(path_inc)
 
         if inc_score + int(increment) < 0:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
 
         update = {
-            (event_id + path_inc): inc_score + difference,
+            path_score: inc_score + increment,
             action_path: new_action
         }
         self._rtdb.reference().update(update)
@@ -438,7 +443,8 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(action_id))
+            str(int(event_id)) + \
+            self._db_keywords["actions"] + "/" + str(int(action_id))
 
         return self._rtdb.reference(path).get()
 
@@ -456,7 +462,8 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(time()))
+            str(int(event_id)) + \
+            self._db_keywords["actions"] + "/" + str(int(time()))
 
         return self._rtdb.reference(path).set(action_content)
 
@@ -473,7 +480,8 @@ class PBPDao:
             ID corresponding to the newly inserted game action.
         """
         path_actions = self._db_keywords["root"] + \
-            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(time()))
+            str(int(event_id)) + \
+            self._db_keywords["actions"] + "/" + str(int(time()))
         current_score = int(self.get_score_by_set(event_id, path_score))
 
         if current_score + int(difference) < 0:
@@ -486,7 +494,7 @@ class PBPDao:
             path_actions: action_content,
             update_path_score: current_score + difference,
         }
-        print(update)
+
         return self._rtdb.reference().update(update)
 
     def edit_pbp_game_action(self, event_id, action_id, action_content):
@@ -504,7 +512,8 @@ class PBPDao:
         """
 
         path = self._db_keywords["root"] + \
-            str(int(event_id)) + self._db_keywords["actions"] + "/" + str(int(action_id))
+            str(int(event_id)) + \
+            self._db_keywords["actions"] + "/" + str(int(action_id))
         return self._rtdb.reference(path).set(action_content)
 
     def remove_pbp_game_action(self, event_id, action_id):
@@ -557,7 +566,6 @@ class PBPDao:
 
         path = self._db_keywords["root"] + str(int(event_id)) + \
             self._db_keywords["meta"] + self._db_keywords["over"]
-
         self._rtdb.reference(path).set("Yes")
 
 

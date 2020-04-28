@@ -50,19 +50,20 @@ class AthleteDAO:
 
 
     
-    def getAthletesBySport(self,sID):
+    def getAthletesBySportAndNotInTeam(self,sID,tID):
         """
         Returns all the athletes that participate in a sport by
-        the id given.
+        the id given and don't belong to the given team.
 
         Performs a query on the database in order to get all
         valid atheletes in the database by using the id of the 
-        sport given. It returns a list of the athletes with their 
+        sport  and team given. It returns a list of the athletes with their 
         information including their positions and categories if
         they have them in the sport being fetched for.
 
         Args:
             sID: The id of the sport that has participant athletes.
+            tID: The id of the team that the athletes will not belong to.
         Returns:
             A list containing all the athletes and their  
             information that participate in the sport given
@@ -71,13 +72,16 @@ class AthleteDAO:
         """
         cursor = self.conn.cursor()        
 
-        query = """select A.id
-                   from athlete as A inner join sport as S on A.sport_id=S.id
-                   where S.id = %s
-                   and A.is_invalid=false
+        query = """ select A.id
+                    from athlete as A inner join sport as S on A.sport_id=S.id
+                    FULL OUTER JOIN team_members as TM on (A.id = TM.athlete_id and TM.team_id=%s)
+                    where A.id not in(select TM.athlete_id from team_members as TM where TM.team_id=%s and TM.is_invalid = false)
+                    and A.sport_id = %s 
+                    and A.is_invalid=false
+                    GROUP BY A.id
                 """
         try:
-            cursor.execute(query,(sID,))        
+            cursor.execute(query,(tID,tID,sID))        
             result = []#Will hold the list with athlete records.
             aids = []#List of the ids of the athletes fetched in the query above.
             for row in cursor:
@@ -556,7 +560,39 @@ class AthleteDAO:
            print(e)
            exists = False        
         
-        return exists        
+        return exists
+
+    def teamExists(self,tID):
+        """
+        Confirms the existance of a team by the team id
+        given.
+
+        Performs a simple fetch query to determine if 
+        the team given exists.
+
+        Args:          
+            tID: The id of the team being confirmed
+        Returns:
+            True if the team exists in the database, 
+            false otherwise.
+        """
+        exists = True
+        query = """select id
+                   from team
+                   where id=%s
+                   and is_invalid = false
+                """
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute(query,(tID,))
+            if not cursor.fetchone():
+                exists = False
+            cursor.close()
+        except Exception as e:
+           print(e)
+           exists = False        
+        
+        return exists              
 
     
     def athleteExists(self,aID):
