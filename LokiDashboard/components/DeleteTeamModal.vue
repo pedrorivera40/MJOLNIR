@@ -25,7 +25,7 @@
             :disabled="!terms"
             :loading="isLoading"
             text
-            @click="removeTeam()"
+            @click="removeTeamLocal()"
           >
             Remover
           </v-btn>
@@ -38,7 +38,7 @@
 <script>
 import { mapActions } from "vuex";
 export default {
-  name: "DeleteTeamMemberModal",
+  name: "DeleteTeamModal",
   props: {
     dialog: Boolean,
     sport_id: Number,
@@ -60,15 +60,14 @@ export default {
       this.terms = false;
       this.$emit("update:dialog", false);
     },
-    async removeTeam() {
+    async removeTeamLocal() {
       this.isLoading = true;
       const payload = {
         sport_id: Number(this.sport_id),
         season_year: Number(this.season_year)
-        
       };
-      await this.setQueryLoading();
       console.log("HEY WE GONNA REMOVE!",payload)
+      await this.setQueryLoading();
       await this.removeTeam(payload);
       this.terms = false;
       this.$emit("update:dialog", false);
