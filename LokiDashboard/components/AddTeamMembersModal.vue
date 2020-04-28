@@ -133,11 +133,12 @@
             this.setSportAthletesNull()
             this.ready_for_members = true
             // this.buildDefaultValues()
-            this.setQueryLoading()
+            
             const athlete_params = {
                 sport_id:Number(this.sport_id),
                 team_id:Number(this.team_id)
             }
+            this.setQueryLoading()
             console.log("THE DAMN PARAMS",athlete_params)
             this.getSportAthletes(athlete_params)
         },       
@@ -197,8 +198,8 @@
             console.log("Going to add athletes to team with id "+this.team_id+".")
             console.log("Yeah yeah params 1",this.members_to_add_formatted)
             console.log("Yeah yeah params 2",athlete_params)
-            this.setQueryLoading()
-            this.addMembers(athlete_params)
+            await this.setQueryLoading()
+            await this.addMembers(athlete_params)
             this.close()
         },
 

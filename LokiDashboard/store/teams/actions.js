@@ -253,7 +253,7 @@ export default{
     async removeTeam({commit},teamJSON){
         try{
             console.log("REMOVE ATHLETES: At actions level we have:",teamJSON)
-            const response = await this.$axios.remove('teams/',teamJSON)
+            const response = await this.$axios.delete('teams/',teamJSON)
             // console.log("REMOVE ATHLETES",response)
             // console.log("REMOVE ATHLETES",response.data)
             // commit("SET_TEAM",null)
@@ -268,14 +268,14 @@ export default{
     async removeTeamMember({commit},memberJSON){
         try{
             console.log("REMOVE ATHLETES: At actions level we have:",memberJSON)
-            const response = await this.$axios.remove('teams/member/',memberJSON)
+            const response = await this.$axios.delete('teams/member/',memberJSON)
             // console.log("REMOVE ATHLETES",response)
             // console.log("REMOVE ATHLETES",response.data)
             // commit("SET_TEAM_MEMBER",null)
             commit("SET_QUERY_DONE")
             
         }catch(error){
-            console.log("ERROR REMOVING TEAM",memberJSON,error)
+            console.log("ERROR REMOVING TEAM MEMBER",memberJSON,error)
             // commit("SET_TEAM_MEMBER",null)
             commit("SET_QUERY_DONE")
         }

@@ -181,6 +181,12 @@
         :sport_id="sport_id"
         :team_id="current_team_id"
       />
+      <DeleteTeamMemberModal
+        v-if="dialogDeleteTeamMember"
+        :dialog.sync="dialogDeleteTeamMember"
+        :athlete_id="athlete_id_deletion"
+        :team_id="current_team_id"
+      />
     </v-card>
     </div>
 </v-container>
@@ -192,6 +198,7 @@ import AthleteCardSimple from '@/components/AthleteCardSimple.vue'
 import AddTeamModal from '@/components/AddTeamModal'
 import AddTeamMembersModal from '@/components/AddTeamMembersModal'
 import UpdateTeamModal from '@/components/UpdateTeamModal'
+import DeleteTeamMemberModal from '@/components/DeleteTeamMemberModal'
 import {mapActions,mapGetters} from "vuex"
 
 export default {
@@ -200,7 +207,8 @@ export default {
     EventCard:EventCard,
     AddTeamModal,
     AddTeamMembersModal,
-    UpdateTeamModal
+    UpdateTeamModal,
+    DeleteTeamMemberModal
   },
 
 
@@ -233,6 +241,7 @@ export default {
       members:'',
       yearList:[],  
       defaultSelected:[],
+      athlete_id_deletion:'',
 
       //SPORT DETERMINATION VARIABLES 
       BASKETBALL_IDM: 1,
@@ -353,7 +362,9 @@ export default {
         },
       // TODO: Implement the removes so they probly create a pop up for confirmation?
       removeTeamMemberLocal(athlete_id){
-            console.log("Will Remove Athlete("+athlete_id+") from Team("+this.current_team.team_id+")")
+        this.athlete_id_deletion = athlete_id;
+        // console.log("Will Remove Athlete("+this.athlete_id_deletion+") from Team("+this.current_team.team_id+")")
+        this.dialogDeleteTeamMember = true;
         },
       removeTeamLocal(){
             console.log("Will Remove Team("+this.current_team.team_id+")")

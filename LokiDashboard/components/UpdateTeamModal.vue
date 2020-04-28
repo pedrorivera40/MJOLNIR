@@ -199,8 +199,8 @@
                 "about_team": this.about_team
             }
             console.log(payload_edit)
-            this.setQueryLoading()
-            this.editTeam(payload_edit)
+            await this.setQueryLoading()
+            await this.editTeam(payload_edit)
             // while(this.loadingQuery){}
             // this.getUpdate()
             this.close()
