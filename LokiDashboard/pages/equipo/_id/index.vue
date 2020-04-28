@@ -175,6 +175,12 @@
         :about_team="current_team.about_team"
         :team_image_url="current_team.team_image_url"
       />
+      <AddTeamMembersModal
+        v-if="dialogAddTeamMember"
+        :dialog.sync="dialogAddTeamMember"
+        :sport_id="sport_id"
+        :team_id="current_team_id"
+      />
     </v-card>
     </div>
 </v-container>
@@ -342,7 +348,8 @@ export default {
             // this.$router.push('/equipo/'+this.sport_id+'/crear/')
         },
       goToAddMembers(){
-            this.$router.push('/equipo/'+this.sport_id+'/miembros/anadir/')
+        this.dialogAddTeamMember = true;
+            // this.$router.push('/equipo/'+this.sport_id+'/miembros/anadir/')
         },
       // TODO: Implement the removes so they probly create a pop up for confirmation?
       removeTeamMemberLocal(athlete_id){

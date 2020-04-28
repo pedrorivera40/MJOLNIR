@@ -221,18 +221,20 @@ export default{
             // }
         }
     },
-    async getSportAthletes({commit},sport_id){
+    async getSportAthletes({commit},athlete_params){
         try{
-            console.log("GET ATHLETES: At actions level we have:",sport_id)
-            console.log("At the request level we have:",sport_id)
-            const response = await this.$axios.get('athletes/?sID='+sport_id)
+            let sport_id = athlete_params.sport_id
+            let team_id = athlete_params.team_id
+            console.log("GET ATHLETES: At actions level we have:",athlete_params)
+            console.log("At the request level we have:",athlete_params)
+            const response = await this.$axios.get('athletes/?sID='+sport_id+'&tID='+team_id)
             console.log("GET ATHLETES",response)
             console.log("GET ATHLETES",response.data)
-            commit("SET_SPORT_ATHLETES",response.data.Atheletes)
+            commit("SET_SPORT_ATHLETES",response.data.Athletes)
             commit("SET_QUERY_DONE")
             
         }catch(error){
-            console.log("ERROR GETTING SPORT ATHLETES",sport_id,error)
+            console.log("ERROR GETTING SPORT ATHLETES",athlete_params,error)
             commit("SET_SPORT_ATHLETES",null)
             commit("SET_QUERY_DONE")
         }

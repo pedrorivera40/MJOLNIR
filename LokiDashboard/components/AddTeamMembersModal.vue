@@ -85,7 +85,14 @@
                                 </v-col>  
                             </v-row>      
                             <v-row justify="end">
-                                <v-btn class="mr-4" @click="submit">submit</v-btn>
+                                <v-spacer/>
+                                <v-spacer/>
+                                <v-col>
+                                    <v-btn color="primary ligthen-1" text @click="close()">close</v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-btn color="primary ligthen-1" text @click="submit" :loading="loadingQuery">submit</v-btn>
+                                </v-col>
                             </v-row>   
                         </v-container>
                     </form>
@@ -127,7 +134,12 @@
             this.ready_for_members = true
             // this.buildDefaultValues()
             this.setQueryLoading()
-            this.getSportAthletes(this.sport_id,this.team_id)
+            const athlete_params = {
+                sport_id:Number(this.sport_id),
+                team_id:Number(this.team_id)
+            }
+            console.log("THE DAMN PARAMS",athlete_params)
+            this.getSportAthletes(athlete_params)
         },       
         methods: {
             ...rules,
@@ -164,7 +176,9 @@
             const index = this.members_to_add.indexOf(item.athlete_id)
             if (index >= 0) this.members_to_add.splice(index, 1)
         },
-    
+        close() {
+            this.$emit("update:dialog", false);
+        },
         async submit () {
             var i;
             console.log("Going to add the members here!",this.members_to_add)
@@ -185,6 +199,7 @@
             console.log("Yeah yeah params 2",athlete_params)
             this.setQueryLoading()
             this.addMembers(athlete_params)
+            this.close()
         },
 
         goToTeam(){
