@@ -58,9 +58,8 @@ class UserHandler:
 
         # Verify password complies with the rules
         if not rulesMatch(password):
-            return jsonify(Error="""Password should contain At least 1 upercase letter,
-            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long."""), 400
+            return jsonify(Error="""La contraseña debe contener al menos 1 letra mayúscula, 
+            1 minúscula, 1 símbolo, y debe tener entre 10 y 64 caracteres."""), 400
 
         # Hash the password
         hashedPassword = createHash(password)
@@ -70,11 +69,11 @@ class UserHandler:
 
         if res == 'UserError1':
             # Conflict with the current state of the server
-            return jsonify(Error='Email has been registered.'), 400
+            return jsonify(Error='El correo electrónico ha sido registrado.'), 400
         elif res == 'UserError2':
-            return jsonify(Error='Username is already taken.'), 400
+            return jsonify(Error='El nombre de usuario está en uso.'), 400
         elif res == 'UserError3':
-            return jsonify(Error="New user not created"), 400
+            return jsonify(Error="El nuevo usuario no se ha creado."), 400
         else:
             mappedUser = self.mapUserToDict(res)
             # sets login attempts to 0 upon creation.
@@ -96,7 +95,7 @@ class UserHandler:
         userList = dao.getAllDashUsers()
 
         if userList == None:
-            return jsonify(Error='No users found in the system'), 404
+            return jsonify(Error='No se encontró ningún usuario en el sistema.'), 404
 
         mappedUsers = []
         for user in userList:
@@ -123,7 +122,7 @@ class UserHandler:
         dao = UserDAO()
         fetchedUser = dao.getDashUserByID(duid)
         if fetchedUser == None:
-            return jsonify(Error="No user found in the system with that id."), 404
+            return jsonify(Error="No se encontró ningún usuario en el sistema con ese id."), 404
 
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser), 200  # 200 == OK
@@ -148,7 +147,7 @@ class UserHandler:
         dao = UserDAO()
         fetchedUser = dao.getDashUserByUsername(username)
         if fetchedUser == None:
-            return jsonify(Error="No user found in the system with that username."), 404
+            return jsonify(Error="No se encontró ningún usuario en el sistema con ese nombre de usuario."), 404
 
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser), 200  # 200 == OK
@@ -172,7 +171,7 @@ class UserHandler:
         dao = UserDAO()
         fetchedUser = dao.getDashUserByEmail(email)
         if fetchedUser == None:
-            return jsonify(Error="No user found in the system with that email."), 404
+            return jsonify(Error="No se encontró ningún usuario en el sistema con ese correo electrónico."), 404
 
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser), 200  # 200 == OK
@@ -202,7 +201,7 @@ class UserHandler:
         # verify is user exists
         if user == None:
             # Login attempts do not increase because username does not exist.
-            return jsonify(Error="Username or Password are incorrect."), 400
+            return jsonify(Error="La contraseña o el nombre de usuario estan incorrectos."), 400
 
         # get user id , whic is position 0 of the user tupple.
         duid = user[0]
@@ -213,12 +212,12 @@ class UserHandler:
         # If there are 3 failed login attempts, deactivate account.
         if attempts == 3 or user[4] == False:
             dao.deactivateDashUserAccount(duid)
-            return jsonify(Error='Account is locked.'), 401
+            return jsonify(Error='La cuenta esta desactivada, por favor activarla.'), 401
 
         fetchedHash = dao.getHashByUsername(username)
         if fetchedHash == None:  # TODO this may be repeated code.
             # Login attempts do not increase because username does not exist.
-            return jsonify(Error="Username or Password are incorrect."), 400
+            return jsonify(Error="La contraseña o el nombre de usuario estan incorrectos."), 400
 
         mappedHash = self.mapHash(fetchedHash)
 
@@ -235,7 +234,7 @@ class UserHandler:
             return jsonify(auth=loginInfo), 201
 
         dao.setLoginAttempts(duid, attempts+1)
-        return jsonify(Error="Username or Password are incorrect."), 400
+        return jsonify(Error="La contraseña o el nombre de usuario estan incorrectos."), 400
 
     def updateDashUserPassword(self, duid, password):
         """
@@ -257,15 +256,14 @@ class UserHandler:
 
         # Verify password complies with the rules
         if not rulesMatch(password):
-            return jsonify(Error="""Password should contain At least 1 upercase letter,
-            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long."""), 400
+            return jsonify(Error="""La contraseña debe contener al menos 1 letra mayúscula, 
+            1 minúscula, 1 símbolo, y debe tener entre 10 y 64 caracteres."""), 400
         # Hash password
         hashedPassword = createHash(password)
         dao = UserDAO()
         res = dao.updateDashUserPassword(duid, hashedPassword)
         if res == None:
-            return jsonify(Error='No user found in the system with that id.'), 404
+            return jsonify(Error='No se encontró ningún usuario en el sistema con ese id.'), 404
 
         # When password is reset, login attempts are set to 0
         dao.deactivateDashUserAccount(duid)  # Set account active to false.
@@ -297,25 +295,24 @@ class UserHandler:
         fetchedHash = dao.getHashByUsername(username)
         if fetchedHash == None: 
             #username is incorrect 
-            return jsonify(Error="Username or Password are incorrect."), 400
+            return jsonify(Error="La contraseña o el nombre de usuario estan incorrectos."), 400
 
         mappedHash = self.mapHash(fetchedHash)
         if not verifyHash(password, mappedHash['hash']):
             #password is incorrect
-            return jsonify(Error="Username or Password are incorrect."), 400
+            return jsonify(Error="La contraseña o el nombre de usuario estan incorrectos."), 400
 
         # Verify the new password complies with the rules
         if not rulesMatch(new_password):
-            return jsonify(Error="""Password should contain At least 1 upercase letter,
-            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long."""), 400
+            return jsonify(Error="""La contraseña debe contener al menos 1 letra mayúscula, 
+            1 minúscula, 1 símbolo, y debe tener entre 10 y 64 caracteres."""), 400
         
         # If they do, hash password
         hashedPassword = createHash(new_password)
         
         res = dao.updateDashUserPasswordByUsername(username, hashedPassword)
         if res == None:
-            return jsonify(Error='No user found in the system with that id.'), 404
+            return jsonify(Error='No se encontró ningún usuario en el sistema con ese id.'), 404
         updatedUser = self.mapUserToDict(res)
         # When password is reset, login attempts are set to 0
         updateActiveStatus = dao.activateDashUserAccount(updatedUser['id'])  # Set account active to true.
@@ -347,11 +344,11 @@ class UserHandler:
         res = dao.updateDashUserInfo(
             duid, username, full_name, email, is_active)
         if res == None:
-            return jsonify(Error='No user found in the system with that id.'), 404
+            return jsonify(Error='No se encontró ningún usuario en el sistema con ese id.'), 404
         if res == 'UserError1':
-            return jsonify(Error='Email already taken.'), 400
+            return jsonify(Error='El correo electrónico ha sido registrado.'), 400
         elif res == 'UserError2':
-            return jsonify(Error='Username already taken.'), 400
+            return jsonify(Error='El nombre de usuario está en uso.'), 400
         else:
             return jsonify(User=self.mapUserToDict(res)), 201
 
@@ -375,7 +372,7 @@ class UserHandler:
         dao = UserDAO()
         res = dao.toggleDashUserActive(duid)
         if res == None:
-            return jsonify(Error='No user found in the system with that id.'), 404
+            return jsonify(Error='No se encontró ningún usuario en el sistema con ese id.'), 404
         return jsonify(User=self.mapUserToDict(res)), 201
 
     def removeDashUser(self, duid):
@@ -397,7 +394,7 @@ class UserHandler:
         dao = UserDAO()
         res = dao.removeDashUser(duid)
         if res == None:
-            return jsonify(Error='No user found in the system with that id.'), 404
+            return jsonify(Error='No se encontró ningún usuario en el sistema con ese id.'), 404
         return jsonify(User=self.mapUserToDict(res)), 201
 
     def setUserPermissions(self, duid, permissionsList):
@@ -427,7 +424,7 @@ class UserHandler:
         dao = UserDAO()
         resultList = dao.setUserPermissions(duid, permissionsList)
         if resultList == 'UserError4':
-            return jsonify(Error='No User found in the system with that id.'), 404
+            return jsonify(Error='No se encontró ningún usuario en el sistema con ese id.'), 404
         if resultList == 'UserError5':
             # Bad request
             return jsonify(Error='Permissions cant be empty.'), 400
@@ -455,7 +452,7 @@ class UserHandler:
         dao = UserDAO()
         permisionsList = dao.getUserPermissions(duid)
         if permisionsList == 'UserError4':
-            return jsonify(Error='No User found in the system with that id.'), 404
+            return jsonify(Error='No se encontró ningún usuario en el sistema con ese id.'), 404
         mappedPermissions = []
         for row in permisionsList:
             mappedPermissions.append(self.mapPermissionsToDict(row))
