@@ -1,18 +1,14 @@
 export default{
 
     SET_ATHLETE(state,athlete){
-			state.athlete = athlete
+        state.athlete = athlete
     },
 
     SET_ATHLETES(state,athletes){
-			state.athletes = athletes
+        state.athletes = athletes
     },
 
-    SET_LOADING(state){
-			state.isLoadingA = true
+    SET_ATHLETE_SPORTS(state,athlete_sports){
+        state.athlete_sports = athlete_sports
     },
-
-    DONE_LOADING(state){
-			state.isLoadingA = false
-    }
 }

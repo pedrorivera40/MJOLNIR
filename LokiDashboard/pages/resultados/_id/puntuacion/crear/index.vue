@@ -1,7 +1,7 @@
 <template>
   <v-card width="800" class="elevation-12 mx-auto">
     <v-toolbar color="green darken-1" dark flat>
-        <v-toolbar-title>Crear Puntuacion Final {{sport}} - {{branch}}</v-toolbar-title>
+        <v-toolbar-title>Crear Puntuacion Final {{sport_name}} - {{branch}}</v-toolbar-title>
         <v-spacer />
     </v-toolbar>
     <v-card-text>            
@@ -130,23 +130,43 @@
         date: new Date().toISOString().substr(0,10),
         about_team:'',
         team_image_url:'',
-        sport_id:1,
+        sport_id:'',
         // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
-        sport:'Baloncesto',      
+        sport_name:'',      
         branch:'Masculino',
 
 
         //NEEDED. 
-        event_id:1, //get from route ?
+        event_id:'', //get from route ?
     }),
            
       
       
     created(){
+        this.buildDefaultValues()
         this.initializeSportData()
     }, 
 
     methods: {
+        buildDefaultValues(){
+            this.event_id = this.$route.params.id
+            if (this.event_id == 1){
+                this.sport_id = this.BASKETBALL_IDM
+                this.sport_name = "Baloncesto"
+            }
+            else if (this.event_id == 2){
+                this.sport_id =  this.VOLLEYBALL_IDF 
+                this.sport_name = "Voleibol"
+            }
+            else if (this.event_id == 3){
+                this.sport_id =  this.SOCCER_IDF 
+                this.sport_name = "Futbol"
+            }
+            else if (this.event_id == 4){
+                this.sport_id =  this.BASEBALL_IDM
+                this.sport_name = "Beisbol"
+            }
+        },
         initializeSportData(){
         //console.log(this.season)
         this.payload_final_score = {
@@ -183,7 +203,7 @@
             return this.sport
         },
         goToResults(){
-             this.$router.push('/resultados/')
+             this.$router.push("/resultados/"+this.event_id)
         }
     },
   }

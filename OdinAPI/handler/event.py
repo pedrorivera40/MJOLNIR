@@ -29,9 +29,11 @@ class EventHandler:
         result['opponent_name'] = record[5]
         result['event_summary'] = record[6]
         result['sport_name'] = record[7]
-        result['sport_img_url'] = record[8]
-        result['branch'] = record[9]
-        result['team_season_year'] = record[10]
+        result['sport_id'] = record[8]
+        result['sport_img_url'] = record[9]
+        result['branch'] = record[10]
+        result['team_season_year'] = record[11]
+        
 
         if 'Voleibol' in record[7]:
             result['hasPBP'] = self._pbp_exists(record[0])
@@ -88,18 +90,23 @@ class EventHandler:
             A JSON containing all the valid events in the 
             database.
         """
-
+        dao = None
         try:
-            result = EventDAO().getAllEvents()
+            dao = EventDAO()
+            result = dao.getAllEvents()
             if not result:
-                return jsonify(Error = "No events were found."),400
+                dao._closeConnection()
+                return jsonify(Error = "No existen eventos en el systema."),404
             mappedResult = []
             for event in result:
                 mappedResult.append(self.mapEventWithScoresToDict(event))
             return jsonify(Events = mappedResult),200
             
-        except:
-            return jsonify(Error = "An error ocurred when fetching all the events in the system."),400   
+        except Exception as e:
+            print(e)
+            if dao:
+                dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno tratando de recolectar todos los eventos."),500  
         
     
     def getEventsByTeam(self,tID):
@@ -121,24 +128,29 @@ class EventHandler:
         """
         try:
             if not isinstance(int(tID),int) or tID < 0:
-                return jsonify(Error = "Bad arguments in request"),400
+                return jsonify(Error = "Argumentos dados son incorrectos."),400
         except:
-            return jsonify(Error = "Bad arguments in request"),400
-        try:
+            return jsonify(Error = "Argumentos dados son incorrectos."),400        
+        dao = None
+        try:            
             dao = EventDAO()
             if not dao.teamExists(tID):
-                return jsonify(Error = "Team does not exist with id:{}".format(tID)),404
+                dao._closeConnection()
+                return jsonify(Error = "Equipo no existe con el identificador:{}".format(tID)),404
 
             result = dao.getEventsByTeam(tID)
 
             if isinstance(result,str):
-                return jsonify(Error = result),400
+                return jsonify(Error = result),500
             mappedResult = []
             for event in result:
                 mappedResult.append(self.mapEventWithScoresToDict(event))
             return jsonify(Events = mappedResult),200
-        except:
-            return jsonify(Error = "A problem ocurred when getting the events of a team."),400
+        except Exception as e:
+            print(e)
+            if dao:
+                dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno tratando de recolectar los eventos de un equipo."),500
 
     def getEventByID(self,eID):
         """
@@ -157,22 +169,29 @@ class EventHandler:
         """
         try:
             if not isinstance(int(eID),int) or eID < 0:
-                return jsonify(Error = "Bad arguments in request"),400
+                return jsonify(Error = "Argumentos dados son incorrectos."),400
         except:
-            return jsonify(Error = "Bad arguments in request"),400
-
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
+        dao = None
         try:
             dao = EventDAO()
             if not dao.eventExists(eID):
-                return jsonify(Error = "Event does not exist with id:{}".format(eID)),404
+                dao._closeConnection()
+                return jsonify(Error = "Event no existe con el identificador:{}".format(eID)),404
+
             result = dao.getEventByID(eID)
+
             if isinstance(result,str):
-                return jsonify(Error = result),400
+                return jsonify(Error = result),500
+
             mappedResult = self.mapEventToDict(result)
 
             return jsonify(Event = mappedResult),200
-        except:
-            return jsonify(Error = "A problem ocurred when getting an event by its id."),400
+        except Exception as e:
+            print(e) 
+            if dao:
+                dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno tratando de recolectar un evento por su identificador."),500
     
 
     def addEvent(self,tID,attributes):
@@ -193,29 +212,35 @@ class EventHandler:
         """
         try:
             if not isinstance(int(tID),int) or tID < 0 or not isinstance(attributes,dict):
-                return jsonify(Error = "Bad arguments in request"),400
+                return jsonify(Error = "Argumentos dados son incorrectos."),400
         except:
-            return jsonify(Error = "Bad arguments in request"),400    
+            return jsonify(Error = "Argumentos dados son incorrectos."),400            
+        dao = None
         try:   
-            
+            dao = EventDAO()
             attributesValidation = self.validateAttributes(attributes)
 
             if isinstance(attributesValidation,str):
-                return jsonify(Error = attributesValidation),400
+                dao._closeConnection()
+                return jsonify(Error = attributesValidation),400            
             
-            dao = EventDAO()
             if not dao.teamExists(tID):
-                return jsonify(Error = "Team does not exist with id:{}".format(tID)),404
+                dao._closeConnection()
+                return jsonify(Error = "Equipo no existe con el identificador:{}".format(tID)),404
 
             result = dao.addEvent(tID,attributes['event_date'],attributes['is_local'],attributes['venue'],attributes['opponent_name'],attributes['event_summary'])
 
             if isinstance(result,str):
-                return jsonify(Error = result),400
+                dao._closeConnection()
+                return jsonify(Error = result),500
 
-            return jsonify(Event = "Added event with id: {}".format(result)),201
+            return jsonify(Event = "Se añadió un evento con el identificador: {}".format(result)),201
             
-        except:
-            return jsonify("A problem ocurred when adding an event."),400
+        except Exception as e:
+            print(e)
+            if dao:
+                dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno tratando de añadir un evento."),500
         
     def editEvent(self,eID,attributes):
         """
@@ -235,30 +260,37 @@ class EventHandler:
         """
         try:
             if not isinstance(int(eID),int) or eID < 0 or not isinstance(attributes,dict):
-                return jsonify(Error = "Bad arguments in request"),400
+                return jsonify(Error = "Argumentos dados son incorrectos."),400
         except:
-            return jsonify(Error = "Bad arguments in request"),400
+            return jsonify(Error = "Argumentos dados son incorrectos."),400
 
-        try:   
-            
+        dao = None
+        try:  
+            dao = EventDAO()            
             attributesValidation = self.validateAttributes(attributes)
 
             if isinstance(attributesValidation,str):
+                dao._closeConnection()
                 return jsonify(Error = attributesValidation),400
             
-            dao = EventDAO()
+            
             if not dao.eventExists(eID):
-                return jsonify(Error = "Event does not exist with id:{}".format(eID)),404
+                dao._closeConnection()
+                return jsonify(Error = "Evento no existe con el identificador:{}".format(eID)),404
 
             result = dao.editEvent(eID,attributes['event_date'],attributes['is_local'],attributes['venue'],attributes['opponent_name'],attributes['event_summary'])
 
             if isinstance(result,str):
-                return jsonify(Error = result),400
+                dao._closeConnection()
+                return jsonify(Error = result),500
                 
-            return jsonify(Event = "Edited event with id: {}".format(result)),200
+            return jsonify(Event = "Evento con el identificador:{}, fue editado.".format(result)),200
             
-        except:
-            return jsonify("A problem ocurred when editing an event."),400
+        except Exception as e:
+            print(e)
+            if dao:
+                dao._closeConnection()            
+            return jsonify(Error = "Occurrió un error interno tratando de editar un evento."),500
         
     
     def removeEvent(self,eID):
@@ -277,24 +309,29 @@ class EventHandler:
         """
         try:
             if not isinstance(int(eID),int) or eID < 0:
-                return jsonify(Error = "Bad arguments were given."),400
+                return jsonify(Error = "Argumentos dados son incorrectos."),400
         except:
-            return jsonify(Error = "Bad arguments in request"),400
-
-        try:
-            dao = EventDAO()
+            return jsonify(Error = "Argumentos dados son incorrectos."),400   
+        dao = None     
+        try: 
+            dao = EventDAO()           
             if not dao.eventExists(eID):
-                return jsonify(Error = "Event does not exist with id:{}".format(eID)),404
+                dao._closeConnection()
+                return jsonify(Error = "Evento no existe con el identificador:{}".format(eID)),404
 
             result = dao.removeEvent(eID)
 
             if isinstance(result,str):
-                return jsonify(Error = result),400
+                dao._closeConnection()
+                return jsonify(Error = result),500
 
-            return jsonify(Event = "Removed event with id:{}".format(result)),200
+            return jsonify(Event = "Se removió el evento con el identificador:{}".format(result)),200
 
-        except:
-            return jsonify("A problem ocurred when removing an event."),400
+        except Exception as e:
+            print(e)
+            if dao:
+                dao._closeConnection()
+            return jsonify(Error = "Occurrió un error interno tratando de remover un evento."),500
     
     def validateAttributes(self,attributes):
         """
@@ -324,27 +361,27 @@ class EventHandler:
             cAlphaSpaceReg = re.compile(alphaSpaceRegex)
 
             if not eventDate or not isinstance(eventDate,str):
-                return "Invalid date given."
+                return "Fecha del evento dada es invalida."
             
             try:#Date format validation                    
                 parse(eventDate)
             except:
-                return "The event date given is not valid."
+                return "Fecha del evento dada es invalida."
 
-            if not isLocal or not isinstance(bool(isLocal),bool):
-                return "Invalid locality given."
+            if isLocal == None or not isinstance(bool(isLocal),bool):                
+                return "Localidad dada es invalida."
 
             if venue:
                 if not isinstance(venue,str) or not re.search(cAlphaSpaceReg,venue):
-                    return "Invalid venue given."
+                    return "Lugar del evento dado es invalido."
 
             if opponentName:
                 if not isinstance(opponentName,str) or not re.search(cPhraseReg,opponentName):
-                    return "Invalid opponent name given."               
+                    return "Nombre del oponente dado es invalido."               
 
             if eventSummary:
                 if not isinstance(eventSummary,str) or len(eventSummary)>250:
-                    return "Invalid event summary given."
+                    return "Resumen del evento dado es invalido."
             
             return 1
 

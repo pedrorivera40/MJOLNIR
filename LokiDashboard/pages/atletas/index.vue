@@ -1,94 +1,113 @@
 <template>
-  <v-container grid-list-sm v-if="isReady()">  
-    <v-row>       
-    <h1> Atletas: </h1>
-    </v-row>
-    
-    <v-menu
-      v-model="menu"
-      bottom
-      origin="center center"
-      transition="slide-x-transition"
-      :close-on-content-click="false"
-    >
-    <template v-slot:activator="{ on }">
-        <v-btn
-          color="green darken-1"
-          @click="goToCreateAthlete"                   
-        >
-        <v-icon left >mdi-pen-plus</v-icon>
-          Nuevo Atleta
-        </v-btn>  
-        <v-btn
-          color="white"          
-          v-on="on"         
-        >
-        <v-icon left >mdi-filter-variant</v-icon>
-          Filtros
-        </v-btn> 
-          
-    </template>
-     
-    <v-list>
-     
-      <v-list-item>
-          <v-select
-            v-model="sport"
-            :items="sports"                    
-            label ="Deporte"                 
-          ></v-select>              
-      </v-list-item>    
-      <v-list-item>
-          <v-text-field
-            v-model="name"                                
-            label ="Nombre"                 
-          ></v-text-field>              
-      </v-list-item>      
-      <v-list-item>
-        <v-btn @click="clearFilters">Borrar</v-btn>
-        <v-spacer/>
-        <v-btn @click="applyFilters">Filtrar</v-btn>
-      </v-list-item>
-     
-    </v-list>
+  <v-container class="wrapper">          
+    <h1 class="primary_dark--text pl-3">Atletas:</h1>   
+    <div class="content-area pa-4 pt-12">
+      <v-card >
+        <v-card-title>
+          <v-row>
+            <v-col>
+              <v-btn
+                color="green darken-1"
+                @click="goToCreateAthlete"                   
+              >
+                <v-icon left >mdi-plus</v-icon>
+                Nuevo Atleta
+              </v-btn>
+              <v-spacer />
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                rounded
+                dense
+                outlined
+                single-line
+                hide-details
+              />
+            </v-col>
 
-    </v-menu>
-    
-  <v-row v-if="filteredAthletes !=''">
-    <v-col v-for="(value,key) in filteredAthletes" :key=key md="3">
-   
-    <AthleteCard     
-      :athleteID="value.id"  
-      :firstName ="value.fName"
-      :lastNames ="value.lName"   
-      :sportName="value.sportName"      
-      :img="value.profilePicLink"
-      
-    />        
-    
-    </v-col>
-  </v-row>
+          </v-row>
 
-  <v-row v-else>
-    <v-col v-for="(value,key) in athletes" :key=key md="3">
-   
-    <AthleteCard     
-      :athleteID="value.id"  
-      :firstName ="value.fName"
-      :lastNames ="value.lName"   
-      :sportName="value.sportName"      
-      :img="value.profilePicLink"
-      
-    />        
-    
-    </v-col>
-  </v-row>
-  
-    
-       
-  </v-container>  
- 
-   
+
+        </v-card-title>
+        
+        <v-data-table
+                 
+          :headers="headers"
+          :items="athletes"
+          :search="search"
+          :loading="loadingAthletes()"
+          no-data-text="No hay atletas."
+          loading-text="Buscando atletas."
+        >
+          <template v-slot:item.actions="{ item }">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-icon
+                  small
+                  class="mr-2 table-actions"
+                  v-on="on"                 
+                  @click="viewAthlete(item.id)"
+                >
+                  mdi-eye-plus
+                </v-icon>
+              </template>
+              <span>Ver Atleta</span>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-icon
+                  small
+                  class="mr-2 table-actions"
+                  v-on="on"                  
+                  @click="editAthlete(item.id)"
+                >
+                  mdi-pencil
+                </v-icon>
+              </template>
+              <span>Editar Atleta</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-icon
+                  small
+                  class="mr-2 table-actions"
+                  v-on="on"                 
+                  @click="prepareAthleteToRemove(item.id)"
+                >
+                  mdi-delete
+                </v-icon>
+              </template>
+              <span>Borrar Atleta</span>
+            </v-tooltip>           
+          </template>          
+        </v-data-table>
+
+        <v-dialog v-model="dialog" persistent max-width="290">            
+            <v-card>
+              <v-card-title class="headline">¿Estás seguro de que quieres eliminar el atleta con id:{{aid}}?</v-card-title>
+              <v-card-text>
+                Esta acción es <strong> irreversible.</strong>
+                <v-checkbox
+                  v-model="terms"
+                  :label="`Yo acepto las consecuencias.`"
+                >
+                </v-checkbox>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken-1" text @click="cancelRemoval">Cancelar</v-btn>
+                <v-btn color="green darken-1" :disabled="!terms" text @click="deleteAthlete">Eliminar</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>       
+        
+      </v-card>
+    </div>
+  </v-container>
 </template>
 
 <script>
@@ -101,12 +120,30 @@ export default {
   },
 
   data: () =>({
-    menu:false,
+    search:'',
+    aid:0,
+    dialog:false,
+    terms:false,
+    ready:false,
     name:'',
     sport:'',   
     sports:['Voleibol','Baloncesto','Atletismo'],     
     
     filteredAthletes:'',
+
+    headers:[
+      {
+        text:"ID",
+        align:"start",
+        value:"id"
+      },
+      {text:"Primer Nombre",value:"fName"},
+      {text:"Segundo Nombre",value:"mName"},
+      {text:"Apellidos",value:"lName"},
+      {text:"Deporte",value:"sportName"},
+      {text:"Rama",value:"sportBranch"},
+      {text:"Acciones",value:"actions",sortable:false}
+    ]
   
 
     
@@ -116,62 +153,45 @@ export default {
 
   methods:{
     ...mapActions({
-      getAthletes: "athletes/getAthletes"
+      getAthletes: "athletes/getAthletes",
+      removeAthlete:"athletes/removeAthlete"
     }),
 
     goToCreateAthlete(){
         this.$router.push('/atleta/')
     },
-
-    clearFilters(){
-        
-        this.name = ''
-        this.sport = ''        
-        this.menu=false       
-        
-        
-        if(this.filteredAthletes.length != this.athletes.length){
-          this.filteredAthletes = []
-          for(let i = 0; i < this.athletes.length; i++){
-            this.filteredAthletes.push(this.athletes[i])
-          }          
-        }
-          
-    },
     
-
-    applyFilters(){
-      
-      this.filteredAthletes = []
-      for(let i = 0; i < this.athletes.length; i++){
-        this.filteredAthletes.push(this.athletes[i])
-      }
-      
-      for(let i = this.filteredAthletes.length-1; i >=0; i--){
-        let athlete=this.filteredAthletes[i]
-        if(this.sport!=''){
-          if(this.sport.localeCompare(athlete['sportName'])!=0){
-            this.filteredAthletes.splice(i,1)
-            continue
-          }
-        }
-        if(this.name!=''){
-          let fullName = athlete['fName'] + ' ' + athlete['lName']
-          if(!fullName.toLowerCase().includes(this.name.toLowerCase())){
-            this.filteredAthletes.splice(i,1)
-            continue
-          }
-        }
-      }      
-    },
-    isReady(){
-      if(this.athletes){
+    loadingAthletes(){
+      if(this.athletes.length > 0){
+        return false
+      }else{
         return true
       }
-      else{
-        return false
-      }
+    },
+    viewAthlete(athleteID){
+      this.$router.push('/atleta/'+athleteID)
+    },
+    editAthlete(athleteID){
+      this.$router.push('/atleta/'+athleteID+'/editar')
+    },
+    deleteAthlete(){
+      if(this.aid > 0 && this.terms)            
+        this.removeAthlete(this.aid)
+        this.dialog = false
+        this.terms = false
+        this.ready = false
+    },
+
+    prepareAthleteToRemove(athleteID){
+      this.aid = athleteID
+      this.dialog = true
+    },
+    cancelRemoval(){
+      this.aid = 0
+      this.dialog = false
+      this.terms = false
     }
+    
   },
     
   
