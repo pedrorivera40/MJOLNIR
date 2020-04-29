@@ -44,7 +44,7 @@ class SportHandler:
         '''
 
         mapped_records = []
-        
+
         for row in sport_rows:
             result = {}
             # Extract record attributes.
@@ -53,34 +53,36 @@ class SportHandler:
             sport_branch = row[2]
             position_name = row[3]
             category_name = row[4]
-            #print(row)
+            # print(row)
             # Case: sport not already considered.
             if not mapped_records:
                 if sport_id not in result:
-                    
+
                     result['sport_id'] = sport_id
                     result['sport_name'] = sport_name
                     result['branch_name'] = sport_branch if sport_branch else ''
-                    result['positions'] = [position_name] if position_name else []
-                    result['categories'] = [category_name] if category_name else []
+                    result['positions'] = [
+                        position_name] if position_name else []
+                    result['categories'] = [
+                        category_name] if category_name else []
                     mapped_records.append(result)
                     continue
             else:
                 foundMatch = False
                 for record in mapped_records:
-                    #print(record)
+                    # print(record)
                     if sport_id == record['sport_id']:
                         #print('match found')
                         if position_name and position_name not in record['positions']:
                             record['positions'].append(position_name)
 
                         if category_name and category_name not in record['categories']:
-                            #print(record['categories'])
+                            # print(record['categories'])
                             record['categories'].append(category_name)
-                        
+
                         foundMatch = True
-                        break                       
-                        
+                        break
+
                 if foundMatch:
                     continue
 
@@ -88,13 +90,14 @@ class SportHandler:
                     result['sport_id'] = sport_id
                     result['sport_name'] = sport_name
                     result['branch_name'] = sport_branch if sport_branch else ''
-                    result['positions'] = [position_name] if position_name else []
-                    result['categories'] = [category_name] if category_name else []
+                    result['positions'] = [
+                        position_name] if position_name else []
+                    result['categories'] = [
+                        category_name] if category_name else []
                     mapped_records.append(result)
-                    continue           
+                    continue
 
         return mapped_records
-
 
     def getAllSports(self):
         """
@@ -118,9 +121,9 @@ class SportHandler:
             sports = self._build_sport_dict(sport_rows)
 
             if len(sports) == 0:
-                return jsonify(ERROR="SportHandler.getAllSports - sport data not found."), 400
+                return jsonify(ERROR="SportHandler: No se encontró información sobre ese deporte."), 400
         except:
-            return jsonify(ERROR="SportHandler.getAllSports - unable to obtain sports from DAO."), 500
+            return jsonify(ERROR="SportHandler: Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORTS=sports), 200
 
@@ -149,10 +152,10 @@ class SportHandler:
             sports = self._build_sport_dict(sport_rows)
 
             if len(sports) == 0:
-                return jsonify(ERROR="SportHandler.getSportsByBranch - sport data not found."), 400
+                return jsonify(ERROR="SportHandler: No se encontró información sobre ese deporte."), 400
 
         except:
-            return jsonify(ERROR="SportHandler.getSportsByBranch - unable to obtain sports from DAO."), 500
+            return jsonify(ERROR="SportHandler: Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORTS=sports), 200
 
@@ -179,9 +182,9 @@ class SportHandler:
             sport_row = SportDAO().getSportById(sport_id)
             sport = self._build_sport_row_dict(sport_row)
             if len(sport) == 0:
-                return jsonify(ERROR="SportHandler.getSportById - sport not found."), 400
+                return jsonify(ERROR="SportHandler: No se encontró información sobre ese deporte."), 400
         except:
-            return jsonify(ERROR="SportHandler.getSportById - unable to obtain sport from DAO."), 500
+            return jsonify(ERROR="SportHandler: Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORT=sport), 200
 
@@ -209,9 +212,9 @@ class SportHandler:
             sport_rows = SportDAO().getSportByName(sport_name)
             sports = self._build_sport_dict(sport_rows)
             if len(sports) == 0:
-                return jsonify(ERROR="SportHandler.getSportByName - sport not found."), 400
+                return jsonify(ERROR="SportHandler: No se encontró información sobre ese deporte."), 400
         except:
-            return jsonify(ERROR="SportHandler.getSportByName - unable to obtain sports from DAO."), 500
+            return jsonify(ERROR="SportHandler: Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORTS=sports), 200
 
@@ -239,8 +242,8 @@ class SportHandler:
             sport_rows = SportDAO().getSportCategoriesPositions()
             sports = self._build_sport_category_position(sport_rows)
             if len(sports) == 0:
-                return jsonify(ERROR="SportHandler.getSportCategoriesPositions - sport data not found."), 400
+                return jsonify(ERROR="SportHandler: No se encontró información sobre ese deporte."), 400
         except:
-            return jsonify(ERROR="SportHandler.getSportCategoriesPositions - unable to obtain sports from DAO."), 500
+            return jsonify(ERROR="SportHandler: Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORTS=sports), 200
