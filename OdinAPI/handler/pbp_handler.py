@@ -209,7 +209,7 @@ class VolleyballPBPHandler:
         """
 
         if not dao.pbp_game_action_exists(event_id, action_id):
-            raise Exception("Odin: Información del atleta es inválida.")
+            raise Exception("Odin: No existe esta acción en el sistema.")
 
         if len(new_action) < 2 or len(new_action) > 3:
             raise Exception(
@@ -823,7 +823,7 @@ class VolleyballPBPHandler:
             # Validate event
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin:. No existe una secuencia PBP para este evento."), 403.
+                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 403.
 
             if pbp_dao.is_game_over(event_id):
                 return jsonify(ERROR="Odin: El partido de Voleibol ha finalizado."), 403

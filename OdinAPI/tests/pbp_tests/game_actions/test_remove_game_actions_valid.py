@@ -26,6 +26,6 @@ class TestRemoveValidVolleyballPBP(unittest.TestCase):
         # Try to remove it.
         response = self.client.delete('/pbp/Voleibol/actions', data=json.dumps(
             data["valid_to_remove"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Removed game action"
+        expected_msg = "Odin: Se ha removido la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
