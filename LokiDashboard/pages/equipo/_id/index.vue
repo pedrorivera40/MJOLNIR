@@ -40,17 +40,17 @@
               justify="end">
               <v-spacer />
               <v-col md=3 align="end">
-                <v-btn color="primary_light"
+                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == ''))"
                   class="white--text" @click="goToEditTeam">Editar Equipo</v-btn>
               </v-col>
               <v-spacer />
               <v-col md=3 align="end">
-                <v-btn color="primary_light"
+                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == ''))"
                   class="white--text" @click="removeTeamLocal">Remover Equipo</v-btn>
               </v-col>
               <v-spacer />
               <v-col md=3 align="end">
-                <v-btn color="primary_light"
+                <v-btn color="primary_light" :disabled = "loadingQuery"
                   class="white--text" @click="goToCreateTeam">Añadir Equipo +</v-btn>
               </v-col>
               <v-spacer />
@@ -105,7 +105,7 @@
               <v-row align="center"
                 justify="end">
                 <v-col md=3 align="end">
-                  <v-btn color="primary_light"
+                  <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == ''))"
                   class="white--text" @click="goToAddMembers">Añadir Miembro +</v-btn>
                 </v-col>
               </v-row>
@@ -148,7 +148,7 @@
               <v-row align="center"
               justify="end">
               <v-col md=3 align="end">
-                <v-btn color="primary_light"
+                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == ''))"
                   class="white--text" @click="goToAddMembers">Añadir Miembro +</v-btn>
               </v-col>
             </v-row>
