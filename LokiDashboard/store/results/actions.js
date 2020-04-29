@@ -18,7 +18,7 @@ export default{
     async getEventInfo({commit},event_id){
         try{
             //console.log("At the request level we have:",event_id)
-            const response = await this.$axios.get('http://localhost:5000/events/'+event_id)
+            const response = await this.$axios.get('http://localhost:5000/events/'+event_id+'/')
             //console.log("GET EVENT INFO",response)
             console.log("GET EVENT INFO",response.data)
             commit("SET_EVENT_INFO",response.data.Event)
@@ -40,6 +40,49 @@ export default{
             commit("SET_EVENT_INFO",null)
         }catch(error){
             console.log("ERROR SETTING EVENT INFO TO NULL",error)
+        }
+    },
+    //NEW ACTIONS FOR THE INTEGRATION OF POST/PUT/DELETE:
+    async getTeamMembers({commit},team_id){
+        try{
+            //console.log("GET MEMBERS: At actions level we have:",team_id)
+            const response = await this.$axios.get('teams/members/?team_id='+team_id)
+            
+            //console.log("GET MEMBERS:",response)
+            console.log("GET MEMBERS:",response.data)
+            commit("SET_TEAM_MEMBERS",response.data.Team)
+            //TODO: LIKELY MOVE FROM HERE SINCE DASHBOARD ENDS EARLIER
+            commit("SET_QUERY_DONE")
+            
+        }catch(error){
+            console.log("ERROR GETTING TEAM MEMBERS",team_id,error)
+            commit("SET_TEAM_MEMBERS",null)
+            commit("SET_QUERY_DONE")
+        }
+    },
+    async setQueryLoading({commit}){
+        try{
+            commit("SET_QUERY_LOADING")
+        }catch(error){
+            console.log("ERROR SETTING STATE VARIABLE FOR LOADING QUERY",error)
+        }
+    },
+    async setNullTeamMembers({commit}){
+        try{
+            commit("SET_TEAM_MEMBERS",null)
+        }catch(error){
+            console.log("ERROR SETTING NULLIFYING TEAM MEMBERS",error)
+        }
+    },
+    async addIndividualStatistics({commit,dispatch},statsJSON){
+        try{
+            let sports_route = statsJSON.sports_route
+            let statistics = stats.JSON.statistics
+            const response = await this.$axios.post('results/'+sports_route+'/individual/',statistics)
+            commit("SET_QUERY_DONE")
+        }catch(error){
+            commit("SET_QUERY_DONE")
+            console.log("ERROR POSTING INDIVIDUAL STATS",statsJSON,error)
         }
     },
 }

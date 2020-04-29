@@ -18,7 +18,7 @@ export default{
     async getEventInfo({commit},event_id){
         try{
             //console.log("At the request level we have:",event_id)
-            const response = await this.$axios.get('http://localhost:5000/events/'+event_id)
+            const response = await this.$axios.get('http://localhost:5000/events/'+event_id+'/')
             //console.log("GET EVENT INFO",response)
             console.log("GET EVENT INFO",response.data)
             commit("SET_EVENT_INFO",response.data.Event)

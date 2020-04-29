@@ -182,7 +182,7 @@ export default{
             const response = await this.$axios.post('teams/',teamJSON)
             // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
             
-            let sport_id = teamJSON.sport_id
+            // let sport_id = teamJSON.sport_id
             commit("SET_QUERY_DONE")
             // this.$router.push('/equipo/'+sport_id)
         }catch(error){

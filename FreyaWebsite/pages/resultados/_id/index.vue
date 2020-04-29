@@ -4,8 +4,9 @@
     <!-- PURELY FOR TESTING PURPOSES, TODO: REMOVE SOON 4/24 -->
     <!-- <v-btn class="mr-4" @click="getAllEventStatistics(event_id)" color="green darken-1">GET AGAIN</v-btn>
     <v-btn class="mr-4" @click="formated_member_stats()" color="green darken-1">CHECK THE STATS</v-btn> -->
-    <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
+    <!-- TODO: FIX DATE -->
     <!-- <h3>Evento de {{event_info.Event.event_date}}</h3> -->
+    <h3>Evento de {{event_date}}</h3>
     <div class="content-area pa-4 pt-12">
     <v-container v-if="formated_member_stats()">
         <v-row align="center"
@@ -64,11 +65,11 @@
                         :loading="isLoadingU" -->
                         <!-- THE SPORTS STATS TABLE TABLE! -->
                         <v-data-table
-                        dense 
-                        :headers="headers" 
-                        :items="payload_stats.athlete_statistic"
-                        item-key="payload_stats.athlete_statistic" 
-                        class="elevation-1"								
+                            dense 
+                            :headers="headers" 
+                            :items="payload_stats.athlete_statistic"
+                            item-key="payload_stats.athlete_statistic" 
+                            class="elevation-1"								
                         >
                         <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
                         </v-data-table>
@@ -102,11 +103,6 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      
-      dialogEdit: false,
-      dialogDelete: false,
-      dialogPermissions: false,
-     
     //   headers: [
     //     {
     //       text: "ID",
@@ -133,11 +129,12 @@ export default {
       team_headers:[],
       statistics_per_season:"",
       team_statistics:'',
-      search_individual: "",
+    //   search_individual: "",
       sport_id:'',
       sport_route:'',
       sport_name: '',
       event_id:'',
+      event_date:'',
     //   event_info:'',
       opponent_score:'',
       opponent_name:'', //TODO: MAKE THIS VALUE DYNAMIC
@@ -192,7 +189,7 @@ created(){
             this.sport_id =  this.event_info.sport_id 
             this.sport_name = this.event_info.sport_name
             this.opponent_name = this.event_info.opponent_name
-
+            this.event_date = this.event_info.event_date
             if (this.ready_for_stats){
                 this.buildTable()
                 console.log("[3] BUILT TABLE",this.results_payload)
