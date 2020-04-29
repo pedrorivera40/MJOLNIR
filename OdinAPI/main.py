@@ -402,7 +402,7 @@ def basketballStatistics():
 # }
 @app.route("/results/basketball/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def basketballAthleteStatistics():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -458,7 +458,7 @@ def basketballAthleteStatistics():
 # }
 @app.route("/results/basketball/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def basketballTeamStatistics():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -509,7 +509,7 @@ def basketballTeamStatistics():
 # }
 @app.route("/results/basketball/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def basketballFinalScores():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -934,7 +934,7 @@ def volleyballStatistics():
 # }
 @app.route("/results/volleyball/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def volleyballAthleteStatistics():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -993,7 +993,7 @@ def volleyballAthleteStatistics():
 # }
 @app.route("/results/volleyball/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def volleyballTeamStatistics():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -1041,7 +1041,7 @@ def volleyballTeamStatistics():
 # }
 @app.route("/results/volleyball/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def volleyballFinalScores():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -1288,7 +1288,7 @@ def soccerStatistics():
 # }
 @app.route("/results/soccer/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def soccerAthleteStatistics():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -1342,7 +1342,7 @@ def soccerAthleteStatistics():
 # }
 @app.route("/results/soccer/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def soccerTeamStatistics():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -1390,7 +1390,7 @@ def soccerTeamStatistics():
 # }
 @app.route("/results/soccer/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def soccerFinalScores():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -1641,7 +1641,7 @@ def baseballStatistics():
 # }
 @app.route("/results/baseball/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def baseballAthleteStatistics():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -1698,7 +1698,7 @@ def baseballAthleteStatistics():
 # }
 @app.route("/results/baseball/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def baseballTeamStatistics():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -1746,7 +1746,7 @@ def baseballTeamStatistics():
 # }
 @app.route("/results/baseball/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def baseballFinalScores():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -1944,7 +1944,7 @@ def get_sport_info():
 # }
 @app.route("/teams/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def teamByYear():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -2021,7 +2021,7 @@ def teamMembers():
 # TODO: (Herbert) Check if need to remove route due to redundancy, wait for front end
 @app.route("/teams/member/", methods=['GET', 'POST', 'DELETE'])
 def teamMemberByIDs():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json

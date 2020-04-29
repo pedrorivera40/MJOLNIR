@@ -9,5 +9,11 @@ export default{
     readyForMembers: state => state.readyForMembers,
     readyForMemberStats: state => state.readyForMemberStats,
     readyForTeamStats: state => state.readyForTeamStats,
-    loadingQuery: state => state.loadingQuery
+    loadingQuery: state => state.loadingQuery,
+    sport_athletes: state => state.sport_athletes
+    //edit team route
+    
+    //create team route
+
+    //create member route
 }
