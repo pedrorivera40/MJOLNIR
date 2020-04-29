@@ -1,5 +1,6 @@
 from flask import jsonify
 from .dao.event_dao import EventDAO
+from .dao.pbp_dao import PBPDao
 from dateutil.parser import parse
 import re
 
@@ -36,7 +37,7 @@ class EventHandler:
         
 
         if 'Voleibol' in record[7]:
-            result['hasPBP'] = self._pbp_exists(record[0])
+            result['hasPBP'] = self._check_pbp(record[0])
 
         return result
 
@@ -73,7 +74,7 @@ class EventHandler:
         result['opponent_score'] = record[11]
 
         if 'Voleibol' in record[7]:
-            result['hasPBP'] = self._pbp_exists(record[0])
+            result['hasPBP'] = self._check_pbp(record[0])
 
         return result
 
@@ -177,7 +178,7 @@ class EventHandler:
             dao = EventDAO()
             if not dao.eventExists(eID):
                 dao._closeConnection()
-                return jsonify(Error = "Event no existe con el identificador:{}".format(eID)),404
+                return jsonify(Error = "Evento no existe con el identificador:{}".format(eID)),404
 
             result = dao.getEventByID(eID)
 
@@ -388,22 +389,27 @@ class EventHandler:
         except:
             return "Bad arguments were given." 
 
-    def _pbp_exists(self,eID):
+    def _check_pbp(self,eID):
         """
-        Mock function of the on found in PBP DAO
-        using it to return true if a volleyball event
-        identified by their id has a pbp sequence.
+        Will check the existance of a pbp sequence 
+        for an event.
+
+        Uses a PBPDao to determine the existance of
+        a PBP sequence.
 
         Args:
-            eID: The id of the volleyball event.
+            eID: The id of the event.
         Returns:
-            True if the id matches a predefined one, False otherwise
+            True if pbp sequence exists, False otherwise
         """  
+        
+        try:
+            return PBPDao().pbp_exists(eID)
 
-        if eID == 7:
-            return True
-        else:
+        except Exception as e:
+            print(e)
             return False
+       
 
     
     

@@ -660,7 +660,7 @@ def pbp_sequence(sport):
         return jsonify(ERROR="Odin: El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
     if len(body) != 1 or "event_id" not in body:
-        return jsonify("Odin: Error en la solicitud. Debe proveerse un ID para evento.")
+        return jsonify(ERROR = "Bad request."),400
 
     event_id = body["event_id"]
     if request.method == 'POST':
@@ -2089,7 +2089,7 @@ def matchbasedStatistics():
 @app.route("/results/matchbased/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def matchbasedAthleteStatistics():
     json = None
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -2125,7 +2125,7 @@ def matchbasedAthleteStatistics():
 @app.route("/results/matchbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def matchbasedTeamStatistics():
     json = None
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -2162,7 +2162,7 @@ def matchbasedTeamStatistics():
 @app.route("/results/matchbased/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def matchbasedFinalScores():
     json = None
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -2259,7 +2259,7 @@ def matchbasedAggregateTeamStatistics():
 
 
 # ===================================================================================
-# =======================//MATCH BASED RESULTS ROUTES//===============================
+# =======================//MEDAL BASED RESULTS ROUTES//===============================
 # ===================================================================================
 
 @app.route("/results/medalbased/", methods=['GET', 'POST'])
@@ -2290,7 +2290,7 @@ def medalbasedStatistics():
 @app.route("/results/medalbased/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def medalbasedAthleteStatistics():
     json = None
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -2326,7 +2326,7 @@ def medalbasedAthleteStatistics():
 @app.route("/results/medalbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def medalbasedTeamStatistics():
     json = None
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == "DELETE":
         json = request.args
     else:
         json = request.json
@@ -2363,7 +2363,7 @@ def medalbasedTeamStatistics():
 @app.route("/results/medalbased/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def medalbasedFinalScores():
     json = None
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
@@ -2455,7 +2455,7 @@ def medalbasedAggregateTeamStatistics():
 
 
 # ===================================================================================
-# ===================//END MATCH BASED RESULTS ROUTES//===============================
+# ===================//END MEDAL BASED RESULTS ROUTES//===============================
 # ===================================================================================
 
 
