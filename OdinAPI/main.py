@@ -66,7 +66,7 @@ def athletes():
     if request.method == 'POST':
         json = request.json
         if not 'sID' in json or not 'attributes' in json:
-            return jsonify(Error = "Argumentos dados son incorrectos."),400
+            return jsonify(Error="Argumentos dados son incorrectos."), 400
 
         return handler.addAthlete(json['sID'], json['attributes'])
 
@@ -76,9 +76,9 @@ def athletes():
             return handler.getAllAthletes()
 
         if not 'sID' in json or not 'tID' in json:
-            return jsonify(Error = "Argumentos dados son incorrectos."),400
+            return jsonify(Error="Argumentos dados son incorrectos."), 400
 
-        return handler.getAthletesBySportAndNotInTeam(json['sID'],json['tID'])
+        return handler.getAthletesBySportAndNotInTeam(json['sID'], json['tID'])
 
 
 @app.route("/athletes/<int:aid>/", methods=['GET', 'PUT', 'DELETE'])
@@ -89,7 +89,7 @@ def athleteByID(aid):
     elif request.method == 'PUT':
         json = request.json
         if 'attributes' not in json:
-            return jsonify(Error = "Argumentos dados son incorrectos."),400
+            return jsonify(Error="Argumentos dados son incorrectos."), 400
 
         return handler.editAthlete(aid, json['attributes'])
 
@@ -269,7 +269,7 @@ def eventsById(eID):
     elif request.method == 'PUT':
         json = request.json
         if 'attributes' not in json:
-            return jsonify(Error = "Argumentos dados son incorrectos."),400            
+            return jsonify(Error="Argumentos dados son incorrectos."), 400
         return handler.editEvent(eID, json['attributes'])
     elif request.method == 'DELETE':
         return handler.removeEvent(eID)
@@ -283,7 +283,7 @@ def teamEvents(tID):
     elif request.method == 'POST':
         json = request.json
         if not json or 'attributes' not in json:
-            return jsonify(Error = "Argumentos dados son incorrectos."),400
+            return jsonify(Error="Argumentos dados son incorrectos."), 400
         return handler.addEvent(tID, json['attributes'])
 
 
@@ -1898,27 +1898,27 @@ def get_sports():
             if 'branch' in body:
                 # Validate branch type.
                 if not isinstance(body['branch'], str):
-                    return jsonify(ERROR="Odin/sports: Malformed request, branch must be string."), 400
+                    return jsonify(ERROR="Odin: Error en la solicitud. La rama deportiva debe ser una secuencia de caracteres."), 400
 
                 return handler.getSportsByBranch(body['branch'])
 
             if 'sport_name' in body:
                 # Validate sport_name type.
                 if not isinstance(body['sport_name'], str):
-                    return jsonify(ERROR="Odin/sports: Malformed request, sport_name must be string."), 400
+                    return jsonify(ERROR="Odin: Error en la solicitud. El nombre del deporte debe ser una secuencia de caracteres."), 400
 
                 return handler.getSportByName(body['sport_name'])
 
             if 'sport_id' in body:
                 # Validate sport_name type.
                 if not isinstance(body['sport_id'], int):
-                    return jsonify(ERROR="Odin/sports: Malformed request, sport_id must be string."), 400
+                    return jsonify(ERROR="Odin: Error en la solicitud. El ID del deporte debe ser un entero."), 400
 
                 return handler.getSportById(body['sport_id'])
 
-        return jsonify(ERROR="Odin/sports: Malformed request, either branch or name is allowed."), 400
+        return jsonify(ERROR="Odin: Error en la solicitud. Debe proveerse un valor (rama deportiva o nombre del deporte)."), 400
 
-    return jsonify(ERROR="Odin/sports: HTTP verb not allowed."), 405
+    return jsonify(ERROR="Odin: Método HTTP no autorizado."), 405
 
 
 @app.route("/sports/details", methods=['GET'])
@@ -1928,9 +1928,9 @@ def get_sport_info():
         if not body:
             return SportHandler().getSportCategoriesPositions()
 
-        return jsonify(ERROR="Odin/sports/details: Malformed request, no params allowed."), 400
+        return jsonify(ERROR="Odin: Error en la solicitud. No se permiten parámetros."), 400
 
-    return jsonify(ERROR="Odin/sports: HTTP verb not allowed."), 405
+    return jsonify(ERROR="Odin: Método HTTP no autorizado."), 405
 
 
 # ===================================================================================
