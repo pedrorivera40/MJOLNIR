@@ -53,12 +53,26 @@ export default {
   methods: {
     ...mapActions({
       removeTeam: "teams/removeTeam",
-      setQueryLoading: "teams/setQueryLoading"
+      setQueryLoading: "teams/setQueryLoading",
+      setNullTeam:"teams/setNullTeam",
+      setNullTeamMembers:"teams/setNullTeamMembers",
+      getTeamByYear:"teams/getTeamByYear"
     }),
     
     close() {
       this.terms = false;
       this.$emit("update:dialog", false);
+    },
+    getSeasonDataPost(){
+      this.setQueryLoading()
+      this.setNullTeam()
+      this.setNullTeamMembers()
+      const team_params = {
+        sport_id: String(this.sport_id),
+        season_year: String(this.season_year)
+      }
+      //console.log("At the index level inside the getSeasonData, request params look like",team_params)
+      this.getTeamByYear(team_params)   			
     },
     async removeTeamLocal() {
       this.isLoading = true;
@@ -69,6 +83,7 @@ export default {
       console.log("HEY WE GONNA REMOVE!",payload)
       await this.setQueryLoading();
       await this.removeTeam(payload);
+      await this.getSeasonDataPost()
       this.terms = false;
       this.$emit("update:dialog", false);
       this.isLoading = false;

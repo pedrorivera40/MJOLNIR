@@ -180,12 +180,15 @@
         :dialog.sync="dialogAddTeamMember"
         :sport_id="sport_id"
         :team_id="current_team_id"
+        :season_year="season"
       />
       <DeleteTeamMemberModal
         v-if="dialogDeleteTeamMember"
         :dialog.sync="dialogDeleteTeamMember"
         :athlete_id="athlete_id_deletion"
         :team_id="current_team_id"
+        :sport_id="sport_id"
+        :season_year="season"
       />
       <DeleteTeamModal
         v-if="dialogDeleteTeam"
@@ -314,10 +317,11 @@ export default {
             console.log("INDEX LEVEL LOCAL TEAM",this.current_team)
             console.log("INDEX LEVEL QUERY TEAM",this.team)
             this.getTeamMembers(this.current_team_id)
+            this.stopGetMembers()
             // this.ready_for_members = false
           }
           // this.readyForMembers = false
-          this.stopGetMembers()
+          
           return true
         }
         else{

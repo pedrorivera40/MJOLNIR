@@ -44,7 +44,7 @@
                                                 :items="yearList"
                                                 label ="Año de Temporada"
                                                 prepend-icon="mdi-calendar-blank-multiple"
-                                                :rules="[required('Temporada')]"
+                                                :rules="[seasonRequired('Temporada')]"
                                             ></v-select>
                                         </v-col>
                                     </v-row>    
@@ -61,8 +61,7 @@
                                         >
                                             
                                             <v-text-field
-                                                v-model="team_image_url"
-                                                :error-messages="errors"                    
+                                                v-model="team_image_url"                  
                                                 label="Enlace de Imagen de Equipo"
                                                 prepend-icon="mdi-link"
                                                 required
@@ -85,7 +84,6 @@
                                         <v-textarea
                                             v-model="about_team"                      
                                             :counter="1000"
-                                            :error-messages="errors" 
                                             label="Breve Descripcion Del Equipo"
                                             auto-grow
                                             rows = "3"
@@ -188,7 +186,9 @@
         ...mapActions({
             setQueryLoading:"teams/setQueryLoading",
             postTeam:"teams/postTeam",
-            setNullTeam:"teams/setNullTeam"
+            setNullTeam:"teams/setNullTeam",
+            setNullTeamMembers:"teams/setNullTeamMembers",
+            getTeamByYear:"teams/getTeamByYear",
         }),
 
         //TODO: will be removed
@@ -215,13 +215,25 @@
             console.log(parseInt(this.sport_id))
             console.log(this.sport_id)
             console.log("WHAT ARE THE CURRENT VALUES BEFORE QUERY???",payload_edit)
-            this.postTeam(payload_edit)
+            await this.postTeam(payload_edit)
+            await this.getSeasonDataPost()
             // while(this.loadingQuery){
             //     //don't close yet
             // }
             this.close()
             // this.goToTeam()
             // }
+        },
+        getSeasonDataPost(){
+            this.setQueryLoading()
+            this.setNullTeam()
+            this.setNullTeamMembers()
+            const team_params = {
+                sport_id: String(this.sport_id),
+                season_year: String(this.season_year)
+            }
+            //console.log("At the index level inside the getSeasonData, request params look like",team_params)
+            this.getTeamByYear(team_params)   			
         },
         clear () {
             this.about_team='',

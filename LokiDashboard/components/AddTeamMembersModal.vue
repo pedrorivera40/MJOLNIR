@@ -8,7 +8,7 @@
                 </v-toolbar>
                 <v-card-text>            
                 
-                    <form>
+                    <v-form v-model="valid">
                         <v-container v-if="formated()">  
                             <v-row>
                                 <v-col>
@@ -95,7 +95,7 @@
                                 </v-col>
                             </v-row>   
                         </v-container>
-                    </form>
+                    </v-form>
                 
                 </v-card-text>
             </v-card>
@@ -111,7 +111,8 @@
         props:{
             dialog:Boolean,
             sport_id:Number,
-            team_id:Number
+            team_id:Number,
+            season_year: Number
         },
         data: () => ({
             valid:false,
@@ -149,7 +150,10 @@
             setQueryLoading:"teams/setQueryLoading",
             addMembers:"teams/addMembers",
             getSportAthletes:"teams/getSportAthletes",
-            setSportAthletesNull:"teams/setSportAthletesNull"
+            setSportAthletesNull:"teams/setSportAthletesNull",
+            setNullTeam:"teams/setNullTeam",
+            setNullTeamMembers:"teams/setNullTeamMembers",
+            getTeamByYear:"teams/getTeamByYear"
         }),
         buildDefaultValues(){
             this.sport_id = this.$route.params.id
@@ -180,6 +184,17 @@
         close() {
             this.$emit("update:dialog", false);
         },
+        getSeasonDataPost(){
+            this.setQueryLoading()
+            this.setNullTeam()
+            this.setNullTeamMembers()
+            const team_params = {
+                sport_id: String(this.sport_id),
+                season_year: String(this.season_year)
+            }
+            //console.log("At the index level inside the getSeasonData, request params look like",team_params)
+            this.getTeamByYear(team_params)   			
+        },
         async submit () {
             var i;
             console.log("Going to add the members here!",this.members_to_add)
@@ -200,6 +215,7 @@
             console.log("Yeah yeah params 2",athlete_params)
             await this.setQueryLoading()
             await this.addMembers(athlete_params)
+            await this.getSeasonDataPost()
             this.close()
         },
 

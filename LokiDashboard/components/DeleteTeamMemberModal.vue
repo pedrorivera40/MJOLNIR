@@ -42,7 +42,9 @@ export default {
   props: {
     dialog: Boolean,
     athlete_id: Number,
-    team_id: Number
+    team_id: Number,
+    sport_id: Number,
+    season_year: Number
   },
   data() {
     return {
@@ -53,9 +55,22 @@ export default {
   methods: {
     ...mapActions({
       removeTeamMember: "teams/removeTeamMember",
-      setQueryLoading: "teams/setQueryLoading"
+      setQueryLoading: "teams/setQueryLoading",
+      setNullTeam:"teams/setNullTeam",
+      setNullTeamMembers:"teams/setNullTeamMembers",
+      getTeamByYear:"teams/getTeamByYear"
     }),
-    
+    getSeasonDataPost(){
+      this.setQueryLoading()
+      this.setNullTeam()
+      this.setNullTeamMembers()
+      const team_params = {
+        sport_id: String(this.sport_id),
+        season_year: String(this.season_year)
+      }
+      //console.log("At the index level inside the getSeasonData, request params look like",team_params)
+      this.getTeamByYear(team_params)   			
+    },
     close() {
       this.terms = false;
       this.$emit("update:dialog", false);
@@ -69,6 +84,7 @@ export default {
       await this.setQueryLoading();
       await this.removeTeamMember(payload);
       this.terms = false;
+      await this.getSeasonDataPost()
       this.$emit("update:dialog", false);
       this.isLoading = false;
     }

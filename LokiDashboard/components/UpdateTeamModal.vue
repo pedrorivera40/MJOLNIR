@@ -36,7 +36,6 @@
                                                 readonly
                                                 solo
                                                 prepend-icon="mdi-calendar-blank-multiple"
-                                                :rules="[required('Temporada')]"
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -52,7 +51,6 @@
                                         <v-col>
                                             <v-text-field
                                                 v-model="team_image_url"
-                                                :error-messages="errors"
                                                 label="Enlace de Imagen de Equipo"
                                                 prepend-icon="mdi-link"
                                             ></v-text-field>
@@ -72,7 +70,6 @@
                                     <v-textarea
                                         v-model="about_team"
                                         :counter="1000"
-                                        :error-messages="errors"
                                         label="Breve Descripcion Del Equipo"
                                         auto-grow
                                         rows = "3"
@@ -167,6 +164,7 @@
             editTeam:"teams/editTeam",
             setNullTeam:"teams/setNullTeam",
             getTeamByYearSimple:"teams/getTeamByYearSimple"
+
         }),
 
         formated(){
@@ -207,8 +205,9 @@
             console.log(payload_edit)
             await this.setQueryLoading()
             await this.editTeam(payload_edit)
+            await this.getSeasonDataUpdate()
             // while(this.loadingQuery){}
-            // this.getUpdate()
+      
             this.close()
             // this.goToTeam()
             // }
@@ -217,15 +216,18 @@
             this.about_team='',
             this.team_image_url=''
         },
-        getUpdate(){
-            // this.setQueryLoading()
-            // this.setNullTeam()
-            // const team_params = {
-            //     sport_id: String(this.sport_id),
-            //     season_year: String(this.season_year)
-            // }
-            // //console.log("At the index level inside the getSeasonData, request params look like",team_params)
-            // this.getTeamByYearSimple(team_params)
+        getSeasonDataUpdate(){
+            this.setQueryLoading()
+            this.setNullTeam()
+            // this.setNullMembersStats()
+            // this.setNullTeamStats()
+        
+            const team_params = {
+                sport_id: String(this.sport_id),
+                season_year: String(this.season_year)
+            }
+            //console.log("At the index level inside the getSeasonData, request params look like",team_params)
+            this.getTeamByYearSimple(team_params)   			
         },
         goToTeam(){
              this.$router.push('/equipo/'+sport_id)
