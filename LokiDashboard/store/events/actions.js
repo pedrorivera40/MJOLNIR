@@ -89,6 +89,24 @@ export default {
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
         }
+    },
+
+    async startPBPSequence({commit,dispatch},eventJSON){
+        try{
+            
+            commit("SET_EVENTS",[])
+            const response = await this.$axios.post('pbp/'+eventJSON.sport_name,eventJSON)
+            
+            dispatch('notifications/setSnackbar', {text: response.data.MSG, color: 'success'}, {root: true})
+            this.$router.push('/jugadas-voleibol/'+eventJSON.event_id)
+        }catch(error){
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.ERROR, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
+        }
+        
     }
     
     

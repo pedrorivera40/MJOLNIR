@@ -1,4 +1,4 @@
-import { rtdb } from '~/services/firebaseInit.js'
+import  rtdb  from '~/services/firebaseInit.js'
 
 export default {
 

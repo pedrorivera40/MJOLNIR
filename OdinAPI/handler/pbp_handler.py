@@ -1,7 +1,7 @@
 from re import search
 from flask import jsonify
 from .dao.pbp_dao import PBPDao as VolleyballPBPDao
-from.mock.event_handler import _mockEventHandler as EventHandler
+from handler.event import EventHandler
 from.mock.team_handler import _mockTeamHandler as TeamHandler
 
 
@@ -414,13 +414,15 @@ class VolleyballPBPHandler:
             if not str(event_id).isdigit():
                 return jsonify(ERROR="Invalid event id (must be an integer)."), 400
 
-            event_info, resp_code = EventHandler().getEventById(event_id)
+            event_info, resp_code = EventHandler().getEventByID(event_id)
             event_info = event_info.json
+            
+            print(event_info)
 
-            if not event_info.get("EVENT"):
+            if not event_info.get("Event"):
                 return jsonify(ERROR="Event does not exist."), 400
 
-            event_info = event_info.get("EVENT")
+            event_info = event_info.get("Event")
 
             if event_info.get("sport_name") != self._sport_keywords["sport"]:
                 return jsonify(ERROR="Sport does not match Volleyball."), 403
@@ -576,7 +578,7 @@ class VolleyballPBPHandler:
             if not isinstance(event_id, int) or not isinstance(athlete_id, int):
                 return jsonify(ERROR="Values for event_id and athlete_id must be integer."), 400
 
-            event_info = EventHandler().getEventById(event_id)
+            event_info = EventHandler().getEventByID(event_id)
             event_info = event_info[0].json
 
             if not event_info.get("EVENT"):
