@@ -94,11 +94,10 @@ class SportDAO:
                 from sport as S inner join branch as B on S.branch_id = B.id
                 where S.id = %s;
                 '''
-        
+
         cursor.execute(query, (sport_id,))
         return cursor.fetchone()
 
-    # TODO -> Fix it to return all sports...
     def getSportByName(self, sport_name):
         """
         Fetches sport records from the database corresponding to a given sport name.
@@ -147,10 +146,10 @@ class SportDAO:
         return self._build_result(cursor)
 
 
-if __name__ == '__main__':
-    sport_dao = SportDAO()
+# if __name__ == '__main__':
+#     sport_dao = SportDAO()
 
-    print(sport_dao.getAllSports())
-    print(sport_dao.getSportById("1"))
-    print(sport_dao.getSportByName("soccer"))
-    print(sport_dao.getSportsByBranch("male"))
+#     print(sport_dao.getAllSports())
+#     print(sport_dao.getSportById("1"))
+#     print(sport_dao.getSportByName("soccer"))
+#     print(sport_dao.getSportsByBranch("male"))

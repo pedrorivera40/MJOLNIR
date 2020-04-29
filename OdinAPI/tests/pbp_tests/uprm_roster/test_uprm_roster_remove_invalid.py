@@ -14,13 +14,13 @@ class TestRemoveUPRMRosterVolleyballPBP(unittest.TestCase):
     def test_uprm_roster_remove_invalid1(self):
         response = self.client.delete('/pbp/Voleibol/roster', data=json.dumps(
             data["invalid_to_remove1"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Invalid event id."
+        expected_msg = "Odin: El ID del evento es inválido."
         self.assertEqual(response.status_code, 403)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
 
     def test_uprm_roster_remove_invalid2(self):
         response = self.client.delete('/pbp/Voleibol/roster', data=json.dumps(
             data["invalid_to_remove2"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Player does not exist."
+        expected_msg = "Odin: El atleta no existe."
         self.assertEqual(response.status_code, 404)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])

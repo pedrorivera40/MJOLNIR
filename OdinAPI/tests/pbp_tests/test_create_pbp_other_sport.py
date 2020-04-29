@@ -14,7 +14,7 @@ class TestCreateVolleyballPBP(unittest.TestCase):
     def test_create_pbp_other_sport(self):
         response = self.client.post('/pbp/Voleibol', data=json.dumps(
             data["different_sport"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Sport does not match Volleyball."
+        expected_msg = "Odin: El evento seleccionado no es de Voleibol."
         self.assertEqual(response.status_code, 403)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
 
