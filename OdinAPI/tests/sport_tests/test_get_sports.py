@@ -19,7 +19,7 @@ class TestGetAllSports(unittest.TestCase):
     def test_get_all_sports_bad(self):
         response = self.client.get('/sports', data=json.dumps(
             {"SOMETHING_BAD": "SOMETHING_WORSE"}), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin/sports: Malformed request, either branch or name is allowed."
+        expected_msg = "Odin: Error en la solicitud. Debe proveerse un valor (rama deportiva o nombre del deporte)."
         self.assertEqual(response.status_code, 400)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
         print(response.json)

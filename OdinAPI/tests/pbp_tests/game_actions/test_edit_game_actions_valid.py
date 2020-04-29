@@ -27,7 +27,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_notification"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -39,7 +39,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_score_to_score_opp"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -50,7 +50,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_score_to_score_uprm"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -62,7 +62,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_personal_to_personal_opp"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -73,7 +73,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_personal_to_personal_uprm"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -85,7 +85,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_error_to_error_opp"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -96,7 +96,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_error_to_error_uprm"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -108,7 +108,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_score_to_error_opp"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -119,7 +119,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_score_to_error_uprm"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -131,7 +131,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_score_to_personal_opp1"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -142,7 +142,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_score_to_personal_uprm1"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -154,7 +154,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_error_to_score_opp"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -165,7 +165,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_error_to_score_uprm"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -177,7 +177,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_error_to_personal_opp"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -188,7 +188,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_error_to_personal_uprm"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -200,7 +200,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_personal_to_score_opp"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -211,7 +211,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_personal_to_score_uprm"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -223,7 +223,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_personal_to_error_opp"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
@@ -234,6 +234,6 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit it.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_valid_personal_to_error_uprm"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Edit game action success."
+        expected_msg = "Odin: Se ha editado la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])

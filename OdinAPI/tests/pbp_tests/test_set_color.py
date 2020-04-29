@@ -14,14 +14,14 @@ class TestSetColorVolleyballPBP(unittest.TestCase):
     def test_set_valid_color(self):
         response = self.client.put('/pbp/Voleibol/color', data=json.dumps(
             data["valid_color"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Color set."
+        expected_msg = "Odin: El color se ha actualizado."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 
     def test_set_invalid_color(self):
         response = self.client.put('/pbp/Voleibol/color', data=json.dumps(
             data["invalid_color"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Invalid color format."
+        expected_msg = "Odin: El formato de color debe ser HEX."
         self.assertEqual(response.status_code, 400)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
 

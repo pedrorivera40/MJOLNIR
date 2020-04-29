@@ -14,7 +14,7 @@ class TestEndVolleyballPBP(unittest.TestCase):
     def test_end_pbp_valid(self):
         response = self.client.post('/pbp/Voleibol/end', data=json.dumps(
             data["valid_id"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Volleyball game is over."
+        expected_msg = "Odin: Se marcó el partido de Voleibol como finalizado."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 

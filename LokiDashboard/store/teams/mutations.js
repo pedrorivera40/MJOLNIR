@@ -45,8 +45,18 @@ export default{
     SET_LOADING(state){
 			state.isLoadingT = true
     },
+    SET_SPORT_ATHLETES(state,sport_athletes){
+        state.sport_athletes = sport_athletes
+    },
 
     DONE_LOADING(state){
 			state.isLoadingT = false
     }
+
+
+    //edit team route
+    
+    //create team route
+
+    //create member route
 }

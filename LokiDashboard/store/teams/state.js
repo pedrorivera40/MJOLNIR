@@ -1,4 +1,6 @@
 export default() =>({
+
+    //basic route
     team: null,
     teams: null,
     team_members: null,
@@ -10,8 +12,15 @@ export default() =>({
     readyForMemberStats: false,
     readyForTeamStats: false,
     loadingQuery:false,
+    sport_athletes: null,
 
-    // athlete: null,
-    // athletes: [],
-    // isLoadingA: false,
+    //edit team route
+
+    //create team route
+
+    //create member route
+
+    //
+
+   
 })
