@@ -2,7 +2,7 @@ from re import search
 from flask import jsonify
 from .dao.pbp_dao import PBPDao as VolleyballPBPDao
 from handler.event import EventHandler
-from.mock.team_handler import _mockTeamHandler as TeamHandler
+from handler.team import TeamHandler
 
 
 class VolleyballPBPHandler:
@@ -590,7 +590,6 @@ class VolleyballPBPHandler:
 
             event_info = EventHandler().getEventByID(event_id)
             event_info = event_info[0].json
-            print(event_info)
 
             if not event_info.get("Event"):
                 return jsonify(ERROR="El evento no existe."), 400
@@ -600,11 +599,11 @@ class VolleyballPBPHandler:
                 event_info["team_id"])
 
             team_roster = team_roster[0].json
-            if not team_roster.get("TEAM"):
-                print(event_id, "TEAM_ROSTER", team_roster)
+
+            if not team_roster.get("Team") or not team_roster.get("Team").get("team_members"):
                 return jsonify(ERROR="No se encontró información del roster."), 400
 
-            team_roster = team_roster.get("TEAM")
+            team_roster = team_roster.get("Team").get("team_members")
             athlete_info = None
 
             for athlete in team_roster:
