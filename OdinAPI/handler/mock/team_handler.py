@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
 
+# NOTE: This mock has been deprecated during integration phase (April 30, 2020).
+
 
 class _mockTeamHandler:
 
