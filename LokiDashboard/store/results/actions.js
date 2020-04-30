@@ -5,7 +5,7 @@ export default{
             let event_id = stat_params.event_id
             let sport_route = stat_params.sport_route
             //console.log("At the request level we have:",event_id)
-            const response = await this.$axios.get('results/'+sport_route+'/?event_id='+event_id)
+            const response = await this.$axios.get('results/'+sport_route+'/?event_id='+event_id+'/')
             //console.log("GET ALL EVENT STATS",response)
             console.log("GET ALL EVENT STATS",response.data)
             commit("SET_RESULTS_PAYLOAD",response.data)

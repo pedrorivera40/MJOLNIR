@@ -1,429 +1,419 @@
 <template>
-  <div class="wrapper">
-    <h1>Resultados {{sport_name}}</h1>
+  <v-container class="wrapper">
+    <h1 class="primary_dark--text pl-3">Resultados {{sport_name}}</h1>
     <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
     <h3>Evento de {{event_date}}</h3>
     <div class="content-area pa-4 pt-12">
-    <v-row align="center"
-      justify="center">
-      <v-card width=400 class="mx-lg-auto" outlined>
-          <v-card-title>
-            <v-row justify="center">
-                <h3>Final Result</h3>
+        <v-container>
+            <v-row align="center"
+            justify="center">
+                <v-card width=400 class="mx-lg-auto" outlined>
+                    <v-card-title>
+                        <v-row justify="center">
+                            <h3>Final Result</h3>
+                        </v-row>
+                        </v-card-title>
+                    <v-container>
+                        <v-row >
+                            
+                            <v-col >
+                                <v-row justify="center">
+                                    <h1>{{uprm_score}}</h1>
+                                </v-row>
+                                <v-row justify="center">
+                                    <h3>UPRM</h3>
+                                </v-row>
+                            </v-col>
+                            
+                            <v-col align="center">
+                                <v-row justify="center">
+                                    <h2>-</h2>
+                                </v-row>
+                            </v-col>
+                            
+                            <v-col>
+                                <v-row justify="center">
+                                    <h1>{{opponent_score}}</h1>
+                                </v-row>
+                                <v-row justify="center">
+                                    <h3>{{opponent_name}}</h3>
+                                </v-row>
+                            </v-col>
+                            
+                        </v-row>
+                    </v-container>
+                </v-card>   
             </v-row>
-            </v-card-title>
-          <v-container>
-            <v-row >
-                
-                <v-col >
-                    <v-row justify="center">
-                        <h1>{{uprm_score}}</h1>
-                    </v-row>
-                    <v-row justify="center">
-                        <h3>UPRM</h3>
-                    </v-row>
-                </v-col>
-                
-                <v-col align="center">
-                    <v-row justify="center">
-                        <h2>-</h2>
-                    </v-row>
+            <v-row justify="center" align="center">
+                <v-spacer/>
+                <v-spacer/>
+                <v-col>
+                    <v-btn
+                        color="primary_light"
+                        class="white--text"
+                        @click="addFinalScore()"
+                    >
+                        <v-icon left>
+                        mdi-plus
+                        </v-icon>
+                        Añadir Puntuación Final
+                    </v-btn>
                 </v-col>
                 
                 <v-col>
-                    <v-row justify="center">
-                        <h1>{{opponent_score}}</h1>
-                    </v-row>
-                    <v-row justify="center">
-                        <h3>{{opponent_name}}</h3>
-                    </v-row>
+                    <v-btn
+                        color="primary_light"
+                        class="white--text"
+                        @click="editFinalScore()"
+                    >
+                        <v-icon left>
+                        mdi-pencil
+                        </v-icon>
+                        Editar Puntuación Final
+                    </v-btn>
                 </v-col>
-                
+                <v-spacer/>
+                <v-spacer/>
             </v-row>
-          </v-container>
-      </v-card>
-        
-      </v-row>
-      <v-row justify="center" align="center">
-        <v-spacer/>
-        <v-spacer/>
-        <v-col>
-            <v-btn
-                color="primary_light"
-                class="white--text"
-                @click="addFinalScore()"
-            >
-                <v-icon left>
-                mdi-plus
-                </v-icon>
-                Añadir Puntuación Final
-            </v-btn>
-        </v-col>
-        
-        <v-col>
-            <v-btn
-                color="primary_light"
-                class="white--text"
-                @click="editFinalScore()"
-            >
-                <v-icon left>
-                mdi-pencil
-                </v-icon>
-                Editar Puntuación Final
-            </v-btn>
-        </v-col>
-        <v-spacer/>
-        <v-spacer/>
-    </v-row>   
-    <v-tabs
-              centered
-          >
-            <v-tabs-slider/>
-            <v-tab>
-                POR ATLETA
-            </v-tab>
+            <v-container>   
+                <v-tabs centered>
+                    <v-tabs-slider/>
+                    <v-tab>
+                        POR ATLETA
+                    </v-tab>
 
-            <v-tab>
-                POR EQUIPO
-            </v-tab>
-            <v-tab-item>
-                <v-card>
-                    
-                    <v-card-title>
-                    <v-row>
-                        <v-col>
-                        <v-btn
-                            color="primary_light"
-                            class="white--text"
-                            @click="addAthleteStatistics(editedItemIndex)"
-                        >
-                            <v-icon left>
-                            mdi-plus
-                            </v-icon>
-                            Añadir Estadisticas de Atleta
-                        </v-btn>
-                        <v-spacer />
-                        </v-col>
-                        <v-col cols="4">
-                        <v-text-field
-                            v-model="search_individual"
-                            append-icon="mdi-magnify"
-                            label="Búsqueda"
-                            rounded
-                            dense
-                            outlined
-                            single-line
-                            hide-details
-                        />
-                        </v-col>
-                    </v-row>
-                    </v-card-title>
-                    <!-- :headers="headers"
-                    :items="users"
-                    :search="search"
-                    :loading="isLoadingU" -->
-                    <!-- THE BASKETBALL TABLE -->
-                    <v-data-table
-                    dense 
-                    :headers="headers" 
-                    :items="payload_stats.Basketball_Event_Statistics.athlete_statistic"
-                    :search="search_individual"
-                    item-key="athlete_statistic" 
-                    class="elevation-1"								
-                    v-if="isBasketballTable"
-                    >
-                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
+                    <v-tab>
+                        POR EQUIPO
+                    </v-tab>
+                    <v-tab-item>
+                        <v-card>
+                            
+                            <v-card-title>
+                            <v-row>
+                                <v-col>
+                                <v-btn
+                                    color="primary_light"
+                                    class="white--text"
+                                    @click="addAthleteStatistics(editedItemIndex)"
+                                >
+                                    <v-icon left>
+                                    mdi-plus
+                                    </v-icon>
+                                    Añadir Estadisticas de Atleta
+                                </v-btn>
+                                <v-spacer />
+                                </v-col>
+                                <v-col cols="4">
+                                <v-text-field
+                                    v-model="search_individual"
+                                    append-icon="mdi-magnify"
+                                    label="Búsqueda"
+                                    rounded
+                                    dense
+                                    outlined
+                                    single-line
+                                    hide-details
+                                />
+                                </v-col>
+                            </v-row>
+                            </v-card-title>
+                            <!-- :headers="headers"
+                            :items="users"
+                            :search="search"
+                            :loading="isLoadingU" -->
+                            <!-- THE BASKETBALL TABLE -->
+                            <v-data-table
+                            dense 
+                            :headers="headers" 
+                            :items="payload_stats.Basketball_Event_Statistics.athlete_statistic"
+                            :search="search_individual"
+                            item-key="athlete_statistic" 
+                            class="elevation-1"								
+                            v-if="isBasketballTable"
                             >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
+                            <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                            <template v-slot:item.actions="{ item }">
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="editAthleteStatistics(item)"
+                                    >
+                                    mdi-pencil
+                                    </v-icon>
+                                </template>
+                                <span>Editar Estadisticas de Atleta</span>
+                                </v-tooltip>
+                                <!-- <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click="editPermissions(item)"
+                                    >
+                                    mdi-shield-lock
+                                    </v-icon>
+                                </template>
+                                <span>Edit User Permissions</span>
+                                </v-tooltip> -->
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="deleteAthleteStatistics(item)"
+                                    >
+                                    mdi-delete
+                                    </v-icon>
+                                </template>
+                                <span>Eliminar Estadisticas De Atleta</span>
+                                </v-tooltip>
+                            </template>
+                            </v-data-table>
+                            <!-- VOLLEYBALL TABLE -->
+                            <v-data-table
+                            dense 
+                            :headers="headers" 
+                            :items="payload_stats.Volleyball_Event_Statistics.athlete_statistic"
+                            :search="search_individual"
+                            item-key="athlete_statistic" 
+                            class="elevation-1"								
+                            v-if="isVolleyballTable"
                             >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
+                            <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                            <template v-slot:item.actions="{ item }">
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="editAthleteStatistics(item)"
+                                    >
+                                    mdi-pencil
+                                    </v-icon>
+                                </template>
+                                <span>Editar Estadisticas de Atleta</span>
+                                </v-tooltip>
+                                <!-- <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click="editPermissions(item)"
+                                    >
+                                    mdi-shield-lock
+                                    </v-icon>
+                                </template>
+                                <span>Edit User Permissions</span>
+                                </v-tooltip> -->
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="deleteAthleteStatistics(item)"
+                                    >
+                                    mdi-delete
+                                    </v-icon>
+                                </template>
+                                <span>Eliminar Estadisticas De Atleta</span>
+                                </v-tooltip>
+                            </template>
+                            </v-data-table>
+                            <!-- SOCCER TABLE -->
+                            <v-data-table
+                            dense 
+                            :headers="headers" 
+                            :items="payload_stats.Soccer_Event_Statistics.athlete_statistic"
+                            :search="search_individual"
+                            item-key="athlete_statistic" 
+                            class="elevation-1"								
+                            v-if="isSoccerTable"
                             >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                    <!-- VOLLEYBALL TABLE -->
-                    <v-data-table
-                    dense 
-                    :headers="headers" 
-                    :items="payload_stats.Volleyball_Event_Statistics.athlete_statistic"
-                    :search="search_individual"
-                    item-key="athlete_statistic" 
-                    class="elevation-1"								
-                    v-if="isVolleyballTable"
-                    >
-                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
+                            <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                            <template v-slot:item.actions="{ item }">
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="editAthleteStatistics(item)"
+                                    >
+                                    mdi-pencil
+                                    </v-icon>
+                                </template>
+                                <span>Editar Estadisticas de Atleta</span>
+                                </v-tooltip>
+                                <!-- <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click="editPermissions(item)"
+                                    >
+                                    mdi-shield-lock
+                                    </v-icon>
+                                </template>
+                                <span>Edit User Permissions</span>
+                                </v-tooltip> -->
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="deleteAthleteStatistics(item)"
+                                    >
+                                    mdi-delete
+                                    </v-icon>
+                                </template>
+                                <span>Eliminar Estadisticas De Atleta</span>
+                                </v-tooltip>
+                            </template>
+                            </v-data-table>
+                            <!-- BASEBALL TABLE -->
+                            <v-data-table
+                            dense 
+                            :headers="headers" 
+                            :items="payload_stats.Baseball_Event_Statistics.athlete_statistic"
+                            :search="search_individual"
+                            item-key="athlete_statistic" 
+                            class="elevation-1"								
+                            v-if="isBaseballTable"
                             >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
+                            <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                            <template v-slot:item.actions="{ item }">
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="editAthleteStatistics(item)"
+                                    >
+                                    mdi-pencil
+                                    </v-icon>
+                                </template>
+                                <span>Editar Estadisticas de Atleta</span>
+                                </v-tooltip>
+                                <!-- <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click="editPermissions(item)"
+                                    >
+                                    mdi-shield-lock
+                                    </v-icon>
+                                </template>
+                                <span>Edit User Permissions</span>
+                                </v-tooltip> -->
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="deleteAthleteStatistics(item)"
+                                    >
+                                    mdi-delete
+                                    </v-icon>
+                                </template>
+                                <span>Eliminar Estadisticas De Atleta</span>
+                                </v-tooltip>
+                            </template>
+                            </v-data-table>
+                        </v-card>
+                    </v-tab-item>
+                    <v-tab-item>
+                        <v-card>
+                            <!-- :headers="headers"
+                            :items="users"
+                            :search="search"
+                            :loading="isLoadingU" -->
+                            <v-data-table
+                            dense 
+                            :headers="team_headers" 
+                            :items="team_statistics"
+                            item-key="team_statistics" 
+                            class="elevation-1"								
+                            v-if="payload_stats != ''"
                             >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                    <!-- SOCCER TABLE -->
-                    <v-data-table
-                    dense 
-                    :headers="headers" 
-                    :items="payload_stats.Soccer_Event_Statistics.athlete_statistic"
-                    :search="search_individual"
-                    item-key="athlete_statistic" 
-                    class="elevation-1"								
-                    v-if="isSoccerTable"
-                    >
-                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                    <!-- BASEBALL TABLE -->
-                    <v-data-table
-                    dense 
-                    :headers="headers" 
-                    :items="payload_stats.Baseball_Event_Statistics.athlete_statistic"
-                    :search="search_individual"
-                    item-key="athlete_statistic" 
-                    class="elevation-1"								
-                    v-if="isBaseballTable"
-                    >
-                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                </v-card>
-            </v-tab-item>
-            <v-tab-item>
-                <v-card>
-                    <!-- :headers="headers"
-                    :items="users"
-                    :search="search"
-                    :loading="isLoadingU" -->
-                    <v-data-table
-                    dense 
-                    :headers="team_headers" 
-                    :items="team_statistics"
-                    item-key="team_statistics" 
-                    class="elevation-1"								
-                    v-if="payload_stats != ''"
-                    >
-                    
-                    <template v-slot:item.actions="{ item }">
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editTeamStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Equipo</span>
-                        </v-tooltip> -->
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteTeamStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Equipo</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                </v-card>
-            </v-tab-item>
-        </v-tabs>
+                            
+                            <template v-slot:item.actions="{ item }">
+                                <!-- <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="editTeamStatistics(item)"
+                                    >
+                                    mdi-pencil
+                                    </v-icon>
+                                </template>
+                                <span>Editar Estadisticas de Equipo</span>
+                                </v-tooltip> -->
+                                <!-- <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click="editPermissions(item)"
+                                    >
+                                    mdi-shield-lock
+                                    </v-icon>
+                                </template>
+                                <span>Edit User Permissions</span>
+                                </v-tooltip> -->
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="deleteTeamStatistics(item)"
+                                    >
+                                    mdi-delete
+                                    </v-icon>
+                                </template>
+                                <span>Eliminar Estadisticas De Equipo</span>
+                                </v-tooltip>
+                            </template>
+                            </v-data-table>
+                        </v-card>
+                    </v-tab-item>
+                </v-tabs>
+            </v-container>
+            <AddFinalScoreModal
+                v-if ="dialogAddFinalScore"
+                :dialog.sync="dialogAddFinalScore"
+            />
+        </v-container>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import AddFinalScoreModal from "@/components/AddFinalScoreModal";
 export default {
   data() {
     return {
       
-      dialogEdit: false,
-      dialogDelete: false,
-      dialogPermissions: false,
-     
-    //   headers: [
-    //     {
-    //       text: "ID",
-    //       align: "start",
-    //       sortable: false,
-    //       value: "id"
-    //     },
-    //     { text: "Full Name", value: "full_name" },
-    //     { text: "Username", value: "username" },
-    //     { text: "Email", value: "email" },
-    //     { text: "Account Status", value: "is_active" },
-    //     { text: "Password", value: "password" },
-    //     { text: "Actions", value: "actions", sortable: false }
-    //   ],
+      dialogAddFinalScore: false,
+    
       editedItemIndex: -1,
       editedItem: '',
       defaultItem: {
@@ -460,14 +450,17 @@ export default {
 
     };
   },
-  
-created(){
+// created(){
+  mounted(){
     this.buildDefaultValues()
     this.buildTable()
     this.getSeasonData()
       
       //this.buildDefault()
     }, 
+  components:{
+      AddFinalScoreModal
+  },
   methods: {
     buildDefaultValues(){
         this.event_id = this.$route.params.id
@@ -896,7 +889,8 @@ created(){
         return
     },
     addFinalScore() {
-        this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
+        // this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
+        this.dialogAddFinalScore = true;
     },
     editFinalScore() {
         this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
