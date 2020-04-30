@@ -651,7 +651,9 @@ def basketballAggregateTeamStatistics():
 def pbp_sequence(sport):
 
     body = request.get_json()
+    args = request.args
     handler = None
+    event_id = None
 
     # Assign proper handler.
     if sport == "Voleibol":
@@ -659,10 +661,18 @@ def pbp_sequence(sport):
     else:
         return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
-    if len(body) != 1 or "event_id" not in body:
-        return jsonify(ERROR="Error en la petición. Solo debe proveerse un argumento en el cuerpo."), 400
+    if request.method == 'DELETE':
+        if len(args) != 1 or "event_id" not in args or len(body) != 0:
+            return jsonify(ERROR="Error en la petición. Solo debe proveerse un argumento en el cuerpo."), 400
 
-    event_id = body["event_id"]
+        event_id = args["event_id"]
+
+    else:
+        if len(body) != 1 or "event_id" not in body or len(args) != 0:
+            return jsonify(ERROR="Error en la petición. Solo debe proveerse un argumento en el cuerpo."), 400
+
+        event_id = body["event_id"]
+
     if request.method == 'POST':
         return handler.startPBPSequence(event_id)
 
@@ -823,7 +833,6 @@ def pbp_actions(sport):
     if len(args) != 2 or "action_id" not in args or len(body) != 0:
         return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el ID de la acción como argumentos."), 400
 
-    print("HERE")
     return handler.removePlayPBPAction(event_id, args["action_id"])
 
 

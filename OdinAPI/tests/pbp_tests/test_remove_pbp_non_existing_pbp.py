@@ -12,8 +12,8 @@ class TestRemoveVolleyballPBP(unittest.TestCase):
         self.client = app.test_client()
 
     def test_remove_pbp_non_existing_pbp(self):
-        response = self.client.delete('/pbp/Voleibol', data=json.dumps(
-            data["non_exists_id"]), content_type='application/json', follow_redirects=True)
+        response = self.client.delete('/pbp/Voleibol?event_id=99999', data=json.dumps(
+            {}), content_type='application/json', follow_redirects=True)
         expected_msg = "No existe una secuencia PBP para este evento."
         self.assertEqual(response.status_code, 403)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
