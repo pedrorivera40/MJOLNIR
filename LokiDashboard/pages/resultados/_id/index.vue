@@ -1,257 +1,258 @@
 <template>
-  <div v-if="formated_event_info()" class="wrapper">
-    <h1>Resultados {{sport_name}}</h1>
+  <div class="wrapper">
+    <v-row v-if="formated_event_info()">
+        <v-column>
+            <h1>Resultados {{sport_name}}</h1>
+        </v-column>
+    </v-row>
     <!-- TODO: FIX DATE AND MAKE FORMAT SIMPLER -->
     <h3>Evento de {{event_date}}</h3>
     <div class="content-area pa-4 pt-12">
-        <v-container v-if="formated_member_stats()">
-            <v-row align="center"
-            justify="center">
-            <v-card width=400 class="mx-lg-auto" outlined>
-                <v-card-title>
-                    <v-row justify="center">
-                        <h3>Final Result</h3>
-                    </v-row>
-                    </v-card-title>
-                <v-container>
-                    <v-row >
-                        
-                        <v-col >
-                            <v-row justify="center">
-                                <h1>{{uprm_score}}</h1>
-                            </v-row>
-                            <v-row justify="center">
-                                <h3>UPRM</h3>
-                            </v-row>
-                        </v-col>
-                        
-                        <v-col align="center">
-                            <v-row justify="center">
-                                <h2>-</h2>
-                            </v-row>
-                        </v-col>
-                        
-                        <v-col>
-                            <v-row justify="center">
-                                <h1>{{opponent_score}}</h1>
-                            </v-row>
-                            <v-row justify="center">
-                                <h3>{{opponent_name}}</h3>
-                            </v-row>
-                        </v-col>
-                        
-                    </v-row>
-                </v-container>
-            </v-card>
-                
-            </v-row>
-            <v-row justify="center" align="center">
-                <v-spacer/>
-                <v-spacer/>
-                <v-col>
-                    <v-btn
-                        color="primary_light"
-                        class="white--text"
-                        @click="addFinalScore()"
-                    >
-                        <v-icon left>
-                        mdi-plus
-                        </v-icon>
-                        Añadir Puntuación Final
-                    </v-btn>
-                </v-col>
-                
-                <v-col>
-                    <v-btn
-                        color="primary_light"
-                        class="white--text"
-                        @click="editFinalScore()"
-                    >
-                        <v-icon left>
-                        mdi-pencil
-                        </v-icon>
-                        Editar Puntuación Final
-                    </v-btn>
-                </v-col>
-                <v-spacer/>
-                <v-spacer/>
-            </v-row>   
-            <v-tabs centered>
-                <v-tabs-slider/>
-                <v-tab>
-                    POR ATLETA
-                </v-tab>
-
-                <v-tab>
-                    POR EQUIPO
-                </v-tab>
-                <v-tab-item>
-                    <v-card>
-                        <v-card-title>
-                            <v-row>
-                                <v-col>
-                                    <v-btn
-                                        color="primary_light"
-                                        class="white--text"
-                                        @click="addAthleteStatistics(editedItemIndex)"
-                                        :disabled="(loadingQuery)"
-                                    >
-                                        <v-icon left>
-                                        mdi-plus
-                                        </v-icon>
-                                        Añadir Estadisticas de Atleta
-                                    </v-btn>
-                                    <v-spacer />
-                                </v-col>
-                                <!-- <v-col cols="4">
-                                    <v-text-field
-                                        v-model="search_individual"
-                                        append-icon="mdi-magnify"
-                                        label="Búsqueda"
-                                        rounded
-                                        dense
-                                        outlined
-                                        single-line
-                                        hide-details
-                                    />
-                                </v-col> -->
-                            </v-row>
+        <v-container>
+            <v-container v-if="formated_member_stats()">
+                <v-row align="center"
+                justify="center">
+                <v-card width=400 class="mx-lg-auto" outlined>
+                    <v-card-title>
+                        <v-row justify="center">
+                            <h3>Final Result</h3>
+                        </v-row>
                         </v-card-title>
-                        <!-- :headers="headers"
-                        :items="users"
-                        :search="search"
-                        :loading="isLoadingU" -->
-                        <!-- THE SPORTS STATS TABLE! -->
-                        <v-data-table
-                            dense 
-                            :headers="headers" 
-                            :items="payload_stats.athlete_statistic"
-                            item-key="athlete_statistic" 
-                            class="elevation-1"								
+                    <v-container>
+                        <v-row >
+
+                            <v-col >
+                                <v-row justify="center">
+                                    <h1>{{uprm_score}}</h1>
+                                </v-row>
+                                <v-row justify="center">
+                                    <h3>UPRM</h3>
+                                </v-row>
+                            </v-col>
+
+                            <v-col align="center">
+                                <v-row justify="center">
+                                    <h2>-</h2>
+                                </v-row>
+                            </v-col>
+
+                            <v-col>
+                                <v-row justify="center">
+                                    <h1>{{opponent_score}}</h1>
+                                </v-row>
+                                <v-row justify="center">
+                                    <h3>{{opponent_name}}</h3>
+                                </v-row>
+                            </v-col>
+
+                        </v-row>
+                    </v-container>
+                </v-card>
+
+                </v-row>
+                <v-row justify="center" align="center">
+                    <v-spacer/>
+                    <v-spacer/>
+                    <v-col>
+                        <v-btn
+                            color="primary_light"
+                            class="white--text"
+                           
                         >
-                            <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                            <template v-slot:item.actions="{ item }">
-                                <v-tooltip bottom>
-                                    <template v-slot:activator="{ on }">
-                                        <v-icon
-                                        small
-                                        class="mr-2 table-actions"
-                                        v-on="on"
-                                        @click.stop="editAthleteStatistics(item)"
-                                        >
-                                        mdi-pencil
-                                        </v-icon>
-                                    </template>
-                                    <span>Editar Estadisticas de Atleta</span>
-                                </v-tooltip>
-                                <!-- <v-tooltip bottom>
-                                    <template v-slot:activator="{ on }">
-                                        <v-icon
-                                        small
-                                        class="mr-2 table-actions"
-                                        v-on="on"
-                                        @click="editPermissions(item)"
-                                        >
-                                        mdi-shield-lock
-                                        </v-icon>
-                                    </template>
-                                    <span>Edit User Permissions</span>
-                                </v-tooltip> -->
-                                <v-tooltip bottom>
-                                    <template v-slot:activator="{ on }">
-                                        <v-icon
-                                        small
-                                        class="mr-2 table-actions"
-                                        v-on="on"
-                                        @click.stop="deleteAthleteStatistics(item)"
-                                        >
-                                        mdi-delete
-                                        </v-icon>
-                                    </template>
-                                    <span>Eliminar Estadisticas De Atleta</span>
-                                </v-tooltip>
-                            </template>
-                        </v-data-table>
-                    </v-card>
-                </v-tab-item>
-                <v-tab-item>
-                    <v-card>
-                        <!-- :headers="headers"
-                        :items="users"
-                        :search="search"
-                        :loading="isLoadingU" -->
-                        <v-data-table
-                        dense 
-                        :headers="team_headers" 
-                        :items="team_statistics"
-                        item-key="team_statistics" 
-                        class="elevation-1"								
+                            <v-icon left>
+                            mdi-plus
+                            </v-icon>
+                            Añadir Puntuación Final
+                        </v-btn>
+                    </v-col>
+
+                    <v-col>
+                        <v-btn
+                            color="primary_light"
+                            class="white--text"
+                            @click="editFinalScore()"
                         >
-                        
-                        <!-- <template v-slot:item.actions="{ item }">
-                            <v-tooltip bottom>
-                            <template v-slot:activator="{ on }">
-                                <v-icon
-                                small
-                                class="mr-2 table-actions"
-                                v-on="on"
-                                @click.stop="editTeamStatistics(item)"
-                                >
-                                mdi-pencil
-                                </v-icon>
-                            </template>
-                            <span>Editar Estadisticas de Equipo</span>
-                            </v-tooltip>
-                            <v-tooltip bottom>
-                            <template v-slot:activator="{ on }">
-                                <v-icon
-                                small
-                                class="mr-2 table-actions"
-                                v-on="on"
-                                @click.stop="deleteTeamStatistics(item)"
-                                >
-                                mdi-delete
-                                </v-icon>
-                            </template>
-                            <span>Eliminar Estadisticas De Equipo</span>
-                            </v-tooltip>
-                        </template> -->
-                        </v-data-table>
-                    </v-card>
-                </v-tab-item>
-            </v-tabs>
+                            <v-icon left>
+                            mdi-pencil
+                            </v-icon>
+                            Editar Puntuación Final
+                        </v-btn>
+                    </v-col>
+                    <v-spacer/>
+                    <v-spacer/>
+                </v-row>
+                <v-tabs centered>
+                    <v-tabs-slider/>
+                    <v-tab>
+                        POR ATLETA
+                    </v-tab>
+
+                    <v-tab>
+                        POR EQUIPO
+                    </v-tab>
+                    <v-tab-item>
+                        <v-card>
+                            <v-card-title>
+                                <v-row>
+                                    <v-col>
+                                        <v-btn color="primary_light" :disabled = "loadingQuery"
+                                        class="white--text" @click="addAthleteStatistics"><v-icon left>
+                                            mdi-plus
+                                            </v-icon>Añadir Estadisticas de Atleta</v-btn>
+                                    </v-col>
+                                    <!-- <v-col cols="4">
+                                        <v-text-field
+                                            v-model="search_individual"
+                                            append-icon="mdi-magnify"
+                                            label="Búsqueda"
+                                            rounded
+                                            dense
+                                            outlined
+                                            single-line
+                                            hide-details
+                                        />
+                                    </v-col> -->
+                                </v-row>
+                            </v-card-title>
+                            <!-- :headers="headers"
+                            :items="users"
+                            :search="search"
+                            :loading="isLoadingU" -->
+                            <!-- THE SPORTS STATS TABLE! -->
+                            <v-data-table
+                                dense
+                                :headers="headers"
+                                :items="payload_stats.athlete_statistic"
+                                item-key="athlete_statistic"
+                                class="elevation-1"
+                            >
+                                <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                                <template v-slot:item.actions="{ item }">
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on }">
+                                            <v-icon
+                                            small
+                                            class="mr-2 table-actions"
+                                            v-on="on"
+                                            @click.stop="editAthleteStatistics(item)"
+                                            >
+                                            mdi-pencil
+                                            </v-icon>
+                                        </template>
+                                        <span>Editar Estadisticas de Atleta</span>
+                                    </v-tooltip>
+                                    <!-- <v-tooltip bottom>
+                                        <template v-slot:activator="{ on }">
+                                            <v-icon
+                                            small
+                                            class="mr-2 table-actions"
+                                            v-on="on"
+                                            @click="editPermissions(item)"
+                                            >
+                                            mdi-shield-lock
+                                            </v-icon>
+                                        </template>
+                                        <span>Edit User Permissions</span>
+                                    </v-tooltip> -->
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on }">
+                                            <v-icon
+                                            small
+                                            class="mr-2 table-actions"
+                                            v-on="on"
+                                            @click.stop="deleteAthleteStatistics(item)"
+                                            >
+                                            mdi-delete
+                                            </v-icon>
+                                        </template>
+                                        <span>Eliminar Estadisticas De Atleta</span>
+                                    </v-tooltip>
+                                </template>
+                            </v-data-table>
+                        </v-card>
+                    </v-tab-item>
+                    <v-tab-item>
+                        <v-card>
+                            <!-- :headers="headers"
+                            :items="users"
+                            :search="search"
+                            :loading="isLoadingU" -->
+                            <v-data-table
+                            dense
+                            :headers="team_headers"
+                            :items="team_statistics"
+                            item-key="team_statistics"
+                            class="elevation-1"
+                            >
+
+                            <!-- <template v-slot:item.actions="{ item }">
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="editTeamStatistics(item)"
+                                    >
+                                    mdi-pencil
+                                    </v-icon>
+                                </template>
+                                <span>Editar Estadisticas de Equipo</span>
+                                </v-tooltip>
+                                <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon
+                                    small
+                                    class="mr-2 table-actions"
+                                    v-on="on"
+                                    @click.stop="deleteTeamStatistics(item)"
+                                    >
+                                    mdi-delete
+                                    </v-icon>
+                                </template>
+                                <span>Eliminar Estadisticas De Equipo</span>
+                                </v-tooltip>
+                            </template> -->
+                            </v-data-table>
+                        </v-card>
+                    </v-tab-item>
+                </v-tabs>
+            </v-container>
         </v-container>
-        <AddFinalScoreModal
-            v-if="dialogAddFinalScore"
-            :dialog.sync="dialogAddFinalScore"
-            :sport_id="sport_id"
-        />
-        <UpdateFinalScoreModal
-            v-if="dialogUpdateFinalScore"
-            :dialog.sync="dialogUpdateFinalScore"
-            :sport_id="sport_id"
-        />
-        <AddIndividualStatsModal
-            v-if="dialogAddIndividualStats"
-            :dialog.sync="dialogAddIndividualStats"
-            :sport_id="sport_id"
-            :event_id="event_id"
-            :sport_name="sport_name"
-            :team_id="team_id"
-            :team_members="team_members_local"
-        />
-        <UpdateIndividualStatsModal
-            v-if="dialogUpdateIndividualStats"
-            :dialog.sync="dialogUpdateIndividualStats"
-            :sport_id="sport_id"
-        />
-        <DeleteIndividualStatsModal
-            v-if="dialogDeleteIndividualStats"
-            :dialog.sync="dialogDeleteIndividualStats"
-            :sport_id="sport_id"
-        />
+        
+        
     </div>
+    <AddFinalScoreModal
+                v-if="dialogAddFinalScore"
+                :dialog.sync="dialogAddFinalScore"
+                :sport_id="sport_id"
+            />
+            <UpdateFinalScoreModal
+                v-if="dialogUpdateFinalScore"
+                :dialog.sync="dialogUpdateFinalScore"
+                :sport_id="sport_id"
+            />
+            <AddIndividualStatsModal
+                v-if="dialogAddIndividualStats"
+                :dialog.sync="dialogAddIndividualStats"
+                :sport_id="sport_id"
+                :event_id="event_id"
+                :sport_name="sport_name"
+                :team_id="team_id"
+                :team_members="team_members_local"
+            />
+            <UpdateIndividualStatsModal
+                v-if="dialogUpdateIndividualStats"
+                :dialog.sync="dialogUpdateIndividualStats"
+                :sport_id="sport_id"
+            />
+            <DeleteIndividualStatsModal
+                v-if="dialogDeleteIndividualStats"
+                :dialog.sync="dialogDeleteIndividualStats"
+                :sport_id="sport_id"
+            />
   </div>
+  
 </template>
 
 <script>
@@ -271,8 +272,7 @@ export default {
         UpdateIndividualStatsModal,
         DeleteIndividualStatsModal
     },
-  data() {
-    return {
+  data: () => ({
         //These are for dialogs
         dialogAddFinalScore:false,
         dialogUpdateFinalScore:false,
@@ -310,7 +310,7 @@ export default {
       VOLLEYBALL_IDM: 2,
       VOLLEYBALL_IDF: 12,
       BASEBALL_IDM: 4,
-      SOFTBALL_IDF: 16, 
+      SOFTBALL_IDF: 16,
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
       //season:''
@@ -320,20 +320,19 @@ export default {
       team_members_local:'',
       team_id:'',
 
-    };
-  },
-  
-created(){
-    this.setReadyStats()
-    this.setNullTeamMembers()
+
+  }),
+
+async created(){
+    // this.setNullTeamMembers()
     // this.ready_for_stats=true
+    this.event_id = this.$route.params.id
     this.clearEventInfo()
     this.clearAllStats()
-    this.event_id = this.$route.params.id
     console.log("[1] GOT EVENT ID",this.event_id)
-    this.getEventInfo(this.event_id)
+    await this.getEventInfo(this.event_id)
     console.log("[2] GOT EVENT INFO",this.event_info)
-    }, 
+    },
   methods: {
     ...mapActions({
         getAllEventStatistics:"results/getAllEventStatistics",
@@ -342,7 +341,6 @@ created(){
         clearAllStats:"results/clearAllStats",
         getTeamMembers:"results/getTeamMembers",
         setQueryLoading:"results/setQueryLoading",
-        setReadyStats:"results/setReadyStats",
         stopGetStats:"results/stopGetStats",
         setNullTeamMembers:"results/setNullTeamMembers",
     }),
@@ -350,7 +348,7 @@ created(){
         console.log("the event info...(before)",this.event_info)
         if(this.event_info){
             console.log("GETTING EVENT INFO (from formated method)",this.event_info)
-            this.sport_id =  this.event_info.sport_id 
+            this.sport_id =  this.event_info.sport_id
             this.sport_name = this.event_info.sport_name
             this.opponent_name = this.event_info.opponent_name
             this.event_date = this.event_info.event_date
@@ -366,38 +364,46 @@ created(){
                     sport_route: String(this.sport_route)
                 }
                 console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
+                this.clearAllStats()
                 this.getAllEventStatistics(stat_params)
-                console.log("[4] GOT EVENT STATS",this.results_payload)
+                // console.log("[4] GOT EVENT STATS",this.results_payload)
                 // this.ready_for_stats = false
                 this.stopGetStats()
             }
             return true
         }
         else{
+            this.sport_id =  null
+            this.sport_name = null
+            this.opponent_name = null
+            this.event_date = null
+            this.team_id = null
             return false
         }
     },
     formated_team_members(){
-        if(this.team_members){
-            console.log("[6]WE HAVE THE TEAM MEMBERS!",this.team_members)
-            this.team_members_local = this.team_members.team_members
-            return true
-        }
-        else{
-            this.team_members_local = null
-            return false
-        }
+        // if(this.team_members){
+        //     console.log("[6]WE HAVE THE TEAM MEMBERS!",this.team_members)
+        //     this.team_members_local = this.team_members.team_members
+        //     return true
+        // }
+        // else{
+        //     this.team_members_local = null
+        //     return false
+        // }
+        return false
     },
     formated_member_stats(){
         if(this.results_payload){
-            console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
+            console.log("[4] GOT EVENT STATS",this.results_payload)
+            // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
             if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
             else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
             else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
             else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
             else{
                 this.payload_stats = null
-                return false  
+                return false
             }
             console.log("[5] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
             this.team_statistics = [this.payload_stats.team_statistics]
@@ -406,8 +412,10 @@ created(){
             return true
         }
         else{
+          this.payload_stats = null
           return false
         }
+        return false
     },
     buildDefaultValues(){
         if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}
@@ -421,7 +429,7 @@ created(){
         // basketball
         if (this.sport_id!=''){
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -448,7 +456,7 @@ created(){
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Assists', value: 'basketball_statistics.assists'},
                 {text: 'Blocks', value: 'basketball_statistics.blocks'},
@@ -470,7 +478,7 @@ created(){
                 ]
             }
             else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -491,7 +499,7 @@ created(){
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Kill Points', value: 'volleyball_statistics.kill_points'},
                 {text: 'Attack Errors', value: 'volleyball_statistics.attack_errors'},
@@ -507,7 +515,7 @@ created(){
                 ]
             }
             else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -525,7 +533,7 @@ created(){
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Goal Attempts', value: 'soccer_statistics.goal_attempts'},
                 {text: 'Assists', value: 'soccer_statistics.assists'},
@@ -538,7 +546,7 @@ created(){
                 ]
             }
             else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -557,7 +565,7 @@ created(){
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'At Bats', value: 'baseball_statistics.at_bats'},
                 {text: 'Runs', value: 'baseball_statistics.runs'},
@@ -571,8 +579,8 @@ created(){
                 ]
             }
         }
-          
-        
+
+
     },
 
 
@@ -637,10 +645,12 @@ created(){
     // //   this.dialogEdit = true;
     //     return
     // },
-    addAthleteStatistics(user) {
+    addAthleteStatistics() {
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
+        
+        console.log("KILL ME KILL ME KILL ME")
         this.dialogAddIndividualStats = true
         // this.$router.push("/resultados/"+this.event_id+"/individual/crear")
     },
@@ -672,9 +682,9 @@ created(){
         results_payload:"results/results_payload",
         event_info:"results/event_info",
         loadingQuery:"results/loadingQuery",
-        // might use?
-        readyForMembers:"results/readyForMembers",
-        team_members:"results/team_members",
+        // // might use?
+        // readyForMembers:"results/readyForMembers",
+        // team_members:"results/team_members",
         readyForStats:"results/readyForStats"
 	})
   },

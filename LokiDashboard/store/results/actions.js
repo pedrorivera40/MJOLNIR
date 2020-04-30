@@ -22,10 +22,9 @@ export default{
             //console.log("GET EVENT INFO",response)
             console.log("GET EVENT INFO",response.data)
             commit("SET_EVENT_INFO",response.data.Event)
-            // commit("SET_READY_STATS")
+            commit("SET_READY_STATS")
         }catch(error){
             console.log("ERROR GETTING EVENT INFO",event_id,error)
-            // commit("SET_WAITING_STATS")
             commit("SET_EVENT_INFO",null)
         }
     },
@@ -80,9 +79,7 @@ export default{
             let sports_route = statsJSON.sports_route
             let statistics = statsJSON.statistics
             const response = await this.$axios.post('results/'+sports_route+'/individual/',statistics)
-            commit("SET_QUERY_DONE")
         }catch(error){
-            commit("SET_QUERY_DONE")
             console.log("ERROR POSTING INDIVIDUAL STATS",statsJSON,error)
         }
     },
@@ -91,9 +88,9 @@ export default{
             let sports_route = statsJSON.sports_route
             let statistics = statsJSON.statistics
             const response = await this.$axios.put('results/'+sports_route+'/individual/',statistics)
-            commit("SET_QUERY_DONE")
+      
         }catch(error){
-            commit("SET_QUERY_DONE")
+  
             console.log("ERROR UPDATING INDIVIDUAL STATS",statsJSON,error)
         }
     },
@@ -106,10 +103,10 @@ export default{
             const response = await this.$axios.put('results/'+sports_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
             console.log("GET INDIVIDUAL STATS",response.data)
             commit("SET_INDIVIDUAL_STATS",response.data)
-            commit("SET_QUERY_DONE")
+      
         }catch(error){
             commit("SET_INDIVIDUAL_STATS",null)
-            commit("SET_QUERY_DONE")
+      
             console.log("ERROR GETTING INDIVIDUAL STATS",statsJSON,error)
         }
     },
@@ -120,9 +117,9 @@ export default{
             let event_id = statistics.event_id
             let athlete_id = statistics.athlete_id
             const response = await this.$axios.delete('results/'+sports_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
-            commit("SET_QUERY_DONE")
+          
         }catch(error){
-            commit("SET_QUERY_DONE")
+  
             console.log("ERROR REMOVING INDIVIDUAL STATS",statsJSON,error)
         }
     },
@@ -131,9 +128,9 @@ export default{
             let sports_route = scoreJSON.sports_route
             let statistics = scoreJSON.statistics
             const response = await this.$axios.post('results/'+sports_route+'/individual/',statistics)
-            commit("SET_QUERY_DONE")
+          
         }catch(error){
-            commit("SET_QUERY_DONE")
+     
             console.log("ERROR POSTING FINAL SCORE",scoreJSON,error)
         }
     },
@@ -142,9 +139,9 @@ export default{
             let sports_route = scoreJSON.sports_route
             let statistics = scoreJSON.statistics
             const response = await this.$axios.put('results/'+sports_route+'/individual/',statistics)
-            commit("SET_QUERY_DONE")
+  
         }catch(error){
-            commit("SET_QUERY_DONE")
+         
             console.log("ERROR UPDATING FINAL SCORE",statsJSON,error)
         }
     },
@@ -157,10 +154,10 @@ export default{
             const response = await this.$axios.put('results/'+sports_route+'/score/?event_id='+event_id)
             console.log("GET FINAL SCORE",response.data)
             commit("SET_FINAL_SCORE",response.data)
-            commit("SET_QUERY_DONE")
+      
         }catch(error){
             commit("SET_FINAL_SCORE",null)
-            commit("SET_QUERY_DONE")
+      
             console.log("ERROR GETTING FINAL SCORE",statsJSON,error)
         }
     },
