@@ -717,6 +717,8 @@ def pbp_roster(sport):
     body = request.get_json()
     args = request.args
     handler = None
+    team = None
+    event_id = None
 
     # Assign proper handler.
     if sport == "Voleibol":
@@ -724,12 +726,22 @@ def pbp_roster(sport):
     else:
         return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
-    # Validate team is given within request body.
-    if not "team" in body or not "event_id" in body:
-        return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y nombre de equipo."), 400
+    if request.method == 'DELETE':
+        # Validate team is given within request body.
+        if not "team" in args or not "event_id" in args or len(body) != 0:
+            return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y nombre de equipo como argumentos."), 400
 
-    team = body["team"]
-    event_id = body["event_id"]
+        team = args["team"]
+        event_id = args["event_id"]
+
+    else:
+
+        # Validate team is given within request body.
+        if not "team" in body or not "event_id" in body or len(args) != 0:
+            return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y nombre de equipo en el cuerpo."), 400
+
+        team = body["team"]
+        event_id = body["event_id"]
 
     if request.method == 'POST':
         # Validate data is present in body.
@@ -749,10 +761,10 @@ def pbp_roster(sport):
         return jsonify(ERROR="Error en la solicitud. Nombre de equipo es invalido."), 400
 
     # Validate athlete id is given.
-    if len(body) != 3 or "athlete_id" not in body:
+    if len(args) != 3 or "athlete_id" not in args:
         return jsonify(ERROR="Error en la solicitud. Valores para nombre de equipo, ID del evento, y ID de atleta deben ser proporcionados."), 400
 
-    athlete_id = body["athlete_id"]
+    athlete_id = args["athlete_id"]
 
     if team == "uprm":
         return handler.removeUPRMPlayer(event_id, athlete_id)
