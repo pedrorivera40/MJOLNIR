@@ -20,7 +20,7 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit notification with invalid event_id.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_invalid_notification1"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin: No existe una secuencia PBP para este evento."
+        expected_msg = "No existe una secuencia PBP para este evento."
         self.assertEqual(response.status_code, 403)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
 
@@ -28,6 +28,6 @@ class TestEditValidVolleyballPBP(unittest.TestCase):
         # Try to edit notification with invalid action_id.
         response = self.client.put('/pbp/Voleibol/actions', data=json.dumps(
             data["edit_invalid_notification2"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin: No existe esta acción en el sistema."
+        expected_msg = "No existe esta acción en el sistema."
         self.assertEqual(response.status_code, 500)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])

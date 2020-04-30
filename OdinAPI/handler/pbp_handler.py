@@ -64,7 +64,7 @@ class VolleyballPBPHandler:
 
         # Validate team value is specified correctly.
         if team not in self._sport_keywords["teams"]:
-            raise Exception("Odin: Nombre de equipo es inválido.")
+            raise Exception("Nombre de equipo es inválido.")
 
         current_set = int(dao.get_current_set(event_id))
         set_path = ""
@@ -84,7 +84,7 @@ class VolleyballPBPHandler:
 
         # Validate team value is specified correctly.
         if team not in self._sport_keywords["teams"]:
-            raise Exception("Odin: Nombre de equipo es inválido.")
+            raise Exception("Nombre de equipo es inválido.")
 
         current_set = int(dao.get_current_set(event_id))
         set_path = ""
@@ -106,15 +106,15 @@ class VolleyballPBPHandler:
 
         if not isinstance(action, dict):
             raise Exception(
-                "Odin: Información de la acción (data) debe proveerse en formato JSONs.")
+                "Información de la acción (data) debe proveerse en formato JSONs.")
 
         if len(action) < 2 or len(action) > 3:
             raise Exception(
-                "Odin: Información de la acción (data) debe tener 2 parámetros para una notificación y 3 para una acción de jugada.")
+                "Información de la acción (data) debe tener 2 parámetros para una notificación y 3 para una acción de jugada.")
 
         if not "action_type" in action:
             raise Exception(
-                "Odin: La jugada enviada no está cubierta por el PBP de Voleibol.")
+                "La jugada enviada no está cubierta por el PBP de Voleibol.")
 
         action_type = action["action_type"]
 
@@ -122,18 +122,18 @@ class VolleyballPBPHandler:
         if action_type == self._sport_keywords["notification"]:
             if len(action) != 2:
                 raise Exception(
-                    "Odin: Las notificaciones solo deben tener tipo de acción y mensaje.")
+                    "Las notificaciones solo deben tener tipo de acción y mensaje.")
 
             if "message" not in action:
-                raise Exception("Odin: No se encontró valor para el mensaje.")
+                raise Exception("No se encontró valor para el mensaje.")
 
             if not isinstance(action["message"], str):
                 raise Exception(
-                    "Odin: El tipo de mensaje es incorrecto (debe ser una secuencia de caracteres).")
+                    "El tipo de mensaje es incorrecto (debe ser una secuencia de caracteres).")
 
             if len(action["message"]) < 1 or len(action["message"]) > 100:
                 raise Exception(
-                    "Odin: El mensaje debe debe tener entre 1 y 100 caracteres.")
+                    "El mensaje debe debe tener entre 1 y 100 caracteres.")
 
             dao.add_pbp_game_action(event_id, action)
             return
@@ -141,7 +141,7 @@ class VolleyballPBPHandler:
         # At this point, the remaining valid actions must have 3 arguments.
         if len(action) != 3:
             raise Exception(
-                "Odin: El número de argumentos esperado es 3.")
+                "El número de argumentos esperado es 3.")
 
         # Adjust game actions modify the score of the direct team indicated in action["team"].
         # These are not added to the notifications feed (non-relational database).
@@ -149,13 +149,13 @@ class VolleyballPBPHandler:
             # Validate team value is present.
             if "team" not in action:
                 raise Exception(
-                    "Odin: No se ha encontrado el valor de equipo en data.")
+                    "No se ha encontrado el valor de equipo en data.")
 
             set_path = self._get_direct_set_path(action["team"], event_id, dao)
             # Validate difference value is present.
             if "difference" not in action:
                 raise Exception(
-                    "Odin: No se ha enviado el valor de diferencia en data.")
+                    "No se ha enviado el valor de diferencia en data.")
 
             difference = int(action["difference"])
             dao.adjust_score_by_set(event_id, set_path, difference)
@@ -175,7 +175,7 @@ class VolleyballPBPHandler:
                 return
 
             else:
-                raise Exception("Odin: Información del atleta es inválida.")
+                raise Exception("Información del atleta es inválida.")
 
         # Personal actions only modify athlete statistics.
         # The only action to do is add to Feed and let clients compute statistics.
@@ -186,7 +186,7 @@ class VolleyballPBPHandler:
                 return
 
             else:
-                raise Exception("Odin: Información del atleta es inválida.")
+                raise Exception("Información del atleta es inválida.")
 
         if action_type in self._sport_keywords["error_actions"]:
 
@@ -198,10 +198,10 @@ class VolleyballPBPHandler:
                 return
 
             else:
-                raise Exception("Odin: Información del atleta es inválida.")
+                raise Exception("Información del atleta es inválida.")
 
         raise Exception(
-            "Odin: La acción indicada no está cubierta por PBP de Voleibol.")
+            "La acción indicada no está cubierta por PBP de Voleibol.")
 
     def _handle_pbp_edit_action(self, event_id, action_id, new_action, dao):
         """
@@ -209,20 +209,20 @@ class VolleyballPBPHandler:
         """
 
         if not dao.pbp_game_action_exists(event_id, action_id):
-            raise Exception("Odin: No existe esta acción en el sistema.")
+            raise Exception("No existe esta acción en el sistema.")
 
         if len(new_action) < 2 or len(new_action) > 3:
             raise Exception(
-                "Odin: La acción debe tener dos parámetros para notificación o 3 para cualquier otra acción.")
+                "La acción debe tener dos parámetros para notificación o 3 para cualquier otra acción.")
 
         # Every action must have a type.
         prev_action = dao.get_pbp_action(event_id, action_id)
 
         if prev_action == new_action:
-            raise Exception("Odin: No hubo un cambio en la acción.")
+            raise Exception("No hubo un cambio en la acción.")
 
         if not "action_type" in new_action:
-            raise Exception("Odin: La acción nueva no tiene tipo.")
+            raise Exception("La acción nueva no tiene tipo.")
 
         prev_type = prev_action["action_type"]
         new_type = new_action["action_type"]
@@ -238,40 +238,40 @@ class VolleyballPBPHandler:
         if are_same_type and prev_type == self._sport_keywords["notification"]:
             if len(new_action) != 2 or "message" not in new_action or not isinstance(new_action["message"], str) or len(new_action["message"]) < 1 or len(new_action["message"]) > 100:
                 raise Exception(
-                    "Odin: El formato de nueva notificación es inválido.")
+                    "El formato de nueva notificación es inválido.")
             dao.edit_pbp_game_action(event_id, action_id, new_action)
             return
 
         # If actions are not the same and one of them is notification. This operation is not allowed.
         if prev_type == self._sport_keywords["notification"] or new_type == self._sport_keywords["notification"]:
             raise Exception(
-                "Odin: Las notificaciones no pueden cambiar de tipo.")
+                "Las notificaciones no pueden cambiar de tipo.")
 
         if len(new_action) != 3:
-            raise Exception("Odin: Las jugadas deben tener 3 parámetros.")
+            raise Exception("Las jugadas deben tener 3 parámetros.")
 
         # From now on, the remaining game actions involve game plays.
         # Plays require values for team and athlete_id.
         # Validate team and athlete_id are valid.
         if not "team" in new_action:
             raise Exception(
-                "Odin: No se encontró valor de equipo en la acción nueva.")
+                "No se encontró valor de equipo en la acción nueva.")
 
         if not "athlete_id" in new_action:
             raise Exception(
-                "Odin: No se encontró valor de ID de atleta en la acción nueva.")
+                "No se encontró valor de ID de atleta en la acción nueva.")
 
         new_team = new_action["team"]
         athlete_id = new_action["athlete_id"]
 
         if new_team not in self._sport_keywords["teams"]:
-            raise Exception("Odin: El valor de equipo es inválido.")
+            raise Exception("El valor de equipo es inválido.")
 
         if new_team == self._sport_keywords["teams"][0] and str(int(athlete_id)) not in dao.get_uprm_roster(event_id):
-            raise Exception("Odin: Atleta de UPRM no existe en el roster.")
+            raise Exception("Atleta de UPRM no existe en el roster.")
 
         if new_team == self._sport_keywords["teams"][1] and str(int(athlete_id)) not in dao.get_opponent_roster(event_id):
-            raise Exception("Odin: Atleta oponente no está en el roster.")
+            raise Exception("Atleta oponente no está en el roster.")
 
         # *** Case same type of play (scoring action), but a change is present. ***
         if are_same_type and prev_type in self._sport_keywords["scoring_actions"]:
@@ -383,7 +383,7 @@ class VolleyballPBPHandler:
             return
 
         raise Exception(
-            "Odin: La jugada enviada no está cubierta por el PBP de Voleibol.")
+            "La jugada enviada no está cubierta por el PBP de Voleibol.")
 
     def _handle_remove_pbp_action(self, event_id, action_id, dao):
         """
@@ -391,7 +391,7 @@ class VolleyballPBPHandler:
         """
 
         if not dao.pbp_game_action_exists(event_id, action_id):
-            raise Exception("Odin: La acción no existe.")
+            raise Exception("La acción no existe.")
 
         action = dao.get_pbp_action(event_id, action_id)
 
@@ -422,24 +422,24 @@ class VolleyballPBPHandler:
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="Odin: El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
 
             event_info, resp_code = EventHandler().getEventByID(event_id)
             event_info = event_info.json
-            
+
             print(event_info)
 
             if not event_info.get("Event"):
-                return jsonify(ERROR="Event does not exist."), 400
+                return jsonify(ERROR="El evento no existe."), 400
 
             event_info = event_info.get("Event")
 
             if event_info.get("sport_name") != self._sport_keywords["sport"]:
-                return jsonify(ERROR="Odin: El evento seleccionado no es de Voleibol."), 403
+                return jsonify(ERROR="El evento seleccionado no es de Voleibol."), 403
 
             pbp_dao = VolleyballPBPDao()
             if pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: Ya se había creado una secuencia PBP."), 403
+                return jsonify(ERROR="Ya se había creado una secuencia PBP."), 403
 
             # At this point, the event exists and does not have a PBP sequence.
             game_metadata = {
@@ -452,7 +452,7 @@ class VolleyballPBPHandler:
             pbp_dao.create_pbp_seq(
                 event_id, game_metadata, self._sport_keywords["score-val"])
 
-            return jsonify(MSG="Odin: La secuencia PBP para " + str(event_id) + " se ha creado exitosamente."), 200
+            return jsonify(MSG="La secuencia PBP para " + str(event_id) + " se ha creado exitosamente."), 200
 
         except Exception as e:
             print(str(e))
@@ -473,18 +473,18 @@ class VolleyballPBPHandler:
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="Odin: El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
 
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 403
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Odin: Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             pbp_dao.remove_pbp_seq(event_id)
-            return jsonify(MSG="Odin: La secuencia PBP ha sido removida."), 200
+            return jsonify(MSG="La secuencia PBP ha sido removida."), 200
 
         except Exception as e:
             print(str(e))
@@ -504,24 +504,24 @@ class VolleyballPBPHandler:
         """
         try:
             if not isinstance(event_id, int) and not isinstance(adjust, int):
-                return jsonify(ERROR="Odin: Los valores de ID del evento y adjust deben ser enteros."), 400
+                return jsonify(ERROR="Los valores de ID del evento y adjust deben ser enteros."), 400
 
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 400
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 400
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Odin: Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             current_set = pbp_dao.get_current_set(event_id)
             potential_score = current_set + adjust
             if potential_score > 5 or potential_score < 0:
-                return jsonify(ERROR="Odin: El ajuste es inválido. El valor resultante debe estar entre 1 y 5."), 403
+                return jsonify(ERROR="El ajuste es inválido. El valor resultante debe estar entre 1 y 5."), 403
 
             pbp_dao.set_current_set(event_id, potential_score)
-            return jsonify(MSG="Odin: El parcial ha sido actualizado."), 200
+            return jsonify(MSG="El parcial ha sido actualizado."), 200
 
         except Exception as e:
             print(str(e))
@@ -542,29 +542,29 @@ class VolleyballPBPHandler:
 
         try:
             if not isinstance(color, str):
-                return jsonify(ERROR="Odin: El color debe estar dado como una secuencia de caracteres que representan un valor HEX."), 400
+                return jsonify(ERROR="El color debe estar dado como una secuencia de caracteres que representan un valor HEX."), 400
 
             # Validate a hex formatted color is provided.
             if not search(self._sport_keywords["color-format"], color):
-                return jsonify(ERROR="Odin: El formato de color debe ser HEX."), 400
+                return jsonify(ERROR="El formato de color debe ser HEX."), 400
 
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="Odin: El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
 
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 403
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="Odin: El partido de Voleibol ya ha finalizado."), 403
+                return jsonify(ERROR="El partido de Voleibol ya ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Odin: Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             pbp_dao.set_opponent_color(event_id, color)
-            return jsonify(MSG="Odin: El color se ha actualizado."), 200
+            return jsonify(MSG="El color se ha actualizado."), 200
 
         except Exception as e:
             print(str(e))
@@ -586,21 +586,23 @@ class VolleyballPBPHandler:
         try:
 
             if not isinstance(event_id, int) or not isinstance(athlete_id, int):
-                return jsonify(ERROR="Odin: Valores de ID del evento y ID del atleta deben ser enteros."), 400
+                return jsonify(ERROR="Valores de ID del evento y ID del atleta deben ser enteros."), 400
 
             event_info = EventHandler().getEventByID(event_id)
             event_info = event_info[0].json
+            print(event_info)
 
-            if not event_info.get("EVENT"):
-                return jsonify(ERROR="Odin: El evento no existe."), 400
+            if not event_info.get("Event"):
+                return jsonify(ERROR="El evento no existe."), 400
 
-            event_info = event_info.get("EVENT")
+            event_info = event_info.get("Event")
             team_roster = TeamHandler().getTeamMembersByID(
                 event_info["team_id"])
 
             team_roster = team_roster[0].json
             if not team_roster.get("TEAM"):
-                return jsonify(ERROR="Odin: No se encontró información del roster."), 400
+                print(event_id, "TEAM_ROSTER", team_roster)
+                return jsonify(ERROR="No se encontró información del roster."), 400
 
             team_roster = team_roster.get("TEAM")
             athlete_info = None
@@ -611,23 +613,23 @@ class VolleyballPBPHandler:
                     break
 
             if not athlete_info:
-                return jsonify(ERROR="Odin: No se encontró información del atleta."), 400
+                return jsonify(ERROR="No se encontró información del atleta."), 400
 
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 400
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 400
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="Odin: El partido de Voleibol ha finalizado."), 403
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Odin: Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             uprm_roster = pbp_dao.get_uprm_roster(event_id)
             if athlete_id in uprm_roster:
-                return jsonify(ERROR="Odin: El atleta ya existe en el roster de UPRM."), 403
+                return jsonify(ERROR="El atleta ya existe en el roster de UPRM."), 403
 
             player_info = {
                 "athlete_id": athlete_id,
@@ -639,7 +641,7 @@ class VolleyballPBPHandler:
             }
 
             pbp_dao.set_uprm_athlete(event_id, player_info)
-            return jsonify(MSG="Odin: La información del atleta se ha agragado al sistema."), 200
+            return jsonify(MSG="La información del atleta se ha agragado al sistema."), 200
 
         except Exception as e:
             print(str(e))
@@ -661,28 +663,28 @@ class VolleyballPBPHandler:
         try:
 
             if not isinstance(event_id, int):
-                return jsonify(ERROR="Odin: El valor para ID del evento tiene que ser un entero."), 400
+                return jsonify(ERROR="El valor para ID del evento tiene que ser un entero."), 400
 
             if not isinstance(player_info, dict) or len(player_info) != 2 or not "name" in player_info or not "number" in player_info:
-                return jsonify(ERROR="Odin: Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
+                return jsonify(ERROR="Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
 
             if not isinstance(player_info["name"], str) or not isinstance(player_info["number"], int):
-                return jsonify(ERROR="Odin: La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
+                return jsonify(ERROR="La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
 
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 400
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 400
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="Odin: El partido de Voleibol ha finalizado."), 403
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Odin: Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             pbp_dao.set_opponent_athlete(event_id, player_info)
-            return jsonify(MSG="Odin: La información mas reciente del atleta se agregado al sistema."), 200
+            return jsonify(MSG="La información mas reciente del atleta se agregado al sistema."), 200
 
         except Exception as e:
             print(str(e))
@@ -706,20 +708,20 @@ class VolleyballPBPHandler:
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: El ID del evento es inválido."), 403
+                return jsonify(ERROR="El ID del evento es inválido."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="Odin: El partido de Voleibol ha finalizado."), 403
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Odin: Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             if not str(player_id) in pbp_dao.get_uprm_roster(event_id):
-                return jsonify(ERROR="Odin: El atleta no existe."), 404
+                return jsonify(ERROR="El atleta no existe."), 404
 
             pbp_dao.remove_uprm_athlete(event_id, player_id)
-            return jsonify(MSG="Odin: La información del atleta se ha removido del sistema."), 200
+            return jsonify(MSG="La información del atleta se ha removido del sistema."), 200
 
         except Exception as e:
             print(str(e))
@@ -743,20 +745,20 @@ class VolleyballPBPHandler:
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: El ID del evento es inválido."), 403
+                return jsonify(ERROR="El ID del evento es inválido."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="Odin: El partido de Voleibol ha finalizado."), 403
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Odin: Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             if not str(player_id) in pbp_dao.get_opponent_roster(event_id):
-                return jsonify(ERROR="Odin: El atleta no existe."), 404
+                return jsonify(ERROR="El atleta no existe."), 404
 
             pbp_dao.remove_opponent_athlete(event_id, player_id)
-            return jsonify(MSG="Odin: La información del atleta se ha removido del sistema."), 200
+            return jsonify(MSG="La información del atleta se ha removido del sistema."), 200
 
         except Exception as e:
             print(str(e))
@@ -778,22 +780,22 @@ class VolleyballPBPHandler:
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="Odin: El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
 
             # Validate action data has proper format. (TODO -> CHECK THIS!!!)
             if not action_data:
-                return jsonify(ERROR="Odin: La información referente a data no ha sido especificada."), 403
+                return jsonify(ERROR="La información referente a data no ha sido especificada."), 403
 
             # Validate event
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 403
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="Odin: El partido de Voleibol ha finalizado."), 403
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
 
             self._handle_pbp_action(event_id, action_data, pbp_dao)
-            return jsonify(MSG="Odin: La acción se ha añadido al sistema."), 200
+            return jsonify(MSG="La acción se ha añadido al sistema."), 200
 
         except Exception as e:
             print(str(e))
@@ -816,23 +818,23 @@ class VolleyballPBPHandler:
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit() and str(event_id).isdigit():
-                return jsonify(ERROR="Odin: Valores de ID del evento y ID de la acción deben ser enteros."), 400
+                return jsonify(ERROR="Valores de ID del evento y ID de la acción deben ser enteros."), 400
 
             # Validate action data has proper format. (TODO -> CHECK THIS!!!)
             if not new_action:
-                return jsonify(ERROR="Odin: Información sobre la nueva acción debe ser especificada (data)."), 403
+                return jsonify(ERROR="Información sobre la nueva acción debe ser especificada (data)."), 403
 
             # Validate event
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 403.
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403.
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="Odin: El partido de Voleibol ha finalizado."), 403
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
 
             self._handle_pbp_edit_action(
                 event_id, action_id, new_action, pbp_dao)
-            return jsonify(MSG="Odin: Se ha editado la acción exitosamente."), 200
+            return jsonify(MSG="Se ha editado la acción exitosamente."), 200
 
         except Exception as e:
             print(str(e))
@@ -853,18 +855,18 @@ class VolleyballPBPHandler:
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit() or not str(game_action_id).isdigit():
-                return jsonify(ERROR="Odin: Valores para el ID del evento y ID de acción deben ser enteros."), 400
+                return jsonify(ERROR="Valores para el ID del evento y ID de acción deben ser enteros."), 400
 
             # Validate event
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 403
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="Odin: El partido de Voleibol ha finalizado."), 403
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
 
             self._handle_remove_pbp_action(event_id, game_action_id, pbp_dao)
-            return jsonify(MSG="Odin: Se ha removido la acción exitosamente."), 200
+            return jsonify(MSG="Se ha removido la acción exitosamente."), 200
         except Exception as e:
             print(str(e))
             return jsonify(ERROR=str(e)), 500
@@ -885,21 +887,21 @@ class VolleyballPBPHandler:
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="Odin: El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
 
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Odin: No existe una secuencia PBP para este evento."), 403
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Odin: Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="Odin: El partido de Voleibol ha finalizado."), 403
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
 
             pbp_dao.set_pbp_game_over(event_id)
-            return jsonify(MSG="Odin: Se marcó el partido de Voleibol como finalizado."), 200
+            return jsonify(MSG="Se marcó el partido de Voleibol como finalizado."), 200
 
         except Exception as e:
             print(str(e))

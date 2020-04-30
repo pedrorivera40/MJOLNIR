@@ -7,7 +7,7 @@ class _mockTeamHandler:
         '''
         Initialize collection for the Team Handler mock class.
         '''
-        self.records = {10: [
+        self.records = {4: [
             {
                 "team_members_id": 26,
                 "athlete_id": 12,
