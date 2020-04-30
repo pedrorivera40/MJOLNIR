@@ -9,7 +9,6 @@
                     <v-spacer />
                 </v-toolbar>
                 <v-card-text>            
-                
                     <form>
                         <v-container>   
                             <v-row v-if="isBasketball">
@@ -652,8 +651,13 @@
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
-                                    <v-btn class="mr-4" @click="submitAthleteStats">submit</v-btn>
-                                    <v-btn @click="clear">clear</v-btn>
+                                    <v-btn color="primary ligthen-1" text @click="close()">close</v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-btn color="primary ligthen-1" text @click="submitAthleteStats" :loading="loadingQuery">submit</v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-btn color="primary ligthen-1" text @click="clear">clear</v-btn>
                                 </v-col>
                             </v-row>   
                         </v-container>
@@ -675,6 +679,7 @@
         event_id: Number,
         sport_name: String,
         team_id: Number,
+        team_members: Array,
     },
     data: () => ({
         
@@ -792,6 +797,9 @@
 
     },
     methods: {
+        close() {
+            this.$emit("update:dialog", false);
+        },
         buildDefaultValues(){
             this.event_id = this.$route.params.id
             if (this.event_id == 1){
@@ -898,16 +906,11 @@
             
             
         },
-        //=================
-        // submit () {
-        //     this.$refs.observer.validate()
-        //     this.goToTeam()
-        // },
+
         
         clear () {
             this.initializeSportData()
             // TODO: (Herbert) Check how this works
-            this.$refs.observer.reset()
         },
         updateCategories(key,value){
             console.log(key)

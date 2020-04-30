@@ -310,6 +310,7 @@ export default {
       
       formated(){
         if(this.team){
+          console.log("IS DOOM ETERNAL?",this.team)
           this.current_team_id = this.team.team_info.team_id
           this.current_team = this.team.team_info
           

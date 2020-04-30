@@ -1,5 +1,5 @@
 <template>
-  <div v-if="formated_event_info()"class="wrapper">
+  <div v-if="formated_event_info()" class="wrapper">
     <h1>Resultados {{sport_name}}</h1>
     <!-- TODO: FIX DATE AND MAKE FORMAT SIMPLER -->
     <h3>Evento de {{event_date}}</h3>
@@ -94,6 +94,7 @@
                                         color="primary_light"
                                         class="white--text"
                                         @click="addAthleteStatistics(editedItemIndex)"
+                                        :disabled="(loadingQuery)"
                                     >
                                         <v-icon left>
                                         mdi-plus
@@ -187,8 +188,8 @@
                         class="elevation-1"								
                         >
                         
-                        <template v-slot:item.actions="{ item }">
-                            <!-- <v-tooltip bottom>
+                        <!-- <template v-slot:item.actions="{ item }">
+                            <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
                                 <v-icon
                                 small
@@ -200,7 +201,7 @@
                                 </v-icon>
                             </template>
                             <span>Editar Estadisticas de Equipo</span>
-                            </v-tooltip> -->
+                            </v-tooltip>
                             <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
                                 <v-icon
@@ -214,35 +215,71 @@
                             </template>
                             <span>Eliminar Estadisticas De Equipo</span>
                             </v-tooltip>
-                        </template>
+                        </template> -->
                         </v-data-table>
                     </v-card>
                 </v-tab-item>
             </v-tabs>
         </v-container>
+        <AddFinalScoreModal
+            v-if="dialogAddFinalScore"
+            :dialog.sync="dialogAddFinalScore"
+            :sport_id="sport_id"
+        />
+        <UpdateFinalScoreModal
+            v-if="dialogUpdateFinalScore"
+            :dialog.sync="dialogUpdateFinalScore"
+            :sport_id="sport_id"
+        />
+        <AddIndividualStatsModal
+            v-if="dialogAddIndividualStats"
+            :dialog.sync="dialogAddIndividualStats"
+            :sport_id="sport_id"
+            :event_id="event_id"
+            :sport_name="sport_name"
+            :team_id="team_id"
+            :team_members="team_members_local"
+        />
+        <UpdateIndividualStatsModal
+            v-if="dialogUpdateIndividualStats"
+            :dialog.sync="dialogUpdateIndividualStats"
+            :sport_id="sport_id"
+        />
+        <DeleteIndividualStatsModal
+            v-if="dialogDeleteIndividualStats"
+            :dialog.sync="dialogDeleteIndividualStats"
+            :sport_id="sport_id"
+        />
     </div>
   </div>
 </template>
 
 <script>
+import AddFinalScoreModal from '@/components/AddFinalScoreModal'
+import UpdateFinalScoreModal from '@/components/UpdateFinalScoreModal'
+import AddIndividualStatsModal from '@/components/AddIndividualStatsModal'
+import UpdateIndividualStatsModal from '@/components/UpdateIndividualStatsModal'
+import DeleteIndividualStatsModal from '@/components/DeleteIndividualStatsModal'
 import { mapActions, mapGetters } from "vuex";
+
 export default {
+    components:{
+        AddFinalScoreModal,
+        UpdateFinalScoreModal,
+        AddIndividualStatsModal,
+        AddIndividualStatsModal,
+        UpdateIndividualStatsModal,
+        DeleteIndividualStatsModal
+    },
   data() {
     return {
-    //   headers: [
-    //     {
-    //       text: "ID",
-    //       align: "start",
-    //       sortable: false,
-    //       value: "id"
-    //     },
-    //     { text: "Full Name", value: "full_name" },
-    //     { text: "Username", value: "username" },
-    //     { text: "Email", value: "email" },
-    //     { text: "Account Status", value: "is_active" },
-    //     { text: "Password", value: "password" },
-    //     { text: "Actions", value: "actions", sortable: false }
-    //   ],
+        //These are for dialogs
+        dialogAddFinalScore:false,
+        dialogUpdateFinalScore:false,
+        dialogAddIndividualStats:false,
+        dialogUpdateIndividualStats:false,
+        dialogDeleteIndividualStats:false,
+
       editedItemIndex: -1,
       editedItem: '',
       defaultItem: {
@@ -279,13 +316,17 @@ export default {
       //season:''
       //INTEGRATION QUERY VARS
       ready_for_event:false,
-      ready_for_stats:true,
+    //   ready_for_stats:true,
+      team_members_local:'',
+      team_id:'',
 
     };
   },
   
 created(){
-    this.ready_for_stats=true
+    this.setReadyStats()
+    this.setNullTeamMembers()
+    // this.ready_for_stats=true
     this.clearEventInfo()
     this.clearAllStats()
     this.event_id = this.$route.params.id
@@ -299,18 +340,26 @@ created(){
         getEventInfo:"results/getEventInfo",
         clearEventInfo:"results/clearEventInfo",
         clearAllStats:"results/clearAllStats",
+        getTeamMembers:"results/getTeamMembers",
+        setQueryLoading:"results/setQueryLoading",
+        setReadyStats:"results/setReadyStats",
+        stopGetStats:"results/stopGetStats",
+        setNullTeamMembers:"results/setNullTeamMembers",
     }),
     formated_event_info(){
-        console.log("the event info...(before)",this.results_payload)
+        console.log("the event info...(before)",this.event_info)
         if(this.event_info){
             console.log("GETTING EVENT INFO (from formated method)",this.event_info)
             this.sport_id =  this.event_info.sport_id 
             this.sport_name = this.event_info.sport_name
             this.opponent_name = this.event_info.opponent_name
             this.event_date = this.event_info.event_date
-            if (this.ready_for_stats){
+            this.team_id = this.event_info.team_id
+            // if (this.ready_for_stats){
+            console.log("are we ever getting in there????",this.readyForStats)
+            if (this.readyForStats){
                 this.buildTable()
-                console.log("[3] BUILT TABLE",this.results_payload)
+                console.log("[3] BUILT TABLE",this.event_info)
                 this.buildDefaultValues()
                 const stat_params = {
                     event_id: String(this.event_id),
@@ -319,11 +368,23 @@ created(){
                 console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
                 this.getAllEventStatistics(stat_params)
                 console.log("[4] GOT EVENT STATS",this.results_payload)
-                this.ready_for_stats = false
+                // this.ready_for_stats = false
+                this.stopGetStats()
             }
             return true
         }
         else{
+            return false
+        }
+    },
+    formated_team_members(){
+        if(this.team_members){
+            console.log("[6]WE HAVE THE TEAM MEMBERS!",this.team_members)
+            this.team_members_local = this.team_members.team_members
+            return true
+        }
+        else{
+            this.team_members_local = null
             return false
         }
     },
@@ -404,7 +465,7 @@ created(){
                 {text: 'Three Point Attempt', value: 'basketball_statistics.three_point_attempt'},
                 {text: 'Three Point Percentage(%)', value: 'basketball_statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'basketball_statistics.turnovers'},
-                { text: "Actions", value: "actions", sortable: false },
+                // { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
@@ -441,7 +502,7 @@ created(){
                 {text: 'Blocks', value: 'volleyball_statistics.blocks'},
                 {text: 'Blocking Errors', value: 'volleyball_statistics.blocking_errors'},
                 {text: 'Reception Errors', value: 'volleyball_statistics.reception_errors'},
-                { text: "Actions", value: "actions", sortable: false },
+                // { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
@@ -472,7 +533,7 @@ created(){
                 {text: 'Cards', value: 'soccer_statistics.cards'},
                 {text: 'Successful Goals', value: 'soccer_statistics.successful_goals'},
                 {text: 'Tackles', value: 'soccer_statistics.tackles'},
-                { text: "Actions", value: "actions", sortable: false },
+                // { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
@@ -505,7 +566,7 @@ created(){
                 {text: 'Base On Balls', value: 'baseball_statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'baseball_statistics.strikeouts'},
                 {text: 'Left On Base', value: 'baseball_statistics.left_on_base'},
-                { text: "Actions", value: "actions", sortable: false },
+                // { text: "Actions", value: "actions", sortable: false },
 
                 ]
             }
@@ -543,6 +604,7 @@ created(){
         //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
         console.log(this.editedItem)
         console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
+        this.dialogDeleteIndividualStats = true
     },
     deleteTeamStatistics(user) {
        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
@@ -566,19 +628,21 @@ created(){
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push("/resultados/"+this.event_id+"/individual/editar")
+        this.dialogEditIndividualStats = true
+        // this.$router.push("/resultados/"+this.event_id+"/individual/editar")
     },
-    editTeamStatistics(user) {
-    //   this.editedItemIndex = this.users.indexOf(user)
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogEdit = true;
-        return
-    },
+    // editTeamStatistics(user) {
+    // //   this.editedItemIndex = this.users.indexOf(user)
+    // //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+    // //   this.dialogEdit = true;
+    //     return
+    // },
     addAthleteStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push("/resultados/"+this.event_id+"/individual/crear")
+        this.dialogAddIndividualStats = true
+        // this.$router.push("/resultados/"+this.event_id+"/individual/crear")
     },
     addTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
@@ -587,10 +651,12 @@ created(){
         return
     },
     addFinalScore() {
-        this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
+        this.dialogAddFinalScore = true
+        // this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
     },
     editFinalScore() {
-        this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
+        this.dialogEditFinalScore = true
+        // this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
     },
     // editPermissions(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
@@ -604,7 +670,12 @@ created(){
   computed: {
     ...mapGetters({
         results_payload:"results/results_payload",
-        event_info:"results/event_info"
+        event_info:"results/event_info",
+        loadingQuery:"results/loadingQuery",
+        // might use?
+        readyForMembers:"results/readyForMembers",
+        team_members:"results/team_members",
+        readyForStats:"results/readyForStats"
 	})
   },
 };
