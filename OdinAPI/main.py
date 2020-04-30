@@ -660,7 +660,7 @@ def pbp_sequence(sport):
         return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
     if len(body) != 1 or "event_id" not in body:
-        return jsonify(ERROR="Bad request."), 400
+        return jsonify(ERROR="Error en la petición. Solo debe proveerse un argumento en el cuerpo."), 400
 
     event_id = body["event_id"]
     if request.method == 'POST':
@@ -672,7 +672,11 @@ def pbp_sequence(sport):
 @app.route("/pbp/<string:sport>/set", methods=['PUT'])
 def volleyball_pbp_set_current_set(sport):
     body = request.get_json()
+    args = request.args
     handler = None
+
+    if len(args) != 0:
+        return jsonify(ERROR="No se aceptan argumentos en esta ruta."), 400
 
     # Assign proper handler.
     if sport == "Voleibol":
@@ -689,7 +693,11 @@ def volleyball_pbp_set_current_set(sport):
 @app.route("/pbp/<string:sport>/color", methods=['PUT'])
 def pbp_set_color(sport):
     body = request.get_json()
+    args = request.args
     handler = None
+
+    if len(args) != 0:
+        return jsonify(ERROR="No se aceptan argumentos en esta ruta."), 400
 
     # Assign proper handler.
     if sport == "Voleibol":
@@ -707,6 +715,7 @@ def pbp_set_color(sport):
 def pbp_roster(sport):
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
     body = request.get_json()
+    args = request.args
     handler = None
 
     # Assign proper handler.
@@ -759,12 +768,24 @@ def pbp_roster(sport):
 def pbp_actions(sport):
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
     body = request.get_json()
+    args = request.args
 
-    # Validate event id is present in body.
-    if "event_id" not in body:
-        return jsonify(ERROR="Error en la solicitud. No se encontró valor de ID del evento."), 400
+    event_id = None
 
-    event_id = body["event_id"]
+    if request.method == 'DELETE':
+        # Validate event id is present in args.
+        if "event_id" not in args:
+            return jsonify(ERROR="Error en la solicitud. No se encontró valor de ID del evento."), 400
+
+        event_id = args["event_id"]
+
+    else:
+
+        # Validate event id is present in body.
+        if "event_id" not in body:
+            return jsonify(ERROR="Error en la solicitud. No se encontró valor de ID del evento."), 400
+
+        event_id = body["event_id"]
 
     # Assign proper handler.
     if sport == "Voleibol":
@@ -775,28 +796,33 @@ def pbp_actions(sport):
     if request.method == 'POST':
         # Validate action data is present in request body.
         if len(body) != 2 or "data" not in body:
-            return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el valor de data."), 400
+            return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el valor de data en el cuerpo."), 400
 
         return handler.addPBPAction(event_id, body["data"])
 
     if request.method == 'PUT':
         # Validate data and action id are present in request body.
-        if len(body) != 3 or "data" not in body or "action_id" not in body:
-            return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento, ID de la acción y el valor de data."), 400
+        if len(body) != 3 or "data" not in body or "action_id" not in body or len(args) != 0:
+            return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento, ID de la acción y el valor de data en el cuerpo."), 400
 
         return handler.editPBPAction(event_id, body["action_id"], body["data"])
 
     # For delete, validate action id is present in body.
-    if len(body) != 2 or "action_id" not in body:
-        return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el ID de la acción."), 400
+    if len(args) != 2 or "action_id" not in args or len(body) != 0:
+        return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el ID de la acción como argumentos."), 400
 
-    return handler.removePlayPBPAction(event_id, body["action_id"])
+    print("HERE")
+    return handler.removePlayPBPAction(event_id, args["action_id"])
 
 
 @app.route("/pbp/<string:sport>/end", methods=['POST'])
 def pbp_end(sport):
     body = request.get_json()
+    args = request.args
     handler = None
+
+    if len(args) != 0:
+        return jsonify(ERROR="No se aceptan argumentos en esta ruta."), 400
 
     # Assign proper PBP handler.
     if sport == "Voleibol":
@@ -1893,7 +1919,7 @@ def get_sports():
         handler = SportHandler()
 
         if len(body) != 0:
-            return jsonify(ERROR="No se aceptan parámetros.")
+            return jsonify(ERROR="No se aceptan parámetros."), 400
 
         if len(args) == 0:
             return handler.getAllSports()
