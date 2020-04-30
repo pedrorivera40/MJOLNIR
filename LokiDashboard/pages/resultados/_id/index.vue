@@ -7,7 +7,7 @@
     </v-container>
     <div class="content-area pa-4 pt-12">
         <v-container>
-            <v-container v-if="formated_member_stats()"">
+            <v-container v-if="formated_member_stats()">
                 <v-row align="center" justify="center">
                     <v-card width=400 class="mx-lg-auto" outlined>
                         <v-card-title>
