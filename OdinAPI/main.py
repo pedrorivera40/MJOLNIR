@@ -1886,37 +1886,42 @@ def baseballAggregateTeamStatistics():
 # Launch app.
 @app.route("/sports", methods=['GET'])
 def get_sports():
+
     if request.method == 'GET':
         body = request.get_json()
+        args = request.args
         handler = SportHandler()
 
-        if not body:
+        if len(body) != 0:
+            return jsonify(ERROR="No se aceptan parámetros.")
+
+        if len(args) == 0:
             return handler.getAllSports()
 
-        if len(body) == 1:
+        if len(args) == 1:
 
-            if 'branch' in body:
+            if 'branch' in args:
                 # Validate branch type.
-                if not isinstance(body['branch'], str):
+                if not isinstance(args['branch'], str):
                     return jsonify(ERROR="Error en la solicitud. La rama deportiva debe ser una secuencia de caracteres."), 400
 
-                return handler.getSportsByBranch(body['branch'])
+                return handler.getSportsByBranch(args['branch'])
 
-            if 'sport_name' in body:
+            if 'sport_name' in args:
                 # Validate sport_name type.
-                if not isinstance(body['sport_name'], str):
+                if not isinstance(args['sport_name'], str):
                     return jsonify(ERROR="Error en la solicitud. El nombre del deporte debe ser una secuencia de caracteres."), 400
 
-                return handler.getSportByName(body['sport_name'])
+                return handler.getSportByName(args['sport_name'])
 
-            if 'sport_id' in body:
+            if 'sport_id' in args:
                 # Validate sport_name type.
-                if not isinstance(body['sport_id'], int):
+                if not args['sport_id'].isdigit():
                     return jsonify(ERROR="Error en la solicitud. El ID del deporte debe ser un entero."), 400
 
-                return handler.getSportById(body['sport_id'])
+                return handler.getSportById(args['sport_id'])
 
-        return jsonify(ERROR="Error en la solicitud. Debe proveerse un valor (rama deportiva o nombre del deporte)."), 400
+        return jsonify(ERROR="Error en la solicitud. Debe proveerse un valor (rama deportiva o nombre del deporte) como argumento."), 400
 
     return jsonify(ERROR="Método HTTP no autorizado."), 405
 
@@ -1924,8 +1929,9 @@ def get_sports():
 @app.route("/sports/details", methods=['GET'])
 def get_sport_info():
     if request.method == 'GET':
+        args = request.args
         body = request.get_json()
-        if not body:
+        if not body and not args:
             return SportHandler().getSportCategoriesPositions()
 
         return jsonify(ERROR="Error en la solicitud. No se permiten parámetros."), 400
