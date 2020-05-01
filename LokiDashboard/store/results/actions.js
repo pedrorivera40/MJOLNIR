@@ -63,25 +63,6 @@ export default{
             console.log("ERROR POSTING FINAL SCORE",scoreJSON,error)
         }
     },
-    // async postTeam({commit,dispatch},teamJSON){
-    //     try{
-    //         // commit("SET_ATHLETES",[])
-    //         const response = await this.$axios.post('teams/',teamJSON)
-    //         // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
-            
-    //         let sport_id = teamJSON.sport_id
-    //         commit("SET_QUERY_DONE")
-    //         // this.$router.push('/equipo/'+sport_id)
-    //     }catch(error){
-    //         commit("SET_QUERY_DONE")
-    //         console.log("ERROR POSTING TEAM",teamJSON,error)
-    //         // if(!!error.response.data){
-    //         //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-    //         // }else{
-    //         //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-    //         // }
-    //     }
-    // },
     async editFinalScore({commit,dispatch},scoreJSON){
         try{
             let sport_route = scoreJSON.sport_route
@@ -140,5 +121,59 @@ export default{
         }
     },
     //INDIVIDUAL STATS
+    async addIndividualStatistics({commit,dispatch},statsJSON){
+        try{
+            let sport_route = statsJSON.sport_route
+            console.log("[ADDSTATS-INDEX->ROUTE]",sport_route)
+            let statistics = statsJSON.statistics
+            console.log("[ADDSTATS-INDEX->STATISTICS]",statistics)
+            const response = await this.$axios.post('results/'+sport_route+'/individual/',statistics)
+            commit("SET_QUERY_DONE")
+        }catch(error){
+            commit("SET_QUERY_DONE")
+            console.log("ERROR POSTING INDIVIDUAL STATS",statsJSON,error)
+        }
+    },
+    async editIndividualStatistics({commit,dispatch},statsJSON){
+        try{
+            let sport_route = statsJSON.sport_route
+            let statistics = statsJSON.statistics
+            const response = await this.$axios.put('results/'+sport_route+'/individual/',statistics)
+            commit("SET_QUERY_DONE")
+        }catch(error){
+            commit("SET_QUERY_DONE")
+            console.log("ERROR UPDATING INDIVIDUAL STATS",statsJSON,error)
+        }
+    },
+    async getIndividualStatistics({commit,dispatch},statsJSON){
+        try{
+            let sport_route = statsJSON.sport_route
+            let statistics = statsJSON.statistics
+            let event_id = statistics.event_id
+            let athlete_id = statistics.athlete_id
+            const response = await this.$axios.put('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+            console.log("GET INDIVIDUAL STATS",response.data)
+            commit("SET_INDIVIDUAL_STATS",response.data)
+            commit("SET_QUERY_DONE")
+      
+        }catch(error){
+            commit("SET_INDIVIDUAL_STATS",null)
+            commit("SET_QUERY_DONE")
+            console.log("ERROR GETTING INDIVIDUAL STATS",statsJSON,error)
+        }
+    },
+    async removeIndividualStatistics({commit,dispatch},statsJSON){
+        try{
+            let sport_route = statsJSON.sport_route
+            let statistics = statsJSON.statistics
+            let event_id = statistics.event_id
+            let athlete_id = statistics.athlete_id
+            const response = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+            commit("SET_QUERY_DONE")
+        }catch(error){
+            commit("SET_QUERY_DONE")
+            console.log("ERROR REMOVING INDIVIDUAL STATS",statsJSON,error)
+        }
+    },
 }
 

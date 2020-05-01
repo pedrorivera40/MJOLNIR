@@ -133,10 +133,10 @@ const seasonRequired = (propertyType) => {
  */
 const scoreRequired = (propertyType) => {
   return v => {
-    if(!v){ return `${propertyType} debe ser seleccionado`; }
+    if(!v){ return `${propertyType} es un campo requerido`; }
     
     //Will receive the score of the team which will be an integer larger or equal than zero.
-    return v >= 0 || `${propertyType} debe ser seleccionado`;
+    return v >= 0 || `${propertyType} es un campo requerido`;
   }
 }
 

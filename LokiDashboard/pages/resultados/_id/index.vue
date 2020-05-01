@@ -104,7 +104,7 @@
                                         color="primary_light"
                                         class="white--text"
                                         @click="addAthleteStatistics()"
-                                        :disabled="formated_individual_stats()"
+                                        :disabled="!formated_individual_stats()"
                                     >
                                         <v-icon left>
                                         mdi-plus
@@ -223,6 +223,15 @@
                 :uprm_score.sync="uprm_score"
                 :opponent_score.sync="opponent_score"
             />
+            <AddIndividualStatsModal
+                v-if ="dialogAddIndividualStats"
+                :dialog.sync="dialogAddIndividualStats"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :payload_stats.sync="payload_stats"
+                :sport_id="sport_id"
+                :team_members="team_members_local"
+            />
         </v-container>
     </div>
   </v-container>
@@ -232,15 +241,18 @@
 import { mapActions, mapGetters } from "vuex";
 import AddFinalScoreModal from "@/components/AddFinalScoreModal";
 import UpdateFinalScoreModal from "@/components/UpdateFinalScoreModal";
+import AddIndividualStatsModal from "@/components/AddIndividualStatsModal";
 export default {
   data() {
     return {
       
       dialogAddFinalScore: false,
       dialogEditFinalScore:false,
+      dialogAddIndividualStats:false,
     
       editedItemIndex: -1,
       editedItem: '',
+      edited_athlete_id:'',
       defaultItem: {
         full_name: "",
         username: "",
@@ -277,7 +289,8 @@ export default {
       //OTHE QUERY RELATED VALUES
       team_id:'',
       ready_for_stats:'',
-      team_members_local:''
+      team_members_local:'',
+      indiviual_athlete_stats:''
 
     };
   },
@@ -308,7 +321,7 @@ export default {
             console.log("Trying to get Team Members for:",this.team_id)
             if (this.team_members){
                 console.log("[TM-Got Team Members]",this.team_members)
-                this.team_members_local = this.team_headers
+                this.team_members_local = this.team_members.team_members
             }
             console.log("are we ever getting in there????",this.readyForStats)
             if (this.ready_for_stats){
@@ -348,7 +361,8 @@ export default {
     }, 
   components:{
       AddFinalScoreModal,
-      UpdateFinalScoreModal
+      UpdateFinalScoreModal,
+      AddIndividualStatsModal,
   },
   methods: {
    
@@ -570,8 +584,7 @@ export default {
         else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
             this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
             this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
-        }
-        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+        }        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
             this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
             this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
         }
@@ -618,7 +631,9 @@ export default {
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push("/resultados/"+this.event_id+"/individual/crear")
+        // this.$router.push("/resultados/"+this.event_id+"/individual/crear")
+        console.log("[TM-ADD_STATS(INDEX)]",this.team_members_local)
+        this.dialogAddIndividualStats = true;
     },
     addTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)

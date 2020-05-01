@@ -82,7 +82,7 @@
     import {mapActions,mapGetters} from "vuex"
 
   export default {
-      name:"AddTeamModal",
+      name:"AddFinalScoreModal",
       props:{
         dialog: Boolean,
         event_id: Number,
