@@ -29,6 +29,7 @@
                                                     label="Select"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
+                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
                                                     required
                                                     >
                                                     <template v-slot:selection="data">
