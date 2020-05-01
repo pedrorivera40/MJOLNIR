@@ -708,7 +708,8 @@
         sport_route:String,
         payload_stats:Object,
         sport_id:Number,
-        team_members:Array   
+        team_members:Array,
+        refresh_stats:Boolean 
       },
     data: () => ({
         
@@ -864,6 +865,7 @@
                     statistics: this.payload_stats_individual
                 }
                 await this.addIndividualStatistics(stats_params)
+                this.$emit("update:refresh_stats",true);
                 this.close()
             }
         },

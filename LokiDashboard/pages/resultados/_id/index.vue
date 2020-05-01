@@ -136,7 +136,8 @@
                                 :headers="headers" 
                                 :items="payload_stats.athlete_statistic"
                                 item-key="athlete_statistic" 
-                                class="elevation-1"								 
+                                class="elevation-1"	
+                                v-if="payload_stats.athlete_statistic"							 
                                 >
                                 <!-- v-if="isBasketballTable" -->
                                 <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
@@ -231,6 +232,7 @@
                 :payload_stats.sync="payload_stats"
                 :sport_id="sport_id"
                 :team_members="team_members_local"
+                :refresh_stats.sync="refresh_stats"
             />
         </v-container>
     </div>
@@ -290,11 +292,13 @@ export default {
       team_id:'',
       ready_for_stats:'',
       team_members_local:'',
-      indiviual_athlete_stats:''
-
+      indiviual_athlete_stats:'',
+      refresh_stats:false
     };
   },
-// created(){
+
+    
+  // created(){
   async mounted(){
     this.event_id = this.$route.params.id
     this.clearEventInfo()
@@ -302,12 +306,9 @@ export default {
     this.setNullTeamMembers()
     this.ready_for_stats = true
     console.log("[1] GOT EVENT ID",this.event_id)
+    await this.setQueryLoading()
     await this.getEventInfo(this.event_id)
     console.log("[2] GOT EVENT INFO",this.event_info)
-    // this.buildDefaultValues()
-    // this.buildTable()
-    // this.getSeasonData()
-    //this.buildDefault()
     console.log("the event info...(before)",this.event_info)
         if(this.event_info){
             console.log("GETTING EVENT INFO (from formated method)",this.event_info)
@@ -317,7 +318,8 @@ export default {
             this.event_date = this.event_info.event_date
             this.team_id = this.event_info.team_id
             // if (this.ready_for_stats){
-             await this.getTeamMembers(this.team_id)
+            await this.setQueryLoading()
+            await this.getTeamMembers(this.team_id)
             console.log("Trying to get Team Members for:",this.team_id)
             if (this.team_members){
                 console.log("[TM-Got Team Members]",this.team_members)
@@ -334,6 +336,7 @@ export default {
                     sport_route: String(this.sport_route)
                 }
                 console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
+                await this.setQueryLoading()
                 await this.getAllEventStatistics(stat_params)
                 this.ready_for_stats = false
                 if(this.results_payload){
@@ -375,8 +378,37 @@ export default {
         stopGetStats:"results/stopGetStats",
         getTeamMembers:"results/getTeamMembers",
         setNullTeamMembers:"results/setNullTeamMembers",
+        setQueryLoading:"results/setQueryLoading",
     }),
-    
+    async stat_refresh(){
+        this.clearAllStats()
+        // this.payload_stats = null
+        // this.team_statistics = null
+        const stat_params = {
+            event_id: String(this.event_id),
+            sport_route: String(this.sport_route)
+        }
+        console.log("[4Refresh.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
+        await this.setQueryLoading()
+        await this.getAllEventStatistics(stat_params)
+        this.ready_for_stats = false
+        if(this.results_payload){
+            console.log("[4Refresh] GOT EVENT STATS",this.results_payload)
+            // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
+            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
+            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
+            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
+            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
+            else{
+                return false
+            }
+            console.log("[5Refresh] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
+            this.team_statistics = [this.payload_stats.team_statistics]
+            // this.opponent_score = (this.payload_stats.opponent_score)
+            // this.uprm_score = (this.payload_stats.uprm_score)
+            return true
+        }         
+    }, 
     //confirm why this method was deprecated
     formated_event_info(){
         if (this.sport_id != ''){
@@ -386,6 +418,11 @@ export default {
     },
     formated_member_stats(){
        if (this.payload_stats != ''){
+           if(this.refresh_stats){
+               console.log("[REF] WE SHOULDNT BE HERE YET")
+               this.stat_refresh()
+               this.refresh_stats = false
+           }
            return true
        }
        else return false
@@ -569,13 +606,7 @@ export default {
     },
 
 
-    // ...mapActions({
-    //   getUsers: "dashboardUsers/getUsers",
-    //   getPermissions: "dashboardUsers/getPermissions"
-    // }),
-    // setStatus(status) {
-    //   return status ? "Active" : "Inactive";
-    // },
+
     deleteAthleteStatistics(user) {
        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
             this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
@@ -663,7 +694,8 @@ export default {
     ...mapGetters({
         results_payload:"results/results_payload",
         event_info:"results/event_info",
-        team_members:"results/team_members"
+        team_members:"results/team_members",
+        loadingQuery:"results/loadingQuery"
     })
     
     
