@@ -727,7 +727,7 @@
         // event_id: 1, //This will come from route
         
         //THE MAIN STATISTICS, SPORTS SPECIFIC
-        // payload_stats_individual: '',
+        payload_stats_individual: '',
         
         //CONSTANTS:
         BASKETBALL_IDM: 1,
@@ -778,90 +778,91 @@
         // },
         initializeSportData(){
         //console.log(this.season)
-		if(this.sport_id!=''){
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.payload_stats_individual = {
-                "event_id":this.event_id,
-                "athlete_id":'',
-                "attributes":
-                {
-                    "points":'',
-                    "rebounds":'',
-                    "assists":'',
-                    "steals":'',
-                    "blocks":'',
-                    "turnovers":'',
-                    "field_goal_attempt":'',
-                    "successful_field_goal":'',
-                    "three_point_attempt":'',
-                    "successful_three_point":'',
-                    "free_throw_attempt":'',
-                    "successful_free_throw":'',
+            if(this.sport_id!=''){
+                if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+                    this.payload_stats_individual = {
+                    "event_id":this.event_id,
+                    "athlete_id":'',
+                    "attributes":
+                    {
+                        "points":'',
+                        "rebounds":'',
+                        "assists":'',
+                        "steals":'',
+                        "blocks":'',
+                        "turnovers":'',
+                        "field_goal_attempt":'',
+                        "successful_field_goal":'',
+                        "three_point_attempt":'',
+                        "successful_three_point":'',
+                        "free_throw_attempt":'',
+                        "successful_free_throw":'',
+                    }
+                    }
+                    
                 }
+                else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                    this.payload_stats_individual = {       
+                    "event_id": this.event_id,
+                    "athlete_id":'',
+                    "attributes":
+                    {
+                        "kill_points":'',
+                        "attack_errors":'',
+                        "assists":'',
+                        "aces":'',
+                        "service_errors":'',
+                        "digs":'',
+                        "blocks":'',
+                        "blocking_errors":'',
+                        "reception_errors":''
+                    }
+                    }
+                    
                 }
-                
-            }
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                this.payload_stats_individual = {       
-                "event_id": this.event_id,
-                "athlete_id":'',
-                "attributes":
-                {
-                    "kill_points":'',
-                    "attack_errors":'',
-                    "assists":'',
-                    "aces":'',
-                    "service_errors":'',
-                    "digs":'',
-                    "blocks":'',
-                    "blocking_errors":'',
-                    "reception_errors":''
+                else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                    this.payload_stats_individual = {
+                    "event_id":this.event_id,
+                    "athlete_id":'',
+                    "attributes":
+                    {
+                        "goal_attempts":'',
+                        "assists":'',
+                        "fouls":'',
+                        "cards":'',
+                        "successful_goals":'',
+                        "tackles":''
+                    }
+                    }   
                 }
+                else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                    this.payload_stats_individual = { 
+                    "event_id": this.event_id,
+                    "athlete_id":'',
+                    "attributes":
+                    {
+                        "at_bats":'',
+                        "runs":'',
+                        "hits":'',
+                        "runs_batted_in":'',
+                        "base_on_balls":'',
+                        "strikeouts":'',
+                        "left_on_base":''
+                    }
+                    }
                 }
-                
-            }
-            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                this.payload_stats_individual = {
-                "event_id":this.event_id,
-                "athlete_id":'',
-                "attributes":
-                {
-                    "goal_attempts":'',
-                    "assists":'',
-                    "fouls":'',
-                    "cards":'',
-                    "successful_goals":'',
-                    "tackles":''
-                }
-                }   
-            }
-            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                this.payload_stats_individual = { 
-                "event_id": this.event_id,
-                "athlete_id":'',
-                "attributes":
-                {
-                    "at_bats":'',
-                    "runs":'',
-                    "hits":'',
-                    "runs_batted_in":'',
-                    "base_on_balls":'',
-                    "strikeouts":'',
-                    "left_on_base":''
-                }
-                }
-            }
             }
         },
 
         async submitAthleteStats() {
+            this.setQueryLoading()
             if (this.payload_stats_individual.athlete_id != ''){
                 console.log(this.payload_stats_individual)
                 const stats_params = {
                     sport_route: this.sport_route,
                     statistics: this.payload_stats_individual
                 }
-                this.addIndividualStatistics(stats_params)
+                await this.addIndividualStatistics(stats_params)
                 this.close()
             }
         },
@@ -872,7 +873,6 @@
             // TODO: (Herbert) Check how this works
         },
         close() {
-            
             this.$emit("update:dialog", false);
         }
     },
