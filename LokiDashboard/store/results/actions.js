@@ -42,5 +42,77 @@ export default{
             console.log("ERROR SETTING EVENT INFO TO NULL",error)
         }
     },
+    //NEW ACTIONS FOR THE DASHBOARD INTEGRATION
+    //GENERAL USE
+    async setQueryLoading({commit}){
+        try{
+            commit("SET_QUERY_LOADING")
+        }catch(error){
+            console.log("ERROR SETTING STATE VARIABLE FOR LOADING QUERY",error)
+        }
+    },
+    //FINAL SCORE ACTIONS
+    async addFinalScore({commit,dispatch},scoreJSON){
+        try{
+            let sport_route = scoreJSON.sport_route
+            let statistics = scoreJSON.statistics
+            const response = await this.$axios.post('results/'+sport_route+'/score/',statistics)
+            commit("SET_QUERY_DONE")
+        }catch(error){
+            commit("SET_QUERY_DONE")
+            console.log("ERROR POSTING FINAL SCORE",scoreJSON,error)
+        }
+    },
+    // async postTeam({commit,dispatch},teamJSON){
+    //     try{
+    //         // commit("SET_ATHLETES",[])
+    //         const response = await this.$axios.post('teams/',teamJSON)
+    //         // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
+            
+    //         let sport_id = teamJSON.sport_id
+    //         commit("SET_QUERY_DONE")
+    //         // this.$router.push('/equipo/'+sport_id)
+    //     }catch(error){
+    //         commit("SET_QUERY_DONE")
+    //         console.log("ERROR POSTING TEAM",teamJSON,error)
+    //         // if(!!error.response.data){
+    //         //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+    //         // }else{
+    //         //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+    //         // }
+    //     }
+    // },
+    async editFinalScore({commit,dispatch},scoreJSON){
+        try{
+            let sport_route = scoreJSON.sport_route
+            let statistics = scoreJSON.statistics
+            const response = await this.$axios.put('results/'+sport_route+'/score/',statistics)
+            commit("SET_QUERY_DONE")
+        }catch(error){
+            commit("SET_QUERY_DONE")
+            console.log("ERROR POSTING FINAL SCORE",scoreJSON,error)
+        }
+    },
+    async getFinalScore({commit,dispatch},scoreJSON){
+        try{
+            let sport_route = scoreJSON.sport_route
+            let event_id = scoreJSON.event_id
+            const response = await this.$axios.get('results/'+sport_route+'/score/?event_id='+event_id)
+            console.log("GET FINAL SCORE",response.data)
+            commit("SET_FINAL_SCORE",response.data)
+            	
+        }catch(error){
+            commit("SET_FINAL_SCORE",null)
+            console.log("ERROR GETTING FINAL SCORE",scoreJSON,error)
+        }
+    },
+    //GENERAL ACTIONS
+    async setQueryLoading({commit}){
+        try{
+            commit("SET_QUERY_LOADING")
+        }catch(error){
+            console.log("ERROR SETTING STATE VARIABLE FOR LOADING QUERY",error)
+        }
+    },
 }
 

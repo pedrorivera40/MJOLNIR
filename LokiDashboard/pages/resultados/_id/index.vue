@@ -12,12 +12,11 @@
                     <v-card width=400 class="mx-lg-auto" outlined>
                         <v-card-title>
                             <v-row justify="center">
-                                <h3>Final Result</h3>
+                                <h3>Puntuación Final</h3>
                             </v-row>
                             </v-card-title>
                         <v-container>
-                            <v-row >
-                                
+                            <v-row v-if="formated_final_score()">
                                 <v-col >
                                     <v-row justify="center">
                                         <h1>{{uprm_score}}</h1>
@@ -38,10 +37,16 @@
                                         <h1>{{opponent_score}}</h1>
                                     </v-row>
                                     <v-row justify="center">
-                                        <h3>{{opponent_name}}</h3>
+                                        <h3 v-if="opponent_name">{{opponent_name}}</h3>
+                                        <h3 v-else>Oponente</h3>
                                     </v-row>
                                 </v-col>
                                 
+                            </v-row>
+                            <v-row v-else justify="center">
+                                <v-col align="center">
+                                    <h3>No Hay Puntuación Final Disponible</h3>
+                                </v-col>
                             </v-row>
                         </v-container>
                     </v-card>   
@@ -202,6 +207,10 @@
             <AddFinalScoreModal
                 v-if ="dialogAddFinalScore"
                 :dialog.sync="dialogAddFinalScore"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :uprm_score.sync="uprm_score"
+                :opponent_score.sync="opponent_score"
             />
         </v-container>
     </div>
@@ -343,6 +352,13 @@ export default {
            return true
        }
        else return false
+    },
+    formated_final_score(){
+        console.log("[FS] Do we have a final score?",this.uprm_score,this.opponent_score)
+        if(Number.isFinite(this.uprm_score)&&Number.isFinite(this.opponent_score)){
+            return true
+        }
+        else return false
     },
     buildDefaultValues(){
         if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}
@@ -519,20 +535,20 @@ export default {
     // },
     deleteAthleteStatistics(user) {
        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-            this.editedItemIndex = this.payload_stats.Basketball_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Basketball_Event_Statistics.athlete_statistic[this.editedItemIndex]
+            this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
+            this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
         }
         else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-            this.editedItemIndex = this.payload_stats.Volleyball_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Volleyball_Event_Statistics.athlete_statistic[this.editedItemIndex]
+            this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
+            this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
         }
         else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-            this.editedItemIndex = this.payload_stats.Soccer_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Soccer_Event_Statistics.athlete_statistic[this.editedItemIndex]
+            this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
+            this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
         }
         else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-            this.editedItemIndex = this.payload_stats.Baseball_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Baseball_Event_Statistics.athlete_statistic[this.editedItemIndex]
+            this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
+            this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
         }
         //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
         //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
@@ -541,16 +557,16 @@ export default {
     },
     deleteTeamStatistics(user) {
        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-            this.editedItem = this.payload_stats.Basketball_Event_Statistics.event_info
+            this.editedItem = this.payload_stats.event_info
         }
         else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-           this.editedItem = this.payload_stats.Volleyball_Event_Statistics.event_info
+           this.editedItem = this.payload_stats.event_info
         }
         else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-            this.editedItem = this.payload_stats.Soccer_Event_Statistics.event_info
+            this.editedItem = this.payload_stats.event_info
         }
         else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-           this.editedItem = this.payload_stats.Baseball_Event_Statistics.event_info
+           this.editedItem = this.payload_stats.event_info
         }
         //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
         //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
@@ -596,317 +612,7 @@ export default {
     //   console.log('reset')
     // },
     // Herbert Functions
-    getSeasonData(){
-        //console.log(this.season)
-        // TODO: CHANGE SO NOT HARDCODED IDS
-		if(this.sport_id!=''){
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.payload_stats = {// payload_stats.Basketball_Event_Statistics.athlete_statistic.statistics.
-                    "Basketball_Event_Statistics": {
-                        "athlete_statistic": [
-                        {
-                            "athlete_info": {
-                                "athlete_id": 4,
-                                "basketball_event_id": 16,
-                                "first_name": "Larry",
-                                "last_names": "Bird",
-                                "middle_name": null,
-                                "number": 33,
-                                "profile_image_link": null
-                            },
-                            "statistics": {
-                                "assists": 2,
-                                "blocks": 2,
-                                "field_goal_attempt": 2,
-                                "field_goal_percentage": 100.0,
-                                "free_throw_attempt": 2,
-                                "free_throw_percentage": 100.0,
-                                "points": 2,
-                                "rebounds": 2,
-                                "steals": 2,
-                                "successful_field_goal": 2,
-                                "successful_free_throw": 2,
-                                "successful_three_point": 2,
-                                "three_point_attempt": 2,
-                                "three_point_percentage": 100.0,
-                                "turnovers": 2
-                            }
-                        },
-                        {
-                            "athlete_info": {
-                                "athlete_id": 8,
-                                "basketball_event_id": 17,
-                                "first_name": "Bruce",
-                                "last_names": "Wayne",
-                                "middle_name": "Batman",
-                                "number": 27,
-                                "profile_image_link": "dccomics.com"
-                            },
-                            "statistics": {
-                                "assists": 1,
-                                "blocks": 1,
-                                "field_goal_attempt": 1,
-                                "field_goal_percentage": 100.0,
-                                "free_throw_attempt": 1,
-                                "free_throw_percentage": 100.0,
-                                "points": 1,
-                                "rebounds": 1,
-                                "steals": 1,
-                                "successful_field_goal": 1,
-                                "successful_free_throw": 1,
-                                "successful_three_point": 1,
-                                "three_point_attempt": 1,
-                                "three_point_percentage": 100.0,
-                                "turnovers": 1
-                            }
-                        }
-                        ],
-                        "event_info": {
-                            "basketball_event_team_stats_id": 7,
-                            "event_id": 5
-                        },
-                        "opponent_score": 1,
-                        "team_statistics": {
-                            "basketball_statistics": {
-                                "assists": 500,
-                                "blocks": 500,
-                                "field_goal_attempt": 500,
-                                "field_goal_percentage": 100.0,
-                                "free_throw_attempt": 500,
-                                "free_throw_percentage": 100.0,
-                                "points": 500,
-                                "rebounds": 500,
-                                "steals": 500,
-                                "successful_field_goal": 500,
-                                "successful_free_throw": 500,
-                                "successful_three_point": 500,
-                                "three_point_attempt": 500,
-                                "three_point_percentage": 100.0,
-                                "turnovers": 500
-                            }
-                        },
-                        "uprm_score": 5073
-                    }   
-                }
-                this.team_statistics.push(this.payload_stats.Basketball_Event_Statistics.team_statistics)
-                this.opponent_score = (this.payload_stats.Basketball_Event_Statistics.opponent_score)
-                this.uprm_score = (this.payload_stats.Basketball_Event_Statistics.uprm_score)
-                // this.opponent_name = (this.payload_stats.Basketball_Event_Statistics.opponent_name)
-                
-            }
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                this.payload_stats = {
-                    "Volleyball_Event_Statistics": {
-                        "athlete_statistic": [
-                        {
-                            "athlete_info": {
-                                "athlete_id": 70,
-                                "first_name": "Jill",
-                                "last_names": "Valentine",
-                                "middle_name": null,
-                                "number": null,
-                                "profile_image_link": null,
-                                "volleyball_event_id": 3
-                            },
-                            "statistics": {
-                                "aces": 1,
-                                "assists": 1,
-                                "attack_errors": 1,
-                                "blocking_errors": 1,
-                                "blocks": 1,
-                                "digs": 1,
-                                "kill_points": 1,
-                                "reception_errors": 1,
-                                "service_errors": 1
-                            }
-                        },
-                        {
-                            "athlete_info": {
-                                "athlete_id": 71,
-                                "first_name": "Claire",
-                                "last_names": "Redfield",
-                                "middle_name": null,
-                                "number": null,
-                                "profile_image_link": null,
-                                "volleyball_event_id": 4
-                            },
-                            "statistics": {
-                                "aces": 3,
-                                "assists": 3,
-                                "attack_errors": 3,
-                                "blocking_errors": 3,
-                                "blocks": 3,
-                                "digs": 3,
-                                "kill_points": 3,
-                                "reception_errors": 3,
-                                "service_errors": 3
-                            }
-                        }
-                        ],
-                        "event_info": {
-                            "event_id": 7,
-                            "volleyball_event_team_stats_id": 1
-                        },
-                        "opponent_score": 500,
-                        "team_statistics": {
-                        "volleyball_statistics": {
-                            "aces": 1,
-                            "assists": 1,
-                            "attack_errors": 1,
-                            "blocking_errors": 1,
-                            "blocks": 1,
-                            "digs": 1,
-                            "kill_points": 1,
-                            "reception_errors": 1,
-                            "service_errors": 1
-                            }
-                        },
-                        "uprm_score": 200
-                    }
-                }
-                this.team_statistics.push(this.payload_stats.Volleyball_Event_Statistics.team_statistics)
-                this.opponent_score = (this.payload_stats.Volleyball_Event_Statistics.opponent_score)
-                this.uprm_score = (this.payload_stats.Volleyball_Event_Statistics.uprm_score)
-                // this.opponent_name = (this.payload_stats.Volleyball_Event_Statistics.opponent_name)
-            }
-            else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                this.payload_stats = {
-                    "Soccer_Event_Statistics": {
-                        "athlete_statistic": [
-                        {
-                            "athlete_info": {
-                                "athlete_id": 73,
-                                "first_name": "Sheva",
-                                "last_names": "Alomar",
-                                "middle_name": null,
-                                "number": null,
-                                "profile_image_link": null,
-                                "soccer_event_id": 9
-                            },
-                            "statistics": {
-                                "assists": 1,
-                                "cards": 1,
-                                "fouls": 1,
-                                "goal_attempts": 1,
-                                "successful_goals": 1,
-                                "tackles": 1
-                            }
-                        },
-                        {
-                            "athlete_info": {
-                                "athlete_id": 74,
-                                "first_name": "Ada",
-                                "last_names": "Wong",
-                                "middle_name": null,
-                                "number": null,
-                                "profile_image_link": null,
-                                "soccer_event_id": 10
-                            },
-                            "statistics": {
-                                "assists": 2,
-                                "cards": 2,
-                                "fouls": 2,
-                                "goal_attempts": 2,
-                                "successful_goals": 2,
-                                "tackles": 2
-                            }
-                        }
-                        ],
-                        "event_info": {
-                            "event_id": 10,
-                            "soccer_event_team_stats_id": 5
-                        },
-                        "opponent_score": 50,
-                        "team_statistics": {
-                        "soccer_statistics": {
-                            "assists": 10,
-                            "cards": 10,
-                            "fouls": 20,
-                            "goal_attempts": 50,
-                            "successful_goals": 30,
-                            "tackles": 20
-                        }
-                        },
-                        "uprm_score": 100
-                    }
-                }
-                this.team_statistics.push(this.payload_stats.Soccer_Event_Statistics.team_statistics)
-                this.opponent_score = (this.payload_stats.Soccer_Event_Statistics.opponent_score)
-                this.uprm_score = (this.payload_stats.Soccer_Event_Statistics.uprm_score)
-                // this.opponent_name = (this.payload_stats.Soccer_Event_Statistics.opponent_name)
-            }
-            else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                this.payload_stats = {
-                    "Baseball_Event_Statistics": {
-                        "athlete_statistic": [
-                        {
-                            "athlete_info": {
-                            "athlete_id": 104,
-                            "baseball_event_id": 11,
-                            "first_name": "Leon ",
-                            "last_names": "Kennedy",
-                            "middle_name": null,
-                            "number": 2,
-                            "profile_image_link": null
-                            },
-                            "statistics": {
-                            "at_bats": 1,
-                            "base_on_balls": 1,
-                            "hits": 1,
-                            "left_on_base": 1,
-                            "runs": 1,
-                            "runs_batted_in": 1,
-                            "strikeouts": 1
-                            }
-                        },
-                        {
-                            "athlete_info": {
-                            "athlete_id": 105,
-                            "baseball_event_id": 12,
-                            "first_name": "Nemesis",
-                            "last_names": "Tyrant",
-                            "middle_name": null,
-                            "number": 3,
-                            "profile_image_link": null
-                            },
-                            "statistics": {
-                            "at_bats": 1,
-                            "base_on_balls": 1,
-                            "hits": 1,
-                            "left_on_base": 1,
-                            "runs": 1,
-                            "runs_batted_in": 1,
-                            "strikeouts": 1
-                            }
-                        }
-                        ],
-                        "event_info": {
-                        "baseball_event_team_stats_id": 3,
-                        "event_id": 24
-                        },
-                        "opponent_score": 100,
-                        "team_statistics": {
-                        "baseball_statistics": {
-                            "at_bats": 1,
-                            "base_on_balls": 1,
-                            "hits": 1,
-                            "left_on_base": 1,
-                            "runs": 1,
-                            "runs_batted_in": 1,
-                            "strikeouts": 1
-                        }
-                        },
-                        "uprm_score": 100
-                    }
-                }
-                this.team_statistics.push(this.payload_stats.Baseball_Event_Statistics.team_statistics)
-                this.opponent_score = (this.payload_stats.Baseball_Event_Statistics.opponent_score)
-                this.uprm_score = (this.payload_stats.Baseball_Event_Statistics.uprm_score)
-                // this.opponent_name = (this.payload_stats.Baseball_Event_Statistics.opponent_name)
-            }
-        }
-            
-    }
+   
   },
   computed: {
     ...mapGetters({
