@@ -212,6 +212,14 @@
                 :uprm_score.sync="uprm_score"
                 :opponent_score.sync="opponent_score"
             />
+            <UpdateFinalScoreModal
+                v-if ="dialogEditFinalScore"
+                :dialog.sync="dialogEditFinalScore"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :uprm_score.sync="uprm_score"
+                :opponent_score.sync="opponent_score"
+            />
         </v-container>
     </div>
   </v-container>
@@ -220,11 +228,13 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import AddFinalScoreModal from "@/components/AddFinalScoreModal";
+import UpdateFinalScoreModal from "@/components/UpdateFinalScoreModal";
 export default {
   data() {
     return {
       
       dialogAddFinalScore: false,
+      dialogEditFinalScore:false,
     
       editedItemIndex: -1,
       editedItem: '',
@@ -325,7 +335,8 @@ export default {
         }
     }, 
   components:{
-      AddFinalScoreModal
+      AddFinalScoreModal,
+      UpdateFinalScoreModal
   },
   methods: {
     wtf(){
@@ -602,7 +613,8 @@ export default {
         this.dialogAddFinalScore = true;
     },
     editFinalScore() {
-        this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
+        this.dialogEditFinalScore = true;
+        // this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
     },
     // editPermissions(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
