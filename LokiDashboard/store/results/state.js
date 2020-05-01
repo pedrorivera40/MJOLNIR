@@ -3,4 +3,5 @@ export default() =>({
     event_info: null,
     final_score:null,
     loadingQuery:false,
+    team_members: null,
 })

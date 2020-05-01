@@ -18,6 +18,11 @@ export default{
     //FINAL SCORE
     SET_FINAL_SCORE(state,final_score){
         state.final_score = final_score
+    },
+
+    //TEAM MEMBERS
+    SET_TEAM_MEMBERS(state,team_members){
+        state.team_members = team_members
     }
 
 }

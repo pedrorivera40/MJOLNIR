@@ -114,5 +114,31 @@ export default{
             console.log("ERROR SETTING STATE VARIABLE FOR LOADING QUERY",error)
         }
     },
+    //TEAM MEMBERS
+    async getTeamMembers({commit},team_id){
+        try{
+            //console.log("GET MEMBERS: At actions level we have:",team_id)
+            const response = await this.$axios.get('teams/members/?team_id='+team_id)
+            
+            //console.log("GET MEMBERS:",response)
+            console.log("GET MEMBERS:",response.data)
+            commit("SET_TEAM_MEMBERS",response.data.Team)
+            //TODO: LIKELY MOVE FROM HERE SINCE DASHBOARD ENDS EARLIER
+            commit("SET_QUERY_DONE")
+            
+        }catch(error){
+            console.log("ERROR GETTING TEAM MEMBERS",team_id,error)
+            commit("SET_TEAM_MEMBERS",null)
+            commit("SET_QUERY_DONE")
+        }
+    },
+    async setNullTeamMembers({commit}){
+        try{
+            commit("SET_TEAM_MEMBERS",null)
+        }catch(error){
+            console.log("ERROR SETTING NULLIFYING TEAM MEMBERS",error)
+        }
+    },
+    //INDIVIDUAL STATS
 }
 

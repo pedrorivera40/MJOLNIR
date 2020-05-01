@@ -59,6 +59,7 @@
                             color="primary_light"
                             class="white--text"
                             @click="addFinalScore()"
+                            :disabled="formated_final_score()"
                         >
                             <v-icon left>
                             mdi-plus
@@ -72,6 +73,7 @@
                             color="primary_light"
                             class="white--text"
                             @click="editFinalScore()"
+                            :disabled="!formated_final_score()"
                         >
                             <v-icon left>
                             mdi-pencil
@@ -102,6 +104,7 @@
                                         color="primary_light"
                                         class="white--text"
                                         @click="addAthleteStatistics()"
+                                        :disabled="formated_individual_stats()"
                                     >
                                         <v-icon left>
                                         mdi-plus
@@ -110,7 +113,7 @@
                                     </v-btn>
                                     <v-spacer />
                                     </v-col>
-                                    <v-col cols="4">
+                                    <!-- <v-col cols="4">
                                     <v-text-field
                                         append-icon="mdi-magnify"
                                         label="Búsqueda"
@@ -120,7 +123,7 @@
                                         single-line
                                         hide-details
                                     />
-                                    </v-col>
+                                    </v-col> -->
                                 </v-row>
                                 </v-card-title>
                                 <!-- :headers="headers"
@@ -273,7 +276,8 @@ export default {
 
       //OTHE QUERY RELATED VALUES
       team_id:'',
-      ready_for_stats:''
+      ready_for_stats:'',
+      team_members_local:''
 
     };
   },
@@ -282,6 +286,7 @@ export default {
     this.event_id = this.$route.params.id
     this.clearEventInfo()
     this.clearAllStats()
+    this.setNullTeamMembers()
     this.ready_for_stats = true
     console.log("[1] GOT EVENT ID",this.event_id)
     await this.getEventInfo(this.event_id)
@@ -299,6 +304,12 @@ export default {
             this.event_date = this.event_info.event_date
             this.team_id = this.event_info.team_id
             // if (this.ready_for_stats){
+             await this.getTeamMembers(this.team_id)
+            console.log("Trying to get Team Members for:",this.team_id)
+            if (this.team_members){
+                console.log("[TM-Got Team Members]",this.team_members)
+                this.team_members_local = this.team_headers
+            }
             console.log("are we ever getting in there????",this.readyForStats)
             if (this.ready_for_stats){
                 this.clearAllStats()
@@ -332,6 +343,7 @@ export default {
                 // this.ready_for_stats = false
                 
             }
+            
         }
     }, 
   components:{
@@ -339,9 +351,7 @@ export default {
       UpdateFinalScoreModal
   },
   methods: {
-    wtf(){
-        return true
-    },
+   
     ...mapActions({
         getAllEventStatistics:"results/getAllEventStatistics",
         getEventInfo:"results/getEventInfo",
@@ -349,6 +359,8 @@ export default {
         clearAllStats:"results/clearAllStats",
         //newish
         stopGetStats:"results/stopGetStats",
+        getTeamMembers:"results/getTeamMembers",
+        setNullTeamMembers:"results/setNullTeamMembers",
     }),
     
     //confirm why this method was deprecated
@@ -367,6 +379,12 @@ export default {
     formated_final_score(){
         console.log("[FS] Do we have a final score?",this.uprm_score,this.opponent_score)
         if(Number.isFinite(this.uprm_score)&&Number.isFinite(this.opponent_score)){
+            return true
+        }
+        else return false
+    },
+    formated_individual_stats(){
+        if (this.team_members_local != '' &&  this.payload_stats != ''){
             return true
         }
         else return false
@@ -629,7 +647,8 @@ export default {
   computed: {
     ...mapGetters({
         results_payload:"results/results_payload",
-        event_info:"results/event_info"
+        event_info:"results/event_info",
+        team_members:"results/team_members"
     })
     
     

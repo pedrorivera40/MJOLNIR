@@ -3,4 +3,5 @@ export default{
     event_info: state => state.event_info,
     final_score: state => state.final_score,
     loadingQuery: state => state.loadingQuery,
+    team_members: state => state.team_members,
 }
