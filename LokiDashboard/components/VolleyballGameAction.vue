@@ -88,8 +88,11 @@ export default {
     athlete_number: Number,
     athlete_img: String,
     in_color: String,
-    id: Number,
+    id: String,
     action_type: String
+  },
+  mounted() {
+    console.log("HEHEHEHE");
   },
   data: () => ({
     notification: "Notification" // ADD ACTION TYPES AND A DICTIONARY TO MAP THEM FROM ENGLISH TO SPANISH...
