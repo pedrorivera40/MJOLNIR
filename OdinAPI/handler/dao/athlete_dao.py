@@ -27,18 +27,18 @@ class AthleteDAO:
             their information.
         """
         cursor = self.conn.cursor()
-        query = """select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.year_of_study,A.years_of_participation,A.profile_image_link,S.name as sport_name,B.name
-                   from athlete as A inner join sport as S on A.sport_id=S.id inner join branch as B on S.branch_id = B.id
-                   where A.is_invalid=false
+        query = """select id
+                   from athlete 
+                   where is_invalid=false
                 """
         result = []
         try:
             cursor.execute(query)
-            
+            aids = []#List of the ids of the athletes fetched in the query above.
             for row in cursor:
-                result.append(row)
-
-            cursor.close()
+                aids.append(row[0])#Add the ids of the participant athletes in the sport
+            for aid in aids:
+                result.append(self.getAthleteByID(aid)) #Call this function in order to get the information of the athletes.                                   
         except psycopg2.DatabaseError as e:
             print(e)
         finally:
@@ -108,7 +108,7 @@ class AthleteDAO:
         """
 
         cursor = self.conn.cursor()
-        query = """select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.year_of_study,A.years_of_participation,A.profile_image_link,S.name as sport_name,B.name,P.name as position_name,AP.is_invalid,C.name as category_name,AC.is_invalid
+        query = """select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.year_of_study,A.years_of_participation,A.profile_image_link,S.name as sport_name,B.name,A.sport_id,P.name as position_name,AP.is_invalid,C.name as category_name,AC.is_invalid
                    from ((athlete as A inner join sport as S on A.sport_id=S.id inner join branch as B on S.branch_id=B.id) full outer join (athlete_position as AP inner join position as P on AP.position_id=P.id) on AP.athlete_id=A.id) full outer join (athlete_category as AC inner join category as C on AC.category_id=C.id) on A.id=AC.athlete_id
                    where A.id=%s
                    and A.is_invalid=false

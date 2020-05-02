@@ -34,7 +34,8 @@ class AthleteHandler:
         result['yearsOfParticipation'] = record[11]
         result['profilePicLink'] = record[12]
         result['sportName'] = record[13]
-        result['sportBranch'] = record[14]        
+        result['sportBranch'] = record[14]
+        result['sport_id'] = record[15]        
 
         return result
 
@@ -66,10 +67,10 @@ class AthleteHandler:
         positions = {}
         categories = {}
         for record in records:
-            if record[15]:#Holds the position of the athlete if not null.
-                positions.update(dict(((record[15],record[16]),)))
-            if record[17]:#Holds the category of the athlete if not null.
-                categories.update(dict(((record[17],record[18]),)))
+            if record[16]:#Holds the position of the athlete if not null.
+                positions.update(dict(((record[16],record[17]),)))
+            if record[18]:#Holds the category of the athlete if not null.
+                categories.update(dict(((record[18],record[19]),)))
         
         result.update(dict((('athlete_positions',positions),)))
         result.update(dict((('athlete_categories',categories),)))
@@ -92,7 +93,7 @@ class AthleteHandler:
                 return jsonify(Error = "Ningún atleta fue encontrado."),404
             mappedResult = []
             for athlete in result:
-                mappedResult.append(self.mapAthleteToDict(athlete))
+                mappedResult.append(self.mapAthleteWithPositionsAndCategoriesToDict(athlete))
             return jsonify(Athletes = mappedResult),200
         except:
             dao._closeConnection()
