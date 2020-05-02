@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getSportsExhibicion: "sports/getSportsExhibicion"
+      getAllSports: "sports/getAllSports"
     }),
     redirect(sport_id) {
       this.$router.push("equipo/" + sport_id);
@@ -68,11 +68,13 @@ export default {
   },
   computed: {
     ...mapGetters({
-      sports: "sports/sports"
+      sports: "sports/sportsExhibicion"
     })
   },
   beforeMount() {
-    this.getSportsExhibicion();
+    if (this.sports.length === 0) {
+      this.getAllSports();
+    }
   }
 };
 </script>
