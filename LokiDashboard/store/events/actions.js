@@ -49,10 +49,11 @@ export default {
             
             const response = await this.$axios.post('events/team/'+eventJSON.team_id+'/',eventJSON)
             dispatch('notifications/setSnackbar', {text: response.data.Event, color: 'success'}, {root: true})
-            this.$router.push('/eventos/')
+            //this.$router.push('/eventos/')
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
@@ -61,14 +62,14 @@ export default {
 
     async editEvent({commit,dispatch},eventJSON){
         try{
-            commit("SET_EVENTS",[])
-            
+            commit("SET_EVENTS",[])      
             const response = await this.$axios.put('events/'+eventJSON.event_id+'/',eventJSON)
             dispatch('notifications/setSnackbar', {text: response.data.Event, color: 'success'}, {root: true})
-            this.$router.push('/eventos/')
+            //this.$router.go()
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
@@ -76,12 +77,11 @@ export default {
     },
 
     async removeEvent({commit,dispatch},eventID){
-        try{
-            commit("SET_EVENTS",[])
-            
+        try{          
             const response = await this.$axios.delete('events/'+eventID+'/')
-            dispatch('notifications/setSnackbar', {text: response.data.Event, color: 'success'}, {root: true})
-            this.$router.go()
+            commit("DELETE_EVENT",eventID)
+            dispatch('notifications/setSnackbar', {text: `El evento con identificador:${eventID} ha sido removido.`, color: 'success'}, {root: true})
+            
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
@@ -95,7 +95,8 @@ export default {
         try{
             
             commit("SET_EVENTS",[])
-            const response = await this.$axios.post('pbp/'+eventJSON.sport_name,eventJSON)
+            
+            const response = await this.$axios.post('pbp/'+eventJSON.sport_name,{event_id:eventJSON.event_id})
             
             dispatch('notifications/setSnackbar', {text: response.data.MSG, color: 'success'}, {root: true})
             this.$router.push('/jugadas-voleibol/'+eventJSON.event_id)

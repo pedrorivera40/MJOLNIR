@@ -50,10 +50,11 @@ export default{
             
             const response = await this.$axios.post('athletes/',athleteJSON)
             dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
-            this.$router.push('/atletas/')
+            
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
@@ -66,10 +67,11 @@ export default{
             
             const response = await this.$axios.put('athletes/'+athleteJSON.athlete_id+'/',athleteJSON)
             dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
-            this.$router.push('/atletas/')
+            
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                'return error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
