@@ -8,10 +8,11 @@
             <v-col>
               <v-btn
                 color="green darken-1"
+                dark
                 @click="goToCreateAthlete"                   
               >
                 <v-icon left >mdi-plus</v-icon>
-                Nuevo Atleta
+                Añadir Atleta
               </v-btn>
               <v-spacer />
             </v-col>
@@ -63,7 +64,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"                  
-                  @click="editAthlete(item.id)"
+                  @click="editAthlete(item)"
                 >
                   mdi-pencil
                 </v-icon>
@@ -86,9 +87,34 @@
           </template>          
         </v-data-table>
 
-        <v-dialog v-model="dialog" persistent max-width="290">            
+        <AddAthleteModal
+          :dialog.sync="dialogAdd"
+        />
+
+        <EditAthleteModal
+          :dialog.sync="dialogEdit"
+          :first_name="editedItem.fName"
+          :middle_name="editedItem.mName"
+          :last_names="editedItem.lName"
+          :date_of_birth="editedItem.dBirth"
+          :short_bio="editedItem.bio"
+          :height="editedItem.height"
+          :study_program="editedItem.sProgram"
+          :school_of_precedence="editedItem.school"
+          :years_of_participation="editedItem.yearsOfParticipation"
+          :year_of_study="editedItem.yearOfStudy"
+          :athlete_positions="editedItem.athlete_positions"
+          :athlete_categories="editedItem.athlete_categories"
+          :number="editedItem.number"
+          :profile_image_link="editedItem.profilePicLink"
+          :sport_name="editedItem.sportName"
+          :branch="editedItem.sportBranch"
+          :sport_id="editedItem.sport_id"
+          :id="editedItem.id"
+        />
+        <v-dialog v-model="dialogRemove" persistent max-width="400">            
             <v-card>
-              <v-card-title class="headline">¿Estás seguro de que quieres eliminar el atleta con id:{{aid}}?</v-card-title>
+              <v-card-title class="headline">¿Estás seguro de que quieres <wbr> el atleta con id:{{aid}}?</v-card-title>
               <v-card-text>
                 Esta acción es <strong> irreversible.</strong>
                 <v-checkbox
@@ -111,18 +137,21 @@
 </template>
 
 <script>
-import AthleteCard from '../../components/AthleteCard'
 import { mapActions, mapGetters } from "vuex"
-
+import  AddAthleteModal from "@/components/AddAthleteModal"
+import EditAthleteModal from "@/components/EditAthleteModal"
 export default {
   components:{
-    AthleteCard:AthleteCard
+    AddAthleteModal,
+    EditAthleteModal,
   },
 
   data: () =>({
     search:'',
     aid:0,
-    dialog:false,
+    dialogRemove:false,
+    dialogAdd:false,
+    dialogEdit:false,
     terms:false,
     ready:false,
     name:'',
@@ -143,7 +172,28 @@ export default {
       {text:"Deporte",value:"sportName"},
       {text:"Rama",value:"sportBranch"},
       {text:"Acciones",value:"actions",sortable:false}
-    ]
+    ],
+
+    editedItem:{
+      fName:"",
+      mName:"",
+      lName:"",
+      dBirth:"",
+      bio:"",
+      height:0.0,
+      number:0,
+      school:"",
+      sProgram:"",
+      yearOfStudy:0,
+      sport_id:0,
+      sportName:"",
+      sportBranch:"",
+      yearsOfParticipation:0,
+      profilePicLink:"",
+      athlete_positions:{},
+      athlete_categories:{},
+      id:0,
+    },
   
 
     
@@ -158,7 +208,7 @@ export default {
     }),
 
     goToCreateAthlete(){
-        this.$router.push('/atleta/')
+        this.dialogAdd = true
     },
     
     loadingAthletes(){
@@ -171,24 +221,25 @@ export default {
     viewAthlete(athleteID){
       this.$router.push('/atleta/'+athleteID)
     },
-    editAthlete(athleteID){
-      this.$router.push('/atleta/'+athleteID+'/editar')
+    editAthlete(athlete){
+      this.editedItem = Object.assign({},athlete)
+      this.dialogEdit = true
     },
     deleteAthlete(){
       if(this.aid > 0 && this.terms)            
         this.removeAthlete(this.aid)
-        this.dialog = false
+        this.dialogRemove = false
         this.terms = false
         this.ready = false
     },
 
     prepareAthleteToRemove(athleteID){
       this.aid = athleteID
-      this.dialog = true
+      this.dialogRemove = true
     },
     cancelRemoval(){
       this.aid = 0
-      this.dialog = false
+      this.dialogRemove = false
       this.terms = false
     }
     

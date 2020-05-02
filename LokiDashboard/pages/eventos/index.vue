@@ -12,14 +12,16 @@
               transition="slide-x-transition"
               :close-on-content-click="false"
             >
+              
               <template v-slot:activator="{ on }">
                 <v-col md="3">
                   <v-btn
                     color="green darken-1"
+                    dark
                     @click="goToCreateEvent"                   
                   >
                   <v-icon left >mdi-plus</v-icon>
-                    Nuevo Evento
+                    Añadir Evento
                   </v-btn>       
                        
                   <v-btn color="white"  v-on="on">
@@ -50,7 +52,7 @@
                   </v-menu>
                 </v-list-item>
                 <v-list-item>
-                  <v-select v-model="sport" :items="sports" label="Deporte"></v-select>
+                  <v-autocomplete v-model="sport" :items="sports" label="Deporte"></v-autocomplete>
                 </v-list-item>
                 <v-list-item>
                   <v-select v-model="branch" :items="branches" label="Rama"></v-select>
@@ -58,6 +60,11 @@
                 <v-list-item>
                   <v-select v-model="locality" :items="localities" label="Localizacion"></v-select>
                 </v-list-item>
+                 <v-list-item>
+                  <v-checkbox v-model="eventHasPBP" label="Eventos con PBP"> </v-checkbox>
+                </v-list-item>
+
+                
 
                 <v-list-item>
                   <v-btn @click="clearFilters">Borrar</v-btn>
@@ -85,7 +92,8 @@
                   color="primary"
                   outlined
                   small
-                  v-on="on"                  
+                  v-on="on"
+                  @click="goToPBPSequence(item)"                  
                 >
                   Ver PBP
                 </v-btn>
@@ -99,7 +107,8 @@
                   color="primary"
                   outlined
                   small
-                  v-on="on"                  
+                  v-on="on"
+                  @click="createPBPSequence(item)"                  
                 >
                   Crear PBP
                 </v-btn>
@@ -129,7 +138,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"                  
-                  @click="editEvent(item.id)"
+                  @click="editEvent(item)"
                 >
                   mdi-pencil
                 </v-icon>
@@ -151,6 +160,24 @@
             </v-tooltip>           
           </template>          
         </v-data-table>
+
+        <EditEventModal
+          :dialog.sync = "dialogEdit"
+          :id="editedItem.id"
+          :date="editedItem.event_date"
+          :time ="editedItem.time"    
+          :locality="editedItem.is_local"
+          :venue="editedItem.venue"
+          :sport_name="editedItem.sport_name"
+          :branch="editedItem.branch"
+          :team_season_year="editedItem.team_season_year"
+          :opponent_name="editedItem.opponent_name"
+          :event_summary="editedItem.event_summary"
+        />
+
+        <AddEventModal
+          :dialog.sync = "dialogAdd"
+        />
 
         <v-dialog v-model="dialog" persistent max-width="290">            
             <v-card>
@@ -178,21 +205,25 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import EventCard from "../../components/EventCard";
+import EditEventModal from "@/components/EditEventModal"
+import AddEventModal from "@/components/AddEventModal"
 
 export default {
   components: {
-    EventCard
+    EditEventModal,
+    AddEventModal,
   },
 
   data: () => ({
     ready:false,
     menu: false,
     dialog: false,
+    dialogEdit: false,
+    dialogAdd:false,
     terms:false,
     dateMenu: false,
     loading : true,
-    eid:0,
+    eventHasPBP : false,       
     date: "",
     sport: "",
     branch: "",
@@ -201,6 +232,7 @@ export default {
     branches: ["Masculino", "Femenino", "Exhibicion"],
     localities: ["Casa", "Afuera"],
     filteredEvents:[],
+    eid: 0,
 
     headers:[
       {
@@ -213,11 +245,23 @@ export default {
       {text:"Rama", value:"branch"},
       {text:"Lugar del Evento",value:"venue"},      
       {text:"Play-by-Play",align:"center",value:"hasPBP"},
-      {text:"Acciones", value:"actions",sortable:false}
-      
-      
+      {text:"Acciones", value:"actions",sortable:false}     
 
-    ]
+    ],
+
+    editedItem:{
+      event_date: "",
+      time:"",
+      is_local: "",
+      venue: "",
+      event_summary: "",
+      opponent_name: "",      
+      sport_name: "",
+      branch: "",
+      team_season_year: "",
+      id: 0
+    }
+
 
     
 
@@ -226,11 +270,13 @@ export default {
   methods: {
     ...mapActions({
       getEvents: "events/getEvents",
-      removeEvent:"events/removeEvent"
+      removeEvent:"events/removeEvent",
+      startPBPSequence:"events/startPBPSequence"
     }),
     
     goToCreateEvent(){
-      this.$router.push('/evento/')
+      this.dialogAdd = true
+      //this.$router.push('/evento/')
     },
 
     clearFilters() {
@@ -238,6 +284,7 @@ export default {
       this.sport = "";
       this.branch = "";
       this.locality = "";
+      this.eventHasPBP = false;
       this.menu = false;
       
       
@@ -256,12 +303,16 @@ export default {
         }
         else{         
           
-          if(this.filteredEvents.length == 0){
+          if(this.filteredEvents.length != this.events.length){
             
             this.filteredEvents = []
             for (let i = 0; i < this.events.length; i++) {
               this.filteredEvents.push(this.events[i]);
-              this.filteredEvents[i].event_date = new Date(this.events[i].event_date).toISOString().substring(0,10)
+              const parsedDate =  new Date(Date.parse(this.events[i].event_date))
+              const eDate = parsedDate.toISOString().substring(0,10)
+              const time = parsedDate.getUTCHours() + ':' + parsedDate.getMinutes()
+              this.filteredEvents[i].event_date = eDate
+              this.filteredEvents[i].time = time
             }
             this.ready = true
             this.loading = false
@@ -316,6 +367,14 @@ export default {
             continue;
           }
         }
+        if(this.eventHasPBP == true){
+          if(!event.hasPBP){
+            this.filteredEvents.splice(i,1);
+            continue
+          }
+        }
+
+        this.menu = false
       }
     },
 
@@ -329,8 +388,10 @@ export default {
       this.$router.push('/evento/'+eventID)
     },
 
-    editEvent(eventID){
-      this.$router.push('/evento/'+eventID+'/editar')
+    editEvent(event){     
+      this.editedItem = Object.assign({},event)
+      this.dialogEdit = true
+      //this.$router.push('/evento/'+eventID+'/editar')
     },
     deleteEvent(){  
       if(this.eid > 0 && this.terms)            
@@ -338,6 +399,7 @@ export default {
         this.dialog = false
         this.terms = false
         this.ready = false
+
     },
     prepareEventToRemove(eventID){
       this.eid = eventID
@@ -347,6 +409,17 @@ export default {
       this.eid = 0
       this.dialog = false
       this.terms = false
+    },
+
+    goToPBPSequence(event)
+    {
+      this.$router.push('/jugadas-voleibol/'+event.id)
+    },
+
+    createPBPSequence(event)
+    {
+      const eventJSON = {"sport_name":event.sport_name,"event_id":event.id}
+      this.startPBPSequence(eventJSON)
     }
 
   },

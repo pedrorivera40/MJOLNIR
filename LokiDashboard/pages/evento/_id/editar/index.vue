@@ -249,7 +249,7 @@ export default {
           
           this.time = eventDate.getUTCHours() + ':' + eventDate.getUTCMinutes()
           
-
+          console.log(eventDate)
 
           this.locality = this.event.is_local
 				
