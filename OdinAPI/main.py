@@ -1939,7 +1939,7 @@ def get_sports():
         args = request.args
         handler = SportHandler()
 
-        if len(body) != 0:
+        if body:
             return jsonify(ERROR="No se aceptan parámetros."), 400
 
         if len(args) == 0:
