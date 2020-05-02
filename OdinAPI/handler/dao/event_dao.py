@@ -211,10 +211,7 @@ class EventDAO:
             
         except Exception as e:
             print(e)
-            return "Occurrió un error interno tratando de añadir un evento."
-        finally:
-            if self.conn is not None:
-                self._closeConnection()
+            return "Occurrió un error interno tratando de añadir un evento."        
 
         return eID
        
@@ -260,10 +257,7 @@ class EventDAO:
             cursor.close()        
         except Exception as e:
             print(e)
-            return "Occurrió un error interno tratando de actualizar un evento existente."
-        finally:
-            if self.conn is not None:
-                self._closeConnection()
+            return "Occurrió un error interno tratando de actualizar un evento existente."       
 
         return eid
     
@@ -301,7 +295,8 @@ class EventDAO:
             return "Occurrió un error interno tratando de eliminar un evento existente."
         finally:
             if self.conn is not None:
-                self._closeConnection()       
+                self.conn.close()
+              
         return eid
 
     def commitChanges(self):

@@ -235,7 +235,10 @@ class EventHandler:
                 dao._closeConnection()
                 return jsonify(Error = result),500
 
-            return jsonify(Event = "Se añadió un evento con el identificador: {}".format(result)),201
+            event = dao.getEventByID(result)
+            mappedEvent = self.mapEventToDict(event)
+
+            return jsonify(Event =  mappedEvent),201
             
         except Exception as e:
             print(e)
@@ -284,8 +287,11 @@ class EventHandler:
             if isinstance(result,str):
                 dao._closeConnection()
                 return jsonify(Error = result),500
+            
+            event = dao.getEventByID(result)
+            mappedEvent = self.mapEventToDict(event)
                 
-            return jsonify(Event = "Evento con el identificador:{}, fue editado.".format(result)),200
+            return jsonify(Event = mappedEvent),200
             
         except Exception as e:
             print(e)
@@ -386,7 +392,8 @@ class EventHandler:
             
             return 1
 
-        except:
+        except Exception as e:
+            print(e)
             return "Bad arguments were given." 
 
     def _check_pbp(self,eID):
