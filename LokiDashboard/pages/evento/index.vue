@@ -17,8 +17,7 @@
       <v-form v-model="valid" v-if="formated()">
         <v-container>            
           <v-row>            
-            <v-col
-              cols="1"
+            <v-col             
               md="3"
             >	
 
@@ -27,7 +26,6 @@
             </v-col>
 
             <v-col
-              cols="12"
               
             >
             <v-date-picker
@@ -43,9 +41,24 @@
             </v-col>
           </v-row>
 
+          <v-row>            
+            <v-col             
+              md="3"
+            >	
+
+            <h2>Hora del Evento:</h2>
+              
+            </v-col>
+
+            <v-col>                  
+            
+             <v-time-picker v-model="time" color="green darken-1"></v-time-picker>
+              
+            </v-col>
+          </v-row>
+
           <v-row>
-            <v-col
-              cols="1"
+            <v-col            
               md="3"
             >	
 
@@ -53,8 +66,7 @@
             
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="3"
             >                
               <v-select
@@ -65,8 +77,7 @@
               ></v-select>                
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="4"
             >          
               <v-text-field
@@ -79,8 +90,7 @@
           </v-row>
 
           <v-row >
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >	
 
@@ -88,8 +98,7 @@
               
             </v-col>
 
-            <v-col 
-              cols="1"
+            <v-col             
               md="9"
               
             >               
@@ -108,8 +117,7 @@
           </v-row>
 
           <v-row>
-            <v-col
-              cols="1"
+            <v-col             
               md="3"
             >	
 
@@ -117,8 +125,7 @@
               
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col             
               md="4"
             >              
               <v-text-field
@@ -131,8 +138,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >	
 
@@ -140,8 +146,7 @@
               
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="9"
             >                
               <v-textarea
@@ -179,15 +184,15 @@
 
 <script>
 
-  import rules from "../../utils/validations"   
-  import teamsData from "../../data/eventsPagesData/teams.json"
-
+  import rules from "../../utils/validations"    
+  import {mapActions,mapGetters} from "vuex"
   export default {
     
     data: () => ({
       ready : false,
       valid:false,
-			date:'', 
+      date:'',
+      time:'', 
 			locality:'',
 			localities:['Casa','Afuera'],
 			venue:'',
@@ -198,7 +203,7 @@
       year:'',
       team:'',
       teamsList:[],     
-      teams:teamsData,      
+         
       
     }),
 
@@ -207,28 +212,32 @@
     methods: {
       ...rules,
 
-      submit () {
+      ...mapActions({
+        addEvent:"events/addEvent",
+        getEventTeams:"events/getEventTeams"
+      }),
 
-        let event_attributes = {}
+      submit () {        
+        
+        const event_attributes = {}
 
-        event_attributes['event_date'] = this.date
+        event_attributes['event_date'] = this.date + ' ' + this.time
 
         if(this.locality.localeCompare('Casa') == 0)
           event_attributes['is_local'] = true
         else if(this.locality.localeCompare('Afuera') == 0)
-          event_attributes['is_local'] = false
+          event_attributes['is_local'] = false        
         
-        event_attributes['team_id'] = this.team
+        event_attributes['venue'] = this.venue
         event_attributes['opponent_name'] = this.opponent_name
         event_attributes['event_summary'] = this.eventSummary
-
-        console.log("Creating a new event with the following information:")
-        console.log(event_attributes)
-
-        this.$router.push('/eventos/')
+        
+        const eventJSON = {'team_id':this.team,'attributes':event_attributes}
+        this.addEvent(eventJSON)     
         
       },
       clear () {
+        
         this.locality =''
         this.team = ''
         this.eventSummary = null
@@ -246,7 +255,7 @@
       },
 
       formated(){
-        if(this.teams){
+        if(this.teams.length > 0){
           if(this.ready){
             return true
           }
@@ -265,12 +274,25 @@
       resetDate()
       {
         let time_zone_offset = new Date().getTimezoneOffset() * 60000
-      
-        this.date = new Date(Date.now() - time_zone_offset).toISOString().substring(0,10)
+        const newDate =  new Date(Date.now() - time_zone_offset)
+        this.date = newDate.toISOString().substring(0,10)
+        this.time = newDate.getUTCHours()+':'+newDate.getUTCMinutes()
         
       }
 
       
     },
+
+    computed: {
+		...mapGetters({
+			 teams:"events/event_teams"
+		}),
+		
+
+	},
+	mounted() {
+		this.getEventTeams();
+		
+	}
   }
 </script>

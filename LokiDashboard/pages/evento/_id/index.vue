@@ -23,138 +23,83 @@
 						:src="event.sport_img_url"
 					></v-img>
 				</v-row>
-				<v-row>
-						<v-col
-							cols="1"
-							md="3"
-						>	
 
-							<h2>Resumen de Evento:</h2>
-							
-						</v-col>
-
-						<v-col
-							cols="12"
-							md="9"
-						>
-						
-							<v-textarea
-								v-model="event.event_summary"    
-								
-								label="Resumen"
-								rows="2"
-								readonly
-								outlined
-							></v-textarea>
-							
-						</v-col>
+				<v-row>            
+					<v-col						
+						md="12"
+					>	
+				
+					<v-card-text>
+							<h2>Fecha del Evento:<wbr> {{date}}</h2>
+					</v-card-text>						               
+					</v-col>			      
 				</v-row>
 
 				<v-row>            
-					<v-col
-						cols="12"
-						md="3"
+					<v-col						
+						md="12"
 					>	
-
-					<h2>Fecha del Evento:</h2>						               
-					</v-col>
-
-					<v-col
-						cols=12
-						md=2
-					>
-						<v-text-field
-							v-model="date"
-							label="Fecha"								
-							readonly
-												
-						></v-text-field>
-					</v-col>             
+				
+					<v-card-text>
+							<h2>Hora del Evento:<wbr> {{time}}</h2>
+					</v-card-text>						               
+					</v-col>			      
 				</v-row>
+				
+				<v-row>
+					<v-col						
+						md="12"
+					>	
+					<v-card-text >
+							<h2>Equipo de UPRM: {{team}}</h2>							
+					</v-card-text>					
+					</v-col>					
+				</v-row>				
 
 				<v-row>
-					<v-col
-						cols="1"
-						md="3"
+					<v-col					
+						md="12"
 					>	
-
-					<h2>Localización:</h2>
-					
-					</v-col>
-
-					<v-col
-						cols="12"
-						md="3"
-					>							
-						<v-text-field
-							:value="getLocality()"							
-							label ="Localización"
-							readonly
-							
-						></v-text-field>						
-					</v-col>
-
-					<v-col
-						cols="12"
-						md="3"
+						<v-card-text >
+							<h2>Localización: {{getLocality()}}</h2>							
+						</v-card-text>	
+					</v-col>					
+				</v-row>
+				<v-row>			
+					<v-col						
+						md="12"
 					>						
-						<v-text-field
-							v-model="event.venue"									                    
-							label="Lugar del Evento"
-							readonly
-							
-						></v-text-field>							
+						<v-card-text >
+							<h2>Lugar del Evento: {{event.venue}}</h2>							
+						</v-card-text>								
 					</v-col>
+				</v-row>
+		
+
+				<v-row>
+					<v-col						
+						md="12"
+					>	
+						<v-card-text >
+							<h2>Nombre de Oponente: {{event.opponent_name}}</h2>							
+						</v-card-text>							
+						
+					</v-col>				
 				</v-row>
 
 				<v-row>
-					<v-col
-						cols="1"
-						md="3"
-					>	
-
-					<h2>Equipo de UPRM:</h2>
-						
-					</v-col>
-
-					<v-col
-						cols="1"
-						md="9"
-					>
-						<v-text-field
-								v-model="team"
-								label="Equipo"									
-								readonly                
-								
-						></v-text-field>
-					</v-col>
+						<v-col						
+							md="12"
+						>	
+							<v-card-text>
+								<h2>Resumen de Evento:</h2>
+								<p>
+								{{event.event_summary}}
+								</p>
+							</v-card-text>
+						</v-col>
 				</v-row>
-
-				<v-row>
-					<v-col
-						cols="1"
-						md="3"
-					>	
-
-						<h2>Nombre de Oponente:</h2>
-						
-					</v-col>
-
-					<v-col
-						cols="12"
-						md="4"
-					>
-						<v-text-field
-							v-if="event"
-							v-model="event.opponent_name"									                  
-							label="Oponente"
-							readonly
-							required
-						></v-text-field>
-					
-					</v-col>
-				</v-row>
-
+		
 
 				<v-row>
 					<v-spacer/>
@@ -182,7 +127,9 @@ export default {
 		
 		team:'',
 		locality:'',		
-		ready:false,		   
+		ready:false,
+		time:'',
+		date:''		   
 		
 	}),
 
@@ -217,14 +164,33 @@ export default {
 					return true
 				}
 				else{
-					this.date = new Date(Date.parse(this.event.event_date)).toISOString().substr(0,10)
+					let eventDate = new Date(Date.parse(this.event.event_date))
+					this.date = eventDate.toISOString().substr(0,10)
+					let hours = eventDate.getUTCHours()
+					let minutes = eventDate.getUTCMinutes()
+					
+					let amPM = null
+					if(hours > 12){
+						amPM = 'PM'
+						hours -= 12
+					}
+					else if(hours < 12)
+						amPM = 'AM'
+
+					if(minutes < 10)
+						this.time = hours + ":0"+minutes + amPM
+					else if(minutes >=10)
+						this.time = hours + ":" +minutes + amPM
+						
+				 	
+				
 					if(this.event.is_local)
 						this.locality = 'Casa'
 				
 					else
 						this.locality = 'Afuera'
 					
-					this.team = "Deporte: " + this.event.sport_name + '-' + this.event.branch + " Temporada: " + this.event.team_season_year
+					this.team = this.event.sport_name + '-' + this.event.branch + '-'+ this.event.team_season_year
 					
 					this.ready = true
 				}
@@ -252,3 +218,12 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+h2{
+	font-weight: normal;
+	word-break: keep-all;	
+}
+
+
+</style>

@@ -104,6 +104,15 @@ const passwordDiffFromOld = (password) => {
 
 }
 
+const seasonRequired = (propertyType) => {
+  return v => {
+    if(!v){ return `${propertyType} debe ser seleccionado`; }
+    
+    //Will receive the id of the team which will be an integer larger than zero.
+    return v >= 2020 || `${propertyType} debe ser seleccionado`;
+  }
+}
+
 export default {
   required,
   minLength,
@@ -116,6 +125,7 @@ export default {
   nameFormat,
   generalPhrase,
   alphaSpaces,
-  passwordDiffFromOld
+  passwordDiffFromOld,
+  seasonRequired
 
 }

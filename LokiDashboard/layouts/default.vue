@@ -3,9 +3,7 @@
     <v-app-bar app color="primary" dark clipped-left v-if="$auth.loggedIn">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
-      <v-toolbar-title class="headline font-weight-medium">
-        Huella Deportiva Dashboard
-      </v-toolbar-title>
+      <v-toolbar-title class="headline font-weight-medium">Huella Deportiva Dashboard</v-toolbar-title>
 
       <v-spacer />
 
@@ -32,12 +30,7 @@
     >
       <v-list dense>
         <v-list-item-group class="nav-links">
-          <v-list-item
-            v-for="(item, index) in items"
-            :key="index"
-            :to="item.to"
-            nuxt
-          >
+          <v-list-item v-for="(item, index) in items" :key="index" :to="item.to" nuxt>
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>

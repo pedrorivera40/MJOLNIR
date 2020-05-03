@@ -1,9 +1,8 @@
 from flask import jsonify
 
 from .dao.team_dao import TeamDAO
-#from .dao.athlete_dao import AthleteDAO
-from .dao.mock_dao import AthleteDAO
-from .dao.mock_dao import SportDAO
+from .dao.athlete_dao import AthleteDAO
+from .dao.sport_dao import SportDAO
 
 
 class TeamHandler():
@@ -446,7 +445,7 @@ class TeamHandler():
             athlete_sport = a_dao.getAthleteSportByID(aID)
             sID = dao.getTeamSportByID(tID)[0]
             if athlete_sport != sID:
-                return jsonify(Error="Athlete for ID:{} does not match team sport ID:{}.".format(aID, sID)), 400
+                return jsonify(Error="Athlete for ID:{} does not match team sport ID:{}, for it has sport ID:{}.".format(aID, sID,athlete_sport)), 400
         except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
         except:
