@@ -173,31 +173,20 @@
           :team_season_year="editedItem.team_season_year"
           :opponent_name="editedItem.opponent_name"
           :event_summary="editedItem.event_summary"
+          :trigger.sync="ready"
         />
 
         <AddEventModal
           :dialog.sync = "dialogAdd"
+          :trigger.sync = "ready"
         />
 
-        <v-dialog v-model="dialog" persistent max-width="290">            
-            <v-card>
-              <v-card-title class="headline">¿Estás seguro de que quieres eliminar el evento con id:{{eid}}?</v-card-title>
-              <v-card-text>
-                Esta acción es <strong> irreversible.</strong>
-                <v-checkbox
-                  v-model="terms"
-                  :label="`Yo acepto las consecuencias.`"
-                >
-                </v-checkbox>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="green darken-1" text @click="cancelRemoval">Cancelar</v-btn>
-                <v-btn color="green darken-1" :disabled="!terms" text @click="deleteEvent">Eliminar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>       
-        
+        <DeleteEventModal
+          :dialog.sync = "dialogDelete"
+          :id = "eid"
+          :trigger.sync = "ready"
+        />
+       
       </v-card>
     </div>
   </v-container>
@@ -207,17 +196,18 @@
 import { mapActions, mapGetters } from "vuex";
 import EditEventModal from "@/components/EditEventModal"
 import AddEventModal from "@/components/AddEventModal"
-
+import DeleteEventModal from "@/components/DeleteEventModal"
 export default {
   components: {
     EditEventModal,
     AddEventModal,
+    DeleteEventModal,
   },
 
   data: () => ({
     ready:false,
     menu: false,
-    dialog: false,
+    dialogDelete: false,
     dialogEdit: false,
     dialogAdd:false,
     terms:false,
@@ -258,7 +248,7 @@ export default {
       opponent_name: "",      
       sport_name: "",
       branch: "",
-      team_season_year: "",
+      team_season_year: 0,
       id: 0
     }
 
@@ -302,21 +292,18 @@ export default {
           return false
         }
         else{         
-          
-          if(this.filteredEvents.length != this.events.length){
-            
-            this.filteredEvents = []
-            for (let i = 0; i < this.events.length; i++) {
-              this.filteredEvents.push(this.events[i]);
-              const parsedDate =  new Date(Date.parse(this.events[i].event_date))
-              const eDate = parsedDate.toISOString().substring(0,10)
-              const time = parsedDate.getUTCHours() + ':' + parsedDate.getMinutes()
-              this.filteredEvents[i].event_date = eDate
-              this.filteredEvents[i].time = time
-            }
-            this.ready = true
-            this.loading = false
+          console.log('ran only once?')
+          this.filteredEvents = []
+          for (let i = 0; i < this.events.length; i++) {
+            this.filteredEvents.push(this.events[i]);
+            const parsedDate =  new Date(Date.parse(this.events[i].event_date))
+            const eDate = parsedDate.toISOString().substring(0,10)
+            const time = parsedDate.getUTCHours() + ':' + parsedDate.getMinutes()
+            this.filteredEvents[i].event_date = eDate
+            this.filteredEvents[i].time = time
           }
+          this.ready = true          
+          
         }
       }
       else{
@@ -403,7 +390,7 @@ export default {
     },
     prepareEventToRemove(eventID){
       this.eid = eventID
-      this.dialog = true
+      this.dialogDelete = true
     },
     cancelRemoval(){
       this.eid = 0

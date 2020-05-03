@@ -44,14 +44,16 @@ export default {
     },
 
     async addEvent({commit,dispatch},eventJSON){
-        try{
-            commit("SET_EVENTS",[])
+        try{         
             
             const response = await this.$axios.post('events/team/'+eventJSON.team_id+'/',eventJSON)
-            dispatch('notifications/setSnackbar', {text: response.data.Event, color: 'success'}, {root: true})
-            //this.$router.push('/eventos/')
+            console.log(response)
+            commit("ADD_EVENT",response.data.Event)
+            dispatch('notifications/setSnackbar', {text: "Se añadió un nuevo evento exitosamente", color: 'success'}, {root: true})
+            
         }catch(error){
-            if(!!error.response.data){
+            console.log(error)
+            if(!!error.response.data){               
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
                 return 'error'
             }else{
@@ -62,12 +64,15 @@ export default {
 
     async editEvent({commit,dispatch},eventJSON){
         try{
-            commit("SET_EVENTS",[])      
+           
             const response = await this.$axios.put('events/'+eventJSON.event_id+'/',eventJSON)
-            dispatch('notifications/setSnackbar', {text: response.data.Event, color: 'success'}, {root: true})
-            //this.$router.go()
+            commit("UPDATE_EVENT",response.data.Event)
+            dispatch('notifications/setSnackbar', {text: `El evento con identificador:${eventJSON.event_id} ha sido editado.`, color: 'success'}, {root: true})
+            
         }catch(error){
+            
             if(!!error.response.data){
+                
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
                 return 'error'
             }else{
@@ -85,6 +90,7 @@ export default {
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }

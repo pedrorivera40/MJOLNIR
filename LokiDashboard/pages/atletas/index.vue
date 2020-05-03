@@ -112,24 +112,10 @@
           :sport_id="editedItem.sport_id"
           :id="editedItem.id"
         />
-        <v-dialog v-model="dialogRemove" persistent max-width="400">            
-            <v-card>
-              <v-card-title class="headline">¿Estás seguro de que quieres <wbr> el atleta con id:{{aid}}?</v-card-title>
-              <v-card-text>
-                Esta acción es <strong> irreversible.</strong>
-                <v-checkbox
-                  v-model="terms"
-                  :label="`Yo acepto las consecuencias.`"
-                >
-                </v-checkbox>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="green darken-1" text @click="cancelRemoval">Cancelar</v-btn>
-                <v-btn color="green darken-1" :disabled="!terms" text @click="deleteAthlete">Eliminar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>       
+        <DeleteAthleteModal
+          :dialog.sync="dialogDelete"
+          :id="aid"          
+        />      
         
       </v-card>
     </div>
@@ -140,16 +126,19 @@
 import { mapActions, mapGetters } from "vuex"
 import  AddAthleteModal from "@/components/AddAthleteModal"
 import EditAthleteModal from "@/components/EditAthleteModal"
+import DeleteAthleteModal from "@/components/DeleteAthleteModal"
+
 export default {
   components:{
     AddAthleteModal,
     EditAthleteModal,
+    DeleteAthleteModal,
   },
 
   data: () =>({
     search:'',
     aid:0,
-    dialogRemove:false,
+    dialogDelete:false,
     dialogAdd:false,
     dialogEdit:false,
     terms:false,
@@ -235,11 +224,11 @@ export default {
 
     prepareAthleteToRemove(athleteID){
       this.aid = athleteID
-      this.dialogRemove = true
+      this.dialogDelete = true
     },
     cancelRemoval(){
       this.aid = 0
-      this.dialogRemove = false
+      this.dialogDelete = false
       this.terms = false
     }
     

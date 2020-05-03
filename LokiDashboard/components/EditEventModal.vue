@@ -46,6 +46,8 @@
                   color="green darken-1"
                   class="mt-4"
                   locale="es-419"
+                  :min="min_date"
+                  :max="max_date"
                 ></v-date-picker>
                   
                 </v-col>
@@ -80,7 +82,7 @@
               </v-row>
               <v-row justify="center">
                 <v-col              
-                  md="4"
+                  md="6"
                 > 
                         
                   <v-select
@@ -95,12 +97,13 @@
 
               <v-row justify="center">
                 <v-col              
-                  md="4"
+                  md="6"
                 >              
                   <v-text-field
                     v-model="venue_"                                    
                     label="Lugar del Evento"
                     required
+                    counter="25"
                     :rules="[alphaSpaces('Lugar del Evento')]"
                   ></v-text-field>              
                 </v-col>
@@ -117,12 +120,13 @@
               </v-row>
               <v-row justify="center">
                 <v-col              
-                  md="4"
+                  md="6"
                 >              
                   <v-text-field
                     v-model="opponent_name_"                                    
                     label="Oponente"
                     required
+                    counter="25"
                     :rules="[generalPhrase('Nombre de Oponente')]"
                   ></v-text-field>              
                 </v-col>
@@ -170,14 +174,14 @@
              Cerrar
             </v-btn>
            <v-btn 
-                    color="green darken-1" 
-                              
-                    :disabled="!(valid & terms)"
-                    @click="submit"
-                    :loading="editing"
-                  >
-                    Editar
-                  </v-btn>
+              color="green darken-1" 
+                        
+              :disabled="!(valid & terms)"
+              @click="submit"
+              :loading="editing"
+            >
+              Editar
+            </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -198,10 +202,11 @@ export default {
     venue:String,
     sport_name:String,
     branch:String,
-    team_season_year:String,
+    team_season_year:Number,
     opponent_name:String,
     event_summary:String,
     id:Number,
+    trigger:Boolean,
 
   },
   
@@ -218,7 +223,9 @@ export default {
     opponent_name_:'',
     eventSummary_:'',
     loading:true, 
-    editing:false,   
+    editing:false,
+    min_date:'',
+    max_date:'',  
    
     
   }),
@@ -250,38 +257,36 @@ export default {
 
       this.editing = false
       if(response !== 'error'){
-        this.close()
-        this.$router.go()
+        this.$emit("update:trigger",false)
+        this.close()        
       }          
      
     },
      
     format(){
 			
-      if(this.dialog && !this.ready){
-
-       
+      if(this.dialog && !this.ready){       
         
         this.date_ = this.date
+
+        const dateYear = this.team_season_year
+        this.min_date = dateYear +'-01-01'
+        this.max_date = dateYear+1 +'-12-31'
         
-        this.time_ = this.time
+
         
-       
-       
-       
+        this.time_ = this.time        
 
         this.locality_ = this.locality
       
-        this.team_ = this.sport_name + '-' + this.branch + '-' + this.team_season_year		
-        
+        this.team_ = this.sport_name + '-' + this.branch + '-' + this.team_season_year		        
         
         if(this.venue)
-          this.venue_ = this.venue
-        
-        
+          this.venue_ = this.venue   
         
         if(this.opponent_name)
           this.opponent_name_ = this.opponent_name
+
         if(this.event_summary)
           this.eventSummary_ = this.event_summary
         
@@ -295,7 +300,10 @@ export default {
     close(){
       this.ready = false
       this.terms = false
-      this.$emit("update:dialog",false);
+      this.venue_ = ''
+      this.opponent_name_ = ''
+      this.eventSummary_ = ''
+      this.$emit("update:dialog",false);       
     }
        
   }, 

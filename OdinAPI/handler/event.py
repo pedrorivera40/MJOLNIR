@@ -70,8 +70,9 @@ class EventHandler:
         result['sport_name'] = record[7]
         result['sport_img_url'] = record[8]
         result['branch'] = record[9]
-        result['local_score'] = record[10]
-        result['opponent_score'] = record[11]
+        result['team_season_year'] = record[10]
+        result['local_score'] = record[11]
+        result['opponent_score'] = record[12]
 
         if 'Voleibol' in record[7]:
             result['hasPBP'] = self._check_pbp(record[0])

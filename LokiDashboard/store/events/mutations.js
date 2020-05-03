@@ -17,13 +17,13 @@ export default {
         state.events = state.events.filter(events => events.id !== id)
     },
 
-    ADD_USER(state,event){
-        state.events.push(user)
+    ADD_EVENT(state,event){
+        state.events.push(event)
     },
 
 
     UPDATE_EVENT(state,event){
-        const index = state.users.findIndex(arrevent => arrevent.id === event.id)
+        const index = state.events.findIndex(arrevent => arrevent.id === event.id)
         if(index !== -1){
             state.events.splice(index,1,event)
         }

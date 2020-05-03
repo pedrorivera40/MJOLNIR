@@ -27,16 +27,16 @@
                           
               <v-row>            
                 <v-col             
-                  md="3"
+                  md="12"
                 >	
 
                 <h2>Fecha del Evento:</h2>
                   
                 </v-col>
+              </v-row>
 
-                <v-col
-                  
-                >
+              <v-row>
+                <v-col>
                 <v-date-picker
                   v-model="date"
                   full-width
@@ -45,23 +45,29 @@
                   color="green darken-1"
                   class="mt-4"
                   locale="es-419"
+                  :min ="min_date"
+                  :max ="max_date" 
                 ></v-date-picker>
                   
                 </v-col>
               </v-row>
 
               <v-row>            
-                <v-col             
-                  md="3"
-                >	
+                <v-col>	
 
                 <h2>Hora del Evento:</h2>
                   
                 </v-col>
+              </v-row>
 
+              <v-row>
                 <v-col>                  
                 
-                <v-time-picker v-model="time" color="green darken-1"></v-time-picker>
+                <v-time-picker 
+                  v-model="time" 
+                  :landscape="$vuetify.breakpoint.mdAndUp"
+                  color="green darken-1"
+                ></v-time-picker>
                   
                 </v-col>
               </v-row>
@@ -186,14 +192,14 @@
              Cerrar
             </v-btn>
            <v-btn 
-                    color="green darken-1" 
-                              
-                    :disabled="!(valid & terms)"
-                    @click="submit"
-                    :loading="adding"
-                  >
-                    Añadir
-                  </v-btn>
+              color="green darken-1" 
+                        
+              :disabled="!(valid & terms)"
+              @click="submit"
+              :loading="adding"
+            >
+              Añadir
+            </v-btn>
         </v-card-actions>
 
       </v-card>
@@ -209,6 +215,7 @@
     name:"AddEventModal",
     props:{
       dialog:Boolean,
+      trigger:Boolean,
     },
     
     data: () => ({
@@ -227,7 +234,9 @@
       yearList:[],
       year:'',
       team:'',
-      teamsList:[],     
+      teamsList:[],
+      min_date:'',
+      max_date:'',   
          
       
     }),
@@ -262,8 +271,8 @@
         const response = await this.addEvent(eventJSON)
         this.adding = false
         if(response !== 'error'){
-          this.close()
-          this.$router.go()
+          this.$emit("update:trigger",false)
+          this.close()          
         }    
         
       },
@@ -292,6 +301,11 @@
           else{
             this.buildTeamsList()
             this.resetDate()
+            this.team = ''
+            this.venue = ''
+            this.locality = ''
+            this.opponent_name = ''
+            this.eventSummary = null
             this.ready = true
           }
 
@@ -309,6 +323,9 @@
         this.date = newDate.toISOString().substring(0,10)
         this.time = newDate.getUTCHours()+':'+newDate.getUTCMinutes()
         
+        const dateYear = newDate.getFullYear()
+        this.min_date = dateYear +'-01-01'
+        this.max_date = dateYear+1 +'-12-31'
       }
 
       

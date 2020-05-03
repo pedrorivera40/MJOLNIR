@@ -82,15 +82,16 @@ export default{
 
 
     async removeAthlete({commit,dispatch},athleteID){
-        try{
-            commit("SET_ATHLETES",[])
+        try{           
             
             const response = await this.$axios.delete('athletes/'+athleteID+'/')
+            commit("DELETE_ATHLETE",athleteID)
             dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
-            this.$router.go()
+            
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
