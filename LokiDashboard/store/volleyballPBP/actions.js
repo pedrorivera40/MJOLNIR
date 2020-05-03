@@ -29,7 +29,8 @@ export default {
         try {
 
             await rtdb().ref("/v1/" + event_id + "/game-metadata/current-set").on('value', function (snapshot) {
-                commit("UPDATE_CURRENT_SET", snapshot.val())
+                commit("UPDATE_CURRENT_SET", snapshot.val());
+                console.log(snapshot.val());
             });
 
         } catch (error) {
@@ -185,10 +186,12 @@ export default {
         try {
 
             await rtdb().ref("/v1/" + event_id + "/game-metadata/current-set").on('value', function (snapshot) {
-                commit("UPDATE_CURRENT_SET", snapshot.val())
+                commit("UPDATE_CURRENT_SET", snapshot.val());
+                console.log("HEYHEYHEY");
             });
 
         } catch (error) {
+            console.log("UNABLE TO RETRIEVE CURRENT SET " + error);
             dispatch('notifications/setSnackbar', { text: "Unable to retrieve current set from RTDB.", color: "error" }, { root: true });
         }
     },

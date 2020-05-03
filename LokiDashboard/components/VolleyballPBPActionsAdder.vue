@@ -26,20 +26,20 @@
               class="mx-4"
               v-if="button.button_state === true"
               :pressed="button.button_state"
-              dark
-              color="red"
+              light
+              color="white"
               @click.native="clear_action_buttons()"
-              width="150"
-            >{{button.action_type}}</v-btn>
+              width="175"
+            >{{ map_action(button.action_type) }}</v-btn>
             <v-btn
               class="mx-4"
               v-else
               :pressed="button.button_state"
               dark
-              color="primary"
+              color="green"
               @click.native="set_action_button(button.key)"
-              width="150"
-            >{{button.action_type}}</v-btn>
+              width="175"
+            >{{ map_action(button.action_type) }}</v-btn>
           </v-row>
         </v-col>
       </v-row>
@@ -218,6 +218,46 @@ export default {
           action_type: action,
           team: "opponent"
         });
+      }
+    },
+
+    map_action(action_name) {
+      switch (action_name) {
+        case "Notification":
+          return "Notificación";
+
+        case "KillPoint":
+          return "Punto de Ataque";
+
+        case "Ace":
+          return "Servicio Directo";
+
+        case "BlockPoint":
+          return "Punto de Bloqueo";
+
+        case "Assist":
+          return "Asistencia";
+
+        case "Block":
+          return "Bloqueo";
+
+        case "Dig":
+          return "Recepción";
+
+        case "AttackError":
+          return "Error de Ataque";
+
+        case "ServiceError":
+          return "Error de Servicio";
+
+        case "BlockingError":
+          return "Error de Bloqueo";
+
+        case "ReceptionError":
+          return "Error de Recepción";
+
+        default:
+          return "Acción Desconocida";
       }
     }
   }

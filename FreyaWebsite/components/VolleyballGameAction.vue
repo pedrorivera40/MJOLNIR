@@ -4,7 +4,7 @@
       <v-card v-if="action_type === notification" width="550px" :elevation="hover ? 16 : 2">
         <v-toolbar :color="in_color" dark flat>
           <v-row justify="center" align="center">
-            <v-card-title>{{ action_type }}</v-card-title>
+            <v-card-title>{{ map_action(action_type) }}</v-card-title>
           </v-row>
         </v-toolbar>
         <v-row align="center">
@@ -25,7 +25,7 @@
       <v-card v-else width="550px" :elevation="hover ? 16 : 2">
         <v-toolbar :color="in_color" dark flat>
           <v-row justify="center" align="center">
-            <v-card-title>{{ action_type }}</v-card-title>
+            <v-card-title>{{ map_action(action_type) }}</v-card-title>
           </v-row>
         </v-toolbar>
         <v-row>
@@ -67,6 +67,47 @@ export default {
   },
   data: () => ({
     notification: "Notification" // ADD ACTION TYPES AND A DICTIONARY TO MAP THEM FROM ENGLISH TO SPANISH...
-  })
+  }),
+  methods: {
+    map_action(action_name) {
+      switch (action_name) {
+        case "Notification":
+          return "Notificación";
+
+        case "KillPoint":
+          return "Punto de Ataque";
+
+        case "Ace":
+          return "Servicio Directo";
+
+        case "BlockPoint":
+          return "Punto de Bloqueo";
+
+        case "Assist":
+          return "Asistencia";
+
+        case "Block":
+          return "Bloqueo";
+
+        case "Dig":
+          return "Recepción";
+
+        case "AttackError":
+          return "Error de Ataque";
+
+        case "ServiceError":
+          return "Error de Servicio";
+
+        case "BlockingError":
+          return "Error de Bloqueo";
+
+        case "ReceptionError":
+          return "Error de Recepción";
+
+        default:
+          return "Acción Desconocida";
+      }
+    }
+  }
 };
 </script>
