@@ -7,7 +7,8 @@
     </v-container>
     <div class="content-area pa-4 pt-12">
         <v-container>
-            <v-container v-if="formated_member_stats()">
+            <!-- <v-container v-if="formated_member_stats()"> -->
+            <v-container>
                 <v-row align="center" justify="center">
                     <v-card width=400 class="mx-lg-auto" outlined>
                         <v-card-title>
@@ -137,7 +138,7 @@
                                 :items="payload_stats.athlete_statistic"
                                 item-key="athlete_statistic"
                                 class="elevation-1"
-                                v-if="payload_stats.athlete_statistic"
+                                v-if="formated_member_stats()"
                                 :loading="loadingQuery"
                                 >
                                 <!-- v-if="isBasketballTable" -->
@@ -201,7 +202,8 @@
                                 :items="team_statistics"
                                 item-key="team_statistics"
                                 class="elevation-1"
-                                v-if="payload_stats != ''"
+                                v-if="formated_member_stats()"
+                                :loading="loadingQuery"
                                 >
                                 </v-data-table>
                             </v-card>
@@ -320,12 +322,14 @@ export default {
       indiviual_athlete_stats:'',
       refresh_stats:false,
       current_individual_stats:'',
+      ready_for_table: false,
     };
   },
 
 
   // created(){
   async mounted(){
+    this.ready_for_table = false
     this.event_id = this.$route.params.id
     this.clearEventInfo()
     this.clearAllStats()
@@ -525,7 +529,7 @@ export default {
                 {text: 'Three Point Attempt', value: 'basketball_statistics.three_point_attempt'},
                 {text: 'Three Point Percentage(%)', value: 'basketball_statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'basketball_statistics.turnovers'},
-                { text: "Actions", value: "actions", sortable: false },
+               
 
                 ]
             }
@@ -562,7 +566,7 @@ export default {
                 {text: 'Blocks', value: 'volleyball_statistics.blocks'},
                 {text: 'Blocking Errors', value: 'volleyball_statistics.blocking_errors'},
                 {text: 'Reception Errors', value: 'volleyball_statistics.reception_errors'},
-                { text: "Actions", value: "actions", sortable: false },
+               
 
                 ]
             }
@@ -593,8 +597,7 @@ export default {
                 {text: 'Cards', value: 'soccer_statistics.cards'},
                 {text: 'Successful Goals', value: 'soccer_statistics.successful_goals'},
                 {text: 'Tackles', value: 'soccer_statistics.tackles'},
-                { text: "Actions", value: "actions", sortable: false },
-
+              
                 ]
             }
             else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
@@ -626,10 +629,11 @@ export default {
                 {text: 'Base On Balls', value: 'baseball_statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'baseball_statistics.strikeouts'},
                 {text: 'Left On Base', value: 'baseball_statistics.left_on_base'},
-                { text: "Actions", value: "actions", sortable: false },
+               
 
                 ]
             }
+            this.ready_for_table = true
         }
 
 
