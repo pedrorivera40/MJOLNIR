@@ -58,7 +58,7 @@
 
               <v-row justify="center">
                 <v-col              
-                  md=6    
+                  md="9"
                 >              
                   <v-text-field
                     v-model="last_names_"
@@ -92,8 +92,7 @@
                     <template v-slot:activator="{ on }">
                       <v-text-field
                         v-model="date_of_birth_"
-                        label="Fecha"
-                        prepend-icon="mdi-calendar"
+                        label="Fecha"                       
                         readonly
                         v-on="on"
                       ></v-text-field>
@@ -142,22 +141,20 @@
                 <v-col              
                   md="4"
                 >
-                  <v-select
+                  <v-autocomplete
                     v-model="height_feet_"
                     :items="feet"
-                    label ="Pies"
-                    prepend-icon="mdi-human-male-height"
-                  ></v-select>
+                    label ="Pies"                    
+                  ></v-autocomplete>
                 </v-col>
               </v-row>
               <v-row justify="center">
                 <v-col md="4">         
-                    <v-select
+                    <v-autocomplete
                     v-model="height_inches_"
                     :items="inches"
-                    label ="Pulgadas"
-                    prepend-icon="mdi-human-male-height"
-                  ></v-select>
+                    label ="Pulgadas"                    
+                  ></v-autocomplete>
                 </v-col>
               </v-row>
 
@@ -174,42 +171,42 @@
 
               <v-row justify="center">
                 <v-col            
-                  md="4"
+                  md="8"
                 >              
                   <v-text-field
                     v-model="study_program_"                                   
-                    label="Programa de Estudio"
-                    prepend-icon="mdi-school"
-                    :rules="[alphaSpaces('Programa de Estudio')]"
+                    label="Programa de Estudio"                    
+                    :counter="30"
+                    :rules="[alphaSpaces('Programa de Estudio'),maxSummaryLength('Programa de Estudio',30)]"
                   ></v-text-field>
                   
                 </v-col>
+              </v-row>
+
+              <v-row justify="center"> 
+                <v-col            
+                  md="8"
+                >             
+                  <v-text-field
+                    v-model="school_of_precedence_"                                  
+                    label="Escuela de Precedencia"                   
+                    :counter="30"
+                    :rules="[alphaSpaces('Escuela de Precedencia'),maxSummaryLength('Escuela de Precedencia',30)]"
+                  ></v-text-field>            
+                </v-col>
+                
               </v-row>
 
               <v-row justify="center">
                 <v-col              
                   md="4"               
                 >  
-                  <v-select
+                  <v-autocomplete
                     v-model="year_of_study_"
-                    :items="yearsOfStudy"
-                    prepend-icon="mdi-chair-school"              
+                    :items="yearsOfStudy"                                 
                     label ="Año de Estudio"                
-                  ></v-select>
+                  ></v-autocomplete>
                 </v-col>                  
-              </v-row>
-              <v-row justify="center"> 
-                <v-col            
-                  md="4"
-                >             
-                  <v-text-field
-                    v-model="school_of_precedence_"                                  
-                    label="Escuela de Precedencia"
-                    prepend-icon="mdi-school-outline"
-                    :rules="[alphaSpaces('Programa de Estudio')]"
-                  ></v-text-field>            
-                </v-col>
-                
               </v-row>
 
               <v-row justify="start"> 
@@ -225,14 +222,13 @@
 
               <v-row justify="center">
                 <v-col               
-                  md="6"               
+                  md="5"               
                 >  
-                  <v-select
+                  <v-autocomplete
                     v-model="years_of_participation_"
                     :items="yearsOfParticipation"              
-                    label ="Años de Participación"
-                    prepend-icon="mdi-seal"                
-                  ></v-select>
+                    label ="Años de Participación"                                    
+                  ></v-autocomplete>
                 </v-col>              
               </v-row>
 
@@ -288,9 +284,9 @@
 
               <v-row justify="start"> 
 
-                <v-col              
-                  md="4"               
-                >              
+                <v-col
+                  md="12"
+                >           
                   <div>                  
                     <h2 v-if="sportHasNumber">
                       
@@ -305,13 +301,12 @@
                 <v-col               
                   md="4"               
                 >
-                  <v-select
+                  <v-autocomplete
                     v-model="number_"
                     :items="numbers"
-                    label ="Número del Athleta"
-                    prepend-icon="mdi-numeric-0-box"
+                    label ="Número"                    
                     v-if="sportHasNumber"
-                  ></v-select>
+                  ></v-autocomplete>
 
                 </v-col>
               </v-row>            
@@ -319,7 +314,7 @@
               <v-row justify="start">
 
                 <v-col             
-                  md="3"
+                  md="12"
                 >
 
                 <h2>Imagen de Perfil:</h2>
@@ -330,12 +325,11 @@
               <v-row justify="center">
 
                 <v-col            
-                  md="5"
+                  md="12"
                 >             
                   <v-text-field
                     v-model="profile_image_link_"                                
-                    label="Enlace de Imagen de Perfil"
-                    prepend-icon="mdi-link"
+                    label="Enlace de Imagen de Perfil"                    
                     required
                   ></v-text-field>              
                 </v-col>
@@ -427,8 +421,7 @@ export default {
     number_:'',
     profile_image_link_:'',
     sport:'',
-    sport_id_:0,     
-          
+    sport_id_:0,            
    
     sportHasNumber:false,
     feet: [4,5,6,7],      
@@ -476,9 +469,7 @@ export default {
       if(this.height_feet_ != '' & this.height_inches_ != '')
         athlete_attributes['height'] = this.height_feet_*12.0 + this.height_inches_*1.0
       else
-        athlete_attributes['height'] = null
-
-      
+        athlete_attributes['height'] = this.height      
 
       athlete_attributes['study_program'] = this.study_program_
       athlete_attributes['date_of_birth'] = this.date_of_birth_
@@ -487,38 +478,33 @@ export default {
       if(this.number_ != '') 
         athlete_attributes['number'] = this.number_
       else
-        athlete_attributes['number'] = null
+        athlete_attributes['number'] = this.number
       
-      athlete_attributes['profile_picture_link'] = this.profile_image_link_
-
-      
+      athlete_attributes['profile_picture_link'] = this.profile_image_link_      
 
       if(this.year_of_study_ != '')
         athlete_attributes['year_of_study'] = this.year_of_study_
       else
-        athlete_attributes['year_of_study'] = null
+        athlete_attributes['year_of_study'] = this.year_of_study
       
       if(this.years_of_participation_ != '') 
         athlete_attributes['years_of_participation'] = this.years_of_participation_
+      else
+        athlete_attributes['years_of_participation'] = this.years_of_participation
 
       athlete_attributes['positions'] = this.athlete_positions_
 
       athlete_attributes['categories'] = this.athlete_categories_
 
-      const athleteJSON = {'athlete_id': this.id,'attributes':athlete_attributes}
-
-      //console.log("Editing the athlete with id:" + this.athlete.id + " with the following information:")
-      //console.log(athlete_attributes)
+      const athleteJSON = {'athlete_id': this.id,'attributes':athlete_attributes}   
 
       const resonse = await this.editAthlete(athleteJSON)
 
       this.editing = false
       if(resonse != 'error')
       {
-        this.close()
-        this.$router.go()
-      }
-      
+        this.close()        
+      }    
       
     },    
 
@@ -544,6 +530,7 @@ export default {
 
         this.sport = this.sport_name+ '-' + this.branch
         
+        this.sport_id_ = this.sport_id
         
         if(this.short_bio)
           this.short_bio_ = this.short_bio
@@ -558,8 +545,8 @@ export default {
 
         if(this.height)
         {
-          this.height_feet = Math.floor(this.height/12)
-          this.height_inches = this.height%12
+          this.height_feet_ = Math.floor(this.height/12)
+          this.height_inches_ = this.height%12
         }
 
         if(this.profile_image_link)
@@ -633,6 +620,7 @@ export default {
     close(){
       this.ready = false
       this.terms = false
+      this.loading = true
       this.middle_name_ = ''
       this.short_bio_ = ''
       this.years_of_participation_ = ''
@@ -643,6 +631,7 @@ export default {
       this.school_of_precedence_ = ''
       this.athlete_positions_ = null
       this.athlete_categories_ = null
+      this.profile_image_link_ = ''
       
       this.resetDate()
       

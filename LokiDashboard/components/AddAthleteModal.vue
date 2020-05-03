@@ -58,7 +58,7 @@
 
               <v-row justify="center">
                 <v-col              
-                  md=6    
+                  md="9"    
                 >              
                   <v-text-field
                     v-model="last_names"
@@ -130,36 +130,34 @@
               </v-row>
 
               <v-row justify="start">
-                <v-col>
+                <v-col md="3">
 
                 <h2>Estatura:</h2>
                   
                 </v-col>
               </v-row>
               <v-row justify="center">
-                <v-col>
-                  <v-select
+                <v-col md="4">
+                  <v-autocomplete
                     v-model="height_feet"
                     :items="feet"
-                    label ="Pies"
-                    prepend-icon="mdi-human-male-height"
-                  ></v-select>
+                    label ="Pies"                   
+                  ></v-autocomplete>
                 </v-col>
               </v-row>
               <v-row justify="center">
-                <v-col>         
-                    <v-select
+                <v-col md="4">         
+                    <v-autocomplete
                     v-model="height_inches"
                     :items="inches"
-                    label ="Pulgadas"
-                    prepend-icon="mdi-human-male-height"
-                  ></v-select>
+                    label ="Pulgadas"                   
+                  ></v-autocomplete>
                 </v-col>
               </v-row>
 
               <v-row justify="start">
 
-                <v-col>
+                <v-col md="3">
 
                 <h2>Educación:</h2>
                   
@@ -167,38 +165,38 @@
               </v-row>
 
               <v-row justify="center">
-                <v-col>              
+                <v-col md="8">              
                   <v-text-field
                     v-model="study_program"                                   
-                    label="Programa de Estudio"
-                    prepend-icon="mdi-school"
-                    :rules="[alphaSpaces('Programa de Estudio')]"
+                    label="Programa de Estudio"                   
+                    :counter="30"
+                    :rules="[alphaSpaces('Programa de Estudio'),maxSummaryLength('Programa de Estudio',30)]"
                   ></v-text-field>
                   
                 </v-col>
               </v-row>
+            
+              <v-row justify="center"> 
+                <v-col md="8">             
+                  <v-text-field
+                    v-model="school_of_precedence"                                  
+                    label="Escuela de Precedencia"
+                    :counter="30"                    
+                    :rules="[alphaSpaces('Escuela de Precedencia'),maxSummaryLength('Escuela de Precedencia',30)]"
+                  ></v-text-field>            
+                </v-col>                
+              </v-row> 
 
               <v-row justify="center">
-                <v-col>  
-                  <v-select
+                <v-col md="5">  
+                  <v-autocomplete
                     v-model="year_of_study"
                     :items="yearsOfStudy"
                     prepend-icon="mdi-chair-school"              
                     label ="Año de Estudio"                
-                  ></v-select>
-                </v-col>                  
-              </v-row>
-              <v-row justify="center"> 
-                <v-col>             
-                  <v-text-field
-                    v-model="school_of_precedence"                                  
-                    label="Escuela de Precedencia"
-                    prepend-icon="mdi-school-outline"
-                    :rules="[alphaSpaces('Programa de Estudio')]"
-                  ></v-text-field>            
-                </v-col>
-                
-              </v-row>
+                  ></v-autocomplete>
+                </v-col> 
+              </v-row> 
 
               <v-row justify="start"> 
                 
@@ -210,32 +208,30 @@
 
               <v-row justify="center">
 
-                <v-col>              
-                  <v-select
+                <v-col md="12">              
+                  <v-autocomplete
                     v-model="sport"
                     :items="sportsList"               
                     label ="Deporte"
                     item-text="sportName"
-                    item-value="id"
-                    prepend-icon="mdi-volleyball"
+                    item-value="id"                    
                     v-on:change="setCategoriesAndPositions()"
                     :rules="[teamRequired('Deporte')]"
-                  ></v-select>              
+                  ></v-autocomplete>              
                 </v-col>
               </v-row>
               <v-row justify="center">
-                <v-col>  
-                  <v-select
+                <v-col md="5">  
+                  <v-autocomplete
                     v-model="years_of_participation"
                     :items="yearsOfParticipation"              
-                    label ="Años de Participación"
-                    prepend-icon="mdi-seal"                
-                  ></v-select>
+                    label ="Años de Participación"                                    
+                  ></v-autocomplete>
                 </v-col>              
               </v-row>
 
               <v-row justify="start">
-                <v-col>              
+                <v-col md="4">              
                   <div>                  
                     <h2 v-if="!isEmpty(sport_positions)">
                       
@@ -256,7 +252,7 @@
               </v-row>
 
               <v-row justify="center">
-                <v-col> 
+                <v-col md="4"> 
                 
                   <div v-for="(value,key) in sport_positions" :key="key" >
                     <v-checkbox
@@ -282,7 +278,7 @@
 
               <v-row justify="start"> 
 
-                <v-col>              
+                <v-col md="12">              
                   <div>                  
                     <h2 v-if="sportHasNumber">
                       
@@ -294,21 +290,20 @@
               </v-row>
 
               <v-row justify="center">
-                <v-col>
-                  <v-select
+                <v-col md="4">
+                  <v-autocomplete
                     v-model="number"
                     :items="numbers"
-                    label ="Número del Athleta"
-                    prepend-icon="mdi-numeric-0-box"
+                    label ="Número"                    
                     v-if="sportHasNumber"
-                  ></v-select>
+                  ></v-autocomplete>
 
                 </v-col>
               </v-row>            
 
               <v-row justify="start">
 
-                <v-col>
+                <v-col md="12">
 
                 <h2>Imagen de Perfil:</h2>
                   
@@ -317,7 +312,7 @@
 
               <v-row justify="center">
 
-                <v-col>             
+                <v-col md="12">             
                   <v-text-field
                     v-model="profile_image_link"                                
                     label="Enlace de Imagen de Perfil"
@@ -467,6 +462,9 @@
         if(this.years_of_participation != '') 
           athlete_attributes['years_of_participation'] = this.years_of_participation
 
+        else(this.years_of_participation != '') 
+          athlete_attributes['years_of_participation'] = null
+
         athlete_attributes['positions'] = this.sport_positions
 
         athlete_attributes['categories'] = this.sport_categories
@@ -479,18 +477,14 @@
         
         this.adding = false
         if(response !== 'error'){
-          this.close()
-          this.$router.go()
-        }
-        
-
-
-        
+          this.close()          
+        }    
       },
 
       close() {
         this.ready = false
         this.terms = false
+        this.clear()
         this.$emit("update:dialog", false)
       },
 
@@ -510,6 +504,7 @@
         this.sportHasNumber=false         
         this.sport ='' 
         this.years_of_participation = ''
+        this.year_of_study = ''
         this.setCategoriesAndPositions() 
         this.resetDate()
         
@@ -518,12 +513,12 @@
       updatePositons(key,value){
         
         this.sport_positions[key]=!value 
-        console.log(this.sport_positions)      
+        //console.log(this.sport_positions)      
       },
       updateCategories(key,value){
         
         this.sport_categories[key]=!value       
-        console.log(this.sport_categories)
+        //console.log(this.sport_categories)
       },
 
 
@@ -570,8 +565,7 @@
               }
             }
         }
-        this.sportNumber()
-        console.log(this.sport)
+        this.sportNumber()        
         
       },
 

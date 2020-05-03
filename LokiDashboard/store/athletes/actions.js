@@ -45,11 +45,10 @@ export default{
     },
 
     async addAthlete({commit,dispatch},athleteJSON){
-        try{
-            commit("SET_ATHLETES",[])
-            
+        try{           
             const response = await this.$axios.post('athletes/',athleteJSON)
-            dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
+            commit("ADD_ATHLETE",response.data.Athlete)
+            dispatch('notifications/setSnackbar', {text: "Se añadió un nuevo atleta exitosamente", color: 'success'}, {root: true})
             
         }catch(error){
             if(!!error.response.data){
@@ -62,13 +61,14 @@ export default{
     },
 
     async editAthlete({commit,dispatch},athleteJSON){
-        try{
-            commit("SET_ATHLETES",[])
+        try{           
             
             const response = await this.$axios.put('athletes/'+athleteJSON.athlete_id+'/',athleteJSON)
-            dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
+            commit("UPDATE_ATHLETE",response.data.Athlete)
+            dispatch('notifications/setSnackbar', {text: `El atleta con identificador:${athleteJSON.athlete_id} ha sido editado.`, color: 'success'}, {root: true})
             
         }catch(error){
+            console.log(error)
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
                 'return error'

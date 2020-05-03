@@ -46,13 +46,11 @@ export default {
     async addEvent({commit,dispatch},eventJSON){
         try{         
             
-            const response = await this.$axios.post('events/team/'+eventJSON.team_id+'/',eventJSON)
-            console.log(response)
+            const response = await this.$axios.post('events/team/'+eventJSON.team_id+'/',eventJSON)            
             commit("ADD_EVENT",response.data.Event)
             dispatch('notifications/setSnackbar', {text: "Se añadió un nuevo evento exitosamente", color: 'success'}, {root: true})
             
-        }catch(error){
-            console.log(error)
+        }catch(error){            
             if(!!error.response.data){               
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
                 return 'error'

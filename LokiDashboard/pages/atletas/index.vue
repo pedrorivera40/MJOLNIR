@@ -9,7 +9,7 @@
               <v-btn
                 color="green darken-1"
                 dark
-                @click="goToCreateAthlete"                   
+                @click="addAthlete"                   
               >
                 <v-icon left >mdi-plus</v-icon>
                 Añadir Atleta
@@ -77,7 +77,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"                 
-                  @click="prepareAthleteToRemove(item.id)"
+                  @click="deleteAthlete(item.id)"
                 >
                   mdi-delete
                 </v-icon>
@@ -196,8 +196,8 @@ export default {
       removeAthlete:"athletes/removeAthlete"
     }),
 
-    goToCreateAthlete(){
-        this.dialogAdd = true
+    addAthlete(){
+      this.dialogAdd = true
     },
     
     loadingAthletes(){
@@ -213,24 +213,13 @@ export default {
     editAthlete(athlete){
       this.editedItem = Object.assign({},athlete)
       this.dialogEdit = true
-    },
-    deleteAthlete(){
-      if(this.aid > 0 && this.terms)            
-        this.removeAthlete(this.aid)
-        this.dialogRemove = false
-        this.terms = false
-        this.ready = false
-    },
+    },    
 
-    prepareAthleteToRemove(athleteID){
+    deleteAthlete(athleteID){
       this.aid = athleteID
       this.dialogDelete = true
     },
-    cancelRemoval(){
-      this.aid = 0
-      this.dialogDelete = false
-      this.terms = false
-    }
+    
     
   },
     
