@@ -87,7 +87,7 @@
           <v-spacer />
           <v-container>
             <v-row align="center" justify="center">
-              <v-card-title>ANOTACIONES POR SET</v-card-title>
+              <v-card-title>ANOTACIONES POR PARCIAL</v-card-title>
             </v-row>
 
             <v-row>
