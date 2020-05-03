@@ -247,6 +247,14 @@
                 :athlete_id="edited_athlete_id"
                 :individual_stats="this.current_individual_stats"
             />
+            <DeleteIndividualStatsModal
+                v-if ="dialogDeleteIndividualStats"
+                :dialog.sync="dialogDeleteIndividualStats"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :refresh_stats.sync="refresh_stats"
+                :athlete_id="edited_athlete_id"
+            />
         </v-container>
     </div>
   </v-container>
@@ -258,6 +266,7 @@ import AddFinalScoreModal from "@/components/AddFinalScoreModal";
 import UpdateFinalScoreModal from "@/components/UpdateFinalScoreModal";
 import AddIndividualStatsModal from "@/components/AddIndividualStatsModal";
 import UpdateIndividualStatsModal from "@/components/UpdateIndividualStatsModal";
+import DeleteIndividualStatsModal from "@/components/DeleteIndividualStatsModal";
 export default {
   data() {
     return {
@@ -266,6 +275,7 @@ export default {
       dialogEditFinalScore:false,
       dialogAddIndividualStats:false,
       dialogEditIndividualStats:false,
+      dialogDeleteIndividualStats:false,
 
       editedItemIndex: -1,
       editedItem: '',
@@ -383,6 +393,7 @@ export default {
       UpdateFinalScoreModal,
       AddIndividualStatsModal,
       UpdateIndividualStatsModal,
+      DeleteIndividualStatsModal,
   },
   methods: {
 
@@ -627,39 +638,16 @@ export default {
 
 
     deleteAthleteStatistics(user) {
-       if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-            this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
-        }
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-            this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
-        }        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-            this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
-        }
-        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-            this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex]
-        }
-        //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-        //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
-        console.log(this.editedItem)
-        console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
+        this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user);
+        this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex];
+        console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM",this.editedItem)
+        console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
+        this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
+        // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
+        this.dialogDeleteIndividualStats = true;
     },
     deleteTeamStatistics(user) {
-       if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-            this.editedItem = this.payload_stats.event_info
-        }
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-           this.editedItem = this.payload_stats.event_info
-        }
-        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-            this.editedItem = this.payload_stats.event_info
-        }
-        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-           this.editedItem = this.payload_stats.event_info
-        }
+        this.editedItem = this.payload_stats.event_info
         //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
         //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
         console.log(this.editedItem)

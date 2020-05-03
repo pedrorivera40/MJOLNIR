@@ -177,9 +177,9 @@ export default{
     async removeIndividualStatistics({commit,dispatch},statsJSON){
         try{
             let sport_route = statsJSON.sport_route
-            let statistics = statsJSON.statistics
-            let event_id = statistics.event_id
-            let athlete_id = statistics.athlete_id
+            // let statistics = statsJSON.statistics
+            let event_id = statsJSON.event_id
+            let athlete_id = statsJSON.athlete_id
             const response = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
             commit("SET_QUERY_DONE")
         }catch(error){
