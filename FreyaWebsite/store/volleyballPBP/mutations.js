@@ -438,6 +438,10 @@ export default {
     },
 
     SET_OPPONENT_NAME(state, name) {
-        state.opponentName = name;
+        if (name === "") {
+            state.opponentName = "Oponente";
+        } else {
+            state.opponentName = name;
+        }
     },
 }

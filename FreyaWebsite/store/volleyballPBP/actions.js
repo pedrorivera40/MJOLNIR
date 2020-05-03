@@ -255,7 +255,9 @@ export default {
 
     async getEvent({ commit, dispatch }, event_id) {
         try {
+            console.log("PRE QUERY");
             const response = await this.$axios.get(`/events/${event_id}/`);
+            console.log(response.data);
             commit("SET_HAS_PBP", response.data.Event.hasPBP);
             commit("SET_TEAM_ID", response.data.Event.team_id);
             commit("SET_BRANCH", response.data.Event.branch);
