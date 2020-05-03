@@ -28,4 +28,4 @@ class TestUserRoutes(unittest.TestCase):
   def test_remove_user_inexistent_user(self):
     response = self.client.patch(f'/users/666/remove',follow_redirects=True)
     self.assertEqual(response.status_code, 404)
-    self.assertEqual(response.json['Error'], 'No user found in the system with that id.')
+    self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')

@@ -4,24 +4,23 @@
       <v-card>
         <v-toolbar flat color="primary_dark">
           <v-toolbar-title class="headline white--text">
-            Delete User
+            Borrar Usuario
           </v-toolbar-title>
         </v-toolbar>
-        <v-card-title
-          >Are you sure you want to delete {{ username }}'s
-          account?</v-card-title
-        >
+        <v-card-title>
+          <p>¿Seguro que quieres borrar la cuenta de {{ username }}?</p>
+        </v-card-title>
         <v-card-text>
-          This action is <strong>irreversible</strong>.
+          <div class="body">Esta acción es <strong>irreversible</strong>.</div>
           <v-checkbox
             v-model="terms"
-            :label="`I accept the consequences.`"
+            :label="`Acepto las consecuencias.`"
           ></v-checkbox>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="close()"> Cancel </v-btn>
+          <v-btn color="green darken-1" text @click="close()"> Cancelar </v-btn>
           <v-btn
             color="green darken-1"
             :disabled="!terms"
@@ -29,7 +28,7 @@
             text
             @click="delete_User()"
           >
-            Delete
+            Borrar
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -56,7 +55,7 @@ export default {
     ...mapActions({
       deleteUser: "dashboardUsers/deleteUser"
     }),
-    
+
     close() {
       this.terms = false;
       this.$emit("update:dialog", false);
@@ -76,5 +75,12 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+p {
+  hyphens: auto;
+}
+
+.body{
+  font-size: 1.1rem;
+}
 </style>

@@ -20,7 +20,7 @@ class TestUserRoutes(unittest.TestCase):
   def test_add_existent_user_email(self):
     response = self.client.post('/users/',data=json.dumps(self.data),content_type='application/json', follow_redirects=True)
     self.assertEqual(response.status_code, 400)
-    self.assertEqual(response.json['Error'], 'Email has been registered.') 
+    self.assertEqual(response.json['Error'], 'El correo electrónico ha sido registrado.') 
 
   def test_add_existent_user_username(self):
     response = self.client.post('/users/',data=json.dumps({
@@ -30,7 +30,7 @@ class TestUserRoutes(unittest.TestCase):
         'password':'someR4nd0mP455woRd!',
       }),content_type='application/json', follow_redirects=True)
     self.assertEqual(response.status_code, 400)
-    self.assertEqual(response.json['Error'], 'Username is already taken.') 
+    self.assertEqual(response.json['Error'], 'El nombre de usuario está en uso.') 
 
 
 

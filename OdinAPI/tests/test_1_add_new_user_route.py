@@ -30,9 +30,8 @@ class TestUserRoutes(unittest.TestCase):
     self.data['password'] = 'shitPaswd'
     response = self.client.post('/users/',data=json.dumps(self.data),content_type='application/json', follow_redirects=True)
     self.assertEqual(response.status_code, 400)
-    self.assertEqual(response.json['Error'], """Password should contain At least 1 upercase letter,
-            1 lowecase letter, at least 1 number, at least 1 symbol, and is between 
-            10 and 64 characters long.""")
+    self.assertEqual(response.json['Error'], """La contraseña debe contener al menos 1 letra mayúscula, 
+            1 minúscula, 1 símbolo, y debe tener entre 10 y 64 caracteres.""")
     
 
 if __name__ == "__main__":

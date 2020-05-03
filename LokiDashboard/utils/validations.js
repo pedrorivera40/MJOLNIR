@@ -10,7 +10,7 @@
  * @param {*} customErrorMessage Custom error message fro when the rule is not met.
  */
 const required = (propertyType, customErrorMessage) => { 
-  return v => v && v.length > 0 || customErrorMessage || `You must input a ${propertyType}`
+  return v => v && v.length > 0 || customErrorMessage || `Favor de ingresar ${propertyType}`
 }
 
 /**
@@ -22,7 +22,7 @@ const minLength = (propertyType, minLength) => {
   return v => {
     if(!v){ return true; }
 
-    return v.length >= minLength || `${propertyType} must be at least ${minLength} characters`;
+    return v.length >= minLength || `${propertyType} debe ser mayor de ${minLength} caracteres`;
   }
 }
 
@@ -32,7 +32,7 @@ const minLength = (propertyType, minLength) => {
  * @param {*} maxLength maximum lenght required.
  */
 const maxLength = (propertyType, maxLength) => {
-  return v => v && v.length <= maxLength || `${propertyType} must be less than ${maxLength} characters`
+  return v => v && v.length <= maxLength || `${propertyType} debe ser menor de ${maxLength} caracteres`
 }
 
 
@@ -44,17 +44,18 @@ const maxSummaryLength = (propertyType, maxSummaryLength) => {
   }
 }
 
-/**
- * Validation fucntion that uses regex to establish the format for password within the syste.
- */
+
 const nameFormat = () => {
   let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$/
   return v => regex.test(v) || "El formato del nombre es incorrecto,"
 }
 
+/**
+ * Validation fucntion that uses regex to establish the format for password within the syste.
+ */
 const passwordFormat = () => {
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$/
-  return v => regex.test(v) || "Password must contain at least: 1 upercase, 1 lowercase, 1 number, and 1 special character."
+  return v => regex.test(v) || "La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número y 1 caracter especial."
 }
 
 /**
@@ -62,7 +63,7 @@ const passwordFormat = () => {
  */
 const emailFormat = () => {
   let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  return v => regex.test(v) || "Not a valid email format."
+  return v => regex.test(v) || "No es un formato valido de correo electrónico."
 }
 
 /**
@@ -70,7 +71,7 @@ const emailFormat = () => {
  * @param {*} password pasword to match to.
  */
 const passwordMatch = (password) => {
-  return v => v === password || "Password does not match."
+  return v => v === password || "Las contraseñas no coinciden."
 
 }
 
@@ -99,7 +100,7 @@ const teamRequired = (propertyType) => {
  * @param {*} password password to differentiate from.
  */
 const passwordDiffFromOld = (password) => {
-  return v => v !== password || "Password password can't be the same as the previous one."
+  return v => v !== password || "La nueva contraseña no puede ser igual a la contraseña anterior."
 
 }
 
