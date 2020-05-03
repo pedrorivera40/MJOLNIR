@@ -5,8 +5,6 @@ from .dao.final_score_dao import FinalScoreDAO
 #from .dao.team import TeamDAO
 #from .dao.athlete import AthleteDAO
 from .event_result import EventResultHandler
-# TODO: REMOVE FOR FULL VERSIONS
-# MOCK IMPLEMENTATIONS OF DAO
 from .dao.event_dao import EventDAO
 from .dao.team_dao import TeamDAO
 from .dao.athlete_dao import AthleteDAO

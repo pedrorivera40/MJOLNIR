@@ -23,6 +23,11 @@ export default{
     //TEAM MEMBERS
     SET_TEAM_MEMBERS(state,team_members){
         state.team_members = team_members
+    },
+
+    //INDIVIDUAL STATS
+    SET_INDIVIDUAL_STATS(state,individual_stats){
+        state.individual_stats = individual_stats
     }
 
 }

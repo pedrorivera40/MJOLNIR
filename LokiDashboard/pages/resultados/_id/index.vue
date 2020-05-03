@@ -25,13 +25,13 @@
                                         <h3>UPRM</h3>
                                     </v-row>
                                 </v-col>
-                                
+
                                 <v-col align="center">
                                     <v-row justify="center">
                                         <h2>-</h2>
                                     </v-row>
                                 </v-col>
-                                
+
                                 <v-col>
                                     <v-row justify="center">
                                         <h1>{{opponent_score}}</h1>
@@ -41,7 +41,7 @@
                                         <h3 v-else>Oponente</h3>
                                     </v-row>
                                 </v-col>
-                                
+
                             </v-row>
                             <v-row v-else justify="center">
                                 <v-col align="center">
@@ -49,7 +49,7 @@
                                 </v-col>
                             </v-row>
                         </v-container>
-                    </v-card>   
+                    </v-card>
                 </v-row>
                 <v-row justify="center" align="center">
                     <v-spacer/>
@@ -67,7 +67,7 @@
                             Añadir Puntuación Final
                         </v-btn>
                     </v-col>
-                    
+
                     <v-col>
                         <v-btn
                             color="primary_light"
@@ -84,7 +84,7 @@
                     <v-spacer/>
                     <v-spacer/>
                 </v-row>
-                <v-container>   
+                <v-container>
                     <v-tabs centered>
                         <v-tabs-slider/>
                         <v-tab>
@@ -96,7 +96,7 @@
                         </v-tab>
                         <v-tab-item>
                             <v-card>
-                                
+
                                 <v-card-title>
                                 <v-row>
                                     <v-col>
@@ -132,12 +132,13 @@
                                 :loading="isLoadingU" -->
                                 <!-- THE SPORTS STATS TABLE -->
                                 <v-data-table
-                                dense 
-                                :headers="headers" 
+                                dense
+                                :headers="headers"
                                 :items="payload_stats.athlete_statistic"
-                                item-key="athlete_statistic" 
-                                class="elevation-1"	
-                                v-if="payload_stats.athlete_statistic"							 
+                                item-key="athlete_statistic"
+                                class="elevation-1"
+                                v-if="payload_stats.athlete_statistic"
+                                :loading="loadingQuery"
                                 >
                                 <!-- v-if="isBasketballTable" -->
                                 <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
@@ -183,9 +184,9 @@
                                     </v-tooltip>
                                 </template>
                                 </v-data-table>
-                                
-                                
-                                
+
+
+
                             </v-card>
                         </v-tab-item>
                         <v-tab-item>
@@ -195,11 +196,11 @@
                                 :search="search"
                                 :loading="isLoadingU" -->
                                 <v-data-table
-                                dense 
-                                :headers="team_headers" 
+                                dense
+                                :headers="team_headers"
                                 :items="team_statistics"
-                                item-key="team_statistics" 
-                                class="elevation-1"								
+                                item-key="team_statistics"
+                                class="elevation-1"
                                 v-if="payload_stats != ''"
                                 >
                                 </v-data-table>
@@ -234,6 +235,18 @@
                 :team_members="team_members_local"
                 :refresh_stats.sync="refresh_stats"
             />
+            <UpdateIndividualStatsModal
+                v-if ="dialogEditIndividualStats"
+                :dialog.sync="dialogEditIndividualStats"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :payload_stats.sync="payload_stats"
+                :sport_id="sport_id"
+                :team_members="team_members_local"
+                :refresh_stats.sync="refresh_stats"
+                :athlete_id="edited_athlete_id"
+                :individual_stats="this.current_individual_stats"
+            />
         </v-container>
     </div>
   </v-container>
@@ -244,14 +257,16 @@ import { mapActions, mapGetters } from "vuex";
 import AddFinalScoreModal from "@/components/AddFinalScoreModal";
 import UpdateFinalScoreModal from "@/components/UpdateFinalScoreModal";
 import AddIndividualStatsModal from "@/components/AddIndividualStatsModal";
+import UpdateIndividualStatsModal from "@/components/UpdateIndividualStatsModal";
 export default {
   data() {
     return {
-      
+
       dialogAddFinalScore: false,
       dialogEditFinalScore:false,
       dialogAddIndividualStats:false,
-    
+      dialogEditIndividualStats:false,
+
       editedItemIndex: -1,
       editedItem: '',
       edited_athlete_id:'',
@@ -283,7 +298,7 @@ export default {
       VOLLEYBALL_IDM: 2,
       VOLLEYBALL_IDF: 12,
       BASEBALL_IDM: 4,
-      SOFTBALL_IDF: 16, 
+      SOFTBALL_IDF: 16,
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
       //season:''
@@ -293,11 +308,12 @@ export default {
       ready_for_stats:'',
       team_members_local:'',
       indiviual_athlete_stats:'',
-      refresh_stats:false
+      refresh_stats:false,
+      current_individual_stats:'',
     };
   },
 
-    
+
   // created(){
   async mounted(){
     this.event_id = this.$route.params.id
@@ -357,28 +373,31 @@ export default {
                 }
                 // console.log("[4] GOT EVENT STATS",this.results_payload)
                 // this.ready_for_stats = false
-                
+
             }
-            
+
         }
-    }, 
+    },
   components:{
       AddFinalScoreModal,
       UpdateFinalScoreModal,
       AddIndividualStatsModal,
+      UpdateIndividualStatsModal,
   },
   methods: {
-   
+
     ...mapActions({
         getAllEventStatistics:"results/getAllEventStatistics",
         getEventInfo:"results/getEventInfo",
         clearEventInfo:"results/clearEventInfo",
         clearAllStats:"results/clearAllStats",
+        clearIndividualStats:"results/clearIndividualStats",
         //newish
         stopGetStats:"results/stopGetStats",
         getTeamMembers:"results/getTeamMembers",
         setNullTeamMembers:"results/setNullTeamMembers",
         setQueryLoading:"results/setQueryLoading",
+        getIndividualStatistics:"results/getIndividualStatistics"
     }),
     async stat_refresh(){
         this.clearAllStats()
@@ -407,8 +426,8 @@ export default {
             // this.opponent_score = (this.payload_stats.opponent_score)
             // this.uprm_score = (this.payload_stats.uprm_score)
             return true
-        }         
-    }, 
+        }
+    },
     //confirm why this method was deprecated
     formated_event_info(){
         if (this.sport_id != ''){
@@ -451,7 +470,7 @@ export default {
         // basketball
         if (this.sport_id!=''){
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -478,7 +497,7 @@ export default {
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Assists', value: 'basketball_statistics.assists'},
                 {text: 'Blocks', value: 'basketball_statistics.blocks'},
@@ -500,7 +519,7 @@ export default {
                 ]
             }
             else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -521,7 +540,7 @@ export default {
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Kill Points', value: 'volleyball_statistics.kill_points'},
                 {text: 'Attack Errors', value: 'volleyball_statistics.attack_errors'},
@@ -537,7 +556,7 @@ export default {
                 ]
             }
             else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -555,7 +574,7 @@ export default {
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Goal Attempts', value: 'soccer_statistics.goal_attempts'},
                 {text: 'Assists', value: 'soccer_statistics.assists'},
@@ -568,7 +587,7 @@ export default {
                 ]
             }
             else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -587,7 +606,7 @@ export default {
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'At Bats', value: 'baseball_statistics.at_bats'},
                 {text: 'Runs', value: 'baseball_statistics.runs'},
@@ -601,8 +620,8 @@ export default {
                 ]
             }
         }
-          
-        
+
+
     },
 
 
@@ -646,11 +665,29 @@ export default {
         console.log(this.editedItem)
         console.log("Will Remove Team Statistics for Event ID("+(this.editedItem.event_id)+").")
     },
-    editAthleteStatistics(user) {
+    async editAthleteStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push("/resultados/"+this.event_id+"/individual/editar")
+        this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user);
+        this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex];
+        console.log("THIS IS THE EDITED ITEM",this.editedItem)
+        console.log("THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
+        this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
+        const param_json = {
+            sport_route: this.sport_route,
+            event_id:this.event_id,
+            athlete_id:this.edited_athlete_id
+        }
+        console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json)
+        this.clearIndividualStats()
+        this.setQueryLoading()
+        await this.getIndividualStatistics(param_json)
+        console.log("[EDIT INDIVIDUAL -INDEX] SHOULD HAVE GOTTEN , THEY ARE:",this.individual_stats)
+        // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
+        this.current_individual_stats = this.individual_stats;
+        this.dialogEditIndividualStats = true;
+        // this.$router.push("/resultados/"+this.event_id+"/individual/editar")
     },
     editTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
@@ -688,17 +725,18 @@ export default {
     //   console.log('reset')
     // },
     // Herbert Functions
-   
+
   },
   computed: {
     ...mapGetters({
         results_payload:"results/results_payload",
         event_info:"results/event_info",
         team_members:"results/team_members",
-        loadingQuery:"results/loadingQuery"
+        loadingQuery:"results/loadingQuery",
+        individual_stats:"results/individual_stats",
     })
-    
-    
+
+
   },
 };
 </script>

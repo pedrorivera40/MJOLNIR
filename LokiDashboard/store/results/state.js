@@ -4,4 +4,5 @@ export default() =>({
     final_score:null,
     loadingQuery:false,
     team_members: null,
+    individual_stats: null,
 })

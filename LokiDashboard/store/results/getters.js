@@ -4,4 +4,5 @@ export default{
     final_score: state => state.final_score,
     loadingQuery: state => state.loadingQuery,
     team_members: state => state.team_members,
+    individual_stats: state => state.individual_stats,
 }

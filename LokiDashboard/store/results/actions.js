@@ -39,6 +39,13 @@ export default{
             console.log("ERROR SETTING RESULTS PAYLOAD TO NULL",error)
         }
     },
+    async clearIndividualStats({commit}){
+        try{
+            commit("SET_INDIVIDUAL_STATS",null)
+        }catch(error){
+            console.log("ERROR SETTING INDIVIDUAL STATS PAYLOAD TO NULL",error)
+        }
+    },
     async clearEventInfo({commit}){
         try{
             commit("SET_EVENT_INFO",null)
@@ -151,11 +158,12 @@ export default{
     },
     async getIndividualStatistics({commit,dispatch},statsJSON){
         try{
+            console.log("[EDIT STATS] STRAIGHT FROM ACTIONS, PARAMS ARE",statsJSON)
             let sport_route = statsJSON.sport_route
-            let statistics = statsJSON.statistics
-            let event_id = statistics.event_id
-            let athlete_id = statistics.athlete_id
-            const response = await this.$axios.put('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+            // let statistics = statsJSON.statistics
+            let event_id = statsJSON.event_id
+            let athlete_id = statsJSON.athlete_id
+            const response = await this.$axios.get('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
             console.log("GET INDIVIDUAL STATS",response.data)
             commit("SET_INDIVIDUAL_STATS",response.data)
             commit("SET_QUERY_DONE")
