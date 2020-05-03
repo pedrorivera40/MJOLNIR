@@ -62,8 +62,8 @@
               justify="center"
               :action_type="action.action_type"
               :message="action.text"
-              :athlete_number="action.athlete_number"
-              :athlete_name="action.athlete_name"
+              :athlete_number="findAthleteNumber(action.athlete_id, oppRoster)"
+              :athlete_name="findAthleteName(action.athlete_id, oppRoster)"
               :athlete_img="action.athlete_img"
               :in_color="opp_color"
               :id="action.key"
@@ -74,9 +74,9 @@
               justify="center"
               :action_type="action.action_type"
               :message="action.text"
-              :athlete_number="action.athlete_number"
-              :athlete_name="action.athlete_name"
-              :athlete_img="action.athlete_img"
+              :athlete_number="findAthleteNumber(action.athlete_id, uprmRoster)"
+              :athlete_name="findAthleteName(action.athlete_id, uprmRoster)"
+              :athlete_img="findAthleteImg(action.athlete_id, uprmRoster)"
               :in_color="uprm_color"
               :id="action.key"
             />
@@ -283,7 +283,59 @@ export default {
       detachGameOver: "volleyballPBP/detachGameOver",
       detachOppColor: "volleyballPBP/detachOppColor",
       detachGameActions: "volleyballPBP/detachGameActions"
-    })
+    }),
+    findAthleteName(athlete_id, roster) {
+      let athlete_index = -1;
+      for (let index in roster) {
+        if (roster[index].key == athlete_id) {
+          athlete_index = index;
+          continue;
+        }
+      }
+
+      if (athlete_index === -1) {
+        return "Atleta Desconocido";
+      }
+      let athlete_name = roster[athlete_index].first_name;
+      if (roster[athlete_index].middle_name !== "") {
+        athlete_name += " " + roster[athlete_index].middle_name;
+      }
+      athlete_name += " " + roster[athlete_index].last_names;
+
+      return athlete_name;
+    },
+
+    findAthleteNumber(athlete_id, roster) {
+      let athlete_index = -1;
+      for (let index in roster) {
+        if (roster[index].key == athlete_id) {
+          athlete_index = index;
+          continue;
+        }
+      }
+
+      if (athlete_index === -1) {
+        return "?";
+      }
+
+      return roster[athlete_index].number;
+    },
+
+    findAthleteImg(athlete_id, roster) {
+      let athlete_index = -1;
+      for (let index in roster) {
+        if (roster[index].key == athlete_id) {
+          athlete_index = index;
+          continue;
+        }
+      }
+
+      if (athlete_index === -1) {
+        return "";
+      }
+
+      return roster[athlete_index].profile_image_link;
+    }
   },
   computed: {
     // Functions for getting values in the data models.
@@ -315,7 +367,6 @@ export default {
   beforeMount() {
     let event_id = this.$route.params.id;
     this.getEvent(event_id).then(() => {
-      console.log("LETS DO FIREBASE");
       this.getValidUPRMRoster(this.teamId);
       this.handleSetScores(event_id);
       this.handleCurrentSet(event_id);
