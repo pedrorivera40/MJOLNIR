@@ -81,6 +81,17 @@ const generalPhrase = (propertyType) =>{
     return v => regex.test(v) || `El formato de ${propertyType} es incorrecto.`
   
 }
+
+/**
+ * Validation function to check if only using numeric values
+ * @param {*} propertyType type of the required field
+ */
+const numeric = (propertyType) =>{
+  let regex = /^[0-9]*$/
+  return v => regex.test(v) || `El formato de ${propertyType} es incorrecto.`
+
+}
+
 const alphaSpaces = (propertyType) =>{
   let regex = /^[a-zA-Z ]*$/
   return v => regex.test(v) || `El formato de ${propertyType} es incorrecto.`
@@ -104,12 +115,29 @@ const passwordDiffFromOld = (password) => {
 
 }
 
+/**
+ * Validation function to determine a season was chosen properly
+ * @param {*} propertyType  type of the required field
+ */
 const seasonRequired = (propertyType) => {
   return v => {
     if(!v){ return `${propertyType} debe ser seleccionado`; }
     
-    //Will receive the id of the team which will be an integer larger than zero.
+    //Will receive the year of the season which will be an integer larger or equal than 2020.
     return v >= 2020 || `${propertyType} debe ser seleccionado`;
+  }
+}
+
+/**
+ * Validation function to determine a number input properly
+ * @param {*} propertyType  type of the required field
+ */
+const scoreRequired = (propertyType) => {
+  return v => {
+    if(!v){ return `${propertyType} es un campo requerido`; }
+    
+    //Will receive the score of the team which will be an integer larger or equal than zero.
+    return v >= 0 || `${propertyType} es un campo requerido`;
   }
 }
 
@@ -126,6 +154,8 @@ export default {
   generalPhrase,
   alphaSpaces,
   passwordDiffFromOld,
-  seasonRequired
+  seasonRequired,
+  numeric,
+  scoreRequired
 
 }
