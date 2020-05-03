@@ -138,7 +138,9 @@ class AthleteHandler:
 
             result = dao.getAthletesBySportAndNotInTeam(sID,tID)
             if not result:
+                dao._closeConnection()
                 return jsonify(Error = "Atletas no fueron encontrados para el deporte con el siguiente identifador: {}.".format(sID)),404
+            dao._closeConnection()
             mappedResult = []
             for athlete in result:   
                 mappedResult.append(self.mapAthleteWithPositionsAndCategoriesToDict(athlete))
@@ -171,7 +173,8 @@ class AthleteHandler:
                 dao._closeConnection()
                 return jsonify(Error = "No existe un atleta con el siguiente identificador:{}".format(aID)),404
 
-            result = dao.getAthleteByID(aID)           
+            result = dao.getAthleteByID(aID) 
+            dao._closeConnection()          
             mappedResult = self.mapAthleteWithPositionsAndCategoriesToDict(result)
             return jsonify(Athlete = mappedResult), 200
         except Exception as e:
@@ -235,8 +238,10 @@ class AthleteHandler:
             if isinstance(result,str):#If true, result will contain the error message.
                 dao._closeConnection()
                 return jsonify(Error = result),400
-
-            return jsonify(Athlete = "Un nuevo atleta fue añadido con el identificador:{}.".format(result)),201
+            athlete = dao.getAthleteByID(result)
+            dao._closeConnection()
+            mappedResult = self.mapAthleteWithPositionsAndCategoriesToDict(athlete)
+            return jsonify(Athlete = mappedResult),201
         except Exception as e:
             print(e)
             dao._closeConnection()
@@ -281,8 +286,11 @@ class AthleteHandler:
             if isinstance(result,str):
                     dao._closeConnection()
                     return jsonify(Error = result),500
-            
-            return jsonify(Athlete = "Se editó el atleta con identificador: {}".format(result)),200
+
+            athlete = dao.getAthleteByID(result)
+            dao._closeConnection()
+            mappedResult = self.mapAthleteWithPositionsAndCategoriesToDict(athlete)
+            return jsonify(Athlete = mappedResult),200
         except Exception as e:
             print(e)
             dao._closeConnection()
@@ -433,73 +441,6 @@ class AthleteHandler:
 
         return 1     
 
-    #NOTE: This will be moved to sport handler
-    def _sportsWithPositionAndCategories(self):
-
-        try:
-            
-            result = AthleteDAO().sportsWithPositionAndCategories()
-            if not result:
-                return jsonify(Error = "Error interno"),500
-            
-            return jsonify(Sports = self.mapSportsWithPositionsAndCategories(result)),200
-            
-        except Exception as e:
-            return jsonify(Error = str(e)),500
-                
-    #NOTE:This will be moved to sport handler
-    def mapSportsWithPositionsAndCategories(self,sportRecords):
-        mappedRecords = []
-        
-        for row in sportRecords:
-            result = {}
-            # Extract record attributes.
-            sport_id = row[0]
-            sport_name = row[1]
-            sport_branch = row[2]
-            position_name = row[3]
-            category_name = row[4]
-            #print(row)
-            # Case: sport not already considered.
-            if not mappedRecords:
-                if sport_id not in result:
-                    
-                    result['sport_id'] = sport_id
-                    result['sport_name'] = sport_name
-                    result['branch_name'] = sport_branch if sport_branch else ''
-                    result['positions'] = [position_name] if position_name else []
-                    result['categories'] = [category_name] if category_name else []
-                    mappedRecords.append(result)
-                    continue
-            else:
-                foundMatch = False
-                for record in mappedRecords:
-                    #print(record)
-                    if sport_id == record['sport_id']:
-                        #print('match found')
-                        if position_name and position_name not in record['positions']:
-                            record['positions'].append(position_name)
-
-                        if category_name and category_name not in record['categories']:
-                            print(record['categories'])
-                            record['categories'].append(category_name)
-                        
-                        foundMatch = True
-                        break                       
-                        
-                if foundMatch:
-                    continue
-
-                else:
-                    result['sport_id'] = sport_id
-                    result['sport_name'] = sport_name
-                    result['branch_name'] = sport_branch if sport_branch else ''
-                    result['positions'] = [position_name] if position_name else []
-                    result['categories'] = [category_name] if category_name else []
-                    mappedRecords.append(result)
-                    continue           
-
-        return mappedRecords
 
 
 

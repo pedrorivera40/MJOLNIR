@@ -163,9 +163,7 @@ class AthleteDAO:
         except:
             return "Occurrió un error interno tratando de añadir a un atleta"
         try:
-            self.commitChanges()
-            cursor.close()
-            self._closeConnection()        
+            self.commitChanges()                   
         except:
             return "Occurrió un error interno tratando de añadir a un atleta"
 
@@ -247,9 +245,7 @@ class AthleteDAO:
             return "Occurrió un error interno tratando de añadir a un atleta"
 
         try:
-            self.commitChanges()
-            cursor.close()
-            self._closeConnection()        
+            self.commitChanges()                   
         except:
             return "Occurrió un error interno tratando de añadir a un atleta"  
 
@@ -331,9 +327,7 @@ class AthleteDAO:
         except:
             return "Occurrió un error interno tratando de añadir a un atleta."
         try:
-            self.commitChanges()
-            cursor.close()
-            self._closeConnection()        
+            self.commitChanges()                  
         except:
             return "Occurrió un error interno tratando de añadir a un atleta."  
 
@@ -485,9 +479,7 @@ class AthleteDAO:
         
         
         try:
-            self.commitChanges()
-            cursor.close()
-            self._closeConnection()        
+            self.commitChanges()                  
         except:
             return "Occurrió un error interno tratando de actualizar al atleta."            
     
