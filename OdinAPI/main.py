@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify
 
 from flask_cors import CORS
 import os
@@ -6,6 +6,7 @@ import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
 from auth import verifyHash, generateToken, verifyToken
+from customSession import CustomSession
 from functools import wraps
 from dotenv import load_dotenv
 import os
@@ -28,8 +29,8 @@ load_dotenv()
 
 
 app = Flask(__name__)
-app.secret_key = 'any random string'
-
+app.secret_key = os.getenv('SECRET_KEY')
+session =  CustomSession(app.secret_key)
 CORS(app)
 
 
@@ -113,6 +114,8 @@ def auth():
             
         username = req['username']
         password = req['password'] # TODO: AES Encryption
+        session.setVal('username', username)
+        print(session.getVal('username'))
         return handler.login(username, password)
         
 
@@ -125,6 +128,7 @@ def allUsers():
     
     handler = UserHandler()
     if request.method == 'GET':
+        print(session.getVal('username'))
         # For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
@@ -134,7 +138,7 @@ def allUsers():
         ## Check the request contains the right structure.
         if 'username' not in req or 'full_name' not in req or 'email' not in req or 'password' not in req:
             return jsonify(Error='Bad Request.'), 400
-
+        
         # For account creation
         return handler.addDashUser(req['username'], req['full_name'], req['email'], req['password'])
 
