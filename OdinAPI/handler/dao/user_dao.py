@@ -529,6 +529,9 @@ class UserDAO:
         if permissionsList == None:
             return 'UserError5'
         for permission in permissionsList:
+            dkey =''
+            for key in permission:
+                dkey = key
             query = """
                     update user_permission 
                     set is_invalid = %s
@@ -537,7 +540,7 @@ class UserDAO:
                     returning permission_id, is_invalid
                     """
             cursor.execute(
-                query, (permission['is_invalid'], duid, permission['permission_id'],))
+                query, (permission[dkey], duid, dkey,))
             queryResults.append(cursor.fetchone())
         self.commitChanges()
         return queryResults
