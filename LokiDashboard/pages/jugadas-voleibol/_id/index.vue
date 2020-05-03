@@ -97,29 +97,29 @@
                     <thead>
                       <tr>
                         <th class="text-center">EQUIPO</th>
-                        <th class="text-center">SET 1</th>
-                        <th class="text-center">SET 2</th>
-                        <th class="text-center">SET 3</th>
-                        <th class="text-center">SET 4</th>
-                        <th class="text-center">SET 5</th>
+                        <th class="text-center">PARCIAL 1</th>
+                        <th class="text-center">PARCIAL 2</th>
+                        <th class="text-center">PARCIAL 3</th>
+                        <th class="text-center">PARCIAL 4</th>
+                        <th class="text-center">PARCIAL 5</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr :key="uprm_team_name">
                         <td class="text-center">{{ uprm_team_name }}</td>
-                        <td class="text-center">{{ score.uprm_set1 }}</td>
-                        <td class="text-center">{{ score.uprm_set2 }}</td>
-                        <td class="text-center">{{ score.uprm_set3 }}</td>
-                        <td class="text-center">{{ score.uprm_set4 }}</td>
-                        <td class="text-center">{{ score.uprm_set5 }}</td>
+                        <td class="text-center">{{ uprmSets[0] }}</td>
+                        <td class="text-center">{{ uprmSets[1] }}</td>
+                        <td class="text-center">{{ uprmSets[2] }}</td>
+                        <td class="text-center">{{ uprmSets[3] }}</td>
+                        <td class="text-center">{{ uprmSets[4] }}</td>
                       </tr>
                       <tr :key="opponentName">
                         <td class="text-center">{{ opponentName }}</td>
-                        <td class="text-center">{{ score.opp_set1 }}</td>
-                        <td class="text-center">{{ score.opp_set1 }}</td>
-                        <td class="text-center">{{ score.opp_set1 }}</td>
-                        <td class="text-center">{{ score.opp_set1 }}</td>
-                        <td class="text-center">{{ score.opp_set1 }}</td>
+                        <td class="text-center">{{ oppSets[0] }}</td>
+                        <td class="text-center">{{ oppSets[1] }}</td>
+                        <td class="text-center">{{ oppSets[2] }}</td>
+                        <td class="text-center">{{ oppSets[3] }}</td>
+                        <td class="text-center">{{ oppSets[4] }}</td>
                       </tr>
                     </tbody>
                   </template>
@@ -160,18 +160,22 @@
                     <thead>
                       <tr>
                         <th class="text-center">Atleta</th>
-                        <th v-for="play in plays_map" :key="play" class="text-center">{{ play.esp }}</th>
+                        <th
+                          v-for="(play, idx) in plays_map"
+                          :key="idx + 150"
+                          class="text-center"
+                        >{{ play.esp }}</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="athlete in uprmStatistics" :key="athlete">
+                      <tr v-for="(athlete, idx) in uprmAthleteStatistics" :key="idx + 50">
                         <td class="text-left">#{{ athlete.number }}. {{ athlete.name }}</td>
                         <td class="text-center">{{ athlete.killPoints }}</td>
                         <td class="text-center">{{ athlete.attackErrors }}</td>
                         <td class="text-center">{{ athlete.aces }}</td>
                         <td class="text-center">{{ athlete.serviceErrors }}</td>
                         <td class="text-center">{{ athlete.blocks }}</td>
-                        <td class="text-center">{{ athlete.blockPoints }}</td>
+                        <td class="text-center">{{ athlete.blockingPoints }}</td>
                         <td class="text-center">{{ athlete.blockingErrors }}</td>
                         <td class="text-center">{{ athlete.assists }}</td>
                         <td class="text-center">{{ athlete.digs }}</td>
@@ -182,17 +186,35 @@
                 </v-simple-table>
               </v-tab-item>
               <v-tab-item>
-                <v-container v-for="athlete in uprmRoster" :key="athlete.number">
-                  <v-row justify="center">
-                    <PBPRosterEntry
-                      :athlete_name="athlete.name"
-                      :athlete_img="athlete.img"
-                      :athlete_number="athlete.number"
-                      :athlete_statistics="uprmStatistics"
-                      :in_color="opp_color"
-                    />
-                  </v-row>
-                </v-container>
+                <v-simple-table>
+                  <template v-slot:default>
+                    <thead>
+                      <tr>
+                        <th class="text-center">Atleta</th>
+                        <th
+                          v-for="(play, idx) in plays_map"
+                          :key="idx + 200"
+                          class="text-center"
+                        >{{ play.esp }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(athlete, idx) in oppAthleteStatistics" :key="idx + 100">
+                        <td class="text-left">#{{ athlete.number }}. {{ athlete.name }}</td>
+                        <td class="text-center">{{ athlete.killPoints }}</td>
+                        <td class="text-center">{{ athlete.attackErrors }}</td>
+                        <td class="text-center">{{ athlete.aces }}</td>
+                        <td class="text-center">{{ athlete.serviceErrors }}</td>
+                        <td class="text-center">{{ athlete.blocks }}</td>
+                        <td class="text-center">{{ athlete.blockingPoints }}</td>
+                        <td class="text-center">{{ athlete.blockingErrors }}</td>
+                        <td class="text-center">{{ athlete.assists }}</td>
+                        <td class="text-center">{{ athlete.digs }}</td>
+                        <td class="text-center">{{ athlete.receptionErrors }}</td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
               </v-tab-item>
             </v-tabs>
           </v-container>
