@@ -5,12 +5,12 @@
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card width="800" class="elevation-12 mx-auto">
                 <v-toolbar color="green darken-1" dark flat>
-                    <v-toolbar-title>Añadir Estadísticas Atleta {{sport_name}} - {{branch}}</v-toolbar-title>
+                    <v-toolbar-title>Editar Estadísticas Atleta {{sport_name}} - {{branch}}</v-toolbar-title>
                     <v-spacer />
                 </v-toolbar>
                 <v-card-text>            
                 
-                    <form>
+                    <v-form v-model="valid">
                         <v-container v-if="formated_stats()">   
                             <v-row v-if="isBasketball">
                                 <v-col>  
@@ -257,11 +257,12 @@
                                                     filled
                                                     chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Atleta Seleccionado"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    required
                                                     :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    required
+                                                    disabled
                                                     >
                                                     <template v-slot:selection="data">
                                                         <v-chip
@@ -417,11 +418,12 @@
                                                     filled
                                                     chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Atleta Seleccionado"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    required
                                                     :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    required
+                                                    disabled
                                                     >
                                                     <template v-slot:selection="data">
                                                         <v-chip
@@ -542,11 +544,12 @@
                                                     filled
                                                     chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Atleta Seleccionado"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    required
                                                     :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    required
+                                                    disabled
                                                     >
                                                     <template v-slot:selection="data">
                                                         <v-chip
@@ -690,7 +693,7 @@
                                 </v-col>
                             </v-row>   
                         </v-container>
-                    </form>
+                    </v-form>
                 </v-card-text>
             </v-card>
         </v-dialog>

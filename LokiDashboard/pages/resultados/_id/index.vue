@@ -509,7 +509,7 @@ export default {
                 {text: 'Three Point Attempt', value: 'statistics.three_point_attempt'},
                 {text: 'Three Point Percentage(%)', value: 'statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'statistics.turnovers'},
-                { text: "Actions", value: "actions", sortable: false },
+                { text: "Acciones", value: "actions", sortable: false },
 
                 ]
                 this.team_headers =
@@ -542,30 +542,30 @@ export default {
                 //     sortable: true,
                 //     value: 'athlete_info.first_name'
                 // },
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
-                {text: 'Kill Points', value: 'statistics.kill_points'},
-                {text: 'Attack Errors', value: 'statistics.attack_errors'},
-                {text: 'Assists', value: 'statistics.assists'},
-                {text: 'Aces', value: 'statistics.aces'},
-                {text: 'Service Errors', value: 'statistics.service_errors'},
-                {text: 'Digs', value: 'statistics.digs'},
-                {text: 'Blocks', value: 'statistics.blocks'},
-                {text: 'Blocking Errors', value: 'statistics.blocking_errors'},
-                {text: 'Reception Errors', value: 'statistics.reception_errors'},
-                { text: "Actions", value: "actions", sortable: false },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
+                {text: 'Puntos de Ataque', value: 'statistics.kill_points'},
+                {text: 'Errores de Ataque', value: 'statistics.attack_errors'},
+                {text: 'Asistencias', value: 'statistics.assists'},
+                {text: 'Servicio Directo', value: 'statistics.aces'},
+                {text: 'Errores de Servicios', value: 'statistics.service_errors'},
+                {text: 'Recepciones', value: 'statistics.digs'},
+                {text: 'Bloqueo', value: 'statistics.blocks'},
+                {text: 'Errores De Bloqueo', value: 'statistics.blocking_errors'},
+                {text: 'Errores de Recepcion', value: 'statistics.reception_errors'},
+                { text: "Acciones", value: "actions", sortable: false },
 
                 ]
                 this.team_headers =
                 [
-                {text: 'Kill Points', value: 'volleyball_statistics.kill_points'},
-                {text: 'Attack Errors', value: 'volleyball_statistics.attack_errors'},
-                {text: 'Assists', value: 'volleyball_statistics.assists'},
-                {text: 'Aces', value: 'volleyball_statistics.aces'},
-                {text: 'Service Errors', value: 'volleyball_statistics.service_errors'},
-                {text: 'Digs', value: 'volleyball_statistics.digs'},
-                {text: 'Blocks', value: 'volleyball_statistics.blocks'},
-                {text: 'Blocking Errors', value: 'volleyball_statistics.blocking_errors'},
-                {text: 'Reception Errors', value: 'volleyball_statistics.reception_errors'},
+                {text: 'Puntos de Ataque', value: 'volleyball_statistics.kill_points'},
+                {text: 'Errores de Ataque', value: 'volleyball_statistics.attack_errors'},
+                {text: 'Asistencias', value: 'volleyball_statistics.assists'},
+                {text: 'Servicio Directo', value: 'volleyball_statistics.aces'},
+                {text: 'Errores de Servicio', value: 'volleyball_statistics.service_errors'},
+                {text: 'Recepciones', value: 'volleyball_statistics.digs'},
+                {text: 'Bloqueos', value: 'volleyball_statistics.blocks'},
+                {text: 'Errores de Bloqueo', value: 'volleyball_statistics.blocking_errors'},
+                {text: 'Errores de Recepcion', value: 'volleyball_statistics.reception_errors'},
                
 
                 ]
@@ -579,22 +579,22 @@ export default {
                 //     sortable: true,
                 //     value: 'athlete_info.first_name'
                 // },
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'Goal Attempts', value: 'statistics.goal_attempts'},
-                {text: 'Assists', value: 'statistics.assists'},
+                {text: 'Asistencias', value: 'statistics.assists'},
                 {text: 'Fouls', value: 'statistics.fouls'},
-                {text: 'Cards', value: 'statistics.cards'},
+                {text: 'Tarjetas', value: 'statistics.cards'},
                 {text: 'Successful Goals', value: 'statistics.successful_goals'},
                 {text: 'Tackles', value: 'statistics.tackles'},
-                { text: "Actions", value: "actions", sortable: false },
+                { text: "Acciones", value: "actions", sortable: false },
 
                 ]
                 this.team_headers =
                 [
                 {text: 'Goal Attempts', value: 'soccer_statistics.goal_attempts'},
-                {text: 'Assists', value: 'soccer_statistics.assists'},
+                {text: 'Asistencias', value: 'soccer_statistics.assists'},
                 {text: 'Fouls', value: 'soccer_statistics.fouls'},
-                {text: 'Cards', value: 'soccer_statistics.cards'},
+                {text: 'Tarjetas', value: 'soccer_statistics.cards'},
                 {text: 'Successful Goals', value: 'soccer_statistics.successful_goals'},
                 {text: 'Tackles', value: 'soccer_statistics.tackles'},
               
@@ -609,21 +609,21 @@ export default {
                 //     sortable: true,
                 //     value: 'athlete_info.first_name'
                 // },
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'At Bats', value: 'statistics.at_bats'},
-                {text: 'Runs', value: 'statistics.runs'},
+                {text: 'Carreras', value: 'statistics.runs'},
                 {text: 'Hits', value: 'statistics.hits'},
                 {text: 'Runs Batted In', value: 'statistics.runs_batted_in'},
                 {text: 'Base On Balls', value: 'statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'statistics.strikeouts'},
                 {text: 'Left On Base', value: 'statistics.left_on_base'},
-                { text: "Actions", value: "actions", sortable: false },
+                { text: "Acciones", value: "actions", sortable: false },
 
                 ]
                 this.team_headers =
                 [
                 {text: 'At Bats', value: 'baseball_statistics.at_bats'},
-                {text: 'Runs', value: 'baseball_statistics.runs'},
+                {text: 'Carreras', value: 'baseball_statistics.runs'},
                 {text: 'Hits', value: 'baseball_statistics.hits'},
                 {text: 'Runs Batted In', value: 'baseball_statistics.runs_batted_in'},
                 {text: 'Base On Balls', value: 'baseball_statistics.base_on_balls'},
@@ -637,17 +637,17 @@ export default {
             else if (this.sport_id == 999 || this.sport_id == 999){
                 this.headers =
                 [
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
-                {text: 'Category Name', value: 'statistics.category_name'},
-                {text: 'Medal Earned', value: 'statistics.medal_earned'},
-                { text: "Actions", value: "actions", sortable: false },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
+                {text: 'Categoria', value: 'statistics.category_name'},
+                {text: 'Tipo de Medalla', value: 'statistics.medal_earned'},
+                { text: "Acciones", value: "actions", sortable: false },
 
                 ]
                 this.team_headers =
                 [
-                {text: 'Category Name', value: 'medal_based_statistics.category_name'},
-                {text: 'Type Of Medal', value: 'medal_based_statistics.types_of_medal'},
-                {text: 'Medals Earned', value: 'medal_based_statistics.medals_earned'},
+                {text: 'Categoria', value: 'medal_based_statistics.category_name'},
+                {text: 'Tipo de Medalla', value: 'medal_based_statistics.types_of_medal'},
+                {text: 'Numero de Medallas', value: 'medal_based_statistics.medals_earned'},
                 ]
             }
             this.ready_for_table = true

@@ -68,7 +68,8 @@
                         :headers="headers" 
                         :items="payload_stats.athlete_statistic"
                         item-key="payload_stats.athlete_statistic" 
-                        class="elevation-1"								
+                        class="elevation-1"	
+                        :loading="loadingQuery"							
                         >
                         <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
                         </v-data-table>
@@ -85,7 +86,8 @@
                         :headers="team_headers" 
                         :items="team_statistics"
                         item-key="team_statistics" 
-                        class="elevation-1"								
+                        class="elevation-1"	
+                        :loading="loadingQuery"							
                         >
                         </v-data-table>
                     </v-card>
@@ -373,7 +375,8 @@ created(){
   computed: {
     ...mapGetters({
         results_payload:"results/results_payload",
-        event_info:"results/event_info"
+        event_info:"results/event_info",
+        loadingQuery:"results/loadingQuery",
 	})
   },
 };
