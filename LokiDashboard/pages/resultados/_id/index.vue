@@ -633,6 +633,23 @@ export default {
 
                 ]
             }
+            // TODO: make it so this happens for MEDAL-BASED events
+            else if (this.sport_id == 999 || this.sport_id == 999){
+                this.headers =
+                [
+                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
+                {text: 'Category Name', value: 'statistics.category_name'},
+                {text: 'Medal Earned', value: 'statistics.medal_earned'},
+                { text: "Actions", value: "actions", sortable: false },
+
+                ]
+                this.team_headers =
+                [
+                {text: 'Category Name', value: 'medal_based_statistics.category_name'},
+                {text: 'Type Of Medal', value: 'medal_based_statistics.types_of_medal'},
+                {text: 'Medals Earned', value: 'medal_based_statistics.medals_earned'},
+                ]
+            }
             this.ready_for_table = true
         }
 
