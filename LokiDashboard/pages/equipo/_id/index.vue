@@ -166,6 +166,7 @@
         v-if="dialogAddTeam"
         :dialog.sync="dialogAddTeam"
         :sport_id="sport_id"
+        :season_year_prop.sync="season"
       />
       <UpdateTeamModal
         v-if="dialogEditTeam"
