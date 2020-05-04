@@ -186,7 +186,25 @@
           :id = "eid"
           :trigger.sync = "ready"
         />
-       
+
+        <v-dialog v-model="dialogPBP" persistent max-width="400">            
+          <v-card>
+            <v-card-title class="headline">Falta el nombre del oponente</v-card-title>
+            <v-card-text>              
+              Tienes que editar el evento y añadirle un nombre del oponente.              
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="black"
+                text
+                @click="closePBPDialog()"
+              >Cerrar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>     
+
       </v-card>
     </div>
   </v-container>
@@ -210,6 +228,7 @@ export default {
     dialogDelete: false,
     dialogEdit: false,
     dialogAdd:false,
+    dialogPBP:false,
     terms:false,
     dateMenu: false,
     loading : true,
@@ -405,9 +424,19 @@ export default {
 
     createPBPSequence(event)
     {
-      const eventJSON = {"sport_name":event.sport_name,"event_id":event.id}
-      this.startPBPSequence(eventJSON)
+      
+      if(event.opponent_name == null || event.opponent_name == '')
+        this.dialogPBP = true
+
+      else{
+        const eventJSON = {"sport_name":event.sport_name,"event_id":event.id}
+        this.startPBPSequence(eventJSON)
+      }
+    },
+    closePBPDialog(){
+      this.dialogPBP = false
     }
+
 
   },
 

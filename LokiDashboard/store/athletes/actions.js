@@ -96,6 +96,43 @@ export default{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
         }
-    }
+    },
+
+    //Results related actions
+    async getAthleteSeasonStats({commit,dispatch},stats_params){
+        try{
+            const response = await this.$axios.get('results/'+stats_params.sport_name+'/season/athlete_games/?athlete_id='+stats_params.athlete_id+'&season_year='+stats_params.season_year)
+            //console.log(response.data)
+            commit("SET_SEASON_STATS",response.data)
+            dispatch('notifications/setSnackbar', {text: "Se recolectó exitosamente las estadísticas de la temporada.", color: 'success'}, {root: true})
+        }catch(error){
+            console.log(error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: 'Error', color: 'error'}, {root: true})
+                return 'error'
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
+        }
+
+    },
+
+    async getAthleteAggregateSeasonStats({commit,dispatch},stats_params){
+        try{
+            const response = await this.$axios.get('results/'+stats_params.sport_name+'/season/athlete_aggregate/?athlete_id='+stats_params.athlete_id+'&season_year='+stats_params.season_year)
+            //console.log(response.data)
+            commit("SET_AGGREGATE_SEASON_STATS",response.data)
+            dispatch('notifications/setSnackbar', {text: "Se recolectó exitosamente las estadísticas agregadas de la temporada.", color: 'success'}, {root: true})
+        }catch(error){
+            console.log(error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: 'Error', color: 'error'}, {root: true})
+                return 'error'
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
+        }
+
+    },
 }
 

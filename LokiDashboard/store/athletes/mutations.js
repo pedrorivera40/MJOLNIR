@@ -26,5 +26,13 @@ export default{
         if(index !== -1){
             state.athletes.splice(index,1,athlete)
         }
+    },
+
+    SET_SEASON_STATS(state,season_stats){
+        state.athlete_stats_per_season = season_stats
+    },
+
+    SET_AGGREGATE_SEASON_STATS(state,aggregate_season_stats){
+        state.athlete_aggregate_stats_per_season = aggregate_season_stats
     }
 }
