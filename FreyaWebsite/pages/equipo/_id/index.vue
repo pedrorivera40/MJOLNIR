@@ -7,6 +7,13 @@
 		>
 			<v-spacer />
 			<v-toolbar-title>{{sport_name}}</v-toolbar-title>
+      <v-progress-linear
+				:active="loadingQuery||loadingEventQuery"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>
 			<v-spacer />
 		</v-toolbar>
 		<v-container>
@@ -583,75 +590,6 @@ export default {
         else{this.sport_name = '', this.sport_route = ''}
         
       },
-      getEvents(){
-        this.events =  [
-        {
-          "branch": "masculino",
-          "event_date": "Wed, 01 Apr 2020 00:00:00 GMT",
-          "id": 5,
-          "is_local": true,
-          "local_score": 5073,
-          "opponent_color": null,
-          "opponent_name": null,
-          "opponent_score": 1,
-          "sport_name": "Baloncesto",
-          "team_id": 1,
-          "venue": "Mangual"
-        },
-        {
-          "branch": "masculino",
-          "event_date": "Mon, 20 Apr 2020 00:00:00 GMT",
-          "id": 6,
-          "is_local": true,
-          "local_score": 0,
-          "opponent_color": null,
-          "opponent_name": null,
-          "opponent_score": 0,
-          "sport_name": "Baloncesto",
-          "team_id": 1,
-          "venue": "Espada"
-        },
-        {
-          "branch": "masculino",
-          "event_date": "Mon, 23 Mar 2020 00:00:00 GMT",
-          "id": 3,
-          "is_local": false,
-          "local_score": 200,
-          "opponent_color": "red",
-          "opponent_name": null,
-          "opponent_score": 500,
-          "sport_name": "Baloncesto",
-          "team_id": 1,
-          "venue": "Mangual"
-        },
-        {
-          "branch": "masculino",
-          "event_date": "Mon, 16 Mar 2020 00:00:00 GMT",
-          "id": 17,
-          "is_local": false,
-          "local_score": null,
-          "opponent_color": "black",
-          "opponent_name": null,
-          "opponent_score": null,
-          "sport_name": "Baloncesto",
-          "team_id": 1,
-          "venue": "Choliseo"
-        },
-        {
-          "branch": "masculino",
-          "event_date": "Sat, 14 Mar 2020 00:00:00 GMT",
-          "id": 4,
-          "is_local": true,
-          "local_score": null,
-          "opponent_color": null,
-          "opponent_name": null,
-          "opponent_score": null,
-          "sport_name": "Baloncesto",
-          "team_id": 1,
-          "venue": "Espada"
-        }
-      ]
-      },
 			async getSeasonData(){
           this.setQueryLoading()
           this.setNullTeam()
@@ -664,7 +602,6 @@ export default {
           this.team_statistics_per_season = null
           this.members = null
           this.events = null
-          // this.getEvents()
           const team_params = {
             sport_id: String(this.sport_id),
             season_year: String(this.season)

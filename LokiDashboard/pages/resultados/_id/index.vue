@@ -1,7 +1,7 @@
 <template>
-  <v-container class="wrapper">
+  <v-container class="wrapper" v-if="formated_event_info()">
     <v-container v-if="formated_event_info()">
-        <h1 class="primary_dark--text pl-3">Resultados {{sport_name}}</h1>
+        <h1 class="primary_dark--text pl-3">Resultados {{sport_name}} {{branch_name_local}}</h1>
         <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
         <h3>Evento de {{event_date}}</h3>
     </v-container>
@@ -185,6 +185,13 @@
                                     </v-tooltip>
                                 </template>
                                 </v-data-table>
+                                <v-container v-else>
+                                    <v-row align = "center" justify = "center">
+                                    <v-col justify = "center" align = "center">
+                                        <h2>No Se Encontraron Resultados</h2>
+                                    </v-col>
+                                    </v-row>
+                                </v-container>
 
 
 
@@ -206,6 +213,13 @@
                                 :loading="loadingQuery"
                                 >
                                 </v-data-table>
+                                <v-container v-else>
+                                    <v-row align = "center" justify = "center">
+                                    <v-col justify = "center" align = "center">
+                                        <h2>No Se Encontraron Resultados de Equipo</h2>
+                                    </v-col>
+                                    </v-row>
+                                </v-container>
                             </v-card>
                         </v-tab-item>
                     </v-tabs>
@@ -259,6 +273,13 @@
             />
         </v-container>
     </div>
+  </v-container>
+  <v-container v-else>
+    <v-row justify="center">
+        <v-col align="center">
+            <h3>Evento No Existe</h3>
+        </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -323,12 +344,15 @@ export default {
       refresh_stats:false,
       current_individual_stats:'',
       ready_for_table: false,
+
+      branch_name_local:'',
     };
   },
 
 
   // created(){
   async mounted(){
+    this.sport_id = null
     this.ready_for_table = false
     this.event_id = this.$route.params.id
     this.clearEventInfo()
@@ -346,6 +370,7 @@ export default {
             this.sport_name = this.event_info.sport_name
             this.opponent_name = this.event_info.opponent_name
             this.event_date = this.event_info.event_date
+            this.branch_name_local = this.event_info.branch
             this.team_id = this.event_info.team_id
             // if (this.ready_for_stats){
             await this.setQueryLoading()
@@ -445,7 +470,7 @@ export default {
     },
     //confirm why this method was deprecated
     formated_event_info(){
-        if (this.sport_id != ''){
+        if (this.sport_id != '' && this.sport_id != null){
             return true
         }
         else return false

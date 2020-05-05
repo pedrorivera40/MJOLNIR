@@ -1,13 +1,15 @@
 <template>
-  <div v-if="formated_event_info()" class="wrapper">
-    <h1>Resultados {{sport_name}}</h1>
+  <v-container class="wrapper" v-if="formated_event_info()">
+  <div>
+    <h1 class="primary_dark--text pl-3">Resultados {{sport_name}} {{branch_name_local}}</h1>
     <!-- PURELY FOR TESTING PURPOSES, TODO: REMOVE SOON 4/24 -->
     <!-- <v-btn class="mr-4" @click="getAllEventStatistics(event_id)" color="green darken-1">GET AGAIN</v-btn>
     <v-btn class="mr-4" @click="formated_member_stats()" color="green darken-1">CHECK THE STATS</v-btn> -->
     <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
     <!-- <h3>Evento de {{event_info.Event.event_date}}</h3> -->
+    <h3>Evento de {{event_date}}</h3>
     <div class="content-area pa-4 pt-12">
-    <v-container v-if="formated_member_stats()">
+    <v-container>
         <v-row align="center"
         justify="center">
         <v-card width=400 class="mx-lg-auto" outlined>
@@ -17,7 +19,7 @@
                 </v-row>
                 </v-card-title>
             <v-container>
-                <v-row >  
+                <v-row v-if="formated_final_score()">  
                     <v-col >
                         <v-row justify="center">
                             <h1>{{uprm_score}}</h1>
@@ -38,10 +40,16 @@
                             <h1>{{opponent_score}}</h1>
                         </v-row>
                         <v-row justify="center">
-                            <h3>{{opponent_name}}</h3>
+                            <h3 v-if="opponent_name">{{opponent_name}}</h3>
+                            <h3 v-else>Oponente</h3>
                         </v-row>
                     </v-col>
                     
+                </v-row>
+                <v-row v-else justify="center">
+                    <v-col align="center">
+                        <h3>No Hay Puntuación Final Disponible</h3>
+                    </v-col>
                 </v-row>
             </v-container>
         </v-card>   
@@ -69,10 +77,18 @@
                         :items="payload_stats.athlete_statistic"
                         item-key="payload_stats.athlete_statistic" 
                         class="elevation-1"	
+                        v-if="formated_member_stats()"
                         :loading="loadingQuery"							
                         >
                         <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
                         </v-data-table>
+                        <v-container v-else>
+                            <v-row align = "center" justify = "center">
+                            <v-col justify = "center" align = "center">
+                                <h2>No Se Encontraron Resultados</h2>
+                            </v-col>
+                            </v-row>
+                        </v-container>
                     </v-card>
                 </v-tab-item>
                 <v-tab-item>
@@ -87,28 +103,39 @@
                         :items="team_statistics"
                         item-key="team_statistics" 
                         class="elevation-1"	
-                        :loading="loadingQuery"							
+                        :loading="loadingQuery"
+                        v-if="formated_member_stats()"							
                         >
                         </v-data-table>
+                        <v-container v-else>
+                            <v-row align = "center" justify = "center">
+                            <v-col justify = "center" align = "center">
+                                <h2>No Se Encontraron Resultados de Equipo</h2>
+                            </v-col>
+                            </v-row>
+                        </v-container>
                     </v-card>
                 </v-tab-item>
             </v-tabs>
         </v-container>
     </v-container>
     </div>
-    </div>
+  </div>
+  </v-container>
+  <v-container v-else>
+    <v-row justify="center">
+        <v-col align="center">
+            <h3>Evento No Existe</h3>
+        </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
-    return {
-      
-      dialogEdit: false,
-      dialogDelete: false,
-      dialogPermissions: false,
-     
+    return {     
     //   headers: [
     //     {
     //       text: "ID",
@@ -135,11 +162,12 @@ export default {
       team_headers:[],
       statistics_per_season:"",
       team_statistics:'',
-      search_individual: "",
+    //   search_individual: "",
       sport_id:'',
       sport_route:'',
       sport_name: '',
       event_id:'',
+      event_date:'',
     //   event_info:'',
       opponent_score:'',
       opponent_name:'', //TODO: MAKE THIS VALUE DYNAMIC
@@ -157,6 +185,8 @@ export default {
       //INTEGRATION QUERY VARS
       ready_for_event:false,
       ready_for_stats:true,
+
+      branch_name_local:'',
     };
   },
   
@@ -194,7 +224,8 @@ created(){
             this.sport_id =  this.event_info.sport_id 
             this.sport_name = this.event_info.sport_name
             this.opponent_name = this.event_info.opponent_name
-
+            this.event_date = this.event_info.event_date
+            this.branch_name_local = this.event_info.branch
             if (this.ready_for_stats){
                 this.buildTable()
                 console.log("[3] BUILT TABLE",this.results_payload)
@@ -234,6 +265,12 @@ created(){
         else{
           return false
         }
+    },
+    formated_final_score(){
+        if(Number.isFinite(this.uprm_score)&&Number.isFinite(this.opponent_score)){
+            return true
+        }
+        else return false
     },
     buildDefaultValues(){
         if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}
