@@ -5,7 +5,7 @@ import os
 import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
-from auth import verifyHash, generateToken, verifyToken
+from auth import verifyHash, generateToken, verifyToken, getTokenInfo
 from customSession import CustomSession
 from functools import wraps
 from dotenv import load_dotenv
@@ -30,7 +30,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
-session =  CustomSession(app.secret_key)
+session = CustomSession(app.secret_key)
 CORS(app)
 
 
@@ -59,6 +59,35 @@ def token_check(func):
             return func(*args, **kwargs)
     return decorated
 
+
+def extractUserInfoFormToken():
+    token = request.headers.get('Authorization').split(' ')[1]
+    return getTokenInfo(token)
+
+def validateRequestPermissions(loggedInUser, token, permissionNumber):
+    def switch(permissionNumber):
+        return {
+            '13': 0,
+            '14': 1,
+            '15': 2,
+            '16': 3,
+            '17': 4,
+            '18': 5,
+            '19': 6,
+            '20': 7,
+            '21': 8,
+            '22': 9,
+            '23': 10,
+            '24': 11,
+            '25': 12,
+            '26': 13,
+            '27': 14,
+        }[permissionNumber]
+    index = switch(permissionNumber)
+    if loggedInUser != token['user']:
+        return jsonify(Error='Invalid Session'), 401
+    if(token['permissions'][index][permissionNumber]==False):
+        return jsonify(Error='User does not have permissions to acces this resource.'), 403
 
 #--------- Athlete Routes ---------#
 @app.route("/athletes/", methods=['GET', 'POST'])
@@ -112,22 +141,34 @@ def auth():
             return jsonify(Error='Bad Request.'), 400
 
         username = req['username']
-        password = req['password'] # TODO: AES Encryption
-        session.setVal('username', username)
-        print(session.getVal('username'))
-        return handler.login(username, password)
+        password = req['password']  # TODO: AES Encryption
+        return handler.login(username, password, session)
 
 
 ###########################################
 #--------- Dashboard User Routes ---------#
 ###########################################
 @app.route("/users/", methods=['GET', 'POST'])
-# @token_check
+@token_check
 def allUsers():
+    loggedInUser = session.getVal('username') 
+    token = extractUserInfoFormToken()
+    validateRequestPermissions(loggedInUser,token,'21')
+    validateRequestPermissions(loggedInUser,token,'22')
+    validateRequestPermissions(loggedInUser,token,'23')
+    # print(token)
+    if loggedInUser != token['user']:
+        return jsonify(Error='Invalid Session'), 401
+    if(token['permissions'][9]['22']==False):
+        return jsonify(Error='User does not have permissions to acces this resource.'), 403
+    if(token['permissions'][10]['23']==False):
+        return jsonify(Error='User does not have permissions to acces this resource.'), 403
+    if(token['permissions'][11]['24']==False):
+        return jsonify(Error='User does not have permissions to acces this resource.'), 403
 
     handler = UserHandler()
     if request.method == 'GET':
-        print(session.getVal('username'))
+
         # For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
@@ -137,7 +178,7 @@ def allUsers():
         # Check the request contains the right structure.
         if 'username' not in req or 'full_name' not in req or 'email' not in req or 'password' not in req:
             return jsonify(Error='Bad Request.'), 400
-        
+
         # For account creation
         return handler.addDashUser(req['username'], req['full_name'], req['email'], req['password'])
 

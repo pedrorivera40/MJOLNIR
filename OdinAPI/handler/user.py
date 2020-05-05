@@ -175,7 +175,7 @@ class UserHandler:
         mappedUser = self.mapUserToDict(fetchedUser)
         return jsonify(User=mappedUser), 200  # 200 == OK
 
-    def login(self, username, password):
+    def login(self, username, password, session):
         """
         Gets a dashboard's user password hash given their username.
 
@@ -221,6 +221,8 @@ class UserHandler:
         mappedHash = self.mapHash(fetchedHash)
 
         userPermissions = self.getUserPermissions(duid, 'internal')
+        session.setVal('username', username)
+        session.setVal('permissions', userPermissions)
         # TODO AES encryption.
         if verifyHash(password, mappedHash['hash']):
             # User provided correct password
