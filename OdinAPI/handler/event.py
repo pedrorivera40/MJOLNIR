@@ -70,8 +70,9 @@ class EventHandler:
         result['sport_name'] = record[7]
         result['sport_img_url'] = record[8]
         result['branch'] = record[9]
-        result['local_score'] = record[10]
-        result['opponent_score'] = record[11]
+        result['team_season_year'] = record[10]
+        result['local_score'] = record[11]
+        result['opponent_score'] = record[12]
 
         if 'Voleibol' in record[7]:
             result['hasPBP'] = self._check_pbp(record[0])
@@ -235,7 +236,10 @@ class EventHandler:
                 dao._closeConnection()
                 return jsonify(Error = result),500
 
-            return jsonify(Event = "Se añadió un evento con el identificador: {}".format(result)),201
+            event = dao.getEventByID(result)
+            mappedEvent = self.mapEventToDict(event)
+
+            return jsonify(Event =  mappedEvent),201
             
         except Exception as e:
             print(e)
@@ -284,8 +288,11 @@ class EventHandler:
             if isinstance(result,str):
                 dao._closeConnection()
                 return jsonify(Error = result),500
+            
+            event = dao.getEventByID(result)
+            mappedEvent = self.mapEventToDict(event)
                 
-            return jsonify(Event = "Evento con el identificador:{}, fue editado.".format(result)),200
+            return jsonify(Event = mappedEvent),200
             
         except Exception as e:
             print(e)
@@ -386,7 +393,8 @@ class EventHandler:
             
             return 1
 
-        except:
+        except Exception as e:
+            print(e)
             return "Bad arguments were given." 
 
     def _check_pbp(self,eID):

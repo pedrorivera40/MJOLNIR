@@ -91,7 +91,7 @@ class MedalBasedEventHandler():
         event_info['athlete_id'] = record[5]
         event_info['medal_based_event_id'] = record[4]
         
-        stat_info['type of medal'] = record[2]
+        stat_info['type_of_medal'] = record[2]
         
 
         result = dict(Event = event_info, Event_Statistics = stat_info)
@@ -140,7 +140,7 @@ class MedalBasedEventHandler():
             event_info = dict(
                 event_id = athlete_records[8],
             )
-        medal_based_statistics = {}
+        medal_based_statistics = []
                                
         
         
@@ -148,14 +148,13 @@ class MedalBasedEventHandler():
             try:
                 #print(teamResults)
                 if isinstance(teamResults[1],tuple):
-                    #print(teamResults)
-                    medal_based_statistics[teamResults[0][2]] = []
+                    #print(teamResults)                    
                     for results in teamResults:
-                        print(results)
-                        medal_based_statistics[teamResults[0][2]].append({'medals_earned':results[0],'type_of_medal':results[1],'team_stats_id':results[3]})
+                        #print(results)
+                        medal_based_statistics.append({'category_name':results[2],'medals_earned':results[0],'type_of_medal':results[1],'team_stats_id':results[3]})
                
             except:                 
-                medal_based_statistics[teamResults[0][2]] = {'medals_earned':teamResults[0][0],'type_of_medal':teamResults[0][1],'team_stats_id':teamResults[0][3]}
+                medal_based_statistics.append({'category_name':teamResults[0][2],'medals_earned':teamResults[0][0],'type_of_medal':teamResults[0][1],'team_stats_id':teamResults[0][3]})
         
         
 

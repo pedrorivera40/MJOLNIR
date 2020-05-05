@@ -105,7 +105,14 @@
 					<v-spacer/>
 					<v-spacer/>
 					<v-col>
-						<v-btn color="green darken-1" dark class="mr-4" @click="log">Ver Estadisticas</v-btn>						
+						<v-btn 
+							color="green darken-1" 
+							dark 
+							class="mr-4" 
+							@click="goToEventStatistics()"
+						>	
+							Ver Estadisticas
+						</v-btn>						
 					</v-col>
 				</v-row>
 				
@@ -143,6 +150,10 @@ export default {
 		getSportFullSportName()
 		{
 			return this.event.sport_name + " " + this.event.branch
+		},
+
+		goToEventStatistics(){
+			this.$router.push("/resultados/"+this.event.id)
 		},
 
 		

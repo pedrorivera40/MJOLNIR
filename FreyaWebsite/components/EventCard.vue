@@ -10,7 +10,7 @@
    
     </v-img>
     <v-card-title>Deporte: {{sportName}}</v-card-title> 
-    <v-card-subtitle>Fecha: {{eventDate}}</v-card-subtitle>    
+    <v-card-subtitle>Fecha: {{formatDate()}}</v-card-subtitle>    
     <v-card-text class="text--primary" v-if="opponentName !='' | !!opponentName">
       <div>Equipos: UPRM vs {{opponentName}} </div>
     </v-card-text>
@@ -61,6 +61,28 @@ export default {
       }
       else
         return ''
+    },
+    formatDate(){
+
+          let eDate = new Date(Date.parse(this.eventDate))
+					let date = eDate.toISOString().substr(0,10)
+					let hours = eDate.getUTCHours()
+					let minutes = eDate.getUTCMinutes()
+					
+					let amPM = null
+					if(hours > 12){
+						amPM = 'PM'
+						hours -= 12
+					}
+					else if(hours < 12)
+						amPM = 'AM'
+
+          let time = null;
+					if(minutes < 10)
+						time = hours + ":0"+minutes + amPM
+					else if(minutes >=10)
+						time = hours + ":" +minutes + amPM
+          return date + ' @' + time 
     }
 
   }
