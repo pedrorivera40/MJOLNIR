@@ -2,7 +2,7 @@ Running test_1_add_new_user_route
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 6.233s
+Ran 2 tests in 4.067s
 
 OK
 **********************************
@@ -10,7 +10,7 @@ Running test_2_add_existent_user
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 1.589s
+Ran 2 tests in 2.784s
 
 OK
 **********************************
@@ -18,7 +18,7 @@ Running test_3_get_users_route
 **********************************
 .......
 ----------------------------------------------------------------------
-Ran 7 tests in 3.787s
+Ran 7 tests in 7.294s
 
 OK
 **********************************
@@ -26,27 +26,31 @@ Running test_4_activateUser_account
 **********************************
 .
 ----------------------------------------------------------------------
-Ran 1 test in 1.783s
+Ran 1 test in 1.268s
 
 OK
 **********************************
 Running test_5_login.
 **********************************
+/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/.venv/lib/python3.7/site-packages/Crypto/Random/_UserFriendlyRNG.py:77: DeprecationWarning: time.clock has been deprecated in Python 3.3 and will be removed from Python 3.8: use time.perf_counter or time.process_time instead
+  t = time.clock()
 ../home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/.venv/lib/python3.7/site-packages/jwt/api_jwt.py:81: DeprecationWarning: It is strongly recommended that you pass in a value for the "algorithms" argument when calling decode(). This argument will be mandatory in a future version.
   DeprecationWarning
 /home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/.venv/lib/python3.7/site-packages/jwt/api_jws.py:145: DeprecationWarning: It is strongly recommended that you pass in a value for the "algorithms" argument when calling decode(). This argument will be mandatory in a future version.
   DeprecationWarning
 ..
 ----------------------------------------------------------------------
-Ran 4 tests in 5.958s
+Ran 4 tests in 4.738s
 
 OK
 **********************************
 Running test_6_lockout
 **********************************
+/home/dementedearplug/Projects/Capstone/MJOLNIR/OdinAPI/.venv/lib/python3.7/site-packages/Crypto/Random/_UserFriendlyRNG.py:77: DeprecationWarning: time.clock has been deprecated in Python 3.3 and will be removed from Python 3.8: use time.perf_counter or time.process_time instead
+  t = time.clock()
 .
 ----------------------------------------------------------------------
-Ran 1 test in 4.540s
+Ran 1 test in 5.930s
 
 OK
 **********************************
@@ -54,7 +58,7 @@ Running test_7_reset_invalid_password
 **********************************
 ........
 ----------------------------------------------------------------------
-Ran 8 tests in 8.821s
+Ran 8 tests in 4.620s
 
 OK
 **********************************
@@ -62,7 +66,7 @@ Running test_8_reset_password_route
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 3.579s
+Ran 2 tests in 3.946s
 
 OK
 **********************************
@@ -70,7 +74,7 @@ Running test_9_toggle_active_state_route
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 1.016s
+Ran 2 tests in 0.936s
 
 OK
 **********************************
@@ -78,15 +82,15 @@ Running test_10_add_get_user_permissions
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 1.168s
+Ran 2 tests in 1.585s
 
 OK
 **********************************
 Running test_11_user_set_permissions
 **********************************
-....
+...
 ----------------------------------------------------------------------
-Ran 4 tests in 4.124s
+Ran 3 tests in 8.096s
 
 OK
 **********************************
@@ -94,7 +98,7 @@ Running test_12_remove_user_route
 **********************************
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 5.334s
+Ran 2 tests in 1.024s
 
 OK
 **********************************
@@ -102,6 +106,6 @@ Running test_13_actions_on_removed_user
 **********************************
 .......
 ----------------------------------------------------------------------
-Ran 7 tests in 5.615s
+Ran 7 tests in 10.765s
 
 OK

@@ -24,7 +24,6 @@ class UserHandler:
         """
         permissionsDictionary = {}
         permissionsDictionary[record[0]] = record[1]
-        print('permission dictionary',permissionsDictionary)
         return permissionsDictionary
 
     def mapHash(self, record):

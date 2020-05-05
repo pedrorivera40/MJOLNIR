@@ -16,8 +16,10 @@ class CustomSession(object):
         self.theSession[key] = encrypted
 
     def getVal(self, key):
-        if key:
+        if key in self.theSession:
             return self.decrypt(self.theSession[key])
+        else:
+            return 'Invalid Session'
 
     def encrypt(self, raw):
         raw = self._pad(raw)

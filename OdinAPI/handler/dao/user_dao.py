@@ -15,64 +15,49 @@ class UserDAO:
         )
         self.default_permissions = [
             {
-                "is_invalid": False,
-                "permission_id": 13
+                13: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 14
+                14: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 15
+                15: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 16
+                16: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 17
+                17: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 18
+                18: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 19
+                19: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 20
+                20: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 21
+                21: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 22
+                22: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 23
+                23: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 24
+                24: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 25
+                25: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 26
+                26: False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 27
+                27: False,
             }]
 
         self.conn = psycopg2.connect(connection_url)
@@ -333,12 +318,14 @@ class UserDAO:
                     case when (select count(*) from dashboard_user where id != %s AND username =%s AND is_invalid = FALSE) > 0
                     then 'yes' else 'no' end as usernameTest;
                     """
-        cursor.execute(probeQuery, (duid,email,duid,username,))
+        cursor.execute(probeQuery, (duid, email, duid, username,))
         conflicts = cursor.fetchone()
         if(conflicts[0] == 'yes'):
-            return 'UserError1'  # User with that email already exists in the system.
+            # User with that email already exists in the system.
+            return 'UserError1'
         if(conflicts[1] == 'yes'):
-            return 'UserError2'  # User with that username already exists in the system.
+            # User with that username already exists in the system.
+            return 'UserError2'
 
         query = """
                 update dashboard_user
@@ -494,14 +481,17 @@ class UserDAO:
         if permissionsList == None:
             return 'UserError5'
         for permission in permissionsList:
-            query = """
-                    insert into user_permission (user_id, permission_id, is_invalid)
-                    values (%s,%s, %s)
-                    returning id, user_id, permission_id, is_invalid
-            """
-            cursor.execute(
-                query, (duid, permission['permission_id'], permission['is_invalid'],))
-            queryResults.append(cursor.fetchone())
+            dkey = ''
+            for key in permission:
+                dkey = key
+                query = """
+                        insert into user_permission (user_id, permission_id, is_invalid)
+                        values (%s,%s, %s)
+                        returning id, user_id, permission_id, is_invalid
+                """
+                cursor.execute(
+                    query, (duid, dkey, permission[dkey],))
+                queryResults.append(cursor.fetchone())
         self.commitChanges()
         return queryResults
 
@@ -529,7 +519,7 @@ class UserDAO:
         if permissionsList == None:
             return 'UserError5'
         for permission in permissionsList:
-            dkey =''
+            dkey = ''
             for key in permission:
                 dkey = key
             query = """
