@@ -12,6 +12,8 @@ class CustomSession(object):
         self.key = hashlib.sha256(key.encode()).digest()
 
     def setVal(self, key, value):
+        if value == None or value == '':
+            return
         encrypted = self.encrypt(value)
         self.theSession[key] = encrypted
 

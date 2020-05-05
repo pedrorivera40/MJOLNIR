@@ -413,12 +413,14 @@ class UserHandler:
         """
         if duid == None or permissionsList == None:
             return jsonify(Error="Request Parameters Undefined."), 400
-
-        # for permission in permissionsList:  # If at least one of the parameters of one the indexes is None, scrap the request
-        #     if 'permission_id' not in permission or 'is_invalid' not in permission:
-        #         return jsonify(Error='Bad Request.'), 400
-        #     if permission['permission_id'] == None or permission['is_invalid'] == None:
-        #         return jsonify(Error='Request Parameters Undefined.'), 400
+        # Valid IDs for permissions.
+        validKeys = ["13","14","15","16","17","18","19","20","21","22","23","24","25","26","27"]
+        for permission in permissionsList:  # If at least oe of the parameters of one the indexes is None, scrap the request
+            for key in permission:
+                if key not in validKeys:
+                    return jsonify(Error='Bad Request.'), 400
+                if permission[key] == None:
+                    return jsonify(Error='Request Parameters Undefined.'), 400
 
         dao = UserDAO()
         resultList = dao.setUserPermissions(duid, permissionsList)

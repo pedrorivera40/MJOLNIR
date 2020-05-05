@@ -9,49 +9,49 @@ class TestUserRoutes(unittest.TestCase):
     def setUp(self):
         self.default_permissions = {"permissions": [
                 {
-                    13: True,
+                    "13": True,
                 },
                 {
-                    14: False,
+                    "14": False,
                 },
                 {
-                    15: False,
+                    "15": False,
                 },
                 {
-                    16: True,
+                    "16": True,
                 },
                 {
-                    17: False,
+                    "17": False,
                 },
                 {
-                    18: False,
+                    "18": False,
                 },
                 {
-                    19: False,
+                    "19": False,
                 },
                 {
-                    20: False,
+                    "20": False,
                 },
                 {
-                    21: False,
+                    "21": False,
                 },
                 {
-                    22: False,
+                    "22": False,
                 },
                 {
-                    23: False,
+                    "23": False,
                 },
                 {
-                    24: False,
+                    "24": False,
                 },
                 {
-                    25: False,
+                    "25": False,
                 },
                 {
-                    26: False,
+                    "26": False,
                 },
                 {
-                    27: True,
+                    "27": True,
                 }]}
         app.config['DEBUG'] = True
         self.data = newUser
@@ -68,11 +68,11 @@ class TestUserRoutes(unittest.TestCase):
             dkey = ''
             for key in permission.keys():
                 dkey = key
-                if dkey == 13:
+                if dkey == "13":
                     self.assertEqual(permission[dkey], True)
-                elif dkey == 16:
+                elif dkey == "16":
                     self.assertEqual(permission[dkey], True)
-                elif dkey == 27:
+                elif dkey == "27":
                     self.assertEqual(permission[dkey], True)
                 else:
                     self.assertEqual(permission[dkey], False)
@@ -88,69 +88,54 @@ class TestUserRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json['Error'], 'Permissions cant be empty.')
 
-    # def test_set_user_permissions_invalid_format(self):
-    #     response = self.client.patch(f'/users/{newUserID}/permissions', data=json.dumps({"permissions": [
-    #             {
-    #                 "is_inlid": True,
-    #                 "permison_id": 13
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 14
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 15
-    #             },
-    #             {
-    #                 "is_invalid": True,
-    #                 "permission_id": 16
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 17
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 18
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 19
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 20
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 21
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 22
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 23
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 24
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 25
-    #             },
-    #             {
-    #                 "is_invalid": False,
-    #                 "permission_id": 26
-    #             },
-    #             {
-    #                 "is_invalid": True,
-    #                 "permission_id": 27
-    #             }]}), content_type='application/json',  follow_redirects=True)
-    #     self.assertEqual(response.status_code, 400)
-    #     self.assertEqual(response.json['Error'], 'Bad Request.')
+    def test_set_user_permissions_invalid_format(self):
+        response = self.client.patch(f'/users/{newUserID}/permissions', data=json.dumps({"permissions": [
+                {
+                    "8": True,
+                },
+                {
+                    "14": False,
+                },
+                {
+                    "lolo": False,
+                },
+                {
+                    "45": True,
+                },
+                {
+                    "17": False,
+                },
+                {
+                    "18": False,
+                },
+                {
+                    "19": False,
+                },
+                {
+                    "20": False,
+                },
+                {
+                    "1": False,
+                },
+                {
+                    "0": False,
+                },
+                {
+                    "23": False,
+                },
+                {
+                    "24": False,
+                },
+                {
+                    "25": False,
+                },
+                {
+                    "26": False,
+                },
+                {
+                    "27": True,
+                }]}), content_type='application/json',  follow_redirects=True)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['Error'], 'Bad Request.')
 
 

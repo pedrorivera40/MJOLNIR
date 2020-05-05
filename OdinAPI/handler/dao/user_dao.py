@@ -15,49 +15,49 @@ class UserDAO:
         )
         self.default_permissions = [
             {
-                13: False,
+                "13": False,
             },
             {
-                14: False,
+                "14": False,
             },
             {
-                15: False,
+                "15": False,
             },
             {
-                16: False,
+                "16": False,
             },
             {
-                17: False,
+                "17": False,
             },
             {
-                18: False,
+                "18": False,
             },
             {
-                19: False,
+                "19": False,
             },
             {
-                20: False,
+                "20": False,
             },
             {
-                21: False,
+                "21": False,
             },
             {
-                22: False,
+                "22": False,
             },
             {
-                23: False,
+                "23": False,
             },
             {
-                24: False,
+                "24": False,
             },
             {
-                25: False,
+                "25": False,
             },
             {
-                26: False,
+                "26": False,
             },
             {
-                27: False,
+                "27": False,
             }]
 
         self.conn = psycopg2.connect(connection_url)
