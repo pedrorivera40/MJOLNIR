@@ -70,7 +70,7 @@
               md="3"
             >                
               <v-select
-                v-model="locality"
+                v-model.lazy="locality"
                 :items="localities"                  
                 label ="Localización"
                 :rules="[required('Localización')]"
@@ -102,7 +102,7 @@
               md="9"
               
             >               
-            <v-select
+            <v-autocomplete
                   v-model="team"
                   :items="teamsList"                
                   name="Equipo"                    
@@ -110,7 +110,7 @@
                   item-text="sportName"
                   item-value="id"                  
                   :rules="[teamRequired('Equipo')]"
-              ></v-select>               
+              ></v-autocomplete>               
             </v-col>
 
 

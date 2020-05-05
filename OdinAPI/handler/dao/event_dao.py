@@ -30,7 +30,7 @@ class EventDAO:
         """  
         cursor = self.conn.cursor()
         
-        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.event_summary,S.name,S.sport_image_url,B.name,F.local_score,F.opponent_score
+        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.event_summary,S.name,S.sport_image_url,B.name,T.season_year,F.local_score,F.opponent_score
                    from (event as E inner join ((sport as S inner join branch as B on S.branch_id=B.id) inner join team as T on S.id=T.sport_id) on E.team_id=T.id) full outer join final_score as F on F.event_id=E.id
                    where E.is_invalid=false
                    and T.is_invalid=false
@@ -74,7 +74,7 @@ class EventDAO:
             id as a participant.
         """
         cursor = self.conn.cursor()
-        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.event_summary,S.name,S.sport_image_url,B.name,F.local_score,F.opponent_score
+        query = """select E.id,E.event_date,E.is_local,E.venue,E.team_id,E.opponent_name,E.event_summary,S.name,S.sport_image_url,B.name,T.season_year,F.local_score,F.opponent_score
                    from (event as E inner join ((sport as S inner join branch as B on S.branch_id=B.id) inner join team as T on S.id=T.sport_id) on E.team_id=T.id) full outer join final_score as F on F.event_id=E.id
                    where E.is_invalid=false
                    and T.is_invalid=false
@@ -211,10 +211,7 @@ class EventDAO:
             
         except Exception as e:
             print(e)
-            return "Occurrió un error interno tratando de añadir un evento."
-        finally:
-            if self.conn is not None:
-                self._closeConnection()
+            return "Occurrió un error interno tratando de añadir un evento."        
 
         return eID
        
@@ -260,10 +257,7 @@ class EventDAO:
             cursor.close()        
         except Exception as e:
             print(e)
-            return "Occurrió un error interno tratando de actualizar un evento existente."
-        finally:
-            if self.conn is not None:
-                self._closeConnection()
+            return "Occurrió un error interno tratando de actualizar un evento existente."       
 
         return eid
     
@@ -301,7 +295,8 @@ class EventDAO:
             return "Occurrió un error interno tratando de eliminar un evento existente."
         finally:
             if self.conn is not None:
-                self._closeConnection()       
+                self.conn.close()
+              
         return eid
 
     def commitChanges(self):
