@@ -46,7 +46,7 @@
                     </template>
                     <v-date-picker v-model="date" color="green darken-1" no-title scrollable locale="es-419">
                       <v-spacer></v-spacer>
-                      <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
+                      <v-btn text color="primary" @click="dateMenu = false">Cancelar</v-btn>
                       <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                     </v-date-picker>
                   </v-menu>
@@ -67,9 +67,12 @@
                 
 
                 <v-list-item>
-                  <v-btn @click="clearFilters">Borrar</v-btn>
-                  <v-spacer />
+                  <v-card-actions>
+                                   
+                  <v-btn @click="clearFilters">Borrar</v-btn>  
+                                 
                   <v-btn @click="filterTheList">Filtrar</v-btn>
+                  </v-card-actions>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -121,7 +124,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
+                  med
                   class="mr-2 table-actions"
                   v-on="on"                 
                   @click="viewEvent(item.id)"
@@ -135,7 +138,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
+                  medium
                   class="mr-2 table-actions"
                   v-on="on"                  
                   @click="editEvent(item)"
@@ -148,7 +151,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
+                  medium
                   class="mr-2 table-actions"
                   v-on="on"                 
                   @click="prepareEventToRemove(item.id)"
@@ -456,3 +459,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+::v-deep .v-data-table th {
+  font-size: 14px;
+}
+
+::v-deep .v-data-table td {
+  font-size: 18px;
+}
+</style>

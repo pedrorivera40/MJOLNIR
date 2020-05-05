@@ -93,11 +93,37 @@ class AthleteHandler:
                 return jsonify(Error = "Ningún atleta fue encontrado."),404
             mappedResult = []
             for athlete in result:
+                mappedResult.append(self.mapAthleteToDict(athlete))
+            return jsonify(Athletes = mappedResult),200
+        except Exception as e:
+            print(e)
+            dao._closeConnection()
+            return jsonify(Error = "Ocurrió un error, buscando a todos los atletas."),500
+
+    def getAllAthletesDetailed(self):
+        """
+        Gets all athletes in the database with more details.
+        Calls the AthletDAO to get a list of all athlete records
+        maps the result to a JSON that contains all those valid athletes 
+        in the database. The JSON objects is then returned to the caller.       
+        
+        Returns:
+            A JSON containing all valid athletes that are in the database
+            with detailed information.
+        """
+        dao = AthleteDAO()
+        try:
+            result = dao.getAllAthletesDetailed()
+            if not result:
+                return jsonify(Error = "Ningún atleta fue encontrado."),404
+            mappedResult = []
+            for athlete in result:
                 mappedResult.append(self.mapAthleteWithPositionsAndCategoriesToDict(athlete))
             return jsonify(Athletes = mappedResult),200
         except:
             dao._closeConnection()
-            return jsonify(Error = "Ocurrió un error, buscando a todos los atletas."),400
+            return jsonify(Error = "Ocurrió un error, buscando a todos los atletas."),500
+
 
                 
     
@@ -389,7 +415,7 @@ class AthleteHandler:
                     return "Biografia de atleta es invalida"
 
             if aHeight:
-                if not isinstance(float(aHeight),float) or aHeight < 48.0 or aHeight > 96.0:
+                if not isinstance(float(aHeight),float) or aHeight < 36.0 or aHeight > 96.0:
                     return "Altura dada es invalida."
 
             if aStudyProgram:

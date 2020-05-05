@@ -2,7 +2,7 @@ export default{
     async getAthletes( {commit,dispatch} ){
         try{
            
-            const response = await this.$axios.get('athletes/')
+            const response = await this.$axios.get('athletes/details/')
             commit("SET_ATHLETES",response.data.Athletes)
             commit("SET_ATHLETE",null)
 
@@ -24,6 +24,7 @@ export default{
         }catch(error){            
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }

@@ -16,26 +16,27 @@
 			></v-progress-linear>
 			<v-spacer />
 		</v-toolbar>
-		<v-container v-if="formated()">
+		<v-container v-if="formated() && ready">
 			<v-tabs
 					centered
 			>
 				<v-tabs-slider/>
 				<v-tab>
-						Informacion				
+						Información				
 				</v-tab>
 
 				<v-tab>
-						Estadisticas por Temporada						
+						Estadísticas por Temporada						
 				</v-tab>
 
 				<v-tab-item>
 				
-						<v-card class="mx-auto" outlined>								
-							<v-container>
-								<v-row>
-									<v-col md=3>
-									
+						<v-card outlined>								
+							
+								
+								<v-row class="ma-0 pa-0">
+									<v-col md="auto">
+										
 										<v-avatar
 												class="profile"
 												color="grey"
@@ -46,57 +47,63 @@
 										</v-avatar> 																					
 									</v-col>
 
-									<v-col md=5>
-										<h3>{{first_name}} {{middle_name}} {{last_names}} </h3>
-										<span class="text"><b>Fecha de Nacimiento:</b> {{date_of_birth}} </span>
+									<v-col md="auto">
+										<v-card-text>
+										<h1>{{first_name}} {{middle_name}} {{last_names}} </h1>
+										<span class="text" style="font-size:20px"><b>Fecha de Nacimiento:</b> {{date_of_birth}} </span>
 										<v-spacer/>	
-										<span class="text"><b>Estatura:</b> {{height_feet}}' {{height_inches}}" </span>
+										<span class="text" style="font-size:20px"><b>Estatura:</b> {{height_feet}}' {{height_inches}}" </span>
 										<v-spacer/>	
-										<span class="text"><b>Programa de Estudio:</b> {{study_program}} </span>	
+										<span class="text" style="font-size:20px"><b>Programa de Estudio:</b> {{study_program}} </span>	
 										<v-spacer/>
-										<span class="text"><b>Año de Estudio:</b> {{years_of_study}}</span>
+										<span class="text" style="font-size:20px"><b>Año de Estudio:</b> {{years_of_study}}</span>
 										<v-spacer/>
-										<span class="text"><b>Escuela de Precedencia:</b> {{school_of_precedence}} </span>							
+										<span class="text" style="font-size:20px"><b>Escuela de Precedencia:</b> {{school_of_precedence}} </span>
+										</v-card-text>							
 									</v-col>
 
-									<v-col md=4>
+									<v-col md="auto">
+										<v-card-text>
 										<v-spacer/>
-										<span class="text"><b>Deporte:</b> {{sport}}</span>
+										<span class="text" style="font-size:20px"><b>Deporte:</b> {{sport}}</span>
 										<v-spacer/>	
-										<span class="text"><b>Rama:</b> {{branch}}</span>
+										<span class="text" style="font-size:20px"><b>Rama:</b> {{branch}}</span>
 										<v-spacer/>									
-										<span class="text"><b>Años de Participación:</b> {{years_of_participation}}</span>
+										<span class="text" style="font-size:20px"><b>Años de Participación:</b> {{years_of_participation}}</span>
 										<v-spacer/>	
-										<span class="text"><b>Número:</b> {{number}} </span>										
+										<span class="text" style="font-size:20px"><b>Número:</b> {{number}} </span>										
+										</v-card-text>
+									</v-col>
+							
+								
+									<v-col v-if="athlete_positions !=''" md="auto">
+											<v-card-text>
+												<h2> Posiciones: </h2>										
+												<div v-for="position in athlete_positions" v-bind:key="position.id">
+													<span class="text" style="font-size:20px">{{position}}</span>
+												</div>
+											</v-card-text>
 									</v-col>
 
-									<v-col v-if="athlete_positions !=''" md=3>
-											<h4> Posiciones: </h4>										
-											<div v-for="position in athlete_positions" v-bind:key="position.id">
-												<span class="text">{{position}}</span>
-											</div>
+									<v-col v-if="athlete_categories !=''" md="auto">
+											<v-card-text>
+												<h2> 	Categorías: </h2>										
+												<div v-for="category in athlete_categories" v-bind:key="category.id">
+													<span class="text" style="font-size:20px">{{category}}</span>
+												</div>
+											</v-card-text>
 									</v-col>
-
-									<v-col v-if="athlete_categories !=''" md=3>
-											<h4> 	Categorías: </h4>										
-											<div v-for="category in athlete_categories" v-bind:key="category.id">
-												<span class="text">{{category}}</span>
-											</div>
+									<v-col md="auto">
+										<v-card-text>
+											<h2> Biografía: </h2>
+											<p style="font-size:20px">
+												{{short_bio}}
+											</p>
+										</v-card-text>
 									</v-col>
 								
 								</v-row>
-								
-								<v-row>
-									<v-col>
-										<h3> Biografia: </h3>
-										<p>
-											{{short_bio}}
-										</p>
-									</v-col>
-								</v-row>
-
 						
-							</v-container>
 						</v-card>
 						
 				</v-tab-item>
@@ -113,23 +120,34 @@
 								</v-col>
 
 								<v-col md=3>
-									<v-btn class="mr-4" @click="getSeasonData" color="green darken-1">Confirmar Temporada</v-btn>
+									<v-btn 
+										class="mr-4" 
+										@click="getSeasonData" 
+										color="green darken-1"
+										dark
+									>
+										Confirmar Temporada
+									</v-btn>
 								</v-col>
 							</v-row>
 
 					
 							<v-row>
 								<v-col>
+									<v-card-text>
+									 <h2> Estadísticas de la Temporada {{season}}: </h2>
+									</v-card-text>
 									<v-data-table 
 										dense 
 										:headers="headers_" 
 										:items="aggregate_statistics_per_season" 										
 										class="elevation-1"
 										loading="fetchinAthleteStats"
-										:disable-pagination=true		
-										:hide-default-footer=true													
+											
+																					
 										loading-text="Recolectando Data...Por favor espere"
-										v-if="aggregate_statistics_per_season != '' & aggregate_statistics_per_season != ''"
+										no-data-text="No hay estadísticas para esta temporada."
+										v-if="aggregate_statistics_per_season.length>0"
 									>		
 									</v-data-table>
 								</v-col>
@@ -138,14 +156,18 @@
 
 							<v-row>
 								<v-col>
+									<v-card-text>
+									 <h2> Estadísticas por Evento de la Temporada {{season}}: </h2>
+									</v-card-text>
 									<v-data-table 
 										dense 
 										:headers="headers" 
 										:items="statistics_per_season"										 
 										class="elevation-1"
-										loading="fetchinAthleteStats"																
-										loading-text="Recolectando Data...Por favor espere"
-										v-if="statistics_per_season != ''"
+										loading="fetchinAthleteStats"	
+										no-data-text="No hay estadísticas para esta temporada."															
+										loading-text="Recolectando Data...Por favor espere"	
+										v-if="statistics_per_season.length>0"									
 									>		
 									</v-data-table>
 								</v-col>
@@ -188,15 +210,16 @@ export default {
       number:'',
       profile_image_link:'',
       sport:'',     
-			branch:'', 
+			branch:'',
+			sport_id:'', 
 			fetchingAthleteStats:false,
 
 			season:'',
 			seasons:[],
-			headers:'',
-			headers_:'',
-			statistics_per_season:'',
-			aggregate_statistics_per_season:''
+			headers:[],
+			headers_:[],
+			statistics_per_season:[],
+			aggregate_statistics_per_season:[]
     }),//end of data()
 		
 		methods: {
@@ -206,84 +229,86 @@ export default {
 				getAthleteAggregateSeasonStats:"athletes/getAthleteAggregateSeasonStats"
 			}),
 
-			formated(){
-				if(this.athlete){
-					if(this.ready){
+			async formated(){
+				
+				if(this.ready){
+					return true
+				}
+				else{
+
+					const response = await this.getAthleteByID(this.$route.params.id)
+					if(response == 'error'){
+						this.ready = true
 						return true
 					}
-					else{
 
-						if(!this.ready){
+					this.first_name = this.athlete.fName
+					this.last_names = this.athlete.lName	
+					if(this.athlete.mName)
+						this.middle_name = this.athlete.mName
 
-							this.first_name = this.athlete.fName
-							this.last_names = this.athlete.lName	
-							if(this.athlete.mName)
-								this.middle_name = this.athlete.mName
+					this.sport = this.athlete.sportName
+					this.branch = this.athlete.sportBranch
+					this.sport_id = this.athlete.sport_id
 
-							this.sport = this.athlete.sportName
-							this.branch = this.athlete.sportBranch.charAt(0).toUpperCase() + this.athlete.sportBranch.slice(1)
-							
-							if(this.athlete.bio)
-								this.short_bio = this.athlete.bio
+					if(this.athlete.bio)
+						this.short_bio = this.athlete.bio
 
-							if(this.athlete.number)
-								this.number = this.athlete.number
+					if(this.athlete.number)
+						this.number = this.athlete.number
 
-							if(this.athlete.height)
-							{
-								this.height_feet = Math.floor(this.athlete.height/12)
-								this.height_inches = this.athlete.height%12
+					if(this.athlete.height)
+					{
+						this.height_feet = Math.floor(this.athlete.height/12)
+						this.height_inches = this.athlete.height%12
+					}
+
+					if(this.athlete.profilePicLink)
+						this.profile_image_link = this.athlete.profilePicLink
+					
+
+					if(this.athlete.school)
+						this.school_of_precedence = this.athlete.school
+
+					if(this.athlete.sProgram)
+						this.study_program = this.athlete.sProgram
+					
+					if(this.athlete.yearOfStudy)
+						this.years_of_study = this.athlete.yearOfStudy
+					
+					if(this.athlete.yearsOfParticipation)
+						this.years_of_participation = this.athlete.yearsOfParticipation						
+					
+					if(this.athlete.dBirth)
+						this.date_of_birth= new Date(Date.parse(this.athlete.dBirth)).toISOString().substr(0,10)
+					
+					if(this.athlete.athlete_positions)
+					{
+						this.athlete_positions = []
+						const entries = Object.entries(this.athlete.athlete_positions)
+						for(const [name, value] of entries){
+							if(!value){
+								this.athlete_positions.push(name)
 							}
-
-							if(this.athlete.profilePicLink)
-								this.profile_image_link = this.athlete.profilePicLink
-							
-
-							if(this.athlete.school)
-								this.school_of_precedence = this.athlete.school
-
-							if(this.athlete.sProgram)
-								this.study_program = this.athlete.sProgram
-							
-							if(this.athlete.yearOfStudy)
-								this.years_of_study = this.athlete.yearOfStudy
-							
-							if(this.athlete.yearsOfParticipation)
-								this.years_of_participation = this.athlete.yearsOfParticipation						
-							
-							if(this.athlete.dBirth)
-								this.date_of_birth= new Date(Date.parse(this.athlete.dBirth)).toISOString().substr(0,10)
-							
-							if(this.athlete.athlete_positions)
-							{
-								this.athlete_positions = []
-								const entries = Object.entries(this.athlete.athlete_positions)
-								for(const [name, value] of entries){
-									if(!value){
-										this.athlete_positions.push(name)
-									}
-								}
-							}
-							if(this.athlete.athlete_categories)
-							{
-								this.athlete_categories = []
-								const entries = Object.entries(this.athlete.athlete_categories)
-								for(const [name, value] of entries){
-									if(!value){
-										this.athlete_categories.push(name)
-									}
-								}
-							}	
-							
-							this.buildSeasonList()
-							this.ready = true
 						}
 					}
-				}
-				else
-				{
+					if(this.athlete.athlete_categories)
+					{
+						this.athlete_categories = []
+						const entries = Object.entries(this.athlete.athlete_categories)
+						for(const [name, value] of entries){
+							if(!value){
+								this.athlete_categories.push(name)
+							}
+						}
+					}	
+					
+					this.buildSeasonList()
+					this.ready = true
 					return false
 				}
+			
+				
 
 			},
 
@@ -313,6 +338,8 @@ export default {
 				
 				if(this.season !='')
 				{
+					this.statistics_per_season = []
+					this.aggregate_statistics_per_season = []
 					this.fetchingAthleteStats = true
 					let sport_name = ''
 					
@@ -328,6 +355,20 @@ export default {
 					else if(this.sport.localeCompare("Fútbol") == 0){
 						sport_name = "soccer"
 					}
+					//MatchBased Sports
+					else if(this.sport.localeCompare("Tenis de Campo") == 0 || this.sport.localeCompare("Tenis de Mesa") == 0){
+						sport_name = "matchbased"
+					}
+					//Medal Based Sports
+					else if(this.sport.localeCompare("Atletismo") == 0 || 
+									this.sport.localeCompare("Judo") == 0 || 
+									this.sport.localeCompare("Baile") == 0 || 
+									this.sport.localeCompare("Halterofilia") == 0 || 
+									this.sport.localeCompare("Campo Traviesa") == 0 ||
+									this.sport.localeCompare("Lucha Olimpica") == 0 ||
+									this.sport.localeCompare("Taekwondo") == 0){
+						sport_name = "medalbased"
+					}
 					
 
 					const stats_params = {'sport_name':sport_name,'athlete_id':this.athlete.id,'season_year':this.season}
@@ -336,8 +377,8 @@ export default {
 					const response_2 = await this.getAthleteAggregateSeasonStats(stats_params)
 
  					if(response_1 !== 'error' && response_2 !== 'error'){	
-						this.statistics_per_season = []
-						this.aggregate_statistics_per_season = []
+					
+
 						if(sport_name.localeCompare("basketball") == 0){
 							for(let i = 0; i < this.athlete_stats_per_season.Basketball_Event_Season_Athlete_Statistics.length; i++){
 								const statsObj =  this.athlete_stats_per_season.Basketball_Event_Season_Athlete_Statistics[i]
@@ -377,6 +418,26 @@ export default {
 
 							}
 							this.aggregate_statistics_per_season.push(this.athlete_aggregate_stats_per_season.Soccer_Event_Season_Athlete_Statistics)
+							this.buildHeadersList(sport_name)
+						}
+						else if(sport_name.localeCompare("matchbased") == 0){
+							for(let i = 0; i < this.athlete_stats_per_season.Match_Based_Event_Season_Athlete_Statistics.length; i++){
+								const statsObj =  this.athlete_stats_per_season.Match_Based_Event_Season_Athlete_Statistics[i]
+								this.statistics_per_season.push(statsObj)
+								this.statistics_per_season[i].Event['event_date'] = this.formatedDate(statsObj.Event["event_date"])
+
+							}
+							this.aggregate_statistics_per_season.push(this.athlete_aggregate_stats_per_season.Match_Based_Event_Season_Athlete_Statistics)
+							this.buildHeadersList(sport_name)
+						}
+						else if(sport_name.localeCompare("medalbased") == 0){
+							for(let i = 0; i < this.athlete_stats_per_season.Medal_Based_Event_Season_Athlete_Statistics.length; i++){
+								const statsObj =  this.athlete_stats_per_season.Medal_Based_Event_Season_Athlete_Statistics[i]
+								this.statistics_per_season.push(statsObj)
+								this.statistics_per_season[i].Event['event_date'] = this.formatedDate(statsObj.Event["event_date"])
+
+							}
+							this.aggregate_statistics_per_season =this.athlete_aggregate_stats_per_season.Medal_Based_Event_Season_Athlete_Statistics							
 							this.buildHeadersList(sport_name)
 						}
 
@@ -519,6 +580,44 @@ export default {
 						{text: 'Left On Base', value: 'Event_Statistics.left_on_base'}					
 					]
 				}
+				else if(sport_name.localeCompare("matchbased") == 0){
+					this.headers =	[
+						{
+							text:'Event Date',
+							align: 'start',
+							sortable: true,
+							value:'Event.event_date'
+						},
+						{text: 'Category Name', value: 'Event.category_name'},
+						{text: 'Matches Played', value: 'Event_Statistics.matches_played'},
+						{text: 'Matches Won', value: 'Event_Statistics.matches_won'}
+
+					]
+					this.headers_ = [
+						{text: 'Category Name', value: 'Event_Statistics.category_name'},
+						{text: 'Matches Played', value: 'Event_Statistics.matches_played'},
+						{text: 'Matches Won', value: 'Event_Statistics.matches_won'}					
+					]
+				}
+				else if(sport_name.localeCompare("medalbased") == 0){
+					this.headers =	[
+						{
+							text:'Event Date',
+							align: 'start',
+							sortable: true,
+							value:'Event.event_date'
+						},
+						{text: 'Category Name', value: 'Event.category_name'},
+						{text: 'Medal Earned', value: 'Event_Statistics.type_of_medal'}
+					
+
+					]
+					this.headers_ = [
+						{text: 'Category Name', value: 'Event_Statistics.category_name'},
+						{text: 'Medal Earned', value: 'Event_Statistics.type_of_medal'},
+						{text: 'Number of Medals', value: 'Event_Statistics.medals_earned'}					
+					]
+				}
 				
 			}
 		},
@@ -531,10 +630,19 @@ export default {
 			})
 		},
 
-		mounted(){
-			this.getAthleteByID(this.$route.params.id)
-		}
+		
 
 		
 }
 </script>
+
+<style scoped>
+::v-deep .v-data-table th {
+  font-size: 14px;
+}
+
+::v-deep .v-data-table td {
+  font-size: 18px;
+}
+</style>
+

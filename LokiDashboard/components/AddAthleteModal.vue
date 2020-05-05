@@ -27,7 +27,7 @@
                   
               </v-col>
               </v-row>
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col        
                   md="6"
                 >             
@@ -42,7 +42,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col              
                   md="6"
                 >
@@ -56,7 +56,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col              
                   md="9"    
                 >              
@@ -92,15 +92,14 @@
                     <template v-slot:activator="{ on }">
                       <v-text-field
                         v-model="date"
-                        label="Fecha"
-                        prepend-icon="mdi-calendar"
+                        label="Fecha"                        
                         readonly
                         v-on="on"
                       ></v-text-field>
                     </template>
                     <v-date-picker v-model="date" color = "green darken-1" no-title scrollable locale="es-419">
                       <v-spacer></v-spacer>
-                      <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                      <v-btn text color="primary" @click="menu = false">Cancelar</v-btn>
                       <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                     </v-date-picker>
                   </v-menu>
@@ -136,7 +135,7 @@
                   
                 </v-col>
               </v-row>
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col md="4">
                   <v-autocomplete
                     v-model="height_feet"
@@ -145,7 +144,7 @@
                   ></v-autocomplete>
                 </v-col>
               </v-row>
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col md="4">         
                     <v-autocomplete
                     v-model="height_inches"
@@ -164,7 +163,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col md="8">              
                   <v-text-field
                     v-model="study_program"                                   
@@ -176,7 +175,7 @@
                 </v-col>
               </v-row>
             
-              <v-row justify="center"> 
+              <v-row justify="start"> 
                 <v-col md="8">             
                   <v-text-field
                     v-model="school_of_precedence"                                  
@@ -187,12 +186,11 @@
                 </v-col>                
               </v-row> 
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col md="5">  
                   <v-autocomplete
                     v-model="year_of_study"
-                    :items="yearsOfStudy"
-                    prepend-icon="mdi-chair-school"              
+                    :items="yearsOfStudy"                                 
                     label ="Año de Estudio"                
                   ></v-autocomplete>
                 </v-col> 
@@ -206,7 +204,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
 
                 <v-col md="12">              
                   <v-autocomplete
@@ -220,7 +218,7 @@
                   ></v-autocomplete>              
                 </v-col>
               </v-row>
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col md="5">  
                   <v-autocomplete
                     v-model="years_of_participation"
@@ -251,7 +249,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col md="4"> 
                 
                   <div v-for="(value,key) in sport_positions" :key="key" >
@@ -289,7 +287,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col md="4">
                   <v-autocomplete
                     v-model="number"
@@ -310,13 +308,12 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
 
                 <v-col md="12">             
                   <v-text-field
                     v-model="profile_image_link"                                
-                    label="Enlace de Imagen de Perfil"
-                    prepend-icon="mdi-link"
+                    label="Enlace de Imagen de Perfil"                   
                     required
                   ></v-text-field>              
                 </v-col>
@@ -341,14 +338,14 @@
              Cerrar
             </v-btn>
            <v-btn 
-                    color="green darken-1" 
-                              
-                    :disabled="!(valid & terms)"
-                    @click="submit"
-                    :loading="adding"
-                  >
-                    Añadir
-                  </v-btn>
+              color="green darken-1" 
+                        
+              :disabled="!(valid & terms)"
+              @click="submit"
+              :loading="adding"
+            >
+              Añadir
+            </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -395,7 +392,7 @@
       sportHasNumber:false,
       branch:'',
       branches:['Masculino','Femenino','Otro'],
-      feet: [4,5,6,7],      
+      feet: [3,4,5,6,7],      
       inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0],
       yearsOfStudy:[1,2,3,4,5,6,7,8,9,10],
       yearsOfParticipation:[1,2,3,4],

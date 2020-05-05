@@ -20,7 +20,7 @@
               <v-text-field
                 v-model="search"
                 append-icon="mdi-magnify"
-                label="Search"
+                label="Buscar"
                 rounded
                 dense
                 outlined
@@ -40,6 +40,7 @@
           :items="athletes"
           :search="search"
           :loading="loadingAthletes()"
+          class="elevation-1"
           no-data-text="No hay atletas."
           loading-text="Buscando atletas."
         >
@@ -47,7 +48,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
+                  medium
                   class="mr-2 table-actions"
                   v-on="on"                 
                   @click="viewAthlete(item.id)"
@@ -61,7 +62,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
+                  medium
                   class="mr-2 table-actions"
                   v-on="on"                  
                   @click="editAthlete(item)"
@@ -74,7 +75,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
+                  medium
                   class="mr-2 table-actions"
                   v-on="on"                 
                   @click="deleteAthlete(item.id)"
@@ -238,3 +239,13 @@ export default {
     
 }
 </script>
+
+<style scoped>
+::v-deep .v-data-table th {
+  font-size: 14px;
+}
+
+::v-deep .v-data-table td {
+  font-size: 18px;
+}
+</style>

@@ -80,6 +80,12 @@ def athletes():
 
         return handler.getAthletesBySportAndNotInTeam(json['sID'], json['tID'])
 
+@app.route("/athletes/details/", methods = ['GET'])
+def athletesDetailed():
+    if request.method == 'GET':
+        return AthleteHandler().getAllAthletesDetailed()
+    
+
 
 @app.route("/athletes/<int:aid>/", methods=['GET', 'PUT', 'DELETE'])
 def athleteByID(aid):

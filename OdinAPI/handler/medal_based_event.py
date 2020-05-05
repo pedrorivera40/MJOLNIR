@@ -91,7 +91,7 @@ class MedalBasedEventHandler():
         event_info['athlete_id'] = record[5]
         event_info['medal_based_event_id'] = record[4]
         
-        stat_info['type of medal'] = record[2]
+        stat_info['type_of_medal'] = record[2]
         
 
         result = dict(Event = event_info, Event_Statistics = stat_info)

@@ -27,7 +27,7 @@
                     
                 </v-col>
               </v-row>
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col        
                   md="6"
                 >             
@@ -42,7 +42,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col              
                   md="6"
                 >
@@ -51,12 +51,12 @@
                     :counter="20"
                     label="Segundo Nombre"
                     required
-                    :rules="[nameFormat('Segundo Nombre'),maxSummaryLength('Segundo Nombre',20)]"
+                    :rules="[maxSummaryLength('Segundo Nombre',20)]"
                   ></v-text-field>              
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col              
                   md="9"
                 >              
@@ -99,7 +99,7 @@
                     </template>
                     <v-date-picker v-model="date_of_birth_" color = "green darken-1" no-title scrollable locale="es-419">
                       <v-spacer></v-spacer>
-                      <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                      <v-btn text color="primary" @click="menu = false">Cancelar</v-btn>
                       <v-btn text color="primary" @click="$refs.menu.save(date_of_birth_)">OK</v-btn>
                     </v-date-picker>
                   </v-menu>
@@ -137,7 +137,7 @@
                   
                 </v-col>
               </v-row>
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col              
                   md="4"
                 >
@@ -148,7 +148,7 @@
                   ></v-autocomplete>
                 </v-col>
               </v-row>
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col md="4">         
                     <v-autocomplete
                     v-model="height_inches_"
@@ -169,7 +169,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col            
                   md="8"
                 >              
@@ -183,7 +183,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center"> 
+              <v-row justify="start"> 
                 <v-col            
                   md="8"
                 >             
@@ -197,7 +197,7 @@
                 
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col              
                   md="4"               
                 >  
@@ -220,7 +220,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col               
                   md="5"               
                 >  
@@ -255,7 +255,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col              
                   md="4"               
                 > 
@@ -297,7 +297,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
                 <v-col               
                   md="4"               
                 >
@@ -322,7 +322,7 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="center">
+              <v-row justify="start">
 
                 <v-col            
                   md="12"
@@ -356,7 +356,7 @@
               </v-btn>
               <v-btn 
                 color="green darken-1"                     
-                :disabled="!(valid & terms)"
+                :disabled="!(valid && terms)"
                 @click="submit"
                 :loading="editing"
               >
@@ -424,7 +424,7 @@ export default {
     sport_id_:0,            
    
     sportHasNumber:false,
-    feet: [4,5,6,7],      
+    feet: [3,4,5,6,7],      
     inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0],
     yearsOfStudy:[1,2,3,4,5,6,7,8,9,10],
     yearsOfParticipation:[1,2,3,4],
@@ -570,9 +570,29 @@ export default {
         else
           this.resetDate()
         
-        this.athlete_positions_ = this.athlete_positions
         
-        this.athlete_categories_ = this.athlete_categories
+
+        if(this.athlete_positions)
+        {
+          this.athlete_positions_ = {}
+          const entries = Object.entries(this.athlete_positions)
+          for(const [name, value] of entries){
+            
+            this.athlete_positions_[name] = value
+            
+          }
+        }
+        
+        if(this.athlete_categories)
+        {
+          this.athlete_categories_ = {}
+          const entries = Object.entries(this.athlete_categories)
+          for(const [name, value] of entries){
+            
+            this.athlete_categories_[name] = value
+            
+          }
+        }
 
         this.ready = true
         this.loading = false
