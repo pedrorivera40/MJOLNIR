@@ -156,19 +156,9 @@ def allUsers():
     validateRequestPermissions(loggedInUser,token,'21')
     validateRequestPermissions(loggedInUser,token,'22')
     validateRequestPermissions(loggedInUser,token,'23')
-    # print(token)
-    if loggedInUser != token['user']:
-        return jsonify(Error='Invalid Session'), 401
-    if(token['permissions'][9]['22']==False):
-        return jsonify(Error='User does not have permissions to acces this resource.'), 403
-    if(token['permissions'][10]['23']==False):
-        return jsonify(Error='User does not have permissions to acces this resource.'), 403
-    if(token['permissions'][11]['24']==False):
-        return jsonify(Error='User does not have permissions to acces this resource.'), 403
 
     handler = UserHandler()
     if request.method == 'GET':
-
         # For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
