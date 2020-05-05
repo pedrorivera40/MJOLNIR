@@ -1,12 +1,15 @@
 class CustomSession(object):
 
-    def __init__(self, key):
-        self.theSession = {}
+    def __init__(self):
+        self.sessionList = []
 
-    def setVal(self, key, value):
+    def setLoggedUser(self, value):
+        theSession = {}
         if value == None or value == '':
             return
-        self.theSession[key] = value
+        theSession["username"] = value
+        self.sessionList.append(theSession)
 
-    def getVal(self, key):
-        return self.theSession.get(key,'Invalid Session')
+    def isLoggedIn(self, username):
+        loggedUser = next(session for session in self.sessionList if session["username"] == username)
+        return loggedUser

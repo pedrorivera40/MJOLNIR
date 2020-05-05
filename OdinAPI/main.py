@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-
 from flask_cors import CORS
 import os
 import datetime
@@ -10,6 +9,7 @@ from customSession import CustomSession
 from functools import wraps
 from dotenv import load_dotenv
 import os
+
 from handler.position import PositionHandler
 from handler.event import EventHandler
 from handler.basketball_event import BasketballEventHandler
@@ -30,7 +30,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
-session = CustomSession(app.secret_key)
+customSession = CustomSession()
 CORS(app)
 
 
@@ -64,7 +64,7 @@ def extractUserInfoFormToken():
     token = request.headers.get('Authorization').split(' ')[1]
     return getTokenInfo(token)
 
-def validateRequestPermissions(loggedInUser, token, permissionNumber):
+def validateRequestPermissions(token, permissionNumber):
     def switch(permissionNumber):
         return {
             '13': 0,
@@ -84,8 +84,6 @@ def validateRequestPermissions(loggedInUser, token, permissionNumber):
             '27': 14,
         }[permissionNumber]
     index = switch(permissionNumber)
-    if loggedInUser != token['user']:
-        return jsonify(Error='Invalid Session'), 401
     if(token['permissions'][index][permissionNumber]==False):
         return jsonify(Error='User does not have permissions to acces this resource.'), 403
 
@@ -142,7 +140,7 @@ def auth():
 
         username = req['username']
         password = req['password']  # TODO: AES Encryption
-        return handler.login(username, password, session)
+        return handler.login(username, password, customSession)
 
 
 ###########################################
@@ -151,12 +149,13 @@ def auth():
 @app.route("/users/", methods=['GET', 'POST'])
 @token_check
 def allUsers():
-    loggedInUser = session.getVal('username') 
     token = extractUserInfoFormToken()
-    validateRequestPermissions(loggedInUser,token,'21')
-    validateRequestPermissions(loggedInUser,token,'22')
-    validateRequestPermissions(loggedInUser,token,'23')
-
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(not bool(loggedUser)):
+        return jsonify(Error='Invalid Session'), 401
+    validateRequestPermissions(token,'21')
+    validateRequestPermissions(token,'22')
+    validateRequestPermissions(token,'23')
     handler = UserHandler()
     if request.method == 'GET':
         # For user list display

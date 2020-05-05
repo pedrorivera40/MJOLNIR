@@ -1,4 +1,4 @@
-from flask import jsonify, session
+from flask import jsonify
 from auth import createHash, verifyHash, generateToken, rulesMatch
 from .dao.user_dao import UserDAO
 
@@ -221,12 +221,12 @@ class UserHandler:
         mappedHash = self.mapHash(fetchedHash)
 
         userPermissions = self.getUserPermissions(duid, 'internal')
-        session.setVal('username', username)
-        session.setVal('permissions', userPermissions)
         # TODO AES encryption.
         if verifyHash(password, mappedHash['hash']):
             # User provided correct password
             token = generateToken(username,userPermissions)
+            session.setLoggedUser(username)
+
             loginInfo = {
                 'user': username,
                 'token': token
