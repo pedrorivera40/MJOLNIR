@@ -148,6 +148,17 @@ def auth():
         password = req['password']  # TODO: AES Encryption
         return handler.login(username, password, customSession)
 
+@app.route("/logout", methods=['POST'])
+def logout():
+    if request.json == None:
+        return jsonify(Error='Bad Request.'), 400
+    if request.method == 'POST':
+        req = request.json
+
+        username = req['username']
+        if(customSession.logout(username)):
+            return jsonify(Message='Logout exitoso!'), 200
+        return jsonify(Error='Problemas con el logout.'), 400
 
 ###########################################
 #--------- Dashboard User Routes ---------#

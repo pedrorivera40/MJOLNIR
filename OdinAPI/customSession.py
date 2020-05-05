@@ -32,11 +32,8 @@ class CustomSession(object):
             Returns a dictionary containing the logged in user is the user has an active session and None
             if there is no active session.
         """
-        try:
-            loggedUser = next(session for session in self.sessionList if session.get("username", "Invalid Session") == username)
-            return loggedUser
-        except:
-            return None
+        loggedUser = next((session for session in self.sessionList if session.get("username", "Invalid Session") == username), None)
+        return loggedUser
 
     def logout(self, username):
         """
@@ -45,3 +42,5 @@ class CustomSession(object):
         Deletes the user with the provided username from the active session list.
         """
         self.sessionList = [session for session in self.sessionList if not (session['username'] == username)]
+        loggedUser = next((session for session in self.sessionList if session.get("username", "Invalid Session") == username),None)
+        return loggedUser == None
