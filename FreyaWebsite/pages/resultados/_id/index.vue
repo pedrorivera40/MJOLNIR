@@ -288,40 +288,40 @@ created(){
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
                 this.headers = 
                 [
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'Asistencias', value: 'statistics.assists'},
-                {text: 'Blocks', value: 'statistics.blocks'},
+                {text: 'Bloqueos', value: 'statistics.blocks'},
                 {text: 'Field Goal Attempt', value: 'statistics.field_goal_attempt'},
                 {text: 'Field Goal Percentage(%)', value: 'statistics.field_goal_percentage'},
-                {text: 'Free Throw Attempt', value: 'statistics.free_throw_attempt'},
-                {text: 'Free Throw Percentage(%)', value: 'statistics.free_throw_percentage'},
-                {text: 'Points', value: 'statistics.points'},
+                {text: 'Intentos de Tiro Libre', value: 'statistics.free_throw_attempt'},
+                {text: 'Porcentaje de Tiro Libre (%)', value: 'statistics.free_throw_percentage'},
+                {text: 'Puntos', value: 'statistics.points'},
                 {text: 'Rebounds', value: 'statistics.rebounds'},
                 {text: 'Steals', value: 'statistics.steals'},
                 {text: 'Successful Field Goal', value: 'statistics.successful_field_goal'},
                 {text: 'Successful Free Throw', value: 'statistics.successful_free_throw'},
                 {text: 'Successful Three Point', value: 'statistics.successful_three_point'},
-                {text: 'Three Point Attempt', value: 'statistics.three_point_attempt'},
-                {text: 'Three Point Percentage(%)', value: 'statistics.three_point_percentage'},
+                {text: 'Intentos de Tres Puntos', value: 'statistics.three_point_attempt'},
+                {text: 'Porcentaje de Tres Puntos(%)', value: 'statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'statistics.turnovers'},
 
                 ]
                 this.team_headers = 
                 [
-                {text: 'Assists', value: 'basketball_statistics.assists'},
-                {text: 'Blocks', value: 'basketball_statistics.blocks'},
+                {text: 'Asistencias', value: 'basketball_statistics.assists'},
+                {text: 'Bloqueos', value: 'basketball_statistics.blocks'},
                 {text: 'Field Goal Attempt', value: 'basketball_statistics.field_goal_attempt'},
                 {text: 'Field Goal Percentage(%)', value: 'basketball_statistics.field_goal_percentage'},
-                {text: 'Free Throw Attempt', value: 'basketball_statistics.free_throw_attempt'},
+                {text: 'Intentos de Tiro Libre', value: 'basketball_statistics.free_throw_attempt'},
                 {text: 'Free Throw Percentage(%)', value: 'basketball_statistics.free_throw_percentage'},
-                {text: 'Points', value: 'basketball_statistics.points'},
+                {text: 'Puntos', value: 'basketball_statistics.points'},
                 {text: 'Rebounds', value: 'basketball_statistics.rebounds'},
                 {text: 'Steals', value: 'basketball_statistics.steals'},
                 {text: 'Successful Field Goal', value: 'basketball_statistics.successful_field_goal'},
                 {text: 'Successful Free Throw', value: 'basketball_statistics.successful_free_throw'},
                 {text: 'Successful Three Point', value: 'basketball_statistics.successful_three_point'},
-                {text: 'Three Point Attempt', value: 'basketball_statistics.three_point_attempt'},
-                {text: 'Three Point Percentage(%)', value: 'basketball_statistics.three_point_percentage'},
+                {text: 'Intentos de Tres Puntos', value: 'basketball_statistics.three_point_attempt'},
+                {text: 'Porcentaje de Tres Puntos(%)', value: 'basketball_statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'basketball_statistics.turnovers'},
 
                 ]
@@ -330,7 +330,7 @@ created(){
             else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
                 this.headers = 
                 [
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'Kill Points', value: 'statistics.kill_points'},
                 {text: 'Attack Errors', value: 'statistics.attack_errors'},
                 {text: 'Assists', value: 'statistics.assists'},
@@ -360,7 +360,7 @@ created(){
             else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
                 this.headers = 
                 [
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'Goal Attempts', value: 'statistics.goal_attempts'},
                 {text: 'Assists', value: 'statistics.assists'},
                 {text: 'Fouls', value: 'statistics.fouls'},
@@ -384,7 +384,7 @@ created(){
             else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
                 this.headers = 
                 [
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'At Bats', value: 'statistics.at_bats'},
                 {text: 'Runs', value: 'statistics.runs'},
                 {text: 'Hits', value: 'statistics.hits'},

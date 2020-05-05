@@ -338,6 +338,11 @@ export default {
 
       ATHLETICS_IDM: 8,
       ATHLETICS_IDF: 19,
+
+      FIELD_TENNIS_IDM: 9,
+      FIELD_TENNIS_IDF: 18,
+      TABLE_TENNIS_IDM:7,
+      TABLE_TENNIS_IDF:15,
       //season:''
 
       //OTHE QUERY RELATED VALUES
@@ -420,6 +425,17 @@ export default {
                     else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
                         this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
                         this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
+                    }
+                    else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                            this.payload_stats = this.results_payload.Match_Based_Event_Statistics
+                            this.team_statistics = []
+                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble){
+                                this.team_statistics.push({category_name:"Doble",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble})
+                            }
+                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo){
+                                this.team_statistics.push({category_name:"Solo",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo})
+                            }
                     }
                     else{
                         return false
@@ -525,6 +541,8 @@ export default {
         else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_route = "soccer"}
         else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_route = "baseball"}
         else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){this.sport_route = "medalbased"}
+        else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){this.sport_route ="matchbased"}
         else{this.sport_route = ''}
     },
     buildTable(){
@@ -694,6 +712,24 @@ export default {
                 {text: 'Categoria', value: '.category_name'},
                 {text: 'Tipo de Medalla', value: 'type_of_medal'},
                 {text: 'Numero de Medallas', value: 'medals_earned'},
+                ]
+            }
+            else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                this.headers =
+                [
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
+                {text: 'Categoria', value: 'statistics.category_name'},
+                {text: 'Partidas Jugadas', value: 'statistics.matches_played'},
+                {text: 'Partidas Ganadas', value: 'statistics.matches_won'},
+                { text: "Acciones", value: "actions", sortable: false },
+
+                ]
+                this.team_headers =
+                [
+                {text: 'Categoria', value: 'category_name'},
+                {text: 'Partidas Jugadas', value: 'statistics.matches_played'},
+                {text: 'Partidas Ganadas', value: 'statistics.matches_won'},
                 ]
             }
             this.ready_for_table = true
