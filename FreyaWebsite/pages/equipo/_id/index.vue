@@ -27,8 +27,8 @@
             :items="yearList" 
             label ="Temporada"
             prepend-icon="mdi-calendar-blank-multiple"
-            :disabled = "loadingQuery"
-            :loading = "loadingQuery"
+            :disabled ="loadingQuery||loadingEventQuery"
+            :loading="loadingQuery||loadingEventQuery"
             @input="getSeasonData"
           ></v-select>
         </v-col>
@@ -191,19 +191,30 @@
         
         </v-tab-item>
         <v-tab-item>
-          <v-row>
-            <v-col v-for="(value,key) in events" :key=key md="3">
-          
-            <EventCardSimple      
-              :eventID="value.id"     
-              :eventDate="value.event_date"
-              opponentName='UPRP'
-              :localScore='value.local_score'
-              :opponentScore='value.opponent_score' 
-              eventSummary="El evento fue entretinido"
-            />        
-            </v-col>
-          </v-row>
+          <v-container v-if="formated_events()">
+          <!-- <v-container> -->
+            <v-row>
+              <v-col v-for="(value,key) in events" :key=key md="3">
+            
+              <EventCardSimple      
+                :eventID="value.id"     
+                :eventDate="value.event_date"
+                opponentName='UPRP'
+                :localScore='value.local_score'
+                :opponentScore='value.opponent_score' 
+                eventSummary="El evento fue entretinido"
+                v-if="events != ''"
+              />        
+              </v-col>
+            </v-row>
+          </v-container>
+          <v-container v-else>
+            <v-row align = "center" justify = "center">
+              <v-col justify = "center" align = "center">
+                <h2>No Se Encontraron Eventos Para El Equipo</h2>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-tab-item>
 			</v-tabs>
 		</v-container>        
@@ -261,7 +272,7 @@ export default {
 
       current_team:'',
       current_team_id:'',
-      events:[],
+      events:'',
       ready_for_members: false,
 
       }),//end of data()
@@ -271,10 +282,12 @@ export default {
       this.setNullTeamMembers()
       this.setNullMembersStats()
       this.setNullTeamStats()
+      this.setNullEvents()
       this.current_team = null
       this.members = null
       this.statistics_per_season = null
       this.team_statistics_per_season = null
+      this.events = null
       
       
       
@@ -300,6 +313,9 @@ export default {
         setNullTeamMembers:"teams/setNullTeamMembers",
         setNullMembersStats:"teams/setNullMemberStats",
         setNullTeamStats:"teams/setNullTeamStats",
+        setNullEvents:"teams/setNullEvents",
+        getTeamEvents:"teams/getTeamEvents",
+        setEventQueryLoading:"teams/setEventQueryLoading",
       }),
       
       formated(){
@@ -372,7 +388,7 @@ export default {
 
       formated_team_stats(){
         if(this.team_statistics){
-          console.log("//////=====THIS IS A FUCKING TEST YO=======////",this.team_statistics)
+          console.log("Team Statistics:",this.team_statistics)
           if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Basketball_Event_Season_Team_Statistics]}
           else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Volleyball_Event_Season_Team_Statistics]}
           else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.team_statistics_per_season = [this.team_statistics.Soccer_Event_Season_Team_Statistics]}
@@ -381,6 +397,11 @@ export default {
             this.team_statistics_per_season = null
             return false
           }
+          // if(this.readyForEvents){
+          //   console.log("INDEX LEVEL QUERY TEAM STATS:",this.team_statistics_per_season)
+          //   // this.getTeamEvents(this.current_team_id)
+          // }
+          // this.stopGetEvents()
           return true
         }
         else{
@@ -388,28 +409,14 @@ export default {
         }
       },
 
-
-      // // ORIGINAL LUIS ATHLETE VERSION
-      // formated(){
-			// 	if(this.athlete){
-			// 		if(this.ready){
-			// 			return true
-			// 		}
-			// 		else{
-
-			// 			if(!this.ready){
-
-			// 				this.ready = true
-			// 			}
-			// 		}
-			// 	}
-			// 	else
-			// 	{
-			// 		return false
-			// 	}
-
-			// },
-
+      formated_events(){
+        if (this.events != '' && this.events != null){
+          return true
+        }
+        else{
+          return false
+        } 
+      },
 
       buildTable(){
         // basketball
@@ -645,24 +652,31 @@ export default {
         }
       ]
       },
-			getSeasonData(){
+			async getSeasonData(){
           this.setQueryLoading()
           this.setNullTeam()
           this.setNullTeamMembers()
           this.setNullMembersStats()
           this.setNullTeamStats()
+          this.setNullEvents()
           this.current_team = null
           this.statistics_per_season = null
           this.team_statistics_per_season = null
           this.members = null
-    
-          this.getEvents()
+          this.events = null
+          // this.getEvents()
           const team_params = {
             sport_id: String(this.sport_id),
             season_year: String(this.season)
           }
           //console.log("At the index level inside the getSeasonData, request params look like",team_params)
-          this.getTeamByYear(team_params)   
+          await this.getTeamByYear(team_params)   
+          await this.setEventQueryLoading()
+          await this.getTeamEvents(this.current_team_id)
+          if (this.team_events){
+            console.log("Team Events (INDEX):",this.team_events)
+            this.events = this.team_events.Events
+          }
           // this.getMemberStatistics(team_params)    
           // this.getTeamStatistics(team_params)   
 			}
@@ -689,7 +703,9 @@ export default {
         readyForTeamStats:"teams/readyForTeamStats",
         loadingQuery:"teams/loadingQuery",
         member_statistics:"teams/member_statistics",
-        team_statistics:"teams/team_statistics"
+        team_statistics:"teams/team_statistics",
+        team_events:"teams/team_events",
+        loadingEventQuery:"teams/loadingEventQuery"
         
 
 			})
