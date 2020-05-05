@@ -11,5 +11,8 @@ class CustomSession(object):
         self.sessionList.append(theSession)
 
     def isLoggedIn(self, username):
-        loggedUser = next(session for session in self.sessionList if session["username"] == username)
-        return loggedUser
+        try:
+            loggedUser = next(session for session in self.sessionList if session.get("username", "Invalid Session") == username)
+            return loggedUser
+        except:
+            return None

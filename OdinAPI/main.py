@@ -157,7 +157,8 @@ def auth():
 def allUsers():
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
-    if(not bool(loggedUser)):
+    print(loggedUser)
+    if(loggedUser == None):
         return jsonify(Error='Invalid Session'), 401
     validateRequestPermissions(token,'21')
     validateRequestPermissions(token,'22')
