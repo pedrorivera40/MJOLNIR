@@ -719,6 +719,7 @@
       },
     data: () => ({
         
+        valid: false,
         //WRITTEN TO/PARAMETERS:
         //Baloncesto
         

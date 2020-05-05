@@ -334,6 +334,10 @@ export default {
       SOFTBALL_IDF: 16,
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
+
+
+      ATHLETICS_IDM: 8,
+      ATHLETICS_IDF: 19,
       //season:''
 
       //OTHE QUERY RELATED VALUES
@@ -397,15 +401,31 @@ export default {
                 if(this.results_payload){
                     console.log("[4] GOT EVENT STATS",this.results_payload)
                     // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
-                    if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
-                    else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
-                    else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
-                    else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
+                    if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+                        this.payload_stats = this.results_payload.Basketball_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                    }
+                    else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                        this.payload_stats = this.results_payload.Volleyball_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                        }
+                    else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                        this.payload_stats = this.results_payload.Soccer_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                    }
+                    else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                        this.payload_stats = this.results_payload.Baseball_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                    }
+                    else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                        this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
+                        this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
+                    }
                     else{
                         return false
                     }
                     console.log("[5] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
-                    this.team_statistics = [this.payload_stats.team_statistics]
+                    // this.team_statistics = [this.payload_stats.team_statistics]
                     this.opponent_score = (this.payload_stats.opponent_score)
                     this.uprm_score = (this.payload_stats.uprm_score)
                     return true
@@ -504,6 +524,7 @@ export default {
         else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_route = "volleyball"}
         else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_route = "soccer"}
         else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_route = "baseball"}
+        else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){this.sport_route = "medalbased"}
         else{this.sport_route = ''}
     },
     buildTable(){
@@ -659,7 +680,7 @@ export default {
                 ]
             }
             // TODO: make it so this happens for MEDAL-BASED events
-            else if (this.sport_id == 999 || this.sport_id == 999){
+            else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
                 this.headers =
                 [
                 {text: "Atleta", align:'start', sortable: true, value: "full_name" },
@@ -670,9 +691,9 @@ export default {
                 ]
                 this.team_headers =
                 [
-                {text: 'Categoria', value: 'medal_based_statistics.category_name'},
-                {text: 'Tipo de Medalla', value: 'medal_based_statistics.types_of_medal'},
-                {text: 'Numero de Medallas', value: 'medal_based_statistics.medals_earned'},
+                {text: 'Categoria', value: '.category_name'},
+                {text: 'Tipo de Medalla', value: 'type_of_medal'},
+                {text: 'Numero de Medallas', value: 'medals_earned'},
                 ]
             }
             this.ready_for_table = true

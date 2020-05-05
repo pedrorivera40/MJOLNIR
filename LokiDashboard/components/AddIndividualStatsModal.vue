@@ -712,6 +712,8 @@
         refresh_stats:Boolean 
       },
     data: () => ({
+
+        valid: false,
         
         //WRITTEN TO/PARAMETERS:
         //Baloncesto
