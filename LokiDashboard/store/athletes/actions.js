@@ -2,7 +2,7 @@ export default{
     async getAthletes( {commit,dispatch} ){
         try{
            
-            const response = await this.$axios.get('athletes/')
+            const response = await this.$axios.get('athletes/details/')
             commit("SET_ATHLETES",response.data.Athletes)
             commit("SET_ATHLETE",null)
 
@@ -24,6 +24,7 @@ export default{
         }catch(error){            
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
@@ -45,15 +46,15 @@ export default{
     },
 
     async addAthlete({commit,dispatch},athleteJSON){
-        try{
-            commit("SET_ATHLETES",[])
-            
+        try{           
             const response = await this.$axios.post('athletes/',athleteJSON)
-            dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
-            this.$router.push('/atletas/')
+            commit("ADD_ATHLETE",response.data.Athlete)
+            dispatch('notifications/setSnackbar', {text: "Se añadió un nuevo atleta exitosamente", color: 'success'}, {root: true})
+            
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
@@ -61,15 +62,17 @@ export default{
     },
 
     async editAthlete({commit,dispatch},athleteJSON){
-        try{
-            commit("SET_ATHLETES",[])
+        try{           
             
             const response = await this.$axios.put('athletes/'+athleteJSON.athlete_id+'/',athleteJSON)
-            dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
-            this.$router.push('/atletas/')
+            commit("UPDATE_ATHLETE",response.data.Athlete)
+            dispatch('notifications/setSnackbar', {text: `El atleta con identificador:${athleteJSON.athlete_id} ha sido editado.`, color: 'success'}, {root: true})
+            
         }catch(error){
+            console.log(error)
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                'return error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
@@ -80,19 +83,57 @@ export default{
 
 
     async removeAthlete({commit,dispatch},athleteID){
-        try{
-            commit("SET_ATHLETES",[])
+        try{           
             
             const response = await this.$axios.delete('athletes/'+athleteID+'/')
+            commit("DELETE_ATHLETE",athleteID)
             dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
-            this.$router.go()
+            
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
         }
-    }
+    },
+
+    //Results related actions
+    async getAthleteSeasonStats({commit,dispatch},stats_params){
+        try{
+            const response = await this.$axios.get('results/'+stats_params.sport_name+'/season/athlete_games/?athlete_id='+stats_params.athlete_id+'&season_year='+stats_params.season_year)
+            //console.log(response.data)
+            commit("SET_SEASON_STATS",response.data)
+            dispatch('notifications/setSnackbar', {text: "Se recolectó exitosamente las estadísticas de la temporada.", color: 'success'}, {root: true})
+        }catch(error){
+            console.log(error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: 'Error', color: 'error'}, {root: true})
+                return 'error'
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
+        }
+
+    },
+
+    async getAthleteAggregateSeasonStats({commit,dispatch},stats_params){
+        try{
+            const response = await this.$axios.get('results/'+stats_params.sport_name+'/season/athlete_aggregate/?athlete_id='+stats_params.athlete_id+'&season_year='+stats_params.season_year)
+            //console.log(response.data)
+            commit("SET_AGGREGATE_SEASON_STATS",response.data)
+            dispatch('notifications/setSnackbar', {text: "Se recolectó exitosamente las estadísticas agregadas de la temporada.", color: 'success'}, {root: true})
+        }catch(error){
+            console.log(error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: 'Error', color: 'error'}, {root: true})
+                return 'error'
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
+        }
+
+    },
 }
 

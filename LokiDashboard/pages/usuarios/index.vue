@@ -18,7 +18,7 @@
               </v-btn>
               <v-spacer />
             </v-col>
-            <v-col cols="4">
+            <!-- <v-col cols="4">
               <v-text-field
                 v-model="search"
                 append-icon="mdi-magnify"
@@ -29,13 +29,13 @@
                 single-line
                 hide-details
               />
-            </v-col>
+            </v-col> -->
           </v-row>
         </v-card-title>
         <v-data-table
           :headers="headers"
           :items="users"
-          :search="search"
+        
           :loading="isLoadingU"
         >
           <template v-slot:item.is_active="{ item }">
@@ -149,7 +149,7 @@ import PasswordResetModal from "@/components/PasswordResetModal";
 export default {
   data() {
     return {
-      search: "",
+      // search: "",
       dialogEdit: false,
       dialogDelete: false,
       dialogPermissions: false,
