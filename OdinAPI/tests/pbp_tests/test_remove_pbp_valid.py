@@ -12,9 +12,9 @@ class TestRemoveVolleyballPBP(unittest.TestCase):
         self.client = app.test_client()
 
     def test_remove_pbp_valid(self):
-        response = self.client.delete('/pbp/Voleibol', data=json.dumps(
-            data["valid_id"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin: La secuencia PBP ha sido removida."
+        response = self.client.delete('/pbp/Voleibol?event_id=30', data=json.dumps(
+            {}), content_type='application/json', follow_redirects=True)
+        expected_msg = "La secuencia PBP ha sido removida."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])
 

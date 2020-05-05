@@ -12,8 +12,8 @@ class TestRemoveOppRosterVolleyballPBP(unittest.TestCase):
         self.client = app.test_client()
 
     def test_opp_roster_remove_valid1(self):
-        response = self.client.delete('/pbp/Voleibol/roster', data=json.dumps(
-            data["valid_to_remove"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin: La información del atleta se ha removido del sistema."
+        response = self.client.delete('/pbp/Voleibol/roster?event_id=28&athlete_id=15&team=opponent', data=json.dumps(
+            {}), content_type='application/json', follow_redirects=True)
+        expected_msg = "La información del atleta se ha removido del sistema."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])

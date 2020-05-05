@@ -58,7 +58,7 @@ export default {
   async setPermissions({ commit, dispatch },payload) {
     try {
       await this.$axios.patch(`users/${payload.id}/permissions`, {permissions: payload.permissions})
-      dispatch('notifications/setSnackbar', {text: 'User Permissions Saved.', color: 'primary lighten-1'}, {root: true})
+      dispatch('notifications/setSnackbar', {text: 'Los permisos del usuario han sido guardados.', color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
       if(!!error.response.data){
@@ -79,7 +79,7 @@ export default {
     try {
       await this.$axios.patch(`users/${payload.id}/remove`,)
       commit("DELETE_USER", payload.id)
-      dispatch('notifications/setSnackbar', {text: `${payload.username} has been deleted.`, color: 'primary lighten-1'}, {root: true})
+      dispatch('notifications/setSnackbar', {text: `${payload.username} ha sido borrado.`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
       if(!!error.response.data){
@@ -100,7 +100,7 @@ export default {
     try {
       const response = await this.$axios.post(`users/`, payload)
       commit("ADD_USER", response.data.User)
-      dispatch('notifications/setSnackbar', {text: `${payload.username} has been added to the system.`, color: 'primary lighten-1'}, {root: true})
+      dispatch('notifications/setSnackbar', {text: `${payload.username} ha sido añadido al sistema.`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
       if(!!error.response.data){
@@ -122,7 +122,7 @@ export default {
     try {
       const response = await this.$axios.patch(`users/${payload.id}`, payload)
       commit("UPDATE_USER", response.data.User)
-      dispatch('notifications/setSnackbar', {text: `${payload.username}'s information has been updated!`, color: 'primary lighten-1'}, {root: true})
+      dispatch('notifications/setSnackbar', {text: `La información de ${payload.username} ha sido actualizada!`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
       // console.log(error)
@@ -145,7 +145,7 @@ export default {
     try {
       const response = await this.$axios.patch(`users/${payload.id}/reset`, payload)
       commit("UNLOCK_USER", response.data.User)
-      dispatch('notifications/setSnackbar', {text: `${payload.username}'s password has been reset`, color: 'primary lighten-1'}, {root: true})
+      dispatch('notifications/setSnackbar', {text: `La contraseña de ${payload.username} ha sido restablecida.`, color: 'primary lighten-1'}, {root: true})
 
     } catch (error) {
       if(!!error.response.data){

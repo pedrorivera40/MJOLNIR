@@ -1,431 +1,287 @@
 <template>
-  <div class="wrapper">
-    <h1>Resultados {{sport_name}}</h1>
-    <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
-    <h3>Evento de {{event_date}}</h3>
+  <v-container class="wrapper">
+    <v-container v-if="formated_event_info()">
+        <h1 class="primary_dark--text pl-3">Resultados {{sport_name}}</h1>
+        <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
+        <h3>Evento de {{event_date}}</h3>
+    </v-container>
     <div class="content-area pa-4 pt-12">
-    <v-row align="center"
-      justify="center">
-      <v-card width=400 class="mx-lg-auto" outlined>
-          <v-card-title>
-            <v-row justify="center">
-                <h3>Final Result</h3>
-            </v-row>
-            </v-card-title>
-          <v-container>
-            <v-row >
-                
-                <v-col >
-                    <v-row justify="center">
-                        <h1>{{uprm_score}}</h1>
-                    </v-row>
-                    <v-row justify="center">
-                        <h3>UPRM</h3>
-                    </v-row>
-                </v-col>
-                
-                <v-col align="center">
-                    <v-row justify="center">
-                        <h2>-</h2>
-                    </v-row>
-                </v-col>
-                
-                <v-col>
-                    <v-row justify="center">
-                        <h1>{{opponent_score}}</h1>
-                    </v-row>
-                    <v-row justify="center">
-                        <h3>{{opponent_name}}</h3>
-                    </v-row>
-                </v-col>
-                
-            </v-row>
-          </v-container>
-      </v-card>
-        
-      </v-row>
-      <v-row justify="center" align="center">
-        <v-spacer/>
-        <v-spacer/>
-        <v-col>
-            <v-btn
-                color="primary_light"
-                class="white--text"
-                @click="addFinalScore()"
-            >
-                <v-icon left>
-                mdi-plus
-                </v-icon>
-                Añadir Puntuación Final
-            </v-btn>
-        </v-col>
-        
-        <v-col>
-            <v-btn
-                color="primary_light"
-                class="white--text"
-                @click="editFinalScore()"
-            >
-                <v-icon left>
-                mdi-pencil
-                </v-icon>
-                Editar Puntuación Final
-            </v-btn>
-        </v-col>
-        <v-spacer/>
-        <v-spacer/>
-    </v-row>   
-    <v-tabs
-              centered
-          >
-            <v-tabs-slider/>
-            <v-tab>
-                POR ATLETA
-            </v-tab>
+        <v-container>
+            <!-- <v-container v-if="formated_member_stats()"> -->
+            <v-container>
+                <v-row align="center" justify="center">
+                    <v-card width=400 class="mx-lg-auto" outlined>
+                        <v-card-title>
+                            <v-row justify="center">
+                                <h3>Puntuación Final</h3>
+                            </v-row>
+                            </v-card-title>
+                        <v-container>
+                            <v-row v-if="formated_final_score()">
+                                <v-col >
+                                    <v-row justify="center">
+                                        <h1>{{uprm_score}}</h1>
+                                    </v-row>
+                                    <v-row justify="center">
+                                        <h3>UPRM</h3>
+                                    </v-row>
+                                </v-col>
 
-            <v-tab>
-                POR EQUIPO
-            </v-tab>
-            <v-tab-item>
-                <v-card>
-                    
-                    <v-card-title>
-                    <v-row>
-                        <v-col>
+                                <v-col align="center">
+                                    <v-row justify="center">
+                                        <h2>-</h2>
+                                    </v-row>
+                                </v-col>
+
+                                <v-col>
+                                    <v-row justify="center">
+                                        <h1>{{opponent_score}}</h1>
+                                    </v-row>
+                                    <v-row justify="center">
+                                        <h3 v-if="opponent_name">{{opponent_name}}</h3>
+                                        <h3 v-else>Oponente</h3>
+                                    </v-row>
+                                </v-col>
+
+                            </v-row>
+                            <v-row v-else justify="center">
+                                <v-col align="center">
+                                    <h3>No Hay Puntuación Final Disponible</h3>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card>
+                </v-row>
+                <v-row justify="center" align="center">
+                    <v-spacer/>
+                    <v-spacer/>
+                    <v-col>
                         <v-btn
                             color="primary_light"
                             class="white--text"
-                            @click="addAthleteStatistics(editedItemIndex)"
+                            @click="addFinalScore()"
+                            :disabled="formated_final_score()"
                         >
                             <v-icon left>
                             mdi-plus
                             </v-icon>
-                            Añadir Estadisticas de Atleta
+                            Añadir Puntuación Final
                         </v-btn>
-                        <v-spacer />
-                        </v-col>
-                        <v-col cols="4">
-                        <v-text-field
-                            v-model="search_individual"
-                            append-icon="mdi-magnify"
-                            label="Búsqueda"
-                            rounded
-                            dense
-                            outlined
-                            single-line
-                            hide-details
-                        />
-                        </v-col>
-                    </v-row>
-                    </v-card-title>
-                    <!-- :headers="headers"
-                    :items="users"
-                    :search="search"
-                    :loading="isLoadingU" -->
-                    <!-- THE BASKETBALL TABLE -->
-                    <v-data-table
-                    dense 
-                    :headers="headers" 
-                    :items="payload_stats.Basketball_Event_Statistics.athlete_statistic"
-                    :search="search_individual"
-                    item-key="athlete_statistic" 
-                    class="elevation-1"								
-                    v-if="isBasketballTable"
-                    >
-                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
+                    </v-col>
+
+                    <v-col>
+                        <v-btn
+                            color="primary_light"
+                            class="white--text"
+                            @click="editFinalScore()"
+                            :disabled="!formated_final_score()"
+                        >
+                            <v-icon left>
                             mdi-pencil
                             </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                    <!-- VOLLEYBALL TABLE -->
-                    <v-data-table
-                    dense 
-                    :headers="headers" 
-                    :items="payload_stats.Volleyball_Event_Statistics.athlete_statistic"
-                    :search="search_individual"
-                    item-key="athlete_statistic" 
-                    class="elevation-1"								
-                    v-if="isVolleyballTable"
-                    >
-                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                    <!-- SOCCER TABLE -->
-                    <v-data-table
-                    dense 
-                    :headers="headers" 
-                    :items="payload_stats.Soccer_Event_Statistics.athlete_statistic"
-                    :search="search_individual"
-                    item-key="athlete_statistic" 
-                    class="elevation-1"								
-                    v-if="isSoccerTable"
-                    >
-                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                    <!-- BASEBALL TABLE -->
-                    <v-data-table
-                    dense 
-                    :headers="headers" 
-                    :items="payload_stats.Baseball_Event_Statistics.athlete_statistic"
-                    :search="search_individual"
-                    item-key="athlete_statistic" 
-                    class="elevation-1"								
-                    v-if="isBaseballTable"
-                    >
-                    <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editAthleteStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Atleta</span>
-                        </v-tooltip>
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteAthleteStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Atleta</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                </v-card>
-            </v-tab-item>
-            <v-tab-item>
-                <v-card>
-                    <!-- :headers="headers"
-                    :items="users"
-                    :search="search"
-                    :loading="isLoadingU" -->
-                    <v-data-table
-                    dense 
-                    :headers="team_headers" 
-                    :items="team_statistics"
-                    item-key="team_statistics" 
-                    class="elevation-1"								
-                    v-if="payload_stats != ''"
-                    >
-                    
-                    <template v-slot:item.actions="{ item }">
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="editTeamStatistics(item)"
-                            >
-                            mdi-pencil
-                            </v-icon>
-                        </template>
-                        <span>Editar Estadisticas de Equipo</span>
-                        </v-tooltip> -->
-                        <!-- <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click="editPermissions(item)"
-                            >
-                            mdi-shield-lock
-                            </v-icon>
-                        </template>
-                        <span>Edit User Permissions</span>
-                        </v-tooltip> -->
-                        <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-icon
-                            small
-                            class="mr-2 table-actions"
-                            v-on="on"
-                            @click.stop="deleteTeamStatistics(item)"
-                            >
-                            mdi-delete
-                            </v-icon>
-                        </template>
-                        <span>Eliminar Estadisticas De Equipo</span>
-                        </v-tooltip>
-                    </template>
-                    </v-data-table>
-                </v-card>
-            </v-tab-item>
-        </v-tabs>
+                            Editar Puntuación Final
+                        </v-btn>
+                    </v-col>
+                    <v-spacer/>
+                    <v-spacer/>
+                </v-row>
+                <v-container>
+                    <v-tabs centered>
+                        <v-tabs-slider/>
+                        <v-tab>
+                            POR ATLETA
+                        </v-tab>
+
+                        <v-tab>
+                            POR EQUIPO
+                        </v-tab>
+                        <v-tab-item>
+                            <v-card>
+
+                                <v-card-title>
+                                <v-row>
+                                    <v-col>
+                                    <v-btn
+                                        color="primary_light"
+                                        class="white--text"
+                                        @click="addAthleteStatistics()"
+                                        :disabled="!formated_individual_stats()"
+                                    >
+                                        <v-icon left>
+                                        mdi-plus
+                                        </v-icon>
+                                        Añadir Estadisticas de Atleta
+                                    </v-btn>
+                                    <v-spacer />
+                                    </v-col>
+                                    <!-- <v-col cols="4">
+                                    <v-text-field
+                                        append-icon="mdi-magnify"
+                                        label="Búsqueda"
+                                        rounded
+                                        dense
+                                        outlined
+                                        single-line
+                                        hide-details
+                                    />
+                                    </v-col> -->
+                                </v-row>
+                                </v-card-title>
+                                <!-- :headers="headers"
+                                :items="users"
+                                :search="search"
+                                :loading="isLoadingU" -->
+                                <!-- THE SPORTS STATS TABLE -->
+                                <v-data-table
+                                dense
+                                :headers="headers"
+                                :items="payload_stats.athlete_statistic"
+                                item-key="athlete_statistic"
+                                class="elevation-1"
+                                v-if="formated_member_stats()"
+                                :loading="loadingQuery"
+                                >
+                                <!-- v-if="isBasketballTable" -->
+                                <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                                <template v-slot:item.actions="{ item }">
+                                    <v-tooltip bottom>
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon
+                                        small
+                                        class="mr-2 table-actions"
+                                        v-on="on"
+                                        @click.stop="editAthleteStatistics(item)"
+                                        >
+                                        mdi-pencil
+                                        </v-icon>
+                                    </template>
+                                    <span>Editar Estadisticas de Atleta</span>
+                                    </v-tooltip>
+                                    <!-- <v-tooltip bottom>
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon
+                                        small
+                                        class="mr-2 table-actions"
+                                        v-on="on"
+                                        @click="editPermissions(item)"
+                                        >
+                                        mdi-shield-lock
+                                        </v-icon>
+                                    </template>
+                                    <span>Edit User Permissions</span>
+                                    </v-tooltip> -->
+                                    <v-tooltip bottom>
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon
+                                        small
+                                        class="mr-2 table-actions"
+                                        v-on="on"
+                                        @click.stop="deleteAthleteStatistics(item)"
+                                        >
+                                        mdi-delete
+                                        </v-icon>
+                                    </template>
+                                    <span>Eliminar Estadisticas De Atleta</span>
+                                    </v-tooltip>
+                                </template>
+                                </v-data-table>
+
+
+
+                            </v-card>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <v-card>
+                                <!-- :headers="headers"
+                                :items="users"
+                                :search="search"
+                                :loading="isLoadingU" -->
+                                <v-data-table
+                                dense
+                                :headers="team_headers"
+                                :items="team_statistics"
+                                item-key="team_statistics"
+                                class="elevation-1"
+                                v-if="formated_member_stats()"
+                                :loading="loadingQuery"
+                                >
+                                </v-data-table>
+                            </v-card>
+                        </v-tab-item>
+                    </v-tabs>
+                </v-container>
+            </v-container>
+            <AddFinalScoreModal
+                v-if ="dialogAddFinalScore"
+                :dialog.sync="dialogAddFinalScore"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :uprm_score.sync="uprm_score"
+                :opponent_score.sync="opponent_score"
+            />
+            <UpdateFinalScoreModal
+                v-if ="dialogEditFinalScore"
+                :dialog.sync="dialogEditFinalScore"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :uprm_score.sync="uprm_score"
+                :opponent_score.sync="opponent_score"
+            />
+            <AddIndividualStatsModal
+                v-if ="dialogAddIndividualStats"
+                :dialog.sync="dialogAddIndividualStats"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :payload_stats.sync="payload_stats"
+                :sport_id="sport_id"
+                :team_members="team_members_local"
+                :refresh_stats.sync="refresh_stats"
+            />
+            <UpdateIndividualStatsModal
+                v-if ="dialogEditIndividualStats"
+                :dialog.sync="dialogEditIndividualStats"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :payload_stats.sync="payload_stats"
+                :sport_id="sport_id"
+                :team_members="team_members_local"
+                :refresh_stats.sync="refresh_stats"
+                :athlete_id="edited_athlete_id"
+                :individual_stats="this.current_individual_stats"
+            />
+            <DeleteIndividualStatsModal
+                v-if ="dialogDeleteIndividualStats"
+                :dialog.sync="dialogDeleteIndividualStats"
+                :event_id="event_id"
+                :sport_route="sport_route"
+                :refresh_stats.sync="refresh_stats"
+                :athlete_id="edited_athlete_id"
+            />
+        </v-container>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import AddFinalScoreModal from "@/components/AddFinalScoreModal";
+import UpdateFinalScoreModal from "@/components/UpdateFinalScoreModal";
+import AddIndividualStatsModal from "@/components/AddIndividualStatsModal";
+import UpdateIndividualStatsModal from "@/components/UpdateIndividualStatsModal";
+import DeleteIndividualStatsModal from "@/components/DeleteIndividualStatsModal";
 export default {
   data() {
     return {
-      
-      dialogEdit: false,
-      dialogDelete: false,
-      dialogPermissions: false,
-     
-    //   headers: [
-    //     {
-    //       text: "ID",
-    //       align: "start",
-    //       sortable: false,
-    //       value: "id"
-    //     },
-    //     { text: "Full Name", value: "full_name" },
-    //     { text: "Username", value: "username" },
-    //     { text: "Email", value: "email" },
-    //     { text: "Account Status", value: "is_active" },
-    //     { text: "Password", value: "password" },
-    //     { text: "Actions", value: "actions", sortable: false }
-    //   ],
+
+      dialogAddFinalScore: false,
+      dialogEditFinalScore:false,
+      dialogAddIndividualStats:false,
+      dialogEditIndividualStats:false,
+      dialogDeleteIndividualStats:false,
+
       editedItemIndex: -1,
       editedItem: '',
+      edited_athlete_id:'',
       defaultItem: {
         full_name: "",
         username: "",
@@ -438,14 +294,15 @@ export default {
       team_headers:[],
       statistics_per_season:"",
       team_statistics:[],
-      search_individual: "",
+    //   search_individual: "",
       sport_id: '',
+      sport_route:'',
       sport_name: '',
       event_id:'',
       event_date:'',
-      event_info:'',
+    //   event_info:'',
       opponent_score:'',
-      opponent_name:"INTER SG", //TODO: MAKE THIS VALUE DYNAMIC
+      opponent_name:'', //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
       payload_stats:'',
       BASKETBALL_IDM: 1,
@@ -453,223 +310,182 @@ export default {
       VOLLEYBALL_IDM: 2,
       VOLLEYBALL_IDF: 12,
       BASEBALL_IDM: 4,
-      SOFTBALL_IDF: 16, 
+      SOFTBALL_IDF: 16,
       SOCCER_IDM: 3,
-      SOCCER_IDF: 11
+      SOCCER_IDF: 11,
       //season:''
 
+      //OTHE QUERY RELATED VALUES
+      team_id:'',
+      ready_for_stats:'',
+      team_members_local:'',
+      indiviual_athlete_stats:'',
+      refresh_stats:false,
+      current_individual_stats:'',
+      ready_for_table: false,
     };
   },
-  
-created(){
-    this.buildDefaultValues()
-    this.buildTable()
-    this.getSeasonData()
-      
-      //this.buildDefault()
-    }, 
-  methods: {
-    buildDefaultValues(){
-        this.event_id = this.$route.params.id
-        if (this.event_id == 1){
-            //Getting Sport Information
-            this.sport_id = this.BASKETBALL_IDM
-            this.sport_name = "Baloncesto"
-            //Getting Event Information
-            this.event_info = {
-                "Event": {
-                    "branch": "masculino",
-                    "event_date": "Sat, 19 Apr 2025 00:00:00 GMT",
-                    "event_summary": "Test Event #1: Using to Add All Stats",
-                    "id": 32,
-                    "is_local": true,
-                    "opponent_name": "Inter SG",
-                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/88207403_3003298336425647_2084912734775803904_o.jpg?_nc_cat=109&_nc_sid=e007fa&_nc_ohc=cPJHsQ73nbMAX988FmN&_nc_ht=scontent.fsig1-1.fna&oh=1ff606b6b98ae4bd4d211840ac373a2a&oe=5EAB30D6",
-                    "sport_name": "Baloncesto",
-                    "team_id": 25,
-                    "team_season_year": 2025,
-                    "venue": "Mangual"
-                }
-            }
-            this.event_date = this.event_info.Event.event_date
-        }
-        else if (this.event_id == 2){
-            //Getting Sport Information
-            this.sport_id =  this.VOLLEYBALL_IDF 
-            this.sport_name = "Voleibol"
-            //Getting Event Information
-            this.event_info = {
-                "Event": {
-                    "branch": "femenino",
-                    "event_date": "Fri, 24 Apr 2020 00:00:00 GMT",
-                    "event_summary": null,
-                    "hasPBP": false,
-                    "id": 30,
-                    "is_local": true,
-                    "opponent_name": null,
-                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/70916818_2501810766574409_3176798918700695552_o.jpg?_nc_cat=102&_nc_sid=e007fa&_nc_ohc=Jokgru5MxFcAX-Iepr4&_nc_ht=scontent.fsig1-1.fna&oh=1e231a8b32569ced072a763ee0270c55&oe=5EA8EF86",
-                    "sport_name": "Voleibol",
-                    "team_id": 4,
-                    "team_season_year": 2020,
-                    "venue": null
-                }
-            }
-            this.event_date = this.event_info.Event.event_date
-        }
-        else if (this.event_id == 3){
-            //Getting Sport Information
-            this.sport_id =  this.SOCCER_IDF 
-            this.sport_name = "Futbol"
-            //Getting Event Information
-            this.event_info = {
-                "Event": {
-                    "branch": "femenino",
-                    "event_date": "Wed, 01 Apr 2020 00:00:00 GMT",
-                    "event_summary": null,
-                    "id": 10,
-                    "is_local": true,
-                    "opponent_name": null,
-                    "sport_img_url": "https://scontent.fsig1-1.fna.fbcdn.net/v/t1.0-9/88983239_2989638081125006_5994073246109007872_n.jpg?_nc_cat=104&_nc_sid=e007fa&_nc_ohc=eCtVJEHWHjEAX-4zKxa&_nc_ht=scontent.fsig1-1.fna&oh=b6e46d5ef1e373fa84c065ee433e784a&oe=5EAAE8DB",
-                    "sport_name": "Fútbol",
-                    "team_id": 7,
-                    "team_season_year": 2020,
-                    "venue": "Mangual"
-                }
-            }
-            this.event_date = this.event_info.Event.event_date
-        }
-        else if (this.event_id == 4){
-            //Getting Sport Information
-            this.sport_id =  this.BASEBALL_IDM
-            this.sport_name = "Beisbol"
-            //Getting Event Information
-            this.event_info = {
-                "Event": {
-                    "branch": "femenino",
-                    "event_date": "Wed, 01 Apr 2020 00:00:00 GMT",
-                    "event_summary": null,
-                    "id": 13,
-                    "is_local": true,
-                    "opponent_name": null,
-                    "sport_img_url": "https://scontent.fsig2-1.fna.fbcdn.net/v/t1.0-9/57619118_2226257830796372_302697234753912832_o.jpg?_nc_cat=109&_nc_sid=e007fa&_nc_ohc=JOsXhrEM1tUAX8dDHSv&_nc_ht=scontent.fsig2-1.fna&oh=ca2da5e6e2342cfd795624cb292ee289&oe=5EB771E8",
-                    "sport_name": "Softbol",
-                    "team_id": 8,
-                    "team_season_year": 2020,
-                    "venue": "Mangual"
-                }
-            }
-            this.event_date = this.event_info.Event.event_date
-        }
-        
 
+
+  // created(){
+  async mounted(){
+    this.ready_for_table = false
+    this.event_id = this.$route.params.id
+    this.clearEventInfo()
+    this.clearAllStats()
+    this.setNullTeamMembers()
+    this.ready_for_stats = true
+    console.log("[1] GOT EVENT ID",this.event_id)
+    await this.setQueryLoading()
+    await this.getEventInfo(this.event_id)
+    console.log("[2] GOT EVENT INFO",this.event_info)
+    console.log("the event info...(before)",this.event_info)
+        if(this.event_info){
+            console.log("GETTING EVENT INFO (from formated method)",this.event_info)
+            this.sport_id =  this.event_info.sport_id
+            this.sport_name = this.event_info.sport_name
+            this.opponent_name = this.event_info.opponent_name
+            this.event_date = this.event_info.event_date
+            this.team_id = this.event_info.team_id
+            // if (this.ready_for_stats){
+            await this.setQueryLoading()
+            await this.getTeamMembers(this.team_id)
+            console.log("Trying to get Team Members for:",this.team_id)
+            if (this.team_members){
+                console.log("[TM-Got Team Members]",this.team_members)
+                this.team_members_local = this.team_members.team_members
+            }
+            console.log("are we ever getting in there????",this.readyForStats)
+            if (this.ready_for_stats){
+                this.clearAllStats()
+                this.buildTable()
+                console.log("[3] BUILT TABLE",this.event_info)
+                this.buildDefaultValues()
+                const stat_params = {
+                    event_id: String(this.event_id),
+                    sport_route: String(this.sport_route)
+                }
+                console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
+                await this.setQueryLoading()
+                await this.getAllEventStatistics(stat_params)
+                this.ready_for_stats = false
+                if(this.results_payload){
+                    console.log("[4] GOT EVENT STATS",this.results_payload)
+                    // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
+                    if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
+                    else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
+                    else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
+                    else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
+                    else{
+                        return false
+                    }
+                    console.log("[5] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
+                    this.team_statistics = [this.payload_stats.team_statistics]
+                    this.opponent_score = (this.payload_stats.opponent_score)
+                    this.uprm_score = (this.payload_stats.uprm_score)
+                    return true
+                }
+                // console.log("[4] GOT EVENT STATS",this.results_payload)
+                // this.ready_for_stats = false
+
+            }
+
+        }
+    },
+  components:{
+      AddFinalScoreModal,
+      UpdateFinalScoreModal,
+      AddIndividualStatsModal,
+      UpdateIndividualStatsModal,
+      DeleteIndividualStatsModal,
+  },
+  methods: {
+
+    ...mapActions({
+        getAllEventStatistics:"results/getAllEventStatistics",
+        getEventInfo:"results/getEventInfo",
+        clearEventInfo:"results/clearEventInfo",
+        clearAllStats:"results/clearAllStats",
+        clearIndividualStats:"results/clearIndividualStats",
+        //newish
+        stopGetStats:"results/stopGetStats",
+        getTeamMembers:"results/getTeamMembers",
+        setNullTeamMembers:"results/setNullTeamMembers",
+        setQueryLoading:"results/setQueryLoading",
+        getIndividualStatistics:"results/getIndividualStatistics"
+    }),
+    async stat_refresh(){
+        this.clearAllStats()
+        // this.payload_stats = null
+        // this.team_statistics = null
+        const stat_params = {
+            event_id: String(this.event_id),
+            sport_route: String(this.sport_route)
+        }
+        console.log("[4Refresh.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
+        await this.setQueryLoading()
+        await this.getAllEventStatistics(stat_params)
+        this.ready_for_stats = false
+        if(this.results_payload){
+            console.log("[4Refresh] GOT EVENT STATS",this.results_payload)
+            // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
+            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
+            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
+            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
+            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
+            else{
+                return false
+            }
+            console.log("[5Refresh] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
+            this.team_statistics = [this.payload_stats.team_statistics]
+            // this.opponent_score = (this.payload_stats.opponent_score)
+            // this.uprm_score = (this.payload_stats.uprm_score)
+            return true
+        }
     },
     //confirm why this method was deprecated
-    buildDefault(){
-        if (this.sport_id!=''){
-            if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.editedItem = {
-                    "athlete_info": {
-                        "athlete_id": '',
-                        "basketball_event_id": '',
-                        "first_name": '',
-                        "last_names": '',
-                        "middle_name": '',
-                        "number": '',
-                        "profile_image_link":''
-                    },
-                    "statistics": {
-                        "assists":'',
-                        "blocks":'',
-                        "field_goal_attempt": '',
-                        "field_goal_percentage": '',
-                        "free_throw_attempt": '',
-                        "free_throw_percentage": '',
-                        "points":'',
-                        "rebounds": '',
-                        "steals": '',
-                        "successful_field_goal": '',
-                        "successful_free_throw": '',
-                        "successful_three_point": '',
-                        "three_point_attempt": '',
-                        "three_point_percentage": '',
-                        "turnovers": ''
-                    }
-                }
-            }
-            else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                this.editedItem = {
-                    "athlete_info": {
-                        "athlete_id": '',
-                        "first_name": '',
-                        "last_names": '',
-                        "middle_name": '',
-                        "number": '',
-                        "profile_image_link": '',
-                        "volleyball_event_id": ''
-                    },
-                    "statistics": {
-                        "aces": '',
-                        "assists":'',
-                        "attack_errors": '',
-                        "blocking_errors": '',
-                        "blocks": '',
-                        "digs": '',
-                        "kill_points": '',
-                        "reception_errors": '',
-                        "service_errors":''
-                    }
-                }
-            }
-            else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                this.editedItem = {
-                    "athlete_info": {
-                        "athlete_id": '',
-                        "first_name": '',
-                        "last_names": '',
-                        "middle_name": '',
-                        "number": '',
-                        "profile_image_link": '',
-                        "soccer_event_id": ''
-                    },
-                    "statistics": {
-                        "assists": '',
-                        "cards": '',
-                        "fouls": '',
-                        "goal_attempts": '',
-                        "successful_goals": '',
-                        "tackles": ''
-                    }
-                }
-            }
-            else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                this.editedItem = {
-                        "athlete_info": {
-                        "athlete_id": '',
-                        "baseball_event_id": '',
-                        "first_name": '',
-                        "last_names": '',
-                        "middle_name": '',
-                        "number": '',
-                        "profile_image_link": ''
-                        },
-                        "statistics": {
-                        "at_bats": '',
-                        "base_on_balls": '',
-                        "hits": '',
-                        "left_on_base": '',
-                        "runs": '',
-                        "runs_batted_in": '',
-                        "strikeouts":''
-                        }
-                    }
-                }
-            }
+    formated_event_info(){
+        if (this.sport_id != ''){
+            return true
+        }
+        else return false
+    },
+    formated_member_stats(){
+       if (this.payload_stats != ''){
+           if(this.refresh_stats){
+               console.log("[REF] WE SHOULDNT BE HERE YET")
+               this.stat_refresh()
+               this.refresh_stats = false
+           }
+           return true
+       }
+       else return false
+    },
+    formated_final_score(){
+        console.log("[FS] Do we have a final score?",this.uprm_score,this.opponent_score)
+        if(Number.isFinite(this.uprm_score)&&Number.isFinite(this.opponent_score)){
+            return true
+        }
+        else return false
+    },
+    formated_individual_stats(){
+        if (this.team_members_local != '' &&  this.payload_stats != ''){
+            return true
+        }
+        else return false
+    },
+    buildDefaultValues(){
+        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}
+        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_route = "volleyball"}
+        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_route = "soccer"}
+        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_route = "baseball"}
+        else{this.sport_route = ''}
     },
     buildTable(){
         // basketball
         if (this.sport_id!=''){
             if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -696,7 +512,7 @@ created(){
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Assists', value: 'basketball_statistics.assists'},
                 {text: 'Blocks', value: 'basketball_statistics.blocks'},
@@ -713,12 +529,12 @@ created(){
                 {text: 'Three Point Attempt', value: 'basketball_statistics.three_point_attempt'},
                 {text: 'Three Point Percentage(%)', value: 'basketball_statistics.three_point_percentage'},
                 {text: 'Turnovers', value: 'basketball_statistics.turnovers'},
-                { text: "Actions", value: "actions", sortable: false },
+               
 
                 ]
             }
             else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -739,7 +555,7 @@ created(){
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Kill Points', value: 'volleyball_statistics.kill_points'},
                 {text: 'Attack Errors', value: 'volleyball_statistics.attack_errors'},
@@ -750,12 +566,12 @@ created(){
                 {text: 'Blocks', value: 'volleyball_statistics.blocks'},
                 {text: 'Blocking Errors', value: 'volleyball_statistics.blocking_errors'},
                 {text: 'Reception Errors', value: 'volleyball_statistics.reception_errors'},
-                { text: "Actions", value: "actions", sortable: false },
+               
 
                 ]
             }
             else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -773,7 +589,7 @@ created(){
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Goal Attempts', value: 'soccer_statistics.goal_attempts'},
                 {text: 'Assists', value: 'soccer_statistics.assists'},
@@ -781,12 +597,11 @@ created(){
                 {text: 'Cards', value: 'soccer_statistics.cards'},
                 {text: 'Successful Goals', value: 'soccer_statistics.successful_goals'},
                 {text: 'Tackles', value: 'soccer_statistics.tackles'},
-                { text: "Actions", value: "actions", sortable: false },
-
+              
                 ]
             }
             else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                this.headers = 
+                this.headers =
                 [
                 // {
                 //     text:'Athlete',
@@ -805,7 +620,7 @@ created(){
                 { text: "Actions", value: "actions", sortable: false },
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'At Bats', value: 'baseball_statistics.at_bats'},
                 {text: 'Runs', value: 'baseball_statistics.runs'},
@@ -814,68 +629,57 @@ created(){
                 {text: 'Base On Balls', value: 'baseball_statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'baseball_statistics.strikeouts'},
                 {text: 'Left On Base', value: 'baseball_statistics.left_on_base'},
-                { text: "Actions", value: "actions", sortable: false },
+               
 
                 ]
             }
+            this.ready_for_table = true
         }
-          
-        
+
+
     },
 
 
-    // ...mapActions({
-    //   getUsers: "dashboardUsers/getUsers",
-    //   getPermissions: "dashboardUsers/getPermissions"
-    // }),
-    // setStatus(status) {
-    //   return status ? "Active" : "Inactive";
-    // },
+
     deleteAthleteStatistics(user) {
-       if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-            this.editedItemIndex = this.payload_stats.Basketball_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Basketball_Event_Statistics.athlete_statistic[this.editedItemIndex]
-        }
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-            this.editedItemIndex = this.payload_stats.Volleyball_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Volleyball_Event_Statistics.athlete_statistic[this.editedItemIndex]
-        }
-        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-            this.editedItemIndex = this.payload_stats.Soccer_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Soccer_Event_Statistics.athlete_statistic[this.editedItemIndex]
-        }
-        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-            this.editedItemIndex = this.payload_stats.Baseball_Event_Statistics.athlete_statistic.indexOf(user)
-            this.editedItem = this.payload_stats.Baseball_Event_Statistics.athlete_statistic[this.editedItemIndex]
-        }
-        //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-        //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
-        console.log(this.editedItem)
-        console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
+        this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user);
+        this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex];
+        console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM",this.editedItem)
+        console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
+        this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
+        // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
+        this.dialogDeleteIndividualStats = true;
     },
     deleteTeamStatistics(user) {
-       if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-            this.editedItem = this.payload_stats.Basketball_Event_Statistics.event_info
-        }
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-           this.editedItem = this.payload_stats.Volleyball_Event_Statistics.event_info
-        }
-        else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-            this.editedItem = this.payload_stats.Soccer_Event_Statistics.event_info
-        }
-        else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-           this.editedItem = this.payload_stats.Baseball_Event_Statistics.event_info
-        }
+        this.editedItem = this.payload_stats.event_info
         //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
         //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
         console.log(this.editedItem)
         console.log("Will Remove Team Statistics for Event ID("+(this.editedItem.event_id)+").")
     },
-    editAthleteStatistics(user) {
+    async editAthleteStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push("/resultados/"+this.event_id+"/individual/editar")
+        this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user);
+        this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex];
+        console.log("THIS IS THE EDITED ITEM",this.editedItem)
+        console.log("THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
+        this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
+        const param_json = {
+            sport_route: this.sport_route,
+            event_id:this.event_id,
+            athlete_id:this.edited_athlete_id
+        }
+        console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json)
+        this.clearIndividualStats()
+        this.setQueryLoading()
+        await this.getIndividualStatistics(param_json)
+        console.log("[EDIT INDIVIDUAL -INDEX] SHOULD HAVE GOTTEN , THEY ARE:",this.individual_stats)
+        // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
+        this.current_individual_stats = this.individual_stats;
+        this.dialogEditIndividualStats = true;
+        // this.$router.push("/resultados/"+this.event_id+"/individual/editar")
     },
     editTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
@@ -883,11 +687,13 @@ created(){
     //   this.dialogEdit = true;
         return
     },
-    addAthleteStatistics(user) {
+    addAthleteStatistics() {
     //   this.editedItemIndex = this.users.indexOf(user)
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogEdit = true;
-        this.$router.push("/resultados/"+this.event_id+"/individual/crear")
+        // this.$router.push("/resultados/"+this.event_id+"/individual/crear")
+        console.log("[TM-ADD_STATS(INDEX)]",this.team_members_local)
+        this.dialogAddIndividualStats = true;
     },
     addTeamStatistics(user) {
     //   this.editedItemIndex = this.users.indexOf(user)
@@ -896,10 +702,12 @@ created(){
         return
     },
     addFinalScore() {
-        this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
+        // this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
+        this.dialogAddFinalScore = true;
     },
     editFinalScore() {
-        this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
+        this.dialogEditFinalScore = true;
+        // this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
     },
     // editPermissions(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
@@ -909,344 +717,19 @@ created(){
     //   console.log('reset')
     // },
     // Herbert Functions
-    getSeasonData(){
-        //console.log(this.season)
-        // TODO: CHANGE SO NOT HARDCODED IDS
-		if(this.sport_id!=''){
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.payload_stats = {// payload_stats.Basketball_Event_Statistics.athlete_statistic.statistics.
-                    "Basketball_Event_Statistics": {
-                        "athlete_statistic": [
-                        {
-                            "athlete_info": {
-                                "athlete_id": 4,
-                                "basketball_event_id": 16,
-                                "first_name": "Larry",
-                                "last_names": "Bird",
-                                "middle_name": null,
-                                "number": 33,
-                                "profile_image_link": null
-                            },
-                            "statistics": {
-                                "assists": 2,
-                                "blocks": 2,
-                                "field_goal_attempt": 2,
-                                "field_goal_percentage": 100.0,
-                                "free_throw_attempt": 2,
-                                "free_throw_percentage": 100.0,
-                                "points": 2,
-                                "rebounds": 2,
-                                "steals": 2,
-                                "successful_field_goal": 2,
-                                "successful_free_throw": 2,
-                                "successful_three_point": 2,
-                                "three_point_attempt": 2,
-                                "three_point_percentage": 100.0,
-                                "turnovers": 2
-                            }
-                        },
-                        {
-                            "athlete_info": {
-                                "athlete_id": 8,
-                                "basketball_event_id": 17,
-                                "first_name": "Bruce",
-                                "last_names": "Wayne",
-                                "middle_name": "Batman",
-                                "number": 27,
-                                "profile_image_link": "dccomics.com"
-                            },
-                            "statistics": {
-                                "assists": 1,
-                                "blocks": 1,
-                                "field_goal_attempt": 1,
-                                "field_goal_percentage": 100.0,
-                                "free_throw_attempt": 1,
-                                "free_throw_percentage": 100.0,
-                                "points": 1,
-                                "rebounds": 1,
-                                "steals": 1,
-                                "successful_field_goal": 1,
-                                "successful_free_throw": 1,
-                                "successful_three_point": 1,
-                                "three_point_attempt": 1,
-                                "three_point_percentage": 100.0,
-                                "turnovers": 1
-                            }
-                        }
-                        ],
-                        "event_info": {
-                            "basketball_event_team_stats_id": 7,
-                            "event_id": 5
-                        },
-                        "opponent_score": 1,
-                        "team_statistics": {
-                            "basketball_statistics": {
-                                "assists": 500,
-                                "blocks": 500,
-                                "field_goal_attempt": 500,
-                                "field_goal_percentage": 100.0,
-                                "free_throw_attempt": 500,
-                                "free_throw_percentage": 100.0,
-                                "points": 500,
-                                "rebounds": 500,
-                                "steals": 500,
-                                "successful_field_goal": 500,
-                                "successful_free_throw": 500,
-                                "successful_three_point": 500,
-                                "three_point_attempt": 500,
-                                "three_point_percentage": 100.0,
-                                "turnovers": 500
-                            }
-                        },
-                        "uprm_score": 5073
-                    }   
-                }
-                this.team_statistics.push(this.payload_stats.Basketball_Event_Statistics.team_statistics)
-                this.opponent_score = (this.payload_stats.Basketball_Event_Statistics.opponent_score)
-                this.uprm_score = (this.payload_stats.Basketball_Event_Statistics.uprm_score)
-                // this.opponent_name = (this.payload_stats.Basketball_Event_Statistics.opponent_name)
-                
-            }
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                this.payload_stats = {
-                    "Volleyball_Event_Statistics": {
-                        "athlete_statistic": [
-                        {
-                            "athlete_info": {
-                                "athlete_id": 70,
-                                "first_name": "Jill",
-                                "last_names": "Valentine",
-                                "middle_name": null,
-                                "number": null,
-                                "profile_image_link": null,
-                                "volleyball_event_id": 3
-                            },
-                            "statistics": {
-                                "aces": 1,
-                                "assists": 1,
-                                "attack_errors": 1,
-                                "blocking_errors": 1,
-                                "blocks": 1,
-                                "digs": 1,
-                                "kill_points": 1,
-                                "reception_errors": 1,
-                                "service_errors": 1
-                            }
-                        },
-                        {
-                            "athlete_info": {
-                                "athlete_id": 71,
-                                "first_name": "Claire",
-                                "last_names": "Redfield",
-                                "middle_name": null,
-                                "number": null,
-                                "profile_image_link": null,
-                                "volleyball_event_id": 4
-                            },
-                            "statistics": {
-                                "aces": 3,
-                                "assists": 3,
-                                "attack_errors": 3,
-                                "blocking_errors": 3,
-                                "blocks": 3,
-                                "digs": 3,
-                                "kill_points": 3,
-                                "reception_errors": 3,
-                                "service_errors": 3
-                            }
-                        }
-                        ],
-                        "event_info": {
-                            "event_id": 7,
-                            "volleyball_event_team_stats_id": 1
-                        },
-                        "opponent_score": 500,
-                        "team_statistics": {
-                        "volleyball_statistics": {
-                            "aces": 1,
-                            "assists": 1,
-                            "attack_errors": 1,
-                            "blocking_errors": 1,
-                            "blocks": 1,
-                            "digs": 1,
-                            "kill_points": 1,
-                            "reception_errors": 1,
-                            "service_errors": 1
-                            }
-                        },
-                        "uprm_score": 200
-                    }
-                }
-                this.team_statistics.push(this.payload_stats.Volleyball_Event_Statistics.team_statistics)
-                this.opponent_score = (this.payload_stats.Volleyball_Event_Statistics.opponent_score)
-                this.uprm_score = (this.payload_stats.Volleyball_Event_Statistics.uprm_score)
-                // this.opponent_name = (this.payload_stats.Volleyball_Event_Statistics.opponent_name)
-            }
-            else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                this.payload_stats = {
-                    "Soccer_Event_Statistics": {
-                        "athlete_statistic": [
-                        {
-                            "athlete_info": {
-                                "athlete_id": 73,
-                                "first_name": "Sheva",
-                                "last_names": "Alomar",
-                                "middle_name": null,
-                                "number": null,
-                                "profile_image_link": null,
-                                "soccer_event_id": 9
-                            },
-                            "statistics": {
-                                "assists": 1,
-                                "cards": 1,
-                                "fouls": 1,
-                                "goal_attempts": 1,
-                                "successful_goals": 1,
-                                "tackles": 1
-                            }
-                        },
-                        {
-                            "athlete_info": {
-                                "athlete_id": 74,
-                                "first_name": "Ada",
-                                "last_names": "Wong",
-                                "middle_name": null,
-                                "number": null,
-                                "profile_image_link": null,
-                                "soccer_event_id": 10
-                            },
-                            "statistics": {
-                                "assists": 2,
-                                "cards": 2,
-                                "fouls": 2,
-                                "goal_attempts": 2,
-                                "successful_goals": 2,
-                                "tackles": 2
-                            }
-                        }
-                        ],
-                        "event_info": {
-                            "event_id": 10,
-                            "soccer_event_team_stats_id": 5
-                        },
-                        "opponent_score": 50,
-                        "team_statistics": {
-                        "soccer_statistics": {
-                            "assists": 10,
-                            "cards": 10,
-                            "fouls": 20,
-                            "goal_attempts": 50,
-                            "successful_goals": 30,
-                            "tackles": 20
-                        }
-                        },
-                        "uprm_score": 100
-                    }
-                }
-                this.team_statistics.push(this.payload_stats.Soccer_Event_Statistics.team_statistics)
-                this.opponent_score = (this.payload_stats.Soccer_Event_Statistics.opponent_score)
-                this.uprm_score = (this.payload_stats.Soccer_Event_Statistics.uprm_score)
-                // this.opponent_name = (this.payload_stats.Soccer_Event_Statistics.opponent_name)
-            }
-            else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                this.payload_stats = {
-                    "Baseball_Event_Statistics": {
-                        "athlete_statistic": [
-                        {
-                            "athlete_info": {
-                            "athlete_id": 104,
-                            "baseball_event_id": 11,
-                            "first_name": "Leon ",
-                            "last_names": "Kennedy",
-                            "middle_name": null,
-                            "number": 2,
-                            "profile_image_link": null
-                            },
-                            "statistics": {
-                            "at_bats": 1,
-                            "base_on_balls": 1,
-                            "hits": 1,
-                            "left_on_base": 1,
-                            "runs": 1,
-                            "runs_batted_in": 1,
-                            "strikeouts": 1
-                            }
-                        },
-                        {
-                            "athlete_info": {
-                            "athlete_id": 105,
-                            "baseball_event_id": 12,
-                            "first_name": "Nemesis",
-                            "last_names": "Tyrant",
-                            "middle_name": null,
-                            "number": 3,
-                            "profile_image_link": null
-                            },
-                            "statistics": {
-                            "at_bats": 1,
-                            "base_on_balls": 1,
-                            "hits": 1,
-                            "left_on_base": 1,
-                            "runs": 1,
-                            "runs_batted_in": 1,
-                            "strikeouts": 1
-                            }
-                        }
-                        ],
-                        "event_info": {
-                        "baseball_event_team_stats_id": 3,
-                        "event_id": 24
-                        },
-                        "opponent_score": 100,
-                        "team_statistics": {
-                        "baseball_statistics": {
-                            "at_bats": 1,
-                            "base_on_balls": 1,
-                            "hits": 1,
-                            "left_on_base": 1,
-                            "runs": 1,
-                            "runs_batted_in": 1,
-                            "strikeouts": 1
-                        }
-                        },
-                        "uprm_score": 100
-                    }
-                }
-                this.team_statistics.push(this.payload_stats.Baseball_Event_Statistics.team_statistics)
-                this.opponent_score = (this.payload_stats.Baseball_Event_Statistics.opponent_score)
-                this.uprm_score = (this.payload_stats.Baseball_Event_Statistics.uprm_score)
-                // this.opponent_name = (this.payload_stats.Baseball_Event_Statistics.opponent_name)
-            }
-        }
-            
-    }
+
   },
   computed: {
-    // ...mapGetters({
-    //   users: "dashboardUsers/users",
-    //   isLoadingU: "dashboardUsers/isLoadingU"
-    // })
-    // a computed getter
-    isBasketballTable: function () {
-      // `this` points to the vm instance
-      return (this.payload_stats != '' && (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF))
-    },
-    isVolleyballTable: function () {
-      // `this` points to the vm instance
-      return (this.payload_stats != '' && (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF))
-    },
-    isSoccerTable: function () {
-      // `this` points to the vm instance
-      return (this.payload_stats != '' && (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF))
-    },
-    isBaseballTable: function () {
-      // `this` points to the vm instance
-      return (this.payload_stats != '' && (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF))
-    }
+    ...mapGetters({
+        results_payload:"results/results_payload",
+        event_info:"results/event_info",
+        team_members:"results/team_members",
+        loadingQuery:"results/loadingQuery",
+        individual_stats:"results/individual_stats",
+    })
+
+
   },
-//   mounted() {
-//     this.getUsers();
-//   }
 };
 </script>
 

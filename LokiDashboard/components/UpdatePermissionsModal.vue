@@ -4,11 +4,11 @@
       <v-card>
         <v-toolbar flat color="primary_dark">
           <v-toolbar-title class="headline white--text">
-            User Permissions
+            Permisos de Usuario
           </v-toolbar-title>
         </v-toolbar>
         <v-card-title class="headline text--secondary">
-          {{ username }}'s System Permissions
+          Permisos de {{ username }} en el sistema.
         </v-card-title>
         <v-card-text>
           <v-container
@@ -17,21 +17,21 @@
           >
             <v-row align="center">
               <v-col cols="12" sm="4">
-                <h2 class="font-weight-medium" v-text="'Events:'"></h2>
+                <h2 class="font-weight-medium" v-text="'Eventos:'"></h2>
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Add"
+                label="Añadir"
                 v-model="permissions[0].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Delete"
+                label="Borrar"
                 v-model="permissions[1].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Modify"
+                label="Modificar"
                 v-model="permissions[2].is_invalid"
               ></v-checkbox>
             </v-row>
@@ -41,88 +41,88 @@
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Add"
+                label="Añadir"
                 v-model="permissions[3].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Delete"
+                label="Borrar"
                 v-model="permissions[4].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Modify"
+                label="Modificar"
                 v-model="permissions[5].is_invalid"
               ></v-checkbox>
             </v-row>
             <v-row align="center">
               <v-col cols="12" sm="4">
-                <h2 class="font-weight-medium" v-text="'Statistics:'"></h2>
+                <h2 class="font-weight-medium" v-text="'Estadísticas:'"></h2>
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Add"
+                label="Añadir"
                 v-model="permissions[6].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Delete"
+                label="Borrar"
                 v-model="permissions[7].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Modify"
+                label="Modificar"
                 v-model="permissions[8].is_invalid"
               ></v-checkbox>
             </v-row>
             <v-row align="center">
               <v-col cols="12" sm="4">
-                <h2 class="font-weight-medium" v-text="'Users:'"></h2>
+                <h2 class="font-weight-medium" v-text="'Usuarios:'"></h2>
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Add"
+                label="Añadir"
                 v-model="permissions[9].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Delete"
+                label="Borrar"
                 v-model="permissions[10].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Modify"
+                label="Modificar"
                 v-model="permissions[11].is_invalid"
               ></v-checkbox>
             </v-row>
             <v-row align="center">
               <v-col cols="12" sm="4">
-                <h2 class="font-weight-medium" v-text="'Profiles:'"></h2>
+                <h2 class="font-weight-medium" v-text="'Perfiles:'"></h2>
               </v-col>
               <v-checkbox
                 class="mx-3"
-                label="Add"
+                label="Añadir"
                 v-model="permissions[12].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Delete"
+                label="Borrar"
                 v-model="permissions[13].is_invalid"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
-                label="Modify"
+                label="Modificar"
                 v-model="permissions[14].is_invalid"
               ></v-checkbox>
             </v-row>
-            <v-checkbox v-model="reviewed" label="I have reviewed my changes.">
+            <v-checkbox v-model="reviewed" label="He revisado mis cambios.">
 
             </v-checkbox>
           </v-container>
           <v-container class="text-center" v-else>
             <v-row align="center">
               <v-col justify="center">
-                <h3 class="font-weight-light">Loading Permissions...</h3>
+                <h3 class="font-weight-light">Cargando Permisos...</h3>
               </v-col>
             </v-row>
             <v-progress-circular
@@ -134,7 +134,7 @@
         <v-card-actions >
           <v-spacer></v-spacer>
           <v-btn color="primary ligthen-1" text @click="close()">
-            Close
+            Cerrar
           </v-btn>
           <v-btn
             color="primary ligthen-1"
@@ -143,7 +143,7 @@
             :loading="isLoading"
             :disabled="!reviewed"
           >
-            Save
+            Guardar
           </v-btn>
         </v-card-actions>
       </v-card>

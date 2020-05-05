@@ -268,11 +268,16 @@ export default {
             }
             let athlete_index = -1;
             for (let athlete in state.uprmRoster) {
-                if (state.uprmRoster[athlete].number === currentAction.number) {
+                if (state.uprmRoster[athlete].key == currentAction.athlete_id) {
                     athlete_index = athlete;
                     break;
                 }
             }
+            // Continue when an athlete has been removed.
+            if (athlete_index === -1) {
+                continue;
+            }
+
             switch (currentAction.action_type) {
                 case "KillPoint":
                     result[athlete_index].killPoints++;
@@ -352,11 +357,17 @@ export default {
             }
             let athlete_index = -1;
             for (let athlete in state.oppRoster) {
-                if (state.oppRoster[athlete].number === currentAction.number) {
+                if (state.oppRoster[athlete].key == currentAction.athlete_id) {
                     athlete_index = athlete;
                     break;
                 }
             }
+
+            // Continue when an athlete has been removed.
+            if (athlete_index === -1) {
+                continue;
+            }
+
             switch (currentAction.action_type) {
                 case "KillPoint":
                     result[athlete_index].killPoints++;

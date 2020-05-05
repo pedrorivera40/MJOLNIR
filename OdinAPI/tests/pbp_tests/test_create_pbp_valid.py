@@ -14,7 +14,7 @@ class TestCreateVolleyballPBP(unittest.TestCase):
     def test_create_pbp_valid(self):
         response = self.client.post('/pbp/Voleibol', data=json.dumps(
             data["valid_id"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin: La secuencia PBP para " + \
+        expected_msg = "La secuencia PBP para " + \
             str(data["valid_id"]["event_id"]) + " se ha creado exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])

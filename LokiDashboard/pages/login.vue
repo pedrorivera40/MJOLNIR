@@ -2,38 +2,38 @@
   <div class="wrapper d-flex align-center justify-center">
     <v-card width="500" class="elevation-12 mx-auto">
       <v-toolbar color="primary" dark flat>
-        <v-toolbar-title @click="setSnackbar({text:'hello'})">Login</v-toolbar-title>
+        <v-toolbar-title>Login</v-toolbar-title>
         <v-spacer />
       </v-toolbar>
       <v-card-text>
         <v-container>
           <v-form v-model="valid">
             <v-text-field
-              label="Username"
+              label="Nombre de usuario"
               name="login"
               prepend-icon="mdi-account"
               type="text"
               v-model="username"
-              :rules="[required('username')]"
+              :rules="[required('Nombre de usuario', 'Debe ingresar un nombre de usuario.')]"
             />
 
             <v-text-field
               id="password"
-              label="Password"
+              label="Contraseña"
               name="password"
               prepend-icon="mdi-lock"
               :append-icon=" show ? 'mdi-eye-off' : 'mdi-eye'"
               :type="show ? 'text' : 'password'"
               v-model="password"
               @click:append="show=!show"
-              :rules="[required('password')]"
+              :rules="[required('Contraseña', 'Debe ingresar una contraseña.')]"
             />
           </v-form>
         </v-container>
       </v-card-text>
       <v-card-actions>
-        <nuxt-link class="ml-6" to="/activate">
-          Activate account.
+        <nuxt-link class="ml-6" to="/activar">
+          Activar cuenta.
         </nuxt-link>
         <v-spacer />
         <v-btn
@@ -59,8 +59,8 @@ export default {
     return {
       valid: false,
       show: false,
-      username: "newUser27",
-      password: "ninjaTurtles1!",
+      username: "",
+      password: "",
       ...rules,
     };
   },

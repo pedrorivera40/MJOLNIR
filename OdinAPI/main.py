@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify
 
 from flask_cors import CORS
 import os
@@ -6,6 +6,7 @@ import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
 from auth import verifyHash, generateToken, verifyToken
+from customSession import CustomSession
 from functools import wraps
 from dotenv import load_dotenv
 import os
@@ -28,8 +29,8 @@ load_dotenv()
 
 
 app = Flask(__name__)
-app.secret_key = 'any random string'
-
+app.secret_key = os.getenv('SECRET_KEY')
+session =  CustomSession(app.secret_key)
 CORS(app)
 
 
@@ -117,7 +118,9 @@ def auth():
             return jsonify(Error='Bad Request.'), 400
 
         username = req['username']
-        password = req['password']  # TODO: AES Encryption
+        password = req['password'] # TODO: AES Encryption
+        session.setVal('username', username)
+        print(session.getVal('username'))
         return handler.login(username, password)
 
 
@@ -130,6 +133,7 @@ def allUsers():
 
     handler = UserHandler()
     if request.method == 'GET':
+        print(session.getVal('username'))
         # For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
@@ -139,7 +143,7 @@ def allUsers():
         # Check the request contains the right structure.
         if 'username' not in req or 'full_name' not in req or 'email' not in req or 'password' not in req:
             return jsonify(Error='Bad Request.'), 400
-
+        
         # For account creation
         return handler.addDashUser(req['username'], req['full_name'], req['email'], req['password'])
 
@@ -657,18 +661,28 @@ def basketballAggregateTeamStatistics():
 def pbp_sequence(sport):
 
     body = request.get_json()
+    args = request.args
     handler = None
+    event_id = None
 
     # Assign proper handler.
     if sport == "Voleibol":
         handler = VolleyballPBPHandler()
     else:
-        return jsonify(ERROR="Odin: El deporte seleccionado no tiene cobertura jugada a jugada."), 400
+        return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
-    if len(body) != 1 or "event_id" not in body:
-        return jsonify(ERROR = "Bad request."),400
+    if request.method == 'DELETE':
+        if len(args) != 1 or "event_id" not in args or len(body) != 0:
+            return jsonify(ERROR="Error en la petición. Solo debe proveerse un argumento en el cuerpo."), 400
 
-    event_id = body["event_id"]
+        event_id = args["event_id"]
+
+    else:
+        if len(body) != 1 or "event_id" not in body or len(args) != 0:
+            return jsonify(ERROR="Error en la petición. Solo debe proveerse un argumento en el cuerpo."), 400
+
+        event_id = body["event_id"]
+
     if request.method == 'POST':
         return handler.startPBPSequence(event_id)
 
@@ -678,60 +692,81 @@ def pbp_sequence(sport):
 @app.route("/pbp/<string:sport>/set", methods=['PUT'])
 def volleyball_pbp_set_current_set(sport):
     body = request.get_json()
+    args = request.args
     handler = None
+
+    if len(args) != 0:
+        return jsonify(ERROR="No se aceptan argumentos en esta ruta."), 400
 
     # Assign proper handler.
     if sport == "Voleibol":
         handler = VolleyballPBPHandler()
     else:
-        return jsonify(ERROR="Odin: El deporte seleccionado no tiene cobertura jugada a jugada."), 400
+        return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
     if len(body) == 2 and "adjust" in body and "event_id" in body:
         return handler.adjustCurrentSet(body["event_id"], body["adjust"])
 
-    return jsonify(ERROR="Odin: Error en la solicitud. Se debe enviar ambos ID del evento y cantidad a ser ajustada."), 400
+    return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y cantidad a ser ajustada."), 400
 
 
 @app.route("/pbp/<string:sport>/color", methods=['PUT'])
 def pbp_set_color(sport):
     body = request.get_json()
+    args = request.args
     handler = None
+
+    if len(args) != 0:
+        return jsonify(ERROR="No se aceptan argumentos en esta ruta."), 400
 
     # Assign proper handler.
     if sport == "Voleibol":
         handler = VolleyballPBPHandler()
     else:
-        return jsonify(ERROR="Odin: El deporte seleccionado no tiene cobertura jugada a jugada."), 400
+        return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
     if len(body) == 2 and "color" in body and "event_id" in body:
         return handler.setOpponentColor(body["event_id"], body["color"])
 
-    return jsonify(ERROR="Odin: Error en la solicitud. Se debe enviar ambos ID del evento y color en formato HEX."), 400
+    return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y color en formato HEX."), 400
 
 
 @app.route("/pbp/<string:sport>/roster", methods=['POST', 'DELETE'])
 def pbp_roster(sport):
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
     body = request.get_json()
+    args = request.args
     handler = None
+    team = None
+    event_id = None
 
     # Assign proper handler.
     if sport == "Voleibol":
         handler = VolleyballPBPHandler()
     else:
-        return jsonify(ERROR="Odin: El deporte seleccionado no tiene cobertura jugada a jugada."), 400
+        return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
-    # Validate team is given within request body.
-    if not "team" in body or not "event_id" in body:
-        return jsonify(ERROR="Odin: Error en la solicitud. Se debe enviar ambos ID del evento y nombre de equipo."), 400
+    if request.method == 'DELETE':
+        # Validate team is given within request body.
+        if not "team" in args or not "event_id" in args or len(body) != 0:
+            return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y nombre de equipo como argumentos."), 400
 
-    team = body["team"]
-    event_id = body["event_id"]
+        team = args["team"]
+        event_id = args["event_id"]
+
+    else:
+
+        # Validate team is given within request body.
+        if not "team" in body or not "event_id" in body or len(args) != 0:
+            return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y nombre de equipo en el cuerpo."), 400
+
+        team = body["team"]
+        event_id = body["event_id"]
 
     if request.method == 'POST':
         # Validate data is present in body.
         if len(body) != 3 or not "data" in body:
-            return jsonify(ERROR="Odin: Error en la solicitud. Se debe enviar el ID del evento, nombre de equipo, y data."), 400
+            return jsonify(ERROR="Error en la solicitud. Se debe enviar el ID del evento, nombre de equipo, y data."), 400
 
         data = body["data"]
 
@@ -743,13 +778,13 @@ def pbp_roster(sport):
             return handler.setOppPlayer(event_id, data)
 
         # Team not recognized.
-        return jsonify(ERROR="Odin: Error en la solicitud. Nombre de equipo es invalido."), 400
+        return jsonify(ERROR="Error en la solicitud. Nombre de equipo es invalido."), 400
 
     # Validate athlete id is given.
-    if len(body) != 3 or "athlete_id" not in body:
-        return jsonify(ERROR="Odin: Error en la solicitud. Valores para nombre de equipo, ID del evento, y ID de atleta deben ser proporcionados."), 400
+    if len(args) != 3 or "athlete_id" not in args:
+        return jsonify(ERROR="Error en la solicitud. Valores para nombre de equipo, ID del evento, y ID de atleta deben ser proporcionados."), 400
 
-    athlete_id = body["athlete_id"]
+    athlete_id = args["athlete_id"]
 
     if team == "uprm":
         return handler.removeUPRMPlayer(event_id, athlete_id)
@@ -758,62 +793,78 @@ def pbp_roster(sport):
         return handler.removeOppPlayer(event_id, athlete_id)
 
     # Team not recognized.
-    return jsonify(ERROR="Odin: Error en la solicitud. Nombre de equipo es invalido."), 400
+    return jsonify(ERROR="Error en la solicitud. Nombre de equipo es invalido."), 400
 
 
 @app.route("/pbp/<string:sport>/actions", methods=['POST', 'PUT', 'DELETE'])
 def pbp_actions(sport):
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
     body = request.get_json()
+    args = request.args
 
-    # Validate event id is present in body.
-    if "event_id" not in body:
-        return jsonify(ERROR="Odin: Error en la solicitud. No se encontró valor de ID del evento."), 400
+    event_id = None
 
-    event_id = body["event_id"]
+    if request.method == 'DELETE':
+        # Validate event id is present in args.
+        if "event_id" not in args:
+            return jsonify(ERROR="Error en la solicitud. No se encontró valor de ID del evento."), 400
+
+        event_id = args["event_id"]
+
+    else:
+
+        # Validate event id is present in body.
+        if "event_id" not in body:
+            return jsonify(ERROR="Error en la solicitud. No se encontró valor de ID del evento."), 400
+
+        event_id = body["event_id"]
 
     # Assign proper handler.
     if sport == "Voleibol":
         handler = VolleyballPBPHandler()
     else:
-        return jsonify(ERROR="Odin: El deporte seleccionado no tiene cobertura jugada a jugada."), 400
+        return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
     if request.method == 'POST':
         # Validate action data is present in request body.
         if len(body) != 2 or "data" not in body:
-            return jsonify(ERROR="Odin: Error en la solicitud. Se deben incluir el ID del evento y el valor de data."), 400
+            return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el valor de data en el cuerpo."), 400
 
         return handler.addPBPAction(event_id, body["data"])
 
     if request.method == 'PUT':
         # Validate data and action id are present in request body.
-        if len(body) != 3 or "data" not in body or "action_id" not in body:
-            return jsonify(ERROR="Odin: Error en la solicitud. Se deben incluir el ID del evento, ID de la acción y el valor de data."), 400
+        if len(body) != 3 or "data" not in body or "action_id" not in body or len(args) != 0:
+            return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento, ID de la acción y el valor de data en el cuerpo."), 400
 
         return handler.editPBPAction(event_id, body["action_id"], body["data"])
 
     # For delete, validate action id is present in body.
-    if len(body) != 2 or "action_id" not in body:
-        return jsonify(ERROR="Odin: Error en la solicitud. Se deben incluir el ID del evento y el ID de la acción."), 400
+    if len(args) != 2 or "action_id" not in args or len(body) != 0:
+        return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el ID de la acción como argumentos."), 400
 
-    return handler.removePlayPBPAction(event_id, body["action_id"])
+    return handler.removePlayPBPAction(event_id, args["action_id"])
 
 
 @app.route("/pbp/<string:sport>/end", methods=['POST'])
 def pbp_end(sport):
     body = request.get_json()
+    args = request.args
     handler = None
+
+    if len(args) != 0:
+        return jsonify(ERROR="No se aceptan argumentos en esta ruta."), 400
 
     # Assign proper PBP handler.
     if sport == "Voleibol":
         handler = VolleyballPBPHandler()
     else:
-        return jsonify(ERROR="Odin: El deporte seleccionado no tiene cobertura jugada a jugada."), 400
+        return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
     if len(body) == 1 and "event_id" in body:
         return handler.setPBPSequenceOver(body["event_id"])
 
-    return jsonify(ERROR="Odin: Error en la solicitud. Se debe incluir solamente el ID del evento."), 400
+    return jsonify(ERROR="Error en la solicitud. Se debe incluir solamente el ID del evento."), 400
 
 
 # ===================================================================================
@@ -1892,51 +1943,57 @@ def baseballAggregateTeamStatistics():
 # Launch app.
 @app.route("/sports", methods=['GET'])
 def get_sports():
+
     if request.method == 'GET':
         body = request.get_json()
+        args = request.args
         handler = SportHandler()
 
-        if not body:
+        if body:
+            return jsonify(ERROR="No se aceptan parámetros."), 400
+
+        if len(args) == 0:
             return handler.getAllSports()
 
-        if len(body) == 1:
+        if len(args) == 1:
 
-            if 'branch' in body:
+            if 'branch' in args:
                 # Validate branch type.
-                if not isinstance(body['branch'], str):
-                    return jsonify(ERROR="Odin: Error en la solicitud. La rama deportiva debe ser una secuencia de caracteres."), 400
+                if not isinstance(args['branch'], str):
+                    return jsonify(ERROR="Error en la solicitud. La rama deportiva debe ser una secuencia de caracteres."), 400
 
-                return handler.getSportsByBranch(body['branch'])
+                return handler.getSportsByBranch(args['branch'])
 
-            if 'sport_name' in body:
+            if 'sport_name' in args:
                 # Validate sport_name type.
-                if not isinstance(body['sport_name'], str):
-                    return jsonify(ERROR="Odin: Error en la solicitud. El nombre del deporte debe ser una secuencia de caracteres."), 400
+                if not isinstance(args['sport_name'], str):
+                    return jsonify(ERROR="Error en la solicitud. El nombre del deporte debe ser una secuencia de caracteres."), 400
 
-                return handler.getSportByName(body['sport_name'])
+                return handler.getSportByName(args['sport_name'])
 
-            if 'sport_id' in body:
+            if 'sport_id' in args:
                 # Validate sport_name type.
-                if not isinstance(body['sport_id'], int):
-                    return jsonify(ERROR="Odin: Error en la solicitud. El ID del deporte debe ser un entero."), 400
+                if not args['sport_id'].isdigit():
+                    return jsonify(ERROR="Error en la solicitud. El ID del deporte debe ser un entero."), 400
 
-                return handler.getSportById(body['sport_id'])
+                return handler.getSportById(args['sport_id'])
 
-        return jsonify(ERROR="Odin: Error en la solicitud. Debe proveerse un valor (rama deportiva o nombre del deporte)."), 400
+        return jsonify(ERROR="Error en la solicitud. Debe proveerse un valor (rama deportiva o nombre del deporte) como argumento."), 400
 
-    return jsonify(ERROR="Odin: Método HTTP no autorizado."), 405
+    return jsonify(ERROR="Método HTTP no autorizado."), 405
 
 
 @app.route("/sports/details", methods=['GET'])
 def get_sport_info():
     if request.method == 'GET':
+        args = request.args
         body = request.get_json()
-        if not body:
+        if not body and not args:
             return SportHandler().getSportCategoriesPositions()
 
-        return jsonify(ERROR="Odin: Error en la solicitud. No se permiten parámetros."), 400
+        return jsonify(ERROR="Error en la solicitud. No se permiten parámetros."), 400
 
-    return jsonify(ERROR="Odin: Método HTTP no autorizado."), 405
+    return jsonify(ERROR="Método HTTP no autorizado."), 405
 
 
 # ===================================================================================

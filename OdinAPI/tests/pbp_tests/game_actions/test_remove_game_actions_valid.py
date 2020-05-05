@@ -24,8 +24,8 @@ class TestRemoveValidVolleyballPBP(unittest.TestCase):
         self._rtdb.reference(data["content_to_valid_edit"]["path"]).set(
             data["content_to_valid_edit"]["data"])
         # Try to remove it.
-        response = self.client.delete('/pbp/Voleibol/actions', data=json.dumps(
-            data["valid_to_remove"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin: Se ha removido la acción exitosamente."
+        response = self.client.delete('/pbp/Voleibol/actions?event_id=28&action_id=25', data=json.dumps(
+            {}), content_type='application/json', follow_redirects=True)
+        expected_msg = "Se ha removido la acción exitosamente."
         self.assertEqual(response.status_code, 200)
         self.assertMultiLineEqual(expected_msg, response.json["MSG"])

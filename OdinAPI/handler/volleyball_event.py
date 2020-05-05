@@ -640,7 +640,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         # TODO: (Luis) Need EventDAO method to obtain team ID
         try:
-            t_dao = TeamDAO()
+            e_dao = EventDAO()
             tID = e_dao.getEventTeamByID(eID)
         except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
@@ -650,7 +650,8 @@ class VolleyballEventHandler(EventResultHandler):
         # Validate that the event belongs to the correct sport.
         # TODO: (Herbert) Need TeamDAO to return sport_id of a team.
         try:
-            sID = t_dao.getTeamSportByID(tID)
+            t_dao = TeamDAO()
+            sID = t_dao.getTeamSportByID(tID)[0]
             if sID != VOLLEYBALL_IDF and sID != VOLLEYBALL_IDM:
                 return jsonify(Error="Malformed Query, Event ID:{} does not belong to Volleyball.".format(eID)), 400
         except (TypeError, ValueError):
@@ -792,7 +793,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         # TODO: (Luis) Need EventDAO method to obtain team ID
         try:
-            t_dao = TeamDAO()
+            e_dao = EventDAO()
             tID = e_dao.getEventTeamByID(eID)
         except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
@@ -802,7 +803,8 @@ class VolleyballEventHandler(EventResultHandler):
         # Validate that the event belongs to the correct sport.
         # TODO: (Herbert) Need TeamDAO to return sport_id of a team.
         try:
-            sID = t_dao.getTeamSportByID(tID)
+            t_dao = TeamDAO()
+            sID = t_dao.getTeamSportByID(tID)[0]
             if sID != VOLLEYBALL_IDF and sID != VOLLEYBALL_IDM:
                 return jsonify(Error="Malformed Query, Event ID:{} does not belong to Volleyball.".format(eID)), 400
         except (TypeError, ValueError):
@@ -893,7 +895,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         # TODO: (Luis) Need EventDAO method to obtain team ID
         try:
-            t_dao = TeamDAO()
+            e_dao = EventDAO()
             tID = e_dao.getEventTeamByID(eID)
         except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
@@ -903,7 +905,8 @@ class VolleyballEventHandler(EventResultHandler):
         # Validate that the event belongs to the correct sport.
         # TODO: (Herbert) Need TeamDAO to return sport_id of a team.
         try:
-            sID = t_dao.getTeamSportByID(tID)
+            t_dao = TeamDAO()
+            sID = t_dao.getTeamSportByID(tID)[0]
             if sID != VOLLEYBALL_IDF and sID != VOLLEYBALL_IDM:
                 return jsonify(Error="Malformed Query, Event ID:{} does not belong to Volleyball.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1028,7 +1031,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         # TODO: (Luis) Need EventDAO method to obtain team ID
         try:
-            t_dao = TeamDAO()
+            e_dao = EventDAO()
             tID = e_dao.getEventTeamByID(eID)
         except (TypeError, ValueError):
             return jsonify(ERROR="Bad Request, Type Error."), 400
@@ -1038,7 +1041,8 @@ class VolleyballEventHandler(EventResultHandler):
         # Validate that the event belongs to the correct sport.
         # TODO: (Herbert) Need TeamDAO to return sport_id of a team.
         try:
-            sID = t_dao.getTeamSportByID(tID)
+            t_dao = TeamDAO()
+            sID = t_dao.getTeamSportByID(tID)[0]
             if sID != VOLLEYBALL_IDF and sID != VOLLEYBALL_IDM:
                 return jsonify(Error="Malformed Query, Event ID:{} does not belong to Volleyball.".format(eID)), 400
         except (TypeError, ValueError):

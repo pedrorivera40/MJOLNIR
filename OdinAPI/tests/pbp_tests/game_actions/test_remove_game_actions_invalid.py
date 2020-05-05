@@ -12,15 +12,15 @@ class TestRemoveInvalidVolleyballPBP(unittest.TestCase):
         self.client = app.test_client()
 
     def test_invalid_pbp_to_remove1(self):
-        response = self.client.delete('/pbp/Voleibol/actions', data=json.dumps(
-            data["invalid_pbp_to_remove1"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin: No existe una secuencia PBP para este evento."
+        response = self.client.delete('/pbp/Voleibol/actions?event_id=99999&action_id=25', data=json.dumps(
+            {}), content_type='application/json', follow_redirects=True)
+        expected_msg = "No existe una secuencia PBP para este evento."
         self.assertEqual(response.status_code, 403)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
 
     def test_invalid_pbp_to_remove2(self):
-        response = self.client.delete('/pbp/Voleibol/actions', data=json.dumps(
-            data["invalid_pbp_to_remove2"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin: La acción no existe."
+        response = self.client.delete('/pbp/Voleibol/actions?event_id=28&action_id=99999', data=json.dumps(
+            {}), content_type='application/json', follow_redirects=True)
+        expected_msg = "La acción no existe."
         self.assertEqual(response.status_code, 500)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])

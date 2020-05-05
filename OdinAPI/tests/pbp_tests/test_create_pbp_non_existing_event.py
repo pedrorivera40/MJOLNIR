@@ -14,7 +14,7 @@ class TestCreateVolleyballPBP(unittest.TestCase):
     def test_create_pbp_non_existing_event(self):
         response = self.client.post('/pbp/Voleibol', data=json.dumps(
             data["non_exists_id"]), content_type='application/json', follow_redirects=True)
-        expected_msg = "Odin: El evento no existe."
+        expected_msg = "El evento no existe."
         self.assertEqual(response.status_code, 400)
         self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
 

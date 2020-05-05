@@ -12,7 +12,7 @@ export default {
       await this.$auth.setUser(user.data.User) // Set auth user.
 
       dispatch('getUserPermissions', response.data.auth.token)
-      dispatch('notifications/setSnackbar', { text: 'Login Sucessfully' }, { root: true })
+      dispatch('notifications/setSnackbar', { text: 'Login Exitoso!' }, { root: true })
       commit("SET_USER_DATA", response.data)
     } catch (error) {
       if (!!error.response) {
@@ -49,7 +49,7 @@ export default {
       await this.$axios.patch(`users/activate`, { username: credentials.username, password: credentials.password, new_password: credentials.new_password }) //call get user by username to set auth user.
       commit("DONE_LOADING")
       dispatch('login', { username: credentials.username, password: credentials.new_password })
-      dispatch('notifications/setSnackbar', { text: 'Password changed successfully! Loggin in...' }, { root: true })
+      dispatch('notifications/setSnackbar', { text: 'Cambio de contraseña exitoso! Iniciando sesión...' }, { root: true })
     } catch (error) {
       if (!!error.response) {
         dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })

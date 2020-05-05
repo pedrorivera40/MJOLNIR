@@ -83,14 +83,14 @@ class TestUserRoutes(unittest.TestCase):
         response = self.client.patch(
             f'/users/{newUserID}/remove', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No user found in the system with that id.')
+        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_get_user_by_id_of_removed_user(self):
         response = self.client.get(
             f'/users/{newUserID}', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
         # TODO add corresponding error message
-        self.assertEqual(response.json['Error'], 'No user found in the system with that id.')
+        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_get_user_by_username_of_removed_user(self):
         # Make sure to put data of a removed user
@@ -105,7 +105,7 @@ class TestUserRoutes(unittest.TestCase):
         response = self.client.patch(
             f'/users/{newUserID}/toggleActive', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No user found in the system with that id.')
+        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_get_user_permissions_removed_user(self):
         """The add user permissions method is internal to the dao and is used when
@@ -116,13 +116,13 @@ class TestUserRoutes(unittest.TestCase):
         response = self.client.get(
             f'/users/{newUserID}/permissions', content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No User found in the system with that id.')
+        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_set_user_permissions_inexistent_user(self):
         response = self.client.patch(f'/users/{newUserID}/permissions', data=json.dumps(
             self.default_permissions), content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No User found in the system with that id.')
+        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_add_new_user_with_username_of_removed_user(self):
         newUserOldUsername = {
