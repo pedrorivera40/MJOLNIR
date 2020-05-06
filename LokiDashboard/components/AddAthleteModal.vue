@@ -228,7 +228,7 @@
                 </v-col>              
               </v-row>
 
-              <v-row justify="start">
+              <v-row justify="start" v-if="!isEmpty(sport_positions) || !isEmpty(sport_categories)">
                 <v-col md="4">              
                   <div>                  
                     <h2 v-if="!isEmpty(sport_positions)">
@@ -249,14 +249,17 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="start">
+              <v-row justify="start" v-if="!isEmpty(sport_positions) || !isEmpty(sport_categories)">
                 <v-col md="4"> 
                 
                   <div v-for="(value,key) in sport_positions" :key="key" >
                     <v-checkbox
-                      :input-value="!value"
-                      :label="key"                    
-                      v-on:change="updatePositons(key,value)"
+                      v-model="sport_positions[key]"
+                      :true-value=false
+                      :false-value=true
+                      :label="key" 
+                      :key="key"                   
+                      v-on:change="updatePositons(key,sport_positions[key])"
                       v-if="!isEmpty(sport_positions)"                                        
                     ></v-checkbox>
                   </div>
@@ -264,9 +267,12 @@
                   
                   <div v-for="(value,key) in sport_categories" :key="key">
                     <v-checkbox
-                      :input-value="!value"
+                      v-model="sport_categories[key]"
+                      :true-value=false
+                      :false-value=true
                       :label="key"
-                      v-on:change="updateCategories(key,value)"
+                      :key="key"
+                      v-on:change="updateCategories(key,sport_categories[key])"
                       v-if="!isEmpty(sport_categories)"                      
                     ></v-checkbox>
                   </div>
@@ -274,11 +280,11 @@
                 </v-col>                   
               </v-row>  
 
-              <v-row justify="start"> 
+              <v-row justify="start" v-if="sportHasNumber"> 
 
                 <v-col md="12">              
                   <div>                  
-                    <h2 v-if="sportHasNumber">
+                    <h2>
                       
                       Número del Atleta:
 
@@ -287,13 +293,12 @@
                 </v-col>
               </v-row>
 
-              <v-row justify="start">
+              <v-row justify="start" v-if="sportHasNumber">
                 <v-col md="4">
                   <v-autocomplete
                     v-model="number"
                     :items="numbers"
-                    label ="Número"                    
-                    v-if="sportHasNumber"
+                    label ="Número"             
                   ></v-autocomplete>
 
                 </v-col>
@@ -311,11 +316,16 @@
               <v-row justify="start">
 
                 <v-col md="12">             
-                  <v-text-field
+                  <v-textarea
                     v-model="profile_image_link"                                
                     label="Enlace de Imagen de Perfil"                   
                     required
-                  ></v-text-field>              
+                    :counter="1000"
+                    auto-grow
+                    rows = "1"
+                    outlined
+                    :rules="[maxSummaryLength('Enlace de Imagen de Perfil',1000)]"
+                  ></v-textarea>              
                 </v-col>
               </v-row> 
 
@@ -389,9 +399,7 @@
       sport_id:0,
       sport:'',      
       sportsList:[],     
-      sportHasNumber:false,
-      branch:'',
-      branches:['Masculino','Femenino','Otro'],
+      sportHasNumber:false,     
       feet: [3,4,5,6,7],      
       inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0],
       yearsOfStudy:[1,2,3,4,5,6,7,8,9,10],
@@ -462,9 +470,29 @@
         else(this.years_of_participation != '') 
           athlete_attributes['years_of_participation'] = null
 
-        athlete_attributes['positions'] = this.sport_positions
+        
 
-        athlete_attributes['categories'] = this.sport_categories
+        let athlete_positions = {}
+        const p_entries = Object.entries(this.sport_positions)
+        for(const [name, value] of p_entries){
+          
+          if(!value)
+            athlete_positions[name] = value
+          
+        }
+        athlete_attributes['positions'] = athlete_positions
+
+        
+
+        let athlete_categories = {}
+        const c_entries = Object.entries(this.sport_categories)
+        for(const [name, value] of c_entries){
+          
+          if(!value)
+            athlete_categories[name] = value
+          
+        }
+        athlete_attributes['categories'] = athlete_categories
 
         //console.log("Creating a new athlete with the following information:")
         //console.log(athlete_attributes)
@@ -509,13 +537,13 @@
 
       updatePositons(key,value){
         
-        this.sport_positions[key]=!value 
-        //console.log(this.sport_positions)      
+        this.sport_positions[key]=value 
+        console.log(this.sport_positions)      
       },
       updateCategories(key,value){
         
-        this.sport_categories[key]=!value       
-        //console.log(this.sport_categories)
+        this.sport_categories[key]=value       
+        console.log(this.sport_categories)
       },
 
 
@@ -545,6 +573,8 @@
       setCategoriesAndPositions(){
         this.sport_positions = {}
         this.sport_categories = {}
+        Object.keys(this.sport_positions).forEach(key => this.sport_positions[key] = null)
+        Object.keys(this.sport_categories).forEach(key => this.sport_categories[key] = null)
         for(let i = 0; i < this.sports.length; i++){
             let sportObj = this.sports[i]
             if(this.sport == sportObj['sport_id']){
@@ -560,6 +590,7 @@
                   this.sport_categories[categories[k]]=true;                   
                 }
               }
+              break
             }
         }
         this.sportNumber()        
