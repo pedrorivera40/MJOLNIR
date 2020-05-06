@@ -30,7 +30,6 @@ export default {
 
             await rtdb().ref("/v1/" + event_id + "/game-metadata/current-set").on('value', function (snapshot) {
                 commit("UPDATE_CURRENT_SET", snapshot.val());
-                console.log(snapshot.val());
             });
 
         } catch (error) {
@@ -187,11 +186,9 @@ export default {
 
             await rtdb().ref("/v1/" + event_id + "/game-metadata/current-set").on('value', function (snapshot) {
                 commit("UPDATE_CURRENT_SET", snapshot.val());
-                console.log("HEYHEYHEY");
             });
 
         } catch (error) {
-            console.log("UNABLE TO RETRIEVE CURRENT SET " + error);
             dispatch('notifications/setSnackbar', { text: "Unable to retrieve current set from RTDB.", color: "error" }, { root: true });
         }
     },
@@ -337,6 +334,11 @@ export default {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
         }
+    },
+
+    // Send a notification in case athlete is selected without previously having a game action chosen.
+    notifyNotActionSelected({ commit, dispatch }) {
+        dispatch('notifications/setSnackbar', { text: "Debe seleccionar el tipo de jugada antes de escoger un jugador.", color: 'error' }, { root: true });
     },
 
 }

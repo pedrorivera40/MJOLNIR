@@ -62,21 +62,40 @@
           </v-col>
           <v-col :cols="2" allign="center" justify="right">
             <v-row>
-              <v-btn
-                class="ma-2"
-                color="gray"
-                fab
-                small
-                dark
-                @click.native="startEditNotification()"
-              >
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="ma-2"
+                    color="gray"
+                    fab
+                    small
+                    dark
+                    @click.native="startEditNotification()"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                </template>
+                <span>Editar notificación</span>
+              </v-tooltip>
             </v-row>
             <v-row>
-              <v-btn class="ma-2" color="red" fab small dark @click.native="delete_dialog = true">
-                <v-icon>mdi-trash-can</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="ma-2"
+                    color="red"
+                    fab
+                    small
+                    dark
+                    @click.native="delete_dialog = true"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-trash-can</v-icon>
+                  </v-btn>
+                </template>
+                <span>Eliminar notificación</span>
+              </v-tooltip>
             </v-row>
           </v-col>
         </v-row>
@@ -110,14 +129,40 @@
           </v-col>
           <v-col :cols="2" allign="center" justify="right">
             <v-row>
-              <v-btn class="ma-2" color="gray" fab small dark @click.native="edit_action()">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="ma-2"
+                    color="gray"
+                    fab
+                    small
+                    dark
+                    @click.native="edit_action()"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                </template>
+                <span>Editar jugada</span>
+              </v-tooltip>
             </v-row>
             <v-row>
-              <v-btn class="ma-2" color="red" fab small dark @click.native="delete_dialog = true">
-                <v-icon>mdi-trash-can</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="ma-2"
+                    color="red"
+                    fab
+                    small
+                    dark
+                    @click.native="delete_dialog = true"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-trash-can</v-icon>
+                  </v-btn>
+                </template>
+                <span>Eliminar jugada</span>
+              </v-tooltip>
             </v-row>
           </v-col>
         </v-row>

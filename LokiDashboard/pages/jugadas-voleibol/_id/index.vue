@@ -44,6 +44,22 @@
           <v-row justify="center">
             <v-card-title>Lista de Jugadas</v-card-title>
           </v-row>
+          <v-row justify="center">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  class="ma-6"
+                  color="secondary"
+                  dark
+                  v-on="on"
+                  @click.native="on_notification_pressed()"
+                >
+                  <v-icon class="mx-1">mdi-android-messages</v-icon>Notificación
+                </v-btn>
+              </template>
+              <span>Crear notificación de juego</span>
+            </v-tooltip>
+          </v-row>
           <v-container v-for="action in gameActions" :key="action.key">
             <VolleyballGameAction
               v-if="action.action_type === notification"
@@ -225,6 +241,35 @@
         </v-tab-item>
       </v-tabs>
     </v-container>
+    <v-dialog v-model="notification_dialog" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Enviar Notificación</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row allign="center">
+              <v-col>
+                <v-text-field
+                  label="Texto de notificación *"
+                  required
+                  v-model="notification_text"
+                  counter="100"
+                  :rules="notification_rules"
+                  outlined
+                ></v-text-field>
+                <small>* Indica que es un valor requerido</small>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="notification_dialog = false">Cerrar</v-btn>
+          <v-btn color="primary" text @click.native="send_notification()">Enviar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -249,6 +294,14 @@ export default {
     loading: true,
     dialog: false,
     event_id: Number,
+
+    notification_dialog: false,
+    notification_text: "",
+    notification_rules: [
+      v =>
+        (v.length > 0 && v.length <= 100) ||
+        "Las notificaciones deben tener entre 1 y 100 caracteres."
+    ],
 
     plays_map: [
       { eng: "kills", esp: "Puntos de Ataque" },
@@ -308,7 +361,8 @@ export default {
       detachOPPRoster: "volleyballPBP/detachOPPRoster",
       detachGameOver: "volleyballPBP/detachGameOver",
       detachOppColor: "volleyballPBP/detachOppColor",
-      detachGameActions: "volleyballPBP/detachGameActions"
+      detachGameActions: "volleyballPBP/detachGameActions",
+      sendGameAction: "volleyballPBP/sendGameAction"
     }),
     findAthleteName(athlete_id, roster) {
       let athlete_index = -1;
@@ -329,6 +383,28 @@ export default {
       athlete_name += " " + roster[athlete_index].last_names;
 
       return athlete_name;
+    },
+
+    on_notification_pressed() {
+      this.notification_text = "";
+      this.notification_dialog = true;
+    },
+
+    send_notification() {
+      if (
+        this.notification_text.length > 0 &&
+        this.notification_text.length <= 100
+      ) {
+        const payload = {
+          event_id: this.event_id,
+          data: {
+            message: this.notification_text,
+            action_type: "Notification"
+          }
+        };
+        this.sendGameAction(payload);
+        this.notification_dialog = false;
+      }
     },
 
     findAthleteNumber(athlete_id, roster) {

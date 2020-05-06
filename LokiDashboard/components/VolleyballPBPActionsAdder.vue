@@ -6,51 +6,66 @@
           <v-card-title>{{ uprm_team_name }}</v-card-title>
         </v-row>
 
-        <v-btn
-          class="ma-4"
-          v-for="athlete in uprm_roster"
-          :key="athlete.number"
-          dark
-          color="#a89f9e"
-          @click.native="uprm_athlete_action(athlete.id)"
-          width="50"
-          height="50"
-        >{{athlete.number}}</v-btn>
+        <v-tooltip bottom v-for="athlete in uprm_roster" :key="athlete.number">
+          <template v-slot:activator="{ on }">
+            <v-btn
+              class="mx-2 my-4"
+              dark
+              color="secondary"
+              @click.native="uprm_athlete_action(athlete.number)"
+              width="50"
+              height="50"
+              v-on="on"
+            >{{athlete.number}}</v-btn>
+          </template>
+          <span>{{ athlete.name }}</span>
+        </v-tooltip>
+
+        <v-row justify="center">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn class="ma-4" color="primary" dark v-on="on">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+            <span>Manejar atletas de UPRM</span>
+          </v-tooltip>
+        </v-row>
       </v-card>
     </v-col>
-    <v-col>
+    <v-col allign="center">
       <v-row>
-        <v-col v-for="button in action_buttons" :key="button.key">
-          <v-row allign="center" justify="center">
-            <v-btn
-              class="mx-4"
-              v-if="button.button_state === true"
-              :pressed="button.button_state"
-              light
-              color="white"
-              @click.native="clear_action_buttons()"
-              width="175"
-            >{{ map_action(button.action_type) }}</v-btn>
-            <v-btn
-              class="mx-4"
-              v-else
-              :pressed="button.button_state"
-              dark
-              color="green"
-              @click.native="set_action_button(button.key)"
-              width="175"
-            >{{ map_action(button.action_type) }}</v-btn>
-          </v-row>
-        </v-col>
-      </v-row>
-      <v-row justify="center">
-        <v-btn
-          depressed
-          dark
-          color="#a89f9e"
-          width="300"
-          @click.native="on_notification_pressed()"
-        >NOTIFICACIÓN</v-btn>
+        <v-tooltip bottom v-for="button in action_buttons" :key="button.key">
+          <template v-slot:activator="{ on }">
+            <v-col>
+              <v-row>
+                <v-row allign="center" justify="center">
+                  <v-btn
+                    class="mx-4"
+                    v-if="button.button_state === true"
+                    :pressed="button.button_state"
+                    light
+                    color="white"
+                    @click.native="clear_action_buttons()"
+                    width="175"
+                    v-on="on"
+                  >{{ map_action(button.action_type) }}</v-btn>
+                  <v-btn
+                    class="mx-4"
+                    v-else
+                    :pressed="button.button_state"
+                    dark
+                    color="primary"
+                    @click.native="set_action_button(button.key)"
+                    width="175"
+                    v-on="on"
+                  >{{ map_action(button.action_type) }}</v-btn>
+                </v-row>
+              </v-row>
+            </v-col>
+          </template>
+          <span>Añadir "{{ map_action(button.action_type) }}"</span>
+        </v-tooltip>
       </v-row>
     </v-col>
     <v-col justify="center">
@@ -59,46 +74,32 @@
           <v-card-title>{{ opp_team_name }}</v-card-title>
         </v-row>
 
-        <v-btn
-          class="ma-4"
-          v-for="athlete in opp_roster"
-          :key="athlete.number"
-          dark
-          color="#a89f9e"
-          @click.native="opp_athlete_action(athlete.number)"
-          width="50"
-          height="50"
-        >{{athlete.number}}</v-btn>
+        <v-tooltip bottom v-for="athlete in opp_roster" :key="athlete.number">
+          <template v-slot:activator="{ on }">
+            <v-btn
+              class="mx-2 my-4"
+              dark
+              color="secondary"
+              @click.native="opp_athlete_action(athlete.number)"
+              width="50"
+              height="50"
+              v-on="on"
+            >{{athlete.number}}</v-btn>
+          </template>
+          <span>{{ athlete.name }}</span>
+        </v-tooltip>
+
+        <v-row justify="center">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn class="ma-4" color="primary" dark v-on="on">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+            <span>Manejar atletas de equipo oponente</span>
+          </v-tooltip>
+        </v-row>
       </v-card>
-      <v-dialog v-model="notification_dialog" persistent max-width="600px">
-        <v-card>
-          <v-card-title>
-            <span class="headline">Enviar Notificación</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row allign="center">
-                <v-col>
-                  <v-text-field
-                    label="Texto de notificación *"
-                    required
-                    v-model="notification_text"
-                    counter="100"
-                    :rules="notification_rules"
-                    outlined
-                  ></v-text-field>
-                  <small>* Indica que es un valor requerido</small>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="notification_dialog = false">Cerrar</v-btn>
-            <v-btn color="primary" text @click.native="send_notification()">Enviar</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -112,13 +113,6 @@ export default {
   },
 
   data: () => ({
-    notification_dialog: false,
-    notification_text: "",
-    notification_rules: [
-      v =>
-        (v.length > 0 && v.length <= 100) ||
-        "Las notificaciones deben tener entre 1 y 100 caracteres."
-    ],
     action_buttons: [
       { key: 1, action_type: "KillPoint", button_state: false },
       { key: 2, action_type: "AttackError", button_state: false },
@@ -164,7 +158,8 @@ export default {
   }),
   methods: {
     ...mapActions({
-      sendGameAction: "volleyballPBP/sendGameAction"
+      sendGameAction: "volleyballPBP/sendGameAction",
+      notifyNotActionSelected: "volleyballPBP/notifyNotActionSelected"
     }),
 
     clear_action_buttons() {
@@ -181,27 +176,7 @@ export default {
         }
       }
     },
-    on_notification_pressed() {
-      this.clear_action_buttons();
-      this.notification_text = "";
-      this.notification_dialog = true;
-    },
-    send_notification() {
-      if (
-        this.notification_text.length > 0 &&
-        this.notification_text.length <= 100
-      ) {
-        const payload = {
-          event_id: this.event_id,
-          data: {
-            message: this.notification_text,
-            action_type: "Notification"
-          }
-        };
-        this.sendGameAction(payload);
-        this.notification_dialog = false;
-      }
-    },
+
     uprm_athlete_action(id) {
       let action = "";
       for (let index in this.action_buttons) {
@@ -211,7 +186,7 @@ export default {
         }
       }
       if (action === "") {
-        console.log("ERROR MUST BE DISPLAYED... NO ACTION PRESSED");
+        this.notifyNotActionSelected();
       } else {
         console.log({ athlete_id: id, action_type: action, team: "uprm" });
       }
@@ -225,7 +200,7 @@ export default {
         }
       }
       if (action === "") {
-        console.log("ERROR MUST BE DISPLAYED... NO ACTION PRESSED");
+        this.notifyNotActionSelected();
       } else {
         console.log({
           athlete_id: number,
