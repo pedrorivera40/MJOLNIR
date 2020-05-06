@@ -426,6 +426,7 @@ export default {
                     }
                     else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
                         this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
+                        this.team_statistics = []
                         this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
                     }
                     else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
@@ -492,15 +493,46 @@ export default {
         if(this.results_payload){
             console.log("[4Refresh] GOT EVENT STATS",this.results_payload)
             // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
-            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
-            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
+            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+                        this.payload_stats = this.results_payload.Basketball_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                    }
+                    else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                        this.payload_stats = this.results_payload.Volleyball_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                        }
+                    else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                        this.payload_stats = this.results_payload.Soccer_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                    }
+                    else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                        this.payload_stats = this.results_payload.Baseball_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                    }
+                    else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                        this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
+                        this.team_statistics = []
+                        this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
+                    }
+                    else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                            this.payload_stats = this.results_payload.Match_Based_Event_Statistics
+                            this.team_statistics = []
+                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble){
+                                this.team_statistics.push({category_name:"Doble",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble})
+                            }
+                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo){
+                                this.team_statistics.push({category_name:"Solo",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo})
+                            }
+                    }
             else{
                 return false
             }
             console.log("[5Refresh] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
-            this.team_statistics = [this.payload_stats.team_statistics]
+            // this.team_statistics = [this.payload_stats.team_statistics]
+
+
+            
             // this.opponent_score = (this.payload_stats.opponent_score)
             // this.uprm_score = (this.payload_stats.uprm_score)
             return true
@@ -516,7 +548,7 @@ export default {
     formated_member_stats(){
        if (this.payload_stats != ''){
            if(this.refresh_stats){
-               console.log("[REF] WE SHOULDNT BE HERE YET")
+               console.log("[REF] REFRESHING STATS")
                this.stat_refresh()
                this.refresh_stats = false
            }
@@ -711,7 +743,7 @@ export default {
                 ]
                 this.team_headers =
                 [
-                {text: 'Categoria', value: '.category_name'},
+                {text: 'Categoria', value: 'category_name'},
                 {text: 'Tipo de Medalla', value: 'type_of_medal'},
                 {text: 'Numero de Medallas', value: 'medals_earned'},
                 ]

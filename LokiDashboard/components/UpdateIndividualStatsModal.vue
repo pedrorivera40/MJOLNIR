@@ -1033,21 +1033,21 @@
             ]
             this.medals= [
             {
-                medal_id:0,
+                medal_id:1,
                 medal_obtained:"Oro"
             },
             {
-                medal_id:1,
+                medal_id:2,
                 medal_obtained:"Plata"
             },
             {
-                medal_id:2,
+                medal_id:3,
                 medal_obtained:"Bronce"
             },
-            {
-                medal_id:3,
-                medal_obtained:"Ninguna"
-            }
+            // {
+            //     medal_id:4,
+            //     medal_obtained:"Ninguna"
+            // }
         ]
         },
         formated_stats(){
@@ -1133,7 +1133,7 @@
                 }
                  else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
                     this.payload_stats_individual = {
-                        "event_id":this.event_id,
+                        "event_id":Number(this.event_id),
                         "athlete_id":'',
                         "attributes":{
                             "medal_id":'',
@@ -1144,7 +1144,7 @@
                 else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
                     || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
                     this.payload_stats_individual = {
-                        "event_id":this.event_id,
+                        "event_id":Number(this.event_id),
                         "athlete_id":'',
                         "attributes":
                         {
@@ -1239,11 +1239,11 @@
                 else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
                     let current_statistics = this.individual_stats.Medal_Based_Event_Athlete_Statistics.event_statistics
                     this.payload_stats_individual = {
-                        "event_id":this.event_id,
+                        "event_id":Number(this.event_id),
                         "athlete_id":this.athlete_id,
                         "attributes":{
                             // "medal_id":this.current_statistics.medal_id,
-                            "medal_id":4,
+                            "medal_id":1,
                             // "category_id":this.current_statistics.category_id
                             "category_id":12
                         }
@@ -1253,7 +1253,7 @@
                     || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
                     let current_statistics = this.individual_stats.Match_Based_Event_Athlete_Statistics.event_statistics
                     this.payload_stats_individual = {
-                        "event_id":this.event_id,
+                        "event_id":Number(this.event_id),
                         "athlete_id":this.athlete_id,
                         "attributes":
                         {
