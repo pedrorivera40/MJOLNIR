@@ -24,7 +24,10 @@ class TestUserRoutes(unittest.TestCase):
         response = self.client.get(f'/users/{newUserID}/permissions', content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 200)
         for permission in response.json['Permissions']:
-            self.assertEqual(permission['is_invalid'], False)
+            skey = ''
+            for key in permission:
+                skey = key
+            self.assertEqual(permission[skey], False)
 
     def test_get_user_permissions_inexistent_user(self):
         """The add user permissions method is internal to the dao and is used when

@@ -1,15 +1,15 @@
 from flask import Flask, request, jsonify
-
 from flask_cors import CORS
 import os
 import datetime
 from handler.user import UserHandler
 from handler.athlete import AthleteHandler
-from auth import verifyHash, generateToken, verifyToken
+from auth import verifyHash, generateToken, verifyToken, getTokenInfo
 from customSession import CustomSession
 from functools import wraps
 from dotenv import load_dotenv
 import os
+
 from handler.position import PositionHandler
 from handler.event import EventHandler
 from handler.basketball_event import BasketballEventHandler
@@ -30,7 +30,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
-session =  CustomSession(app.secret_key)
+customSession = CustomSession()
 CORS(app)
 
 
@@ -59,6 +59,37 @@ def token_check(func):
             return func(*args, **kwargs)
     return decorated
 
+
+def extractUserInfoFormToken():
+    token = request.headers.get('Authorization').split(' ')[1]
+    return getTokenInfo(token)
+
+def validateRequestPermissions(token, permissionNumber):
+    def switch(permissionNumber):
+        return {
+            '13': 0,
+            '14': 1,
+            '15': 2,
+            '16': 3,
+            '17': 4,
+            '18': 5,
+            '19': 6,
+            '20': 7,
+            '21': 8,
+            '22': 9,
+            '23': 10,
+            '24': 11,
+            '25': 12,
+            '26': 13,
+            '27': 14,
+        }[permissionNumber]
+    index = switch(permissionNumber)
+    print('index',index)
+    print('Permission Number',permissionNumber)
+    print('All permissions',token['permissions'])
+    print('Permissions being checked',token['permissions'][index][permissionNumber])
+    print('Permission check',token['permissions'][index][permissionNumber]==False)
+    return(token['permissions'][index][permissionNumber]==False)
 
 #--------- Athlete Routes ---------#
 @app.route("/athletes/", methods=['GET', 'POST'])
@@ -118,11 +149,20 @@ def auth():
             return jsonify(Error='Bad Request.'), 400
 
         username = req['username']
-        password = req['password'] # TODO: AES Encryption
-        session.setVal('username', username)
-        print(session.getVal('username'))
-        return handler.login(username, password)
+        password = req['password']  # TODO: AES Encryption
+        return handler.login(username, password, customSession)
 
+@app.route("/logout", methods=['POST'])
+def logout():
+    if request.json == None:
+        return jsonify(Error='Bad Request.'), 400
+    if request.method == 'POST':
+        req = request.json
+
+        username = req['username']
+        if(customSession.logout(username)):
+            return jsonify(Message='Logout exitoso!'), 200
+        return jsonify(Error='Problemas con el logout.'), 400
 
 ###########################################
 #--------- Dashboard User Routes ---------#
@@ -130,10 +170,18 @@ def auth():
 @app.route("/users/", methods=['GET', 'POST'])
 @token_check
 def allUsers():
-
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    print(loggedUser)
+    if(loggedUser == None):
+        return jsonify(Error='Invalid Session'), 401
+        
+    if(validateRequestPermissions(token,'21') or
+    validateRequestPermissions(token,'22') or
+    validateRequestPermissions(token,'23')):
+        return jsonify(Error='User does not have permissions to acces this resource.'), 403
     handler = UserHandler()
     if request.method == 'GET':
-        print(session.getVal('username'))
         # For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
@@ -143,13 +191,13 @@ def allUsers():
         # Check the request contains the right structure.
         if 'username' not in req or 'full_name' not in req or 'email' not in req or 'password' not in req:
             return jsonify(Error='Bad Request.'), 400
-        
+
         # For account creation
         return handler.addDashUser(req['username'], req['full_name'], req['email'], req['password'])
 
 
 @app.route("/users/<int:duid>", methods=['GET', 'PATCH'])
-@token_check
+# @token_check
 def userByID(duid):
     handler = UserHandler()
     req = request.json
@@ -168,7 +216,7 @@ def userByID(duid):
 
 
 @app.route("/users/username/", methods=['POST'])
-@token_check
+# @token_check
 def getUserByUsername():
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
@@ -183,7 +231,7 @@ def getUserByUsername():
 
 
 @app.route("/users/email/", methods=['POST'])
-@token_check
+# @token_check
 def getUserByEmail():
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
@@ -197,7 +245,7 @@ def getUserByEmail():
 
 
 @app.route("/users/<int:duid>/reset", methods=['PATCH'])
-@token_check
+# @token_check
 def passwordReset(duid):
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
@@ -227,7 +275,7 @@ def accountUnlock():
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/toggleActive", methods=['PATCH'])
-@token_check
+# @token_check
 def toggleActive(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
@@ -236,7 +284,7 @@ def toggleActive(duid):
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/remove", methods=['PATCH'])
-@token_check
+# @token_check
 def removeUser(duid):
     handler = UserHandler()
     if request.method == 'PATCH':
@@ -244,7 +292,7 @@ def removeUser(duid):
 
 
 @app.route("/users/<string:duid>/permissions",  methods=['GET', 'PATCH'])
-@token_check
+# @token_check
 def userPermissions(duid):
 
     handler = UserHandler()

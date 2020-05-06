@@ -134,3 +134,22 @@ def verifyToken(token):
         return True
     except:
         return False
+
+# Verifies a token with the key given.
+def getTokenInfo(token):
+    """
+    Verify if the provided token is valid.
+
+    Tkes the provided token and verifies it is valid.
+
+    Args:
+        token: The token provided by the user.
+        key: Secret key to verify the token.
+
+    Returns:
+        A boolean value signifying if the token is valid or not.
+    """
+    try:
+        return jwt.decode(token, os.getenv('SECRET_KEY'), algorithm='HS256')
+    except:
+        return 'Token can\'t be retrieved.'
