@@ -84,8 +84,12 @@ def validateRequestPermissions(token, permissionNumber):
             '27': 14,
         }[permissionNumber]
     index = switch(permissionNumber)
-    if(token['permissions'][index][permissionNumber]==False):
-        return jsonify(Error='User does not have permissions to acces this resource.'), 403
+    print('index',index)
+    print('Permission Number',permissionNumber)
+    print('All permissions',token['permissions'])
+    print('Permissions being checked',token['permissions'][index][permissionNumber])
+    print('Permission check',token['permissions'][index][permissionNumber]==False)
+    return(token['permissions'][index][permissionNumber]==False)
 
 #--------- Athlete Routes ---------#
 @app.route("/athletes/", methods=['GET', 'POST'])
@@ -171,9 +175,11 @@ def allUsers():
     print(loggedUser)
     if(loggedUser == None):
         return jsonify(Error='Invalid Session'), 401
-    validateRequestPermissions(token,'21')
-    validateRequestPermissions(token,'22')
-    validateRequestPermissions(token,'23')
+        
+    if(validateRequestPermissions(token,'21') or
+    validateRequestPermissions(token,'22') or
+    validateRequestPermissions(token,'23')):
+        return jsonify(Error='User does not have permissions to acces this resource.'), 403
     handler = UserHandler()
     if request.method == 'GET':
         # For user list display
