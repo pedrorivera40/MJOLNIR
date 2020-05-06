@@ -609,10 +609,9 @@ class MedalBasedEventDAO:
         result = []
         
         for indmedal in indv_medal_ids:
-            cursor.execute(query,(indmedal,eID,cID,team_medal_ids[0][teamIndex],))
+            cursor.execute(query,(indmedal,eID,cID,team_medal_ids[teamIndex][0],))            
             result.append(cursor.fetchone()[3])
-            teamIndex += 1
-        
+            teamIndex += 1        
         
         return result
 
