@@ -158,7 +158,31 @@ class VolleyballPBPHandler:
                     "No se ha enviado el valor de diferencia en data.")
 
             difference = int(action["difference"])
-            dao.adjust_score_by_set(event_id, set_path, difference)
+
+            # Adding volleyball rules for scoring:
+            indirect_path = self._get_indirect_set_path(
+                action["team"], event_id, dao)
+            current_set = dao.get_current_set(event_id)
+            current_direct_score = dao.get_score_by_set(event_id, set_path)
+            current_indirect_score = dao.get_score_by_set(
+                event_id, indirect_path)
+
+            # Finding score limit based on current set.
+            limit = 25
+            if current_set == 5:
+                limit = 15
+
+            potential_score = current_direct_score + difference
+            if potential_score < 0:
+                raise Exception(
+                    "Error actualizando puntuación. La puntuación no puede ser negativa.")
+
+            # If limit was reached and more than 2 points difference is attempted.
+            if (current_indirect_score > limit or potential_score > limit) and abs(potential_score - current_indirect_score) > 2:
+                raise Exception(
+                    "Error actualizando puntuación. Si el límite de puntuación se excede, la diferencia de puntos debe ser menor de 3.")
+
+            dao.set_score_by_set(event_id, set_path, potential_score)
             return
 
         is_valid_athlete = (str(action["athlete_id"]) in dao.get_uprm_roster(event_id)
@@ -516,11 +540,11 @@ class VolleyballPBPHandler:
                 return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             current_set = pbp_dao.get_current_set(event_id)
-            potential_score = current_set + adjust
-            if potential_score > 5 or potential_score < 1:
+            potential_set = current_set + adjust
+            if potential_set > 5 or potential_set < 1:
                 return jsonify(ERROR="El ajuste es inválido. El valor resultante debe estar entre 1 y 5."), 403
 
-            pbp_dao.set_current_set(event_id, potential_score)
+            pbp_dao.set_current_set(event_id, potential_set)
             return jsonify(MSG="El parcial ha sido actualizado."), 200
 
         except Exception as e:
