@@ -11,7 +11,8 @@
     "generate": "nuxt generate",
     "clean:dist": "rm -rf .nuxt/dist",
     "build:gcloud": "npm run clean:dist && npm run build",
-    "deploy": "gcloud app deploy app.yml --project huelladashdev && gcloud app browse",
+    "deploy:gcloud": "gcloud app deploy app.yml --project huelladashdev && gcloud app browse",
+    "deploy": "npm run build:gcloud && npm run deploy:gcloud",
     "test": "jest",
     "doc": "jsdoc -c jsdoc.json"
     
