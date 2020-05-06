@@ -9,8 +9,12 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
+    "clean:dist": "rm -rf .nuxt/dist",
+    "build:gcloud": "npm run clean:dist && npm run build",
+    "deploy": "gcloud app deploy app.yml --project huelladashdev && gcloud app browse",
     "test": "jest",
     "doc": "jsdoc -c jsdoc.json"
+    
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.9.0",
