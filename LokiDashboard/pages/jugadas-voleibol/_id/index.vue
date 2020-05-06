@@ -36,7 +36,7 @@
             <v-card-title>Administrador de Jugadas</v-card-title>
           </v-row>
           <v-row>
-            <VolleyballPBPActionsAdder />
+            <VolleyballPBPActionsAdder :event_id="event_id" />
           </v-row>
           <v-row>
             <v-divider class="mx-4" horizontal></v-divider>

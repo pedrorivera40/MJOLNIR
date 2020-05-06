@@ -297,7 +297,7 @@ export default {
         }
     },
 
-    async sendScoreAdjust({ commit, dispatch }, payload) {
+    async sendGameAction({ commit, dispatch }, payload) {
         try {
 
             const response = await this.$axios.post(`/pbp/Voleibol/actions`, payload);

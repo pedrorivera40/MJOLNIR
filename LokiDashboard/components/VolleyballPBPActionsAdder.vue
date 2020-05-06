@@ -104,7 +104,13 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
+  props: {
+    event_id: Number
+  },
+
   data: () => ({
     notification_dialog: false,
     notification_text: "",
@@ -157,6 +163,10 @@ export default {
     opp_team_name: "Gallitos"
   }),
   methods: {
+    ...mapActions({
+      sendGameAction: "volleyballPBP/sendGameAction"
+    }),
+
     clear_action_buttons() {
       // Reset each action button state to false.
       for (let index in this.action_buttons) {
@@ -181,10 +191,14 @@ export default {
         this.notification_text.length > 0 &&
         this.notification_text.length <= 100
       ) {
-        console.log({
-          action_type: "Notification",
-          message: this.notification_text
-        });
+        let payload = {
+          event_id: this.event_id,
+          data: {
+            message: this.notification_text,
+            action_type: "Notification"
+          }
+        };
+        this.sendGameAction(payload);
         this.notification_dialog = false;
       }
     },

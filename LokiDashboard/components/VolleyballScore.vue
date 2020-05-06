@@ -110,7 +110,7 @@ export default {
   methods: {
     ...mapActions({
       sendSetAdjustAction: "volleyballPBP/sendSetAdjust",
-      sendScoreAdjust: "volleyballPBP/sendScoreAdjust"
+      sendScoreAdjust: "volleyballPBP/sendGameAction"
     }),
 
     sendAdjust(team_name, adjust_no) {
