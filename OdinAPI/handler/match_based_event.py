@@ -197,7 +197,7 @@ class MatchBasedEventHandler():
 
         #validate existing event
         try:
-            event = EventDAO().getEventByID(eID)
+            event = EventDAO().eventExists(eID)
             if not event:
                 return jsonify(Error = "Event with id:{} was not found.".format(eID)),404                 
     
@@ -206,7 +206,7 @@ class MatchBasedEventHandler():
         
         #validate existing athlete 
         try:
-           athlete = AthleteDAO().getAthleteByID(aID)
+           athlete = AthleteDAO().athleteExists(aID)
            if not athlete:
                return jsonify(Error = "Athlete with id:{} not found.".format(aID)),404                
         
@@ -255,7 +255,7 @@ class MatchBasedEventHandler():
 
         #validate existing event
         try:
-            event = EventDAO().getEventByID(eID)
+            event = EventDAO().eventExists(eID)
             if not event:
                 return jsonify(Error = "Event with id:{} was not found.".format(eID)),404                 
     
@@ -294,7 +294,7 @@ class MatchBasedEventHandler():
         
         #validate existing athlete 
         try:
-           athlete = AthleteDAO().getAthleteByID(aID)
+           athlete = AthleteDAO().athleteExists(aID)
            if not athlete:
                return jsonify(Error = "Athlete with id:{} not found.".format(aID)),404                
         
@@ -340,7 +340,7 @@ class MatchBasedEventHandler():
         
         try:
             a_dao = AthleteDAO() 
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
         except:
@@ -460,7 +460,7 @@ class MatchBasedEventHandler():
 
         #validate existing event
         try:
-            event = EventDAO().getEventByID(eID)
+            event = EventDAO().eventExists(eID)
             if not event:
                 return jsonify(Error = "Event with id:{} was not found.".format(eID)),404                 
     
@@ -543,7 +543,7 @@ class MatchBasedEventHandler():
         # Validate existing event  
         e_dao = EventDAO()      
         try:            
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
         except:
@@ -575,7 +575,7 @@ class MatchBasedEventHandler():
         
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
         except:
@@ -670,7 +670,7 @@ class MatchBasedEventHandler():
         # Validate existing event
         e_dao =EventDAO()        
         try:            
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
         except:
@@ -781,7 +781,7 @@ class MatchBasedEventHandler():
         # Validate existing event
         e_dao = EventDAO()
         try:           
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
         except:
@@ -824,7 +824,7 @@ class MatchBasedEventHandler():
             
             try:
                 a_dao = AthleteDAO()                
-                athlete = a_dao.getAthleteByID(aID)
+                athlete = a_dao.athleteExists(aID)
                 if not athlete:
                     return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
             except Exception as e:
@@ -909,7 +909,7 @@ class MatchBasedEventHandler():
         # Validate existing event       
         try:
             e_dao = EventDAO()            
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
         except:
@@ -918,7 +918,7 @@ class MatchBasedEventHandler():
         # Validate existing athlete       
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
         except:
@@ -976,7 +976,7 @@ class MatchBasedEventHandler():
         # Validate existing event        
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
         except:
@@ -1017,7 +1017,7 @@ class MatchBasedEventHandler():
         # Validate existing event        
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
         except:
@@ -1028,7 +1028,7 @@ class MatchBasedEventHandler():
         
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
         except:
@@ -1082,7 +1082,7 @@ class MatchBasedEventHandler():
 
         #validate existing event
         try:
-            event = EventDAO().getEventByID(eID)
+            event = EventDAO().eventExists(eID)
             if not event:
                 return jsonify(Error = "Event with id:{} was not found.".format(eID)),404                 
     
