@@ -191,7 +191,7 @@ export default {
         this.notification_text.length > 0 &&
         this.notification_text.length <= 100
       ) {
-        let payload = {
+        const payload = {
           event_id: this.event_id,
           data: {
             message: this.notification_text,

@@ -69,6 +69,7 @@
               :athlete_img="action.athlete_img"
               :in_color="oppColor"
               :id="action.key"
+              :event_id="event_id"
             />
             <VolleyballGameAction
               v-else
@@ -81,6 +82,7 @@
               :athlete_img="findAthleteImg(action.athlete_id, uprmRoster)"
               :in_color="uprm_color"
               :id="action.key"
+              :event_id="event_id"
             />
           </v-container>
         </v-tab-item>

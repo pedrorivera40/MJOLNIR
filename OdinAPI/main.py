@@ -801,6 +801,7 @@ def pbp_actions(sport):
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
     body = request.get_json()
     args = request.args
+    print("ARGS: ", args)
 
     event_id = None
 
@@ -840,7 +841,7 @@ def pbp_actions(sport):
         return handler.editPBPAction(event_id, body["action_id"], body["data"])
 
     # For delete, validate action id is present in body.
-    if len(args) != 2 or "action_id" not in args or len(body) != 0:
+    if len(args) != 2 or "action_id" not in args or body:
         return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el ID de la acción como argumentos."), 400
 
     return handler.removePlayPBPAction(event_id, args["action_id"])

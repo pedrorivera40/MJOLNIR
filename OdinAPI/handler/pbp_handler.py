@@ -877,6 +877,7 @@ class VolleyballPBPHandler:
 
         try:
             # Validate event id is positive integer.
+            print("ID", event_id, "action_id", game_action_id)
             if not str(event_id).isdigit() or not str(game_action_id).isdigit():
                 return jsonify(ERROR="Valores para el ID del evento y ID de acción deben ser enteros."), 400
 

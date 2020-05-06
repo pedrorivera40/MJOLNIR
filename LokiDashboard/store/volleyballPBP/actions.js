@@ -325,4 +325,18 @@ export default {
         }
     },
 
+    async removeGameAction({ commit, dispatch }, payload) {
+        try {
+
+            const response = await this.$axios.delete(`/pbp/Voleibol/actions?event_id=${payload.event_id}&action_id=${payload.action_id}`);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
+    },
+
 }
