@@ -810,7 +810,7 @@ export default {
                 event_id:this.event_id,
                 athlete_id:this.edited_athlete_id,
                 // category_id:this.edited_category_id
-                category_id:12
+                category_id:5
             }
             console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json_1)
             this.clearIndividualStats()
