@@ -283,4 +283,32 @@ export default {
         }
     },
 
+    async sendSetAdjust({ commit, dispatch }, payload) {
+        try {
+
+            const response = await this.$axios.put(`/pbp/Voleibol/set`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
+    },
+
+    async sendScoreAdjust({ commit, dispatch }, payload) {
+        try {
+
+            const response = await this.$axios.post(`/pbp/Voleibol/actions`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
+    },
+
 }

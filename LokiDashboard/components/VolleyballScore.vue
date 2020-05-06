@@ -90,6 +90,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   props: {
     uprm_team: String,
@@ -98,37 +100,37 @@ export default {
     opp_score: Number,
     current_set: Number,
     current_uprm_score: Number, // Score of the current set for UPRM team.
-    current_opp_score: Number // Score of the current set for opponent team.
+    current_opp_score: Number, // Score of the current set for opponent team.
+    event_id: Number
   },
   data: () => ({
     uprm: "uprm",
     opp: "opponent"
   }),
   methods: {
+    ...mapActions({
+      sendSetAdjustAction: "volleyballPBP/sendSetAdjust",
+      sendScoreAdjust: "volleyballPBP/sendScoreAdjust"
+    }),
+
     sendAdjust(team_name, adjust_no) {
       let payload = {
-        team: team_name,
-        action_type: "ScoreAdjust",
-        adjust: adjust_no
+        data: {
+          team: team_name,
+          action_type: "ScoreAdjust",
+          difference: adjust_no
+        },
+        event_id: this.event_id
       };
-      console.log(payload);
+      this.sendScoreAdjust(payload);
     },
 
-    sendSetAdjust(adjust) {
+    sendSetAdjust(adjust_no) {
       let payload = {
-        set_adjust: adjust
+        adjust: adjust_no,
+        event_id: this.event_id
       };
-      console.log(payload);
-    },
-
-    on_uprm_score(change) {
-      this.current_uprm_score += change;
-    },
-    on_opp_score(change) {
-      this.current_opp_score += change;
-    },
-    on_set_change(change) {
-      this.current_set += change;
+      this.sendSetAdjustAction(payload);
     }
   }
 };

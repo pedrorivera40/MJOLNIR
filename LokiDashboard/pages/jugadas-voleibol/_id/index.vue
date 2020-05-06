@@ -15,6 +15,7 @@
           :current_set="currentSet"
           :current_uprm_score="currentUPRMSet"
           :current_opp_score="currentOppSet"
+          :event_id="event_id"
         />
       </v-row>
       <v-row>
@@ -244,6 +245,7 @@ export default {
     error_string: "This emulates an error comming from the database",
     loading: true,
     dialog: false,
+    event_id: Number,
 
     plays_map: [
       { eng: "kills", esp: "Puntos de Ataque" },
@@ -387,16 +389,16 @@ export default {
     })
   },
   beforeMount() {
-    let event_id = this.$route.params.id;
-    this.getEvent(event_id).then(() => {
+    this.event_id = this.$route.params.id;
+    this.getEvent(this.event_id).then(() => {
       this.getValidUPRMRoster(this.teamId);
-      this.handleSetScores(event_id);
-      this.handleCurrentSet(event_id);
-      this.handleUPRMRoster(event_id);
-      this.handleOPPRoster(event_id);
-      this.handleGameOver(event_id);
-      this.handleOppColor(event_id);
-      this.handleGameActions(event_id);
+      this.handleSetScores(this.event_id);
+      this.handleCurrentSet(this.event_id);
+      this.handleUPRMRoster(this.event_id);
+      this.handleOPPRoster(this.event_id);
+      this.handleGameOver(this.event_id);
+      this.handleOppColor(this.event_id);
+      this.handleGameActions(this.event_id);
       if (this.branch === "Masculino") {
         this.uprm_team_name = "Tarzanes";
       } else {
@@ -406,14 +408,13 @@ export default {
   },
 
   beforeDestroy() {
-    let event_id = this.$route.params.id;
-    this.detachSetScores(event_id);
-    this.detachCurrentSet(event_id);
-    this.detachUPRMRoster(event_id);
-    this.detachOPPRoster(event_id);
-    this.detachGameOver(event_id);
-    this.detachOppColor(event_id);
-    this.detachGameActions(event_id);
+    this.detachSetScores(this.event_id);
+    this.detachCurrentSet(this.event_id);
+    this.detachUPRMRoster(this.event_id);
+    this.detachOPPRoster(this.event_id);
+    this.detachGameOver(this.event_id);
+    this.detachOppColor(this.event_id);
+    this.detachGameActions(this.event_id);
   }
 };
 </script>

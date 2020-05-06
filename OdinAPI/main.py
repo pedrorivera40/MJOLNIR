@@ -30,7 +30,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
-session =  CustomSession(app.secret_key)
+session = CustomSession(app.secret_key)
 CORS(app)
 
 
@@ -81,11 +81,11 @@ def athletes():
 
         return handler.getAthletesBySportAndNotInTeam(json['sID'], json['tID'])
 
-@app.route("/athletes/details/", methods = ['GET'])
+
+@app.route("/athletes/details/", methods=['GET'])
 def athletesDetailed():
     if request.method == 'GET':
         return AthleteHandler().getAllAthletesDetailed()
-    
 
 
 @app.route("/athletes/<int:aid>/", methods=['GET', 'PUT', 'DELETE'])
@@ -118,7 +118,7 @@ def auth():
             return jsonify(Error='Bad Request.'), 400
 
         username = req['username']
-        password = req['password'] # TODO: AES Encryption
+        password = req['password']  # TODO: AES Encryption
         session.setVal('username', username)
         print(session.getVal('username'))
         return handler.login(username, password)
@@ -143,7 +143,7 @@ def allUsers():
         # Check the request contains the right structure.
         if 'username' not in req or 'full_name' not in req or 'email' not in req or 'password' not in req:
             return jsonify(Error='Bad Request.'), 400
-        
+
         # For account creation
         return handler.addDashUser(req['username'], req['full_name'], req['email'], req['password'])
 

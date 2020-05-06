@@ -517,7 +517,7 @@ class VolleyballPBPHandler:
 
             current_set = pbp_dao.get_current_set(event_id)
             potential_score = current_set + adjust
-            if potential_score > 5 or potential_score < 0:
+            if potential_score > 5 or potential_score < 1:
                 return jsonify(ERROR="El ajuste es inválido. El valor resultante debe estar entre 1 y 5."), 403
 
             pbp_dao.set_current_set(event_id, potential_score)
