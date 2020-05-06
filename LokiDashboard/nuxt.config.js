@@ -51,8 +51,8 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    // baseURL: 'https://white-smile-272204.ue.r.appspot.com/' //Route for the Flask API Hosted
-    baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API Local
+    baseURL: 'https://white-smile-272204.ue.r.appspot.com/' //Route for the Flask API Hosted
+    // baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API Local
   },
 
   /*
@@ -124,9 +124,9 @@ export default {
    * Development server configuration
    */
   server: {
-    // host: "0.0.0.0",
-    host: "127.0.0.1",
-    port: 7071
+    host: "0.0.0.0",
+    // host: "127.0.0.1",
+    // port: 7071
   },
   /*
   ** Build configuration
