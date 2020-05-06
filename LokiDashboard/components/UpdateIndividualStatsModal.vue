@@ -679,6 +679,220 @@
                                     </v-row>
                                 </v-col>
                             </v-row>
+                            <v-row v-if="isMedalBased">
+                                <v-col>  
+                                    <v-row>
+                                        <h2>Seleccionar Atleta:</h2>
+                                    </v-row>
+                                    <v-row 
+                                        align ="center"
+                                        justify = "center"
+                                        >
+                                            <v-col                   
+                                            >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.athlete_id"
+                                                    :items="team_members"
+                                                    filled
+                                                    chips
+                                                    color="blue-grey lighten-2"
+                                                    label="Atleta Seleccionado"
+                                                    item-text="first_name"
+                                                    item-value="athlete_id"
+                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    required
+                                                    disabled
+                                                    >
+                                                    <template v-slot:selection="data">
+                                                        <v-chip
+                                                        v-bind="data.attrs"
+                                                        :input-value="data.selected"
+                                                        @click="data.select"
+                                                        >
+                                                        <v-avatar left>
+                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
+                                                            <v-img v-else :src="data.item.profile_image_link"/>
+                                                        </v-avatar>
+                                                        {{ data.item.first_name }}
+                                                        </v-chip>
+                                                    </template>
+                                                    <template v-slot:item="data">
+                                                        <template v-if="typeof data.item !== 'object'">
+                                                        <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                        </template>
+                                                        <template v-else>
+                                                        <v-list-item-avatar>
+                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
+                                                            <v-img v-else :src="data.item.profile_image_link"/>
+                                                        </v-list-item-avatar>
+                                                        <v-list-item-content>
+                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                        </v-list-item-content>
+                                                        </template>
+                                                    </template>
+                                                </v-autocomplete>  
+                                            </v-col>
+                                        </v-row>       
+                                    <v-row>
+                                        <h2>Categoria de Deporte:</h2>
+                                    </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.attributes.category_id"
+                                                    :items="sport_categories"
+                                                    filled
+                                                   
+                                                    disabled
+                                                    color="blue-grey lighten-2"
+                                                    label="Select"
+                                                    item-text="category_name"
+                                                    item-value="category_id"
+                                                    required
+                                    
+                                                    >
+                                                </v-autocomplete>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <h2>Medalla Obtenida:</h2>
+                                    </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.attributes.medal_id"
+                                                    :items="medals"
+                                                    filled
+                                                 
+                                                    color="blue-grey lighten-2"
+                                                    label="Select"
+                                                    item-text="medal_obtained"
+                                                    item-value="medal_id"
+                                                    required
+                                    
+                                                    >
+                                                </v-autocomplete>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                            <v-row v-if="isMatchBased">
+                                <v-col>  
+                                    <v-row>
+                                        <h2>Seleccionar Atleta:</h2>
+                                    </v-row>
+                                    <v-row 
+                                        align ="center"
+                                        justify = "center"
+                                        >
+                                            <v-col                   
+                                            >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.athlete_id"
+                                                    :items="team_members"
+                                                    filled
+                                                    chips
+                                                    color="blue-grey lighten-2"
+                                                    label="Atleta Seleccionado"
+                                                    item-text="first_name"
+                                                    item-value="athlete_id"
+                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    required
+                                                    disabled
+                                                    >
+                                                    <template v-slot:selection="data">
+                                                        <v-chip
+                                                        v-bind="data.attrs"
+                                                        :input-value="data.selected"
+                                                        @click="data.select"
+                                                        >
+                                                        <v-avatar left>
+                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
+                                                            <v-img v-else :src="data.item.profile_image_link"/>
+                                                        </v-avatar>
+                                                        {{ data.item.first_name }}
+                                                        </v-chip>
+                                                    </template>
+                                                    <template v-slot:item="data">
+                                                        <template v-if="typeof data.item !== 'object'">
+                                                        <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                        </template>
+                                                        <template v-else>
+                                                        <v-list-item-avatar>
+                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
+                                                            <v-img v-else :src="data.item.profile_image_link"/>
+                                                        </v-list-item-avatar>
+                                                        <v-list-item-content>
+                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                        </v-list-item-content>
+                                                        </template>
+                                                    </template>
+                                                </v-autocomplete>  
+                                            </v-col>
+                                        </v-row>       
+                                    <v-row>
+                                        <h2>Categoria de Deporte:</h2>
+                                    </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.attributes.category_id"
+                                                    :items="sport_categories"
+                                                    filled
+                                                   
+                                                    disabled
+                                                    color="blue-grey lighten-2"
+                                                    label="Select"
+                                                    item-text="category_name"
+                                                    item-value="category_id"
+                                                    required
+                                    
+                                                    >
+                                                </v-autocomplete>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <h2>Medalla Obtenida:</h2>
+                                    </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-text-field
+                                                    v-model="payload_stats_individual.attributes.matches_played"                      
+                                                    label="Matches Played"
+                                                    outlined
+                                                    required
+                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
+                                                ></v-text-field>
+                                        </v-col>
+                                        <v-col             
+                                        >
+                                                <v-text-field
+                                                    v-model="payload_stats_individual.attributes.matches_won"                      
+                                                    label="Matches Won"
+                                                    outlined
+                                                    required
+                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
+                                                ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
                             <v-row>
                                 <v-spacer/>
                                 <v-spacer/>
@@ -747,10 +961,20 @@
         SOFTBALL_IDF: 16, 
         SOCCER_IDM: 3,
         SOCCER_IDF: 11,
+        // OTHER SPORTS (MEDAL BASED)
+        ATHLETICS_IDM: 8,
+        ATHLETICS_IDF: 19,
+        //OTHER SPORTS (MATCH BASED)
+        FIELD_TENNIS_IDM: 9,
+        FIELD_TENNIS_IDF: 18,
+        TABLE_TENNIS_IDM:7,
+        TABLE_TENNIS_IDF:15,
+
 
         //CODE HELPERS:
         statistics_entry: false,
-
+        sport_categories: '',
+        medals: '',
     }),
                  
     
@@ -763,6 +987,7 @@
         // console.log("[EDIT INDIVIDUAL] TRYING TO GET THE INDIVIDUAL STATS HIII",param_json)
         // this.getIndividualStatistics(param_json)
         console.log("[EDIT INDIVIDUAL -MODAL] SHOULD HAVE GOTTEN STATS",this.individual_stats)
+        this.buildDefaultValues()
         if(this.individual_stats){
             this.initializeSportDataFilled()
         }
@@ -779,6 +1004,52 @@
             getAllEventStatistics:"results/getAllEventStatistics"
             // getIndividualStatistics:"results/getIndividualStatistics"
         }),
+        buildDefaultValues(){
+            this.sport_categories=[
+                {
+                    category_id:12, category_name:"400 Metros"
+                },
+                {
+                    category_id:14, category_name:	"Lanzamiento Martillo"
+                },
+                {
+                    category_id:16, category_name:	"Lanzamiento Disco"
+                },
+                {
+                    category_id:17, category_name:	"Salto Largo"
+                },
+                {
+                    category_id:18, category_name:	"Salto Pértiga"
+                },
+                {
+                    category_id:21, category_name:	"10,000 Metros"
+                },
+                {
+                    category_id:23, category_name:	"Relevo 4 x 100"
+                },
+                {
+                    category_id:25, category_name:	"400 Metros Vallas"
+                }
+            ]
+            this.medals= [
+            {
+                medal_id:0,
+                medal_obtained:"Oro"
+            },
+            {
+                medal_id:1,
+                medal_obtained:"Plata"
+            },
+            {
+                medal_id:2,
+                medal_obtained:"Bronce"
+            },
+            {
+                medal_id:3,
+                medal_obtained:"Ninguna"
+            }
+        ]
+        },
         formated_stats(){
             if (this.payload_stats_individual == null||this.payload_stats==''){
                 return false
@@ -860,8 +1131,32 @@
                     }
                     }
                 }
+                 else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                    this.payload_stats_individual = {
+                        "event_id":this.event_id,
+                        "athlete_id":'',
+                        "attributes":{
+                            "medal_id":'',
+                            "category_id":''
+                        }
+                    }
+                }
+                else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                    || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                    this.payload_stats_individual = {
+                        "event_id":this.event_id,
+                        "athlete_id":'',
+                        "attributes":
+                        {
+                            "matches_played":'',
+                            "matches_won":'',
+                            "category_id":''
+                        }
+                    }
+                }
             }
         },
+
         initializeSportDataFilled(){
         //console.log(this.season)
             if(this.sport_id!=''){
@@ -941,13 +1236,41 @@
                     }
                     }
                 }
+                else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                    let current_statistics = this.individual_stats.Medal_Based_Event_Athlete_Statistics.event_statistics
+                    this.payload_stats_individual = {
+                        "event_id":this.event_id,
+                        "athlete_id":this.athlete_id,
+                        "attributes":{
+                            // "medal_id":this.current_statistics.medal_id,
+                            "medal_id":4,
+                            // "category_id":this.current_statistics.category_id
+                            "category_id":12
+                        }
+                    }
+                }
+                else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                    || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                    let current_statistics = this.individual_stats.Match_Based_Event_Athlete_Statistics.event_statistics
+                    this.payload_stats_individual = {
+                        "event_id":this.event_id,
+                        "athlete_id":this.athlete_id,
+                        "attributes":
+                        {
+                            "matches_played":this.current_statistics.matches_played,
+                            "matches_won":this.current_statistics.matches_won,
+                            // "category_id":this.current_statistics.category_id
+                            category_id: 7
+                        }
+                    }
+                }
             }
         },
 
         async submitAthleteStats() {
             this.setQueryLoading()
             if (this.payload_stats_individual.athlete_id != ''){
-                console.log(this.payload_stats_individual)
+                console.log("[PAYLOAD INDIVIDUAL UPDATE",this.payload_stats_individual)
                 const stats_params = {
                     sport_route: this.sport_route,
                     statistics: this.payload_stats_individual
@@ -989,6 +1312,13 @@
     isBaseball: function () {
       // `this` points to the vm instance
       return (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF)
+    },
+    isMedalBased: function () {
+      return (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)
+    },
+    isMatchBased: function (){
+        return (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF)
     }
   },
   }

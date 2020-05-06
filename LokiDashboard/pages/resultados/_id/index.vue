@@ -303,6 +303,7 @@ export default {
       editedItemIndex: -1,
       editedItem: '',
       edited_athlete_id:'',
+      edited_category_id:'',
       defaultItem: {
         full_name: "",
         username: "",
@@ -326,6 +327,8 @@ export default {
       opponent_name:'', //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
       payload_stats:'',
+
+      //SPORT IDS
       BASKETBALL_IDM: 1,
       BASKETBALL_IDF: 10,
       VOLLEYBALL_IDM: 2,
@@ -334,11 +337,10 @@ export default {
       SOFTBALL_IDF: 16,
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
-
-
+    // OTHER SPORTS (MEDAL BASED)
       ATHLETICS_IDM: 8,
       ATHLETICS_IDF: 19,
-
+    //OTHER SPORTS (MATCH BASED)
       FIELD_TENNIS_IDM: 9,
       FIELD_TENNIS_IDF: 18,
       TABLE_TENNIS_IDM:7,
@@ -765,15 +767,36 @@ export default {
         console.log("THIS IS THE EDITED ITEM",this.editedItem)
         console.log("THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
         this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
-        const param_json = {
-            sport_route: this.sport_route,
-            event_id:this.event_id,
-            athlete_id:this.edited_athlete_id
+        
+        
+        if((this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)||
+        (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF)){
+            this.edited_category_id = this.editedItem.statistics.category_id;
+            const param_json_1 = {
+                sport_route: this.sport_route,
+                event_id:this.event_id,
+                athlete_id:this.edited_athlete_id,
+                // category_id:this.edited_category_id
+                category_id:12
+            }
+            console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json_1)
+            this.clearIndividualStats()
+            this.setQueryLoading()
+            await this.getIndividualStatistics(param_json_1)
         }
-        console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json)
-        this.clearIndividualStats()
-        this.setQueryLoading()
-        await this.getIndividualStatistics(param_json)
+        else{
+            const param_json_2 = {
+                sport_route: this.sport_route,
+                event_id:this.event_id,
+                athlete_id:this.edited_athlete_id
+            }
+            console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json_2)
+            this.clearIndividualStats()
+            this.setQueryLoading()
+            await this.getIndividualStatistics(param_json_2)
+        }
+        
         console.log("[EDIT INDIVIDUAL -INDEX] SHOULD HAVE GOTTEN , THEY ARE:",this.individual_stats)
         // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
         this.current_individual_stats = this.individual_stats;
