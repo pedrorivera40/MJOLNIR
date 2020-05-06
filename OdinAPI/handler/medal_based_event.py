@@ -62,6 +62,8 @@ class MedalBasedEventHandler():
         event_info['event_id'] = record[2]
         event_info['athlete_id'] = record[3]
         event_info['medal_based_event_id'] = record[4]
+        stat_info['medal_id'] = record[5]
+        stat_info['category_id'] = record[6]
         
         return dict(event_info= event_info, event_statistics = stat_info)
 
@@ -174,7 +176,9 @@ class MedalBasedEventHandler():
             )
             statistics = dict(
                 medal_earned = athlete_record[6],
-                category_name = athlete_record[7]                
+                medal_id = athlete_record[11],
+                category_name = athlete_record[7],
+                category_id = athlete_record[12]                
             )
             athlete_statistics.append(dict(athlete_info = athlete_info, statistics = statistics))
        
@@ -637,15 +641,13 @@ class MedalBasedEventHandler():
                 team_result = dao.addTeamStatistics(eID,attributes['category_id'],attributes['medal_id'])
                 print(team_result)
         except Exception as e:
-            return jsonify(ERROR="HERE Unable to verify medal based event team statistics from DAO." + str(e)), 500       
+            return jsonify(ERROR="Unable to verify medal based event team statistics from DAO." + str(e)), 500       
 
         
-        if invalid_duplicate:
-            mappedResult = self.mapEventAthleteStatsToDict(result)
+        if invalid_duplicate:            
             dao.commitChanges()
-            return jsonify(Medal_Based_Event_Athlete_Statistics = mappedResult),200
-        else:
-           
+            return jsonify(Medal_Based_Event_Athlete_Statistics = "Edited existing statistics record for athlete id:{} in event_id:{}".format(aID,eID)),200
+        else:           
             dao.commitChanges()
             return jsonify(Medal_Based_Event_Athlete_Statistics = "Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),201
 
@@ -949,13 +951,13 @@ class MedalBasedEventHandler():
             team_result = dao.editTeamStatistics(eID,attributes['category_id'])
             if not team_result:
                 return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            print('G')
-            mappedResult = self.mapEventAthleteStatsToDict(result)
+            
+            #mappedResult = self.mapEventAthleteStatsToDict(result)
         except Exception as e:
             return jsonify(ERROR="Unable to verify medal based event team statistics from DAO." + str(e)), 500
          
         dao.commitChanges()
-        return jsonify(Medal_Based_Event_Athlete_Statistics = mappedResult),200
+        return jsonify(Medal_Based_Event_Athlete_Statistics = "Edited existig athlete records"),200
 
 
     def editTeamStatistics(self,eID,cID): 
