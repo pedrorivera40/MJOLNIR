@@ -56,6 +56,7 @@
               :athlete_img="action.athlete_img"
               in_color="gray"
               :id="action.key"
+              :event_id="event_id"
             />
             <VolleyballGameAction
               v-else-if="action.team === opp_keyword"
@@ -66,7 +67,7 @@
               :athlete_number="findAthleteNumber(action.athlete_id, oppRoster)"
               :athlete_name="findAthleteName(action.athlete_id, oppRoster)"
               :athlete_img="action.athlete_img"
-              :in_color="opp_color"
+              :in_color="oppColor"
               :id="action.key"
             />
             <VolleyballGameAction
@@ -260,8 +261,7 @@ export default {
       { eng: "receptionErrors", esp: "Errores de Recepción" }
     ],
 
-    uprm_color: "green",
-    opp_color: "red",
+    uprm_color: "primary",
     notification: "Notification",
     uprm_team_name: "uprm",
     opp_keyword: "opponent",

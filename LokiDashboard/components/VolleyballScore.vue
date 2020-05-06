@@ -101,7 +101,7 @@ export default {
     current_set: Number,
     current_uprm_score: Number, // Score of the current set for UPRM team.
     current_opp_score: Number, // Score of the current set for opponent team.
-    event_id: Number
+    event_id: String
   },
   data: () => ({
     uprm: "uprm",

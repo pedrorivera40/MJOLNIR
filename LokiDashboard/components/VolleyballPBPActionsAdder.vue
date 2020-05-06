@@ -108,7 +108,7 @@ import { mapActions } from "vuex";
 
 export default {
   props: {
-    event_id: Number
+    event_id: String
   },
 
   data: () => ({

@@ -311,4 +311,18 @@ export default {
         }
     },
 
+    async updateGameAction({ commit, dispatch }, payload) {
+        try {
+
+            const response = await this.$axios.put(`/pbp/Voleibol/actions`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
+    },
+
 }
