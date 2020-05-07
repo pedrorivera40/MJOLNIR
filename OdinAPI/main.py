@@ -84,12 +84,6 @@ def validateRequestPermissions(token, permissionNumber):
             '27': 14,
         }[permissionNumber]
     index = switch(permissionNumber)
-    print('index',index)
-    print('Permission Number',permissionNumber)
-    print('All permissions',token['permissions'])
-    print('Permissions being checked',token['permissions'][index][permissionNumber])
-    print('Permission check',token['permissions'][index][permissionNumber])
-    print((token['permissions'][index][permissionNumber]))
     return(token['permissions'][index][permissionNumber])
 
 #--------- Athlete Routes ---------#
