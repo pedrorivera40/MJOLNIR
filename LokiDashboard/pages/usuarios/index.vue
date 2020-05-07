@@ -36,9 +36,11 @@
         <v-data-table
           :headers="headers"
           :items="users"
+          :loading="isLoadingU"
+          :search="search"
           no-data-text="No hay usuarios en este momento."
           loading-text="Cargando usuarios."
-          :loading="isLoadingU"
+          no-results-text="No se encontró ningun usuario."
         >
           <template v-slot:item.is_active="{ item }">
             <v-chip class="ma-2" small  :color="item.is_active ? 'primary lighten-2': ''">
