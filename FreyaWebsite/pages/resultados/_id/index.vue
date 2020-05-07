@@ -299,6 +299,7 @@ created(){
         }
     },
     formated_final_score(){
+        console.log("[FS] Do we have a final score?",this.uprm_score,this.opponent_score)
         if(Number.isFinite(this.uprm_score)&&Number.isFinite(this.opponent_score)){
             return true
         }
