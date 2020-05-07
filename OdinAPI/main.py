@@ -1840,7 +1840,7 @@ def baseballTeamStatistics():
         if json['add_type'] == 'MANUAL':
             return handler.addTeamStatistics(json['event_id'], json['attributes'])
         else:
-            return jsonify(Error="Metodo no permitido, debe especificar \"add_type\" valido.), 405
+            return jsonify(Error="Metodo no permitido, debe especificar \"add_type\" valido."), 405
     else:
         return jsonify(Error="Metodo no permitido."), 405
 
