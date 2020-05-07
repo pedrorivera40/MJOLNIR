@@ -104,7 +104,7 @@ export default {
       setUser: "userAuth/setUser"
     }),
     test() {
-      console.log(this.$vuetify.breakpoint);
+      console.log(this.$store.state.userAuth.userPermissions[9]['22']);
     }
   },
   computed: {

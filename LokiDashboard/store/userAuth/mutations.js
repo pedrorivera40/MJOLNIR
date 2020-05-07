@@ -1,3 +1,5 @@
+const Cookie = process.client ? require('js-cookie') : undefined 
+
 //Mutations are how you modify the state of the app.
 export default {
 
@@ -27,7 +29,9 @@ export default {
   SET_USER_PERMISSIONS(state, userPermissions) {
     //Set user data
     state.userPermissions = userPermissions
-    localStorage.setItem('permissions', JSON.stringify(state.userPermissions))
+    // Cookie.set('permissions', userPermissions)
+    // process.client ? localStorage.setItem('permissions', JSON.stringify(state.userPermissions)) : undefined
+    
   },
 
   /**

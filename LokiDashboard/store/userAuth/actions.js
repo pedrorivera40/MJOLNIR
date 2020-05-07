@@ -1,3 +1,4 @@
+const Cookie = process.client ? require('js-cookie') : undefined 
 export default {
   /**
    * Action  to log a user into the system, and set their data in the store.
@@ -70,7 +71,9 @@ export default {
     try {
       // Extract permissions from jwt
       const permissions = JSON.parse(atob(token.split('.')[1])).permissions
-      console.log(permissions)
+      
+      Cookie.set('permissions', permissions)
+
       commit("SET_USER_PERMISSIONS", permissions)
     } catch (error) {
       if (!!error.response) {

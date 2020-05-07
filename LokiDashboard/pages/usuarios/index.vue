@@ -147,6 +147,7 @@ import UpdatePermissionsModal from "@/components/UpdatePermissionsModal";
 import UpdateUserModal from "@/components/UpdateUserInfoModal";
 import PasswordResetModal from "@/components/PasswordResetModal";
 export default {
+  middleware: 'admin',
   data() {
     return {
       // search: "",
@@ -205,7 +206,8 @@ export default {
   methods: {
     ...mapActions({
       getUsers: "dashboardUsers/getUsers",
-      getPermissions: "dashboardUsers/getPermissions"
+      getPermissions: "dashboardUsers/getPermissions",
+      setUser: "userAuth/setUser"
     }),
     setStatus(status) {
       return status ? "Activa" : "Inactiva";
@@ -237,6 +239,7 @@ export default {
   },
   mounted() {
     this.getUsers();
+    this.setUser();
   }
 };
 </script>
