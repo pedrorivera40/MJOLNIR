@@ -54,7 +54,8 @@ class VolleyballPBPHandler:
             ],
             "notification": "Notification",
             "teams": ["uprm", "opponent"],
-            "color-format": "^#(?:[0-9a-fA-F]{1,2}){3}$"
+            # Color format regex adapted from: https://www.regextester.com/93589
+            "color-format": "^((0x){0,1}|#{0,1})([0-9A-F]{8}|[0-9A-F]{6})$"
         }
 
     def _get_direct_set_path(self, team, event_id, dao):
@@ -569,7 +570,7 @@ class VolleyballPBPHandler:
 
         try:
             if not isinstance(color, str):
-                return jsonify(ERROR="El color debe estar dado como una secuencia de caracteres que representan un valor HEX."), 400
+                return jsonify(ERROR="El color debe estar dado como una secuencia de caracteres que representan un valor HEX (# + 8 valores HEX)."), 400
 
             # Validate a hex formatted color is provided.
             if not search(self._sport_keywords["color-format"], color):

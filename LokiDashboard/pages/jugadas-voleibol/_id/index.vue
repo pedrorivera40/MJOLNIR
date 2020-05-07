@@ -47,11 +47,15 @@
           </v-row>
 
           <v-row justify="center">
+            <v-card-title>Acciones Generales</v-card-title>
+          </v-row>
+
+          <v-row justify="center">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-btn
                   class="ma-6"
-                  color="secondary"
+                  color="primary"
                   dark
                   v-on="on"
                   width="175"
@@ -61,6 +65,22 @@
                 </v-btn>
               </template>
               <span>Crear notificación de juego</span>
+            </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  class="ma-6"
+                  color="primary"
+                  dark
+                  v-on="on"
+                  width="225"
+                  @click.native="startChooseColor()"
+                >
+                  <v-icon class="mx-1">mdi-palette</v-icon>Color de Oponente
+                </v-btn>
+              </template>
+              <span>Seleccionar color de equipo oponente</span>
             </v-tooltip>
 
             <v-tooltip bottom>
@@ -303,6 +323,17 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="color_dialog" persistent max-width="300">
+      <v-card>
+        <v-card-title class="text-center" style="word-break: normal;">Color del Equipo Oponente</v-card-title>
+        <v-color-picker v-model="color" show-swatches></v-color-picker>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="cancelColorUpdate()">Cancelar</v-btn>
+          <v-btn color="green darken-1" text @click="updateColor()">Guardar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -329,6 +360,9 @@ export default {
     event_id: Number,
 
     end_pbp_dialog: false,
+    color_dialog: false,
+    color: "FF0000",
+    prev_color: null,
 
     notification_dialog: false,
     notification_text: "",
@@ -399,7 +433,8 @@ export default {
       detachGameActions: "volleyballPBP/detachGameActions",
       sendGameAction: "volleyballPBP/sendGameAction",
       endPBPSequence: "volleyballPBP/endPBPSequence",
-      clearPBPState: "volleyballPBP/clearPBPState"
+      clearPBPState: "volleyballPBP/clearPBPState",
+      updateOpponentColor: "volleyballPBP/updateOpponentColor"
     }),
 
     startEndPBPSequence() {
@@ -485,6 +520,29 @@ export default {
       }
 
       return roster[athlete_index].profile_image_link;
+    },
+
+    // Set up variables for color update dialog.
+    startChooseColor() {
+      this.prev_color = this.color;
+      this.color_dialog = true;
+    },
+
+    // Rollback to previous color in case cancel was pressed.
+    cancelColorUpdate() {
+      this.color = this.prev_color;
+      this.color_dialog = false;
+    },
+
+    // Send request to Odin.
+    updateColor() {
+      console.log(this.color);
+      const payload = {
+        event_id: this.event_id,
+        color: this.color
+      };
+      this.updateOpponentColor(payload);
+      this.color_dialog = false;
     }
   },
   computed: {

@@ -362,6 +362,21 @@ export default {
         } catch (error) {
             dispatch('notifications/setSnackbar', { text: error, color: 'error' }, { root: true })
         }
+    },
+
+    // Update opponent color in the RTDB via Odin.
+    async updateOpponentColor({ commit, dispatch }, payload) {
+        try {
+            console.log(payload);
+            const response = await this.$axios.put(`/pbp/Voleibol/color`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
     }
 
 }
