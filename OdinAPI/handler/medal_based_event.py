@@ -919,7 +919,10 @@ class MedalBasedEventHandler():
         # Validate Exists in order to update
         
         dao = MedalBasedEventDAO()
-        try:        
+        try:
+            if attributes['medal_id'] != NO_MEDAL_ID:
+                if dao.medalExistsInCategoryOfEvent(attributes['medal_id'],attributes['category_id'],eID):
+                    return jsonify(Error = "There is already a medal awarded for that event."), 500          
            
             if not dao.getMedalBasedEventID(eID,aID,attributes['category_id']):
                 return jsonify(Error = "Medal Based Event Entry does not exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),404 
