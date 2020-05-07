@@ -145,7 +145,7 @@ class MatchBasedEventDAO:
                 SELECT
                 A.id as A_id, A.first_name, A.middle_name, A.last_names, 
                 A.number, A.profile_image_link,M.matches_played,M.matches_won,C.name,               
-                M.event_id, M.id as match_based_event_id
+                M.event_id, M.id as match_based_event_id,C.id
                 FROM match_based_event as M INNER JOIN category as C ON M.category_id=C.id
                 INNER JOIN athlete as A ON A.id = M.athlete_id
                 WHERE event_id = %s and 
@@ -182,7 +182,7 @@ class MatchBasedEventDAO:
         query = """
                 SELECT
                 matches_played,matches_won,C.name,event_id,athlete_id,
-                match_based_event.id as match_based_event_id
+                match_based_event.id as match_based_event_id,C.id
                 FROM match_based_event INNER JOIN category as C ON match_based_event.category_id=C.id
                 WHERE event_id = %s and athlete_id = %s and category_id=%s and 
                 (match_based_event.is_invalid = false or match_based_event.is_invalid is null);

@@ -149,8 +149,9 @@ class MedalBasedEventDAO:
         query = """                
                 SELECT
                 A.id as A_id, A.first_name, A.middle_name, A.last_names, 
-                A.number, A.profile_image_link,M.type_of_medal,C.name,              
-                individual_medal_event.event_id, individual_medal_event.id as individual_medal_event_id,E.opponent_name
+                A.number, A.profile_image_link,M.type_of_medal,C.name,             
+                individual_medal_event.event_id, individual_medal_event.id as individual_medal_event_id,E.opponent_name,
+                M.id,C.id
                 FROM individual_medal_event INNER JOIN category as C ON individual_medal_event.category_id=C.id
                 INNER JOIN event as E on individual_medal_event.event_id = E.id
                 INNER JOIN medal as M  on individual_medal_event.medal_id = M.id
@@ -189,7 +190,8 @@ class MedalBasedEventDAO:
         query = """
                 SELECT
                 M.type_of_medal,C.name,event_id,athlete_id,
-                individual_medal_event.id as individual_medal_event_id
+                individual_medal_event.id as individual_medal_event_id,
+                M.id,C.id
                 FROM individual_medal_event INNER JOIN category as C ON individual_medal_event.category_id=C.id
                 INNER JOIN medal as M on M.id = individual_medal_event.medal_id
                 WHERE event_id = %s and athlete_id = %s and category_id=%s and individual_medal_event.medal_id is not null and
@@ -237,8 +239,8 @@ class MedalBasedEventDAO:
                 """
         cursor.execute(query,(eID,cID,))
         
-        result = []
-        for row in cursor:
+        result = []        
+        for row in cursor:          
             result.append(row)                 
        
         return result
@@ -568,7 +570,7 @@ class MedalBasedEventDAO:
         cursor.execute(query,(eID,cID))
         indv_medal_ids = []#Individual medal ids
         for row in cursor:
-            indv_medal_ids.append(row)
+            indv_medal_ids.append(row[0])
 
         #the second query collects the medals earned by the team 
         query = """
@@ -593,13 +595,13 @@ class MedalBasedEventDAO:
     
         
         teamIndex = 0        
-
+        
         query = """
                 UPDATE individual_medal_event_team_stats
                 SET medal_id = %s,                                        
                     is_invalid = false
                 WHERE event_id = %s
-                and category_id=%s 
+                and category_id=%s                 
                 and id = %s
                 RETURNING
                     medal_id,                    
@@ -608,11 +610,10 @@ class MedalBasedEventDAO:
                 """
         result = []
         
-        for indmedal in indv_medal_ids:
-            cursor.execute(query,(indmedal,eID,cID,team_medal_ids[0][teamIndex],))
+        for indmedal in indv_medal_ids:            
+            cursor.execute(query,(indmedal,eID,cID,team_medal_ids[teamIndex][0],))            
             result.append(cursor.fetchone()[3])
-            teamIndex += 1
-        
+            teamIndex += 1        
         
         return result
 
@@ -719,6 +720,30 @@ class MedalBasedEventDAO:
         except:
             return []
 
+    def medalExistsInCategoryOfEvent(self,mID,cID,eID):
+        """
+        Returns true if a medal of a type is already a 
+        """
+
+        cursor = self.conn.cursor()
+        medalExists = False
+        query = """
+                select *
+                from individual_medal_event
+                where medal_id =%s
+                and category_id = %s
+                and event_id = %s
+                """
+
+        try:
+            cursor.execute(query,(mID,cID,eID,))
+            result = cursor.fetchone()
+            if result:
+                medalExists = True
+        except Exception as e:
+            print(e)
+            return False
+        return medalExists
 
         
     def commitChanges(self):

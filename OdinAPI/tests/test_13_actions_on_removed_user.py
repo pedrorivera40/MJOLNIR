@@ -13,64 +13,49 @@ class TestUserRoutes(unittest.TestCase):
         self.client = app.test_client()
         self.default_permissions = {"permissions": [
             {
-                "is_invalid": True,
-                "permission_id": 13
+                "13": True,
             },
             {
-                "is_invalid": False,
-                "permission_id": 14
+                "14": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 15
+                "15": False,
             },
             {
-                "is_invalid": True,
-                "permission_id": 16
+                "16": True,
             },
             {
-                "is_invalid": False,
-                "permission_id": 17
+                "17": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 18
+                "18": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 19
+                "19": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 20
+                "20": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 21
+                "21": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 22
+                "22": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 23
+                "23": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 24
+                "24": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 25
+                "25": False,
             },
             {
-                "is_invalid": False,
-                "permission_id": 26
+                "26": False,
             },
             {
-                "is_invalid": True,
-                "permission_id": 27
+                "27": True,
             }]}
 
     #############################################################
@@ -83,14 +68,16 @@ class TestUserRoutes(unittest.TestCase):
         response = self.client.patch(
             f'/users/{newUserID}/remove', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
+        self.assertEqual(
+            response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_get_user_by_id_of_removed_user(self):
         response = self.client.get(
             f'/users/{newUserID}', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
         # TODO add corresponding error message
-        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
+        self.assertEqual(
+            response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_get_user_by_username_of_removed_user(self):
         # Make sure to put data of a removed user
@@ -99,13 +86,14 @@ class TestUserRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         # TODO add corresponding error message
         self.assertEqual(
-            response.json['Error'], 'No user found in the system with that username.')
+            response.json['Error'], 'No se encontró ningún usuario en el sistema con ese nombre de usuario.')
 
     def test_toggle_active_on_removed_user(self):
         response = self.client.patch(
             f'/users/{newUserID}/toggleActive', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
+        self.assertEqual(
+            response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_get_user_permissions_removed_user(self):
         """The add user permissions method is internal to the dao and is used when
@@ -116,18 +104,20 @@ class TestUserRoutes(unittest.TestCase):
         response = self.client.get(
             f'/users/{newUserID}/permissions', content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
+        self.assertEqual(
+            response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_set_user_permissions_inexistent_user(self):
         response = self.client.patch(f'/users/{newUserID}/permissions', data=json.dumps(
             self.default_permissions), content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
+        self.assertEqual(
+            response.json['Error'], 'No se encontró ningún usuario en el sistema con ese id.')
 
     def test_add_new_user_with_username_of_removed_user(self):
         newUserOldUsername = {
-            'email': 'newnewUser40email.com',
-            'full_name': 'Newnew User40',
+            'email': 'newnewUser45email.com',
+            'full_name': 'Newnew User45',
             'username': self.data['username'],
             'password': 'ninjaTurtles1!'
         }
@@ -135,9 +125,12 @@ class TestUserRoutes(unittest.TestCase):
         response = self.client.post('/users/', data=json.dumps(
             newUserOldUsername), content_type='application/json', follow_redirects=True)
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json['User']['email'], newUserOldUsername['email'])
-        self.assertEqual(response.json['User']['full_name'], newUserOldUsername['full_name'])
+        self.assertEqual(response.json['User']
+                         ['email'], newUserOldUsername['email'])
+        self.assertEqual(
+            response.json['User']['full_name'], newUserOldUsername['full_name'])
         self.assertEqual(response.json['User']['id'], id)
         self.assertEqual(response.json['User']['is_active'], False)
         self.assertEqual(response.json['User']['is_invalid'], False)
-        self.assertEqual(response.json['User']['username'], newUserOldUsername['username'])
+        self.assertEqual(
+            response.json['User']['username'], newUserOldUsername['username'])

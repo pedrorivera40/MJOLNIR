@@ -255,21 +255,19 @@ class AthleteDAO:
             for row in cursor:
                 positions.append(row)
             if not positions:
-                return 'El deporte del atleta no tiene posiciones.'
-
-            if len(positions) != len(aPositions):
-                return 'Todas las posiciones del deporte no fueron dadas.'
+                return 'El deporte del atleta no tiene posiciones.'            
             
             try:
                 #This query is used to insert the athlete position in the database.
                 query = """insert into athlete_position(position_id,athlete_id,is_invalid)
                             values(%s,%s,%s) returning id
                             """
-                for position in positions:                                  
-                    cursor.execute(query,(position[0],aID,bool(aPositions[position[1]]),))
-                    apID = cursor.fetchone()[0]
-                    if not apID:
-                        return 'Occurrió un error interno tratando de añadir las posiciones del atleta.'                
+                for position in positions:   
+                    if position[1] in aPositions:                               
+                        cursor.execute(query,(position[0],aID,aPositions[position[1]],))
+                        apID = cursor.fetchone()[0]
+                        if not apID:
+                            return 'Occurrió un error interno tratando de añadir las posiciones del atleta.'                
             except:                
                 return 'El nombre de las posiciones dadas son incorrectas.'
         except:
@@ -338,20 +336,18 @@ class AthleteDAO:
                 categories.append(row)
 
             if not categories:
-                return "El deporte del atleta no tiene categorías."
-            
-            if len(categories) != len(aCategories):
-                return "Todas las categorías del deporte no fueron dadas."           
+                return "El deporte del atleta no tiene categorías."                       
 
             try:   
                 for category in categories:            
                     query = """insert into athlete_category(athlete_id,category_id,is_invalid)
                             values(%s,%s,%s) returning id
                             """
-                    cursor.execute(query,(aID,category[0],bool(aCategories[category[1]]),))
-                    acID = cursor.fetchone()[0]
-                    if not acID:
-                        return 'Occurrió un error interno tratando de añadir las categorías del atleta.'                    
+                    if category[1] in aCategories:
+                        cursor.execute(query,(aID,category[0],aCategories[category[1]],))
+                        acID = cursor.fetchone()[0]
+                        if not acID:
+                            return 'Occurrió un error interno tratando de añadir las categorías del atleta.'                    
             except:
                 return 'Los nombres de las categorías dadas son incorrectas para el deporte dado.'
 
@@ -450,24 +446,49 @@ class AthleteDAO:
                     positions.append(row)
 
                 if not positions:
-                    return 'El deporte del atleta no tiene posiciones.'
+                    return 'El deporte del atleta no tiene posiciones.'  
 
-                if len(positions) != len(aPositions):
-                    return 'Todas las posiciones del deporte no fueron dadas.'         
+                #Get current positions for the athlete
+                current_query = """select position_id,athlete_id
+                                   from athlete_position
+                                   where athlete_id=%s              
+                                """      
+                cursor.execute(current_query,(aID,))
+                
+                athlete_positions = []
+                for row in cursor:
+                    athlete_positions.append(row)
 
-                try:            
-                    query = """update athlete_position
-                            set is_invalid=%s
-                            where position_id=%s
-                            and athlete_id=%s
-                            returning id
-                            """
-                    for position in positions:
-                        cursor.execute(query,(bool(aPositions[position[1]]),position[0],aID))
-                        apID = cursor.fetchone()[0]
-                    if not apID:
-                        return 'Occurrió un error interno tratando de actualizar las posiciones del atleta.' 
-                except:
+                try:        
+                        
+                    update_query = """update athlete_position
+                                      set is_invalid=%s
+                                      where position_id=%s
+                                      and athlete_id=%s
+                                      returning id
+                                   """
+                    insert_query = """insert into athlete_position(athlete_id,position_id,is_invalid)
+                                      values(%s,%s,'false') returning id
+                                   """
+                    for position in positions:                        
+                        if position[1] in aPositions:                            
+                            if athlete_positions:
+                                foundMatch = False
+                                for existing_position in athlete_positions:
+                                    if existing_position[0] == position[0] and existing_position[1] == aID:
+                                        cursor.execute(update_query,(aPositions[position[1]],position[0],aID,))
+                                        foundMatch = True
+                                        break
+                                if not foundMatch:
+                                    cursor.execute(insert_query,(aID,position[0],))
+                            else:
+                                cursor.execute(insert_query,(aID,position[0],))
+                    
+                            apID = cursor.fetchone()[0]
+                            if not apID:
+                                return 'Occurrió un error interno tratando de actualizar las posiciones del atleta.' 
+                except Exception as e:
+                    print(e)
                     return 'El nombre de las posiciones dadas son incorrectas.'
                     
             #If the categories were given then the categories of the athlete will be udpated.
@@ -487,21 +508,45 @@ class AthleteDAO:
                 if not categories:
                     return 'El deporte de este atleta no tiene categorías.'
                 
-                if len(categories) != len(aCategories):
-                    return "Todas las categorías del deporte no fueron dadas." 
-                    
+                #Get current categories for the athlete.
+                current_query = """select category_id,athlete_id
+                                   from athlete_category
+                                   where athlete_id=%s
+                                """
+                cursor.execute(current_query,(aID,))
+                athlete_categories = []
+                
+                for row in cursor:
+                    athlete_categories.append(row)
+
                 try:
-                    query = """update athlete_category
-                            set is_invalid=%s
-                            where category_id=%s
-                            and athlete_id=%s
-                            returning id
-                            """
-                    for category in categories:                   
-                        cursor.execute(query,(bool(aCategories[category[1]]),category[0],aID,))
-                        acID = cursor.fetchone()[0]
-                        if not acID:
-                            return "Occurrió un error interno tratando de actualizar las categorías del atleta."        
+                    update_query = """update athlete_category
+                                      set is_invalid=%s
+                                      where category_id=%s
+                                      and athlete_id=%s
+                                      returning id
+                                   """
+                                                       
+                    insert_query = """insert into athlete_category(athlete_id,category_id,is_invalid)
+                                      values(%s,%s,'false') returning id 
+                                   """
+                    for category in categories: 
+                        if category[1] in aCategories:
+                            if athlete_categories:
+                                foundMatch = False
+                                for existing_categories in athlete_categories:
+                                    if existing_categories[0] == category[0] and existing_categories[1] == aID:                                
+                                        cursor.execute(update_query,(aCategories[category[1]],category[0],aID,))
+                                        foundMatch = True
+                                        break
+                                if not foundMatch:
+                                    cursor.execute(insert_query,(aID,category[0],))
+                            else:
+                                cursor.execute(insert_query,(aID,category[0],))
+                            
+                            acID = cursor.fetchone()[0]
+                            if not acID:
+                                return "Occurrió un error interno tratando de actualizar las categorías del atleta."        
                 except:                
                     return "Los nombres de las categorías dadas son incorrectas para el deporte dado."        
         except Exception as e:

@@ -419,7 +419,7 @@ class AthleteHandler:
                     return "Altura dada es invalida."
 
             if aStudyProgram:
-                if not isinstance(aStudyProgram,str) or not re.search(cAlphaSpaceReg,aStudyProgram):
+                if not isinstance(aStudyProgram,str) or len(aStudyProgram) > 30 or not re.search(cAlphaSpaceReg,aStudyProgram):
                     return "El programa de estudio dado es invalido."
 
             if aDateOfBirth:           
@@ -432,7 +432,7 @@ class AthleteHandler:
 
 
             if aSchoolOfPrecedence:
-                if not isinstance(aSchoolOfPrecedence,str) or not re.search(cAlphaSpaceReg,aSchoolOfPrecedence):
+                if not isinstance(aSchoolOfPrecedence,str) or len(aSchoolOfPrecedence) > 30 or not re.search(cAlphaSpaceReg,aSchoolOfPrecedence):
                     return "La escuela de precedencia dada es invalida."
 
             if aNumber:
@@ -448,7 +448,7 @@ class AthleteHandler:
                     return "Los años de participación dados son invalidos."
 
             if aProfilePictureLink:
-                if not isinstance(aProfilePictureLink,str):
+                if not isinstance(aProfilePictureLink,str) or len(aProfilePictureLink) > 1000:
                     return "Enlace de imagen de perfil es invalido."
 
             if aPositions:            

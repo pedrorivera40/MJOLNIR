@@ -50,12 +50,13 @@ class MatchBasedEventHandler():
         event_info = {}
 
         stat_info['matches_played'] = record[0]
-        stat_info['matches_won'] = record[1]
+        stat_info['matches_won'] = record[1] 
+        stat_info['category_id'] = record[6]
 
         event_info['category_name'] = record[2]        
         event_info['event_id'] = record[3]
         event_info['athlete_id'] = record[4]
-        event_info['match_based_event_id'] = record[5]
+        event_info['match_based_event_id'] = record[5]       
         
         return dict(event_info= event_info, event_statistics = stat_info)
 
@@ -161,7 +162,8 @@ class MatchBasedEventHandler():
             statistics = dict(
                 matches_played = athlete_record[6],
                 matches_won = athlete_record[7],
-                category_name = athlete_record[8]                
+                category_name = athlete_record[8],
+                category_id = athlete_record[11]                
             )
 
             athlete_statistics.append(dict(athlete_info = athlete_info, statistics = statistics))
@@ -629,9 +631,9 @@ class MatchBasedEventHandler():
 
         
         if invalid_duplicate:
-            mappedResult = self.mapEventAthleteStatsToDict(result)
+            
             dao.commitChanges()
-            return jsonify(Match_Based_Event_Athlete_Statistics = mappedResult),200
+            return jsonify(Match_Based_Event_Athlete_Statistics = "Edited existing match based event statistics for athlete id:{} and event id:{}.".format(aID,eID)),200
         else:
             dao.commitChanges()
             return jsonify(Match_Based_Event_Athlete_Statistics = "Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),201
@@ -938,13 +940,12 @@ class MatchBasedEventHandler():
         try:
             team_result = dao.editTeamStatistics(eID,attributes['category_id'])
             if not team_result:
-                return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
-            mappedResult = self.mapEventAthleteStatsToDict(result)
+                return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404            
         except:
             return jsonify(ERROR="Unable to verify match based event team statistics from DAO."), 500
          
         dao.commitChanges()
-        return jsonify(Match_Based_Event_Athlete_Statistics = mappedResult),200
+        return jsonify(Match_Based_Event_Athlete_Statistics = "Edited existing match based statistics for the athlete id:{} and event id:{}".format(aID,eID)),200
 
 
     def editTeamStatistics(self,eID,cID): 
