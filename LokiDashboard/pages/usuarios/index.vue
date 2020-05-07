@@ -36,7 +36,8 @@
         <v-data-table
           :headers="headers"
           :items="users"
-        
+          no-data-text="No hay usuarios en este momento."
+          loading-text="Cargando usuarios."
           :loading="isLoadingU"
         >
           <template v-slot:item.is_active="{ item }">
@@ -143,10 +144,10 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import DeleteUserModal from "@/components/DeleteUserModal";
-import UpdatePermissionsModal from "@/components/UpdatePermissionsModal";
-import UpdateUserModal from "@/components/UpdateUserInfoModal";
-import PasswordResetModal from "@/components/PasswordResetModal";
+import DeleteUserModal from "@/components/users/DeleteUserModal";
+import UpdatePermissionsModal from "@/components/users/UpdatePermissionsModal";
+import UpdateUserModal from "@/components/users/UpdateUserInfoModal";
+import PasswordResetModal from "@/components/users/PasswordResetModal";
 export default {
   middleware: 'admin',
   data() {

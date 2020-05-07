@@ -17,8 +17,6 @@ export const actions = {
           permissions = JSON.parse(parsed.permissions)
           user = JSON.parse(parsed.user)
           await $auth.setUser(user)
-          console.log('nuxt server init permissions', permissions)
-          console.log('nuxt server init user', user)
         } catch (err) {
           console.log(err)
         }
