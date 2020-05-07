@@ -270,6 +270,7 @@
                 :sport_route="sport_route"
                 :refresh_stats.sync="refresh_stats"
                 :athlete_id="edited_athlete_id"
+                :category_id="current_category_id"
             />
         </v-container>
     </div>
@@ -357,6 +358,7 @@ export default {
       ready_for_table: false,
 
       branch_name_local:'',
+      current_category_id:'',
     };
   },
 
@@ -780,6 +782,14 @@ export default {
         console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM",this.editedItem)
         console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
         this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
+        if((this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)||
+        (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF)){
+            this.current_category_id = this.editedItem.statistics.category_id;
+        }
+        else{
+             this.current_category_id = null
+        }
         // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
         this.dialogDeleteIndividualStats = true;
     },

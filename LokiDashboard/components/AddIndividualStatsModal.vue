@@ -1127,7 +1127,7 @@
                 }
                 else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
                     this.payload_stats_individual = {
-                        "event_id":this.event_id,
+                        "event_id":Number(this.event_id),
                         "athlete_id":'',
                         "attributes":{
                             "medal_id":'',
@@ -1138,7 +1138,7 @@
                 else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
                     || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
                     this.payload_stats_individual = {
-                        "event_id":this.event_id,
+                        "event_id":Number(this.event_id),
                         "athlete_id":'',
                         "attributes":
                         {

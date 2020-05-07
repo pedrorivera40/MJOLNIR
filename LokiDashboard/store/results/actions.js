@@ -191,7 +191,13 @@ export default{
             // let statistics = statsJSON.statistics
             let event_id = statsJSON.event_id
             let athlete_id = statsJSON.athlete_id
-            const response = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+            if(statsJSON.category_id){
+                let category_id = statsJSON.category_id
+                const response1 = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id+'&category_id='+category_id)
+            }
+            else{
+                const response2 = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+            }
             commit("SET_QUERY_DONE")
         }catch(error){
             commit("SET_QUERY_DONE")
