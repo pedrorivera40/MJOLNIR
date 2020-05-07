@@ -6,9 +6,9 @@
           Welcome to Huella Deportiva Dashboard!
         </h1>
         <logo />
-        <h2 class="my-6">Please, proceed to the login page.</h2>
+        <h2 class="my-6">Por favor, proceda a la página de acceso.</h2>
         <v-btn color="primary_dark" dark @click="proceed">
-          Continue
+          Continuar
         </v-btn>
       </div>
     </v-flex>
