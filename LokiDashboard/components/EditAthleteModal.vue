@@ -51,7 +51,7 @@
                     :counter="20"
                     label="Segundo Nombre"
                     required
-                    :rules="[maxSummaryLength('Segundo Nombre',20)]"
+                    :rules="[nameFormat('Segundo Nombre'),maxSummaryLength('Segundo Nombre',20)]"
                   ></v-text-field>              
                 </v-col>
               </v-row>
@@ -261,20 +261,28 @@
                 > 
                 
                   <div v-for="(value,key) in athlete_positions_" :key="key" >
-                    <v-checkbox
-                      :input-value="!value"
-                      :label="key"                    
-                      v-on:change="updatePositons(key,value)"
+                    
+                    <v-checkbox         
+                     
+                      v-model="athlete_positions_[key]"
+                      :true-value=false
+                      :false-value=true
+                      :label="key"
+                      :key ="key"                                          
+                      v-on:change="updatePositons(key,athlete_positions_[key])"
                       v-if="!isEmpty(athlete_positions_)"                                        
                     ></v-checkbox>
-                  </div>
+                  </div>               
                 
                   
                   <div v-for="(value,key) in athlete_categories_" :key="key">
                     <v-checkbox
-                      :input-value="!value"
+                      v-model="athlete_categories_[key]"
+                      :true-value=false
+                      :false-value=true
                       :label="key"
-                      v-on:change="updateCategories(key,value)"
+                      :key ="key"
+                      v-on:change="updateCategories(key,athlete_categories_[key])"
                       v-if="!isEmpty(athlete_categories_)"                      
                     ></v-checkbox>
                   </div>
@@ -327,11 +335,16 @@
                 <v-col            
                   md="12"
                 >             
-                  <v-text-field
+                  <v-textarea
                     v-model="profile_image_link_"                                
                     label="Enlace de Imagen de Perfil"                    
                     required
-                  ></v-text-field>              
+                    :counter="1000"
+                    auto-grow
+                    rows = "1"
+                    outlined
+                    :rules="[maxSummaryLength('Enlace de Imagen de Perfil',1000)]"
+                  ></v-textarea>              
                 </v-col>
               </v-row>
 
@@ -406,7 +419,7 @@ export default {
     terms:false,
     menu: false,
     first_name_: '',
-    middle_name_: '',
+    middle_name_: null,
     last_names_:'',
     date_of_birth_:'',
     short_bio_:'',
@@ -421,7 +434,7 @@ export default {
     number_:'',
     profile_image_link_:'',
     sport:'',
-    sport_id_:0,            
+    sport_id_:0,               
    
     sportHasNumber:false,
     feet: [3,4,5,6,7],      
@@ -492,29 +505,51 @@ export default {
       else
         athlete_attributes['years_of_participation'] = this.years_of_participation
 
-      athlete_attributes['positions'] = this.athlete_positions_
+      let athlete_positions = {}
+      const p_entries = Object.entries(this.athlete_positions_)
+      for(const [name, value] of p_entries){
+        
+        if(!value)
+          athlete_positions[name] = value
+        else if(value && name in this.athlete_positions)
+          athlete_positions[name] = value
+        
+      }
+      athlete_attributes['positions'] = athlete_positions        
 
-      athlete_attributes['categories'] = this.athlete_categories_
+      let athlete_categories = {}
+      const c_entries = Object.entries(this.athlete_categories_)
+      for(const [name, value] of c_entries){
+        
+        if(!value)
+          athlete_categories[name] = value
+        else if(value && name in this.athlete_categories)
+          athlete_categories[name] = value
+        
+      }
+      athlete_attributes['categories'] = athlete_categories
 
       const athleteJSON = {'athlete_id': this.id,'attributes':athlete_attributes}   
 
       const resonse = await this.editAthlete(athleteJSON)
 
-      this.editing = false
+      this.editing = false     
+      
       if(resonse != 'error')
       {
         this.close()        
-      }    
+      } 
       
     },    
 
     updatePositons(key,value){
       
-      this.athlete_positions_[key]=!value       
+      this.athlete_positions_[key]=value  
+        
     },
     updateCategories(key,value){
       
-      this.athlete_categories_[key]=!value       
+      this.athlete_categories_[key]=value       
     },
 
 
@@ -571,29 +606,35 @@ export default {
           this.resetDate()
         
         
+        this.athlete_positions_ = {}
+        this.athlete_categories_ = {}
+        for(let i = 0; i < this.sports.length; i++){
+            let sportObj = this.sports[i]
+            if(this.sport_id_ == sportObj['sport_id']){
+              let positions = sportObj['positions']
+              if(positions.length > 0){
+                for(let j = 0; j < positions.length; j++){
 
-        if(this.athlete_positions)
-        {
-          this.athlete_positions_ = {}
-          const entries = Object.entries(this.athlete_positions)
-          for(const [name, value] of entries){
-            
-            this.athlete_positions_[name] = value
-            
-          }
+                  if(positions[j] in this.athlete_positions)
+                    this.athlete_positions_[positions[j]] = this.athlete_positions[positions[j]]
+                  else
+                    this.athlete_positions_[positions[j]]=true;                   
+                }
+              }
+              let categories = sportObj['categories']
+              if(categories.length > 0){
+                for(let k = 0; k < categories.length; k++){
+                  if(categories[k] in this.athlete_categories)
+                    this.athlete_categories_[categories[k]] = this.athlete_categories[categories[k]]
+                  else
+                    this.athlete_categories_[categories[k]]=true;                    
+                }
+              }
+              break
+            }
         }
         
-        if(this.athlete_categories)
-        {
-          this.athlete_categories_ = {}
-          const entries = Object.entries(this.athlete_categories)
-          for(const [name, value] of entries){
-            
-            this.athlete_categories_[name] = value
-            
-          }
-        }
-
+        
         this.ready = true
         this.loading = false
       }      
@@ -641,7 +682,7 @@ export default {
       this.ready = false
       this.terms = false
       this.loading = true
-      this.middle_name_ = ''
+      this.middle_name_ = null
       this.short_bio_ = ''
       this.years_of_participation_ = ''
       this.number_ = ''
@@ -649,8 +690,9 @@ export default {
       this.height_feet_ = ''
       this.height_inches_ = ''
       this.school_of_precedence_ = ''
-      this.athlete_positions_ = null
-      this.athlete_categories_ = null
+      Object.keys(this.athlete_positions_).forEach(key => this.athlete_positions_[key] = null)
+      Object.keys(this.athlete_categories_).forEach(key => this.athlete_categories_[key] = null)
+      
       this.profile_image_link_ = ''
       
       this.resetDate()
@@ -661,7 +703,11 @@ export default {
     
   },
 
+  
   computed: {
+    ...mapGetters({
+      sports:"athletes/athlete_sports"
+    }),
     setForm(){     
       this.format()
       return "Editar Atleta"

@@ -247,7 +247,7 @@ class PBPDao:
 
         return self._rtdb.reference(path).get()
 
-    def _set_score_by_set(self, event_id, set_path, score):
+    def set_score_by_set(self, event_id, set_path, score):
         """
         Sets the score for a set or period for a PBP sequence.
         This function updates the score for a given set or period value of a PBP sequence.
@@ -295,7 +295,7 @@ class PBPDao:
         current_score = int(self.get_score_by_set(event_id, set_path))
         if current_score + int(adjust) < 0:
             raise Exception("PBPDao.adjust_score_by_set: Invalid score state.")
-        self._set_score_by_set(event_id, set_path, current_score + int(adjust))
+        self.set_score_by_set(event_id, set_path, current_score + int(adjust))
 
     def adjust_score_by_differential(self, event_id, path_dec, path_inc, difference):
         """

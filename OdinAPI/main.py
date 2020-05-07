@@ -30,6 +30,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
+
 customSession = CustomSession()
 CORS(app)
 
@@ -107,11 +108,11 @@ def athletes():
 
         return handler.getAthletesBySportAndNotInTeam(json['sID'], json['tID'])
 
-@app.route("/athletes/details/", methods = ['GET'])
+
+@app.route("/athletes/details/", methods=['GET'])
 def athletesDetailed():
     if request.method == 'GET':
         return AthleteHandler().getAllAthletesDetailed()
-    
 
 
 @app.route("/athletes/<int:aid>/", methods=['GET', 'PUT', 'DELETE'])
@@ -844,6 +845,7 @@ def pbp_actions(sport):
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
     body = request.get_json()
     args = request.args
+    print("ARGS: ", args)
 
     event_id = None
 
@@ -883,7 +885,7 @@ def pbp_actions(sport):
         return handler.editPBPAction(event_id, body["action_id"], body["data"])
 
     # For delete, validate action id is present in body.
-    if len(args) != 2 or "action_id" not in args or len(body) != 0:
+    if len(args) != 2 or "action_id" not in args or body:
         return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el ID de la acción como argumentos."), 400
 
     return handler.removePlayPBPAction(event_id, args["action_id"])
@@ -2223,9 +2225,12 @@ def matchbasedAthleteStatistics():
         return handler.editStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'DELETE':
-        if 'category_id' not in json:
+        if 'category_id' not in json:           
             return jsonify(Error="Bad arguments"), 400
-        return handler.removeStatistics(json['event_id'], json['athlete_id'], json['category_id'])
+        try:
+            return handler.removeStatistics(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
 
 
 @app.route("/results/matchbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -2261,9 +2266,10 @@ def matchbasedTeamStatistics():
     if request.method == 'DELETE':
         if 'category_id' not in json:
             return jsonify(Error="Bad arguments"), 400
-
-        return handler.removeTeamStatistics(json['event_id'], json['category_id'])
-
+        try:
+            return handler.removeTeamStatistics(int(json['event_id']), int(json['category_id']))
+        except:
+            return jsonify(Error="Bad arguments"), 400
 
 @app.route("/results/matchbased/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def matchbasedFinalScores():
@@ -2426,7 +2432,10 @@ def medalbasedAthleteStatistics():
     if request.method == 'DELETE':
         if 'category_id' not in json:
             return jsonify(Error="Bad arguments"), 400
-        return handler.removeStatistics(json['event_id'], json['athlete_id'], json['category_id'])
+        try:
+            return handler.removeStatistics(int(json['event_id']),int(json['athlete_id']),int(json['category_id']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
 
 
 @app.route("/results/medalbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -2462,8 +2471,10 @@ def medalbasedTeamStatistics():
     if request.method == 'DELETE':
         if 'category_id' not in json:
             return jsonify(Error="Bad arguments"), 400
-
-        return handler.removeTeamStatistics(json['event_id'], json['category_id'])
+        try:
+            return handler.removeTeamStatistics(int(json['event_id']), int(json['category_id']))
+        except:
+            return jsonify(Error="Bad arguments"), 400
 
 
 @app.route("/results/medalbased/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])

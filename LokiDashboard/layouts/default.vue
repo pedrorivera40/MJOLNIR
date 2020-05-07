@@ -97,7 +97,7 @@ export default {
         {
           icon: "mdi-account-group",
           title: "Equipos",
-          to: "/equipos"
+          to: "/deportes"
         },
         {
           icon: "mdi-run",
