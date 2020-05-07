@@ -2180,9 +2180,12 @@ def matchbasedAthleteStatistics():
         return handler.editStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'DELETE':
-        if 'category_id' not in json:
+        if 'category_id' not in json:           
             return jsonify(Error="Bad arguments"), 400
-        return handler.removeStatistics(json['event_id'], json['athlete_id'], json['category_id'])
+        try:
+            return handler.removeStatistics(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
 
 
 @app.route("/results/matchbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -2218,9 +2221,10 @@ def matchbasedTeamStatistics():
     if request.method == 'DELETE':
         if 'category_id' not in json:
             return jsonify(Error="Bad arguments"), 400
-
-        return handler.removeTeamStatistics(json['event_id'], json['category_id'])
-
+        try:
+            return handler.removeTeamStatistics(int(json['event_id']), int(json['category_id']))
+        except:
+            return jsonify(Error="Bad arguments"), 400
 
 @app.route("/results/matchbased/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def matchbasedFinalScores():
@@ -2383,7 +2387,10 @@ def medalbasedAthleteStatistics():
     if request.method == 'DELETE':
         if 'category_id' not in json:
             return jsonify(Error="Bad arguments"), 400
-        return handler.removeStatistics(json['event_id'], json['athlete_id'], json['category_id'])
+        try:
+            return handler.removeStatistics(int(json['event_id']),int(json['athlete_id']),int(json['category_id']))
+        except:
+            return jsonify(Error = "Bad arguments"),400
 
 
 @app.route("/results/medalbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -2419,8 +2426,10 @@ def medalbasedTeamStatistics():
     if request.method == 'DELETE':
         if 'category_id' not in json:
             return jsonify(Error="Bad arguments"), 400
-
-        return handler.removeTeamStatistics(json['event_id'], json['category_id'])
+        try:
+            return handler.removeTeamStatistics(int(json['event_id']), int(json['category_id']))
+        except:
+            return jsonify(Error="Bad arguments"), 400
 
 
 @app.route("/results/medalbased/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
