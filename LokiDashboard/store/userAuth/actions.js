@@ -11,7 +11,7 @@ export default {
       const response = await this.$auth.loginWith('local', { data: credentials }) //returns auth data as json.
       const user = await this.$axios.post('users/username/', credentials) //call get user by username to set auth user.
       await this.$auth.setUser(user.data.User) // Set auth user.
-
+      Cookie.set('user', JSON.stringify({username:user.data.User.username}))
       dispatch('getUserPermissions', response.data.auth.token)
       dispatch('notifications/setSnackbar', { text: 'Login Exitoso!' }, { root: true })
       commit("SET_USER_DATA", response.data)
@@ -32,11 +32,9 @@ export default {
    */
   async setUser({ commit }) {
     const user = JSON.parse(localStorage.getItem('user'))
-
-    const permissions = JSON.parse(localStorage.getItem('permissions'))
     await this.$auth.setUser(user)
 
-    commit("SET_USER_DATA_ON_RELOAD", permissions)
+    commit("SET_USER_DATA_ON_RELOAD")
   },
 
   /**

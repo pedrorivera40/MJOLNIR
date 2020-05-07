@@ -7,16 +7,24 @@ export const strict = false
 
 //Rehydrates permission from cookies on reloads
 export const actions = {
-  nuxtServerInit ({ commit }, { req }) {
+  async nuxtServerInit({ commit }, { $auth, req }) {
     let permissions = null
+    let user = null
     if (req.headers.cookie) {
       const parsed = cookieparser.parse(req.headers.cookie)
-      try {
-        permissions = JSON.parse(parsed.permissions)
-      } catch (err) {
-        console.log(error)
+      if (parsed.permissions && parsed.user) {
+        try {
+          permissions = JSON.parse(parsed.permissions)
+          user = JSON.parse(parsed.user)
+          await $auth.setUser(user)
+          console.log('nuxt server init permissions', permissions)
+          console.log('nuxt server init user', user)
+        } catch (err) {
+          console.log(err)
+        }
       }
+      // commit("userAuth/SET_USER_DATA_ON_RELOAD", { root: true })
+      commit("userAuth/SET_USER_PERMISSIONS", permissions, { root: true })
     }
-    commit("userAuth/SET_USER_PERMISSIONS", permissions, {root:true})
   }
 }

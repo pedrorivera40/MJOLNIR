@@ -29,8 +29,6 @@ export default {
   SET_USER_PERMISSIONS(state, userPermissions) {
     //Set user data
     state.userPermissions = userPermissions
-    // Cookie.set('permissions', userPermissions)
-    // process.client ? localStorage.setItem('permissions', JSON.stringify(state.userPermissions)) : undefined
     
   },
 
@@ -39,10 +37,9 @@ export default {
    * @param {*} state vuex state object
    * @param {*} userPermissions logged in user's permissions
    */
-  SET_USER_DATA_ON_RELOAD(state, userPermissions) {
+  SET_USER_DATA_ON_RELOAD(state) {
     //Set user data
     state.user = this.$auth.user
-    state.userPermissions = userPermissions
 
   },
 
@@ -53,6 +50,8 @@ export default {
   CLEAR_USER_DATA(state) {
     state.isLoading = false;
     this.$auth.logout()
+    Cookie.remove('permissions')
+    Cookie.remove('user')
 
     //Clear userdata from local storage.
     localStorage.removeItem('user')
