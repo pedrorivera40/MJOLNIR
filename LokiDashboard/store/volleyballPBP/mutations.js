@@ -440,4 +440,65 @@ export default {
     SET_OPPONENT_NAME(state, name) {
         state.opponentName = name;
     },
+
+    CLEAR_STATE(state) {
+        state.uprmRoster = [];
+        state.oppRoster = [];
+        state.gameActions = [];
+        state.branch = "";
+        state.opponentName = "";
+        state.validUPRMRoster = [];
+        state.teamId = -1;
+        state.hasPBP = false;
+        state.sportName = "";
+        state.oppAthleteStatistics = [];
+        state.uprmAthleteStatistics = [];
+        state.oppStatistics = {};
+        state.uprmStatistics = {};
+        state.oppColor = "";
+        state.gameOver = false;
+        state.currentSet = 1;
+
+        state.currentSet = 0;
+        state.uprmSets = [0, 0, 0, 0, 0];
+        state.oppSets = [0, 0, 0, 0, 0];
+        state.gameActions = [];
+        state.uprmRoster = [];
+        state.oppRoster = [];
+        state.gameOver = false;
+        state.oppColor = "";
+        state.uprmStatistics = {
+            killPoints: 0,
+            aces: 0,
+            blockPoints: 0,
+            assists: 0,
+            blocks: 0,
+            digs: 0,
+            attackErrors: 0,
+            serviceErrors: 0,
+            blockingErrors: 0,
+            receptionErrors: 0
+        };
+        state.oppStatistics = {
+            killPoints: 0,
+            aces: 0,
+            blockPoints: 0,
+            assists: 0,
+            blocks: 0,
+            digs: 0,
+            attackErrors: 0,
+            serviceErrors: 0,
+            blockingErrors: 0,
+            receptionErrors: 0
+        };
+        state.uprmAthleteStatistics = []
+        state.oppAthleteStatistics = [];
+        // TODO -> Implement functions for the following properties.
+        state.hasPBP = true;
+        state.sportName = "";
+        state.teamId = 0;
+        state.validUPRMRoster = []
+        state.branch = "";
+        state.opponentName = "";
+    }
 }

@@ -36,14 +36,16 @@
             <v-card-title>Administrador de Jugadas</v-card-title>
           </v-row>
           <v-row>
-            <VolleyballPBPActionsAdder :event_id="event_id" />
+            <VolleyballPBPActionsAdder
+              :event_id="event_id"
+              :uprm_team_name="uprm_team_name"
+              :opp_team_name="opponentName"
+            />
           </v-row>
           <v-row>
             <v-divider class="mx-4" horizontal></v-divider>
           </v-row>
-          <v-row justify="center">
-            <v-card-title>Lista de Jugadas</v-card-title>
-          </v-row>
+
           <v-row justify="center">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
@@ -52,6 +54,7 @@
                   color="secondary"
                   dark
                   v-on="on"
+                  width="175"
                   @click.native="on_notification_pressed()"
                 >
                   <v-icon class="mx-1">mdi-android-messages</v-icon>Notificación
@@ -59,8 +62,27 @@
               </template>
               <span>Crear notificación de juego</span>
             </v-tooltip>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  class="ma-6"
+                  color="primary"
+                  dark
+                  v-on="on"
+                  width="175"
+                  @click.native="end_pbp_dialog = true"
+                >
+                  <v-icon class="mx-1">mdi-file-excel-box</v-icon>Finalizar
+                </v-btn>
+              </template>
+              <span>Finalizar secuencia de jugadas</span>
+            </v-tooltip>
           </v-row>
-          <v-container v-for="action in gameActions" :key="action.key">
+          <v-row justify="center">
+            <v-card-title>Lista de Jugadas</v-card-title>
+          </v-row>
+          <v-container v-for="action in gameActions" :key="action.key + 500">
             <VolleyballGameAction
               v-if="action.action_type === notification"
               align="center"
@@ -125,7 +147,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr :key="uprm_team_name">
+                      <tr :key="2525">
                         <td class="text-center">{{ uprm_team_name }}</td>
                         <td class="text-center">{{ uprmSets[0] }}</td>
                         <td class="text-center">{{ uprmSets[1] }}</td>
@@ -133,7 +155,7 @@
                         <td class="text-center">{{ uprmSets[3] }}</td>
                         <td class="text-center">{{ uprmSets[4] }}</td>
                       </tr>
-                      <tr :key="opponentName">
+                      <tr :key="2526">
                         <td class="text-center">{{ opponentName }}</td>
                         <td class="text-center">{{ oppSets[0] }}</td>
                         <td class="text-center">{{ oppSets[1] }}</td>
@@ -270,6 +292,17 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="end_pbp_dialog" persistent max-width="300">
+      <v-card>
+        <v-card-title class="text-center" style="word-break: normal;">Terminar Secuencia de Jugadas</v-card-title>
+        <v-card-text>Terminar una secuencia de jugadas es irreversible. ¿Aún que desea terminar la secuencia de jugadas?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="end_pbp_dialog = false">No</v-btn>
+          <v-btn color="green darken-1" text @click="startEndPBPSequence()">Sí</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -294,6 +327,8 @@ export default {
     loading: true,
     dialog: false,
     event_id: Number,
+
+    end_pbp_dialog: false,
 
     notification_dialog: false,
     notification_text: "",
@@ -362,8 +397,21 @@ export default {
       detachGameOver: "volleyballPBP/detachGameOver",
       detachOppColor: "volleyballPBP/detachOppColor",
       detachGameActions: "volleyballPBP/detachGameActions",
-      sendGameAction: "volleyballPBP/sendGameAction"
+      sendGameAction: "volleyballPBP/sendGameAction",
+      endPBPSequence: "volleyballPBP/endPBPSequence",
+      clearPBPCollections: "volleyballPBP/clearPBPCollections"
     }),
+
+    startEndPBPSequence() {
+      // Set payload format.
+      const payload = {
+        event_id: this.event_id
+      };
+      // Send request for ending a PBP sequence.
+      this.endPBPSequence(payload);
+      this.end_pbp_dialog = false;
+    },
+
     findAthleteName(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
@@ -493,6 +541,7 @@ export default {
     this.detachGameOver(this.event_id);
     this.detachOppColor(this.event_id);
     this.detachGameActions(this.event_id);
+    this.clearPBPCollections();
   }
 };
 </script>

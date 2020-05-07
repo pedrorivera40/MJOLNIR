@@ -341,4 +341,26 @@ export default {
         dispatch('notifications/setSnackbar', { text: "Debe seleccionar el tipo de jugada antes de escoger un jugador.", color: 'error' }, { root: true });
     },
 
+    // Set end to a PBP sequence.
+    async endPBPSequence({ commit, dispatch }, payload) {
+        try {
+            const response = await this.$axios.post(`/pbp/Voleibol/end`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
+    },
+
+    clearPBPCollections({ commit, dispatch }) {
+        try {
+            commit("CLEAR_STATE");
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: error, color: 'error' }, { root: true })
+        }
+    }
+
 }

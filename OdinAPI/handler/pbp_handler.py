@@ -467,7 +467,7 @@ class VolleyballPBPHandler:
 
             # At this point, the event exists and does not have a PBP sequence.
             game_metadata = {
-                "game-over": False,
+                "game-over": {"answer": "No"},
                 "sport": self._sport_keywords["sport"],
                 "current-set": 1,
                 "opp-color": ""
@@ -538,6 +538,9 @@ class VolleyballPBPHandler:
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+
+            if pbp_dao.is_game_over(event_id):
+                return jsonify(ERROR="El partido de Voleibol ya ha finalizado."), 403
 
             current_set = pbp_dao.get_current_set(event_id)
             potential_set = current_set + adjust

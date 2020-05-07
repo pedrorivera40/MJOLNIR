@@ -109,7 +109,9 @@ import { mapActions } from "vuex";
 
 export default {
   props: {
-    event_id: String
+    event_id: String,
+    uprm_team_name: String,
+    opp_team_name: String
   },
 
   data: () => ({
@@ -152,9 +154,7 @@ export default {
       { number: 9, name: "Armando Guerra" },
       { number: 14, name: "Armando Pleito" },
       { number: 15, name: "Sin Nom Bre" }
-    ],
-    uprm_team_name: "Tarzanes",
-    opp_team_name: "Gallitos"
+    ]
   }),
   methods: {
     ...mapActions({
