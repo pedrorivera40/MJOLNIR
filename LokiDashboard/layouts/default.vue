@@ -3,13 +3,17 @@
     <v-app-bar app color="primary" dark clipped-left v-if="$auth.loggedIn">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
-      <v-toolbar-title class="headline font-weight-medium">Huella Deportiva Dashboard</v-toolbar-title>
+      <v-toolbar-title class="headline font-weight-medium"
+        >Huella Deportiva Dashboard</v-toolbar-title
+      >
 
       <v-spacer />
 
       <v-icon class="mr-2" @click="test">mdi-account-circle</v-icon>
 
-      <span class="font-weight-medium" dark v-if="user !== null">{{ user.username }}</span>
+      <span class="font-weight-medium" dark v-if="user !== null">{{
+        user.username
+      }}</span>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn class="ml-2" @click="logout" v-on="on" icon>
@@ -30,11 +34,30 @@
     >
       <v-list dense>
         <v-list-item-group class="nav-links">
-          <v-list-item v-for="(item, index) in items" :key="index" :to="item.to" nuxt>
+          <v-list-item
+            v-for="(item, index) in items"
+            :key="index"
+            :to="item.to"
+            nuxt
+          >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            v-if="
+              $store.state.userAuth.userPermissions[9]['22'] ||
+              $store.state.userAuth.userPermissions[10]['23'] ||
+              $store.state.userAuth.userPermissions[11]['24']
+            "
+            to="/usuarios"
+            nuxt
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-clipboard-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Manejo de Usuarios</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -72,11 +95,6 @@ export default {
           to: "/dashboard"
         },
         {
-          icon: "mdi-clipboard-account",
-          title: "Manejo de Usuarios",
-          to: "/usuarios"
-        },
-        {
           icon: "mdi-account-group",
           title: "Equipos",
           to: "/equipos"
@@ -90,7 +108,7 @@ export default {
           icon: "mdi-calendar-multiple",
           title: "Eventos",
           to: "/eventos"
-        },
+        }
       ],
       miniVariant: false,
       right: true,
@@ -104,7 +122,7 @@ export default {
       setUser: "userAuth/setUser"
     }),
     test() {
-      console.log(this.$store.state.userAuth.userPermissions[9]['22']);
+      console.log(this.$store.state.userAuth.userPermissions[9]["22"]);
     }
   },
   computed: {
