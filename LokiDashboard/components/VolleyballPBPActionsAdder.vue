@@ -35,7 +35,13 @@
         <v-row justify="center">
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
-              <v-btn class="ma-4" color="primary" dark v-on="on">
+              <v-btn
+                class="ma-4"
+                color="primary"
+                dark
+                v-on="on"
+                @click="manage_uprm_roster_dialog = true"
+              >
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </template>
@@ -123,13 +129,35 @@
         </v-row>
       </v-card>
     </v-col>
+    <v-dialog v-model="manage_uprm_roster_dialog" max-width="600">
+      <v-card>
+        <v-card-title class="text-center" style="word-break: normal;">Manejo de Atletas UPRM</v-card-title>
+        <v-card-text>Marque los atletas de UPRM que están participando en este evento.</v-card-text>
+        <VolleyballPBPUPRMAthlete
+          v-for="athlete in uprm_roster"
+          :key="athlete.key + 3000"
+          :athlete_name="athlete.name"
+          :athlete_number="athlete.number"
+          :athlete_img="athlete.profile_image_link"
+        />
+        <v-card-actions fixed>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="manage_uprm_roster_dialog = false">Salir</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import VolleyballPBPUPRMAthlete from "../components/VolleyballPBPUPRMAthlete";
 
 export default {
+  components: {
+    VolleyballPBPUPRMAthlete
+  },
+
   props: {
     event_id: String,
     uprm_team_name: String,
@@ -137,6 +165,7 @@ export default {
   },
 
   data: () => ({
+    manage_uprm_roster_dialog: false,
     action_buttons: [
       { key: 1, action_type: "KillPoint", button_state: false },
       { key: 2, action_type: "AttackError", button_state: false },
@@ -150,7 +179,13 @@ export default {
       { key: 10, action_type: "ReceptionError", button_state: false }
     ],
     uprm_roster: [
-      { id: 1, number: 11, name: "Fulano de Tal" },
+      {
+        id: 1,
+        number: 11,
+        name: "Fulano de Tal",
+        profile_image_link:
+          "https://www.fiawec.com/media/cache/news_details/assets/fileuploads/58/e2/58e20575c78df.jpg"
+      },
       { id: 2, number: 1, name: "Don Perenzejo" },
       { id: 3, number: 21, name: "Juan del Pueblo" },
       { id: 4, number: 3, name: "Pepe El De La Esquina" },
