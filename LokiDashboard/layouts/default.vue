@@ -79,7 +79,7 @@ export default {
         {
           icon: "mdi-account-group",
           title: "Equipos",
-          to: "/equipos"
+          to: "/deportes"
         },
         {
           icon: "mdi-run",
@@ -90,7 +90,7 @@ export default {
           icon: "mdi-calendar-multiple",
           title: "Eventos",
           to: "/eventos"
-        },
+        }
       ],
       miniVariant: false,
       right: true,

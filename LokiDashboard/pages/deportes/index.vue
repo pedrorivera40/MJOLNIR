@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <h1 class="display-1">{{page_title}}</h1>
+        <h1 class="primary_dark--text pl-3">{{page_title}}</h1>
       </v-col>
     </v-row>
     <v-row>
