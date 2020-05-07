@@ -136,35 +136,33 @@ export default{
             commit("SET_QUERY_DONE")
         }
     },
-    
 
-
-
-    
-    // async getAthletes( {commit} ){
-    //     try{
-           
-    //         const response = await this.$axios.get('athletes/')
-    //         commit("SET_ATHLETES",response.data.Athletes)
-    //         commit("SET_ATHLETE",null)
-
-    //     }catch(error){
-    //         console.log(error.response.data.Error)
-
-    //         commit("DONE_LOADING",'users')
-    //     }
-    // },
-
-    // async getAthleteByID({commit},aid){
-    //     try{
-            
-    //         const response = await this.$axios.get('athletes/'+aid+'/')
-    //         commit("SET_ATHLETE",response.data.Athlete)
-            
-    //     }catch(error){
-    //         console.log(error.response.data.Error)
-            
-    //     }
-    // }
+    async getTeamEvents({commit},team_id){
+        try{
+            const response = await this.$axios.get('/events/team/'+team_id+'/')
+            console.log("GET TEAM EVENTS:",response.data)
+            commit("SET_TEAM_EVENTS",response.data)
+            commit("SET_EVENT_QUERY_DONE")
+        }catch(error){
+            console.log("ERROR GETTING TEAM EVENTS",team_id,error)
+            commit("SET_TEAM_EVENTS",null)
+            // commit("SET_WAITING_TEAM_EVENTS")
+            commit("SET_EVENT_QUERY_DONE")
+        }
+    },
+    async setNullEvents({commit}){
+        try{
+            commit("SET_TEAM_EVENTS",null)
+        }catch(error){
+            console.log("ERROR SETTING NULLIFYING EVENTS",error)
+        }
+    },   
+    async setEventQueryLoading({commit}){
+        try{
+            commit("SET_EVENT_QUERY_LOADING")
+        }catch(error){
+            console.log("ERROR SETTING EVENT QUERY LOADING STATE",error)
+        }
+    },
 }
 

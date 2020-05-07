@@ -147,6 +147,7 @@ export default{
     },
     async editIndividualStatistics({commit,dispatch},statsJSON){
         try{
+            console.log("[EDIT STATS SUBMIT] STRAIGHT FROM ACTIONS, PARAMS ARE",statsJSON)
             let sport_route = statsJSON.sport_route
             let statistics = statsJSON.statistics
             const response = await this.$axios.put('results/'+sport_route+'/individual/',statistics)
@@ -163,9 +164,19 @@ export default{
             // let statistics = statsJSON.statistics
             let event_id = statsJSON.event_id
             let athlete_id = statsJSON.athlete_id
-            const response = await this.$axios.get('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
-            console.log("GET INDIVIDUAL STATS",response.data)
-            commit("SET_INDIVIDUAL_STATS",response.data)
+            if(statsJSON.category_id){
+                let category_id = statsJSON.category_id
+                const response1 = await this.$axios.get('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id+'&category_id='+category_id)
+                console.log("GET INDIVIDUAL STATS",response1.data)
+                commit("SET_INDIVIDUAL_STATS",response1.data)
+            }
+            else{
+                const response2 = await this.$axios.get('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+                console.log("GET INDIVIDUAL STATS",response2.data)
+                commit("SET_INDIVIDUAL_STATS",response2.data)
+            }
+            // console.log("GET INDIVIDUAL STATS",response.data)
+            // commit("SET_INDIVIDUAL_STATS",response.data)
             commit("SET_QUERY_DONE")
       
         }catch(error){
@@ -180,7 +191,13 @@ export default{
             // let statistics = statsJSON.statistics
             let event_id = statsJSON.event_id
             let athlete_id = statsJSON.athlete_id
-            const response = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+            if(statsJSON.category_id){
+                let category_id = statsJSON.category_id
+                const response1 = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id+'&category_id='+category_id)
+            }
+            else{
+                const response2 = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+            }
             commit("SET_QUERY_DONE")
         }catch(error){
             commit("SET_QUERY_DONE")

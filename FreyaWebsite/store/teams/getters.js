@@ -9,7 +9,9 @@ export default{
     readyForMembers: state => state.readyForMembers,
     readyForMemberStats: state => state.readyForMemberStats,
     readyForTeamStats: state => state.readyForTeamStats,
-    loadingQuery: state => state.loadingQuery
+    loadingQuery: state => state.loadingQuery,
+    team_events: state => state.team_events,
+    loadingEventQuery: state => state.loadingEventQuery
     // athlete: state => state.athlete,
     // athletes: state => state.athletes,
     // isLoadingA: state => state.isLoadingA,

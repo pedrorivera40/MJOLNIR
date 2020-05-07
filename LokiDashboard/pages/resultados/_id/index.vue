@@ -1,13 +1,12 @@
 <template>
-  <v-container class="wrapper">
+  <v-container class="wrapper" v-if="formated_event_info()">
     <v-container v-if="formated_event_info()">
-        <h1 class="primary_dark--text pl-3">Resultados {{sport_name}}</h1>
+        <h1 class="primary_dark--text pl-3">Resultados {{sport_name}} {{branch_name_local}}</h1>
         <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
         <h3>Evento de {{event_date}}</h3>
     </v-container>
     <div class="content-area pa-4 pt-12">
         <v-container>
-            <!-- <v-container v-if="formated_member_stats()"> -->
             <v-container>
                 <v-row align="center" justify="center">
                     <v-card width=400 class="mx-lg-auto" outlined>
@@ -185,6 +184,13 @@
                                     </v-tooltip>
                                 </template>
                                 </v-data-table>
+                                <v-container v-else>
+                                    <v-row align = "center" justify = "center">
+                                    <v-col justify = "center" align = "center">
+                                        <h2>No Se Encontraron Resultados</h2>
+                                    </v-col>
+                                    </v-row>
+                                </v-container>
 
 
 
@@ -206,6 +212,13 @@
                                 :loading="loadingQuery"
                                 >
                                 </v-data-table>
+                                <v-container v-else>
+                                    <v-row align = "center" justify = "center">
+                                    <v-col justify = "center" align = "center">
+                                        <h2>No Se Encontraron Resultados de Equipo</h2>
+                                    </v-col>
+                                    </v-row>
+                                </v-container>
                             </v-card>
                         </v-tab-item>
                     </v-tabs>
@@ -256,9 +269,17 @@
                 :sport_route="sport_route"
                 :refresh_stats.sync="refresh_stats"
                 :athlete_id="edited_athlete_id"
+                :category_id="current_category_id"
             />
         </v-container>
     </div>
+  </v-container>
+  <v-container v-else>
+    <v-row justify="center">
+        <v-col align="center">
+            <h3>Evento No Existe</h3>
+        </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -282,6 +303,7 @@ export default {
       editedItemIndex: -1,
       editedItem: '',
       edited_athlete_id:'',
+      edited_category_id:'',
       defaultItem: {
         full_name: "",
         username: "",
@@ -305,6 +327,8 @@ export default {
       opponent_name:'', //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score:'',
       payload_stats:'',
+
+      //SPORT IDS
       BASKETBALL_IDM: 1,
       BASKETBALL_IDF: 10,
       VOLLEYBALL_IDM: 2,
@@ -313,6 +337,14 @@ export default {
       SOFTBALL_IDF: 16,
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
+    // OTHER SPORTS (MEDAL BASED)
+      ATHLETICS_IDM: 8,
+      ATHLETICS_IDF: 19,
+    //OTHER SPORTS (MATCH BASED)
+      FIELD_TENNIS_IDM: 9,
+      FIELD_TENNIS_IDF: 18,
+      TABLE_TENNIS_IDM:7,
+      TABLE_TENNIS_IDF:15,
       //season:''
 
       //OTHE QUERY RELATED VALUES
@@ -323,12 +355,16 @@ export default {
       refresh_stats:false,
       current_individual_stats:'',
       ready_for_table: false,
+
+      branch_name_local:'',
+      current_category_id:'',
     };
   },
 
 
   // created(){
   async mounted(){
+    this.sport_id = null
     this.ready_for_table = false
     this.event_id = this.$route.params.id
     this.clearEventInfo()
@@ -346,6 +382,7 @@ export default {
             this.sport_name = this.event_info.sport_name
             this.opponent_name = this.event_info.opponent_name
             this.event_date = this.event_info.event_date
+            this.branch_name_local = this.event_info.branch
             this.team_id = this.event_info.team_id
             // if (this.ready_for_stats){
             await this.setQueryLoading()
@@ -372,15 +409,43 @@ export default {
                 if(this.results_payload){
                     console.log("[4] GOT EVENT STATS",this.results_payload)
                     // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
-                    if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
-                    else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
-                    else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
-                    else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
+                    if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+                        this.payload_stats = this.results_payload.Basketball_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                    }
+                    else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                        this.payload_stats = this.results_payload.Volleyball_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                        }
+                    else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                        this.payload_stats = this.results_payload.Soccer_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                    }
+                    else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                        this.payload_stats = this.results_payload.Baseball_Event_Statistics
+                        this.team_statistics = [this.payload_stats.team_statistics]
+                    }
+                    else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                        this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
+                        this.team_statistics = []
+                        this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
+                    }
+                    else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                            this.payload_stats = this.results_payload.Match_Based_Event_Statistics
+                            this.team_statistics = []
+                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble){
+                                this.team_statistics.push({category_name:"Doble",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble})
+                            }
+                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo){
+                                this.team_statistics.push({category_name:"Solo",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo})
+                            }
+                    }
                     else{
                         return false
                     }
                     console.log("[5] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
-                    this.team_statistics = [this.payload_stats.team_statistics]
+                    // this.team_statistics = [this.payload_stats.team_statistics]
                     this.opponent_score = (this.payload_stats.opponent_score)
                     this.uprm_score = (this.payload_stats.uprm_score)
                     return true
@@ -429,15 +494,46 @@ export default {
         if(this.results_payload){
             console.log("[4Refresh] GOT EVENT STATS",this.results_payload)
             // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
-            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
-            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
+            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+                this.payload_stats = this.results_payload.Basketball_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+            }
+            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                this.payload_stats = this.results_payload.Volleyball_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+                }
+            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                this.payload_stats = this.results_payload.Soccer_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+            }
+            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                this.payload_stats = this.results_payload.Baseball_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+            }
+            else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
+                this.team_statistics = []
+                this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
+            }
+            else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                this.payload_stats = this.results_payload.Match_Based_Event_Statistics
+                this.team_statistics = []
+                if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble){
+                    this.team_statistics.push({category_name:"Doble",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble})
+                }
+                if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo){
+                    this.team_statistics.push({category_name:"Solo",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo})
+                }
+            }
             else{
                 return false
             }
             console.log("[5Refresh] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
-            this.team_statistics = [this.payload_stats.team_statistics]
+            // this.team_statistics = [this.payload_stats.team_statistics]
+
+
+            
             // this.opponent_score = (this.payload_stats.opponent_score)
             // this.uprm_score = (this.payload_stats.uprm_score)
             return true
@@ -445,7 +541,7 @@ export default {
     },
     //confirm why this method was deprecated
     formated_event_info(){
-        if (this.sport_id != ''){
+        if (this.sport_id != '' && this.sport_id != null){
             return true
         }
         else return false
@@ -453,7 +549,7 @@ export default {
     formated_member_stats(){
        if (this.payload_stats != ''){
            if(this.refresh_stats){
-               console.log("[REF] WE SHOULDNT BE HERE YET")
+               console.log("[REF] REFRESHING STATS")
                this.stat_refresh()
                this.refresh_stats = false
            }
@@ -479,6 +575,9 @@ export default {
         else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_route = "volleyball"}
         else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_route = "soccer"}
         else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_route = "baseball"}
+        else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){this.sport_route = "medalbased"}
+        else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){this.sport_route ="matchbased"}
         else{this.sport_route = ''}
     },
     buildTable(){
@@ -493,42 +592,42 @@ export default {
                 //     sortable: true,
                 //     value: 'athlete_info.first_name'
                 // },
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'Asistencias', value: 'statistics.assists'},
-                {text: 'Blocks', value: 'statistics.blocks'},
-                {text: 'Field Goal Attempt', value: 'statistics.field_goal_attempt'},
-                {text: 'Field Goal Percentage(%)', value: 'statistics.field_goal_percentage'},
-                {text: 'Free Throw Attempt', value: 'statistics.free_throw_attempt'},
-                {text: 'Free Throw Percentage(%)', value: 'statistics.free_throw_percentage'},
-                {text: 'Points', value: 'statistics.points'},
-                {text: 'Rebounds', value: 'statistics.rebounds'},
-                {text: 'Steals', value: 'statistics.steals'},
-                {text: 'Successful Field Goal', value: 'statistics.successful_field_goal'},
-                {text: 'Successful Free Throw', value: 'statistics.successful_free_throw'},
-                {text: 'Successful Three Point', value: 'statistics.successful_three_point'},
-                {text: 'Three Point Attempt', value: 'statistics.three_point_attempt'},
-                {text: 'Three Point Percentage(%)', value: 'statistics.three_point_percentage'},
-                {text: 'Turnovers', value: 'statistics.turnovers'},
-                { text: "Actions", value: "actions", sortable: false },
+                {text: 'Bloqueos', value: 'statistics.blocks'},
+                {text: 'Intentos de Tiro de Campo', value: 'statistics.field_goal_attempt'},
+                {text: 'Porcentaje de Tiro de Campo (%)', value: 'statistics.field_goal_percentage'},
+                {text: 'Intentos de Tiro Libre', value: 'statistics.free_throw_attempt'},
+                {text: 'Porcentaje de Tiro Libre (%)', value: 'statistics.free_throw_percentage'},
+                {text: 'Puntos', value: 'statistics.points'},
+                {text: 'Rebotes', value: 'statistics.rebounds'},
+                {text: 'Robos', value: 'statistics.steals'},
+                {text: 'Tiros de Campo Exitosos', value: 'statistics.successful_field_goal'},
+                {text: 'Tiros Libres Exitosos', value: 'statistics.successful_free_throw'},
+                {text: 'Tiros de Tres Puntos Exitosos', value: 'statistics.successful_three_point'},
+                {text: 'Intentos de Tiro de Tres', value: 'statistics.three_point_attempt'},
+                {text: 'Porcentaje de Tiro de Tres (%)', value: 'statistics.three_point_percentage'},
+                {text: 'Perdidas de Balón', value: 'statistics.turnovers'},
+                { text: "Acciones", value: "actions", sortable: false },
 
                 ]
                 this.team_headers =
                 [
-                {text: 'Assists', value: 'basketball_statistics.assists'},
-                {text: 'Blocks', value: 'basketball_statistics.blocks'},
-                {text: 'Field Goal Attempt', value: 'basketball_statistics.field_goal_attempt'},
-                {text: 'Field Goal Percentage(%)', value: 'basketball_statistics.field_goal_percentage'},
-                {text: 'Free Throw Attempt', value: 'basketball_statistics.free_throw_attempt'},
-                {text: 'Free Throw Percentage(%)', value: 'basketball_statistics.free_throw_percentage'},
-                {text: 'Points', value: 'basketball_statistics.points'},
-                {text: 'Rebounds', value: 'basketball_statistics.rebounds'},
-                {text: 'Steals', value: 'basketball_statistics.steals'},
-                {text: 'Successful Field Goal', value: 'basketball_statistics.successful_field_goal'},
-                {text: 'Successful Free Throw', value: 'basketball_statistics.successful_free_throw'},
-                {text: 'Successful Three Point', value: 'basketball_statistics.successful_three_point'},
-                {text: 'Three Point Attempt', value: 'basketball_statistics.three_point_attempt'},
-                {text: 'Three Point Percentage(%)', value: 'basketball_statistics.three_point_percentage'},
-                {text: 'Turnovers', value: 'basketball_statistics.turnovers'},
+                {text: 'Asistencias', value: 'basketball_statistics.assists'},
+                {text: 'Bloqueos', value: 'basketball_statistics.blocks'},
+                {text: 'Intentos de Tiro de Campo', value: 'basketball_statistics.field_goal_attempt'},
+                {text: 'Porcentaje de Tiro de Campo (%)', value: 'basketball_statistics.field_goal_percentage'},
+                {text: 'Intentos de Tiro Libre', value: 'basketball_statistics.free_throw_attempt'},
+                {text: 'Porcentaje de Tiro Libre (%)', value: 'basketball_statistics.free_throw_percentage'},
+                {text: 'Puntos', value: 'basketball_statistics.points'},
+                {text: 'Rebotes', value: 'basketball_statistics.rebounds'},
+                {text: 'Robos', value: 'basketball_statistics.steals'},
+                {text: 'Tiros de Campo Exitosos', value: 'basketball_statistics.successful_field_goal'},
+                {text: 'Tiros Libres Exitosos', value: 'basketball_statistics.successful_free_throw'},
+                {text: 'Tiros de Tres Puntos Exitosos', value: 'basketball_statistics.successful_three_point'},
+                {text: 'Intentos de Tiro de Tres', value: 'basketball_statistics.three_point_attempt'},
+                {text: 'Porcentaje de Tiro de Tres (%)', value: 'basketball_statistics.three_point_percentage'},
+                {text: 'Perdidas de Balón', value: 'basketball_statistics.turnovers'},
                
 
                 ]
@@ -542,30 +641,30 @@ export default {
                 //     sortable: true,
                 //     value: 'athlete_info.first_name'
                 // },
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
-                {text: 'Kill Points', value: 'statistics.kill_points'},
-                {text: 'Attack Errors', value: 'statistics.attack_errors'},
-                {text: 'Assists', value: 'statistics.assists'},
-                {text: 'Aces', value: 'statistics.aces'},
-                {text: 'Service Errors', value: 'statistics.service_errors'},
-                {text: 'Digs', value: 'statistics.digs'},
-                {text: 'Blocks', value: 'statistics.blocks'},
-                {text: 'Blocking Errors', value: 'statistics.blocking_errors'},
-                {text: 'Reception Errors', value: 'statistics.reception_errors'},
-                { text: "Actions", value: "actions", sortable: false },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
+                {text: 'Puntos de Ataque', value: 'statistics.kill_points'},
+                {text: 'Errores de Ataque', value: 'statistics.attack_errors'},
+                {text: 'Asistencias', value: 'statistics.assists'},
+                {text: 'Servicio Directo', value: 'statistics.aces'},
+                {text: 'Errores de Servicios', value: 'statistics.service_errors'},
+                {text: 'Recepciones', value: 'statistics.digs'},
+                {text: 'Bloqueo', value: 'statistics.blocks'},
+                {text: 'Errores De Bloqueo', value: 'statistics.blocking_errors'},
+                {text: 'Errores de Recepcion', value: 'statistics.reception_errors'},
+                { text: "Acciones", value: "actions", sortable: false },
 
                 ]
                 this.team_headers =
                 [
-                {text: 'Kill Points', value: 'volleyball_statistics.kill_points'},
-                {text: 'Attack Errors', value: 'volleyball_statistics.attack_errors'},
-                {text: 'Assists', value: 'volleyball_statistics.assists'},
-                {text: 'Aces', value: 'volleyball_statistics.aces'},
-                {text: 'Service Errors', value: 'volleyball_statistics.service_errors'},
-                {text: 'Digs', value: 'volleyball_statistics.digs'},
-                {text: 'Blocks', value: 'volleyball_statistics.blocks'},
-                {text: 'Blocking Errors', value: 'volleyball_statistics.blocking_errors'},
-                {text: 'Reception Errors', value: 'volleyball_statistics.reception_errors'},
+                {text: 'Puntos de Ataque', value: 'volleyball_statistics.kill_points'},
+                {text: 'Errores de Ataque', value: 'volleyball_statistics.attack_errors'},
+                {text: 'Asistencias', value: 'volleyball_statistics.assists'},
+                {text: 'Servicio Directo', value: 'volleyball_statistics.aces'},
+                {text: 'Errores de Servicio', value: 'volleyball_statistics.service_errors'},
+                {text: 'Recepciones', value: 'volleyball_statistics.digs'},
+                {text: 'Bloqueos', value: 'volleyball_statistics.blocks'},
+                {text: 'Errores de Bloqueo', value: 'volleyball_statistics.blocking_errors'},
+                {text: 'Errores de Recepcion', value: 'volleyball_statistics.reception_errors'},
                
 
                 ]
@@ -579,24 +678,24 @@ export default {
                 //     sortable: true,
                 //     value: 'athlete_info.first_name'
                 // },
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
-                {text: 'Goal Attempts', value: 'statistics.goal_attempts'},
-                {text: 'Assists', value: 'statistics.assists'},
-                {text: 'Fouls', value: 'statistics.fouls'},
-                {text: 'Cards', value: 'statistics.cards'},
-                {text: 'Successful Goals', value: 'statistics.successful_goals'},
-                {text: 'Tackles', value: 'statistics.tackles'},
-                { text: "Actions", value: "actions", sortable: false },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
+                {text: 'Intentos de Gol', value: 'statistics.goal_attempts'},
+                {text: 'Asistencias', value: 'statistics.assists'},
+                {text: 'Faltas', value: 'statistics.fouls'},
+                {text: 'Tarjetas', value: 'statistics.cards'},
+                {text: 'Goles Exitosos', value: 'statistics.successful_goals'},
+                {text: 'Entradas', value: 'statistics.tackles'},
+                { text: "Acciones", value: "actions", sortable: false },
 
                 ]
                 this.team_headers =
                 [
-                {text: 'Goal Attempts', value: 'soccer_statistics.goal_attempts'},
-                {text: 'Assists', value: 'soccer_statistics.assists'},
-                {text: 'Fouls', value: 'soccer_statistics.fouls'},
-                {text: 'Cards', value: 'soccer_statistics.cards'},
-                {text: 'Successful Goals', value: 'soccer_statistics.successful_goals'},
-                {text: 'Tackles', value: 'soccer_statistics.tackles'},
+                {text: 'Intentos de Gol', value: 'soccer_statistics.goal_attempts'},
+                {text: 'Asistencias', value: 'soccer_statistics.assists'},
+                {text: 'Faltas', value: 'soccer_statistics.fouls'},
+                {text: 'Tarjetas', value: 'soccer_statistics.cards'},
+                {text: 'Goles Exitosos', value: 'soccer_statistics.successful_goals'},
+                {text: 'Entradas', value: 'soccer_statistics.tackles'},
               
                 ]
             }
@@ -609,28 +708,63 @@ export default {
                 //     sortable: true,
                 //     value: 'athlete_info.first_name'
                 // },
-                {text: "Athlete", align:'start', sortable: true, value: "full_name" },
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'At Bats', value: 'statistics.at_bats'},
-                {text: 'Runs', value: 'statistics.runs'},
+                {text: 'Carreras', value: 'statistics.runs'},
                 {text: 'Hits', value: 'statistics.hits'},
-                {text: 'Runs Batted In', value: 'statistics.runs_batted_in'},
-                {text: 'Base On Balls', value: 'statistics.base_on_balls'},
+                {text: 'Carreras Empujadas', value: 'statistics.runs_batted_in'},
+                {text: 'Bases Por Bolas', value: 'statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'statistics.strikeouts'},
-                {text: 'Left On Base', value: 'statistics.left_on_base'},
-                { text: "Actions", value: "actions", sortable: false },
+                {text: 'Dejados en Base', value: 'statistics.left_on_base'},
+                { text: "Acciones", value: "actions", sortable: false },
 
                 ]
                 this.team_headers =
                 [
-                {text: 'At Bats', value: 'baseball_statistics.at_bats'},
-                {text: 'Runs', value: 'baseball_statistics.runs'},
+                {text: 'Turnos al Bate', value: 'baseball_statistics.at_bats'},
+                {text: 'Carreras', value: 'baseball_statistics.runs'},
                 {text: 'Hits', value: 'baseball_statistics.hits'},
-                {text: 'Runs Batted In', value: 'baseball_statistics.runs_batted_in'},
-                {text: 'Base On Balls', value: 'baseball_statistics.base_on_balls'},
+                {text: 'Carreras Empujadas', value: 'baseball_statistics.runs_batted_in'},
+                {text: 'Bases Por Bolas', value: 'baseball_statistics.base_on_balls'},
                 {text: 'Strikeouts', value: 'baseball_statistics.strikeouts'},
-                {text: 'Left On Base', value: 'baseball_statistics.left_on_base'},
+                {text: 'Dejados en Base', value: 'baseball_statistics.left_on_base'},
                
 
+                ]
+            }
+            // TODO: make it so this happens for MEDAL-BASED events
+            else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                this.headers =
+                [
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
+                {text: 'Categoria', value: 'statistics.category_name'},
+                {text: 'Tipo de Medalla', value: 'statistics.medal_earned'},
+                { text: "Acciones", value: "actions", sortable: false },
+
+                ]
+                this.team_headers =
+                [
+                {text: 'Categoria', value: 'category_name'},
+                {text: 'Tipo de Medalla', value: 'type_of_medal'},
+                {text: 'Numero de Medallas', value: 'medals_earned'},
+                ]
+            }
+            else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                this.headers =
+                [
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
+                {text: 'Categoria', value: 'statistics.category_name'},
+                {text: 'Partidas Jugadas', value: 'statistics.matches_played'},
+                {text: 'Partidas Ganadas', value: 'statistics.matches_won'},
+                { text: "Acciones", value: "actions", sortable: false },
+
+                ]
+                this.team_headers =
+                [
+                {text: 'Categoria', value: 'category_name'},
+                {text: 'Partidas Jugadas', value: 'statistics.matches_played'},
+                {text: 'Partidas Ganadas', value: 'statistics.matches_won'},
                 ]
             }
             this.ready_for_table = true
@@ -647,6 +781,14 @@ export default {
         console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM",this.editedItem)
         console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
         this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
+        if((this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)||
+        (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF)){
+            this.current_category_id = this.editedItem.statistics.category_id;
+        }
+        else{
+             this.current_category_id = null
+        }
         // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
         this.dialogDeleteIndividualStats = true;
     },
@@ -666,15 +808,35 @@ export default {
         console.log("THIS IS THE EDITED ITEM",this.editedItem)
         console.log("THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
         this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
-        const param_json = {
-            sport_route: this.sport_route,
-            event_id:this.event_id,
-            athlete_id:this.edited_athlete_id
+        
+        
+        if((this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)||
+        (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF)){
+            this.edited_category_id = this.editedItem.statistics.category_id;
+            const param_json_1 = {
+                sport_route: this.sport_route,
+                event_id:this.event_id,
+                athlete_id:this.edited_athlete_id,
+                category_id:this.edited_category_id
+            }
+            console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json_1)
+            this.clearIndividualStats()
+            this.setQueryLoading()
+            await this.getIndividualStatistics(param_json_1)
         }
-        console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json)
-        this.clearIndividualStats()
-        this.setQueryLoading()
-        await this.getIndividualStatistics(param_json)
+        else{
+            const param_json_2 = {
+                sport_route: this.sport_route,
+                event_id:this.event_id,
+                athlete_id:this.edited_athlete_id
+            }
+            console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json_2)
+            this.clearIndividualStats()
+            this.setQueryLoading()
+            await this.getIndividualStatistics(param_json_2)
+        }
+        
         console.log("[EDIT INDIVIDUAL -INDEX] SHOULD HAVE GOTTEN , THEY ARE:",this.individual_stats)
         // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
         this.current_individual_stats = this.individual_stats;

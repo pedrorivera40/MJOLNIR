@@ -10,6 +10,13 @@
       >
         <v-spacer />
         <v-toolbar-title>{{sport_name}}</v-toolbar-title>
+        <v-progress-linear
+				:active="loadingQuery"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>
         <v-spacer />
       </v-toolbar>
       <v-container>
@@ -166,6 +173,7 @@
         v-if="dialogAddTeam"
         :dialog.sync="dialogAddTeam"
         :sport_id="sport_id"
+        :season_year_prop.sync="season"
       />
       <UpdateTeamModal
         v-if="dialogEditTeam"

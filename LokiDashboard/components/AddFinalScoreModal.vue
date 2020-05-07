@@ -8,7 +8,7 @@
                 </v-toolbar>
                 <v-card-text>            
                 
-                    <form>
+                    <v-form v-model="valid">
                         <v-container>  
                             <v-row>
                                 <v-col>
@@ -69,7 +69,7 @@
                             </v-col>
                         </v-row>   
                         </v-container>
-                    </form>
+                    </v-form>
           
                 </v-card-text>
             </v-card>
