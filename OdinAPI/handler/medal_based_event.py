@@ -19,6 +19,8 @@ ATHLETSISM = 8
 M100 = 9
 M400 = 12
 
+NO_MEDAL_ID =4
+
 CATEGORIES = dict(ATHLETSISM =[M100,M400])
 
 
@@ -548,7 +550,10 @@ class MedalBasedEventHandler():
         
         dao = MedalBasedEventDAO()
 
-        try:           
+        try:
+            if attributes['medal_id'] != NO_MEDAL_ID:
+                if dao.medalExistsInCategoryOfEvent(attributes['medal_id'],attributes['category_id'],eID):
+                    return jsonify(Error = "There is already a medal awarded for that event."), 500           
             if dao.getMedalBasedEventID(eID,aID,attributes['category_id']):
                 return jsonify(Error = "Medal Based Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),403 #TODO: Use 403 for duplicates
         except:
@@ -853,6 +858,9 @@ class MedalBasedEventHandler():
             # Create and Validate new Medal_Based_Event
             try:
                 for medalStats in statistics:
+                    if medalStats['medal_id'] != NO_MEDAL_ID:
+                        if dao.medalExistsInCategoryOfEvent(medalStats['medal_id'],medalStats['category_id'],eID):
+                            return jsonify(Error = "There is already a medal awarded for that event."), 500
                     result = dao.addStatistics(eID,aID,medalStats['category_id'],medalStats['medal_id'])               
                     if not result:
                         return jsonify(Error = "Problem inserting new statistics record."),500
