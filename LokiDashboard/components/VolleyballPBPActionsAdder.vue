@@ -9,9 +9,20 @@
         <v-tooltip bottom v-for="athlete in uprm_roster" :key="athlete.number">
           <template v-slot:activator="{ on }">
             <v-btn
+              v-if="action_buton_pressed === true"
               class="mx-2 my-4"
               dark
               color="secondary"
+              @click.native="uprm_athlete_action(athlete.number)"
+              width="50"
+              height="50"
+              v-on="on"
+            >{{athlete.number}}</v-btn>
+            <v-btn
+              v-else
+              class="mx-2 my-4"
+              light
+              color="#d3d3d3"
               @click.native="uprm_athlete_action(athlete.number)"
               width="50"
               height="50"
@@ -77,9 +88,20 @@
         <v-tooltip bottom v-for="athlete in opp_roster" :key="athlete.number">
           <template v-slot:activator="{ on }">
             <v-btn
+              v-if="action_buton_pressed === true"
               class="mx-2 my-4"
               dark
               color="secondary"
+              @click.native="opp_athlete_action(athlete.number)"
+              width="50"
+              height="50"
+              v-on="on"
+            >{{athlete.number}}</v-btn>
+            <v-btn
+              v-else
+              class="mx-2 my-4"
+              light
+              color="#d3d3d3"
               @click.native="opp_athlete_action(athlete.number)"
               width="50"
               height="50"
@@ -154,7 +176,8 @@ export default {
       { number: 9, name: "Armando Guerra" },
       { number: 14, name: "Armando Pleito" },
       { number: 15, name: "Sin Nom Bre" }
-    ]
+    ],
+    action_buton_pressed: false
   }),
   methods: {
     ...mapActions({
@@ -167,6 +190,7 @@ export default {
       for (let index in this.action_buttons) {
         this.action_buttons[index].button_state = false;
       }
+      this.action_buton_pressed = false;
     },
     set_action_button(button_key) {
       this.clear_action_buttons();
@@ -175,6 +199,7 @@ export default {
           this.action_buttons[index].button_state = true;
         }
       }
+      this.action_buton_pressed = true;
     },
 
     uprm_athlete_action(id) {
@@ -190,6 +215,7 @@ export default {
       } else {
         console.log({ athlete_id: id, action_type: action, team: "uprm" });
       }
+      this.action_buton_pressed = false;
     },
     opp_athlete_action(number) {
       let action = "";
@@ -208,6 +234,7 @@ export default {
           team: "opponent"
         });
       }
+      this.action_buton_pressed = false;
     },
 
     map_action(action_name) {
