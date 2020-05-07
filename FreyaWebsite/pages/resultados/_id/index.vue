@@ -327,38 +327,38 @@ created(){
                 {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'Asistencias', value: 'statistics.assists'},
                 {text: 'Bloqueos', value: 'statistics.blocks'},
-                {text: 'Field Goal Attempt', value: 'statistics.field_goal_attempt'},
-                {text: 'Field Goal Percentage(%)', value: 'statistics.field_goal_percentage'},
+                {text: 'Intentos de Tiro de Campo', value: 'statistics.field_goal_attempt'},
+                {text: 'Porcentaje de Tiro de Campo (%)', value: 'statistics.field_goal_percentage'},
                 {text: 'Intentos de Tiro Libre', value: 'statistics.free_throw_attempt'},
                 {text: 'Porcentaje de Tiro Libre (%)', value: 'statistics.free_throw_percentage'},
                 {text: 'Puntos', value: 'statistics.points'},
-                {text: 'Rebounds', value: 'statistics.rebounds'},
-                {text: 'Steals', value: 'statistics.steals'},
-                {text: 'Successful Field Goal', value: 'statistics.successful_field_goal'},
-                {text: 'Successful Free Throw', value: 'statistics.successful_free_throw'},
-                {text: 'Successful Three Point', value: 'statistics.successful_three_point'},
-                {text: 'Intentos de Tres Puntos', value: 'statistics.three_point_attempt'},
-                {text: 'Porcentaje de Tres Puntos(%)', value: 'statistics.three_point_percentage'},
-                {text: 'Turnovers', value: 'statistics.turnovers'},
+                {text: 'Rebotes', value: 'statistics.rebounds'},
+                {text: 'Robos', value: 'statistics.steals'},
+                {text: 'Tiros de Campo Exitosos', value: 'statistics.successful_field_goal'},
+                {text: 'Tiros Libres Exitosos', value: 'statistics.successful_free_throw'},
+                {text: 'Tiros de Tres Puntos Exitosos', value: 'statistics.successful_three_point'},
+                {text: 'Intentos de Tiro de Tres', value: 'statistics.three_point_attempt'},
+                {text: 'Porcentaje de Tiro de Tres (%)', value: 'statistics.three_point_percentage'},
+                {text: 'Perdidas de Balón', value: 'statistics.turnovers'},
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
                 {text: 'Asistencias', value: 'basketball_statistics.assists'},
                 {text: 'Bloqueos', value: 'basketball_statistics.blocks'},
-                {text: 'Field Goal Attempt', value: 'basketball_statistics.field_goal_attempt'},
-                {text: 'Field Goal Percentage(%)', value: 'basketball_statistics.field_goal_percentage'},
+                {text: 'Intentos de Tiro de Campo', value: 'basketball_statistics.field_goal_attempt'},
+                {text: 'Porcentaje de Tiro de Campo (%)', value: 'basketball_statistics.field_goal_percentage'},
                 {text: 'Intentos de Tiro Libre', value: 'basketball_statistics.free_throw_attempt'},
-                {text: 'Free Throw Percentage(%)', value: 'basketball_statistics.free_throw_percentage'},
+                {text: 'Porcentaje de Tiro Libre (%)', value: 'basketball_statistics.free_throw_percentage'},
                 {text: 'Puntos', value: 'basketball_statistics.points'},
-                {text: 'Rebounds', value: 'basketball_statistics.rebounds'},
-                {text: 'Steals', value: 'basketball_statistics.steals'},
-                {text: 'Successful Field Goal', value: 'basketball_statistics.successful_field_goal'},
-                {text: 'Successful Free Throw', value: 'basketball_statistics.successful_free_throw'},
-                {text: 'Successful Three Point', value: 'basketball_statistics.successful_three_point'},
-                {text: 'Intentos de Tres Puntos', value: 'basketball_statistics.three_point_attempt'},
-                {text: 'Porcentaje de Tres Puntos(%)', value: 'basketball_statistics.three_point_percentage'},
-                {text: 'Turnovers', value: 'basketball_statistics.turnovers'},
+                {text: 'Rebotes', value: 'basketball_statistics.rebounds'},
+                {text: 'Robos', value: 'basketball_statistics.steals'},
+                {text: 'Tiros de Campo Exitosos', value: 'basketball_statistics.successful_field_goal'},
+                {text: 'Tiros Libres Exitosos', value: 'basketball_statistics.successful_free_throw'},
+                {text: 'Tiros de Tres Puntos Exitosos', value: 'basketball_statistics.successful_three_point'},
+                {text: 'Intentos de Tiro de Tres', value: 'basketball_statistics.three_point_attempt'},
+                {text: 'Porcentaje de Tiro de Tres (%)', value: 'basketball_statistics.three_point_percentage'},
+                {text: 'Perdidas de Balón', value: 'basketball_statistics.turnovers'},
 
                 ]
             }
@@ -367,28 +367,28 @@ created(){
                 this.headers = 
                 [
                 {text: "Atleta", align:'start', sortable: true, value: "full_name" },
-                {text: 'Kill Points', value: 'statistics.kill_points'},
-                {text: 'Attack Errors', value: 'statistics.attack_errors'},
-                {text: 'Assists', value: 'statistics.assists'},
-                {text: 'Aces', value: 'statistics.aces'},
-                {text: 'Service Errors', value: 'statistics.service_errors'},
-                {text: 'Digs', value: 'statistics.digs'},
-                {text: 'Blocks', value: 'statistics.blocks'},
-                {text: 'Blocking Errors', value: 'statistics.blocking_errors'},
-                {text: 'Reception Errors', value: 'statistics.reception_errors'},
+                {text: 'Puntos de Ataque', value: 'statistics.kill_points'},
+                {text: 'Errores de Ataque', value: 'statistics.attack_errors'},
+                {text: 'Asistencias', value: 'statistics.assists'},
+                {text: 'Servicio Directo', value: 'statistics.aces'},
+                {text: 'Errores de Servicios', value: 'statistics.service_errors'},
+                {text: 'Recepciones', value: 'statistics.digs'},
+                {text: 'Bloqueo', value: 'statistics.blocks'},
+                {text: 'Errores De Bloqueo', value: 'statistics.blocking_errors'},
+                {text: 'Errores de Recepcion', value: 'statistics.reception_errors'},
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
-                {text: 'Kill Points', value: 'volleyball_statistics.kill_points'},
-                {text: 'Attack Errors', value: 'volleyball_statistics.attack_errors'},
-                {text: 'Assists', value: 'volleyball_statistics.assists'},
-                {text: 'Aces', value: 'volleyball_statistics.aces'},
-                {text: 'Service Errors', value: 'volleyball_statistics.service_errors'},
-                {text: 'Digs', value: 'volleyball_statistics.digs'},
-                {text: 'Blocks', value: 'volleyball_statistics.blocks'},
-                {text: 'Blocking Errors', value: 'volleyball_statistics.blocking_errors'},
-                {text: 'Reception Errors', value: 'volleyball_statistics.reception_errors'},
+                {text: 'Puntos de Ataque', value: 'volleyball_statistics.kill_points'},
+                {text: 'Errores de Ataque', value: 'volleyball_statistics.attack_errors'},
+                {text: 'Asistencias', value: 'volleyball_statistics.assists'},
+                {text: 'Servicio Directo', value: 'volleyball_statistics.aces'},
+                {text: 'Errores de Servicio', value: 'volleyball_statistics.service_errors'},
+                {text: 'Recepciones', value: 'volleyball_statistics.digs'},
+                {text: 'Bloqueos', value: 'volleyball_statistics.blocks'},
+                {text: 'Errores de Bloqueo', value: 'volleyball_statistics.blocking_errors'},
+                {text: 'Errores de Recepcion', value: 'volleyball_statistics.reception_errors'},
 
                 ]
             }
@@ -397,22 +397,22 @@ created(){
                 this.headers = 
                 [
                 {text: "Atleta", align:'start', sortable: true, value: "full_name" },
-                {text: 'Goal Attempts', value: 'statistics.goal_attempts'},
-                {text: 'Assists', value: 'statistics.assists'},
-                {text: 'Fouls', value: 'statistics.fouls'},
-                {text: 'Cards', value: 'statistics.cards'},
-                {text: 'Successful Goals', value: 'statistics.successful_goals'},
-                {text: 'Tackles', value: 'statistics.tackles'},
+                {text: 'Intentos de Gol', value: 'statistics.goal_attempts'},
+                {text: 'Asistencias', value: 'statistics.assists'},
+                {text: 'Faltas', value: 'statistics.fouls'},
+                {text: 'Tarjetas', value: 'statistics.cards'},
+                {text: 'Goles Exitosos', value: 'statistics.successful_goals'},
+                {text: 'Atajadas', value: 'statistics.tackles'},
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
-                {text: 'Goal Attempts', value: 'soccer_statistics.goal_attempts'},
-                {text: 'Assists', value: 'soccer_statistics.assists'},
-                {text: 'Fouls', value: 'soccer_statistics.fouls'},
-                {text: 'Cards', value: 'soccer_statistics.cards'},
-                {text: 'Successful Goals', value: 'soccer_statistics.successful_goals'},
-                {text: 'Tackles', value: 'soccer_statistics.tackles'},
+                {text: 'Intentos de Gol', value: 'soccer_statistics.goal_attempts'},
+                {text: 'Asistencias', value: 'soccer_statistics.assists'},
+                {text: 'Faltas', value: 'soccer_statistics.fouls'},
+                {text: 'Tarjetas', value: 'soccer_statistics.cards'},
+                {text: 'Goles Exitosos', value: 'soccer_statistics.successful_goals'},
+                {text: 'Atajadas', value: 'soccer_statistics.tackles'},
 
                 ]
             }
@@ -421,24 +421,24 @@ created(){
                 this.headers = 
                 [
                 {text: "Atleta", align:'start', sortable: true, value: "full_name" },
-                {text: 'At Bats', value: 'statistics.at_bats'},
-                {text: 'Runs', value: 'statistics.runs'},
+                {text: 'Turnos al Bate', value: 'statistics.at_bats'},
+                {text: 'Carreras', value: 'statistics.runs'},
                 {text: 'Hits', value: 'statistics.hits'},
-                {text: 'Runs Batted In', value: 'statistics.runs_batted_in'},
-                {text: 'Base On Balls', value: 'statistics.base_on_balls'},
-                {text: 'Strikeouts', value: 'statistics.strikeouts'},
-                {text: 'Left On Base', value: 'statistics.left_on_base'},
+                {text: 'Carreras Empujadas', value: 'statistics.runs_batted_in'},
+                {text: 'Bases por Bolas', value: 'statistics.base_on_balls'},
+                {text: 'Ponches', value: 'statistics.strikeouts'},
+                {text: 'Dejados en Base', value: 'statistics.left_on_base'},
 
                 ]
-                this.team_headers = 
+                this.team_headers =
                 [
-                {text: 'At Bats', value: 'baseball_statistics.at_bats'},
-                {text: 'Runs', value: 'baseball_statistics.runs'},
+                {text: 'Turnos al Bate', value: 'baseball_statistics.at_bats'},
+                {text: 'Carreras', value: 'baseball_statistics.runs'},
                 {text: 'Hits', value: 'baseball_statistics.hits'},
-                {text: 'Runs Batted In', value: 'baseball_statistics.runs_batted_in'},
-                {text: 'Base On Balls', value: 'baseball_statistics.base_on_balls'},
-                {text: 'Strikeouts', value: 'baseball_statistics.strikeouts'},
-                {text: 'Left On Base', value: 'baseball_statistics.left_on_base'},
+                {text: 'Carreras Empujadas', value: 'baseball_statistics.runs_batted_in'},
+                {text: 'Bases por Bolas', value: 'baseball_statistics.base_on_balls'},
+                {text: 'Ponches', value: 'baseball_statistics.strikeouts'},
+                {text: 'Dejados en Base', value: 'baseball_statistics.left_on_base'},
 
                 ]
             }
@@ -449,7 +449,7 @@ created(){
                 {text: "Atleta", align:'start', sortable: true, value: "full_name" },
                 {text: 'Categoria', value: 'statistics.category_name'},
                 {text: 'Tipo de Medalla', value: 'statistics.medal_earned'},
-                { text: "Acciones", value: "actions", sortable: false },
+
 
                 ]
                 this.team_headers =
@@ -467,7 +467,7 @@ created(){
                 {text: 'Categoria', value: 'statistics.category_name'},
                 {text: 'Partidas Jugadas', value: 'statistics.matches_played'},
                 {text: 'Partidas Ganadas', value: 'statistics.matches_won'},
-                { text: "Acciones", value: "actions", sortable: false },
+ 
 
                 ]
                 this.team_headers =

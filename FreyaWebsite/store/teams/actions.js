@@ -146,7 +146,7 @@ export default{
         }catch(error){
             console.log("ERROR GETTING TEAM EVENTS",team_id,error)
             commit("SET_TEAM_EVENTS",null)
-            commit("SET_WAITING_TEAM_EVENTS")
+            // commit("SET_WAITING_TEAM_EVENTS")
             commit("SET_EVENT_QUERY_DONE")
         }
     },
