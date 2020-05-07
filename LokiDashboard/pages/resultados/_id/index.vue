@@ -7,7 +7,6 @@
     </v-container>
     <div class="content-area pa-4 pt-12">
         <v-container>
-            <!-- <v-container v-if="formated_member_stats()"> -->
             <v-container>
                 <v-row align="center" justify="center">
                     <v-card width=400 class="mx-lg-auto" outlined>
@@ -496,37 +495,37 @@ export default {
             console.log("[4Refresh] GOT EVENT STATS",this.results_payload)
             // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
             if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                        this.payload_stats = this.results_payload.Basketball_Event_Statistics
-                        this.team_statistics = [this.payload_stats.team_statistics]
-                    }
-                    else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                        this.payload_stats = this.results_payload.Volleyball_Event_Statistics
-                        this.team_statistics = [this.payload_stats.team_statistics]
-                        }
-                    else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                        this.payload_stats = this.results_payload.Soccer_Event_Statistics
-                        this.team_statistics = [this.payload_stats.team_statistics]
-                    }
-                    else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                        this.payload_stats = this.results_payload.Baseball_Event_Statistics
-                        this.team_statistics = [this.payload_stats.team_statistics]
-                    }
-                    else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
-                        this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
-                        this.team_statistics = []
-                        this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
-                    }
-                    else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
-                        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
-                            this.payload_stats = this.results_payload.Match_Based_Event_Statistics
-                            this.team_statistics = []
-                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble){
-                                this.team_statistics.push({category_name:"Doble",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble})
-                            }
-                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo){
-                                this.team_statistics.push({category_name:"Solo",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo})
-                            }
-                    }
+                this.payload_stats = this.results_payload.Basketball_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+            }
+            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                this.payload_stats = this.results_payload.Volleyball_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+                }
+            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                this.payload_stats = this.results_payload.Soccer_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+            }
+            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                this.payload_stats = this.results_payload.Baseball_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+            }
+            else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
+                this.team_statistics = []
+                this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
+            }
+            else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                this.payload_stats = this.results_payload.Match_Based_Event_Statistics
+                this.team_statistics = []
+                if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble){
+                    this.team_statistics.push({category_name:"Doble",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble})
+                }
+                if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo){
+                    this.team_statistics.push({category_name:"Solo",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo})
+                }
+            }
             else{
                 return false
             }

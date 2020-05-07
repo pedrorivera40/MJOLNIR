@@ -1,126 +1,122 @@
 <template>
   <v-container class="wrapper" v-if="formated_event_info()">
-  <div>
-    <h1 class="primary_dark--text pl-3">Resultados {{sport_name}} {{branch_name_local}}</h1>
-    <!-- PURELY FOR TESTING PURPOSES, TODO: REMOVE SOON 4/24 -->
-    <!-- <v-btn class="mr-4" @click="getAllEventStatistics(event_id)" color="green darken-1">GET AGAIN</v-btn>
-    <v-btn class="mr-4" @click="formated_member_stats()" color="green darken-1">CHECK THE STATS</v-btn> -->
-    <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
-    <!-- <h3>Evento de {{event_info.Event.event_date}}</h3> -->
-    <h3>Evento de {{event_date}}</h3>
-    <div class="content-area pa-4 pt-12">
-    <v-container>
-        <v-row align="center"
-        justify="center">
-        <v-card width=400 class="mx-lg-auto" outlined>
-            <v-card-title>
-                <v-row justify="center">
-                    <h3>Final Result</h3>
-                </v-row>
-                </v-card-title>
-            <v-container>
-                <v-row v-if="formated_final_score()">  
-                    <v-col >
-                        <v-row justify="center">
-                            <h1>{{uprm_score}}</h1>
-                        </v-row>
-                        <v-row justify="center">
-                            <h3>UPRM</h3>
-                        </v-row>
-                    </v-col>
-                    
-                    <v-col align="center">
-                        <v-row justify="center">
-                            <h2>-</h2>
-                        </v-row>
-                    </v-col>
-                    
-                    <v-col>
-                        <v-row justify="center">
-                            <h1>{{opponent_score}}</h1>
-                        </v-row>
-                        <v-row justify="center">
-                            <h3 v-if="opponent_name">{{opponent_name}}</h3>
-                            <h3 v-else>Oponente</h3>
-                        </v-row>
-                    </v-col>
-                    
-                </v-row>
-                <v-row v-else justify="center">
-                    <v-col align="center">
-                        <h3>No Hay Puntuación Final Disponible</h3>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-card>   
-        </v-row> 
-        <v-container>  
-            <v-tabs centered>
-                <v-tabs-slider/>
-                <v-tab>
-                    POR ATLETA
-                </v-tab>
-
-                <v-tab>
-                    POR EQUIPO
-                </v-tab>
-                <v-tab-item>
-                    <v-card>
-                        <!-- :headers="headers"
-                        :items="users"
-                        :search="search"
-                        :loading="isLoadingU" -->
-                        <!-- THE SPORTS STATS TABLE TABLE! -->
-                        <v-data-table
-                        dense 
-                        :headers="headers" 
-                        :items="payload_stats.athlete_statistic"
-                        item-key="payload_stats.athlete_statistic" 
-                        class="elevation-1"	
-                        v-if="formated_member_stats()"
-                        :loading="loadingQuery"							
-                        >
-                        <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                        </v-data-table>
-                        <v-container v-else>
-                            <v-row align = "center" justify = "center">
-                            <v-col justify = "center" align = "center">
-                                <h2>No Se Encontraron Resultados</h2>
-                            </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card>
-                </v-tab-item>
-                <v-tab-item>
-                    <v-card>
-                        <!-- :headers="headers"
-                        :items="users"
-                        :search="search"
-                        :loading="isLoadingU" -->
-                        <v-data-table
-                        dense 
-                        :headers="team_headers" 
-                        :items="team_statistics"
-                        item-key="team_statistics" 
-                        class="elevation-1"	
-                        :loading="loadingQuery"
-                        v-if="formated_member_stats()"							
-                        >
-                        </v-data-table>
-                        <v-container v-else>
-                            <v-row align = "center" justify = "center">
-                            <v-col justify = "center" align = "center">
-                                <h2>No Se Encontraron Resultados de Equipo</h2>
-                            </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card>
-                </v-tab-item>
-            </v-tabs>
-        </v-container>
+    <v-container v-if="formated_event_info()">
+        <h1 class="primary_dark--text pl-3">Resultados {{sport_name}} {{branch_name_local}}</h1>
+        <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
+        <h3>Evento de {{event_date}}</h3>
     </v-container>
+    <div class="content-area pa-4 pt-12">
+        <v-container>
+            <v-row align="center" justify="center">
+            <v-card width=400 class="mx-lg-auto" outlined>
+                <v-card-title>
+                    <v-row justify="center">
+                        <h3>Puntuación Final</h3>
+                    </v-row>
+                    </v-card-title>
+                <v-container>
+                    <v-row v-if="formated_final_score()">  
+                        <v-col >
+                            <v-row justify="center">
+                                <h1>{{uprm_score}}</h1>
+                            </v-row>
+                            <v-row justify="center">
+                                <h3>UPRM</h3>
+                            </v-row>
+                        </v-col>
+                        
+                        <v-col align="center">
+                            <v-row justify="center">
+                                <h2>-</h2>
+                            </v-row>
+                        </v-col>
+                        
+                        <v-col>
+                            <v-row justify="center">
+                                <h1>{{opponent_score}}</h1>
+                            </v-row>
+                            <v-row justify="center">
+                                <h3 v-if="opponent_name">{{opponent_name}}</h3>
+                                <h3 v-else>Oponente</h3>
+                            </v-row>
+                        </v-col>
+                        
+                    </v-row>
+                    <v-row v-else justify="center">
+                        <v-col align="center">
+                            <h3>No Hay Puntuación Final Disponible</h3>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-card>   
+            </v-row> 
+            <v-container>  
+                <v-tabs centered>
+                    <v-tabs-slider/>
+                    <v-tab>
+                        POR ATLETA
+                    </v-tab>
+
+                    <v-tab>
+                        POR EQUIPO
+                    </v-tab>
+                    <v-tab-item>
+                        <v-card>
+                            <!-- :headers="headers"
+                            :items="users"
+                            :search="search"
+                            :loading="isLoadingU" -->
+                            <!-- THE SPORTS STATS TABLE TABLE! -->
+                            <v-data-table
+                            dense 
+                            :headers="headers" 
+                            :items="payload_stats.athlete_statistic"
+                            item-key="payload_stats.athlete_statistic" 
+                            class="elevation-1"	
+                            v-if="formated_member_stats()"
+                            :loading="loadingQuery"							
+                            >
+                            <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
+                            </v-data-table>
+                            <v-container v-else>
+                                <v-row align = "center" justify = "center">
+                                <v-col justify = "center" align = "center">
+                                    <h2>No Se Encontraron Resultados</h2>
+                                </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card>
+                    </v-tab-item>
+                    <v-tab-item>
+                        <v-card>
+                            <!-- :headers="headers"
+                            :items="users"
+                            :search="search"
+                            :loading="isLoadingU" -->
+                            <v-data-table
+                            dense 
+                            :headers="team_headers" 
+                            :items="team_statistics"
+                            item-key="team_statistics" 
+                            class="elevation-1"	
+                            :loading="loadingQuery"
+                            v-if="formated_member_stats()"							
+                            >
+                            </v-data-table>
+                            <v-container v-else>
+                                <v-row align = "center" justify = "center">
+                                <v-col justify = "center" align = "center">
+                                    <h2>No Se Encontraron Resultados de Equipo</h2>
+                                </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card>
+                    </v-tab-item>
+                </v-tabs>
+            </v-container>
+        </v-container>
     </div>
-  </div>
+    
   </v-container>
   <v-container v-else>
     <v-row justify="center">
@@ -181,6 +177,14 @@ export default {
       SOFTBALL_IDF: 16, 
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
+      // OTHER SPORTS (MEDAL BASED)
+      ATHLETICS_IDM: 8,
+      ATHLETICS_IDF: 19,
+    //OTHER SPORTS (MATCH BASED)
+      FIELD_TENNIS_IDM: 9,
+      FIELD_TENNIS_IDF: 18,
+      TABLE_TENNIS_IDM:7,
+      TABLE_TENNIS_IDF:15,
       //season:''
       //INTEGRATION QUERY VARS
       ready_for_event:false,
@@ -191,9 +195,9 @@ export default {
   },
   
 created(){
-    this.ready_for_stats=true
     this.clearEventInfo()
     this.clearAllStats()
+    this.ready_for_stats=true
     this.event_id = this.$route.params.id
     console.log("[1] GOT EVENT ID",this.event_id)
     this.getEventInfo(this.event_id)
@@ -248,16 +252,44 @@ created(){
     formated_member_stats(){
         if(this.results_payload){
             console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.payload_stats = this.results_payload.Basketball_Event_Statistics}
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.payload_stats = this.results_payload.Volleyball_Event_Statistics}
-            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.payload_stats = this.results_payload.Soccer_Event_Statistics}
-            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.payload_stats = this.results_payload.Baseball_Event_Statistics}
+            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
+                this.payload_stats = this.results_payload.Basketball_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+            }
+            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
+                this.payload_stats = this.results_payload.Volleyball_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+                }
+            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
+                this.payload_stats = this.results_payload.Soccer_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+            }
+            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
+                this.payload_stats = this.results_payload.Baseball_Event_Statistics
+                this.team_statistics = [this.payload_stats.team_statistics]
+            }
+            else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
+                this.team_statistics = []
+                this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
+            }
+            else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                this.payload_stats = this.results_payload.Match_Based_Event_Statistics
+                this.team_statistics = []
+                if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble){
+                    this.team_statistics.push({category_name:"Doble",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble})
+                }
+                if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo){
+                    this.team_statistics.push({category_name:"Solo",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo})
+                }
+            }
             else{
                 this.payload_stats = null
                 return false  
             }
             console.log("[5] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
-            this.team_statistics = [this.payload_stats.team_statistics]
+            // this.team_statistics = [this.payload_stats.team_statistics]
             this.opponent_score = (this.payload_stats.opponent_score)
             this.uprm_score = (this.payload_stats.uprm_score)
             return true
@@ -277,6 +309,9 @@ created(){
         else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_route = "volleyball"}
         else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_route = "soccer"}
         else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_route = "baseball"}
+        else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){this.sport_route = "medalbased"}
+        else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){this.sport_route ="matchbased"}
         else{this.sport_route = ''}
     },
 
@@ -404,6 +439,41 @@ created(){
                 {text: 'Strikeouts', value: 'baseball_statistics.strikeouts'},
                 {text: 'Left On Base', value: 'baseball_statistics.left_on_base'},
 
+                ]
+            }
+            // TODO: make it so this happens for MEDAL-BASED events
+            else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                this.headers =
+                [
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
+                {text: 'Categoria', value: 'statistics.category_name'},
+                {text: 'Tipo de Medalla', value: 'statistics.medal_earned'},
+                { text: "Acciones", value: "actions", sortable: false },
+
+                ]
+                this.team_headers =
+                [
+                {text: 'Categoria', value: 'category_name'},
+                {text: 'Tipo de Medalla', value: 'type_of_medal'},
+                {text: 'Numero de Medallas', value: 'medals_earned'},
+                ]
+            }
+            else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                this.headers =
+                [
+                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
+                {text: 'Categoria', value: 'statistics.category_name'},
+                {text: 'Partidas Jugadas', value: 'statistics.matches_played'},
+                {text: 'Partidas Ganadas', value: 'statistics.matches_won'},
+                { text: "Acciones", value: "actions", sortable: false },
+
+                ]
+                this.team_headers =
+                [
+                {text: 'Categoria', value: 'category_name'},
+                {text: 'Partidas Jugadas', value: 'statistics.matches_played'},
+                {text: 'Partidas Ganadas', value: 'statistics.matches_won'},
                 ]
             }
         } 
