@@ -88,8 +88,9 @@ def validateRequestPermissions(token, permissionNumber):
     print('Permission Number',permissionNumber)
     print('All permissions',token['permissions'])
     print('Permissions being checked',token['permissions'][index][permissionNumber])
-    print('Permission check',token['permissions'][index][permissionNumber]==False)
-    return(token['permissions'][index][permissionNumber]==False)
+    print('Permission check',token['permissions'][index][permissionNumber])
+    print((token['permissions'][index][permissionNumber]))
+    return(token['permissions'][index][permissionNumber])
 
 #--------- Athlete Routes ---------#
 @app.route("/athletes/", methods=['GET', 'POST'])
@@ -176,9 +177,9 @@ def allUsers():
     if(loggedUser == None):
         return jsonify(Error='Invalid Session'), 401
         
-    if(validateRequestPermissions(token,'21') or
-    validateRequestPermissions(token,'22') or
-    validateRequestPermissions(token,'23')):
+    if(not(validateRequestPermissions(token,'22') or
+    validateRequestPermissions(token,'23') or
+    validateRequestPermissions(token,'24'))):
         return jsonify(Error='User does not have permissions to acces this resource.'), 403
     handler = UserHandler()
     if request.method == 'GET':
