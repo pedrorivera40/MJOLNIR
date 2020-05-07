@@ -1,18 +1,13 @@
 <template>
-  <v-container class="wrapper">          
-    <h1 class="primary_dark--text pl-3">Atletas:</h1>   
+  <v-container class="wrapper">
+    <h1 class="primary_dark--text pl-3">Atletas</h1>
     <div class="content-area pa-4 pt-12">
-      <v-card >
+      <v-card>
         <v-card-title>
           <v-row>
             <v-col>
-              <v-btn
-                color="green darken-1"
-                dark
-                @click="addAthlete"                   
-              >
-                <v-icon left >mdi-plus</v-icon>
-                Añadir Atleta
+              <v-btn color="green darken-1" dark @click="addAthlete">
+                <v-icon left>mdi-plus</v-icon>Añadir Atleta
               </v-btn>
               <v-spacer />
             </v-col>
@@ -28,14 +23,10 @@
                 hide-details
               />
             </v-col>
-
           </v-row>
-
-
         </v-card-title>
-        
+
         <v-data-table
-                 
           :headers="headers"
           :items="athletes"
           :search="search"
@@ -50,11 +41,9 @@
                 <v-icon
                   medium
                   class="mr-2 table-actions"
-                  v-on="on"                 
+                  v-on="on"
                   @click="viewAthlete(item.id)"
-                >
-                  mdi-eye-plus
-                </v-icon>
+                >mdi-eye-plus</v-icon>
               </template>
               <span>Ver Atleta</span>
             </v-tooltip>
@@ -64,11 +53,9 @@
                 <v-icon
                   medium
                   class="mr-2 table-actions"
-                  v-on="on"                  
+                  v-on="on"
                   @click="editAthlete(item)"
-                >
-                  mdi-pencil
-                </v-icon>
+                >mdi-pencil</v-icon>
               </template>
               <span>Editar Atleta</span>
             </v-tooltip>
@@ -77,20 +64,16 @@
                 <v-icon
                   medium
                   class="mr-2 table-actions"
-                  v-on="on"                 
+                  v-on="on"
                   @click="deleteAthlete(item.id)"
-                >
-                  mdi-delete
-                </v-icon>
+                >mdi-delete</v-icon>
               </template>
               <span>Borrar Atleta</span>
-            </v-tooltip>           
-          </template>          
+            </v-tooltip>
+          </template>
         </v-data-table>
 
-        <AddAthleteModal
-          :dialog.sync="dialogAdd"
-        />
+        <AddAthleteModal :dialog.sync="dialogAdd" />
 
         <EditAthleteModal
           :dialog.sync="dialogEdit"
@@ -113,131 +96,116 @@
           :sport_id="editedItem.sport_id"
           :id="editedItem.id"
         />
-        <DeleteAthleteModal
-          :dialog.sync="dialogDelete"
-          :id="aid"          
-        />      
-        
+        <DeleteAthleteModal :dialog.sync="dialogDelete" :id="aid" />
       </v-card>
     </div>
   </v-container>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex"
-import  AddAthleteModal from "@/components/AddAthleteModal"
-import EditAthleteModal from "@/components/EditAthleteModal"
-import DeleteAthleteModal from "@/components/DeleteAthleteModal"
+import { mapActions, mapGetters } from "vuex";
+import AddAthleteModal from "@/components/AddAthleteModal";
+import EditAthleteModal from "@/components/EditAthleteModal";
+import DeleteAthleteModal from "@/components/DeleteAthleteModal";
 
 export default {
-  components:{
+  components: {
     AddAthleteModal,
     EditAthleteModal,
-    DeleteAthleteModal,
+    DeleteAthleteModal
   },
 
-  data: () =>({
-    search:'',
-    aid:0,
-    dialogDelete:false,
-    dialogAdd:false,
-    dialogEdit:false,
-    terms:false,
-    ready:false,
-    name:'',
-    sport:'',   
-    sports:['Voleibol','Baloncesto','Atletismo'],     
-    
-    filteredAthletes:'',
+  data: () => ({
+    search: "",
+    aid: 0,
+    dialogDelete: false,
+    dialogAdd: false,
+    dialogEdit: false,
+    terms: false,
+    ready: false,
+    name: "",
+    sport: "",
+    sports: ["Voleibol", "Baloncesto", "Atletismo"],
 
-    headers:[
+    filteredAthletes: "",
+
+    headers: [
       {
-        text:"ID",
-        align:"start",
-        value:"id"
+        text: "ID",
+        align: "start",
+        value: "id"
       },
-      {text:"Primer Nombre",value:"fName"},
-      {text:"Segundo Nombre",value:"mName"},
-      {text:"Apellidos",value:"lName"},
-      {text:"Deporte",value:"sportName"},
-      {text:"Rama",value:"sportBranch"},
-      {text:"Acciones",value:"actions",sortable:false}
+      { text: "Primer Nombre", value: "fName" },
+      { text: "Segundo Nombre", value: "mName" },
+      { text: "Apellidos", value: "lName" },
+      { text: "Deporte", value: "sportName" },
+      { text: "Rama", value: "sportBranch" },
+      { text: "Acciones", value: "actions", sortable: false }
     ],
 
-    editedItem:{
-      fName:"",
-      mName:"",
-      lName:"",
-      dBirth:"",
-      bio:"",
-      height:0.0,
-      number:0,
-      school:"",
-      sProgram:"",
-      yearOfStudy:0,
-      sport_id:0,
-      sportName:"",
-      sportBranch:"",
-      yearsOfParticipation:0,
-      profilePicLink:"",
-      athlete_positions:{},
-      athlete_categories:{},
-      id:0,
-    },
-  
-
-    
+    editedItem: {
+      fName: "",
+      mName: "",
+      lName: "",
+      dBirth: "",
+      bio: "",
+      height: 0.0,
+      number: 0,
+      school: "",
+      sProgram: "",
+      yearOfStudy: 0,
+      sport_id: 0,
+      sportName: "",
+      sportBranch: "",
+      yearsOfParticipation: 0,
+      profilePicLink: "",
+      athlete_positions: {},
+      athlete_categories: {},
+      id: 0
+    }
   }),
 
-  
-
-  methods:{
+  methods: {
     ...mapActions({
       getAthletes: "athletes/getAthletes",
-      removeAthlete:"athletes/removeAthlete"
+      removeAthlete: "athletes/removeAthlete"
     }),
 
-    addAthlete(){
-      this.dialogAdd = true
+    addAthlete() {
+      this.dialogAdd = true;
     },
-    
-    loadingAthletes(){
-      if(this.athletes.length > 0){
-        return false
-      }else{
-        return true
+
+    loadingAthletes() {
+      if (this.athletes.length > 0) {
+        return false;
+      } else {
+        return true;
       }
     },
-    viewAthlete(athleteID){
-      this.$router.push('/atleta/'+athleteID)
+    viewAthlete(athleteID) {
+      this.$router.push("/atleta/" + athleteID);
     },
-    editAthlete(athlete){
-      this.editedItem = Object.assign({},athlete)
-      this.dialogEdit = true
-    },    
+    editAthlete(athlete) {
+      this.editedItem = Object.assign({}, athlete);
+      this.dialogEdit = true;
+    },
 
-    deleteAthlete(athleteID){
-      this.aid = athleteID
-      this.dialogDelete = true
-    },
-    
-    
+    deleteAthlete(athleteID) {
+      this.aid = athleteID;
+      this.dialogDelete = true;
+    }
   },
-    
-  
+
   computed: {
     ...mapGetters({
       athletes: "athletes/athletes"
-    }),
-  
+    })
   },
 
   mounted() {
     this.getAthletes();
   }
-
-    
-}
+};
 </script>
 
 <style scoped>
