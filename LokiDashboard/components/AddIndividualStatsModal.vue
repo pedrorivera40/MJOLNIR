@@ -877,7 +877,8 @@
                                         <v-col             
                                         >
                                                 <v-text-field
-                                                    v-model="payload_stats_individual.attributes.matches_played"                      
+                                                    v-model.number="payload_stats_individual.attributes.matches_played"       
+                                                    type="number"               
                                                     label="Matches Played"
                                                     outlined
                                                     required
@@ -887,7 +888,8 @@
                                         <v-col             
                                         >
                                                 <v-text-field
-                                                    v-model="payload_stats_individual.attributes.matches_won"                      
+                                                    v-model.number="payload_stats_individual.attributes.matches_won"   
+                                                    type="number"                   
                                                     label="Matches Won"
                                                     outlined
                                                     required
@@ -1016,6 +1018,12 @@
             // if (this.event_id == 1){
                 //TEMPORARY MOCK CATEGORIES
             this.sport_categories=[
+                {
+                    category_id:5, category_name:"Solo"
+                },
+                {
+                    category_id:7, category_name:"Doble"
+                },
                 {
                     category_id:12, category_name:"400 Metros"
                 },

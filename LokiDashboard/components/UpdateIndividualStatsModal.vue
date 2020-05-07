@@ -875,7 +875,8 @@
                                                 <v-col             
                                         >
                                                 <v-text-field
-                                                    v-model="payload_stats_individual.attributes.matches_played"                      
+                                                    v-model.number="payload_stats_individual.attributes.matches_played"     
+                                                    type="number"                 
                                                     label="Partidas Jugadas"
                                                     outlined
                                                     required
@@ -885,7 +886,8 @@
                                         <v-col             
                                         >
                                                 <v-text-field
-                                                    v-model="payload_stats_individual.attributes.matches_won"                      
+                                                    v-model.number="payload_stats_individual.attributes.matches_won"                      
+                                                    type="number"
                                                     label="Partidas Ganadas"
                                                     outlined
                                                     required
@@ -896,115 +898,7 @@
                                     </v-row>
                                 </v-col>
                             </v-row>
-                            <!-- <v-row v-if="isMatchBased">
-                                <v-col>  
-                                    <v-row>
-                                        <h2>Seleccionar Atleta:</h2>
-                                    </v-row>
-                                    <v-row 
-                                        align ="center"
-                                        justify = "center"
-                                        >
-                                            <v-col                   
-                                            >
-                                                <v-autocomplete
-                                                    v-model="payload_stats_individual.athlete_id"
-                                                    :items="team_members"
-                                                    filled
-                                                    chips
-                                                    color="blue-grey lighten-2"
-                                                    label="Atleta Seleccionado"
-                                                    item-text="first_name"
-                                                    item-value="athlete_id"
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
-                                                    required
-                                                    disabled
-                                                    >
-                                                    <template v-slot:selection="data">
-                                                        <v-chip
-                                                        v-bind="data.attrs"
-                                                        :input-value="data.selected"
-                                                        @click="data.select"
-                                                        >
-                                                        <v-avatar left>
-                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
-                                                            <v-img v-else :src="data.item.profile_image_link"/>
-                                                        </v-avatar>
-                                                        {{ data.item.first_name }}
-                                                        </v-chip>
-                                                    </template>
-                                                    <template v-slot:item="data">
-                                                        <template v-if="typeof data.item !== 'object'">
-                                                        <v-list-item-content v-text="data.item"></v-list-item-content>
-                                                        </template>
-                                                        <template v-else>
-                                                        <v-list-item-avatar>
-                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
-                                                            <v-img v-else :src="data.item.profile_image_link"/>
-                                                        </v-list-item-avatar>
-                                                        <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
-                                                        </v-list-item-content>
-                                                        </template>
-                                                    </template>
-                                                </v-autocomplete>  
-                                            </v-col>
-                                        </v-row>       
-                                    <v-row>
-                                        <h2>Categoria de Deporte:</h2>
-                                    </v-row>
-                                    <v-row 
-                                    align ="center"
-                                    justify = "center"
-                                    >
-                                        <v-col             
-                                        >
-                                                <v-autocomplete
-                                                    v-model="payload_stats_individual.attributes.category_id"
-                                                    :items="sport_categories"
-                                                    filled
-                                                   
-                                                    disabled
-                                                    color="blue-grey lighten-2"
-                                                    label="Select"
-                                                    item-text="category_name"
-                                                    item-value="category_id"
-                                                    required
-                                    
-                                                    >
-                                                </v-autocomplete>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <h2>Medalla Obtenida:</h2>
-                                    </v-row>
-                                    <v-row 
-                                    align ="center"
-                                    justify = "center"
-                                    >
-                                        <v-col             
-                                        >
-                                                <v-text-field
-                                                    v-model="payload_stats_individual.attributes.matches_played"                      
-                                                    label="Matches Played"
-                                                    outlined
-                                                    required
-                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
-                                                ></v-text-field>
-                                        </v-col>
-                                        <v-col             
-                                        >
-                                                <v-text-field
-                                                    v-model="payload_stats_individual.attributes.matches_won"                      
-                                                    label="Matches Won"
-                                                    outlined
-                                                    required
-                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
-                                                ></v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-col>
-                            </v-row> -->
+                            
                             <v-row>
                                 <v-spacer/>
                                 <v-spacer/>
@@ -1359,25 +1253,25 @@
                         "event_id":Number(this.event_id),
                         "athlete_id":this.athlete_id,
                         "attributes":{
-                            // "medal_id":this.current_statistics.medal_id,
-                            "medal_id":1,
-                            // "category_id":this.current_statistics.category_id
-                            "category_id":12
+                            "medal_id":current_statistics.medal_id,
+                            // "medal_id":1,
+                            "category_id":current_statistics.category_id
+                            // "category_id"s:12
                         }
                     }
                 }
                 else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
                     || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
                     let current_statistics = this.individual_stats.Match_Based_Event_Athlete_Statistics.event_statistics
+                    console.log("[FROM FIELD TENNIS VALUE SET CURRENT STATISTICS:",current_statistics)
                     this.payload_stats_individual = {
                         "event_id":Number(this.event_id),
                         "athlete_id":this.athlete_id,
                         "attributes":
                         {
-                            "matches_played":12,
-                            "matches_won":11,
-                            // "category_id":this.current_statistics.category_id
-                            "category_id": 7
+                            "matches_played":current_statistics.matches_played,
+                            "matches_won":current_statistics.matches_won,
+                            "category_id": current_statistics.category_id
                         }
                     }
                 }
