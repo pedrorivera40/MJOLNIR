@@ -69,7 +69,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username || $store.state.userAuth.userPermissions[9]['24']"
+                  :disabled="item.username === $store.state.userAuth.user.username || !$store.state.userAuth.userPermissions[11]['24']"
                   @click.stop="editUser(item)"
                 >
                   mdi-pencil
@@ -84,7 +84,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username || $store.state.userAuth.userPermissions[9]['24']"
+                  :disabled="item.username === $store.state.userAuth.user.username || !$store.state.userAuth.userPermissions[11]['24']"
                   @click="editPermissions(item)"
                 >
                   mdi-shield-lock
@@ -98,7 +98,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username || $store.state.userAuth.userPermissions[9]['23'] "
+                  :disabled="item.username === $store.state.userAuth.user.username || !$store.state.userAuth.userPermissions[10]['23'] "
                   @click.stop="deleteUser(item)"
                 >
                   mdi-delete
