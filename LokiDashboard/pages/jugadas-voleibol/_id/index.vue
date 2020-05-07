@@ -399,7 +399,7 @@ export default {
       detachGameActions: "volleyballPBP/detachGameActions",
       sendGameAction: "volleyballPBP/sendGameAction",
       endPBPSequence: "volleyballPBP/endPBPSequence",
-      clearPBPCollections: "volleyballPBP/clearPBPCollections"
+      clearPBPState: "volleyballPBP/clearPBPState"
     }),
 
     startEndPBPSequence() {
@@ -541,7 +541,7 @@ export default {
     this.detachGameOver(this.event_id);
     this.detachOppColor(this.event_id);
     this.detachGameActions(this.event_id);
-    this.clearPBPCollections();
+    this.clearPBPState();
   }
 };
 </script>

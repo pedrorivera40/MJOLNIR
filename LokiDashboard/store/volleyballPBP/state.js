@@ -35,7 +35,6 @@ export default () => ({
     }, // Keep collective opponent statistics for this match.
     uprmAthleteStatistics: [], // For each UPRM athlete, keeps their individual stats for this match.
     oppAthleteStatistics: [], // For each opponent athlete, keeps their individual stats for this match.
-    // TODO -> Implement functions for the following properties.
     hasPBP: true,
     sportName: "",
     teamId: 0,

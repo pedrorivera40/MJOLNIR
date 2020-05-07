@@ -115,6 +115,7 @@ export default {
             receptionErrors: 0
         };
 
+        // For each game action, update result accordingly.
         for (let index in state.gameActions) {
             let currentAction = state.gameActions[index];
             if (currentAction.team !== "uprm") {
@@ -184,6 +185,7 @@ export default {
             receptionErrors: 0
         };
 
+        // For each game action, update result accordingly.
         for (let index in state.gameActions) {
             let currentAction = state.gameActions[index];
             if (currentAction.team !== "opponent") {
@@ -261,6 +263,7 @@ export default {
             );
         }
 
+        // For each game action, update athlete statistics accordingly.
         for (let index in state.gameActions) {
             let currentAction = state.gameActions[index];
             if (currentAction.team !== "uprm") {
@@ -350,6 +353,7 @@ export default {
             );
         }
 
+        // For each game action, update athlete statistics accordingly.
         for (let index in state.gameActions) {
             let currentAction = state.gameActions[index];
             if (currentAction.team !== "opponent") {
@@ -417,48 +421,39 @@ export default {
         state.oppAthleteStatistics = result;
     },
 
+    // Set sport_name value.
     SET_SPORT_NAME(state, name) {
         state.sportName = name;
     },
 
+    // Set hasPBP value.
     SET_HAS_PBP(state, value) {
         state.hasPBP = value;
     },
 
+    // Set teamId value.
     SET_TEAM_ID(state, id) {
         state.teamId = id;
     },
 
+    // Set validUPRMRoster value.
     SET_VALID_UPRM_ROSTER(state, roster) {
         state.validUPRMRoster = roster;
     },
 
+    // Set sport branch value.
     SET_BRANCH(state, branch) {
         state.branch = branch;
     },
 
+    // Set opponentName value.
     SET_OPPONENT_NAME(state, name) {
         state.opponentName = name;
     },
 
+    // Clear function to be called before mounting component.
     CLEAR_STATE(state) {
-        state.uprmRoster = [];
-        state.oppRoster = [];
-        state.gameActions = [];
-        state.branch = "";
-        state.opponentName = "";
-        state.validUPRMRoster = [];
-        state.teamId = -1;
-        state.hasPBP = false;
-        state.sportName = "";
-        state.oppAthleteStatistics = [];
-        state.uprmAthleteStatistics = [];
-        state.oppStatistics = {};
-        state.uprmStatistics = {};
-        state.oppColor = "";
-        state.gameOver = false;
-        state.currentSet = 1;
-
+        // Set every state attribute to its default value.
         state.currentSet = 0;
         state.uprmSets = [0, 0, 0, 0, 0];
         state.oppSets = [0, 0, 0, 0, 0];
@@ -493,7 +488,6 @@ export default {
         };
         state.uprmAthleteStatistics = []
         state.oppAthleteStatistics = [];
-        // TODO -> Implement functions for the following properties.
         state.hasPBP = true;
         state.sportName = "";
         state.teamId = 0;

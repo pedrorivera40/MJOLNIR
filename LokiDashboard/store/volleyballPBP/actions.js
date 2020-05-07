@@ -355,7 +355,8 @@ export default {
         }
     },
 
-    clearPBPCollections({ commit, dispatch }) {
+    // Clear app state regarding PBP sequence data.
+    clearPBPState({ commit, dispatch }) {
         try {
             commit("CLEAR_STATE");
         } catch (error) {
