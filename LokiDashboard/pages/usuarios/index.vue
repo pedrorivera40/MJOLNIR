@@ -10,6 +10,7 @@
                 color="primary_light"
                 class="white--text"
                 @click="editUser(editedItemIndex)"
+                :disabled="!$store.state.userAuth.userPermissions[9]['22']"
               >
                 <v-icon left>
                   mdi-plus
@@ -18,7 +19,7 @@
               </v-btn>
               <v-spacer />
             </v-col>
-            <!-- <v-col cols="4">
+            <v-col cols="4">
               <v-text-field
                 v-model="search"
                 append-icon="mdi-magnify"
@@ -29,7 +30,7 @@
                 single-line
                 hide-details
               />
-            </v-col> -->
+            </v-col>
           </v-row>
         </v-card-title>
         <v-data-table
@@ -68,7 +69,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username"
+                  :disabled="item.username === $store.state.userAuth.user.username || $store.state.userAuth.userPermissions[9]['24']"
                   @click.stop="editUser(item)"
                 >
                   mdi-pencil
@@ -83,7 +84,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username"
+                  :disabled="item.username === $store.state.userAuth.user.username || $store.state.userAuth.userPermissions[9]['24']"
                   @click="editPermissions(item)"
                 >
                   mdi-shield-lock
@@ -97,7 +98,7 @@
                   small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username"
+                  :disabled="item.username === $store.state.userAuth.user.username || $store.state.userAuth.userPermissions[9]['23'] "
                   @click.stop="deleteUser(item)"
                 >
                   mdi-delete
@@ -150,7 +151,7 @@ export default {
   middleware: 'admin',
   data() {
     return {
-      // search: "",
+      search: "",
       dialogEdit: false,
       dialogDelete: false,
       dialogPermissions: false,
