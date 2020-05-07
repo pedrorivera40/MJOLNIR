@@ -586,24 +586,25 @@ export default {
             ]
           }
         else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
-          this.headers =
+          this.headers = 
           [
           {text: "Atleta", align:'start', sortable: true, value: "full_name" },
           {text: 'Categoria', value: 'Event_Statistics.category_name'},
-          {text: 'Tipo de Medalla', value: 'Event_Statistics.medal_earned'},
+          {text: 'Tipo de Medalla', value: 'Event_Statistics.type_of_medal'},
+          {text: 'Numero de Medallas', value: 'Event_Statistics.medals_earned'},
 
 
           ]
-          this.team_headers =
+          this.team_headers = 
           [
-          {text: 'Categoria', value: 'category_name'},
-          {text: 'Tipo de Medalla', value: 'type_of_medal'},
-          {text: 'Numero de Medallas', value: 'medals_earned'},
+          {text: 'Categoria', value: 'Event_Statistics.category_name'},
+          {text: 'Tipo de Medalla', value: 'Event_Statistics.type_of_medal'},
+          {text: 'Numero de Medallas', value: 'Event_Statistics.medals_earned'},
           ]
         }
         else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
             || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
-            this.headers =
+            this.headers = 
             [
             {text: "Atleta", align:'start', sortable: true, value: "full_name" },
             {text: 'Categoria', value: 'Event_Statistics.category_name'},
@@ -612,9 +613,9 @@ export default {
 
 
             ]
-            this.team_headers =
+            this.team_headers = 
             [
-            {text: 'Categoria', value: 'category_name'},
+            {text: 'Categoria', value: 'Event_Statistics.category_name'},
             {text: 'Partidas Jugadas', value: 'Event_Statistics.matches_played'},
             {text: 'Partidas Ganadas', value: 'Event_Statistics.matches_won'},
             ]
