@@ -3,17 +3,20 @@ export default {
      * Action to fetch all events from the datadase
      * @param {*} param0 destructuring of vuex context object
      */
-    async getEvents({ commit}) {
+    async getEvents({commit}) {
         try {
             const response = await this.$axios.get('events/')
             commit("SET_EVENTS", response.data.Events)
             commit("SET_EVENT",null)
 
         }catch(error){
+            
             if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                console.log(error)
+                //dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
             }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+                console.log(error)
+                //dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
 
         }
@@ -31,9 +34,11 @@ export default {
 
         }catch(error){
             if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                console.log(error)
+                //dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
             }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+                console.log(error)
+                //dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
         }
     },

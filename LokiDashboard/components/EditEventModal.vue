@@ -196,23 +196,23 @@ export default {
   name: "EditEventModal",
   props:{
     dialog:Boolean,
-    date:String,
-    time:String,    
-    locality:Boolean,
-    venue:String,
-    sport_name:String,
-    branch:String,
+    date:String,//Date of the event
+    time:String,//Time of the event
+    locality:Boolean,//Flag of whether the even is local or away
+    venue:String,//Venue of the event
+    sport_name:String,//Sport of the event
+    branch:String,//Branch of the sport of the event
     team_season_year:Number,
     opponent_name:String,
     event_summary:String,
-    id:Number,
+    id:Number,//Id of the event in the database
     trigger:Boolean,
 
   },
   
   data: () => ({
     ready:false,
-    valid:false,
+    valid:false,//Flag denoting the validity of the contents of the fields with rules
     date_:'',     
     time_:'',
     locality_:Boolean,
@@ -223,7 +223,7 @@ export default {
     opponent_name_:'',
     eventSummary_:'',
     loading:true, 
-    editing:false,
+    editing:false,//Used for loading state in edit button.
     min_date:'',
     max_date:'',  
    
@@ -239,11 +239,16 @@ export default {
     }),
     
     ...rules,
-
+    
+    /**
+     * Function to be called when an event is edited
+     * with valid information and the user presses 
+     * the edit button.
+     */
     async submit () { 
 
       this.editing = true
-      const event_attributes = {}
+      const event_attributes = {}//Temp Object for the attributes of the event.
 
       event_attributes['event_date'] = this.date_ + ' ' + this.time_
       event_attributes['is_local'] = this.locality_      
@@ -251,8 +256,10 @@ export default {
       event_attributes['opponent_name'] = this.opponent_name_
       event_attributes['event_summary'] = this.eventSummary_
       
+      //Contruct Object for the vuex action to be called.
       const eventJSON = {'event_id':this.id,'attributes':event_attributes}
       
+      //Call vuex action and wait for response
       const response = await this.editEvent(eventJSON)
 
       this.editing = false
@@ -262,7 +269,11 @@ export default {
       }          
      
     },
-     
+    
+    /**
+     * Formats the content in the edit event form
+     * fields.
+     */
     format(){
 			
       if(this.dialog && !this.ready){       
@@ -272,9 +283,7 @@ export default {
         const dateYear = this.team_season_year
         this.min_date = dateYear +'-01-01'
         this.max_date = dateYear+1 +'-12-31'
-        
 
-        
         this.time_ = this.time        
 
         this.locality_ = this.locality
@@ -288,18 +297,22 @@ export default {
           this.opponent_name_ = this.opponent_name
 
         if(this.event_summary)
-          this.eventSummary_ = this.event_summary
-        
-        
+          this.eventSummary_ = this.event_summary        
 
         this.ready = true
         this.loading = false    
       }
 
     },
+
+    /**
+     * Closes the EditEventModal and resets optional 
+     * fields.
+     */
     close(){
       this.ready = false
       this.terms = false
+      this.loading = true
       this.venue_ = ''
       this.opponent_name_ = ''
       this.eventSummary_ = ''

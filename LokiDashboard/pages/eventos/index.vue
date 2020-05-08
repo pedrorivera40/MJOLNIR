@@ -18,7 +18,7 @@
                   <v-btn
                     color="green darken-1"
                     dark
-                    @click="goToCreateEvent"                   
+                    @click="activateEventCreationForm"                   
                   >
                   <v-icon left >mdi-plus</v-icon>
                     Añadir Evento
@@ -60,7 +60,7 @@
                 <v-list-item>
                   <v-select v-model="locality" :items="localities" label="Localizacion"></v-select>
                 </v-list-item>
-                 <v-list-item>
+                <v-list-item>
                   <v-checkbox v-model="eventHasPBP" label="Eventos con PBP"> </v-checkbox>
                 </v-list-item>
 
@@ -118,6 +118,10 @@
               </template>
               <span>Crear Play-by-Play</span>
             </v-tooltip>
+            <span class='text' v-if="item.sport_name !='Voleibol'">
+              N/A
+            </span>
+
           </template> 
 
           <template v-slot:item.actions="{ item }">
@@ -243,8 +247,8 @@ export default {
     sports: ["Voleibol", "Baloncesto", "Atletismo","Fútbol","Softbol","Pelota"],
     branches: ["Masculino", "Femenino", "Exhibicion"],
     localities: ["Casa", "Afuera"],
-    filteredEvents:[],
-    eid: 0,
+    filteredEvents:[],//This list is the one presented to the users
+    eid: 0,//This is the id of the event to be deleted.
 
     headers:[
       {
@@ -260,7 +264,7 @@ export default {
       {text:"Acciones", value:"actions",sortable:false}     
 
     ],
-
+    //This will be used by the EditEventModal
     editedItem:{
       event_date: "",
       time:"",
@@ -274,9 +278,6 @@ export default {
       id: 0
     }
 
-
-    
-
   }),
 
   methods: {
@@ -286,11 +287,19 @@ export default {
       startPBPSequence:"events/startPBPSequence"
     }),
     
-    goToCreateEvent(){
+    /**
+     * Activates the AddEventModal dialog component.
+     */
+    activateEventCreationForm(){
       this.dialogAdd = true
-      //this.$router.push('/evento/')
+     
     },
 
+    /**
+     * Clears the filter fields 
+     * and resets the filtered list
+     * if filters have been applied.
+     */
     clearFilters() {
       this.date = "";
       this.sport = "";
@@ -308,13 +317,19 @@ export default {
       }
     },
 
+    /**
+     * Returns false if events have been loaded and formated,
+     * else it returns true after it formats the data of the events
+     * list that have been loaded from the database.
+     * 
+     */
     loadingEvents(){      
       if(this.events.length > 0){
         if(this.ready){
           return false
         }
         else{         
-          console.log('ran only once?')
+          
           this.filteredEvents = []
           for (let i = 0; i < this.events.length; i++) {
             this.filteredEvents.push(this.events[i]);
@@ -333,7 +348,11 @@ export default {
       }
     },    
     
-
+    /**
+     * Applies the filters selected 
+     * by the user on the  viewable
+     * events table.
+     */
     filterTheList() {
 
       
@@ -381,50 +400,53 @@ export default {
             this.filteredEvents.splice(i,1);
             continue
           }
-        }
-
-        this.menu = false
+        }    
       }
+      this.menu = false
     },
 
-    setPBPStatus(status,sportName){
-      if(sportName.localeCompare("Voleibol")!=0)
-        return ""
-      return status  ? "Ver PBP" : "Crear PBP";
-    },
-
+    
+    /**
+     * Routes the user to the event viewer page
+     * of the event with the id given as parameter 
+     * @param eventID The id of the event
+     */
     viewEvent(eventID){
       this.$router.push('/evento/'+eventID)
     },
 
+    /**
+     * Activates the EditEventModal using the event information
+     * given as parameter.
+     * @param event The event Object containg the information of the event to be edited.
+     */
     editEvent(event){     
       this.editedItem = Object.assign({},event)
-      this.dialogEdit = true
-      //this.$router.push('/evento/'+eventID+'/editar')
+      this.dialogEdit = true      
     },
-    deleteEvent(){  
-      if(this.eid > 0 && this.terms)            
-        this.removeEvent(this.eid)
-        this.dialog = false
-        this.terms = false
-        this.ready = false
+    
 
-    },
+    /**
+     * Activates the DeleteEventModal using
+     * the id of the event given as a parameter.
+     * @param eventID The id of event to be removed
+     */
     prepareEventToRemove(eventID){
       this.eid = eventID
       this.dialogDelete = true
-    },
-    cancelRemoval(){
-      this.eid = 0
-      this.dialog = false
-      this.terms = false
-    },
+    },    
 
+    /**
+     * Routes user to pbp sequence page.
+     */
     goToPBPSequence(event)
     {
-      this.$router.push('/jugadas-voleibol/'+event.id)
+      this.$router.push('/jugadas-'+event.sport_name.toLowerCase()+'/'+event.id)
     },
 
+    /**
+     * Calls the start pbp sequence action
+     */
     createPBPSequence(event)
     {
       
@@ -436,6 +458,10 @@ export default {
         this.startPBPSequence(eventJSON)
       }
     },
+
+    /**
+     * Closes the pbp warning dialog 
+     */
     closePBPDialog(){
       this.dialogPBP = false
     }
