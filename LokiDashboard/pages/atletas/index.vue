@@ -6,7 +6,7 @@
         <v-card-title>
           <v-row>
             <v-col>
-              <v-btn color="green darken-1" dark @click="addAthlete">
+              <v-btn color="primary_light" dark @click="addAthlete">
                 <v-icon left>mdi-plus</v-icon>Añadir Atleta
               </v-btn>
               <v-spacer />
@@ -208,12 +208,6 @@ export default {
 };
 </script>
 
-<style scoped>
-::v-deep .v-data-table th {
-  font-size: 14px;
-}
-
-::v-deep .v-data-table td {
-  font-size: 18px;
-}
+<style lang="scss" scoped>
+@import "@/assets/tableStyle.scss";
 </style>
