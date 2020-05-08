@@ -18,7 +18,7 @@ export default{
      */
 
     SET_ATHLETES(state,athletes){
-        //Set loadad athletes list
+        //Set loaded athletes list
         state.athletes = athletes
     },
 

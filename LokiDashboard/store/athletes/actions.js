@@ -9,8 +9,7 @@ export default{
         try{
            
             const response = await this.$axios.get('athletes/details/')
-            commit("SET_ATHLETES",response.data.Athletes)
-            commit("SET_ATHLETE",null)
+            commit("SET_ATHLETES",response.data.Athletes)            
 
         }catch(error){
             if(!!error.response.data){
@@ -65,7 +64,7 @@ export default{
     /**
      * Action to add a new athlete to the system given the information
      * in the athlete creation form
-     * @param {*} param0 destructuring of a vuex context object
+     * @param {*} param0 destructuring of vuex context object
      * @param {*} athleteJSON Object containing the information of the athlete to be added.
      */
     async addAthlete({commit,dispatch},athleteJSON){
@@ -85,9 +84,9 @@ export default{
     },
 
     /**
-     * Action to edith an athlete's information by their id and information given
+     * Action to edit an athlete's information by their id and information given
      * in the athlete edit form.
-     * @param {*} param0 destructuring of a vuex context object
+     * @param {*} param0 destructuring of vuex context object
      * @param {*} athleteJSON Object containing the information of athlete to be edited.
      */
     async editAthlete({commit,dispatch},athleteJSON){

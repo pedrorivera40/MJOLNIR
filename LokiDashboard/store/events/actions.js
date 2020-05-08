@@ -1,4 +1,8 @@
 export default {
+    /**
+     * Action to fetch all events from the datadase
+     * @param {*} param0 destructuring of vuex context object
+     */
     async getEvents({commit,dispatch}) {
         try {
             const response = await this.$axios.get('events/')
@@ -15,6 +19,11 @@ export default {
         }
     },
 
+    /**
+     * Action to fetch an event by their id from the database
+     * @param {*} param0 destructuring of vuex context object
+     * @param {*} eid id of the event being fetched
+     */
     async getEventByID({commit,dispatch},eid) {
         try{
             const response = await this.$axios.get('events/'+eid+'/')
@@ -29,6 +38,10 @@ export default {
         }
     },
 
+    /**
+     * Action to fetch the teams in the database with their information.
+     * @param {*} param0 destructuring of vuex context object
+     */
     async getEventTeams({commit,dispatch}) {
         try{
             const response = await this.$axios.get('teams/all/')
@@ -43,6 +56,12 @@ export default {
         }
     },
 
+    /**
+     * Action to add a new event to the system givent the information
+     * in the event creation form
+     * @param {*} param0 destructuring of vuex context object
+     * @param {*} eventJSON Object containing the information of the event to be added.
+     */
     async addEvent({commit,dispatch},eventJSON){
         try{         
             
@@ -60,6 +79,12 @@ export default {
         }
     },
 
+    /**
+     * Action to edit an event's information by their id and information given
+     * in the event edit form
+     * @param {*} param0 destructuring of a vuex context object
+     * @param {*} eventJSON Object containing the information of the event to be edited.
+     */
     async editEvent({commit,dispatch},eventJSON){
         try{
            
@@ -79,6 +104,11 @@ export default {
         }
     },
 
+    /**
+     * Action to remove an event from the system given their id
+     * @param {*} param0 destructuring of vuex context object
+     * @param {*} eventID id of the event being removed
+     */
     async removeEvent({commit,dispatch},eventID){
         try{          
             const response = await this.$axios.delete('events/'+eventID+'/')
@@ -95,6 +125,11 @@ export default {
         }
     },
 
+    /**
+     * Action to start a pbp sequence for an event in the system.
+     * @param {*} param0 destructuring of vuex context object
+     * @param {*} eventJSON Object containing the route parameters for the request.
+     */
     async startPBPSequence({commit,dispatch},eventJSON){
         try{
             

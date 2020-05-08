@@ -8,13 +8,14 @@ export default{
         try{
            
             const response = await this.$axios.get('athletes/')
-            commit("SET_ATHLETES",response.data.Athletes)
-            commit("SET_ATHLETE",null)
+            commit("SET_ATHLETES",response.data.Athletes)            
 
         }catch(error){
-            console.log(error.response.data.Error)
-
-            commit("DONE_LOADING",'users')
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
 
@@ -30,7 +31,12 @@ export default{
             commit("SET_ATHLETE",response.data.Athlete)
             
         }catch(error){
-            console.log(error.response.data.Error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
             
         }
     },

@@ -18,7 +18,7 @@ export default{
      */
 
     SET_ATHLETES(state,athletes){
-        //Set loadad athletes list
+        //Set loaded athletes list
         state.athletes = athletes
     },
 
@@ -28,7 +28,7 @@ export default{
      * @param {*} athlete_sports loaded athlete sports list with objects containing sport data
      */
     SET_ATHLETE_SPORTS(state,athlete_sports){
-        //Set lodad athlete sports list
+        //Set loaded athlete sports list
         state.athlete_sports = athlete_sports
     },
 
