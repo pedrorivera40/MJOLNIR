@@ -33,7 +33,7 @@ export default {
   name:"DeleteEventModal",
   props:{
     dialog:Boolean,
-    id:Number,
+    id:Number, //ID of the event in the database
     trigger:Boolean,
   },
 
@@ -47,10 +47,15 @@ export default {
       removeEvent:"events/removeEvent"
     }),
 
-    
+    /**
+     * Function to be called  after 
+     * the user has agreed to the terms and has 
+     * pressed the remove button.
+     */
     async deleteEvent(){
       if(this.id > 0 && this.terms) { 
         this.deleting = true 
+        //Call vuex action and store response
         const response = await this.removeEvent(this.id)
         this.deleting = false
         if(response !== 'error'){
@@ -59,9 +64,10 @@ export default {
         }
       } 
     },
-
-    close(){
-      
+    /**
+     * Closes the DeleteEventModal
+     */
+    close(){      
       this.terms = false
       this.$emit("update:dialog",false);
       

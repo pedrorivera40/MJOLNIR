@@ -46,7 +46,11 @@ export default {
       removeAthlete:"athletes/removeAthlete"
     }),
 
-    
+    /**
+     * Function to be called  after 
+     * the user has agreed to the terms and has 
+     * pressed the remove button.
+     */
     async deleteAthlete(){
       if(this.id > 0 && this.terms) { 
         this.deleting = true 
@@ -58,6 +62,9 @@ export default {
       } 
     },
 
+    /**
+     * Closes the DeleteAthleteModal
+     */
     close(){      
       this.terms = false
       this.$emit("update:dialog",false);
