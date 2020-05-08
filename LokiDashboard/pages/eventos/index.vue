@@ -14,7 +14,12 @@
             >
               <template v-slot:activator="{ on }">
                 <v-col md="3">
-                  <v-btn color="primary_light" dark @click="goToCreateEvent">
+                  <v-btn 
+                  color="primary_light" 
+                  class="white--text"
+                  @click="goToCreateEvent"
+                  :disabled="!$store.state.userAuth.userPermissions[0]['13']"
+                  >
                     <v-icon left>mdi-plus</v-icon>Añadir Evento
                   </v-btn>
 
@@ -132,6 +137,7 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="editEvent(item)"
+                  :disabled="!$store.state.userAuth.userPermissions[2]['15']"
                 >mdi-pencil</v-icon>
               </template>
               <span>Editar Evento</span>
@@ -143,6 +149,7 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="prepareEventToRemove(item.id)"
+                  :disabled="!$store.state.userAuth.userPermissions[1]['14']"
                 >mdi-delete</v-icon>
               </template>
               <span>Borrar Evento</span>
