@@ -84,7 +84,7 @@
                                     </v-row>    
                                 </v-col>  
                             </v-row>      
-                            <v-row justify="end">
+                            <!-- <v-row justify="end">
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
@@ -92,6 +92,25 @@
                                 </v-col>
                                 <v-col>
                                     <v-btn color="primary ligthen-1" text @click="submit" :loading="loadingQuery">submit</v-btn>
+                                </v-col>
+                            </v-row>    -->
+                        </v-container>
+                        <v-container v-else>
+                            <v-row align = "center" justify = "center">
+                                <v-col justify = "center" align = "center">
+                                <h2>No Se Encontraron Atletas Para Añadir</h2>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                        <v-container>
+                            <v-row justify="end">
+                                <v-spacer/>
+                                <v-spacer/>
+                                <v-col>
+                                    <v-btn color="primary ligthen-1" text @click="close()">close</v-btn>
+                                </v-col>
+                                <v-col>                                                         
+                                    <v-btn color="primary ligthen-1" text @click="submit" :loading="(loadingQuery&&formated())" >submit</v-btn>
                                 </v-col>
                             </v-row>   
                         </v-container>
