@@ -1,7 +1,7 @@
 
 export default{
     //this one is meant to be done in order with the other set of queries
-    async getTeamByYear({commit},team_params){
+    async getTeamByYear({commit, dispatch},team_params){
         try{
             //console.log("GET TEAM: At actions level we have:",team_params)
             let sport_id = team_params.sport_id
@@ -21,7 +21,7 @@ export default{
             commit("SET_QUERY_DONE")
         }
     },
-    async getTeamMembers({commit},team_id){
+    async getTeamMembers({commit, dispatch},team_id){
         try{
             //console.log("GET MEMBERS: At actions level we have:",team_id)
             const response = await this.$axios.get('teams/members/?team_id='+team_id)
@@ -40,63 +40,103 @@ export default{
             commit("SET_QUERY_DONE")
         }
     },
-    async stopGetMembers({commit}){
+    async stopGetMembers({commit, dispatch}){
         try{
             commit("SET_WAITING_MEMBERS")
         }catch(error){
             console.log("ERROR SETTING STATE VARIABLE FOR TEAM MEMBERS",error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async stopGetMemberStats({commit}){
+    async stopGetMemberStats({commit, dispatch}){
         try{
             commit("SET_WAITING_MEMBER_STATS")
         }catch(error){
             console.log("ERROR SETTING STATE VARIABLE FOR TEAM MEMBER STATS",error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async stopGetTeamStats({commit}){
+    async stopGetTeamStats({commit, dispatch}){
         try{
             commit("SET_WAITING_TEAM_STATS")
         }catch(error){
             console.log("ERROR SETTING STATE VARIABLE FOR TEAM STATS",error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async setQueryLoading({commit}){
+    async setQueryLoading({commit, dispatch}){
         try{
             commit("SET_QUERY_LOADING")
         }catch(error){
             console.log("ERROR SETTING STATE VARIABLE FOR LOADING QUERY",error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async setNullTeam({commit}){
+    async setNullTeam({commit, dispatch}){
         try{
             commit("SET_TEAM",null)
         }catch(error){
             console.log("ERROR SETTING NULLIFYING TEAM",error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async setNullTeamMembers({commit}){
+    async setNullTeamMembers({commit, dispatch}){
         try{
             commit("SET_TEAM_MEMBERS",null)
         }catch(error){
             console.log("ERROR SETTING NULLIFYING TEAM MEMBERS",error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async setNullMemberStats({commit}){
+    async setNullMemberStats({commit, dispatch}){
         try{
             commit("SET_MEMBER_STATISTICS",null)
         }catch(error){
             console.log("ERROR SETTING NULLIFYING MEMBER STATS",error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async setNullTeamStats({commit}){
+    async setNullTeamStats({commit, dispatch}){
         try{
             commit("SET_TEAM_STATISTICS",null)
         }catch(error){
             console.log("ERROR SETTING NULLIFYING TEAM STATS",error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async getMemberStatistics({commit},team_params){
+    async getMemberStatistics({commit, dispatch},team_params){
         try{
             //console.log("GET MEMBER STATS: At actions level we have:",team_params)
            
@@ -117,7 +157,7 @@ export default{
             commit("SET_QUERY_DONE")
         }
     },
-    async getTeamStatistics({commit},team_params){
+    async getTeamStatistics({commit, dispatch},team_params){
         try{
             //console.log("GET TEAM STATS: At actions level we have:",team_params)
          
@@ -138,7 +178,7 @@ export default{
         }
     },
     //THe diffrence is in that query is done after getting team and thats it
-    async getTeamByYearSimple({commit},team_params){
+    async getTeamByYearSimple({commit, dispatch},team_params){
         try{
             console.log("GET TEAM: At actions level we have:",team_params)
             let sport_id = team_params.sport_id
@@ -160,68 +200,61 @@ export default{
         try{
             // commit("SET_ATHLETES",[])
             const response = await this.$axios.put('teams/',teamJSON)
-            // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
+            dispatch('notifications/setSnackbar', {text: "Equipo fue editado de manera exitosa.", color: 'success'}, {root: true})
             
-            let sport_id = teamJSON.sport_id
+      
             commit("SET_QUERY_DONE")
-            // this.$router.push('/equipo/'+sport_id)
+           
         }catch(error){
             commit("SET_QUERY_DONE")
             console.log("ERROR PUTTING TEAM",teamJSON,error)
             
-            // if(!!error.response.data){
-            //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-            // }else{
-            //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-            // }
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
     async postTeam({commit,dispatch},teamJSON){
         try{
             // commit("SET_ATHLETES",[])
             const response = await this.$axios.post('teams/',teamJSON)
-            // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
+            dispatch('notifications/setSnackbar', {text: response.data.Team, color: 'success'}, {root: true})
             
-            let sport_id = teamJSON.sport_id
+
             commit("SET_QUERY_DONE")
-            // this.$router.push('/equipo/'+sport_id)
+           
         }catch(error){
             commit("SET_QUERY_DONE")
             console.log("ERROR POSTING TEAM",teamJSON,error)
-            // if(!!error.response.data){
-            //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-            // }else{
-            //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-            // }
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
     async addMembers({commit,dispatch},membersJSON){
         try{
-            // {
-            //     "team_id":1,
-            //     "athlete_id":8
-            // }
-            // commit("SET_ATHLETES",[])
+          
             const response = await this.$axios.post('teams/members/',membersJSON)
-            // dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
+            dispatch('notifications/setSnackbar', {text: response.data.Team, color: 'success'}, {root: true})
             
-            //TODO: how to dynamically check the sport id if not a param? it'd have to be a param, would 
-            //be a json inside a json or something. oh well. 
-            let sport_id = 1
-            // let sport_id = memberJSON.sport_id
+           
             commit("SET_QUERY_DONE")
-            // this.$router.push('/equipo/'+sport_id)
+     
         }catch(error){
             commit("SET_QUERY_DONE")
             console.log("ERROR POSTING TEAM MEMBERS",membersJSON,error)
-            // if(!!error.response.data){
-            //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-            // }else{
-            //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-            // }
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async getSportAthletes({commit},athlete_params){
+    async getSportAthletes({commit, dispatch},athlete_params){
         try{
             let sport_id = athlete_params.sport_id
             let team_id = athlete_params.team_id
@@ -239,7 +272,7 @@ export default{
             commit("SET_QUERY_DONE")
         }
     },
-    async setSportAthletesNull({commit}){
+    async setSportAthletesNull({commit, dispatch}){
         try{
             commit("SET_SPORT_ATHLETES",null)
             commit("SET_QUERY_DONE")
@@ -248,40 +281,51 @@ export default{
             console.log("ERROR SETTING SPORT ATHLETES NULL",error)
             commit("SET_SPORT_ATHLETES",null)
             commit("SET_QUERY_DONE")
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async removeTeam({commit},teamJSON){
+    async removeTeam({commit, dispatch},teamJSON){
         try{
             let sport_id = teamJSON.sport_id
             let season_year = teamJSON.season_year
             console.log("REMOVE ATHLETES: At actions level we have:",teamJSON)
             const response = await this.$axios.delete('teams/?sport_id='+sport_id+'&season_year='+season_year)
-            // console.log("REMOVE ATHLETES",response)
-            // console.log("REMOVE ATHLETES",response.data)
-            // commit("SET_TEAM",null)
+            dispatch('notifications/setSnackbar', {text: response.data.Team, color: 'success'}, {root: true})
             commit("SET_QUERY_DONE")
             
         }catch(error){
             console.log("ERROR REMOVING TEAM",teamJSON,error)
             // commit("SET_TEAM",null)
             commit("SET_QUERY_DONE")
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
-    async removeTeamMember({commit},memberJSON){
+    async removeTeamMember({commit, dispatch},memberJSON){
         try{
             let athlete_id = memberJSON.athlete_id
             let team_id = memberJSON.team_id
             console.log("REMOVE ATHLETES: At actions level we have:",memberJSON)
             const response = await this.$axios.delete('teams/member/?athlete_id='+athlete_id+'&team_id='+team_id)
-            // console.log("REMOVE ATHLETES",response)
-            // console.log("REMOVE ATHLETES",response.data)
-            // commit("SET_TEAM_MEMBER",null)
+            dispatch('notifications/setSnackbar', {text: response.data.Team, color: 'success'}, {root: true})
             commit("SET_QUERY_DONE")
             
         }catch(error){
             console.log("ERROR REMOVING TEAM MEMBER",memberJSON,error)
             // commit("SET_TEAM_MEMBER",null)
             commit("SET_QUERY_DONE")
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
         }
     },
     
