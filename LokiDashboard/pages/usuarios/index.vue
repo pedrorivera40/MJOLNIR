@@ -259,32 +259,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/variables.scss";
+@import "@/assets/tableStyle.scss";
 .wrapper {
   height: 100%;
 
   .content-area {
     height: 100%;
     width: 100%;
-    ::v-deep .v-data-table {
-      th {
-        font-size: 1.1rem !important;
-        font-weight: 500;
-      }
-
-      td {
-        font-size: 1rem;
-        font-weight: 400;
-      }
-    }
-    .status-label{
+    .status-label {
       font-weight: 500;
-    }
-    .table-actions {
-      font-size: 1.2rem;
-      &:hover {
-        color: $primary-color;
-      }
     }
   }
 }

@@ -1,0 +1,19 @@
+@import "@/assets/variables.scss";
+
+::v-deep .v-data-table {
+  th {
+    font-size: 1.1rem !important;
+    font-weight: 500;
+  }
+
+  td {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+}
+.table-actions {
+  font-size: 1.2rem;
+  &:hover {
+    color: $primary-color;
+  }
+}
