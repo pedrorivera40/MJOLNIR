@@ -43,7 +43,11 @@
           no-results-text="No se encontró ningun usuario."
         >
           <template v-slot:item.is_active="{ item }">
-            <v-chip class="ma-2" small  :color="item.is_active ? 'primary lighten-2': ''">
+            <v-chip
+              class="ma-2 status-label"
+              small
+              :color="item.is_active ? 'primary lighten-2' : ''"
+            >
               {{ setStatus(item.is_active) }}
             </v-chip>
           </template>
@@ -69,10 +73,12 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username || !$store.state.userAuth.userPermissions[11]['24']"
+                  :disabled="
+                    item.username === $store.state.userAuth.user.username ||
+                      !$store.state.userAuth.userPermissions[11]['24']
+                  "
                   @click.stop="editUser(item)"
                 >
                   mdi-pencil
@@ -84,10 +90,12 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username || !$store.state.userAuth.userPermissions[11]['24']"
+                  :disabled="
+                    item.username === $store.state.userAuth.user.username ||
+                      !$store.state.userAuth.userPermissions[11]['24']
+                  "
                   @click="editPermissions(item)"
                 >
                   mdi-shield-lock
@@ -98,10 +106,12 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username || !$store.state.userAuth.userPermissions[10]['23'] "
+                  :disabled="
+                    item.username === $store.state.userAuth.user.username ||
+                      !$store.state.userAuth.userPermissions[10]['23']
+                  "
                   @click.stop="deleteUser(item)"
                 >
                   mdi-delete
@@ -151,7 +161,7 @@ import UpdatePermissionsModal from "@/components/users/UpdatePermissionsModal";
 import UpdateUserModal from "@/components/users/UpdateUserInfoModal";
 import PasswordResetModal from "@/components/users/PasswordResetModal";
 export default {
-  middleware: 'admin',
+  middleware: "admin",
   data() {
     return {
       search: "",
@@ -169,7 +179,7 @@ export default {
         { text: "Nombre de Usuario", value: "username" },
         { text: "Correo Electrónico", value: "email" },
         { text: "Estatus de Cuenta", align: "center", value: "is_active" },
-        { text: "Contraseña",  value: "password" },
+        { text: "Contraseña", value: "password" },
         { text: "Acciones", value: "actions", sortable: false }
       ],
       editedItemIndex: -1,
@@ -256,8 +266,22 @@ export default {
   .content-area {
     height: 100%;
     width: 100%;
+    ::v-deep .v-data-table {
+      th {
+        font-size: 1.1rem !important;
+        font-weight: 500;
+      }
 
+      td {
+        font-size: 1rem;
+        font-weight: 400;
+      }
+    }
+    .status-label{
+      font-weight: 500;
+    }
     .table-actions {
+      font-size: 1.2rem;
       &:hover {
         color: $primary-color;
       }
