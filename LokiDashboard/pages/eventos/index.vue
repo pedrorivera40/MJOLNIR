@@ -14,7 +14,7 @@
             >
               <template v-slot:activator="{ on }">
                 <v-col md="3">
-                  <v-btn color="green darken-1" dark @click="goToCreateEvent">
+                  <v-btn color="primary_light" dark @click="goToCreateEvent">
                     <v-icon left>mdi-plus</v-icon>Añadir Evento
                   </v-btn>
 
@@ -415,12 +415,6 @@ export default {
 };
 </script>
 
-<style scoped>
-::v-deep .v-data-table th {
-  font-size: 14px;
-}
-
-::v-deep .v-data-table td {
-  font-size: 18px;
-}
+<style lang="scss" scoped>
+@import "@/assets/tableStyle.scss";
 </style>
