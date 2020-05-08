@@ -9,64 +9,49 @@ class TestUserRoutes(unittest.TestCase):
     def setUp(self):
         self.default_permissions = {"permissions": [
                 {
-                    "is_invalid": True,
-                    "permission_id": 13
+                    "13": True,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 14
+                    "14": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 15
+                    "15": False,
                 },
                 {
-                    "is_invalid": True,
-                    "permission_id": 16
+                    "16": True,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 17
+                    "17": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 18
+                    "18": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 19
+                    "19": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 20
+                    "20": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 21
+                    "21": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 22
+                    "22": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 23
+                    "23": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 24
+                    "24": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 25
+                    "25": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 26
+                    "26": False,
                 },
                 {
-                    "is_invalid": True,
-                    "permission_id": 27
+                    "27": True,
                 }]}
         app.config['DEBUG'] = True
         self.data = newUser
@@ -80,14 +65,17 @@ class TestUserRoutes(unittest.TestCase):
         response = self.client.patch(f'/users/{newUserID}/permissions', data=json.dumps(self.default_permissions), content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 201)
         for permission in response.json['Permissions']:
-            if permission['permission_id'] == 13:
-                self.assertEqual(permission['is_invalid'], True)
-            elif permission['permission_id'] == 16:
-                self.assertEqual(permission['is_invalid'], True)
-            elif permission['permission_id'] == 27:
-                self.assertEqual(permission['is_invalid'], True)
-            else:
-                self.assertEqual(permission['is_invalid'], False)
+            dkey = ''
+            for key in permission.keys():
+                dkey = key
+                if dkey == "13":
+                    self.assertEqual(permission[dkey], True)
+                elif dkey == "16":
+                    self.assertEqual(permission[dkey], True)
+                elif dkey == "27":
+                    self.assertEqual(permission[dkey], True)
+                else:
+                    self.assertEqual(permission[dkey], False)
 
     def test_set_user_permissions_inexistent_user(self):
         response = self.client.patch(f'/users/89238/permissions', data=json.dumps(self.default_permissions), content_type='application/json',  follow_redirects=True)
@@ -103,64 +91,49 @@ class TestUserRoutes(unittest.TestCase):
     def test_set_user_permissions_invalid_format(self):
         response = self.client.patch(f'/users/{newUserID}/permissions', data=json.dumps({"permissions": [
                 {
-                    "is_inlid": True,
-                    "permison_id": 13
+                    "8": True,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 14
+                    "14": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 15
+                    "lolo": False,
                 },
                 {
-                    "is_invalid": True,
-                    "permission_id": 16
+                    "45": True,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 17
+                    "17": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 18
+                    "18": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 19
+                    "19": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 20
+                    "20": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 21
+                    "1": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 22
+                    "0": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 23
+                    "23": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 24
+                    "24": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 25
+                    "25": False,
                 },
                 {
-                    "is_invalid": False,
-                    "permission_id": 26
+                    "26": False,
                 },
                 {
-                    "is_invalid": True,
-                    "permission_id": 27
+                    "27": True,
                 }]}), content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json['Error'], 'Bad Request.')

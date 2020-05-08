@@ -159,9 +159,9 @@ class TestUserRoutes(unittest.TestCase):
       self.assertEqual(response.status_code, 400)
       self.assertEqual(response.json['Error'],'Request Parameters Undefined.')
 
-    #######################################################
-    #-------- Set User Permissions fot the System --------#
-    #######################################################
+    # #######################################################
+    # #-------- Set User Permissions fot the System --------#
+    # #######################################################
 
     def test_set_user_permissions_empty_request(self):
         response = self.client.patch(f'/users/21/permissions', data=json.dumps({}), content_type='application/json',  follow_redirects=True)
@@ -243,64 +243,49 @@ class TestUserRoutes(unittest.TestCase):
     def test_set_user_permissions_bad_parameters_inside_list(self):
         default_permissions = {"permissions": [
                 {
-                    "ivalid": True,
-                    "pission_id": 13
+                    8: True,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 14
+                    "14": False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 15
+                    "lolo": False,
                 },
                 {
-                    "ivalid": True,
-                    "pission_id": 16
+                    "45": True,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 17
+                    "17": False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 18
+                    "18": False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 19
+                    "19": False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 20
+                    "20": False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 21
+                    "1": False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 22
+                    0: False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 23
+                    23: False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 24
+                    24: False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 25
+                    25: False,
                 },
                 {
-                    "ivalid": False,
-                    "pission_id": 26
+                    "26": False,
                 },
                 {
-                    "ivalid": True,
-                    "pission_id": 27
+                    27: True,
                 }]}
         response = self.client.patch(f'/users/21/permissions', data=json.dumps(default_permissions), content_type='application/json',  follow_redirects=True)
         self.assertEqual(response.status_code, 400)
@@ -309,66 +294,51 @@ class TestUserRoutes(unittest.TestCase):
     def test_set_user_permissions_empty_parameters_inside_list(self):
         default_permissions = {"permissions": [
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "13": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "14": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "15": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "16": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "17": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "18": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "19": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "20": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "21": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "22": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "23": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "24": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "25": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "26": None,
                 },
                 {
-                    "is_invalid": None,
-                    "permission_id": None
+                    "27": None,
                 }]}
-        response = self.client.patch(f'/users/21/permissions', data=json.dumps(default_permissions), content_type='application/json',  follow_redirects=None)
+        response = self.client.patch(f'/users/125/permissions', data=json.dumps(default_permissions), content_type='application/json',  follow_redirects=None)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json['Error'], 'Request Parameters Undefined.')
 

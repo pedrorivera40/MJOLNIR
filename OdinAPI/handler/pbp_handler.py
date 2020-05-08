@@ -54,7 +54,8 @@ class VolleyballPBPHandler:
             ],
             "notification": "Notification",
             "teams": ["uprm", "opponent"],
-            "color-format": "^#(?:[0-9a-fA-F]{1,2}){3}$"
+            # Color format regex adapted from: https://www.regextester.com/93589
+            "color-format": "^((0x){0,1}|#{0,1})([0-9A-F]{8}|[0-9A-F]{6})$"
         }
 
     def _get_direct_set_path(self, team, event_id, dao):
@@ -158,7 +159,31 @@ class VolleyballPBPHandler:
                     "No se ha enviado el valor de diferencia en data.")
 
             difference = int(action["difference"])
-            dao.adjust_score_by_set(event_id, set_path, difference)
+
+            # Adding volleyball rules for scoring:
+            indirect_path = self._get_indirect_set_path(
+                action["team"], event_id, dao)
+            current_set = dao.get_current_set(event_id)
+            current_direct_score = dao.get_score_by_set(event_id, set_path)
+            current_indirect_score = dao.get_score_by_set(
+                event_id, indirect_path)
+
+            # Finding score limit based on current set.
+            limit = 25
+            if current_set == 5:
+                limit = 15
+
+            potential_score = current_direct_score + difference
+            if potential_score < 0:
+                raise Exception(
+                    "Error actualizando puntuación. La puntuación no puede ser negativa.")
+
+            # If limit was reached and more than 2 points difference is attempted.
+            if (current_indirect_score > limit or potential_score > limit) and abs(potential_score - current_indirect_score) > 2:
+                raise Exception(
+                    "Error actualizando puntuación. Si el límite de puntuación se excede, la diferencia de puntos debe ser menor de 3.")
+
+            dao.set_score_by_set(event_id, set_path, potential_score)
             return
 
         is_valid_athlete = (str(action["athlete_id"]) in dao.get_uprm_roster(event_id)
@@ -443,7 +468,7 @@ class VolleyballPBPHandler:
 
             # At this point, the event exists and does not have a PBP sequence.
             game_metadata = {
-                "game-over": False,
+                "game-over": {"answer": "No"},
                 "sport": self._sport_keywords["sport"],
                 "current-set": 1,
                 "opp-color": ""
@@ -515,12 +540,15 @@ class VolleyballPBPHandler:
             if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
+            if pbp_dao.is_game_over(event_id):
+                return jsonify(ERROR="El partido de Voleibol ya ha finalizado."), 403
+
             current_set = pbp_dao.get_current_set(event_id)
-            potential_score = current_set + adjust
-            if potential_score > 5 or potential_score < 0:
+            potential_set = current_set + adjust
+            if potential_set > 5 or potential_set < 1:
                 return jsonify(ERROR="El ajuste es inválido. El valor resultante debe estar entre 1 y 5."), 403
 
-            pbp_dao.set_current_set(event_id, potential_score)
+            pbp_dao.set_current_set(event_id, potential_set)
             return jsonify(MSG="El parcial ha sido actualizado."), 200
 
         except Exception as e:
@@ -542,7 +570,7 @@ class VolleyballPBPHandler:
 
         try:
             if not isinstance(color, str):
-                return jsonify(ERROR="El color debe estar dado como una secuencia de caracteres que representan un valor HEX."), 400
+                return jsonify(ERROR="El color debe estar dado como una secuencia de caracteres que representan un valor HEX (# + 8 valores HEX)."), 400
 
             # Validate a hex formatted color is provided.
             if not search(self._sport_keywords["color-format"], color):
@@ -853,6 +881,7 @@ class VolleyballPBPHandler:
 
         try:
             # Validate event id is positive integer.
+            print("ID", event_id, "action_id", game_action_id)
             if not str(event_id).isdigit() or not str(game_action_id).isdigit():
                 return jsonify(ERROR="Valores para el ID del evento y ID de acción deben ser enteros."), 400
 

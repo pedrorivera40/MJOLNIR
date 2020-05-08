@@ -57,5 +57,16 @@ export default{
 
     DONE_LOADING(state){
 			state.isLoadingT = false
+    },
+
+    SET_TEAM_EVENTS(state,team_events){
+        state.team_events = team_events
+    },
+
+    SET_EVENT_QUERY_LOADING(state){
+        state.loadingEventQuery = true
+    },
+    SET_EVENT_QUERY_DONE(state){
+        state.loadingEventQuery = false
     }
 }

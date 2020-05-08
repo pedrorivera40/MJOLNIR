@@ -8,9 +8,22 @@
         <v-row justify="center">
           <v-layout row wrap align-center>
             <v-col class="text-right">
-              <v-btn @click.native="sendAdjust(uprm, -1)" class="ma-2" color="red" fab small dark>
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    @click.native="sendAdjust(uprm, -1)"
+                    class="ma-2"
+                    color="red"
+                    fab
+                    small
+                    dark
+                    v-on="on"
+                  >
+                    <v-icon>mdi-minus</v-icon>
+                  </v-btn>
+                </template>
+                <span>Quitar un punto a UPRM</span>
+              </v-tooltip>
             </v-col>
           </v-layout>
           <v-col>
@@ -20,9 +33,22 @@
           </v-col>
           <v-layout row wrap align-center>
             <v-col class="text-left">
-              <v-btn @click.native="sendAdjust(uprm, 1)" class="ma-2" color="green" fab small dark>
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    @click.native="sendAdjust(uprm, 1)"
+                    class="ma-2"
+                    color="green"
+                    fab
+                    small
+                    dark
+                    v-on="on"
+                  >
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </template>
+                <span>Añadir un punto a UPRM</span>
+              </v-tooltip>
             </v-col>
           </v-layout>
         </v-row>
@@ -42,9 +68,22 @@
         <v-row justify="center">
           <v-layout row wrap align-center>
             <v-col class="text-right">
-              <v-btn @click.native="sendSetAdjust(-1)" class="ma-2" color="red" fab small dark>
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    @click.native="sendSetAdjust(-1)"
+                    class="ma-2"
+                    color="red"
+                    fab
+                    small
+                    dark
+                    v-on="on"
+                  >
+                    <v-icon>mdi-minus</v-icon>
+                  </v-btn>
+                </template>
+                <span>Cambiar a parcial anterior</span>
+              </v-tooltip>
             </v-col>
           </v-layout>
           <v-card class="ma-3 pa-6" outlined tile>
@@ -52,9 +91,22 @@
           </v-card>
           <v-layout row wrap align-center>
             <v-col class="text-left">
-              <v-btn @click.native="sendSetAdjust(1)" class="ma-2" color="green" fab small dark>
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    @click.native="sendSetAdjust(1)"
+                    class="ma-2"
+                    color="green"
+                    fab
+                    small
+                    dark
+                    v-on="on"
+                  >
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </template>
+                <span>Cambiar al próximo parcial</span>
+              </v-tooltip>
             </v-col>
           </v-layout>
         </v-row>
@@ -66,9 +118,22 @@
         <v-row justify="center">
           <v-layout row wrap align-center>
             <v-col class="text-right">
-              <v-btn @click.native="sendAdjust(opp, -1)" class="ma-2" color="red" fab small dark>
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    @click.native="sendAdjust(opp, -1)"
+                    class="ma-2"
+                    color="red"
+                    fab
+                    small
+                    dark
+                    v-on="on"
+                  >
+                    <v-icon>mdi-minus</v-icon>
+                  </v-btn>
+                </template>
+                <span>Quitar un punto al oponente</span>
+              </v-tooltip>
             </v-col>
           </v-layout>
           <v-col>
@@ -78,9 +143,22 @@
           </v-col>
           <v-layout row wrap align-center>
             <v-col class="text-left">
-              <v-btn @click.native="sendAdjust(opp, 1)" class="ma-2" color="green" fab small dark>
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    @click.native="sendAdjust(opp, 1)"
+                    class="ma-2"
+                    color="green"
+                    fab
+                    small
+                    dark
+                    v-on="on"
+                  >
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </template>
+                <span>Añadir un punto al oponente</span>
+              </v-tooltip>
             </v-col>
           </v-layout>
         </v-row>
@@ -90,6 +168,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   props: {
     uprm_team: String,
@@ -98,37 +178,37 @@ export default {
     opp_score: Number,
     current_set: Number,
     current_uprm_score: Number, // Score of the current set for UPRM team.
-    current_opp_score: Number // Score of the current set for opponent team.
+    current_opp_score: Number, // Score of the current set for opponent team.
+    event_id: String
   },
   data: () => ({
     uprm: "uprm",
     opp: "opponent"
   }),
   methods: {
+    ...mapActions({
+      sendSetAdjustAction: "volleyballPBP/sendSetAdjust",
+      sendScoreAdjust: "volleyballPBP/sendGameAction"
+    }),
+
     sendAdjust(team_name, adjust_no) {
       let payload = {
-        team: team_name,
-        action_type: "ScoreAdjust",
-        adjust: adjust_no
+        data: {
+          team: team_name,
+          action_type: "ScoreAdjust",
+          difference: adjust_no
+        },
+        event_id: this.event_id
       };
-      console.log(payload);
+      this.sendScoreAdjust(payload);
     },
 
-    sendSetAdjust(adjust) {
+    sendSetAdjust(adjust_no) {
       let payload = {
-        set_adjust: adjust
+        adjust: adjust_no,
+        event_id: this.event_id
       };
-      console.log(payload);
-    },
-
-    on_uprm_score(change) {
-      this.current_uprm_score += change;
-    },
-    on_opp_score(change) {
-      this.current_opp_score += change;
-    },
-    on_set_change(change) {
-      this.current_set += change;
+      this.sendSetAdjustAction(payload);
     }
   }
 };

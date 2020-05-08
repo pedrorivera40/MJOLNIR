@@ -10,6 +10,8 @@ export default() =>({
     readyForMemberStats: false,
     readyForTeamStats: false,
     loadingQuery:false,
+    team_events: null,
+    loadingEventQuery: false,
 
     // athlete: null,
     // athletes: [],

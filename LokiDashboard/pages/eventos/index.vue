@@ -1,8 +1,8 @@
 <template>
-  <v-container class="wrapper">    
-    <h1 class="primary_dark--text pl-3">Eventos:</h1>   
+  <v-container class="wrapper">
+    <h1 class="primary_dark--text pl-3">Eventos</h1>
     <div class="content-area pa-4 pt-12">
-      <v-card >
+      <v-card>
         <v-card-title>
           <v-row>
             <v-menu
@@ -12,7 +12,6 @@
               transition="slide-x-transition"
               :close-on-content-click="false"
             >
-              
               <template v-slot:activator="{ on }">
                 <v-col md="3">
                   <v-btn
@@ -22,9 +21,8 @@
                   >
                   <v-icon left >mdi-plus</v-icon>
                     Añadir Evento
-                  </v-btn>       
-                       
-                  <v-btn color="white"  v-on="on">
+                  </v-btn> 
+                  <v-btn color="white" v-on="on">
                     <v-icon left>mdi-filter-variant</v-icon>Filtros
                   </v-btn>
                 </v-col>
@@ -44,7 +42,13 @@
                     <template v-slot:activator="{ on }">
                       <v-text-field v-model="date" label="Fecha del Evento" readonly v-on="on"></v-text-field>
                     </template>
-                    <v-date-picker v-model="date" color="green darken-1" no-title scrollable locale="es-419">
+                    <v-date-picker
+                      v-model="date"
+                      color="green darken-1"
+                      no-title
+                      scrollable
+                      locale="es-419"
+                    >
                       <v-spacer></v-spacer>
                       <v-btn text color="primary" @click="dateMenu = false">Cancelar</v-btn>
                       <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
@@ -63,24 +67,19 @@
                 <v-list-item>
                   <v-checkbox v-model="eventHasPBP" label="Eventos con PBP"> </v-checkbox>
                 </v-list-item>
-
-                
-
                 <v-list-item>
                   <v-card-actions>
-                                   
-                  <v-btn @click="clearFilters">Borrar</v-btn>  
-                                 
-                  <v-btn @click="filterTheList">Filtrar</v-btn>
+                    <v-btn @click="clearFilters">Borrar</v-btn>
+
+                    <v-btn @click="filterTheList">Filtrar</v-btn>
                   </v-card-actions>
                 </v-list-item>
               </v-list>
             </v-menu>
           </v-row>
         </v-card-title>
-        
+
         <v-data-table
-                 
           :headers="headers"
           :items="filteredEvents"
           :loading="loadingEvents()"
@@ -96,10 +95,8 @@
                   outlined
                   small
                   v-on="on"
-                  @click="goToPBPSequence(item)"                  
-                >
-                  Ver PBP
-                </v-btn>
+                  @click="goToPBPSequence(item)"
+                >Ver PBP</v-btn>
               </template>
               <span>Ver Play-by-Play</span>
             </v-tooltip>
@@ -111,30 +108,24 @@
                   outlined
                   small
                   v-on="on"
-                  @click="createPBPSequence(item)"                  
-                >
-                  Crear PBP
-                </v-btn>
+                  @click="createPBPSequence(item)"
+                >Crear PBP</v-btn>
               </template>
               <span>Crear Play-by-Play</span>
             </v-tooltip>
             <span class='text' v-if="item.sport_name !='Voleibol'">
               N/A
             </span>
-
           </template> 
-
           <template v-slot:item.actions="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
                   med
                   class="mr-2 table-actions"
-                  v-on="on"                 
+                  v-on="on"
                   @click="viewEvent(item.id)"
-                >
-                  mdi-eye-plus
-                </v-icon>
+                >mdi-eye-plus</v-icon>
               </template>
               <span>Ver Evento</span>
             </v-tooltip>
@@ -144,11 +135,9 @@
                 <v-icon
                   medium
                   class="mr-2 table-actions"
-                  v-on="on"                  
+                  v-on="on"
                   @click="editEvent(item)"
-                >
-                  mdi-pencil
-                </v-icon>
+                >mdi-pencil</v-icon>
               </template>
               <span>Editar Evento</span>
             </v-tooltip>
@@ -157,22 +146,20 @@
                 <v-icon
                   medium
                   class="mr-2 table-actions"
-                  v-on="on"                 
+                  v-on="on"
                   @click="prepareEventToRemove(item.id)"
-                >
-                  mdi-delete
-                </v-icon>
+                >mdi-delete</v-icon>
               </template>
               <span>Borrar Evento</span>
-            </v-tooltip>           
-          </template>          
+            </v-tooltip>
+          </template>
         </v-data-table>
 
         <EditEventModal
-          :dialog.sync = "dialogEdit"
+          :dialog.sync="dialogEdit"
           :id="editedItem.id"
           :date="editedItem.event_date"
-          :time ="editedItem.time"    
+          :time="editedItem.time"
           :locality="editedItem.is_local"
           :venue="editedItem.venue"
           :sport_name="editedItem.sport_name"
@@ -183,35 +170,20 @@
           :trigger.sync="ready"
         />
 
-        <AddEventModal
-          :dialog.sync = "dialogAdd"
-          :trigger.sync = "ready"
-        />
+        <AddEventModal :dialog.sync="dialogAdd" :trigger.sync="ready" />
 
-        <DeleteEventModal
-          :dialog.sync = "dialogDelete"
-          :id = "eid"
-          :trigger.sync = "ready"
-        />
+        <DeleteEventModal :dialog.sync="dialogDelete" :id="eid" :trigger.sync="ready" />
 
-        <v-dialog v-model="dialogPBP" persistent max-width="400">            
+        <v-dialog v-model="dialogPBP" persistent max-width="400">
           <v-card>
             <v-card-title class="headline">Falta el nombre del oponente</v-card-title>
-            <v-card-text>              
-              Tienes que editar el evento y añadirle un nombre del oponente.              
-            </v-card-text>
+            <v-card-text>Tienes que editar el evento y añadirle un nombre del oponente.</v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                color="black"
-                text
-                @click="closePBPDialog()"
-              >Cerrar
-              </v-btn>
+              <v-btn color="black" text @click="closePBPDialog()">Cerrar</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>     
-
+        </v-dialog>
       </v-card>
     </div>
   </v-container>
@@ -219,59 +191,65 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import EditEventModal from "@/components/EditEventModal"
-import AddEventModal from "@/components/AddEventModal"
-import DeleteEventModal from "@/components/DeleteEventModal"
+import EditEventModal from "@/components/EditEventModal";
+import AddEventModal from "@/components/AddEventModal";
+import DeleteEventModal from "@/components/DeleteEventModal";
 export default {
   components: {
     EditEventModal,
     AddEventModal,
-    DeleteEventModal,
+    DeleteEventModal
   },
 
   data: () => ({
-    ready:false,
+    ready: false,
     menu: false,
     dialogDelete: false,
     dialogEdit: false,
-    dialogAdd:false,
-    dialogPBP:false,
-    terms:false,
+    dialogAdd: false,
+    dialogPBP: false,
+    terms: false,
     dateMenu: false,
-    loading : true,
-    eventHasPBP : false,       
+    loading: true,
+    eventHasPBP: false,
     date: "",
     sport: "",
     branch: "",
     locality: "",
-    sports: ["Voleibol", "Baloncesto", "Atletismo","Fútbol","Softbol","Pelota"],
+    sports: [
+      "Voleibol",
+      "Baloncesto",
+      "Atletismo",
+      "Fútbol",
+      "Softbol",
+      "Pelota"
+    ],
     branches: ["Masculino", "Femenino", "Exhibicion"],
     localities: ["Casa", "Afuera"],
     filteredEvents:[],//This list is the one presented to the users
     eid: 0,//This is the id of the event to be deleted.
-
-    headers:[
+    headers: [
       {
-        text:"ID",
-        align:"start",
-        value:"id"
-      },      
-      {text:"Fecha del Evento", value:"event_date"},
-      {text:"Deporte", value:"sport_name"},
-      {text:"Rama", value:"branch"},
-      {text:"Lugar del Evento",value:"venue"},      
-      {text:"Play-by-Play",align:"center",value:"hasPBP"},
-      {text:"Acciones", value:"actions",sortable:false}     
-
+        text: "ID",
+        align: "start",
+        value: "id"
+      },
+      { text: "Fecha del Evento", value: "event_date" },
+      { text: "Deporte", value: "sport_name" },
+      { text: "Rama", value: "branch" },
+      { text: "Lugar del Evento", value: "venue" },
+      { text: "Play-by-Play", align: "center", value: "hasPBP" },
+      { text: "Acciones", value: "actions", sortable: false }
     ],
+
     //This will be used by the EditEventModal
     editedItem:{
       event_date: "",
-      time:"",
+      time: "",
       is_local: "",
       venue: "",
       event_summary: "",
-      opponent_name: "",      
+      opponent_name: "",
       sport_name: "",
       branch: "",
       team_season_year: 0,
@@ -283,16 +261,15 @@ export default {
   methods: {
     ...mapActions({
       getEvents: "events/getEvents",
-      removeEvent:"events/removeEvent",
-      startPBPSequence:"events/startPBPSequence"
+      removeEvent: "events/removeEvent",
+      startPBPSequence: "events/startPBPSequence"
     }),
-    
+
     /**
      * Activates the AddEventModal dialog component.
      */
     activateEventCreationForm(){
       this.dialogAdd = true
-     
     },
 
     /**
@@ -307,8 +284,7 @@ export default {
       this.locality = "";
       this.eventHasPBP = false;
       this.menu = false;
-      
-      
+
       if (this.filteredEvents.length != this.events.length) {
         this.filteredEvents = [];
         for (let i = 0; i < this.events.length; i++) {
@@ -316,6 +292,7 @@ export default {
         }
       }
     },
+
 
     /**
      * Returns false if events have been loaded and formated,
@@ -333,14 +310,14 @@ export default {
           this.filteredEvents = []
           for (let i = 0; i < this.events.length; i++) {
             this.filteredEvents.push(this.events[i]);
-            const parsedDate =  new Date(Date.parse(this.events[i].event_date))
-            const eDate = parsedDate.toISOString().substring(0,10)
-            const time = parsedDate.getUTCHours() + ':' + parsedDate.getMinutes()
-            this.filteredEvents[i].event_date = eDate
-            this.filteredEvents[i].time = time
+            const parsedDate = new Date(Date.parse(this.events[i].event_date));
+            const eDate = parsedDate.toISOString().substring(0, 10);
+            const time =
+              parsedDate.getUTCHours() + ":" + parsedDate.getMinutes();
+            this.filteredEvents[i].event_date = eDate;
+            this.filteredEvents[i].time = time;
           }
-          this.ready = true          
-          
+          this.ready = true;
         }
       }
       else{
@@ -354,13 +331,13 @@ export default {
      * events table.
      */
     filterTheList() {
-
-      
       this.filteredEvents = [];
-      
+
       for (let i = 0; i < this.events.length; i++) {
-        this.filteredEvents.push(this.events[i])
-        this.filteredEvents[i].event_date = new Date(this.events[i].event_date).toISOString().substring(0,10)
+        this.filteredEvents.push(this.events[i]);
+        this.filteredEvents[i].event_date = new Date(this.events[i].event_date)
+          .toISOString()
+          .substring(0, 10);
       }
       for (let i = this.filteredEvents.length - 1; i >= 0; i--) {
         event = this.filteredEvents[i];
@@ -395,12 +372,13 @@ export default {
             continue;
           }
         }
-        if(this.eventHasPBP == true){
-          if(!event.hasPBP){
-            this.filteredEvents.splice(i,1);
-            continue
+        if (this.eventHasPBP == true) {
+          if (!event.hasPBP) {
+            this.filteredEvents.splice(i, 1);
+            continue;
           }
-        }    
+
+        }
       }
       this.menu = false
     },
@@ -465,25 +443,18 @@ export default {
     closePBPDialog(){
       this.dialogPBP = false
     }
-
-
   },
 
   computed: {
     ...mapGetters({
       events: "events/events"
-    }),
-
-        
+    })
   },
-
 
   mounted() {
     this.getEvents();
-    
-    
   }
-}
+};
 </script>
 
 <style scoped>

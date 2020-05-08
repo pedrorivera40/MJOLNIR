@@ -123,7 +123,8 @@ class SportHandler:
 
             if len(sports) == 0:
                 return jsonify(ERROR="No se encontró información sobre ese deporte."), 400
-        except:
+        except Exception as e:
+            print(str(e))
             return jsonify(ERROR="Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORTS=sports), 200

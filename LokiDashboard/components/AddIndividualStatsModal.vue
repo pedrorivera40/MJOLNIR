@@ -10,10 +10,13 @@
                 </v-toolbar>
                 <v-card-text>            
                 
-                    <form>
+                    <v-form v-model="valid">
                         <v-container>   
                             <v-row v-if="isBasketball">
                                 <v-col>  
+                                    <v-row>
+                                        <h2>Seleccionar Atleta:</h2>
+                                    </v-row>
                                     <v-row 
                                         align ="center"
                                         justify = "center"
@@ -26,7 +29,7 @@
                                                     filled
                                                     chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Atleta"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
                                                     :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
@@ -116,8 +119,8 @@
                                           
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.steals"                      
-                                                    :rules="[numeric('Rebotes'),scoreRequired('Rebotes')]"
-                                                    label="Rebotes"
+                                                    :rules="[numeric('Robos'),scoreRequired('Robos')]"
+                                                    label="Robos"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -243,7 +246,10 @@
                                 </v-col>
                             </v-row>
                             <v-row v-if="isVolleyball">
-                                <v-col>  
+                                <v-col> 
+                                    <v-row>
+                                        <h2>Seleccionar Atleta:</h2>
+                                    </v-row> 
                                     <v-row 
                                         align ="center"
                                         justify = "center"
@@ -303,8 +309,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.kill_points"                      
-                                                    :rules="[numeric('Puntos de Kill*'),scoreRequired('Puntos de Kill*')]"
-                                                    label="Puntos de Kill*"
+                                                    :rules="[numeric('Puntos de Ataque'),scoreRequired('Puntos de Ataque')]"
+                                                    label="Puntos de Ataque"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -338,8 +344,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.aces"                      
-                                                    :rules="[numeric('Aces'),scoreRequired('Aces')]"
-                                                    label="Aces"
+                                                    :rules="[numeric('Servicio Directo'),scoreRequired('Servicio Directo')]"
+                                                    label="Servicio Directo"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -358,8 +364,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.digs"                      
-                                                    :rules="[numeric('Digs*'),scoreRequired('Digs*')]"
-                                                    label="Digs*"
+                                                    :rules="[numeric('Recepciones'),scoreRequired('Recepciones')]"
+                                                    label="Recepciones"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -393,8 +399,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.reception_errors"                      
-                                                    :rules="[numeric('Errores de Recepcion*'),scoreRequired('Errores de Recepcion*')]"
-                                                    label="Errores de Recepcion*"
+                                                    :rules="[numeric('Errores de Recepcion'),scoreRequired('Errores de Recepcion')]"
+                                                    label="Errores de Recepcion"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -403,7 +409,10 @@
                                 </v-col>
                             </v-row>
                             <v-row v-if="isSoccer">
-                                <v-col>  
+                                <v-col>
+                                    <v-row>
+                                        <h2>Seleccionar Atleta:</h2>
+                                    </v-row>  
                                     <v-row 
                                         align ="center"
                                         justify = "center"
@@ -463,8 +472,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.goal_attempts"                      
-                                                    :rules="[numeric('Goal Attempts*'),scoreRequired('Goal Attempts*')]"
-                                                    label="Goal Attempts*"
+                                                    :rules="[numeric('Intentos de Gol'),scoreRequired('Intentos de Gol')]"
+                                                    label="Intentos de Gol"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -483,8 +492,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.fouls"                      
-                                                    :rules="[numeric('Fouls*'),scoreRequired('Fouls*')]"
-                                                    label="Fouls*"
+                                                    :rules="[numeric('Faltas'),scoreRequired('Faltas')]"
+                                                    label="Faltas"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -508,8 +517,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_goals"                      
-                                                    :rules="[numeric('Successful Goals*'),scoreRequired('Successful Goals*')]"
-                                                    label="Successful Goals*"
+                                                    :rules="[numeric('Goles Exitosos'),scoreRequired('Goles Exitosos')]"
+                                                    label="Goles Exitosos"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -518,8 +527,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.tackles"                      
-                                                    :rules="[numeric('Tackles*'),scoreRequired('Tackles*')]"
-                                                    label="Tackles*"
+                                                    :rules="[numeric('Atajadas'),scoreRequired('Atajadas')]"
+                                                    label="Atajadas"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -529,6 +538,9 @@
                             </v-row>
                             <v-row v-if="isBaseball">
                                 <v-col>  
+                                    <v-row>
+                                        <h2>Seleccionar Atleta:</h2>
+                                    </v-row>
                                     <v-row 
                                         align ="center"
                                         justify = "center"
@@ -588,8 +600,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.at_bats"                      
-                                                    :rules="[numeric('At Bats*'),scoreRequired('At Bats*')]"
-                                                    label="At Bats*"
+                                                    :rules="[numeric('Turnos al Bate'),scoreRequired('Turnos al Bate')]"
+                                                    label="Turnos al Bate"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -608,8 +620,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.hits"                      
-                                                    :rules="[numeric('Hits*'),scoreRequired('Hits*')]"
-                                                    label="Hits*"
+                                                    :rules="[numeric('Hits'),scoreRequired('Hits')]"
+                                                    label="Hits"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -623,8 +635,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.runs_batted_in"                      
-                                                    :rules="[numeric('Runs Batted In*'),scoreRequired('Runs Batted In*')]"
-                                                    label="Runs Batted In*"
+                                                    :rules="[numeric('Carreras Empujadas'),scoreRequired('Carreras Empujadas')]"
+                                                    label="Carreras Empujadas"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -633,8 +645,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.base_on_balls"                      
-                                                    :rules="[numeric('Base On Balls*'),scoreRequired('Base On Balls*')]"
-                                                    label="Base On Balls*"
+                                                    :rules="[numeric('Base por Bolas'),scoreRequired('Base por Bolas')]"
+                                                    label="Base por Bolas"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -643,8 +655,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.strikeouts"                      
-                                                    :rules="[numeric('Strikeouts*'),scoreRequired('Strikeouts*')]"
-                                                    label="Strikeouts*"
+                                                    :rules="[numeric('Ponches'),scoreRequired('Ponches')]"
+                                                    label="Ponches"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -658,8 +670,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.left_on_base"                      
-                                                    :rules="[numeric('Left On Base*'),scoreRequired('Left On Base*')]"
-                                                    label="Left On Base*"
+                                                    :rules="[numeric('Dejados en Base'),scoreRequired('Dejados en Base')]"
+                                                    label="Dejados en Base"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -671,6 +683,218 @@
                                         <v-col             
                                         >
                                         
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                            <v-row v-if="isMedalBased">
+                                <v-col>  
+                                    <v-row>
+                                        <h2>Seleccionar Atleta:</h2>
+                                    </v-row>
+                                    <v-row 
+                                        align ="center"
+                                        justify = "center"
+                                        >
+                                            <v-col                   
+                                            >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.athlete_id"
+                                                    :items="team_members"
+                                                    filled
+                                                    chips
+                                                    color="blue-grey lighten-2"
+                                                    label="Select"
+                                                    item-text="first_name"
+                                                    item-value="athlete_id"
+                                                    required
+                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    >
+                                                    <template v-slot:selection="data">
+                                                        <v-chip
+                                                        v-bind="data.attrs"
+                                                        :input-value="data.selected"
+                                                        @click="data.select"
+                                                        >
+                                                        <v-avatar left>
+                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
+                                                            <v-img v-else :src="data.item.profile_image_link"/>
+                                                        </v-avatar>
+                                                        {{ data.item.first_name }}
+                                                        </v-chip>
+                                                    </template>
+                                                    <template v-slot:item="data">
+                                                        <template v-if="typeof data.item !== 'object'">
+                                                        <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                        </template>
+                                                        <template v-else>
+                                                        <v-list-item-avatar>
+                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
+                                                            <v-img v-else :src="data.item.profile_image_link"/>
+                                                        </v-list-item-avatar>
+                                                        <v-list-item-content>
+                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                        </v-list-item-content>
+                                                        </template>
+                                                    </template>
+                                                </v-autocomplete>  
+                                            </v-col>
+                                        </v-row>       
+                                    <v-row>
+                                        <h2>Categoria de Deporte:</h2>
+                                    </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.attributes.category_id"
+                                                    :items="sport_categories"
+                                                    filled
+                                                    chips
+                                                    color="blue-grey lighten-2"
+                                                    label="Select"
+                                                    item-text="category_name"
+                                                    item-value="category_id"
+                                                    required
+                                    
+                                                    >
+                                                </v-autocomplete>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <h2>Medalla Obtenida:</h2>
+                                    </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.attributes.medal_id"
+                                                    :items="medals"
+                                                    filled
+                                                    chips
+                                                    color="blue-grey lighten-2"
+                                                    label="Select"
+                                                    item-text="medal_type"
+                                                    item-value="medal_id"
+                                                    required
+                                    
+                                                    >
+                                                </v-autocomplete>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                            <v-row v-if="isMatchBased">
+                                <v-col>  
+                                    <v-row>
+                                        <h2>Seleccionar Atleta:</h2>
+                                    </v-row>
+                                    <v-row 
+                                        align ="center"
+                                        justify = "center"
+                                        >
+                                            <v-col                   
+                                            >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.athlete_id"
+                                                    :items="team_members"
+                                                    filled
+                                                    chips
+                                                    color="blue-grey lighten-2"
+                                                    label="Select"
+                                                    item-text="first_name"
+                                                    item-value="athlete_id"
+                                                    required
+                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    >
+                                                    <template v-slot:selection="data">
+                                                        <v-chip
+                                                        v-bind="data.attrs"
+                                                        :input-value="data.selected"
+                                                        @click="data.select"
+                                                        >
+                                                        <v-avatar left>
+                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
+                                                            <v-img v-else :src="data.item.profile_image_link"/>
+                                                        </v-avatar>
+                                                        {{ data.item.first_name }}
+                                                        </v-chip>
+                                                    </template>
+                                                    <template v-slot:item="data">
+                                                        <template v-if="typeof data.item !== 'object'">
+                                                        <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                        </template>
+                                                        <template v-else>
+                                                        <v-list-item-avatar>
+                                                            <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
+                                                            <v-img v-else :src="data.item.profile_image_link"/>
+                                                        </v-list-item-avatar>
+                                                        <v-list-item-content>
+                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                        </v-list-item-content>
+                                                        </template>
+                                                    </template>
+                                                </v-autocomplete>  
+                                            </v-col>
+                                        </v-row>       
+                                    <v-row>
+                                        <h2>Categoria de Deporte:</h2>
+                                    </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-autocomplete
+                                                    v-model="payload_stats_individual.attributes.category_id"
+                                                    :items="sport_categories"
+                                                    filled
+                                                    chips
+                                                    color="blue-grey lighten-2"
+                                                    label="Select"
+                                                    item-text="category_name"
+                                                    item-value="category_id"
+                                                    required
+                                    
+                                                    >
+                                                </v-autocomplete>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <h2>Medalla Obtenida:</h2>
+                                    </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-text-field
+                                                    v-model.number="payload_stats_individual.attributes.matches_played"       
+                                                    type="number"               
+                                                    label="Matches Played"
+                                                    outlined
+                                                    required
+                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
+                                                ></v-text-field>
+                                        </v-col>
+                                        <v-col             
+                                        >
+                                                <v-text-field
+                                                    v-model.number="payload_stats_individual.attributes.matches_won"   
+                                                    type="number"                   
+                                                    label="Matches Won"
+                                                    outlined
+                                                    required
+                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
+                                                ></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -689,7 +913,7 @@
                                 </v-col>
                             </v-row>   
                         </v-container>
-                    </form>
+                    </v-form>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -712,6 +936,8 @@
         refresh_stats:Boolean 
       },
     data: () => ({
+
+        valid: false,
         
         //WRITTEN TO/PARAMETERS:
         //Baloncesto
@@ -740,15 +966,42 @@
         SOFTBALL_IDF: 16, 
         SOCCER_IDM: 3,
         SOCCER_IDF: 11,
+        // OTHER SPORTS (MEDAL BASED)
+        ATHLETICS_IDM: 8,
+        ATHLETICS_IDF: 19,
+        //OTHER SPORTS (MATCH BASED)
+        FIELD_TENNIS_IDM: 9,
+        FIELD_TENNIS_IDF: 18,
+        TABLE_TENNIS_IDM:7,
+        TABLE_TENNIS_IDF:15,
 
         //CODE HELPERS:
         statistics_entry: false,
+        sport_categories: '',
+        medals: [
+            {
+                medal_id:0,
+                medal_type:"Oro"
+            },
+            {
+                medal_id:1,
+                medal_type:"Plata"
+            },
+            {
+                medal_id:2,
+                medal_type:"Bronce"
+            },
+            {
+                medal_id:3,
+                medal_type:"Ninguna"
+            },
+        ]
 
     }),
                  
     
     created(){
-        // this.buildDefaultValues()
+        this.buildDefaultValues()
         this.initializeSportData()
         console.log("[TM-ADD_STATS(COMPONENT)]",this.team_members)
     },
@@ -758,26 +1011,45 @@
             setQueryLoading:"results/setQueryLoading",
             addIndividualStatistics:"results/addIndividualStatistics",
             getAllEventStatistics:"results/getAllEventStatistics"
+            // getSportCategories:"result/getSportCategories"
         }),
-        // buildDefaultValues(){
-        //     this.event_id = this.$route.params.id
-        //     if (this.event_id == 1){
-        //         this.sport_id = this.BASKETBALL_IDM
-        //         this.sport_name = "Baloncesto"
-        //     }
-        //     else if (this.event_id == 2){
-        //         this.sport_id =  this.VOLLEYBALL_IDF 
-        //         this.sport_name = "Voleibol"
-        //     }
-        //     else if (this.event_id == 3){
-        //         this.sport_id =  this.SOCCER_IDF 
-        //         this.sport_name = "Futbol"
-        //     }
-        //     else if (this.event_id == 4){
-        //         this.sport_id =  this.BASEBALL_IDM
-        //         this.sport_name = "Beisbol"
-        //     }
-        // },
+        buildDefaultValues(){
+            // this.event_id = this.$route.params.id
+            // if (this.event_id == 1){
+                //TEMPORARY MOCK CATEGORIES
+            this.sport_categories=[
+                {
+                    category_id:5, category_name:"Solo"
+                },
+                {
+                    category_id:7, category_name:"Doble"
+                },
+                {
+                    category_id:12, category_name:"400 Metros"
+                },
+                {
+                    category_id:14, category_name:	"Lanzamiento Martillo"
+                },
+                {
+                    category_id:16, category_name:	"Lanzamiento Disco"
+                },
+                {
+                    category_id:17, category_name:	"Salto Largo"
+                },
+                {
+                    category_id:18, category_name:	"Salto Pértiga"
+                },
+                {
+                    category_id:21, category_name:	"10,000 Metros"
+                },
+                {
+                    category_id:23, category_name:	"Relevo 4 x 100"
+                },
+                {
+                    category_id:25, category_name:	"400 Metros Vallas"
+                }
+            ]
+        },
         initializeSportData(){
         //console.log(this.season)
             if(this.sport_id!=''){
@@ -853,6 +1125,29 @@
                     }
                     }
                 }
+                else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                    this.payload_stats_individual = {
+                        "event_id":Number(this.event_id),
+                        "athlete_id":'',
+                        "attributes":{
+                            "medal_id":'',
+                            "category_id":''
+                        }
+                    }
+                }
+                else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                    || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
+                    this.payload_stats_individual = {
+                        "event_id":Number(this.event_id),
+                        "athlete_id":'',
+                        "attributes":
+                        {
+                            "matches_played":'',
+                            "matches_won":'',
+                            "category_id":''
+                        }
+                    }
+                }
             }
         },
 
@@ -883,7 +1178,8 @@
     ...mapGetters({
         loadingQuery:"results/loadingQuery",
         individual_stats:"results/final_score",
-        results_payload:"results/results_payload",
+        results_payload:"results/results_payload"
+        // categories:"results/categories",
     }),
     // a computed getter
     isBasketball: function () {
@@ -901,6 +1197,13 @@
     isBaseball: function () {
       // `this` points to the vm instance
       return (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF)
+    },
+    isMedalBased: function () {
+      return (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)
+    },
+    isMatchBased: function (){
+        return (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF)
     }
   },
   }

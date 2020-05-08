@@ -1,39 +1,46 @@
-import base64
-import hashlib
-from Crypto import Random
-from Crypto.Cipher import AES
-
-
 class CustomSession(object):
 
-    def __init__(self, key):
-        self.theSession = {}
-        self.bs = AES.block_size
-        self.key = hashlib.sha256(key.encode()).digest()
+    def __init__(self):
+        self.sessionList = []
 
-    def setVal(self, key, value):
-        encrypted = self.encrypt(value)
-        self.theSession[key] = encrypted
+    def setLoggedUser(self, value):
+        """
+        Add logged in user, to the custon session list.
 
-    def getVal(self, key):
-        if key:
-            return self.decrypt(self.theSession[key])
+        Take in the username for the user that just logged in and added to the custom session list.
 
-    def encrypt(self, raw):
-        raw = self._pad(raw)
-        iv = Random.new().read(AES.block_size)
-        cipher = AES.new(self.key, AES.MODE_CBC, iv)
-        return base64.b64encode(iv + cipher.encrypt(raw.encode()))
+        Args: 
+            value: The username of the reciently logged in user to be added to the session list.
+        """
+        theSession = {}
+        if value == None or value == '':
+            return
+        theSession["username"] = value
+        self.sessionList.append(theSession)
 
-    def decrypt(self, enc):
-        enc = base64.b64decode(enc)
-        iv = enc[:AES.block_size]
-        cipher = AES.new(self.key, AES.MODE_CBC, iv)
-        return self._unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
+    def isLoggedIn(self, username):
+        """
+        Function to check if the user with the given uisername is logged in.
 
-    def _pad(self, s):
-        return s + (self.bs - len(s) % self.bs) * chr(self.bs - len(s) % self.bs)
+        This fucntion takes in the username to be queried in order to determined wether that user
+        has a valid active session or not.
 
-    @staticmethod
-    def _unpad(s):
-        return s[:-ord(s[len(s)-1:])]
+        Args:
+            username: The username of the user whose session status must be determined
+
+        Returns:
+            Returns a dictionary containing the logged in user is the user has an active session and None
+            if there is no active session.
+        """
+        loggedUser = next((session for session in self.sessionList if session.get("username", "Invalid Session") == username), None)
+        return loggedUser
+
+    def logout(self, username):
+        """
+        Deletes the session for the user with the provided username.
+
+        Deletes the user with the provided username from the active session list.
+        """
+        self.sessionList = [session for session in self.sessionList if not (session['username'] == username)]
+        loggedUser = next((session for session in self.sessionList if session.get("username", "Invalid Session") == username),None)
+        return loggedUser == None

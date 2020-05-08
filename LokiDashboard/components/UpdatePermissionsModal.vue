@@ -22,17 +22,17 @@
               <v-checkbox
                 class="mx-3"
                 label="Añadir"
-                v-model="permissions[0].is_invalid"
+                v-model="permissions[0]['13']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Borrar"
-                v-model="permissions[1].is_invalid"
+                v-model="permissions[1]['14']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Modificar"
-                v-model="permissions[2].is_invalid"
+                v-model="permissions[2]['15']"
               ></v-checkbox>
             </v-row>
             <v-row align="center">
@@ -42,17 +42,17 @@
               <v-checkbox
                 class="mx-3"
                 label="Añadir"
-                v-model="permissions[3].is_invalid"
+                v-model="permissions[3]['16']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Borrar"
-                v-model="permissions[4].is_invalid"
+                v-model="permissions[4]['17']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Modificar"
-                v-model="permissions[5].is_invalid"
+                v-model="permissions[5]['18']"
               ></v-checkbox>
             </v-row>
             <v-row align="center">
@@ -62,17 +62,17 @@
               <v-checkbox
                 class="mx-3"
                 label="Añadir"
-                v-model="permissions[6].is_invalid"
+                v-model="permissions[6]['19']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Borrar"
-                v-model="permissions[7].is_invalid"
+                v-model="permissions[7]['20']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Modificar"
-                v-model="permissions[8].is_invalid"
+                v-model="permissions[8]['21']"
               ></v-checkbox>
             </v-row>
             <v-row align="center">
@@ -82,17 +82,17 @@
               <v-checkbox
                 class="mx-3"
                 label="Añadir"
-                v-model="permissions[9].is_invalid"
+                v-model="permissions[9]['22']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Borrar"
-                v-model="permissions[10].is_invalid"
+                v-model="permissions[10]['23']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Modificar"
-                v-model="permissions[11].is_invalid"
+                v-model="permissions[11]['24']"
               ></v-checkbox>
             </v-row>
             <v-row align="center">
@@ -102,17 +102,17 @@
               <v-checkbox
                 class="mx-3"
                 label="Añadir"
-                v-model="permissions[12].is_invalid"
+                v-model="permissions[12]['25']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Borrar"
-                v-model="permissions[13].is_invalid"
+                v-model="permissions[13]['26']"
               ></v-checkbox>
               <v-checkbox
                 class="mx-3"
                 label="Modificar"
-                v-model="permissions[14].is_invalid"
+                v-model="permissions[14]['27']"
               ></v-checkbox>
             </v-row>
             <v-checkbox v-model="reviewed" label="He revisado mis cambios.">
@@ -176,10 +176,12 @@ export default {
     }),
     close() {
       this.$emit("update:dialog", false);
+      console.log(this.permissions)
     },
     async save() {
       this.isLoading = true;
       const permissions = this.permissions;
+      console.log(this.permissions)
       await this.setPermissions({ id: this.id, permissions: permissions });
       this.isLoading = false;
       this.close()

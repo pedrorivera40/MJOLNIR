@@ -45,6 +45,7 @@
                                                 label ="Año de Temporada"
                                                 prepend-icon="mdi-calendar-blank-multiple"
                                                 :rules="[seasonRequired('Temporada')]"
+                                                
                                             ></v-select>
                                         </v-col>
                                     </v-row>    
@@ -126,7 +127,8 @@
       name:"AddTeamModal",
       props:{
         dialog: Boolean,
-        sport_id: Number
+        sport_id: Number,
+        season_year_prop: Number
         // season_year: Number
         // year_list: Array
       },
@@ -151,22 +153,15 @@
 
         date: new Date().toISOString().substr(0,10),
         yearList:[],
+
+        season_year:'',
         
     }),
            
       
       
     created(){
-        // this.setNullTeam() //definitely don't do!
-
-        //not necessary due to being in same route. year passed as prop
         this.buildYearList()
-        
-        //not necessary dye to being in same route. id and likely other stuff like branch passed as prop
-        // this.buildDefaultValues()
-
-        //likely not necessary since no query is called yet??
-        // this.setQueryLoading()
     }, 
 
     methods: {
@@ -175,7 +170,7 @@
             let yearToAdd = 2020
             let currentYear = new Date(2023,8).getFullYear()
             this.season = currentYear
-            
+            this.season_year = this.season_year_prop
             while(yearToAdd <= currentYear)
             {
                 this.yearList.push(yearToAdd++)
@@ -217,12 +212,10 @@
             console.log("WHAT ARE THE CURRENT VALUES BEFORE QUERY???",payload_edit)
             await this.postTeam(payload_edit)
             await this.getSeasonDataPost()
-            // while(this.loadingQuery){
-            //     //don't close yet
-            // }
+    
+            this.$emit("update:season_year_prop", this.season_year);
             this.close()
-            // this.goToTeam()
-            // }
+
         },
         getSeasonDataPost(){
             this.setQueryLoading()
@@ -253,10 +246,4 @@
         })
     }
   }
-    // The Only Arguments we need. 
-    //{
-    //"sport_id":1,   -->selected from existing
-    //"season_year":"2020", --> selected from yearList
-    //"team_image_url":"www.google.com" -->inserted
-    //}
 </script>
