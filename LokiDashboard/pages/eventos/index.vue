@@ -111,6 +111,7 @@
                   small
                   v-on="on"
                   @click="createPBPSequence(item)"
+                  :disabled="!$store.state.userAuth.userPermissions[3]['16']"
                 >Crear PBP</v-btn>
               </template>
               <span>Crear Play-by-Play</span>
