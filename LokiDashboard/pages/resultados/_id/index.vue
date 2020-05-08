@@ -104,7 +104,8 @@
                                         color="primary_light"
                                         class="white--text"
                                         @click="addAthleteStatistics()"
-                                        :disabled="!formated_individual_stats()"
+                                        :disabled="!formated_members_fetch()"
+                                        
                                     >
                                         <v-icon left>
                                         mdi-plus
@@ -570,6 +571,12 @@ export default {
         }
         else return false
     },
+    formated_members_fetch(){
+        if (this.team_members_local != '' &&  this.team_members_local != null){
+            return true
+        }
+        else return false
+    },
     buildDefaultValues(){
         if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}
         else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_route = "volleyball"}
@@ -596,7 +603,7 @@ export default {
                 {text: 'Asistencias', value: 'statistics.assists'},
                 {text: 'Bloqueos', value: 'statistics.blocks'},
                 {text: 'Intentos de Tiro de Campo', value: 'statistics.field_goal_attempt'},
-                {text: 'Porcentaje de Tiro de Campo (%)', value: 'statistics.field_goal_percentage'},
+                {text: 'Porcentaje de Tiro de Campo (%)', value: 'statistics.field_goal_percentage'},//.toFixed()
                 {text: 'Intentos de Tiro Libre', value: 'statistics.free_throw_attempt'},
                 {text: 'Porcentaje de Tiro Libre (%)', value: 'statistics.free_throw_percentage'},
                 {text: 'Puntos', value: 'statistics.points'},
