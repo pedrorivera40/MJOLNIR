@@ -65,6 +65,7 @@ def extractUserInfoFormToken():
     token = request.headers.get('Authorization').split(' ')[1]
     return getTokenInfo(token)
 
+
 def validateRequestPermissions(token, permissionNumber):
     def switch(permissionNumber):
         return {
@@ -85,12 +86,14 @@ def validateRequestPermissions(token, permissionNumber):
             '27': 14,
         }[permissionNumber]
     index = switch(permissionNumber)
-    print('index',index)
-    print('Permission Number',permissionNumber)
-    print('All permissions',token['permissions'])
-    print('Permissions being checked',token['permissions'][index][permissionNumber])
-    print('Permission check',token['permissions'][index][permissionNumber]==False)
-    return(token['permissions'][index][permissionNumber]==False)
+    print('index', index)
+    print('Permission Number', permissionNumber)
+    print('All permissions', token['permissions'])
+    print('Permissions being checked',
+          token['permissions'][index][permissionNumber])
+    print('Permission check', token['permissions']
+          [index][permissionNumber] == False)
+    return(token['permissions'][index][permissionNumber] == False)
 
 #--------- Athlete Routes ---------#
 @app.route("/athletes/", methods=['GET', 'POST'])
@@ -153,6 +156,7 @@ def auth():
         password = req['password']  # TODO: AES Encryption
         return handler.login(username, password, customSession)
 
+
 @app.route("/logout", methods=['POST'])
 def logout():
     if request.json == None:
@@ -176,10 +180,10 @@ def allUsers():
     print(loggedUser)
     if(loggedUser == None):
         return jsonify(Error='Invalid Session'), 401
-        
-    if(validateRequestPermissions(token,'21') or
-    validateRequestPermissions(token,'22') or
-    validateRequestPermissions(token,'23')):
+
+    if(validateRequestPermissions(token, '21') or
+       validateRequestPermissions(token, '22') or
+       validateRequestPermissions(token, '23')):
         return jsonify(Error='User does not have permissions to acces this resource.'), 403
     handler = UserHandler()
     if request.method == 'GET':
@@ -797,7 +801,7 @@ def pbp_roster(sport):
 
     if request.method == 'DELETE':
         # Validate team is given within request body.
-        if not "team" in args or not "event_id" in args or len(body) != 0:
+        if not "team" in args or not "event_id" in args or body:
             return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y nombre de equipo como argumentos."), 400
 
         team = args["team"]
@@ -806,7 +810,7 @@ def pbp_roster(sport):
     else:
 
         # Validate team is given within request body.
-        if not "team" in body or not "event_id" in body or len(args) != 0:
+        if not "team" in body or not "event_id" in body or args:
             return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y nombre de equipo en el cuerpo."), 400
 
         team = body["team"]
@@ -821,6 +825,7 @@ def pbp_roster(sport):
 
         # For UPRM, data is the athlete_id.
         if team == "uprm":
+            print(2525252)
             return handler.setUPRMPlayer(event_id, data)
 
         if team == "opponent":
@@ -2230,12 +2235,12 @@ def matchbasedAthleteStatistics():
         return handler.editStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'DELETE':
-        if 'category_id' not in json:           
+        if 'category_id' not in json:
             return jsonify(Error="Bad arguments"), 400
         try:
             return handler.removeStatistics(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
         except:
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error="Bad arguments"), 400
 
 
 @app.route("/results/matchbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -2275,6 +2280,7 @@ def matchbasedTeamStatistics():
             return handler.removeTeamStatistics(int(json['event_id']), int(json['category_id']))
         except:
             return jsonify(Error="Bad arguments"), 400
+
 
 @app.route("/results/matchbased/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def matchbasedFinalScores():
@@ -2438,9 +2444,9 @@ def medalbasedAthleteStatistics():
         if 'category_id' not in json:
             return jsonify(Error="Bad arguments"), 400
         try:
-            return handler.removeStatistics(int(json['event_id']),int(json['athlete_id']),int(json['category_id']))
+            return handler.removeStatistics(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
         except:
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error="Bad arguments"), 400
 
 
 @app.route("/results/medalbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])

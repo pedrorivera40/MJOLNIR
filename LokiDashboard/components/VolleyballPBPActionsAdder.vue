@@ -133,13 +133,20 @@
       <v-card>
         <v-card-title class="text-center" style="word-break: normal;">Manejo de Atletas UPRM</v-card-title>
         <v-card-text>Marque los atletas de UPRM que están participando en este evento.</v-card-text>
+        <v-divider />
         <VolleyballPBPUPRMAthlete
-          v-for="athlete in uprm_roster"
-          :key="athlete.key + 3000"
-          :athlete_name="athlete.name"
+          v-for="athlete in valid_uprm_roster"
+          :key="athlete.athlete_id + 3000"
+          :athlete_first_name="athlete.first_name"
+          :athlete_middle_name="athlete.middle_name"
+          :athlete_last_names="athlete.last_names"
           :athlete_number="athlete.number"
           :athlete_img="athlete.profile_image_link"
+          :event_id="event_id"
+          :athlete_id="athlete.athlete_id"
+          :roster="uprm_roster"
         />
+        <v-divider />
         <v-card-actions fixed>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" text @click="manage_uprm_roster_dialog = false">Salir</v-btn>
@@ -150,7 +157,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import VolleyballPBPUPRMAthlete from "../components/VolleyballPBPUPRMAthlete";
 
 export default {
@@ -159,9 +166,11 @@ export default {
   },
 
   props: {
-    event_id: String,
+    event_id: Number,
     uprm_team_name: String,
-    opp_team_name: String
+    opp_team_name: String,
+    uprm_roster: [],
+    valid_uprm_roster: []
   },
 
   data: () => ({
@@ -178,26 +187,26 @@ export default {
       { key: 9, action_type: "Dig", button_state: false },
       { key: 10, action_type: "ReceptionError", button_state: false }
     ],
-    uprm_roster: [
-      {
-        id: 1,
-        number: 11,
-        name: "Fulano de Tal",
-        profile_image_link:
-          "https://www.fiawec.com/media/cache/news_details/assets/fileuploads/58/e2/58e20575c78df.jpg"
-      },
-      { id: 2, number: 1, name: "Don Perenzejo" },
-      { id: 3, number: 21, name: "Juan del Pueblo" },
-      { id: 4, number: 3, name: "Pepe El De La Esquina" },
-      { id: 5, number: 4, name: "Gonzalo Duarte" },
-      { id: 6, number: 2, name: "Martes Domingo" },
-      { id: 7, number: 6, name: "Tomas Almibar" },
-      { id: 8, number: 16, name: "Pepe Trueno" },
-      { id: 9, number: 8, name: "Eli Nocente" },
-      { id: 10, number: 9, name: "Armando Guerra" },
-      { id: 11, number: 14, name: "Armando Pleito" },
-      { id: 12, number: 15, name: "Sin Nom Bre" }
-    ],
+    // uprm_roster: [
+    //   {
+    //     id: 1,
+    //     number: 11,
+    //     name: "Fulano de Tal",
+    //     profile_image_link:
+    //       "https://www.fiawec.com/media/cache/news_details/assets/fileuploads/58/e2/58e20575c78df.jpg"
+    //   },
+    //   { id: 2, number: 1, name: "Don Perenzejo" },
+    //   { id: 3, number: 21, name: "Juan del Pueblo" },
+    //   { id: 4, number: 3, name: "Pepe El De La Esquina" },
+    //   { id: 5, number: 4, name: "Gonzalo Duarte" },
+    //   { id: 6, number: 2, name: "Martes Domingo" },
+    //   { id: 7, number: 6, name: "Tomas Almibar" },
+    //   { id: 8, number: 16, name: "Pepe Trueno" },
+    //   { id: 9, number: 8, name: "Eli Nocente" },
+    //   { id: 10, number: 9, name: "Armando Guerra" },
+    //   { id: 11, number: 14, name: "Armando Pleito" },
+    //   { id: 12, number: 15, name: "Sin Nom Bre" }
+    // ],
     opp_roster: [
       { number: 11, name: "Fulano de Tal" },
       { number: 1, name: "Don Perenzejo" },
@@ -248,7 +257,24 @@ export default {
       if (action === "") {
         this.notifyNotActionSelected();
       } else {
-        console.log({ athlete_id: id, action_type: action, team: "uprm" });
+        let athlete_id = -1;
+
+        for (let athlete in this.uprm_roster) {
+          if (this.uprm_roster[athlete].number == id) {
+            athlete_id = this.uprm_roster[athlete].athlete_id;
+            break;
+          }
+        }
+        const payload = {
+          event_id: this.event_id,
+          data: {
+            athlete_id: athlete_id,
+            action_type: action,
+            team: "uprm"
+          }
+        };
+        console.log(payload);
+        this.sendGameAction(payload);
       }
       this.action_buton_pressed = false;
     },

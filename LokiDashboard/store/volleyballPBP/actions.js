@@ -367,8 +367,35 @@ export default {
     // Update opponent color in the RTDB via Odin.
     async updateOpponentColor({ commit, dispatch }, payload) {
         try {
-            console.log(payload);
             const response = await this.$axios.put(`/pbp/Voleibol/color`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
+    },
+
+    // Add UPRM player into game roster.
+    async addUPRMAthlete({ commit, dispatch }, payload) {
+        try {
+            const response = await this.$axios.post(`/pbp/Voleibol/roster`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+        }
+    },
+
+    // Remove UPRM player from game roster.
+    async removeUPRMAthlete({ commit, dispatch }, args) {
+        try {
+            const response = await this.$axios.delete(`/pbp/Voleibol/roster?${args}`);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
         } catch (error) {
             if (!!error.response) {

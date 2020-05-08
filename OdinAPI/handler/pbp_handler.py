@@ -655,7 +655,7 @@ class VolleyballPBPHandler:
                 return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             uprm_roster = pbp_dao.get_uprm_roster(event_id)
-            if athlete_id in uprm_roster:
+            if uprm_roster and athlete_id in uprm_roster:
                 return jsonify(ERROR="El atleta ya existe en el roster de UPRM."), 403
 
             player_info = {
@@ -668,7 +668,8 @@ class VolleyballPBPHandler:
             }
 
             pbp_dao.set_uprm_athlete(event_id, player_info)
-            return jsonify(MSG="La información del atleta se ha agragado al sistema."), 200
+            print(player_info)
+            return jsonify(MSG="Se ha actualizado la información de atletas UPRM."), 200
 
         except Exception as e:
             print(str(e))
@@ -744,11 +745,13 @@ class VolleyballPBPHandler:
             if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
-            if not str(player_id) in pbp_dao.get_uprm_roster(event_id):
+            opp_roster = pbp_dao.get_uprm_roster(event_id)
+
+            if opp_roster and not str(player_id) in opp_roster:
                 return jsonify(ERROR="El atleta no existe."), 404
 
             pbp_dao.remove_uprm_athlete(event_id, player_id)
-            return jsonify(MSG="La información del atleta se ha removido del sistema."), 200
+            return jsonify(MSG="Se ha actualizado la información de atletas UPRM."), 200
 
         except Exception as e:
             print(str(e))

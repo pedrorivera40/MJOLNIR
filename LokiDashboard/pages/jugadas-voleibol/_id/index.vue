@@ -40,6 +40,8 @@
               :event_id="event_id"
               :uprm_team_name="uprm_team_name"
               :opp_team_name="opponentName"
+              :uprm_roster="uprmRoster"
+              :valid_uprm_roster="validUPRMRoster"
             />
           </v-row>
           <v-row>
@@ -573,7 +575,7 @@ export default {
     })
   },
   beforeMount() {
-    this.event_id = this.$route.params.id;
+    this.event_id = parseInt(this.$route.params.id);
     this.getEvent(this.event_id).then(() => {
       this.getValidUPRMRoster(this.teamId);
       this.handleSetScores(this.event_id);

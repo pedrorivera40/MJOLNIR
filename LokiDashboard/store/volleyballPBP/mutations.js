@@ -22,8 +22,8 @@ export default {
 
     // Update athlete entry from UPRM roster.
     UPDATE_UPRM_ROSTER(state, athlete) {
-        for (let index in state.oppRoster) {
-            if (state.uprmRoster[index].key === key) {
+        for (let index in state.uprmRoster) {
+            if (state.uprmRoster[index].athlete_id == athlete.athlete_id) {
                 state.uprmRoster.splice(index, 1, athlete);
                 break;
             }
@@ -32,8 +32,10 @@ export default {
 
     // Remove athlete entry from UPRM roster.
     REMOVE_UPRM_ROSTER(state, key) {
-        for (let index in state.oppRoster) {
-            if (state.uprmRoster[index].key === key) {
+        for (let index in state.uprmRoster) {
+            console.log(key);
+            if (state.uprmRoster[index].athlete_id == key) {
+                console.log(state.uprmRoster[index].athlete_id);
                 state.uprmRoster.splice(index, 1);
                 break;
             }

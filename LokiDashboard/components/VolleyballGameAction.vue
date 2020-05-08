@@ -183,7 +183,7 @@ export default {
     athlete_img: String,
     in_color: String,
     id: String,
-    event_id: String
+    event_id: Number
   },
   data: () => ({
     notification: "Notification", // ADD ACTION TYPES AND A DICTIONARY TO MAP THEM FROM ENGLISH TO SPANISH...
