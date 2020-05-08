@@ -147,19 +147,26 @@ export default {
 			getEventByID:"events/getEventByID"
 		}),
 
+		/**
+		 * Returns a formated sport name used in the viewer card.
+		 */
 		getSportFullSportName()
 		{
 			return this.event.sport_name + " " + this.event.branch
 		},
 
+		/**
+		 * Routes user to the statisticts page, using 
+		 * the event id in the route.
+		 */
 		goToEventStatistics(){
 			this.$router.push("/resultados/"+this.event.id)
-		},
-
+		},	
 		
-		log(){
-			console.log(this.event)
-		},
+		/**
+		 * Returns a string denoting whether an event is local 
+		 * or away.
+		 */
 		getLocality(){
 			if(this.event.is_local){
 
@@ -169,6 +176,12 @@ export default {
 				return 'Afuera'
 
 		},
+
+		/**
+		 * Verifies if the event data has been formated, if not then 
+		 * it proceeds to format the event data so that it can be displayed
+		 * properly in the card view.
+		 */
 		formated(){
 			if(this.event){
 				if(this.ready){
@@ -191,9 +204,7 @@ export default {
 					if(minutes < 10)
 						this.time = hours + ":0"+minutes + amPM
 					else if(minutes >=10)
-						this.time = hours + ":" +minutes + amPM
-						
-				 	
+						this.time = hours + ":" +minutes + amPM				 	
 				
 					if(this.event.is_local)
 						this.locality = 'Casa'

@@ -32,11 +32,10 @@
                   md="6"
                 >             
                   <v-text-field
-                    v-model="first_name"          
+                    v-model.lazy="first_name"          
                     
                     :counter="20"
-                    label="Primer Nombre"
-                    required
+                    label="Primer Nombre"              
                     :rules="[required('Primer Nombre'),nameFormat('Primer Nombre'),maxLength('Nombre',20)]"
                   ></v-text-field>              
                 </v-col>
@@ -49,8 +48,7 @@
                   <v-text-field
                     v-model="middle_name"                
                     :counter="20"
-                    label="Segundo Nombre"
-                    required
+                    label="Segundo Nombre"                    
                     :rules="[nameFormat('Segundo Nombre'),maxSummaryLength('Segundo Nombre',20)]"
                   ></v-text-field>              
                 </v-col>
@@ -208,7 +206,7 @@
 
                 <v-col md="12">              
                   <v-autocomplete
-                    v-model="sport"
+                    v-model.lazy="sport"
                     :items="sportsList"               
                     label ="Deporte"
                     item-text="sportName"
@@ -401,7 +399,7 @@
       sportsList:[],     
       sportHasNumber:false,     
       feet: [3,4,5,6,7],      
-      inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0],
+      inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5],
       yearsOfStudy:[1,2,3,4,5,6,7,8,9,10],
       yearsOfParticipation:[1,2,3,4],
       numbers:[0,1,2,3,4,5,6,7,8,9,10,11,12,
@@ -432,6 +430,11 @@
         addAthlete:"athletes/addAthlete"
       }),
 
+      /**
+       * Function to be called after the user 
+       * has entered valid information in the required
+       * field and has agreed to the terms.
+       */
       async submit () {
 
         this.adding = true
@@ -494,8 +497,6 @@
         }
         athlete_attributes['categories'] = athlete_categories
 
-        //console.log("Creating a new athlete with the following information:")
-        //console.log(athlete_attributes)
         const athleteJSON ={'sID':this.sport,'attributes':athlete_attributes}
         
         const response =  await this.addAthlete(athleteJSON)
@@ -506,13 +507,18 @@
         }    
       },
 
+      /**
+       * Closes the AddEventModal
+       */
       close() {
         this.ready = false
         this.terms = false
         this.clear()
         this.$emit("update:dialog", false)
       },
-
+      /**
+       * Clears and resets all optional fields in the form.
+       */
       clear () {
         
         this.first_name= '',
@@ -535,11 +541,24 @@
         
       },
 
+      /**
+       * Updates the positions of the 
+       * sport_positions object
+       * @param key key of the sport_positions Object
+       * @param value value to be assigned to the position
+       */
       updatePositons(key,value){
         
         this.sport_positions[key]=value 
         console.log(this.sport_positions)      
       },
+
+      /**
+       * Updates the categories of the 
+       * categories_categories object
+       * @param key key of the sport_categories Object
+       * @param value value to be assigned to the category
+       */
       updateCategories(key,value){
         
         this.sport_categories[key]=value       
@@ -548,7 +567,11 @@
 
 
       
-
+      /**
+       * Formats the content in the athlete creation form
+       * sports list and date of birth fields and returns true
+       * if it has been completed.
+      */
       formated(){
         if(this.sports.length > 0){
           if(this.ready){ return true }
@@ -569,7 +592,11 @@
           return false
         }
       },
-
+      
+      /**
+       * Assign the sport's categories and positions
+       * to the sport_positions and sport_categories Objects       * 
+       */
       setCategoriesAndPositions(){
         this.sport_positions = {}
         this.sport_categories = {}
@@ -597,6 +624,10 @@
         
       },
 
+      /**
+       * Returns true if object is empty, false otherwise
+       * @param obj Javascript Object
+       */
       isEmpty(obj){
         for(let key in obj){
           if(obj.hasOwnProperty(key))
@@ -605,6 +636,12 @@
         return true
       },
 
+    /**
+     * Determines if the sport of the athlete
+     * has numbers for the athlete and assigns
+     * the value of true or false to th sportHasNumber
+     * flag.
+     */
       sportNumber(){
         const BALONCESTO_M = 1 
         const BALONCESTO_F = 10
@@ -628,7 +665,10 @@
         }
 
       },
-
+      /**
+       * Resets the date of the date_of_birth_ data variable
+       * to the current date.
+       */
       resetDate(){
         let time_zone_offset = new Date().getTimezoneOffset() * 60000      
         this.date = new Date(Date.now() - time_zone_offset).toISOString().substring(0,10)

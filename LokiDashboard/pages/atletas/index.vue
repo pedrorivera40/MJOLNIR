@@ -171,29 +171,55 @@ export default {
       removeAthlete: "athletes/removeAthlete"
     }),
 
-    addAthlete() {
-      this.dialogAdd = true;
-    },
 
-    loadingAthletes() {
-      if (this.athletes.length > 0) {
-        return false;
-      } else {
-        return true;
+    /**
+     * Activates the AddAthleteModal dialog.
+     */
+    addAthlete(){
+      this.dialogAdd = true
+    },
+    /**
+     * Return false if athletes have been loaded,
+     * false otherwise.
+     */
+    loadingAthletes(){
+      if(this.athletes.length > 0){
+        return false
+      }else{
+        return true
       }
     },
-    viewAthlete(athleteID) {
-      this.$router.push("/atleta/" + athleteID);
-    },
-    editAthlete(athlete) {
-      this.editedItem = Object.assign({}, athlete);
-      this.dialogEdit = true;
+
+    /**
+     * Routes user to the athlete view page
+     * using the id given as parameter
+     * @param athleteID id of the athlete to view
+     */
+    viewAthlete(athleteID){
+      this.$router.push('/atleta/'+athleteID)
     },
 
-    deleteAthlete(athleteID) {
-      this.aid = athleteID;
-      this.dialogDelete = true;
-    }
+    /**
+     * Activates the EditAthleteModal and prepares
+     * the athlete to edit using the athlete object given 
+     * as parameter
+     * @param athlete Object containing the information of the athlete to edit.
+     */
+    editAthlete(athlete){
+      this.editedItem = Object.assign({},athlete)
+      this.dialogEdit = true
+    },    
+    /**
+     * Activates the DeleteEventModal using 
+     * the id of the athlete given as parameter.
+     * @param athleteID id of the ahtlete to remove.
+     */
+    deleteAthlete(athleteID){
+      this.aid = athleteID
+      this.dialogDelete = true
+
+    },
+  
   },
 
   computed: {

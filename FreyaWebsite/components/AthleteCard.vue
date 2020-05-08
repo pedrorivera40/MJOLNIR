@@ -15,9 +15,17 @@
             Deporte: {{sportName}} 
           </v-card-subtitle>
           <v-card-actions>
-            <v-btn  @click="goToAthlete">
-              <v-icon> mdi-eye-plus-outline </v-icon>            
-            </v-btn>       
+            <v-tooltip bottom="">
+              <template v-slot:activator="{ on }">
+                <v-btn @click="goToAthlete" v-on="on">
+                  <v-icon> 
+                    mdi-eye-plus-outline 
+                  </v-icon>
+                </v-btn> 
+              </template>           
+              <span> Ver perfil del atleta </span>
+            
+            </v-tooltip>       
           </v-card-actions>
         </v-col>
       </v-row>     
@@ -38,6 +46,10 @@ export default {
   },
   methods: {
     
+    /**
+     * Redirects to the athlete viewer page using
+     * the id of the athlete already given as a prop.
+     */
     goToAthlete() {
       this.$router.push("/atletas/" + this.athleteID);
     }
