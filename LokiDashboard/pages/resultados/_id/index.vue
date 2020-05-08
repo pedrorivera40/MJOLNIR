@@ -104,7 +104,7 @@
                           color="primary_light"
                           class="white--text"
                           @click="addAthleteStatistics()"
-                          :disabled="!formated_individual_stats() || !$store.state.userAuth.userPermissions[7]['20']"
+                          :disabled="!formated_individual_stats() || !$store.state.userAuth.userPermissions[6]['19']"
                         >
                           <v-icon left>
                             mdi-plus
@@ -153,6 +153,7 @@
                             class="mr-2 table-actions"
                             v-on="on"
                             @click.stop="editAthleteStatistics(item)"
+                            :disabled="!$store.state.userAuth.userPermissions[8]['21']"
                           >
                             mdi-pencil
                           </v-icon>
@@ -178,6 +179,7 @@
                             class="mr-2 table-actions"
                             v-on="on"
                             @click.stop="deleteAthleteStatistics(item)"
+                            :disabled="!$store.state.userAuth.userPermissions[7]['20']"
                           >
                             mdi-delete
                           </v-icon>

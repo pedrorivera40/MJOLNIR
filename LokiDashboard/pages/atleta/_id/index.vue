@@ -636,13 +636,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 ::v-deep .v-data-table th {
-  font-size: 14px;
+  font-size: 1rem;
 }
 
 ::v-deep .v-data-table td {
-  font-size: 18px;
+  font-size: 1rem;
 }
 </style>
 

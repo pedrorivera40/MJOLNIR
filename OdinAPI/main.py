@@ -170,7 +170,7 @@ def allUsers():
     loggedUser = customSession.isLoggedIn(token['user'])
     print(loggedUser)
     if(loggedUser == None):
-        return jsonify(Error='Invalid Session'), 401
+        return jsonify(Error='No Session Found'), 401
         
     if(not(validateRequestPermissions(token,'22') or
     validateRequestPermissions(token,'23') or
