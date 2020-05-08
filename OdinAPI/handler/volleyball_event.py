@@ -281,7 +281,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -293,7 +293,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -334,7 +334,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -377,7 +377,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -425,7 +425,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -543,7 +543,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -628,7 +628,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -663,7 +663,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -781,7 +781,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -883,7 +883,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1019,7 +1019,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1068,7 +1068,7 @@ class VolleyballEventHandler(EventResultHandler):
 
             try:
                 a_dao = AthleteDAO()
-                athlete = a_dao.getAthleteByID(aID)
+                athlete = a_dao.athleteExists(aID)
                 if not athlete:
                     return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
             except (TypeError, ValueError):
@@ -1237,7 +1237,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1249,7 +1249,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -1316,7 +1316,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1362,7 +1362,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1374,7 +1374,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -1439,7 +1439,7 @@ class VolleyballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):

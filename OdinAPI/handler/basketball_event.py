@@ -327,7 +327,7 @@ class BasketballEventHandler(EventResultHandler):
         # validate existing event
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -339,7 +339,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -380,7 +380,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -423,7 +423,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -471,7 +471,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -588,13 +588,13 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
             return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(Error="No se pudo verificar evento desde el DAO."), 500
+            return jsonify(Error="No se pudo verificar Evento desde el DAO."), 500
 
         try:
             dao = BasketballEventDAO()
@@ -676,7 +676,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -712,7 +712,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -839,7 +839,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -945,7 +945,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1087,7 +1087,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1136,7 +1136,7 @@ class BasketballEventHandler(EventResultHandler):
 
             try:
                 a_dao = AthleteDAO()
-                athlete = a_dao.getAthleteByID(aID)
+                athlete = a_dao.athleteExists(aID)
                 if not athlete:
                     return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
             except (TypeError, ValueError):
@@ -1314,7 +1314,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1326,7 +1326,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -1395,7 +1395,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1441,7 +1441,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -1453,7 +1453,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             a_dao = AthleteDAO()
-            athlete = a_dao.getAthleteByID(aID)
+            athlete = a_dao.athleteExists(aID)
             if not athlete:
                 return jsonify(Error="Atleta con ID:{} no se encontro.".format(aID)), 400
         except (TypeError, ValueError):
@@ -1515,7 +1515,7 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento para ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):

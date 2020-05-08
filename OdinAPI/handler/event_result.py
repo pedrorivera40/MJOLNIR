@@ -87,7 +87,7 @@ class EventResultHandler:
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento con ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -291,7 +291,7 @@ class EventResultHandler:
         # Validate existing event
         e_dao = EventDAO()
         try:
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento con ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -426,7 +426,7 @@ class EventResultHandler:
         # Validate existing event
         e_dao = EventDAO()
         try:
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento con ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
@@ -501,7 +501,7 @@ class EventResultHandler:
 
         try:
             e_dao = EventDAO()
-            event = e_dao.getEventByID(eID)
+            event = e_dao.eventExists(eID)
             if not event:
                 return jsonify(Error="Evento con ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
