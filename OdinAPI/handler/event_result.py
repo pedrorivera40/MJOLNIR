@@ -89,23 +89,23 @@ class EventResultHandler:
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="Evento con ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde el DAO."), 500
 
         # get final score
         try:
             dao = FinalScoreDAO()
             final_score_result = dao.getFinalScore(eID)
             if not final_score_result:
-                return jsonify(Error="Event Final Score not found for the event: {}.".format(eID)), 404
+                return jsonify(Error="Puntuacion Final no se encontro para el evento con ID:{}.".format(eID)), 404
             mappedResult = self.mapFinalScoreToDict(final_score_result)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar Puntuacion Final desde el DAO."), 500
 
         return jsonify(Event_Final_Score=mappedResult), 200
 
@@ -282,31 +282,31 @@ class EventResultHandler:
         try:
             dao = FinalScoreDAO()
             if dao.getFinalScore(eID):
-                return jsonify(Error="Event Final Score Entry already exists for Event ID:{}".format(eID)), 400
+                return jsonify(Error="Entrada de Puntuacion Final ya existe para Evento con ID:{}".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar Puntuacion Final desde el DAO."), 500
 
         # Validate existing event
         e_dao = EventDAO()
         try:
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="Evento con ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde el DAO."), 500
 
         invalid_duplicate = False
         try:
             if dao.getFinalScoreInvalid(eID):
                 invalid_duplicate = True
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar Puntuacion Final desde el DAO."), 500
 
         # case with previously existing invalid entry, in that case update that entry
         if invalid_duplicate:
@@ -314,12 +314,12 @@ class EventResultHandler:
                 result = dao.editFinalScore(
                     eID, attributes['uprm_score'], attributes['opponent_score'])
                 if not result:
-                    return jsonify(Error="Final Score Record not found for event id:{}.".format(eID)), 404
+                    return jsonify(Error="Record de Puntuacion Final no se encontro para Evento con ID:{}.".format(eID)), 404
                 mappedResult = self.mapFinalScoreToDict(result)
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify final score from DAO."), 500
+                return jsonify(Error="No se pudo verificar Puntuacion Final desde el DAO."), 500
 
             dao.commitChanges()
             return jsonify(Event_Final_Score=mappedResult), 200
@@ -329,13 +329,13 @@ class EventResultHandler:
                 result = dao.addFinalScore(
                     eID, attributes['uprm_score'], attributes['opponent_score'])
                 if not result:
-                    return jsonify(Error="Problem inserting new final score record."), 500
+                    return jsonify(Error="Problema insertando nuevo record de Puntuacion Final."), 500
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify final score from DAO."), 500
+                return jsonify(Error="No se pudo verificar Puntuacion Final desde el DAO."), 500
             dao.commitChanges()
-            return jsonify(Event_Final_Score="Added new final score record with id:{} for event id:{}.".format(result, eID)), 201
+            return jsonify(Event_Final_Score="Se añadio nuevo record de Puntuacion Final con ID:{} para evento con ID:{}.".format(result, eID)), 201
 
     # NEW: the mega query
     def addAllEventStatistics(self, eID, attributes):
@@ -417,34 +417,34 @@ class EventResultHandler:
         try:
             dao = FinalScoreDAO()
             if not dao.getFinalScore(eID):
-                return jsonify(Error="Event Final Score Entry does not exist for Event ID:{}".format(eID)), 400
+                return jsonify(Error="Entrada de Puntuacion Final de Evento no existe para Evento con ID:{}".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar Puntuacion Final desde el DAO."), 500
 
         # Validate existing event
         e_dao = EventDAO()
         try:
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="Evento con ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde el DAO."), 500
 
         # Update and Validate event final score, format returnable
         try:
             result = dao.editFinalScore(
                 eID, attributes['uprm_score'], attributes['opponent_score'])
             if not result:
-                return jsonify(Error="Final Score Record not found for event id:{}.".format(eID)), 404
+                return jsonify(Error="Record de Puntuacion Final no se encontro para Evento con ID:{}.".format(eID)), 404
             mappedResult = self.mapFinalScoreToDict(result)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar Puntuacion Final desde el DAO."), 500
 
         dao.commitChanges()
         return jsonify(Event_Final_Score=mappedResult), 200
@@ -503,22 +503,22 @@ class EventResultHandler:
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="Evento con ID:{} no se encontro.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde el DAO."), 500
 
         # Validate Exists so can remove
 
         try:
             dao = FinalScoreDAO()
             if not dao.getFinalScore(eID):
-                return jsonify(Error="Event Final Score Entry does not exist for Event ID:{}".format(eID)), 400
+                return jsonify(Error="Entrada de Puntuacion Final de Evento no existe para Evento con ID:{}".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar Puntuacion Final desde el DAO."), 500
 
         # Remove Basketball_Event final score and format returnabe
         try:
@@ -526,10 +526,10 @@ class EventResultHandler:
             if not result:
                 return jsonify(Error="Final Score Record not found with event id:{}.".format(eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar Puntuacion Final desde el DAO."), 500
 
         dao.commitChanges()
-        return jsonify(Event_Final_Score="Removed final score record with id:{} for event id:{}.".format(result, eID)), 200
+        return jsonify(Event_Final_Score="Se removio record de Puntuacion Final con ID:{} para evento con id:{}".format(result, eID)), 200
 

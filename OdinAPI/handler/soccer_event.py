@@ -257,11 +257,11 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # validate existing athlete
 
@@ -269,11 +269,11 @@ class SoccerEventHandler(EventResultHandler):
             a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
-                return jsonify(Error="Athlete for ID:{} not found.".format(aID)), 400
+                return jsonify(Error="No se encontro Atleta con ID:{}.".format(aID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar atleta desde DAO."), 500
 
         # validate existing soccer_event entry and format returnable
 
@@ -281,12 +281,12 @@ class SoccerEventHandler(EventResultHandler):
             dao = SoccerEventDAO()
             result = dao.getAllAthleteStatisticsByEventID(eID, aID)
             if not result:
-                return jsonify(Error="Soccer Event Statistics not found for the event: {} and the athlete id: {}.".format(eID, aID)), 404
+                return jsonify(Error="Estadisticas de Evento de Futbol no se encontraron para evento con ID:{} y atleta con ID:{}. ".format(eID, aID)), 404
             mappedResult = self.mapEventAthleteStatsToDict(result)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
         return jsonify(Soccer_Event_Athlete_Statistics=mappedResult), 200
 
     def getAllTeamStatisticsByEventId(self, eID):
@@ -310,11 +310,11 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # validate existing soccer_event entry and format returnable
 
@@ -322,12 +322,12 @@ class SoccerEventHandler(EventResultHandler):
             dao = SoccerEventDAO()
             result = dao.getAllTeamStatisticsByEventID(eID)
             if not result:
-                return jsonify(Error="Soccer Event Team Statistics not found for the event: {}".format(eID)), 404
+                return jsonify(Error="Estadisticas de Equipo para Evento de Futbol no se encontraron para el Evento con ID:{}.".format(eID)), 404
             mappedResult = self.mapEventTeamStatsToDict(result)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_even_team_stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         return jsonify(Soccer_Event_Team_Stats=mappedResult), 200
 
@@ -353,11 +353,11 @@ class SoccerEventHandler(EventResultHandler):
             a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
-                return jsonify(Error="Athlete for ID:{} not found.".format(aID)), 400
+                return jsonify(Error="No se encontro Atleta con ID:{}.".format(aID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar atleta desde DAO."), 500
 
         # validate existing soccer_event entries and format returnable
 
@@ -365,16 +365,16 @@ class SoccerEventHandler(EventResultHandler):
             dao = SoccerEventDAO()
             result = dao.getAllAthleteStatisticsPerSeason(aID, seasonYear)
             if not result:
-                return jsonify(Error="Soccer Event Statistics not found for the athlete id:{} in season year:{}.".format(aID, seasonYear)), 404
+                return jsonify(Error="Estadisticas de Evento de Futbol no se encontraro para atleta con id:{} en temporada con año:{}.".format(aID, seasonYear)), 404
             mappedResult = []
             for athlete_statistics in result:
                 mappedResult.append(
                     self.mapEventSeasonCollectionToDict(athlete_statistics))
             # print(mappedResult)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         return jsonify(Soccer_Event_Season_Athlete_Statistics=mappedResult), 200
 
@@ -401,11 +401,11 @@ class SoccerEventHandler(EventResultHandler):
             a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
-                return jsonify(Error="Athlete for ID:{} not found.".format(aID)), 400
+                return jsonify(Error="No se encontro Atleta con ID:{}.".format(aID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar atleta desde DAO."), 500
 
         # validate existing soccer_event entries and format returnable
 
@@ -414,13 +414,13 @@ class SoccerEventHandler(EventResultHandler):
             result = dao.getAggregatedAthleteStatisticsPerSeason(
                 aID, seasonYear)
             if not result:
-                return jsonify(Error="Soccer Event Statistics not found for the athlete id:{} in season year:{}.".format(aID, seasonYear)), 404
+                return jsonify(Error="Estadisticas de Evento de Futbol no se encontraro para atleta con id:{} en temporada con año:{}.".format(aID, seasonYear)), 404
             mappedResult = self.mapAthleteSeasonAggregate(result)
             # print(mappedResult)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         return jsonify(Soccer_Event_Season_Athlete_Statistics=mappedResult), 200
 
@@ -448,16 +448,16 @@ class SoccerEventHandler(EventResultHandler):
             result = dao.getAllAggregatedAthleteStatisticsPerSeason(
                 sID, seasonYear)
             if not result:
-                return jsonify(Error="Soccer Event Statistics not found for the sport id:{} in season year:{}.".format(sID, seasonYear)), 404
+                return jsonify(Error="Estadisticas de Evento de Futbol no se encontraron para el deporte con ID:{} y temporada con año:{}.".format(sID, seasonYear)), 404
             mappedResult = []
             for athlete_statistics in result:
                 mappedResult.append(
                     self.mapAthleteSeasonAggregate(athlete_statistics))
             # print(mappedResult)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         return jsonify(Soccer_Event_Season_Athlete_Statistics=mappedResult), 200
 
@@ -484,14 +484,14 @@ class SoccerEventHandler(EventResultHandler):
             dao = SoccerEventDAO()
             result = dao.getAggregatedTeamStatisticsPerSeason(sID, seasonYear)
             if not result:
-                return jsonify(Error="Soccer Event Team Statistics not found for sport id:{} in season year:{}.".format(sID, seasonYear)), 404
+                return jsonify(Error="Estadisticas de Equipo para Evento de Futbol no se encontraron para deporte con ID:{} y temporada con año:{}.".format(sID, seasonYear)), 404
             mappedResult = []
             mappedResult = self.mapTeamSeasonAggregate(result)
             # print(mappedResult)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event team stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         return jsonify(Soccer_Event_Season_Team_Statistics=mappedResult), 200
 
@@ -518,30 +518,30 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         try:
             dao = SoccerEventDAO()
             team_result = dao.getAllTeamStatisticsByEventID(eID)
             if not team_result:
-                return jsonify(Error="Soccer Event Team Statistics not found for the event: {}".format(eID)), 404
+                return jsonify(Error="Estadisticas de Equipo para Evento de Futbol no se encontraron para el Evento con ID:{}.".format(eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event team stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
             if not all_stats_result:
-                return jsonify(Error="Soccer Event Statistics not found for the event: {}.".format(eID)), 404
+                return jsonify(Error="Estadisticas de Evento de Futbol no se encontraron para el evento con id:{}.".format(eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         try:
             fs_dao = FinalScoreDAO()
@@ -552,9 +552,9 @@ class SoccerEventHandler(EventResultHandler):
             mappedResult = self.mapEventAllStatsToDict(
                 team_result, all_stats_result, final_score_result)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar puntuacion final desde DAO."), 500
 
         return jsonify(Soccer_Event_Statistics=mappedResult), 200
 
@@ -589,22 +589,22 @@ class SoccerEventHandler(EventResultHandler):
             dao = SoccerEventDAO()
             if dao.getSoccerEventID(eID, aID):
                 # TODO: Use 403 for duplicates
-                return jsonify(Error="Soccer Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID, aID)), 403
+                return jsonify(Error="Entrada de Evento de Futbol ya existe para Evento con ID:{} y Atleta con ID:{}.".format(eID, aID)), 403
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
         # Validate existing event
 
         try:
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # Get Event Team For Validation
 
@@ -613,9 +613,9 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             tID = e_dao.getEventTeamByID(eID)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # Validate that the event belongs to the correct sport.
         # TODO: (Herbert) Need TeamDAO to return sport_id of a team.
@@ -623,11 +623,11 @@ class SoccerEventHandler(EventResultHandler):
             t_dao = TeamDAO()
             sID = t_dao.getTeamSportByID(tID)[0]
             if sID != SOCCER_IDF and sID != SOCCER_IDM:
-                return jsonify(Error="Malformed Query, Event ID:{} does not belong to Soccer.".format(eID)), 400
+                return jsonify(Error="Query Malformado, Evento con ID:{} no pertenece a Futbol.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar Equipo desde DAO."), 500
 
         # Validate existing athlete
 
@@ -635,22 +635,22 @@ class SoccerEventHandler(EventResultHandler):
             a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
-                return jsonify(Error="Athlete for ID:{} not found.".format(aID)), 400
+                return jsonify(Error="No se encontro Atleta con ID:{}.".format(aID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar atleta desde DAO."), 500
 
         # Validate athlete belongs to team playing event
         # TODO: (Herbert) Need TeamDAO method to get a team_member record to validate team membership. Could be a Boolean
         try:
             # alternatively: t_dao.athleteBelongsToTeam(aID,tID)
             if not t_dao.getTeamMemberByIDs(aID, tID):
-                return jsonify(Error="Malformed Query, Athlete ID:{} does not belong to Team ID:{} from Event ID:{}.".format(aID, tID, eID)), 400
+                return jsonify(Error="Query Malformado, Atleta con ID:{} no pertenece a Equipo con ID:{} desde Evento con ID:{}.".format(aID, tID, eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar Equipo desde DAO."), 500
 
         # check if existing invalid, in this case we PUT/update instead of POST/add. sorta.
         invalid_duplicate = False
@@ -658,9 +658,9 @@ class SoccerEventHandler(EventResultHandler):
             if dao.getSoccerEventIDInvalid(eID, aID):
                 invalid_duplicate = True
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         # the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
@@ -668,23 +668,23 @@ class SoccerEventHandler(EventResultHandler):
                 result = dao.editStatistics(eID, aID, attributes['goal_attempts'], attributes['assists'], attributes['fouls'], attributes['cards'],
                                             attributes['successful_goals'], attributes['tackles'])
                 if not result:
-                    return jsonify(Error="Statistics Record not found for athlete id:{} in event id:{}.".format(aID, eID)), 404
+                    return jsonify(Error="Record de Estadisticas no se encontro para atleta con ID:{} en evento con ID:{}.".format(aID, eID)), 404
 
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+                return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
         else:
             # Create and Validate new Soccer_Event
             try:
                 result = dao.addStatistics(eID, aID, attributes['goal_attempts'], attributes['assists'], attributes['fouls'], attributes['cards'],
                                            attributes['successful_goals'], attributes['tackles'])
                 if not result:
-                    return jsonify(Error="Problem inserting new statistics record."), 500
+                    return jsonify(Error="Problema insertando nuevo record de Estadisticas."), 500
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+                return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         # update and validate Soccer Event Team Statistic
         # If existing Team Statistics update, else create
@@ -692,14 +692,14 @@ class SoccerEventHandler(EventResultHandler):
             if dao.getSoccerEventTeamStatsID(eID) or dao.getSoccerEventTeamStatsIDInvalid(eID):
                 team_result = dao.editTeamStatistics(eID)
                 if not team_result:
-                    return jsonify(Error="Team Statistics Record not found for event id:{}.".format(eID)), 404
+                    return jsonify(Error="Record de Estadisticas de Equipo no se encontro para Evento con ID:{}.".format(eID)), 404
             else:
                 dao.addTeamStatistics(eID, attributes['goal_attempts'], attributes['assists'], attributes['fouls'], attributes['cards'],
                                       attributes['successful_goals'], attributes['tackles'])
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         if invalid_duplicate:
             mappedResult = self.mapEventAthleteStatsToDict(result)
@@ -707,7 +707,7 @@ class SoccerEventHandler(EventResultHandler):
             return jsonify(Soccer_Event_Athlete_Statistics=mappedResult), 200
         else:
             dao.commitChanges()
-            return jsonify(Soccer_Event_Athlete_Statistics="Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result, aID, eID)), 201
+            return jsonify(Soccer_Event_Athlete_Statistics="Se añadio nuevo record de Estadisticas con ID:{} para Atleta con ID:{} en Evento con ID:{}.".format(result, aID, eID)), 201
 
     # NEW
     # Instantiates a Soccer Event DAO in order to complete the desired post request and it returns a JSON with either a confirmation or error message.
@@ -738,11 +738,11 @@ class SoccerEventHandler(EventResultHandler):
         try:
             dao = SoccerEventDAO()
             if dao.getSoccerEventTeamStatsID(eID):
-                return jsonify(Error="Soccer Event Team Stats Entry already exists for Event ID:{}".format(eID)), 400
+                return jsonify(Error="Entrada de Estadisticas de Equipo para Evento de Futbol ya existe para Evento con ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event_team_stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         # Validate existing event
 
@@ -750,11 +750,11 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # Get Event Team For Validation
 
@@ -763,9 +763,9 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             tID = e_dao.getEventTeamByID(eID)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar Equipo desde DAO."), 500
 
         # Validate that the event belongs to the correct sport.
         # TODO: (Herbert) Need TeamDAO to return sport_id of a team.
@@ -773,11 +773,11 @@ class SoccerEventHandler(EventResultHandler):
             t_dao = TeamDAO()
             sID = t_dao.getTeamSportByID(tID)[0]
             if sID != SOCCER_IDF and sID != SOCCER_IDM:
-                return jsonify(Error="Malformed Query, Event ID:{} does not belong to Soccer.".format(eID)), 400
+                return jsonify(Error="Query Malformado, Evento con ID:{} no pertenece a Futbol.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar Equipo desde DAO."), 500
 
         # check if existing invalid, in this case we PUT/update instead of POST/add. sorta.
         invalid_duplicate = False
@@ -785,20 +785,20 @@ class SoccerEventHandler(EventResultHandler):
             if dao.getSoccerEventTeamStatsIDInvalid(eID):
                 invalid_duplicate = True
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event_team_Stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
         # the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
             try:
                 result = dao.editTeamStatisticsManual(eID, attributes['goal_attempts'], attributes['assists'], attributes['fouls'], attributes['cards'],
                                                       attributes['successful_goals'], attributes['tackles'])
                 if not result:
-                    return jsonify(Error="Team statistics Record not found for event id:{}.".format(eID)), 404
+                    return jsonify(Error="Record de Estadisticas de Equipo no se encontro para Evento con ID:{}.".format(eID)), 404
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer team event from DAO."), 500
+                return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
             mappedResult = self.mapEventTeamStatsToDict(result)
             dao.commitChanges()
@@ -809,14 +809,14 @@ class SoccerEventHandler(EventResultHandler):
                 result = dao.addTeamStatistics(eID, attributes['goal_attempts'], attributes['assists'], attributes['fouls'], attributes['cards'],
                                                attributes['successful_goals'], attributes['tackles'])
                 if not result:
-                    return jsonify(Error="Problem inserting new team statistics record."), 500
+                    return jsonify(Error="Problema insertando nuevo record de Estadisticas de Equipo."), 500
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer_event_team_stats from DAO."), 500
+                return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
             dao.commitChanges()
-            return jsonify(Soccer_Event_Team_Stats="Added new team statistics record with id:{} for event id:{}.".format(result, eID)), 201
+            return jsonify(Soccer_Event_Team_Stats="Se añadio record de Estadisticas de Equipo con ID:{} para Evento con ID:{}.".format(result, eID)), 201
 
     # NEW
     # Instantiates a Soccer Event DAO in order to complete the desired post request and it returns a JSON with either a confirmation or error message.
@@ -840,11 +840,11 @@ class SoccerEventHandler(EventResultHandler):
         try:
             dao = SoccerEventDAO()
             if dao.getSoccerEventTeamStatsID(eID):
-                return jsonify(Error="Soccer Event Team Stats Entry already exists for Event ID:{}".format(eID)), 400
+                return jsonify(Error="Entrada de Estadisticas de Equipo para Evento de Futbol ya existe para Evento con ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event team sats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         # Validate existing event
 
@@ -852,11 +852,11 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # Get Event Team For Validation
 
@@ -865,9 +865,9 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             tID = e_dao.getEventTeamByID(eID)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar Equipo desde DAO."), 500
 
         # Validate that the event belongs to the correct sport.
         # TODO: (Herbert) Need TeamDAO to return sport_id of a team.
@@ -875,11 +875,11 @@ class SoccerEventHandler(EventResultHandler):
             t_dao = TeamDAO()
             sID = t_dao.getTeamSportByID(tID)[0]
             if sID != SOCCER_IDF and sID != SOCCER_IDM:
-                return jsonify(Error="Malformed Query, Event ID:{} does not belong to Soccer.".format(eID)), 400
+                return jsonify(Error="Query Malformado, Evento con ID:{} no pertenece a Futbol.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar Equipo desde DAO."), 500
 
         # check if existing invalid, in this case we PUT/update instead of POST/add. sorta.
         invalid_duplicate = False
@@ -887,19 +887,19 @@ class SoccerEventHandler(EventResultHandler):
             if dao.getSoccerEventTeamStatsIDInvalid(eID):
                 invalid_duplicate = True
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event_team_Stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
         # the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
             try:
                 result = dao.editTeamStatistics(eID)
                 if not result:
-                    return jsonify(Error="Team statistics Record not found for event id:{}.".format(eID)), 404
+                    return jsonify(Error="Record de Estadisticas de Equipo no se encontro para Evento con ID:{}.".format(eID)), 404
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer team event from DAO."), 500
+                return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
             mappedResult = self.mapEventTeamStatsToDict(result)
             dao.commitChanges()
@@ -909,13 +909,13 @@ class SoccerEventHandler(EventResultHandler):
             try:
                 result = dao.addTeamStatisticsAuto(eID)
                 if not result:
-                    return jsonify(Error="Problem inserting new team statistics record."), 500
+                    return jsonify(Error="Problema insertando nuevo record de Estadisticas de Equipo."), 500
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer event team stats from DAO."), 500
+                return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
             dao.commitChanges()
-            return jsonify(Soccer_Event_Team_Stats="Added new team statistics record with id:{} for event id:{}.".format(result, eID)), 201
+            return jsonify(Soccer_Event_Team_Stats="Se añadio record de Estadisticas de Equipo con ID:{} para Evento con ID:{}.".format(result, eID)), 201
 
     # NEW: the mega query
     def addAllEventStatistics(self, eID, attributes):
@@ -960,21 +960,21 @@ class SoccerEventHandler(EventResultHandler):
         try:
             dao = SoccerEventDAO()
             if dao.getSoccerEventTeamStatsID(eID):
-                return jsonify(Error="Soccer Event Team Stats Entry already exists for Event ID:{}".format(eID)), 400
+                return jsonify(Error="Entrada de Estadisticas de Equipo para Evento de Futbol ya existe para Evento con ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event team stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         # Validate Avoid Duplication Final Score
         try:
             fs_dao = FinalScoreDAO()
             if fs_dao.getFinalScore(eID):
-                return jsonify(Error="Final Score Entry already exists for Event ID:{}".format(eID)), 400
+                return jsonify(Error="Entrada de Puntuacion Final ya existe para Evento con ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar puntuacion final desde DAO."), 500
 
         # Validate existing event
 
@@ -982,11 +982,11 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # Get Event Team For Validation
 
@@ -995,9 +995,9 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             tID = e_dao.getEventTeamByID(eID)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar Equipo desde DAO."), 500
 
         # Validate that the event belongs to the correct sport.
         # TODO: (Herbert) Need TeamDAO to return sport_id of a team.
@@ -1005,11 +1005,11 @@ class SoccerEventHandler(EventResultHandler):
             t_dao = TeamDAO()
             sID = t_dao.getTeamSportByID(tID)[0]
             if sID != SOCCER_IDF and sID != SOCCER_IDM:
-                return jsonify(Error="Malformed Query, Event ID:{} does not belong to Soccer.".format(eID)), 400
+                return jsonify(Error="Query Malformado, Evento con ID:{} no pertenece a Futbol.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar Equipo desde DAO."), 500
 
         # Go through every set of athlete to add attributes for.
         for athlete_attributes in athlete_statistics:
@@ -1018,11 +1018,11 @@ class SoccerEventHandler(EventResultHandler):
             try:
                 # Validate Avoid Duplication Soccer Event Entry
                 if dao.getSoccerEventID(eID, aID):
-                    return jsonify(Error="Soccer Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID, aID)), 400
+                    return jsonify(Error="Entrada de Evento de Futbol ya existe para Evento con ID:{} y Atleta con ID:{}.".format(eID, aID)), 400
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+                return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
             # Validate existing athlete
             statistics = athlete_attributes['statistics']['soccer_statistics']
@@ -1031,22 +1031,22 @@ class SoccerEventHandler(EventResultHandler):
                 a_dao = AthleteDAO()
                 athlete = a_dao.getAthleteByID(aID)
                 if not athlete:
-                    return jsonify(Error="Athlete for ID:{} not found.".format(aID)), 400
+                    return jsonify(Error="No se encontro Atleta con ID:{}.".format(aID)), 400
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+                return jsonify(Error="No se pudo verificar atleta desde DAO."), 500
 
             # Validate athlete belongs to team playing event
             # TODO: (Herbert) Need TeamDAO method to get a team_member record to validate team membership. Could be a Boolean
             try:
                 # alternatively: t_dao.athleteBelongsToTeam(aID,tID)
                 if not t_dao.getTeamMemberByIDs(aID, tID):
-                    return jsonify(Error="Malformed Query, Athlete ID:{} does not belong to Team ID:{} from Event ID:{}.".format(aID, tID, eID)), 400
+                    return jsonify(Error="Query Malformado, Atleta con ID:{} no pertenece a Equipo con ID:{} desde Evento con ID:{}.".format(aID, tID, eID)), 400
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify team from DAO."), 500
+                return jsonify(Error="No se pudo verificar Equipo desde DAO."), 500
 
              # check if existing invalid, in this case we PUT/update instead of POST/add. sorta.
             invalid_duplicate = False
@@ -1054,9 +1054,9 @@ class SoccerEventHandler(EventResultHandler):
                 if dao.getSoccerEventIDInvalid(eID, aID):
                     invalid_duplicate = True
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer_event from DAO."), 500
+                return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
             # the case of there already existing an entry, but marked as invalid
             if invalid_duplicate:
@@ -1064,12 +1064,12 @@ class SoccerEventHandler(EventResultHandler):
                     result = dao.editStatistics(eID, aID, statistics['goal_attempts'], statistics['assists'], statistics['fouls'], statistics['cards'],
                                                 statistics['successful_goals'], statistics['tackles'])
                     if not result:
-                        return jsonify(Error="Statistics Record not found for athlete id:{} in event id:{}.".format(aID, eID)), 404
+                        return jsonify(Error="Record de Estadisticas no se encontro para atleta con ID:{} en evento con ID:{}.".format(aID, eID)), 404
 
                 except (TypeError, ValueError):
-                    return jsonify(ERROR="Bad Request, Type Error."), 400
+                    return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
                 except:
-                    return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+                    return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
             else:
 
                 # Create and Validate new Soccer_Event
@@ -1077,11 +1077,11 @@ class SoccerEventHandler(EventResultHandler):
                     result = dao.addStatistics(eID, aID, statistics['goal_attempts'], statistics['assists'], statistics['fouls'], statistics['cards'],
                                                statistics['successful_goals'], statistics['tackles'])
                     if not result:
-                        return jsonify(Error="Problem inserting new statistics record."), 500
+                        return jsonify(Error="Problema insertando nuevo record de Estadisticas."), 500
                 except (TypeError, ValueError):
-                    return jsonify(ERROR="Bad Request, Type Error."), 400
+                    return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
                 except:
-                    return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+                    return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
             # SUCCESS MESSAGE
             # return jsonify(Soccer_Event_Athlete_Statistics = "Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),201
@@ -1093,9 +1093,9 @@ class SoccerEventHandler(EventResultHandler):
             if fs_dao.getFinalScoreInvalid(eID):
                 invalid_duplicate = True
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar puntuacion final desde DAO."), 500
 
         # case with previously existing invalid entry, in that case update that entry
         if invalid_duplicate:
@@ -1103,22 +1103,22 @@ class SoccerEventHandler(EventResultHandler):
                 result = fs_dao.editFinalScoreAltCursor(
                     eID, attributes['uprm_score'], attributes['opponent_score'], dao.getCursor())
                 if not result:
-                    return jsonify(Error="Final Score Record not found for event id:{}.".format(eID)), 404
+                    return jsonify(Error="Record de Puntuacion Final no se encontro para Evento con ID:{}.".format(eID)), 404
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify final score from DAO."), 500
+                return jsonify(Error="No se pudo verificar puntuacion final desde DAO."), 500
         else:
             # Create and Validate Final Score entry
             try:
                 result = fs_dao.addFinalScoreAltCursor(
                     eID, local_score, opponent_score, dao.getCursor())
                 if not result:
-                    return jsonify(Error="Problem inserting new final score record."), 500
+                    return jsonify(Error="Problema insertando nuevo record de Puntuacion Final."), 500
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify final score from DAO."), 500
+                return jsonify(Error="No se pudo verificar puntuacion final desde DAO."), 500
 
         # check if existing invalid, in this case we PUT/update instead of POST/add. sorta.
         invalid_duplicate = False
@@ -1126,32 +1126,32 @@ class SoccerEventHandler(EventResultHandler):
             if dao.getSoccerEventTeamStatsIDInvalid(eID):
                 invalid_duplicate = True
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event_team_Stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
         # the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
             try:
                 result = dao.editTeamStatistics(eID)
                 if not result:
-                    return jsonify(Error="Team statistics Record not found for athlete id:{} in event id:{}.".format(aID, eID)), 404
+                    return jsonify(Error="Record de Estadisticas de Equipo no se encontro para atleta con ID:{} en evento con ID:{}.".format(aID, eID)), 404
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer team event from DAO."), 500
+                return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
         else:
             # Create and Validate new Soccer_Event team stats
             try:
                 result = dao.addTeamStatistics(eID, team_statistics['goal_attempts'], team_statistics['assists'], team_statistics['fouls'], team_statistics['cards'],
                                                team_statistics['successful_goals'], team_statistics['tackles'])
                 if not result:
-                    return jsonify(Error="Problem inserting new team statistics record."), 500
+                    return jsonify(Error="Problema insertando nuevo record de Estadisticas de Equipo."), 500
             except (TypeError, ValueError):
-                return jsonify(ERROR="Bad Request, Type Error."), 400
+                return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
             except:
-                return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
+                return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
         dao.commitChanges()
-        return jsonify(Soccer_Event_Team_Stats="Added new team statistics record with id:{} and individual statistics for event id:{}.".format(result, eID)), 201
+        return jsonify(Soccer_Event_Team_Stats="Se añadio record de estadisticas de equipo con ID:{} y estadisticas individuales para evento con ID:{}.".format(result, eID)), 201
 
 
 # ===========================//III.PUTS//====================================
@@ -1187,11 +1187,11 @@ class SoccerEventHandler(EventResultHandler):
             dao = SoccerEventDAO()
             # TODO: what is the error code for this case, where it DOESNT exit?
             if not dao.getSoccerEventID(eID, aID):
-                return jsonify(Error="Soccer Event Entry does not exists for Event ID:{} and Athlete ID:{}".format(eID, aID)), 400
+                return jsonify(Error="Entrada de Evento de Futbol no existe para Evento con ID:{} y Atleta con ID:{}.".format(eID, aID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         # Validate existing event
 
@@ -1199,11 +1199,11 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # Validate existing athlete
 
@@ -1211,11 +1211,11 @@ class SoccerEventHandler(EventResultHandler):
             a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
-                return jsonify(Error="Athlete for ID:{} not found.".format(aID)), 400
+                return jsonify(Error="No se encontro Atleta con ID:{}.".format(aID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar atleta desde DAO."), 500
 
         # Update and Validate Soccer event, format returnable
 
@@ -1224,22 +1224,22 @@ class SoccerEventHandler(EventResultHandler):
             result = dao.editStatistics(eID, aID, attributes['goal_attempts'], attributes['assists'], attributes['fouls'], attributes['cards'],
                                         attributes['successful_goals'], attributes['tackles'])
             if not result:
-                return jsonify(Error="Statistics Record not found for athlete id:{} in event id:{}.".format(aID, eID)), 404
+                return jsonify(Error="Record de Estadisticas no se encontro para atleta con ID:{} en evento con ID:{}.".format(aID, eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         # update and validate Soccer Event Team Statistic
         try:
             team_result = dao.editTeamStatistics(eID)
             if not team_result:
-                return jsonify(Error="Team Statistics Record not found for event id:{}.".format(eID)), 404
+                return jsonify(Error="Record de Estadisticas de Equipo no se encontro para Evento con ID:{}.".format(eID)), 404
             mappedResult = self.mapEventAthleteStatsToDict(result)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         dao.commitChanges()
         return jsonify(Soccer_Event_Athlete_Statistics=mappedResult), 200
@@ -1266,11 +1266,11 @@ class SoccerEventHandler(EventResultHandler):
         try:
             dao = SoccerEventDAO()
             if not dao.getSoccerEventTeamStatsID(eID):
-                return jsonify(Error="Soccer Event Team Stats Entry does not exists for Event ID:{}".format(eID)), 400
+                return jsonify(Error="Entrada de Estadisticas de Equipo para Evento de Futbol no existe para Evento con ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event_team_stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         # Validate existing event
 
@@ -1278,11 +1278,11 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # Update and Validate Soccer event team stats, format returnable
 
@@ -1290,12 +1290,12 @@ class SoccerEventHandler(EventResultHandler):
             dao = SoccerEventDAO()
             result = dao.editTeamStatistics(eID)
             if not result:
-                return jsonify(Error="Team Statistics Record not found for event id:{}.".format(eID)), 404
+                return jsonify(Error="Record de Estadisticas de Equipo no se encontro para Evento con ID:{}.".format(eID)), 404
             mappedResult = self.mapEventTeamStatsToDict(result)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         dao.commitChanges()
         return jsonify(Soccer_Event_Team_Stats=mappedResult), 200
@@ -1324,11 +1324,11 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # Validate existing athlete
 
@@ -1336,11 +1336,11 @@ class SoccerEventHandler(EventResultHandler):
             a_dao = AthleteDAO()
             athlete = a_dao.getAthleteByID(aID)
             if not athlete:
-                return jsonify(Error="Athlete for ID:{} not found.".format(aID)), 400
+                return jsonify(Error="No se encontro Atleta con ID:{}.".format(aID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar atleta desde DAO."), 500
 
         # Validate Exists in order to remove
 
@@ -1348,35 +1348,35 @@ class SoccerEventHandler(EventResultHandler):
             dao = SoccerEventDAO()
             # TODO: what is the error code for this case, where it DOESNT exit?
             if not dao.getSoccerEventID(eID, aID):
-                return jsonify(Error="Soccer Event Entry does not exists for Event ID:{} and Athlete ID:{}".format(eID, aID)), 400
+                return jsonify(Error="Entrada de Evento de Futbol no existe para Evento con ID:{} y Atleta con ID:{}.".format(eID, aID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         # Remove Soccer_Event Statistics and format returnabe
 
         try:
             result = dao.removeStatistics(eID, aID)
             if not result:
-                return jsonify(Error="Statistics Record not found with event id:{} for athlete id:{}.".format(eID, aID)), 404
+                return jsonify(Error="Record de Estadisticas no se encontro para evento con ID:{} para atleta con ID:{}.".format(eID, aID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento de Futbol desde DAO."), 500
 
         # update and validate Soccer Event Team Statistic
         try:
             team_result = dao.editTeamStatistics(eID)
             if not team_result:
-                return jsonify(Error="Team Statistics Record not found for event id:{}.".format(eID)), 404
+                return jsonify(Error="Record de Estadisticas de Equipo no se encontro para Evento con ID:{}.".format(eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event team statistics from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         dao.commitChanges()
-        return jsonify(Soccer_Event_Athlete_Statistics="Removed statistics record with id:{} for athlete id:{} in event id:{}.".format(result[0], aID, eID)), 200
+        return jsonify(Soccer_Event_Athlete_Statistics="Se removio record de estadisticas con id:{} para atleta con id:{} en evento con ID:{}.".format(result[0], aID, eID)), 200
 
     # NEW
     # Instantiates a Soccer Event DAO in order to complete the desired put request and it returns a JSON with either a confirmation or error message.
@@ -1401,34 +1401,34 @@ class SoccerEventHandler(EventResultHandler):
             e_dao = EventDAO()
             event = e_dao.getEventByID(eID)
             if not event:
-                return jsonify(Error="Event for ID:{} not found.".format(eID)), 400
+                return jsonify(Error="No se encontro evento para ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar evento desde DAO."), 500
 
         # Validate exists so can remove
 
         try:
             dao = SoccerEventDAO()
             if not dao.getSoccerEventTeamStatsID(eID):
-                return jsonify(Error="Soccer Event Team Stats Entry does not exists for Event ID:{}".format(eID)), 400
+                return jsonify(Error="Entrada de Estadisticas de Equipo para Evento de Futbol no existe para Evento con ID:{}.".format(eID)), 400
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer_event_team_stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         # Remove Soccer_Event Team Statistics and format returnabe
 
         try:
             result = dao.removeTeamStatistics(eID)
             if not result:
-                return jsonify(Error="Team Statistics Record not found with event id:{}.".format(eID)), 404
+                return jsonify(Error="No se encontro record de Estadisticas de Equipo para Evento con ID:{}.".format(eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Bad Request, Type Error."), 400
+            return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
-            return jsonify(ERROR="Unable to verify soccer event team stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar Estadisticas de Equipo para Evento de Futbol desde DAO."), 500
 
         dao.commitChanges()
-        return jsonify(Soccer_Event_Team_Statistics="Removed team statistics record with id:{} for event id:{}.".format(result, eID)), 200
+        return jsonify(Soccer_Event_Team_Statistics="Se removio record de estadisticas con ID:{} para Evento con ID:{}.".format(result, eID)), 200
 
