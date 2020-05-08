@@ -6,7 +6,12 @@
         <v-card-title>
           <v-row>
             <v-col>
-              <v-btn color="primary_light" dark @click="addAthlete">
+              <v-btn
+                color="primary_light"
+                class="white--text"
+                @click="addAthlete"
+                :disabled="!$store.state.userAuth.userPermissions[12]['25']"
+              >
                 <v-icon left>mdi-plus</v-icon>Añadir Atleta
               </v-btn>
               <v-spacer />
@@ -43,7 +48,8 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="viewAthlete(item.id)"
-                >mdi-eye-plus</v-icon>
+                  >mdi-eye-plus</v-icon
+                >
               </template>
               <span>Ver Atleta</span>
             </v-tooltip>
@@ -55,7 +61,9 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="editAthlete(item)"
-                >mdi-pencil</v-icon>
+                  :disabled="!$store.state.userAuth.userPermissions[14]['27']"
+                  >mdi-pencil</v-icon
+                >
               </template>
               <span>Editar Atleta</span>
             </v-tooltip>
@@ -66,7 +74,9 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="deleteAthlete(item.id)"
-                >mdi-delete</v-icon>
+                  :disabled="!$store.state.userAuth.userPermissions[13]['26']"
+                  >mdi-delete</v-icon
+                >
               </template>
               <span>Borrar Atleta</span>
             </v-tooltip>

@@ -9,7 +9,7 @@
 
       <v-spacer />
 
-      <v-icon class="mr-2" @click="test">mdi-account-circle</v-icon>
+      <v-icon class="mr-2" >mdi-account-circle</v-icon>
 
       <span class="font-weight-medium" dark v-if="user !== null">{{
         user.username
