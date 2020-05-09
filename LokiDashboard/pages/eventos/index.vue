@@ -17,7 +17,7 @@
                   <v-btn 
                   color="primary_light" 
                   class="white--text"
-                  @click="goToCreateEvent"
+                  @click="activateEventCreationForm"
                   :disabled="!$store.state.userAuth.userPermissions[0]['13']"
                   >
                     <v-icon left>mdi-plus</v-icon>Añadir Evento
