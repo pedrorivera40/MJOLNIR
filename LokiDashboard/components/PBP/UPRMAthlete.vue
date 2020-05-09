@@ -2,28 +2,41 @@
   <v-card outlined class="pa-md-4 mx-lg-auto">
     <v-row align="center" justify="space-around">
       <v-col :cols="1" class="mx-4">
-        <v-checkbox v-model="in_game" color="primary" @change="inGameChanged()"></v-checkbox>
+        <v-checkbox
+          :disabled="checking"
+          v-model="in_game"
+          color="primary"
+          @change="inGameChanged()"
+        ></v-checkbox>
       </v-col>
       <v-col :cols="3">
         <v-row justify="center">
-          <v-avatar size="75" class="mx-10">
-            <v-icon x-large color="primary" v-if="!athlete_img" height="100px">mdi-account</v-icon>
-            <v-img v-else :src="athlete_img" alt="ATHLETE" height="75px" />
+          <v-avatar size="110" class="mx-10">
+            <v-icon x-large color="primary" v-if="!athlete_img" height="110px">mdi-account</v-icon>
+            <v-img v-else :src="athlete_img" alt="ATHLETE" height="110px" />
             <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
           </v-avatar>
         </v-row>
       </v-col>
       <v-col justify="left">
-        <v-card-title
-          v-if="athlete_middle_name === ''"
-          class="text-left"
-          style="word-break: normal;"
-        >#{{athlete_number}}. {{athlete_first_name}} {{athlete_last_names}}</v-card-title>
-        <v-card-title
-          v-else
-          class="text-left"
-          style="word-break: normal;"
-        >#{{athlete_number}}. {{athlete_first_name}} {{athlete_middle_name}} {{athlete_last_names}}</v-card-title>
+        <v-row>
+          <v-card-text
+            v-if="athlete_middle_name === ''"
+            class="headline text-left"
+            style="headline word-break: normal;"
+          >Nombre: {{athlete_first_name}} {{athlete_last_names}}</v-card-text>
+          <v-card-text
+            v-else
+            class="headline text-left"
+            style="headline word-break: normal;"
+          >Nombre: {{athlete_first_name}} {{athlete_middle_name}} {{athlete_last_names}}</v-card-text>
+        </v-row>
+        <v-row>
+          <v-card-text
+            class="subtitle-1 text-left"
+            style="word-break: normal;"
+          >Número: {{athlete_number}}</v-card-text>
+        </v-row>
       </v-col>
     </v-row>
   </v-card>
@@ -44,7 +57,8 @@ export default {
     roster: null
   },
   data: () => ({
-    in_game: false
+    in_game: false,
+    checking: false
   }),
 
   mounted() {
@@ -57,11 +71,12 @@ export default {
 
   methods: {
     ...mapActions({
-      addUPRMAthlete: "volleyballPBP/addUPRMAthlete",
+      addPBPAthlete: "volleyballPBP/addPBPAthlete",
       removeUPRMAthlete: "volleyballPBP/removeUPRMAthlete"
     }),
 
     async inGameChanged() {
+      this.checking = true;
       if (this.in_game) {
         // Payload for athlete to be
         const payload = {
@@ -69,11 +84,12 @@ export default {
           data: this.athlete_id,
           team: "uprm"
         };
-        await this.addUPRMAthlete(payload);
+        await console.log(this.addPBPAthlete(payload));
       } else {
         const params = `event_id=${this.event_id}&athlete_id=${this.athlete_id}&team=uprm`;
         await this.removeUPRMAthlete(params);
       }
+      this.checking = false;
     }
   },
   computed: {

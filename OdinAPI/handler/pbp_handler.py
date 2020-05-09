@@ -666,6 +666,7 @@ class VolleyballPBPHandler:
                 "last_names": athlete_info["last_names"],
                 "profile_image_link": athlete_info["profile_image_link"]
             }
+            print(player_info)
 
             pbp_dao.set_uprm_athlete(event_id, player_info)
             print(player_info)
@@ -683,6 +684,7 @@ class VolleyballPBPHandler:
 
         Args
             event_id: integer corresponding to an event id.
+            player_info: JSON object containing information about the athlete (number and name).
 
         Returns:
             Response containing a MSG in case of success, or ERROR message in case of failure.
@@ -697,6 +699,7 @@ class VolleyballPBPHandler:
                 return jsonify(ERROR="Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
 
             if not isinstance(player_info["name"], str) or not isinstance(player_info["number"], int):
+                print(player_info)
                 return jsonify(ERROR="La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
 
             pbp_dao = VolleyballPBPDao()

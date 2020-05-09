@@ -768,6 +768,7 @@ def pbp_set_color(sport):
     body = request.get_json()
     args = request.args
     handler = None
+    print(body)
 
     if len(args) != 0:
         return jsonify(ERROR="No se aceptan argumentos en esta ruta."), 400
@@ -855,7 +856,6 @@ def pbp_actions(sport):
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
     body = request.get_json()
     args = request.args
-    print("ARGS: ", args)
 
     event_id = None
 

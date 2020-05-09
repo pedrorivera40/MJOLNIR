@@ -13,7 +13,7 @@
               class="mx-2 my-4"
               dark
               color="secondary"
-              @click.native="uprm_athlete_action(athlete.number)"
+              @click.native="add_athlete_action(athlete.athlete_id, 'uprm')"
               width="50"
               height="50"
               v-on="on"
@@ -22,14 +22,17 @@
               v-else
               class="mx-2 my-4"
               light
-              color="#d3d3d3"
-              @click.native="uprm_athlete_action(athlete.number)"
+              color="#ececec"
+              @click.native="add_athlete_action(athlete.athlete_id, 'uprm')"
               width="50"
               height="50"
               v-on="on"
             >{{athlete.number}}</v-btn>
           </template>
-          <span>{{ athlete.name }}</span>
+          <span
+            v-if="action_buton_pressed === true"
+          >{{ findAthleteName(athlete.athlete_id, uprm_roster) }}</span>
+          <span v-else>Primero debe seleccionar un tipo de jugada</span>
         </v-tooltip>
 
         <v-row justify="center">
@@ -98,7 +101,7 @@
               class="mx-2 my-4"
               dark
               color="secondary"
-              @click.native="opp_athlete_action(athlete.number)"
+              @click.native="add_athlete_action(athlete.number, 'opponent')"
               width="50"
               height="50"
               v-on="on"
@@ -107,20 +110,27 @@
               v-else
               class="mx-2 my-4"
               light
-              color="#d3d3d3"
-              @click.native="opp_athlete_action(athlete.number)"
+              color="#ececec"
+              @click.native="opp_athlete_action(athlete.number, 'opponent')"
               width="50"
               height="50"
               v-on="on"
             >{{athlete.number}}</v-btn>
           </template>
-          <span>{{ athlete.name }}</span>
+          <span v-if="action_buton_pressed === true">{{ athlete.name }}</span>
+          <span v-else>Primero debe seleccionar un tipo de jugada.</span>
         </v-tooltip>
 
         <v-row justify="center">
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
-              <v-btn class="ma-4" color="primary" dark v-on="on">
+              <v-btn
+                class="ma-4"
+                color="primary"
+                dark
+                v-on="on"
+                @click.native="manage_opp_roster_dialog = true"
+              >
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </template>
@@ -131,10 +141,16 @@
     </v-col>
     <v-dialog v-model="manage_uprm_roster_dialog" max-width="600">
       <v-card>
-        <v-card-title class="text-center" style="word-break: normal;">Manejo de Atletas UPRM</v-card-title>
-        <v-card-text>Marque los atletas de UPRM que están participando en este evento.</v-card-text>
+        <v-card-title
+          class="headline text-center"
+          style="word-break: normal;"
+        >Manejo de Atletas UPRM</v-card-title>
+        <v-card-text
+          class="subtitle-1"
+          style="word-break: normal;"
+        >Marque los atletas de UPRM que están participando en este evento.</v-card-text>
         <v-divider />
-        <VolleyballPBPUPRMAthlete
+        <UPRMAthlete
           v-for="athlete in valid_uprm_roster"
           :key="athlete.athlete_id + 3000"
           :athlete_first_name="athlete.first_name"
@@ -153,16 +169,100 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="manage_opp_roster_dialog" max-width="600">
+      <v-card>
+        <v-card-title
+          class="headline text-center"
+          style="word-break: normal;"
+        >Manejo de Atletas Oponente</v-card-title>
+        <v-card-text
+          class="subtitle-1"
+          style="word-break: normal;"
+        >Añada, modifique, o remueva los atletas del equipo oponente que participan en este evento.</v-card-text>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              class="ma-6"
+              color="primary"
+              dark
+              v-on="on"
+              width="175"
+              @click.native="add_opp_athlete_dialog = true"
+            >
+              <v-icon class="mx-1">mdi-plus</v-icon>Añadir Atleta
+            </v-btn>
+          </template>
+          <span>Añadir atleta de equipo oponente</span>
+        </v-tooltip>
+        <v-divider />
+
+        <OppAthlete
+          v-for="athlete in opp_roster"
+          :key="athlete.athlete_id + 3000"
+          :athlete_name="athlete.name"
+          :athlete_number="athlete.number"
+          :athlete_img="athlete.profile_image_link"
+          :event_id="event_id"
+          :roster="opp_roster"
+          :opp_color="opp_color"
+        />
+        <v-divider />
+        <v-card-actions fixed>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="manage_opp_roster_dialog = false">Salir</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="add_opp_athlete_dialog" persistent max-width="600px" ref="add_opp_form">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Añadir Atleta Oponente</span>
+        </v-card-title>
+        <v-container>
+          <v-row allign="center">
+            <v-col>
+              <v-form ref="add_opp_form">
+                <v-text-field
+                  label="Nombre del atleta *"
+                  required
+                  v-model="athlete_name"
+                  counter="200"
+                  :rules="athlete_name_rules"
+                  outlined
+                ></v-text-field>
+                <v-text-field
+                  label="Número del atleta *"
+                  required
+                  v-model="athlete_number"
+                  counter="4"
+                  :rules="athlete_number_rules"
+                  outlined
+                ></v-text-field>
+                <small>* Indica que es un valor requerido</small>
+              </v-form>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="close_dialog()">Cerrar</v-btn>
+          <v-btn color="primary" text @click.native="add_opp_player()">Enviar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import VolleyballPBPUPRMAthlete from "../components/VolleyballPBPUPRMAthlete";
+import UPRMAthlete from "../components/PBP/UPRMAthlete";
+import OppAthlete from "../components/PBP/OppAthlete";
 
 export default {
+  // Custom Components for the PBP Actions Adder.
   components: {
-    VolleyballPBPUPRMAthlete
+    UPRMAthlete,
+    OppAthlete
   },
 
   props: {
@@ -170,11 +270,25 @@ export default {
     uprm_team_name: String,
     opp_team_name: String,
     uprm_roster: [],
-    valid_uprm_roster: []
+    valid_uprm_roster: [],
+    opp_roster: [],
+    opp_color: String
   },
 
   data: () => ({
+    // Dialog flags.
     manage_uprm_roster_dialog: false,
+    manage_opp_roster_dialog: false,
+    add_opp_athlete_dialog: false,
+    dirty_text_field: true,
+
+    athlete_name: "",
+    athlete_number: "",
+
+    // Action button pressed flag (denotes if there is an action button pressed?).
+    action_buton_pressed: false,
+
+    // Action button flags.
     action_buttons: [
       { key: 1, action_type: "KillPoint", button_state: false },
       { key: 2, action_type: "AttackError", button_state: false },
@@ -187,47 +301,55 @@ export default {
       { key: 9, action_type: "Dig", button_state: false },
       { key: 10, action_type: "ReceptionError", button_state: false }
     ],
-    // uprm_roster: [
-    //   {
-    //     id: 1,
-    //     number: 11,
-    //     name: "Fulano de Tal",
-    //     profile_image_link:
-    //       "https://www.fiawec.com/media/cache/news_details/assets/fileuploads/58/e2/58e20575c78df.jpg"
-    //   },
-    //   { id: 2, number: 1, name: "Don Perenzejo" },
-    //   { id: 3, number: 21, name: "Juan del Pueblo" },
-    //   { id: 4, number: 3, name: "Pepe El De La Esquina" },
-    //   { id: 5, number: 4, name: "Gonzalo Duarte" },
-    //   { id: 6, number: 2, name: "Martes Domingo" },
-    //   { id: 7, number: 6, name: "Tomas Almibar" },
-    //   { id: 8, number: 16, name: "Pepe Trueno" },
-    //   { id: 9, number: 8, name: "Eli Nocente" },
-    //   { id: 10, number: 9, name: "Armando Guerra" },
-    //   { id: 11, number: 14, name: "Armando Pleito" },
-    //   { id: 12, number: 15, name: "Sin Nom Bre" }
-    // ],
-    opp_roster: [
-      { number: 11, name: "Fulano de Tal" },
-      { number: 1, name: "Don Perenzejo" },
-      { number: 21, name: "Juan del Pueblo" },
-      { number: 3, name: "Pepe El De La Esquina" },
-      { number: 4, name: "Gonzalo Duarte" },
-      { number: 2, name: "Martes Domingo" },
-      { number: 6, name: "Tomas Almibar" },
-      { number: 16, name: "Pepe Trueno" },
-      { number: 8, name: "Eli Nocente" },
-      { number: 9, name: "Armando Guerra" },
-      { number: 14, name: "Armando Pleito" },
-      { number: 15, name: "Sin Nom Bre" }
+
+    athlete_name_rules: [
+      v =>
+        (v && v.length > 0 && v.length <= 200) ||
+        "Las notificaciones deben tener entre 1 y 200 caracteres."
     ],
-    action_buton_pressed: false
+
+    athlete_number_rules: [
+      v => {
+        // Validate is integer between 0 and 1000.
+        if (!isNaN(parseInt(v)) && v >= 0 && v <= 1000) return true;
+        // Notify error.
+        return "El número de atleta debe ser un entero entre 0 y 1000.";
+      }
+    ]
   }),
   methods: {
     ...mapActions({
       sendGameAction: "volleyballPBP/sendGameAction",
+      addPBPAthlete: "volleyballPBP/addPBPAthlete",
       notifyNotActionSelected: "volleyballPBP/notifyNotActionSelected"
     }),
+
+    close_dialog() {
+      this.manage_uprm_roster_dialog = false;
+      this.manage_opp_roster_dialog = false;
+      this.add_opp_athlete_dialog = false;
+      this.dirty_text_field = false;
+      this.$refs.add_opp_form.reset();
+    },
+
+    // Add opponent athlete into the system.
+    async add_opp_player() {
+      // Prepare payload for athlete to be added.
+      const payload = {
+        event_id: this.event_id,
+        data: {
+          number: parseInt(this.athlete_number),
+          name: this.athlete_name
+        },
+        team: "opponent"
+      };
+      if (
+        this.$refs.add_opp_form.validate() &&
+        (await this.addPBPAthlete(payload))
+      ) {
+        this.add_opp_athlete_dialog = false;
+      }
+    },
 
     clear_action_buttons() {
       // Reset each action button state to false.
@@ -246,7 +368,15 @@ export default {
       this.action_buton_pressed = true;
     },
 
-    uprm_athlete_action(id) {
+    add_athlete_action(id, team_val) {
+      // If no action pressed, notify the user that needs to choose an action first.
+      if (this.action_buton_pressed === false) {
+        this.notifyNotActionSelected();
+      }
+
+      // At this point, an action has been pressed.
+
+      // Find which game action was pressed.
       let action = "";
       for (let index in this.action_buttons) {
         if (this.action_buttons[index].button_state === true) {
@@ -254,48 +384,40 @@ export default {
           this.action_buttons[index].button_state = false;
         }
       }
-      if (action === "") {
-        this.notifyNotActionSelected();
-      } else {
-        let athlete_id = -1;
 
-        for (let athlete in this.uprm_roster) {
-          if (this.uprm_roster[athlete].number == id) {
-            athlete_id = this.uprm_roster[athlete].athlete_id;
-            break;
-          }
+      // Create payload for an UPRM game action.
+      const payload = {
+        event_id: this.event_id,
+        data: {
+          athlete_id: id,
+          action_type: action,
+          team: team_val
         }
-        const payload = {
-          event_id: this.event_id,
-          data: {
-            athlete_id: athlete_id,
-            action_type: action,
-            team: "uprm"
-          }
-        };
-        console.log(payload);
-        this.sendGameAction(payload);
-      }
+      };
+
+      this.sendGameAction(payload);
       this.action_buton_pressed = false;
     },
-    opp_athlete_action(number) {
-      let action = "";
-      for (let index in this.action_buttons) {
-        if (this.action_buttons[index].button_state === true) {
-          action = this.action_buttons[index].action_type;
-          this.action_buttons[index].button_state = false;
+
+    findAthleteName(athlete_id, roster) {
+      let athlete_index = -1;
+      for (let index in roster) {
+        if (roster[index].key == athlete_id) {
+          athlete_index = index;
+          continue;
         }
       }
-      if (action === "") {
-        this.notifyNotActionSelected();
-      } else {
-        console.log({
-          athlete_id: number,
-          action_type: action,
-          team: "opponent"
-        });
+
+      if (athlete_index === -1) {
+        return "Atleta Desconocido";
       }
-      this.action_buton_pressed = false;
+      let athlete_name = roster[athlete_index].first_name;
+      if (roster[athlete_index].middle_name !== "") {
+        athlete_name += " " + roster[athlete_index].middle_name;
+      }
+      athlete_name += " " + roster[athlete_index].last_names;
+
+      return athlete_name;
     },
 
     map_action(action_name) {

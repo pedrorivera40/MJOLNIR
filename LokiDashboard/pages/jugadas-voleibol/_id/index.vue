@@ -42,6 +42,8 @@
               :opp_team_name="opponentName"
               :uprm_roster="uprmRoster"
               :valid_uprm_roster="validUPRMRoster"
+              :opp_roster="oppRoster"
+              :opp_color="oppColor"
             />
           </v-row>
           <v-row>
@@ -125,7 +127,7 @@
               :action_type="action.action_type"
               :message="action.text"
               :athlete_number="findAthleteNumber(action.athlete_id, oppRoster)"
-              :athlete_name="findAthleteName(action.athlete_id, oppRoster)"
+              :athlete_name="findAthleteName(action.athlete_id, 'opponent')"
               :athlete_img="action.athlete_img"
               :in_color="oppColor"
               :id="action.key"
@@ -138,7 +140,7 @@
               :action_type="action.action_type"
               :message="action.text"
               :athlete_number="findAthleteNumber(action.athlete_id, uprmRoster)"
-              :athlete_name="findAthleteName(action.athlete_id, uprmRoster)"
+              :athlete_name="findAthleteName(action.athlete_id, 'uprm')"
               :athlete_img="findAthleteImg(action.athlete_id, uprmRoster)"
               :in_color="uprm_color"
               :id="action.key"
@@ -363,7 +365,6 @@ export default {
 
     end_pbp_dialog: false,
     color_dialog: false,
-    color: "FF0000",
     prev_color: null,
 
     notification_dialog: false,
@@ -449,8 +450,18 @@ export default {
       this.end_pbp_dialog = false;
     },
 
-    findAthleteName(athlete_id, roster) {
+    findAthleteName(athlete_id, team) {
       let athlete_index = -1;
+      let roster = [];
+
+      // Set the right roster.
+      if (team === "uprm") {
+        roster = this.uprmRoster;
+      } else if (team === "opponent") {
+        roster = this.oppRoster;
+      }
+
+      // Iterate through each element in roster.
       for (let index in roster) {
         if (roster[index].key == athlete_id) {
           athlete_index = index;
@@ -461,6 +472,13 @@ export default {
       if (athlete_index === -1) {
         return "Atleta Desconocido";
       }
+
+      // If athlete is opponent, just return its name.
+      if (team === "opponent") {
+        return roster[athlete_index].name;
+      }
+
+      // Otherwise, build its name using the structure established by Odin.
       let athlete_name = roster[athlete_index].first_name;
       if (roster[athlete_index].middle_name !== "") {
         athlete_name += " " + roster[athlete_index].middle_name;
@@ -538,10 +556,9 @@ export default {
 
     // Send request to Odin.
     updateColor() {
-      console.log(this.color);
       const payload = {
         event_id: this.event_id,
-        color: this.color
+        color: this.color.hexa
       };
       this.updateOpponentColor(payload);
       this.color_dialog = false;
