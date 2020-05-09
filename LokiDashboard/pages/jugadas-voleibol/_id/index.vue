@@ -60,7 +60,7 @@
             <v-divider class="mx-4" horizontal></v-divider>
           </v-row>
 
-          <div v-if="!$store.state.userAuth.userPermissions[5]['18']">
+          <div v-if="$store.state.userAuth.userPermissions[5]['18']">
             <v-row justify="center">
               <v-card-title>Acciones Generales</v-card-title>
             </v-row>
