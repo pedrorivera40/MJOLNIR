@@ -72,7 +72,7 @@ export default {
   methods: {
     ...mapActions({
       addPBPAthlete: "volleyballPBP/addPBPAthlete",
-      removeUPRMAthlete: "volleyballPBP/removeUPRMAthlete"
+      removeAthlete: "volleyballPBP/removeAthlete"
     }),
 
     async inGameChanged() {
@@ -87,7 +87,7 @@ export default {
         await console.log(this.addPBPAthlete(payload));
       } else {
         const params = `event_id=${this.event_id}&athlete_id=${this.athlete_id}&team=uprm`;
-        await this.removeUPRMAthlete(params);
+        await this.removeAthlete(params);
       }
       this.checking = false;
     }

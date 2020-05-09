@@ -394,8 +394,8 @@ export default {
         }
     },
 
-    // Remove UPRM player from game roster.
-    async removeUPRMAthlete({ commit, dispatch }, args) {
+    // Remove player from game roster.
+    async removeAthlete({ commit, dispatch }, args) {
         try {
             const response = await this.$axios.delete(`/pbp/Voleibol/roster?${args}`);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })

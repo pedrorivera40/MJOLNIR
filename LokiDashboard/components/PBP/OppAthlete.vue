@@ -63,6 +63,17 @@
         </v-row>
       </v-col>
     </v-row>
+    <v-dialog v-model="delete_dialog" persistent max-width="300">
+      <v-card>
+        <v-card-title class="text-center" style="word-break: normal;">Eliminar Atleta Oponente</v-card-title>
+        <v-card-text>Por favor confirme si desea eliminar el atleta oponente seleccionado.</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="delete_dialog = false">No</v-btn>
+          <v-btn color="green darken-1" text @click="deleteAthlete()">Sí</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -79,27 +90,20 @@ export default {
     opp_color: String
   },
 
+  data: () => ({
+    delete_dialog: false
+  }),
+
   methods: {
     ...mapActions({
       addPBPAthlete: "volleyballPBP/addPBPAthlete",
-      removeUPRMAthlete: "volleyballPBP/removeUPRMAthlete"
+      removeAthlete: "volleyballPBP/removeAthlete"
     }),
 
-    async inGameChanged() {
-      this.checking = true;
-      if (this.in_game) {
-        // Payload for athlete to be
-        const payload = {
-          event_id: this.event_id,
-          data: this.athlete_id,
-          team: "uprm"
-        };
-        await console.log(this.addPBPAthlete(payload));
-      } else {
-        const params = `event_id=${this.event_id}&athlete_id=${this.athlete_id}&team=uprm`;
-        await this.removeUPRMAthlete(params);
-      }
-      this.checking = false;
+    deleteAthlete() {
+      const params = `event_id=${this.event_id}&athlete_id=${this.athlete_number}&team=opponent`;
+      this.removeAthlete(params);
+      this.delete_dialog = false;
     }
   }
 };
