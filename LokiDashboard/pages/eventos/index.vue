@@ -14,14 +14,15 @@
             >
               <template v-slot:activator="{ on }">
                 <v-col md="3">
-                  <v-btn
-                    color="green darken-1"
-                    dark
-                    @click="activateEventCreationForm"                   
+                  <v-btn 
+                  color="primary_light" 
+                  class="white--text"
+                  @click="activateEventCreationForm"
+                  :disabled="!$store.state.userAuth.userPermissions[0]['13']"
                   >
-                  <v-icon left >mdi-plus</v-icon>
-                    Añadir Evento
-                  </v-btn> 
+                    <v-icon left>mdi-plus</v-icon>Añadir Evento
+                  </v-btn>
+
                   <v-btn color="white" v-on="on">
                     <v-icon left>mdi-filter-variant</v-icon>Filtros
                   </v-btn>
@@ -109,6 +110,7 @@
                   small
                   v-on="on"
                   @click="createPBPSequence(item)"
+                  :disabled="!$store.state.userAuth.userPermissions[3]['16']"
                 >Crear PBP</v-btn>
               </template>
               <span>Crear Play-by-Play</span>
@@ -137,6 +139,7 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="editEvent(item)"
+                  :disabled="!$store.state.userAuth.userPermissions[2]['15']"
                 >mdi-pencil</v-icon>
               </template>
               <span>Editar Evento</span>
@@ -148,6 +151,7 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="prepareEventToRemove(item.id)"
+                  :disabled="!$store.state.userAuth.userPermissions[1]['14']"
                 >mdi-delete</v-icon>
               </template>
               <span>Borrar Evento</span>
@@ -457,12 +461,6 @@ export default {
 };
 </script>
 
-<style scoped>
-::v-deep .v-data-table th {
-  font-size: 14px;
-}
-
-::v-deep .v-data-table td {
-  font-size: 18px;
-}
+<style lang="scss" scoped>
+@import "@/assets/tableStyle.scss";
 </style>

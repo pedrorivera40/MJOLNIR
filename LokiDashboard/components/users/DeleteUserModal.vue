@@ -8,7 +8,7 @@
           </v-toolbar-title>
         </v-toolbar>
         <v-card-title>
-          <p>¿Seguro que quieres borrar la cuenta de {{ username }}?</p>
+          <p style="word-break: normal;">¿Seguro que quieres borrar la cuenta de {{ username }}?</p>
         </v-card-title>
         <v-card-text>
           <div class="body">Esta acción es <strong>irreversible</strong>.</div>

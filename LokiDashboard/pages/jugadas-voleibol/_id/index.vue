@@ -2,7 +2,7 @@
   <v-card fixed>
     <v-toolbar color="green darken-1" dark flat>
       <v-spacer />
-      <v-toolbar-title class="title">{{sportName}}</v-toolbar-title>
+      <v-toolbar-title class="title">{{ sportName }}</v-toolbar-title>
       <v-spacer />
     </v-toolbar>
     <v-container>
@@ -16,6 +16,18 @@
           :current_uprm_score="currentUPRMSet"
           :current_opp_score="currentOppSet"
           :event_id="event_id"
+          v-if="$store.state.userAuth.userPermissions[5]['18']"
+        />
+        <VolleyballScoreDisplayOnly
+          :uprm_team="uprm_team_name"
+          :opp_team="opponentName"
+          :uprm_score="uprmScore"
+          :opp_score="oppScore"
+          :current_set="currentSet"
+          :current_uprm_score="currentUPRMSet"
+          :current_opp_score="currentOppSet"
+          :event_id="event_id"
+          v-else
         />
       </v-row>
       <v-row>
@@ -32,73 +44,78 @@
         <v-tab>ESTADÍSTICAS POR ATLETAS</v-tab>
 
         <v-tab-item>
-          <v-row justify="center">
-            <v-card-title>Administrador de Jugadas</v-card-title>
-          </v-row>
-          <v-row>
-            <VolleyballPBPActionsAdder
-              :event_id="event_id"
-              :uprm_team_name="uprm_team_name"
-              :opp_team_name="opponentName"
-            />
-          </v-row>
+          <div v-if="$store.state.userAuth.userPermissions[5]['18']">
+            <v-row justify="center">
+              <v-card-title>Administrador de Jugadas</v-card-title>
+            </v-row>
+            <v-row>
+              <VolleyballPBPActionsAdder
+                :event_id="event_id"
+                :uprm_team_name="uprm_team_name"
+                :opp_team_name="opponentName"
+              />
+            </v-row>
+          </div>
           <v-row>
             <v-divider class="mx-4" horizontal></v-divider>
           </v-row>
 
-          <v-row justify="center">
-            <v-card-title>Acciones Generales</v-card-title>
-          </v-row>
+          <div v-if="$store.state.userAuth.userPermissions[5]['18']">
+            <v-row justify="center">
+              <v-card-title>Acciones Generales</v-card-title>
+            </v-row>
 
-          <v-row justify="center">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  class="ma-6"
-                  color="primary"
-                  dark
-                  v-on="on"
-                  width="175"
-                  @click.native="on_notification_pressed()"
-                >
-                  <v-icon class="mx-1">mdi-android-messages</v-icon>Notificación
-                </v-btn>
-              </template>
-              <span>Crear notificación de juego</span>
-            </v-tooltip>
+            <v-row justify="center">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="ma-6"
+                    color="primary"
+                    dark
+                    v-on="on"
+                    width="175"
+                    @click.native="on_notification_pressed()"
+                  >
+                    <v-icon class="mx-1">mdi-android-messages</v-icon
+                    >Notificación
+                  </v-btn>
+                </template>
+                <span>Crear notificación de juego</span>
+              </v-tooltip>
 
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  class="ma-6"
-                  color="primary"
-                  dark
-                  v-on="on"
-                  width="225"
-                  @click.native="startChooseColor()"
-                >
-                  <v-icon class="mx-1">mdi-palette</v-icon>Color de Oponente
-                </v-btn>
-              </template>
-              <span>Seleccionar color de equipo oponente</span>
-            </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="ma-6"
+                    color="primary"
+                    dark
+                    v-on="on"
+                    width="225"
+                    @click.native="startChooseColor()"
+                  >
+                    <v-icon class="mx-1">mdi-palette</v-icon>Color de Oponente
+                  </v-btn>
+                </template>
+                <span>Seleccionar color de equipo oponente</span>
+              </v-tooltip>
 
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  class="ma-6"
-                  color="primary"
-                  dark
-                  v-on="on"
-                  width="175"
-                  @click.native="end_pbp_dialog = true"
-                >
-                  <v-icon class="mx-1">mdi-file-excel-box</v-icon>Finalizar
-                </v-btn>
-              </template>
-              <span>Finalizar secuencia de jugadas</span>
-            </v-tooltip>
-          </v-row>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="ma-6"
+                    color="primary"
+                    dark
+                    v-on="on"
+                    width="175"
+                    @click.native="end_pbp_dialog = true"
+                  >
+                    <v-icon class="mx-1">mdi-file-excel-box</v-icon>Finalizar
+                  </v-btn>
+                </template>
+                <span>Finalizar secuencia de jugadas</span>
+              </v-tooltip>
+            </v-row>
+          </div>
           <v-row justify="center">
             <v-card-title>Lista de Jugadas</v-card-title>
           </v-row>
@@ -198,8 +215,8 @@
             <v-tabs centered :color="uprm_color">
               <v-tabs-slider :color="uprm_color" />
 
-              <v-tab>{{uprm_team_name}}</v-tab>
-              <v-tab>{{opponentName}}</v-tab>
+              <v-tab>{{ uprm_team_name }}</v-tab>
+              <v-tab>{{ opponentName }}</v-tab>
               <v-tab-item>
                 <VolleyballStatistics :volleyball_stats="uprmStatistics" />
               </v-tab-item>
@@ -226,22 +243,35 @@
                           v-for="(play, idx) in plays_map"
                           :key="idx + 150"
                           class="text-center"
-                        >{{ play.esp }}</th>
+                        >
+                          {{ play.esp }}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(athlete, idx) in uprmAthleteStatistics" :key="idx + 50">
-                        <td class="text-left">#{{ athlete.number }}. {{ athlete.name }}</td>
+                      <tr
+                        v-for="(athlete, idx) in uprmAthleteStatistics"
+                        :key="idx + 50"
+                      >
+                        <td class="text-left">
+                          #{{ athlete.number }}. {{ athlete.name }}
+                        </td>
                         <td class="text-center">{{ athlete.killPoints }}</td>
                         <td class="text-center">{{ athlete.attackErrors }}</td>
                         <td class="text-center">{{ athlete.aces }}</td>
                         <td class="text-center">{{ athlete.serviceErrors }}</td>
                         <td class="text-center">{{ athlete.blocks }}</td>
-                        <td class="text-center">{{ athlete.blockingPoints }}</td>
-                        <td class="text-center">{{ athlete.blockingErrors }}</td>
+                        <td class="text-center">
+                          {{ athlete.blockingPoints }}
+                        </td>
+                        <td class="text-center">
+                          {{ athlete.blockingErrors }}
+                        </td>
                         <td class="text-center">{{ athlete.assists }}</td>
                         <td class="text-center">{{ athlete.digs }}</td>
-                        <td class="text-center">{{ athlete.receptionErrors }}</td>
+                        <td class="text-center">
+                          {{ athlete.receptionErrors }}
+                        </td>
                       </tr>
                     </tbody>
                   </template>
@@ -257,22 +287,35 @@
                           v-for="(play, idx) in plays_map"
                           :key="idx + 200"
                           class="text-center"
-                        >{{ play.esp }}</th>
+                        >
+                          {{ play.esp }}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(athlete, idx) in oppAthleteStatistics" :key="idx + 100">
-                        <td class="text-left">#{{ athlete.number }}. {{ athlete.name }}</td>
+                      <tr
+                        v-for="(athlete, idx) in oppAthleteStatistics"
+                        :key="idx + 100"
+                      >
+                        <td class="text-left">
+                          #{{ athlete.number }}. {{ athlete.name }}
+                        </td>
                         <td class="text-center">{{ athlete.killPoints }}</td>
                         <td class="text-center">{{ athlete.attackErrors }}</td>
                         <td class="text-center">{{ athlete.aces }}</td>
                         <td class="text-center">{{ athlete.serviceErrors }}</td>
                         <td class="text-center">{{ athlete.blocks }}</td>
-                        <td class="text-center">{{ athlete.blockingPoints }}</td>
-                        <td class="text-center">{{ athlete.blockingErrors }}</td>
+                        <td class="text-center">
+                          {{ athlete.blockingPoints }}
+                        </td>
+                        <td class="text-center">
+                          {{ athlete.blockingErrors }}
+                        </td>
                         <td class="text-center">{{ athlete.assists }}</td>
                         <td class="text-center">{{ athlete.digs }}</td>
-                        <td class="text-center">{{ athlete.receptionErrors }}</td>
+                        <td class="text-center">
+                          {{ athlete.receptionErrors }}
+                        </td>
                       </tr>
                     </tbody>
                   </template>
@@ -307,30 +350,49 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="notification_dialog = false">Cerrar</v-btn>
-          <v-btn color="primary" text @click.native="send_notification()">Enviar</v-btn>
+          <v-btn color="primary" text @click="notification_dialog = false"
+            >Cerrar</v-btn
+          >
+          <v-btn color="primary" text @click.native="send_notification()"
+            >Enviar</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog v-model="end_pbp_dialog" persistent max-width="300">
       <v-card>
-        <v-card-title class="text-center" style="word-break: normal;">Terminar Secuencia de Jugadas</v-card-title>
-        <v-card-text>Terminar una secuencia de jugadas es irreversible. ¿Aún que desea terminar la secuencia de jugadas?</v-card-text>
+        <v-card-title class="text-center" style="word-break: normal;"
+          >Terminar Secuencia de Jugadas</v-card-title
+        >
+        <v-card-text
+          >Terminar una secuencia de jugadas es irreversible. ¿Aún que desea
+          terminar la secuencia de jugadas?</v-card-text
+        >
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="end_pbp_dialog = false">No</v-btn>
-          <v-btn color="green darken-1" text @click="startEndPBPSequence()">Sí</v-btn>
+          <v-btn color="green darken-1" text @click="end_pbp_dialog = false"
+            >No</v-btn
+          >
+          <v-btn color="green darken-1" text @click="startEndPBPSequence()"
+            >Sí</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog v-model="color_dialog" persistent max-width="300">
       <v-card>
-        <v-card-title class="text-center" style="word-break: normal;">Color del Equipo Oponente</v-card-title>
+        <v-card-title class="text-center" style="word-break: normal;"
+          >Color del Equipo Oponente</v-card-title
+        >
         <v-color-picker v-model="color" show-swatches></v-color-picker>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="cancelColorUpdate()">Cancelar</v-btn>
-          <v-btn color="green darken-1" text @click="updateColor()">Guardar</v-btn>
+          <v-btn color="green darken-1" text @click="cancelColorUpdate()"
+            >Cancelar</v-btn
+          >
+          <v-btn color="green darken-1" text @click="updateColor()"
+            >Guardar</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -339,6 +401,7 @@
 
 <script>
 import VolleyballScore from "../../../components/VolleyballScore";
+import VolleyballScoreDisplayOnly from "../../../components/VolleyballScoreDisplayOnly";
 import VolleyballStatistics from "../../../components/VolleyballStatistics";
 import PBPRosterEntry from "../../../components/PBPRosterEntry";
 import VolleyballGameAction from "../../../components/VolleyballGameAction";
@@ -348,6 +411,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     VolleyballScore,
+    VolleyballScoreDisplayOnly,
     VolleyballStatistics,
     PBPRosterEntry,
     VolleyballGameAction,

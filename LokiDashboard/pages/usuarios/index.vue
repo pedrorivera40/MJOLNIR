@@ -10,6 +10,7 @@
                 color="primary_light"
                 class="white--text"
                 @click="editUser(editedItemIndex)"
+                :disabled="!$store.state.userAuth.userPermissions[9]['22']"
               >
                 <v-icon left>
                   mdi-plus
@@ -18,7 +19,7 @@
               </v-btn>
               <v-spacer />
             </v-col>
-            <!-- <v-col cols="4">
+            <v-col cols="4">
               <v-text-field
                 v-model="search"
                 append-icon="mdi-magnify"
@@ -29,17 +30,24 @@
                 single-line
                 hide-details
               />
-            </v-col> -->
+            </v-col>
           </v-row>
         </v-card-title>
         <v-data-table
           :headers="headers"
           :items="users"
-        
           :loading="isLoadingU"
+          :search="search"
+          no-data-text="No hay usuarios en este momento."
+          loading-text="Cargando usuarios."
+          no-results-text="No se encontró ningun usuario."
         >
           <template v-slot:item.is_active="{ item }">
-            <v-chip class="ma-2" small  :color="item.is_active ? 'primary lighten-2': ''">
+            <v-chip
+              class="ma-2 status-label"
+              small
+              :color="item.is_active ? 'primary lighten-2' : ''"
+            >
               {{ setStatus(item.is_active) }}
             </v-chip>
           </template>
@@ -65,10 +73,12 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username"
+                  :disabled="
+                    item.username === $store.state.userAuth.user.username ||
+                      !$store.state.userAuth.userPermissions[11]['24']
+                  "
                   @click.stop="editUser(item)"
                 >
                   mdi-pencil
@@ -80,10 +90,12 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username"
+                  :disabled="
+                    item.username === $store.state.userAuth.user.username ||
+                      !$store.state.userAuth.userPermissions[11]['24']
+                  "
                   @click="editPermissions(item)"
                 >
                   mdi-shield-lock
@@ -94,10 +106,12 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon
-                  small
                   class="mr-2 table-actions"
                   v-on="on"
-                  :disabled="item.username === $store.state.userAuth.user.username"
+                  :disabled="
+                    item.username === $store.state.userAuth.user.username ||
+                      !$store.state.userAuth.userPermissions[10]['23']
+                  "
                   @click.stop="deleteUser(item)"
                 >
                   mdi-delete
@@ -142,14 +156,15 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import DeleteUserModal from "@/components/DeleteUserModal";
-import UpdatePermissionsModal from "@/components/UpdatePermissionsModal";
-import UpdateUserModal from "@/components/UpdateUserInfoModal";
-import PasswordResetModal from "@/components/PasswordResetModal";
+import DeleteUserModal from "@/components/users/DeleteUserModal";
+import UpdatePermissionsModal from "@/components/users/UpdatePermissionsModal";
+import UpdateUserModal from "@/components/users/UpdateUserInfoModal";
+import PasswordResetModal from "@/components/users/PasswordResetModal";
 export default {
+  middleware: "admin",
   data() {
     return {
-      // search: "",
+      search: "",
       dialogEdit: false,
       dialogDelete: false,
       dialogPermissions: false,
@@ -164,7 +179,7 @@ export default {
         { text: "Nombre de Usuario", value: "username" },
         { text: "Correo Electrónico", value: "email" },
         { text: "Estatus de Cuenta", align: "center", value: "is_active" },
-        { text: "Contraseña",  value: "password" },
+        { text: "Contraseña", value: "password" },
         { text: "Acciones", value: "actions", sortable: false }
       ],
       editedItemIndex: -1,
@@ -205,7 +220,8 @@ export default {
   methods: {
     ...mapActions({
       getUsers: "dashboardUsers/getUsers",
-      getPermissions: "dashboardUsers/getPermissions"
+      getPermissions: "dashboardUsers/getPermissions",
+      setUser: "userAuth/setUser"
     }),
     setStatus(status) {
       return status ? "Activa" : "Inactiva";
@@ -237,23 +253,21 @@ export default {
   },
   mounted() {
     this.getUsers();
+    this.setUser();
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/variables.scss";
+@import "@/assets/tableStyle.scss";
 .wrapper {
   height: 100%;
 
-  .content-area {
+  .content-area  {
     height: 100%;
     width: 100%;
-
-    .table-actions {
-      &:hover {
-        color: $primary-color;
-      }
+    .status-label {
+      font-weight: 500;
     }
   }
 }

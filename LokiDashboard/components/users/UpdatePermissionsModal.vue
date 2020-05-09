@@ -176,12 +176,10 @@ export default {
     }),
     close() {
       this.$emit("update:dialog", false);
-      console.log(this.permissions)
     },
     async save() {
       this.isLoading = true;
       const permissions = this.permissions;
-      console.log(this.permissions)
       await this.setPermissions({ id: this.id, permissions: permissions });
       this.isLoading = false;
       this.close()
