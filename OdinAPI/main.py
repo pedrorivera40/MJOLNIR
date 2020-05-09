@@ -785,7 +785,7 @@ def pbp_set_color(sport):
     return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y color en formato HEX."), 400
 
 
-@app.route("/pbp/<string:sport>/roster", methods=['POST', 'DELETE'])
+@app.route("/pbp/<string:sport>/roster", methods=['POST', 'DELETE', 'PUT'])
 def pbp_roster(sport):
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
     body = request.get_json()
@@ -826,7 +826,6 @@ def pbp_roster(sport):
 
         # For UPRM, data is the athlete_id.
         if team == "uprm":
-            print(2525252)
             return handler.setUPRMPlayer(event_id, data)
 
         if team == "opponent":
@@ -834,6 +833,27 @@ def pbp_roster(sport):
 
         # Team not recognized.
         return jsonify(ERROR="Error en la solicitud. Nombre de equipo es invalido."), 400
+
+    if request.method == 'PUT':
+        # Validate data is present in body.
+        if len(body) != 3 or not "data" in body:
+            return jsonify(ERROR="Error en la solicitud. Se debe enviar el ID del evento, nombre de equipo, y data."), 400
+
+        data = body["data"]
+
+        # For UPRM, no edits are allowed.
+        if team == "uprm":
+            return jsonify(ERROR="Error en la solicitud. Los atributos de atletas UPRM no pueden editarse."), 403
+
+        if team == "opponent":
+            # TODO -> add optional argument in setOppPlayer to denote that it corresponds to an edit...
+            #         OTHERWISE: Add an editOppPlayer method...
+            return handler.setOppPlayer(event_id, data)
+
+        # Team not recognized.
+        return jsonify(ERROR="Error en la solicitud. Nombre de equipo es invalido."), 400
+
+    # DELETE
 
     # Validate athlete id is given.
     if len(args) != 3 or "athlete_id" not in args:

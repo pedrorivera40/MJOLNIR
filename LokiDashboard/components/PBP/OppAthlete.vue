@@ -34,7 +34,7 @@
                 fab
                 small
                 dark
-                @click.native="edit_action()"
+                @click.native="start_edit_opp_player()"
                 v-on="on"
               >
                 <v-icon>mdi-pencil</v-icon>
@@ -74,6 +74,43 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="edit_opp_athlete_dialog" persistent max-width="600px" ref="add_opp_form">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Editar Atleta Oponente</span>
+        </v-card-title>
+        <v-container>
+          <v-row allign="center">
+            <v-col>
+              <v-form ref="edit_opp_form">
+                <v-text-field
+                  label="Nombre del atleta *"
+                  required
+                  v-model="new_athlete_name"
+                  counter="200"
+                  :rules="athlete_name_rules"
+                  outlined
+                ></v-text-field>
+                <v-text-field
+                  label="Número del atleta *"
+                  required
+                  v-model="new_number"
+                  counter="4"
+                  :rules="athlete_number_rules"
+                  outlined
+                ></v-text-field>
+                <small>* Indica que es un valor requerido</small>
+              </v-form>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="close_edit_dialog()">Cerrar</v-btn>
+          <v-btn color="primary" text @click.native="edit_opp_player()">Enviar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -91,7 +128,28 @@ export default {
   },
 
   data: () => ({
-    delete_dialog: false
+    delete_dialog: false,
+    edit_opp_athlete_dialog: false,
+
+    // Data to be temporarily used during edits.
+    new_athlete_name: "",
+    new_number: 0,
+
+    // Validation rules.
+    athlete_name_rules: [
+      v =>
+        (v && v.length > 0 && v.length <= 200) ||
+        "Las notificaciones deben tener entre 1 y 200 caracteres."
+    ],
+
+    athlete_number_rules: [
+      v => {
+        // Validate is integer between 0 and 1000.
+        if (!isNaN(parseInt(v)) && v >= 0 && v <= 1000) return true;
+        // Notify error.
+        return "El número de atleta debe ser un entero entre 0 y 1000.";
+      }
+    ]
   }),
 
   methods: {
@@ -104,7 +162,20 @@ export default {
       const params = `event_id=${this.event_id}&athlete_id=${this.athlete_number}&team=opponent`;
       this.removeAthlete(params);
       this.delete_dialog = false;
-    }
+    },
+
+    close_edit_dialog() {
+      this.edit_opp_athlete_dialog = false;
+      this.$refs.edit_opp_form.reset();
+    },
+
+    start_edit_opp_player() {
+      this.new_athlete_name = this.athlete_name;
+      this.new_number = this.athlete_number;
+      this.edit_opp_athlete_dialog = true;
+    },
+
+    edit_opp_player() {}
   }
 };
 </script>

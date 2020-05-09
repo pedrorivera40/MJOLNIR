@@ -111,7 +111,7 @@
               class="mx-2 my-4"
               light
               color="#ececec"
-              @click.native="opp_athlete_action(athlete.number, 'opponent')"
+              @click.native="add_athlete_action(athlete.number, 'opponent')"
               width="50"
               height="50"
               v-on="on"
@@ -280,7 +280,6 @@ export default {
     manage_uprm_roster_dialog: false,
     manage_opp_roster_dialog: false,
     add_opp_athlete_dialog: false,
-    dirty_text_field: true,
 
     athlete_name: "",
     athlete_number: "",
@@ -328,7 +327,6 @@ export default {
       this.manage_uprm_roster_dialog = false;
       this.manage_opp_roster_dialog = false;
       this.add_opp_athlete_dialog = false;
-      this.dirty_text_field = false;
       this.$refs.add_opp_form.reset();
     },
 
