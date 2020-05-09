@@ -263,7 +263,7 @@ export default {
 .wrapper {
   height: 100%;
 
-  .content-area {
+  .content-area  {
     height: 100%;
     width: 100%;
     .status-label {
