@@ -26,7 +26,7 @@ export default {
      */
     async getEventByID({commit,dispatch},eid) {
         try{
-            const response = await this.$axios.get('events/'+eid+'/')
+            const response = await this.$axios.get('events/'+eid+'/public/')
             commit("SET_EVENT",response.data.Event)            
 
         }catch(error){
