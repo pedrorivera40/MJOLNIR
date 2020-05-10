@@ -159,11 +159,6 @@ def athleteByID(aid):
 ###########################################
 @app.route("/auth/", methods=['POST'])
 def auth():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
