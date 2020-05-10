@@ -394,6 +394,23 @@ export default {
         }
     },
 
+    // Update opponent PBP player.
+    // Add PBP player into game roster.
+    async updateOppAthlete({ commit, dispatch }, payload) {
+        try {
+            const response = await this.$axios.put(`/pbp/Voleibol/roster`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+            return false;
+        }
+    },
+
     // Remove player from game roster.
     async removeAthlete({ commit, dispatch }, args) {
         try {

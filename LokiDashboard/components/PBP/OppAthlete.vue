@@ -74,7 +74,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="edit_opp_athlete_dialog" persistent max-width="600px" ref="add_opp_form">
+    <v-dialog v-model="edit_opp_athlete_dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
           <span class="headline">Editar Atleta Oponente</span>
@@ -82,6 +82,7 @@
         <v-container>
           <v-row allign="center">
             <v-col>
+              <v-card-title>Número de Atleta: {{this.athlete_number}}</v-card-title>
               <v-form ref="edit_opp_form">
                 <v-text-field
                   label="Nombre del atleta *"
@@ -89,14 +90,6 @@
                   v-model="new_athlete_name"
                   counter="200"
                   :rules="athlete_name_rules"
-                  outlined
-                ></v-text-field>
-                <v-text-field
-                  label="Número del atleta *"
-                  required
-                  v-model="new_number"
-                  counter="4"
-                  :rules="athlete_number_rules"
                   outlined
                 ></v-text-field>
                 <small>* Indica que es un valor requerido</small>
@@ -154,7 +147,7 @@ export default {
 
   methods: {
     ...mapActions({
-      addPBPAthlete: "volleyballPBP/addPBPAthlete",
+      updateOppAthlete: "volleyballPBP/updateOppAthlete",
       removeAthlete: "volleyballPBP/removeAthlete"
     }),
 
@@ -175,7 +168,22 @@ export default {
       this.edit_opp_athlete_dialog = true;
     },
 
-    edit_opp_player() {}
+    async edit_opp_player() {
+      const payload = {
+        event_id: this.event_id,
+        data: {
+          number: this.athlete_number,
+          name: this.new_athlete_name
+        },
+        team: "opponent"
+      };
+      if (
+        this.$refs.edit_opp_form.validate() &&
+        (await this.updateOppAthlete(payload))
+      ) {
+        this.edit_opp_athlete_dialog = false;
+      }
+    }
   }
 };
 </script>

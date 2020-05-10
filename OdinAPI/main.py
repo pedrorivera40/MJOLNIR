@@ -846,14 +846,12 @@ def pbp_roster(sport):
             return jsonify(ERROR="Error en la solicitud. Los atributos de atletas UPRM no pueden editarse."), 403
 
         if team == "opponent":
-            # TODO -> add optional argument in setOppPlayer to denote that it corresponds to an edit...
-            #         OTHERWISE: Add an editOppPlayer method...
-            return handler.setOppPlayer(event_id, data)
+            return handler.updateOppPlayer(event_id, data)
 
         # Team not recognized.
         return jsonify(ERROR="Error en la solicitud. Nombre de equipo es invalido."), 400
 
-    # DELETE
+    # DELETE method.
 
     # Validate athlete id is given.
     if len(args) != 3 or "athlete_id" not in args:

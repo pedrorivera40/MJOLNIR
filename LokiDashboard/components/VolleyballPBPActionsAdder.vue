@@ -23,7 +23,7 @@
               class="mx-2 my-4"
               light
               color="#ececec"
-              @click.native="add_athlete_action(athlete.athlete_id, 'uprm')"
+              @click.native="notifyNotActionSelected()"
               width="50"
               height="50"
               v-on="on"
@@ -111,7 +111,7 @@
               class="mx-2 my-4"
               light
               color="#ececec"
-              @click.native="add_athlete_action(athlete.number, 'opponent')"
+              @click.native="notifyNotActionSelected()"
               width="50"
               height="50"
               v-on="on"
@@ -213,7 +213,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="add_opp_athlete_dialog" persistent max-width="600px" ref="add_opp_form">
+    <v-dialog v-model="add_opp_athlete_dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
           <span class="headline">Añadir Atleta Oponente</span>
@@ -245,7 +245,7 @@
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="close_dialog()">Cerrar</v-btn>
+          <v-btn color="primary" text @click="close_add_opp_dialog()">Cerrar</v-btn>
           <v-btn color="primary" text @click.native="add_opp_player()">Enviar</v-btn>
         </v-card-actions>
       </v-card>
@@ -323,9 +323,7 @@ export default {
       notifyNotActionSelected: "volleyballPBP/notifyNotActionSelected"
     }),
 
-    close_dialog() {
-      this.manage_uprm_roster_dialog = false;
-      this.manage_opp_roster_dialog = false;
+    close_add_opp_dialog() {
       this.add_opp_athlete_dialog = false;
       this.$refs.add_opp_form.reset();
     },
