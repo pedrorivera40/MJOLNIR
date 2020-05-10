@@ -188,12 +188,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-            <v-btn  @click="close()">
+            <v-btn text color="grey darken-3" @click="close()">
              Cerrar
             </v-btn>
            <v-btn 
-              color="green darken-1" 
-                        
+              color="primary darken-1" 
+              text      
               :disabled="!(valid & terms)"
               @click="submit"
               :loading="adding"
