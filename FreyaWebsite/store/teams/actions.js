@@ -6,7 +6,7 @@ export default{
             let sport_id = team_params.sport_id
             let season_year = team_params.season_year
             //console.log("At the request level we have:",sport_id,season_year)
-            const response = await this.$axios.get('teams/?sport_id='+sport_id+'&season_year='+season_year)
+            const response = await this.$axios.get('/teams/public/?sport_id='+sport_id+'&season_year='+season_year)
             //console.log("GET TEAM",response)
             console.log("GET TEAM",response.data)
             commit("SET_TEAM",response.data.Team)
@@ -23,7 +23,7 @@ export default{
     async getTeamMembers({commit},team_id){
         try{
             //console.log("GET MEMBERS: At actions level we have:",team_id)
-            const response = await this.$axios.get('teams/members/?team_id='+team_id)
+            const response = await this.$axios.get('/teams/members/public/?team_id='+team_id)
             
             //console.log("GET MEMBERS:",response)
             console.log("GET MEMBERS:",response.data)
