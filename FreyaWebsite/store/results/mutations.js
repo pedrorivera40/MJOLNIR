@@ -5,5 +5,12 @@ export default{
   
     SET_EVENT_INFO(state,event_info){
         state.event_info = event_info
+    },
+    //LOADING QUERY STATUS
+    SET_QUERY_LOADING(state){
+        state.loadingQuery = true
+    },
+    SET_QUERY_DONE(state){
+        state.loadingQuery = false
     }
 }

@@ -80,7 +80,7 @@
 									</v-col>
 								</v-row>
 							</v-container>
-              <v-container v-else>
+              <v-container v-else-if="!loadingQuery&&!loadingEventQuery">
                 <v-row align = "center" justify = "center">
                   <v-col justify = "center" align = "center">
                     <h2>No Se Encontro Equipo</h2>
@@ -120,7 +120,7 @@
               </v-col>
             </v-row>
           </v-container>
-          <v-container v-else>
+          <v-container v-else-if="!loadingQuery&&!loadingEventQuery">
             <v-row align = "center" justify = "center">
               <v-col justify = "center" align = "center">
                 <h2>No Se Encontraron Miembros de Equipo</h2>
@@ -161,7 +161,7 @@
                   </v-data-table>
                 </v-card>
               </v-container>
-              <v-container v-else>
+              <v-container v-else-if="!loadingQuery&&!loadingEventQuery">
                 <v-row align = "center" justify = "center">
                   <v-col justify = "center" align = "center">
                     <h2>No Se Encontraron Estadisticas Individuales</h2>
@@ -185,7 +185,7 @@
                   </v-data-table>
                 </v-card>
               </v-container>
-              <v-container v-else>
+              <v-container v-else-if="!loadingQuery&&!loadingEventQuery">
                 <v-row align = "center" justify = "center">
                   <v-col justify = "center" align = "center">
                     <h2>No Se Encontraron Estadisticas de Equipo</h2>
@@ -215,7 +215,7 @@
               </v-col>
             </v-row>
           </v-container>
-          <v-container v-else>
+          <v-container v-else-if="!loadingQuery&&!loadingEventQuery">
             <v-row align = "center" justify = "center">
               <v-col justify = "center" align = "center">
                 <h2>No Se Encontraron Eventos Para El Equipo</h2>

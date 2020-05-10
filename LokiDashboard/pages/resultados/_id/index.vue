@@ -104,7 +104,7 @@
                           color="primary_light"
                           class="white--text"
                           @click="addAthleteStatistics()"
-                          :disabled="!formated_individual_stats() || !$store.state.userAuth.userPermissions[6]['19']"
+                          :disabled="!formated_members_fetch() || !$store.state.userAuth.userPermissions[6]['19']"
                         >
                           <v-icon left>
                             mdi-plus
@@ -616,10 +616,11 @@ export default {
         return true;
       } else return false;
     },
-    formated_individual_stats() {
-      if (this.team_members_local != "" && this.payload_stats != "") {
-        return true;
-      } else return false;
+    formated_members_fetch(){
+        if (this.team_members_local != '' &&  this.team_members_local != null){
+            return true
+        }
+        else return false
     },
     buildDefaultValues() {
       if (
