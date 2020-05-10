@@ -829,7 +829,7 @@ def pbp_roster(sport):
             return handler.setUPRMPlayer(event_id, data)
 
         if team == "opponent":
-            return handler.setOppPlayer(event_id, data)
+            return handler.addOppPlayer(event_id, data)
 
         # Team not recognized.
         return jsonify(ERROR="Error en la solicitud. Nombre de equipo es invalido."), 400
