@@ -139,7 +139,7 @@ export default{
 
     async getTeamEvents({commit},team_id){
         try{
-            const response = await this.$axios.get('/events/team/'+team_id+'/')
+            const response = await this.$axios.get('/events/team/'+team_id+'/public/')
             console.log("GET TEAM EVENTS:",response.data)
             commit("SET_TEAM_EVENTS",response.data)
             commit("SET_EVENT_QUERY_DONE")

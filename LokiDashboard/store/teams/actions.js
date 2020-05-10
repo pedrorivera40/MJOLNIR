@@ -260,7 +260,7 @@ export default{
             let team_id = athlete_params.team_id
             console.log("GET ATHLETES: At actions level we have:",athlete_params)
             console.log("At the request level we have:",athlete_params)
-            const response = await this.$axios.get('/athletes/?sID='+sport_id+'&tID='+team_id)
+            const response = await this.$axios.get('/athletes/public/?sID='+sport_id+'&tID='+team_id)
             console.log("GET ATHLETES",response)
             console.log("GET ATHLETES",response.data)
             commit("SET_SPORT_ATHLETES",response.data.Athletes)
