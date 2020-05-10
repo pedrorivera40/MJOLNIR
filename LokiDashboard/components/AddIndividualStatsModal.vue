@@ -903,13 +903,13 @@
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="close()">close</v-btn>
+                                    <v-btn color="grey darken-3" text @click="close()">close</v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-btn color="grey darken-3" text @click="clear()">clear</v-btn>
                                 </v-col>
                                 <v-col>
                                     <v-btn color="primary ligthen-1" text @click="submitAthleteStats()" :loading="loadingQuery">submit</v-btn>
-                                </v-col>
-                                <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="clear()">clear</v-btn>
                                 </v-col>
                             </v-row>   
                         </v-container>

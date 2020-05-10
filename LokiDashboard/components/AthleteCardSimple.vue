@@ -9,7 +9,7 @@
                             color="grey"
                             size="150"                                                                                                                                                                                    
                     >       
-                            <v-icon v-if="profile_image_link == null" height="100"> mdi-account </v-icon>
+                            <v-icon v-if="((profile_image_link == null)||(profile_image_link == ''))" height="100"> mdi-account </v-icon>
                             <v-img v-else :src="profile_image_link"/>
                                                                                             
                     </v-avatar> 																					

@@ -9,7 +9,7 @@
           flat
       >
         <v-spacer />
-        <v-toolbar-title>{{sport_name}}</v-toolbar-title>
+        <v-toolbar-title>{{sport_name}} - {{branch}}</v-toolbar-title>
         <v-progress-linear
 				:active="loadingQuery"
 				indeterminate
@@ -24,7 +24,7 @@
         </v-col>
         <v-row align="center">
           <v-col justify="center" align="center">
-            <h1>Tarzanes</h1>
+            <h1>{{branch_mascot}}</h1>
           </v-col>
         </v-row>
         <v-row align="center"
@@ -246,7 +246,7 @@ export default {
 
       sport_name:'',    
       //TODO: Check remove/change branch to dynamic (if necessary) 
-			branch:'Masculino', 
+			branch:'', 
       sport_id:'',
       sport_route:'',
 			season:'',
@@ -271,11 +271,22 @@ export default {
       SOFTBALL_IDF: 16, 
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
+      // OTHER SPORTS (MEDAL BASED)
+      ATHLETICS_IDM: 8,
+      ATHLETICS_IDF: 19,
+      //OTHER SPORTS (MATCH BASED)
+      FIELD_TENNIS_IDM: 9,
+      FIELD_TENNIS_IDF: 18,
+      TABLE_TENNIS_IDM:7,
+      TABLE_TENNIS_IDF:15,
 
       current_team:'',
       current_team_id:'',
       events:[],
       ready_for_members: false,
+
+      branch_mascot:'',
+
       }),//end of data()
     
     created(){
@@ -319,6 +330,10 @@ export default {
       formated(){
         if(this.team){
           this.current_team_id = this.team.team_info.team_id
+          this.sport_name = this.team.team_info.sport_name
+          this.branch = this.team.team_info.branch_name
+          if (this.branch == "Masculino"){this.branch_mascot = "Tarzanes"}
+          else if(this.branch == "Femenino"){this.branch_mascot = "Juanas"}
           this.current_team = this.team.team_info
           
           if(this.readyForMembers){
@@ -361,12 +376,15 @@ export default {
         let currentYear = new Date(2023,8).getFullYear()
         this.defaultSelected.push({'season_year':currentYear})
         this.sport_id = this.$route.params.id
-        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_name = "Baloncesto", this.sport_route = "basketball"}
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_name = "Voleibol",this.sport_route = "volleyball"}
-        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_name = "Fútbol", this.sport_route = "soccer"}
-        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol", this.sport_route = "baseball"}
-        else{this.sport_name = '', this.sport_route = ''}
-        
+        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}
+        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_route = "volleyball"}
+        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_route = "soccer"}
+        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_route = "baseball"}
+        else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){this.sport_route = "medalbased"}
+        else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){this.sport_route ="matchbased"}
+        else{this.sport_route = ''}
+        console.log("[SPORT ROUTE CONFIRMED]",this.sport_route)
       },
       goToEditTeam(){
         this.dialogEditTeam = true;
