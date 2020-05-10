@@ -7,7 +7,7 @@ export default{
     async getAthletes( {commit} ){
         try{
            
-            const response = await this.$axios.get('athletes/')
+            const response = await this.$axios.get('athletes/public/')
             commit("SET_ATHLETES",response.data.Athletes)            
 
         }catch(error){
@@ -27,7 +27,7 @@ export default{
     async getAthleteByID({commit},aid){
         try{
             
-            const response = await this.$axios.get('athletes/'+aid+'/')
+            const response = await this.$axios.get('athletes/'+aid+'/public/')
             commit("SET_ATHLETE",response.data.Athlete)
             
         }catch(error){
