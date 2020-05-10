@@ -5,7 +5,7 @@ export default{
             let event_id = stat_params.event_id
             let sport_route = stat_params.sport_route
             //console.log("At the request level we have:",event_id)
-            const response = await this.$axios.get('results/'+sport_route+'/?event_id='+event_id)
+            const response = await this.$axios.get('/results/'+sport_route+'/public/?event_id='+event_id)
             //console.log("GET ALL EVENT STATS",response)
             console.log("GET ALL EVENT STATS",response.data)
             commit("SET_RESULTS_PAYLOAD",response.data)
@@ -25,7 +25,7 @@ export default{
     async getEventInfo({commit, dispatch},event_id){
         try{
             //console.log("At the request level we have:",event_id)
-            const response = await this.$axios.get('http://localhost:5000/events/'+event_id+'/')
+            const response = await this.$axios.get('/events/'+event_id+'/')
             //console.log("GET EVENT INFO",response)
             console.log("GET EVENT INFO",response.data)
             commit("SET_EVENT_INFO",response.data.Event)
@@ -97,7 +97,7 @@ export default{
         try{
             let sport_route = scoreJSON.sport_route
             let statistics = scoreJSON.statistics
-            const response = await this.$axios.post('results/'+sport_route+'/score/',statistics)
+            const response = await this.$axios.post('/results/'+sport_route+'/score/',statistics)
             commit("SET_QUERY_DONE")
             dispatch('notifications/setSnackbar', {text: "Se añadio nuevo record de Puntuacion Final de manera exitosa.", color: 'success'}, {root: true})
         }catch(error){
@@ -114,7 +114,7 @@ export default{
         try{
             let sport_route = scoreJSON.sport_route
             let statistics = scoreJSON.statistics
-            const response = await this.$axios.put('results/'+sport_route+'/score/',statistics)
+            const response = await this.$axios.put('/results/'+sport_route+'/score/',statistics)
             commit("SET_QUERY_DONE")
             dispatch('notifications/setSnackbar', {text: "Se edito record de Puntuacion Final de manera exitosa.", color: 'success'}, {root: true})
         }catch(error){
@@ -131,7 +131,7 @@ export default{
         try{
             let sport_route = scoreJSON.sport_route
             let event_id = scoreJSON.event_id
-            const response = await this.$axios.get('results/'+sport_route+'/score/?event_id='+event_id)
+            const response = await this.$axios.get('/results/'+sport_route+'/score/public/?event_id='+event_id)
             console.log("GET FINAL SCORE",response.data)
             commit("SET_FINAL_SCORE",response.data)
             	
@@ -157,7 +157,7 @@ export default{
     async getTeamMembers({commit, dispatch},team_id){
         try{
             //console.log("GET MEMBERS: At actions level we have:",team_id)
-            const response = await this.$axios.get('teams/members/?team_id='+team_id)
+            const response = await this.$axios.get('/teams/members/public/?team_id='+team_id)
             
             //console.log("GET MEMBERS:",response)
             console.log("GET MEMBERS:",response.data)
@@ -195,7 +195,7 @@ export default{
             console.log("[ADDSTATS-INDEX->ROUTE]",sport_route)
             let statistics = statsJSON.statistics
             console.log("[ADDSTATS-INDEX->STATISTICS]",statistics)
-            const response = await this.$axios.post('results/'+sport_route+'/individual/',statistics)
+            const response = await this.$axios.post('/results/'+sport_route+'/individual/',statistics)
             commit("SET_QUERY_DONE")
             dispatch('notifications/setSnackbar', {text: "Se añadio nuevo record de Estadisticas de Atleta de manera exitosa.", color: 'success'}, {root: true})
         }catch(error){
@@ -213,7 +213,7 @@ export default{
             console.log("[EDIT STATS SUBMIT] STRAIGHT FROM ACTIONS, PARAMS ARE",statsJSON)
             let sport_route = statsJSON.sport_route
             let statistics = statsJSON.statistics
-            const response = await this.$axios.put('results/'+sport_route+'/individual/',statistics)
+            const response = await this.$axios.put('/results/'+sport_route+'/individual/',statistics)
             commit("SET_QUERY_DONE")
             dispatch('notifications/setSnackbar', {text: "Se edito record de Estadisticas de Atleta de manera exitosa.", color: 'success'}, {root: true})
         }catch(error){
@@ -235,12 +235,12 @@ export default{
             let athlete_id = statsJSON.athlete_id
             if(statsJSON.category_id){
                 let category_id = statsJSON.category_id
-                const response1 = await this.$axios.get('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id+'&category_id='+category_id)
+                const response1 = await this.$axios.get('/results/'+sport_route+'/individual/public/?event_id='+event_id+'&athlete_id='+athlete_id+'&category_id='+category_id)
                 console.log("GET INDIVIDUAL STATS",response1.data)
                 commit("SET_INDIVIDUAL_STATS",response1.data)
             }
             else{
-                const response2 = await this.$axios.get('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+                const response2 = await this.$axios.get('/results/'+sport_route+'/individual/public/?event_id='+event_id+'&athlete_id='+athlete_id)
                 console.log("GET INDIVIDUAL STATS",response2.data)
                 commit("SET_INDIVIDUAL_STATS",response2.data)
                 
@@ -267,10 +267,10 @@ export default{
             let athlete_id = statsJSON.athlete_id
             if(statsJSON.category_id){
                 let category_id = statsJSON.category_id
-                const response1 = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id+'&category_id='+category_id)
+                const response1 = await this.$axios.delete('/results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id+'&category_id='+category_id)
             }
             else{
-                const response2 = await this.$axios.delete('results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
+                const response2 = await this.$axios.delete('/results/'+sport_route+'/individual/?event_id='+event_id+'&athlete_id='+athlete_id)
             }
             commit("SET_QUERY_DONE")
             dispatch('notifications/setSnackbar', {text: "Se removio record de Estadisticas de Atleta de manera exitosa.", color: 'success'}, {root: true})

@@ -7,7 +7,7 @@ export default{
             let sport_id = team_params.sport_id
             let season_year = team_params.season_year
             //console.log("At the request level we have:",sport_id,season_year)
-            const response = await this.$axios.get('teams/?sport_id='+sport_id+'&season_year='+season_year)
+            const response = await this.$axios.get('/teams/public/?sport_id='+sport_id+'&season_year='+season_year)
             //console.log("GET TEAM",response)
             console.log("GET TEAM",response.data)
             commit("SET_TEAM",response.data.Team)
@@ -24,7 +24,7 @@ export default{
     async getTeamMembers({commit, dispatch},team_id){
         try{
             //console.log("GET MEMBERS: At actions level we have:",team_id)
-            const response = await this.$axios.get('teams/members/?team_id='+team_id)
+            const response = await this.$axios.get('/teams/members/public/?team_id='+team_id)
             
             //console.log("GET MEMBERS:",response)
             console.log("GET MEMBERS:",response.data)
@@ -184,7 +184,7 @@ export default{
             let sport_id = team_params.sport_id
             let season_year = team_params.season_year
             console.log("At the request level we have:",sport_id,season_year)
-            const response = await this.$axios.get('teams/?sport_id='+sport_id+'&season_year='+season_year)
+            const response = await this.$axios.get('/teams/public/?sport_id='+sport_id+'&season_year='+season_year)
             console.log("GET TEAM",response)
             console.log("GET TEAM",response.data)
             commit("SET_TEAM",response.data.Team)
@@ -199,7 +199,7 @@ export default{
     async editTeam({commit,dispatch},teamJSON){
         try{
             // commit("SET_ATHLETES",[])
-            const response = await this.$axios.put('teams/',teamJSON)
+            const response = await this.$axios.put('/teams/',teamJSON)
             dispatch('notifications/setSnackbar', {text: "Equipo fue editado de manera exitosa.", color: 'success'}, {root: true})
             
       
@@ -260,7 +260,7 @@ export default{
             let team_id = athlete_params.team_id
             console.log("GET ATHLETES: At actions level we have:",athlete_params)
             console.log("At the request level we have:",athlete_params)
-            const response = await this.$axios.get('athletes/?sID='+sport_id+'&tID='+team_id)
+            const response = await this.$axios.get('/athletes/?sID='+sport_id+'&tID='+team_id)
             console.log("GET ATHLETES",response)
             console.log("GET ATHLETES",response.data)
             commit("SET_SPORT_ATHLETES",response.data.Athletes)

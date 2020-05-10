@@ -56,16 +56,16 @@ export default {
     
       //NOTE: Using pre-written data for athlete with id:8,
       //      will need to fetch this data below from the API.
-      athlete_id: String,
+      athlete_id: Number,
       first_name: String,
       middle_name: String,
       last_names:String,
-	  height_inches:String,
+	  height_inches:Number,
       study_program:String,
       school_of_precedence:String,
       athlete_positions:[String],
       athlete_categories:[String],      
-      number:String,
+      number:Number,
       profile_image_link:String,
       years_of_participation:String,
     },//end of data()
