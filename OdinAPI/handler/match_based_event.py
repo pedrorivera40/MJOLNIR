@@ -496,7 +496,7 @@ class MatchBasedEventHandler():
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
             if not all_stats_result:            
-                return jsonify(Error = "No se encontraron estadísticas para un evento de partido  pare el evento con id:{}.".format(eID)),404
+                return jsonify(Error = "No se encontraron estadísticas para un evento de partido para el evento con id:{}.".format(eID)),404
         except Exception as e:
             print(e)
             return jsonify(Error="No se pudo verificar el evento de partido."), 500
@@ -719,7 +719,7 @@ class MatchBasedEventHandler():
             try:
                 result = dao.editTeamStatistics(eID,attributes['category_id'])
                 if not result:
-                    return jsonify(Error = "No se encontraron estadísticas de equipo para el atlta con id:{} en el evento con id:{}.".format(aID,eID)),404  
+                    return jsonify(Error = "No se encontraron estadísticas de equipo para el atleta con id:{} en el evento con id:{}.".format(aID,eID)),404  
             except:
                 return jsonify(Error="No se pudo verificar las estadísticas de equipo para un evento de partido."), 500
             
@@ -863,7 +863,7 @@ class MatchBasedEventHandler():
             fs_dao = FinalScoreDAO()
             result = fs_dao.addFinalScore(eID,local_score, opponent_score)
             if not result:
-                return jsonify(Error = "Problem inserting new final score record."),500
+                return jsonify(Error = "Ocurrió un problema interno intentando añadir una nueva entrada de puntuación final."),500
         except:
             return jsonify(Error="No se pudo verificar la puntuación final."), 500
          
@@ -956,7 +956,7 @@ class MatchBasedEventHandler():
             return jsonify(Error="No se pudo verificar las estadísticas de un equipo para un evento de partido."), 500
          
         dao.commitChanges()
-        return jsonify(Match_Based_Event_Athlete_Statistics = "Se edtaron las estadísticas de un evento de partido para el atleta con id:{} en el evento con id:{}.".format(aID,eID)),200
+        return jsonify(Match_Based_Event_Athlete_Statistics = "Se editaron las estadísticas de un evento de partido para el atleta con id:{} en el evento con id:{}.".format(aID,eID)),200
 
 
     def editTeamStatistics(self,eID,cID): 
@@ -981,7 +981,7 @@ class MatchBasedEventHandler():
         dao = MatchBasedEventDAO()       
         try:            
             if not dao.getMatchBasedEventTeamStatsID(eID,cID):
-                return jsonify(Error = "Match Based Event Team Stats Entry does not exists for Event ID:{}".format(eID)),404
+                return jsonify(Error = "No existe una entrada de estadísticas de equipo para un evento de medalla para el evento con id:{} y categoría con id:{}.".format(eID,cID)),404
         except:
             return jsonify(Error="No se pudo verificar las estadísticas de equipo para un evento de partido."), 500
 
@@ -1062,7 +1062,7 @@ class MatchBasedEventHandler():
         try:
             team_result = dao.editTeamStatistics(eID,cID)
             if not team_result:
-                return jsonify(Error = "Estadísticas de equipo ne fueron encontradas para el evento con id:{}.".format(eID)),404
+                return jsonify(Error = "Estadísticas de equipo no fueron encontradas para el evento con id:{}.".format(eID)),404
             
         except:
             return jsonify(Error="No se pudo verificar las estadísticas de un equipo para un evento de partido."), 500
