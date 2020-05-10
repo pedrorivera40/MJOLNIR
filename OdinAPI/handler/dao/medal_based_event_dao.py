@@ -722,7 +722,16 @@ class MedalBasedEventDAO:
 
     def medalExistsInCategoryOfEvent(self,mID,cID,eID):
         """
-        Returns true if a medal of a type is already a 
+        Returns true if a medal of a type is already assigned
+        for the category given in the event given.
+
+        Args:
+            mID: The id of the medal awarded.
+            cID: The id of the category played in the event.
+            eID: The id of the event.
+        Returns:
+            True if medal with the id given has been awarded in 
+            the category given for the event given, False otherwise.
         """
 
         cursor = self.conn.cursor()
