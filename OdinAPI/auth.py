@@ -27,10 +27,9 @@ def rulesMatch(password):
         password: password to be checked againt the regex.
     
     Returns:
-        A boolean to determine if the password complies or not.
+        A an object or None to determine if the password complies or not.
     """
     pw = password
-
     # set the rules for the regular expression
     reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$"
 
@@ -41,7 +40,9 @@ def rulesMatch(password):
     match = re.search(compiledReg, pw)
 
     # Return true if it matches false if it does not.
-    return match
+    if match:
+        return True
+    return False  
 
 # Uses BCrypt hashing algorithm to hash a password given with
 # the amount of rounds specified in the gensalt() method
@@ -133,3 +134,22 @@ def verifyToken(token):
         return True
     except:
         return False
+
+# Verifies a token with the key given.
+def getTokenInfo(token):
+    """
+    Verify if the provided token is valid.
+
+    Tkes the provided token and verifies it is valid.
+
+    Args:
+        token: The token provided by the user.
+        key: Secret key to verify the token.
+
+    Returns:
+        A boolean value signifying if the token is valid or not.
+    """
+    try:
+        return jwt.decode(token, os.getenv('SECRET_KEY'), algorithm='HS256')
+    except:
+        return 'Token can\'t be retrieved.'

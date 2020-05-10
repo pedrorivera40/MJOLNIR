@@ -1,0 +1,115 @@
+\hypertarget{classhandler_1_1athlete_1_1_athlete_handler}{}\section{handler.\+athlete.\+Athlete\+Handler Class Reference}
+\label{classhandler_1_1athlete_1_1_athlete_handler}\index{handler.\+athlete.\+Athlete\+Handler@{handler.\+athlete.\+Athlete\+Handler}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a953b9be16453dce8e25f08d2c53413f0}\label{classhandler_1_1athlete_1_1_athlete_handler_a953b9be16453dce8e25f08d2c53413f0}} 
+def {\bfseries map\+Athlete\+To\+Dict} (self, record)
+\item 
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a53d7b2d7abc4fe899194f146763d3287}\label{classhandler_1_1athlete_1_1_athlete_handler_a53d7b2d7abc4fe899194f146763d3287}} 
+def {\bfseries map\+Athlete\+With\+Positions\+And\+Categories\+To\+Dict} (self, records)
+\item 
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_aae7ac6fee7495a16818e09a8946ead32}\label{classhandler_1_1athlete_1_1_athlete_handler_aae7ac6fee7495a16818e09a8946ead32}} 
+def {\bfseries get\+All\+Athletes} (self)
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_af33bd416854d51f10a33aa264f1e3b2f}{get\+Athletes\+By\+Sport} (self, s\+ID)
+\begin{DoxyCompactList}\small\item\em Gets all athletes belonging to a specific sport. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_a7261ed3d7231ef7bdb261863414be608}{get\+Athlete\+By\+ID} (self, a\+ID)
+\begin{DoxyCompactList}\small\item\em Gets a specified athlete by their id. \end{DoxyCompactList}\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_a08fe0c2dab373f26b69dbab68a1b2a72}{add\+Athlete} (self, s\+ID, attributes)
+\begin{DoxyCompactList}\small\item\em Adds a new athlete with the information given. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_af2953ad06fe27a2bd718a83cde63272b}\label{classhandler_1_1athlete_1_1_athlete_handler_af2953ad06fe27a2bd718a83cde63272b}} 
+def {\bfseries edit\+Athlete} (self, a\+ID, attributes)
+\item 
+def \hyperlink{classhandler_1_1athlete_1_1_athlete_handler_a9f3ea8fb6c3c156f89c2b2a5bda6e689}{remove\+Athlete} (self, a\+ID)
+\begin{DoxyCompactList}\small\item\em Invalidates an athlete in the database. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a08fe0c2dab373f26b69dbab68a1b2a72}\label{classhandler_1_1athlete_1_1_athlete_handler_a08fe0c2dab373f26b69dbab68a1b2a72}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!add\+Athlete@{add\+Athlete}}
+\index{add\+Athlete@{add\+Athlete}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{add\+Athlete()}{addAthlete()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+add\+Athlete (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID,  }\item[{}]{attributes }\end{DoxyParamCaption})}
+
+
+
+Adds a new athlete with the information given. 
+
+Calls a Athlete\+D\+AO to add a new athlete and maps the result to a J\+S\+ON object that contains the id of the newly added athlete.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s\+ID} & The id of the sport in which the athlete participates. \\
+\hline
+{\em attributes} & A dictionary containing the attributes of the athlete to be added. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON object containing the id of the newly added event. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a7261ed3d7231ef7bdb261863414be608}\label{classhandler_1_1athlete_1_1_athlete_handler_a7261ed3d7231ef7bdb261863414be608}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!get\+Athlete\+By\+ID@{get\+Athlete\+By\+ID}}
+\index{get\+Athlete\+By\+ID@{get\+Athlete\+By\+ID}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{get\+Athlete\+By\+I\+D()}{getAthleteByID()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+get\+Athlete\+By\+ID (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets a specified athlete by their id. 
+
+Calls the Athlete\+D\+AO to get an athlete by their id and maps the result to a J\+S\+ON that contains the desired record. The J\+S\+ON object is then returned to the caller.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a\+ID} & The id of the athlete that needs to be fetched.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the athlete with the given id. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_af33bd416854d51f10a33aa264f1e3b2f}\label{classhandler_1_1athlete_1_1_athlete_handler_af33bd416854d51f10a33aa264f1e3b2f}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!get\+Athletes\+By\+Sport@{get\+Athletes\+By\+Sport}}
+\index{get\+Athletes\+By\+Sport@{get\+Athletes\+By\+Sport}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{get\+Athletes\+By\+Sport()}{getAthletesBySport()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+get\+Athletes\+By\+Sport (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{s\+ID }\end{DoxyParamCaption})}
+
+
+
+Gets all athletes belonging to a specific sport. 
+
+Calls the Athlet\+D\+AO to get a list of all athlete records that participate in a specific sport and maps the result to a J\+S\+ON that contains all those valid athletes in the system. The J\+S\+ON objects is then returned to the caller.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s\+ID} & The id of the sport in which the athletes parcipate.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing all valid athletes that participate in a specified sport by the given sport id. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classhandler_1_1athlete_1_1_athlete_handler_a9f3ea8fb6c3c156f89c2b2a5bda6e689}\label{classhandler_1_1athlete_1_1_athlete_handler_a9f3ea8fb6c3c156f89c2b2a5bda6e689}} 
+\index{handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}!remove\+Athlete@{remove\+Athlete}}
+\index{remove\+Athlete@{remove\+Athlete}!handler\+::athlete\+::\+Athlete\+Handler@{handler\+::athlete\+::\+Athlete\+Handler}}
+\subsubsection{\texorpdfstring{remove\+Athlete()}{removeAthlete()}}
+{\footnotesize\ttfamily def handler.\+athlete.\+Athlete\+Handler.\+remove\+Athlete (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{a\+ID }\end{DoxyParamCaption})}
+
+
+
+Invalidates an athlete in the database. 
+
+Call the Athlete\+D\+AO to invalidate the athlete record. It then maps the result to a J\+S\+ON object that contains the id of the invalidated athlete. The J\+S\+ON object is then returned to the caller.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a\+ID} & The id of the athlete to be invalidated. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A J\+S\+ON containing the id of the invalidated athlete. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+handler/athlete.\+py\end{DoxyCompactItemize}

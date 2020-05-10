@@ -3,31 +3,26 @@
     <v-img
       v-if="img != ''"
       class="black--text"
-      width="300px"
+      width="450px"
       height="300px"
       :src="img"
     >
    
     </v-img>
     <v-card-title>Deporte: {{sportName}}</v-card-title> 
-    <v-card-subtitle>Fecha: {{eventDate}}</v-card-subtitle>    
-    <v-card-text class="text--primary" v-if="opponentName !='' | !!opponentName">
-      <div>Equipos: UPRM vs {{opponentName}} </div>
-    </v-card-text>
-    <v-card-text class="text--primary">
-      <div>Puntos: {{localScore}} - {{opponentScore}} </div>
-    </v-card-text>
-     <v-card-text class="text--primary">
-      <div>Resumen: {{formatSummary()}} </div>
-    </v-card-text>
+    <v-card-subtitle>
+      <span class="text" style="font-size:20px">Fecha: {{formatDate()}}</span>
+    </v-card-subtitle>    
+    <v-card-text v-if="opponentName !='' | !!opponentName">
+      <span class="text" style="font-size:20px">Equipos: UPRM vs {{opponentName}} </span>
+    </v-card-text>      
     <v-card-actions> 
+      
+      <v-btn v-if="hasPBP == true" @click="goToPBPSequence">Ver Play-by-Play</v-btn> 
       <v-spacer/>      
       <v-btn color="green darken-1" dark @click="goToEvent" >Ver Detalles</v-btn>      
     </v-card-actions> 
-    <v-card-actions> 
-      <v-spacer/>
-      <v-btn v-if="hasPBP == true">Ver Play-by-Play</v-btn>     
-    </v-card-actions>
+    
   
 
   </v-card>
@@ -48,19 +43,46 @@ export default {
     hasPBP:Boolean,     
   },
   methods:{
+
+    /**
+     * Routes user to event viewer page for
+     * the event with id given as prop.
+     */
     goToEvent(){
       this.$router.push('/eventos/'+this.eventID)
+    },  
+    /**
+     * Routes user to PBP sequence viewer page
+     * for the event with the sport and id given as
+     * props
+     */
+    goToPBPSequence(){
+      this.$router.push('/jugadas-'+this.sportName.toLowerCase()+'/'+this.eventID)
     },
-    
-    formatSummary(){
-      if(this.eventSummary !== null){
-        if(this.eventSummary.length > 20)
-          return this.eventSummary.substring(0,20).concat("...")
-        else
-          return this.eventSummary
-      }
-      else
-        return ''
+    /**
+     * Formats the date and time for the card.
+     */
+    formatDate(){
+
+          let eDate = new Date(Date.parse(this.eventDate))
+					let date = eDate.toISOString().substr(0,10)
+					let hours = eDate.getUTCHours()
+					let minutes = eDate.getUTCMinutes()
+					
+					let amPM = null
+					if(hours > 12){
+						amPM = 'PM'
+						hours -= 12
+					}
+					else if(hours < 12)
+						amPM = 'AM'
+
+          let time = null;
+					if(minutes < 10)
+						time = hours + ":0"+minutes + amPM
+					else if(minutes >=10)
+						time = hours + ":" +minutes + amPM
+          return date + ' @' + time 
     }
 
   }

@@ -3,15 +3,21 @@
     <v-toolbar color="green darken-1" dark flat>
       <v-spacer />
       <v-toolbar-title>Evento</v-toolbar-title>
+      <v-progress-linear
+				:active="!ready"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>
       <v-spacer />
     </v-toolbar>
     <v-card-text>            
       
-      <v-form v-model="valid">
+      <v-form v-model="valid" v-if="formated()">
         <v-container>            
           <v-row>            
-            <v-col
-              cols="1"
+            <v-col             
               md="3"
             >	
 
@@ -20,7 +26,6 @@
             </v-col>
 
             <v-col
-              cols="12"
               
             >
             <v-date-picker
@@ -28,6 +33,7 @@
               full-width
               :landscape="$vuetify.breakpoint.smAndUp"
               :show-current="true"
+              color="green darken-1"
               class="mt-4"
               locale="es-419"
             ></v-date-picker>
@@ -35,9 +41,24 @@
             </v-col>
           </v-row>
 
+          <v-row>            
+            <v-col             
+              md="3"
+            >	
+
+            <h2>Hora del Evento:</h2>
+              
+            </v-col>
+
+            <v-col>                  
+            
+             <v-time-picker v-model="time" color="green darken-1"></v-time-picker>
+              
+            </v-col>
+          </v-row>
+
           <v-row>
-            <v-col
-              cols="1"
+            <v-col            
               md="3"
             >	
 
@@ -45,33 +66,31 @@
             
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="3"
             >                
               <v-select
-                v-model="locality"
+                v-model.lazy="locality"
                 :items="localities"                  
                 label ="Localización"
                 :rules="[required('Localización')]"
               ></v-select>                
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="4"
             >          
               <v-text-field
                 v-model="venue"                                     
                 label="Lugar del Evento"
                 required
+                :rules="[alphaSpaces('Lugar del Evento')]"
               ></v-text-field>                
             </v-col>
           </v-row>
 
           <v-row >
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >	
 
@@ -79,12 +98,11 @@
               
             </v-col>
 
-            <v-col 
-              cols="1"
+            <v-col             
               md="9"
               
             >               
-            <v-select
+            <v-autocomplete
                   v-model="team"
                   :items="teamsList"                
                   name="Equipo"                    
@@ -92,15 +110,14 @@
                   item-text="sportName"
                   item-value="id"                  
                   :rules="[teamRequired('Equipo')]"
-              ></v-select>               
+              ></v-autocomplete>               
             </v-col>
 
 
           </v-row>
 
           <v-row>
-            <v-col
-              cols="1"
+            <v-col             
               md="3"
             >	
 
@@ -108,21 +125,20 @@
               
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col             
               md="4"
             >              
               <v-text-field
                 v-model="opponent_name"                                  
-                label="Oponente"
+                label="Nombre de Oponente"
                 required
+                :rules="[generalPhrase('Nombre de Oponente')]"
               ></v-text-field>
               
             </v-col>
           </v-row>
           <v-row>
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >	
 
@@ -130,8 +146,7 @@
               
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="9"
             >                
               <v-textarea
@@ -141,7 +156,7 @@
                 auto-grow
                 rows = "2"
                 outlined
-                :rules="[minLength('Resumen',1),maxSummaryLength('Resumen',2)]"
+                :rules="[minLength('Resumen',1),maxSummaryLength('Resumen',250)]"
               ></v-textarea>                
             </v-col>
           </v-row>
@@ -151,7 +166,12 @@
             <v-spacer/>
             <v-spacer/>
             <v-col>
-              <v-btn color="green darken-1" dark class="mr-4" :disabled="!valid" @click="submit">Someter</v-btn>
+              <v-btn 
+                color="green darken-1" 
+                class="mr-4" 
+                :disabled="!valid" 
+                @click="submit">Someter
+              </v-btn>
               <v-btn @click="clear">Borrar</v-btn>
             </v-col>
           </v-row>
@@ -164,49 +184,65 @@
 
 <script>
 
-  import rules from "../../utils/validations"   
-  import teamsData from "../../data/eventsPagesData/teams.json"
-
+  import rules from "../../utils/validations"    
+  import {mapActions,mapGetters} from "vuex"
   export default {
     
     data: () => ({
+      ready : false,
       valid:false,
-			date:'', 
+      date:'',
+      time:'', 
 			locality:'',
 			localities:['Casa','Afuera'],
 			venue:'',
 			teamSport:'',		
       opponent_name:'',
-      eventSummary:'',
+      eventSummary:null,
       yearList:[],
       year:'',
       team:'',
       teamsList:[],     
-      teams:teamsData,      
+         
       
     }),
 
-    created(){
-      this.buildTeamsList(),      
-      this.constructDate()
-    },   
-  
+   
 
     methods: {
       ...rules,
 
-      submit () {
-        console.log(this.team)
+      ...mapActions({
+        addEvent:"events/addEvent",
+        getEventTeams:"events/getEventTeams"
+      }),
+
+      submit () {        
+        
+        const event_attributes = {}
+
+        event_attributes['event_date'] = this.date + ' ' + this.time
+
+        if(this.locality.localeCompare('Casa') == 0)
+          event_attributes['is_local'] = true
+        else if(this.locality.localeCompare('Afuera') == 0)
+          event_attributes['is_local'] = false        
+        
+        event_attributes['venue'] = this.venue
+        event_attributes['opponent_name'] = this.opponent_name
+        event_attributes['event_summary'] = this.eventSummary
+        
+        const eventJSON = {'team_id':this.team,'attributes':event_attributes}
+        this.addEvent(eventJSON)     
+        
       },
       clear () {
+        
         this.locality =''
         this.team = ''
-        this.eventSummary = ''
+        this.eventSummary = null
         this.opponent_name = ''
-        this.constructDate()
-				
-
-      
+        this.resetDate()  
       },
       buildTeamsList(){
         for(let i = 0; i < this.teams.length; i ++)
@@ -217,16 +253,46 @@
 
         }
       },
+
+      formated(){
+        if(this.teams.length > 0){
+          if(this.ready){
+            return true
+          }
+          else{
+            this.buildTeamsList()
+            this.resetDate()
+            this.ready = true
+          }
+
+        }
+        else{
+          return false
+        }
+      },
       
-      constructDate()
+      resetDate()
       {
         let time_zone_offset = new Date().getTimezoneOffset() * 60000
-      
-        this.date = new Date(Date.now() - time_zone_offset).toISOString().substring(0,10)
+        const newDate =  new Date(Date.now() - time_zone_offset)
+        this.date = newDate.toISOString().substring(0,10)
+        this.time = newDate.getUTCHours()+':'+newDate.getUTCMinutes()
         
       }
 
       
     },
+
+    computed: {
+		...mapGetters({
+			 teams:"events/event_teams"
+		}),
+		
+
+	},
+	mounted() {
+		this.getEventTeams();
+		
+	}
   }
 </script>

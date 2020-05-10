@@ -2,31 +2,32 @@ from .config.sqlconfig import db_config
 from flask import jsonify
 import psycopg2
 
+
 class BasketballEventDAO:
 
-# getAllStatisticsByEventID(eID)//Return all statistics of a Basketball Event event.
-# getAllAthleteStatisticsByEventId(eID,aID)//Returns all of an Athlete statistics of a Basketball Event for a given id.
-# addStatistics(eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalPe rcentage,threePointPercentage,freeThrowPercentage)//Adds a Basketball Event record in the database and returns the id of the inserted record.
-# editStatistics(eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalPe rcentage,threePointPercentage,freeThrowPercentage)//Edits a Basketball record in the database for a specific Athlete during an Event by the ids given and returns the updated record.
-# removesStatistics(eID, aID)//Invalidates a Basketball Event record on a database and it returns the invalidated record.
-# commitChanges()//Commits changes on the database after an insertion or update query.
+    # getAllStatisticsByEventID(eID)//Return all statistics of a Basketball Event event.
+    # getAllAthleteStatisticsByEventId(eID,aID)//Returns all of an Athlete statistics of a Basketball Event for a given id.
+    # addStatistics(eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalPe rcentage,threePointPercentage,freeThrowPercentage)//Adds a Basketball Event record in the database and returns the id of the inserted record.
+    # editStatistics(eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalPe rcentage,threePointPercentage,freeThrowPercentage)//Edits a Basketball record in the database for a specific Athlete during an Event by the ids given and returns the updated record.
+    # removesStatistics(eID, aID)//Invalidates a Basketball Event record on a database and it returns the invalidated record.
+    # commitChanges()//Commits changes on the database after an insertion or update query.
 
-#TODO: need to add not-invalid check to all the queries
+    # TODO: need to add not-invalid check to all the queries
 
     def __init__(self):
         connection_url = "dbname={} user={} password={} host ={} ".format(
-        db_config['database'],
-        db_config['username'],
-        db_config['password'],
-        db_config['host']
+            db_config['database'],
+            db_config['username'],
+            db_config['password'],
+            db_config['host']
         )
         self.conn = psycopg2.connect(connection_url)
 
-#=============================//HELPERS//====================
+# =============================//HELPERS//====================
     def getCursor(self):
         return self.conn.cursor()
 
-    def getBasketballEventID(self,eID,aID):
+    def getBasketballEventID(self, eID, aID):
         """
         Checks if basketball event exists.
 
@@ -36,7 +37,7 @@ class BasketballEventDAO:
         Args:
             eID: The ID of the event 
             aID: The ID of the athlete
-            
+
         Returns:
             The id of the basketball event entry if it exists.
         """
@@ -46,11 +47,11 @@ class BasketballEventDAO:
                 FROM basketball_event
                 WHERE event_id = %s and athlete_id = %s and (is_invalid = false or is_invalid is Null);
                 """
-        cursor.execute(query,(int(eID),int(aID),))
+        cursor.execute(query, (int(eID), int(aID),))
         result = cursor.fetchone()
         return result
-    
-    def getBasketballEventIDInvalid(self,eID,aID):
+
+    def getBasketballEventIDInvalid(self, eID, aID):
         """
         Checks if invalid basketball event exists.
 
@@ -60,7 +61,7 @@ class BasketballEventDAO:
         Args:
             eID: The ID of the event 
             aID: The ID of the athlete
-            
+
         Returns:
             The id of the invalid basketball event entry if it exists.
         """
@@ -70,11 +71,11 @@ class BasketballEventDAO:
                 FROM basketball_event
                 WHERE event_id = %s and athlete_id = %s and (is_invalid = true);
                 """
-        cursor.execute(query,(int(eID),int(aID),))
+        cursor.execute(query, (int(eID), int(aID),))
         result = cursor.fetchone()
         return result
-    
-    def getBasketballEventTeamStatsID(self,eID):
+
+    def getBasketballEventTeamStatsID(self, eID):
         """
         Checks if basketball event team stats exist.
 
@@ -83,7 +84,7 @@ class BasketballEventDAO:
 
         Args:
             eID: The ID of the event 
-            
+
         Returns:
             The id of the basketball event team stats entry if it exists.
         """
@@ -93,12 +94,12 @@ class BasketballEventDAO:
                 FROM basketball_event_team_stats
                 WHERE event_id = %s and (is_invalid = false or is_invalid is Null);
                 """
-        cursor.execute(query,(int(eID),))
+        cursor.execute(query, (int(eID),))
         result = cursor.fetchone()
-        #print(result)
+        # print(result)
         return result
 
-    def getBasketballEventTeamStatsIDInvalid(self,eID):
+    def getBasketballEventTeamStatsIDInvalid(self, eID):
         """
         Checks if invalid basketball event team stats exist.
 
@@ -107,7 +108,7 @@ class BasketballEventDAO:
 
         Args:
             eID: The ID of the event 
-            
+
         Returns:
             The id of the invalid basketball event team stats entry if it exists.
         """
@@ -117,14 +118,16 @@ class BasketballEventDAO:
                 FROM basketball_event_team_stats
                 WHERE event_id = %s and (is_invalid = true);
                 """
-        cursor.execute(query,(int(eID),))
+        cursor.execute(query, (int(eID),))
         result = cursor.fetchone()
-        #print(result)
+        # print(result)
         return result
 
-    
-#=============================//GETS//=======================
-    def getAllStatisticsByEventID(self,eID):
+
+# =============================//GETS//=======================
+
+
+    def getAllStatisticsByEventID(self, eID):
         """
         Gets all the statistics per athlete for a given event. 
 
@@ -133,15 +136,15 @@ class BasketballEventDAO:
 
         Args:
             eID: The ID of the event of which statistics need to be fetched.
-            
+
         Returns:
             A list containing the response to the database query
             containing all the statistics in the system containing 
             the matching record for the given ID.
         """
         cursor = self.conn.cursor()
-        #TODO: Confirm that's the info we want from athlete...
-        #TODO: verify if need to check the joined column's is_invalid (And all the foreign keys)
+        # TODO: Confirm that's the info we want from athlete...
+        # TODO: verify if need to check the joined column's is_invalid (And all the foreign keys)
         query = """
                 SELECT
                 athlete.id as athlete_id, athlete.first_name, athlete.middle_name, athlete.last_names, 
@@ -157,16 +160,15 @@ class BasketballEventDAO:
                 WHERE event_id = %s and 
                 (basketball_event.is_invalid = false or basketball_event.is_invalid is null);
                 """
-        #TODO: need to avoid sql injections. the use of  %s and just a non-validated string is dangerous. 
-        cursor.execute(query,(int(eID),))        
+        # TODO: need to avoid sql injections. the use of  %s and just a non-validated string is dangerous.
+        cursor.execute(query, (int(eID),))
         result = []
         for row in cursor:
-            #print(row)
+            # print(row)
             result.append(row)
-        return result 
+        return result
 
-    
-    def getAllAthleteStatisticsByEventID(self,eID,aID):
+    def getAllAthleteStatisticsByEventID(self, eID, aID):
         """
         Gets all the statistics for a given athlete and event. 
 
@@ -176,8 +178,8 @@ class BasketballEventDAO:
         Args:
             eID: The ID of the event of which statistics need to be fetched.
             aID: The ID of the athlete of which statistics need to be fetched. 
-            
-            
+
+
         Returns:
             A list containing the response to the database query
             containing all the statistics in the system containing 
@@ -196,14 +198,13 @@ class BasketballEventDAO:
                 WHERE event_id = %s and athlete_id = %s and 
                 (basketball_event.is_invalid = false or basketball_event.is_invalid is null);
                 """
-        cursor.execute(query,(int(eID),int(aID),))
+        cursor.execute(query, (int(eID), int(aID),))
         result = cursor.fetchone()
         return result
 
+    # NEW: given an event, get aggregate of team statistics
 
-
-    #NEW: given an event, get aggregate of team statistics
-    def getAllTeamStatisticsByEventID(self,eID):
+    def getAllTeamStatisticsByEventID(self, eID):
         """
         Gets the team statistics for a given event. 
 
@@ -212,8 +213,8 @@ class BasketballEventDAO:
 
         Args:
             eID: The ID of the event of which team statistics need to be fetched.
-            
-            
+
+
         Returns:
             A list containing the response to the database query
             containing all the statistics in the system containing 
@@ -232,14 +233,12 @@ class BasketballEventDAO:
                 WHERE event_id = %s  and 
                 (basketball_event_team_stats.is_invalid = false or basketball_event_team_stats.is_invalid is null);
                 """
-        cursor.execute(query,(int(eID),))
+        cursor.execute(query, (int(eID),))
         result = cursor.fetchone()
         return result
 
-
-    
-    #NEW : given team and athlete, return all statistics
-    def getAllAthleteStatisticsPerSeason(self,aID,seasonYear):
+    # NEW : given team and athlete, return all statistics
+    def getAllAthleteStatisticsPerSeason(self, aID, seasonYear):
         """
         Gets all the statistics for a given athlete and season. 
 
@@ -249,8 +248,8 @@ class BasketballEventDAO:
         Args:
             aID: The ID of the athlete of which statistics need to be fetched.
             seasonYear: the season year of which statistics need to be fetched.
-            
-            
+
+
         Returns:
             A list containing the response to the database query
             containing all the statistics in the system containing 
@@ -273,15 +272,15 @@ class BasketballEventDAO:
                 WHERE athlete_id = %s and team.season_year = %s and
                 (basketball_event.is_invalid = false or basketball_event.is_invalid is null);
                 """
-        cursor.execute(query,(int(aID),int(seasonYear),))        
+        cursor.execute(query, (int(aID), int(seasonYear),))
         result = []
         for row in cursor:
-            #print(row)
+            # print(row)
             result.append(row)
-        return result  
+        return result
 
-    #NEW
-    def getAggregatedAthleteStatisticsPerSeason(self,aID,seasonYear):
+    # NEW
+    def getAggregatedAthleteStatisticsPerSeason(self, aID, seasonYear):
         """
         Gets the aggregated statistics for a given athlete and season. 
 
@@ -291,8 +290,8 @@ class BasketballEventDAO:
         Args:
             aID: The ID of the athlete of which statistics need to be fetched.
             seasonYear: the season year of which statistics need to be fetched.
-            
-            
+
+
         Returns:
             A list containing the response to the database query
             containing the aggregated statistics in the system containing 
@@ -323,12 +322,12 @@ class BasketballEventDAO:
                 INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
                 ;
                 """
-        cursor.execute(query,(int(aID),int(seasonYear),))        
+        cursor.execute(query, (int(aID), int(seasonYear),))
         result = cursor.fetchone()
         return result
 
-    #NEW
-    def getAllAggregatedAthleteStatisticsPerSeason(self,sID,seasonYear):
+    # NEW
+    def getAllAggregatedAthleteStatisticsPerSeason(self, sID, seasonYear):
         """
         Gets all the aggregated statistics for a given athlete and season. 
 
@@ -338,8 +337,8 @@ class BasketballEventDAO:
         Args:
             sID: the sport id for the basketball branch of which statistics need to be fetched
             seasonYear: the season year of which statistics need to be fetched.
-            
-            
+
+
         Returns:
             A list containing the response to the database query
             containing all the aggregated statistics in the system containing 
@@ -370,15 +369,15 @@ class BasketballEventDAO:
                 INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
                 ;
                 """
-        cursor.execute(query,(int(sID),int(seasonYear),))        
+        cursor.execute(query, (int(sID), int(seasonYear),))
         result = []
         for row in cursor:
-            #print(row)
+            # print(row)
             result.append(row)
-        return result  
+        return result
 
-    #NEW
-    def getAggregatedTeamStatisticsPerSeason(self,sID,seasonYear):
+    # NEW
+    def getAggregatedTeamStatisticsPerSeason(self, sID, seasonYear):
         """
         Gets the aggregated team statistics for a given athlete and season. 
 
@@ -388,8 +387,8 @@ class BasketballEventDAO:
         Args:
             sID: The ID of the sport of which statistics need to be fetched.
             seasonYear: the season year of which statistics need to be fetched.
-            
-            
+
+
         Returns:
             A list containing the response to the database query
             containing the aggregated team statistics in the system containing 
@@ -418,19 +417,19 @@ class BasketballEventDAO:
                 from aggregate_query
                 ;
                 """
-        cursor.execute(query,(int(sID),int(seasonYear),))        
+        cursor.execute(query, (int(sID), int(seasonYear),))
         result = cursor.fetchone()
         return result
 
-        
 
-#=============================//POST//=======================
-    
-    # Need to validate: event exists. athlete belongs to team  that is tied to the event. 
+# =============================//POST//=======================
+
+    # Need to validate: event exists. athlete belongs to team  that is tied to the event.
     # needless to say, a bunch changes since these are more complex statistics...
     # TODO: need to update documentation, substitute percentages for success/attempt.
-    def addStatistics(self,eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalAttempt, 
-    successfulFieldGoal,threePointAttempt,successfulThreePoint, freeThrowAttempt,successfulFreeThrow):
+
+    def addStatistics(self, eID, aID, points, rebounds, assists, steals, blocks, turnovers, fieldGoalAttempt,
+                      successfulFieldGoal, threePointAttempt, successfulThreePoint, freeThrowAttempt, successfulFreeThrow):
         """
         Adds a new basketball event statistics record with the provided information.
 
@@ -453,7 +452,7 @@ class BasketballEventDAO:
             successfulThreePoint: number of successful three point shots attained by the athlete in the event.
             freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
             successfulFreeThrow: number of successful free throws attained by the athlete in the event.
-            
+
         Returns:
             A list containing the response to the database query
             containing the matching record for the new statistics entry. 
@@ -465,19 +464,19 @@ class BasketballEventDAO:
                 free_throw_attempt,successful_free_throw,event_id,athlete_id,is_invalid)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),
-        int(turnovers),int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),
-        int(successfulThreePoint),int(freeThrowAttempt),int(successfulFreeThrow),int(eID),int(aID),))
+        cursor.execute(query, (int(points), int(rebounds), int(assists), int(steals), int(blocks),
+                               int(turnovers), int(fieldGoalAttempt), int(
+                                   successfulFieldGoal), int(threePointAttempt),
+                               int(successfulThreePoint), int(freeThrowAttempt), int(successfulFreeThrow), int(eID), int(aID),))
         sID = cursor.fetchone()[0]
         if not sID:
             return sID
-        #self.commitChanges()
+        # self.commitChanges()
         return sID
 
-    
-    #NEW: add team statistics aggregate passed by parameter
-    def addTeamStatistics(self,eID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalAttempt, 
-    successfulFieldGoal,threePointAttempt,successfulThreePoint, freeThrowAttempt,successfulFreeThrow):
+    # NEW: add team statistics aggregate passed by parameter
+    def addTeamStatistics(self, eID, points, rebounds, assists, steals, blocks, turnovers, fieldGoalAttempt,
+                          successfulFieldGoal, threePointAttempt, successfulThreePoint, freeThrowAttempt, successfulFreeThrow):
         """
         Adds a new basketball event team statistics record with the provided information.
 
@@ -499,7 +498,7 @@ class BasketballEventDAO:
             successfulThreePoint: number of successful three point shots attained by the team in the event.
             freeThrowAttempt: number of free throw attempts attained by the team in the event.
             successfulFreeThrow: number of successful free throws attained by the team in the event.
-            
+
         Returns:
             A list containing the response to the database query
             containing the matching record for the new team statistics entry. 
@@ -511,18 +510,19 @@ class BasketballEventDAO:
                 free_throw_attempt,successful_free_throw,event_id,is_invalid)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
-        cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),
-        int(turnovers),int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),
-        int(successfulThreePoint),int(freeThrowAttempt),int(successfulFreeThrow),int(eID),))
+        cursor.execute(query, (int(points), int(rebounds), int(assists), int(steals), int(blocks),
+                               int(turnovers), int(fieldGoalAttempt), int(
+                                   successfulFieldGoal), int(threePointAttempt),
+                               int(successfulThreePoint), int(freeThrowAttempt), int(successfulFreeThrow), int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
-        #self.commitChanges()
+        # self.commitChanges()
         return tsID
-    
-    #NEW : aggregate statistics automatically and insert new team stats
-    #TODO: name better. this method will take the aggregate and add the necessary team statistics
-    def addTeamStatisticsAuto(self,eID):
+
+    # NEW : aggregate statistics automatically and insert new team stats
+    # TODO: name better. this method will take the aggregate and add the necessary team statistics
+    def addTeamStatisticsAuto(self, eID):
         """
         Adds a new basketball event team statistics record with provided and existing information.
 
@@ -532,14 +532,14 @@ class BasketballEventDAO:
 
         Args:
             eID: the ID of the event for which the statistics record will be added
-            
+
         Returns:
             A list containing the response to the database query
             containing the matching record for the new statistics entry. 
         """
         cursor = self.conn.cursor()
-        #the first query collects the aggregate
-        #DONE: needed to add subquery so we only aggregate from the valid events :)
+        # the first query collects the aggregate
+        # DONE: needed to add subquery so we only aggregate from the valid events :)
         query = """
                 with aggregate_query as(
                 with valid_basketball_events as
@@ -558,9 +558,9 @@ class BasketballEventDAO:
                 from aggregate_query
                 where aggregate_query.points is not null;
                 """
-        cursor.execute(query,(int(eID),))
+        cursor.execute(query, (int(eID),))
         resultTeam = cursor.fetchone()
-       
+
         query = """
                 INSERT INTO basketball_event_team_stats(points,rebounds,assists,steals,blocks,turnovers,
                 field_goal_attempt,successful_field_goal,three_point_attempt,successful_three_point,
@@ -568,22 +568,24 @@ class BasketballEventDAO:
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         if resultTeam:
-            cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
-            int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
-            int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
+            cursor.execute(query, (int(resultTeam[0]), int(resultTeam[1]), int(resultTeam[2]), int(resultTeam[3]),
+                                   int(resultTeam[4]), int(resultTeam[5]), int(
+                                       resultTeam[6]), int(resultTeam[7]), int(resultTeam[8]),
+                                   int(resultTeam[9]), int(resultTeam[10]), int(resultTeam[11]), int(eID),))
         else:
-            cursor.execute(query,(0,0,0,0,0,0,0,0,0,0,0,0,int(eID),))
+            cursor.execute(query, (0, 0, 0, 0, 0, 0, 0,
+                                   0, 0, 0, 0, 0, int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
-        #self.commitChanges()
+        # self.commitChanges()
         return tsID
 
-#=============================//PUTS//=======================
+# =============================//PUTS//=======================
 
-    #TODO: recal athlete will be validaded by handler
-    def editStatistics(self,eID,aID,points,rebounds,assists,steals,blocks,turnovers,fieldGoalAttempt, 
-    successfulFieldGoal,threePointAttempt,successfulThreePoint, freeThrowAttempt,successfulFreeThrow):
+    # TODO: recal athlete will be validaded by handler
+    def editStatistics(self, eID, aID, points, rebounds, assists, steals, blocks, turnovers, fieldGoalAttempt,
+                       successfulFieldGoal, threePointAttempt, successfulThreePoint, freeThrowAttempt, successfulFreeThrow):
         """
         Updates the statistics for the basketball event with the given IDs.
 
@@ -606,14 +608,14 @@ class BasketballEventDAO:
             successfulThreePoint: number of successful three point shots attained by the athlete in the event.
             freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
             successfulFreeThrow: number of successful free throws attained by the athlete in the event.
-            
+
         Returns:
             A list containing the response to the database query
             containing the matching record for the modified basketball
             event statistics.
         """
-        #NEW: will also have to update the team statistics
-        #TODO: update team statistic. simply call the outside dao?
+        # NEW: will also have to update the team statistics
+        # TODO: update team statistic. simply call the outside dao?
         cursor = self.conn.cursor()
         query = """
                 UPDATE basketball_event
@@ -650,17 +652,18 @@ class BasketballEventDAO:
                     basketball_event.event_id, basketball_event.id as basketball_event_id, basketball_event.athlete_id;
 
                 """
-        cursor.execute(query,(int(points),int(rebounds),int(assists),int(steals),int(blocks),int(turnovers),
-        int(fieldGoalAttempt),int(successfulFieldGoal),int(threePointAttempt),int(successfulThreePoint),
-        int(freeThrowAttempt),int(successfulFreeThrow),int(eID),int(aID),))
+        cursor.execute(query, (int(points), int(rebounds), int(assists), int(steals), int(blocks), int(turnovers),
+                               int(fieldGoalAttempt), int(successfulFieldGoal), int(
+                                   threePointAttempt), int(successfulThreePoint),
+                               int(freeThrowAttempt), int(successfulFreeThrow), int(eID), int(aID),))
         result = cursor.fetchone()
         if not result:
             return result
-        #self.commitChanges()
+        # self.commitChanges()
         return result
 
-    #NEW: edit team statistics. automatically update based on aggregate. 
-    def editTeamStatistics(self,eID):
+    # NEW: edit team statistics. automatically update based on aggregate.
+    def editTeamStatistics(self, eID):
         """
         Updates the statistics for the basketball event with the given IDs.
 
@@ -670,14 +673,14 @@ class BasketballEventDAO:
 
         Args:
             eID: the ID of the event for which the team statistics record will be updated
-            
+
         Returns:
             A list containing the response to the database query
             containing the matching record for the modified basketball
             event team statistics.
         """
         cursor = self.conn.cursor()
-        #the first query collects the aggregate
+        # the first query collects the aggregate
         query = """
                 with aggregate_query as(
                 with valid_basketball_events as
@@ -696,10 +699,10 @@ class BasketballEventDAO:
                 from aggregate_query
                 where aggregate_query.points is not null;
                 """
-        cursor.execute(query,(int(eID),))
+        cursor.execute(query, (int(eID),))
         resultTeam = cursor.fetchone()
-  
-        #the second query updates the basketball_event_team_stats based on aggregate results
+
+        # the second query updates the basketball_event_team_stats based on aggregate results
         query = """
                 UPDATE basketball_event_team_stats
                 SET points = %s,
@@ -735,22 +738,102 @@ class BasketballEventDAO:
                     basketball_event_team_stats.event_id, basketball_event_team_stats.id as basketball_event_team_stats_id;
                 """
         if resultTeam:
-            cursor.execute(query,(int(resultTeam[0]),int(resultTeam[1]),int(resultTeam[2]),int(resultTeam[3]),
-            int(resultTeam[4]),int(resultTeam[5]),int(resultTeam[6]),int(resultTeam[7]),int(resultTeam[8]),
-            int(resultTeam[9]),int(resultTeam[10]),int(resultTeam[11]),int(eID),))
+            cursor.execute(query, (int(resultTeam[0]), int(resultTeam[1]), int(resultTeam[2]), int(resultTeam[3]),
+                                   int(resultTeam[4]), int(resultTeam[5]), int(
+                                       resultTeam[6]), int(resultTeam[7]), int(resultTeam[8]),
+                                   int(resultTeam[9]), int(resultTeam[10]), int(resultTeam[11]), int(eID),))
         else:
-            cursor.execute(query,(0,0,0,0,0,0,0,0,0,0,0,0,int(eID),))
+            cursor.execute(query, (0, 0, 0, 0, 0, 0, 0,
+                                   0, 0, 0, 0, 0, int(eID),))
         result = cursor.fetchone()
         if not result:
             return result
-        #self.commitChanges()
+        # self.commitChanges()
+        return result
+
+    # TODO: recal athlete will be validaded by handler
+    def editTeamStatisticsManual(self, eID, points, rebounds, assists, steals, blocks, turnovers, fieldGoalAttempt,
+                                 successfulFieldGoal, threePointAttempt, successfulThreePoint, freeThrowAttempt, successfulFreeThrow):
+        """
+        Updates the team statistics for the basketball event with the given IDs.
+
+        This function accepts event ID and sports specific statistics and uses them 
+        to update the statistics in the record of the basketball event with the 
+        matching IDs.
+
+        Args:
+            eID: the ID of the event for which the statistics record will be updated.
+            points: number of points scored by the athlete in the event.
+            rebounds: number of rebounds attained by the athlete in the event.
+            assists: number of assists attained by the athlete in the event.
+            steals: number of steals attained by the athlete in the event.
+            blocks: number of blocks attained by the athlete in the event.
+            turnovers: number of turnovers attained by the athlete in the event.
+            fieldGoalAttempt: number of field goal attempts attained by the athlete in the event.
+            successfulFieldGoal: number of successful field goals attained by the athlete in the event.
+            threePointAttempt: number of three point attempts attained by the athlete in the event.
+            successfulThreePoint: number of successful three point shots attained by the athlete in the event.
+            freeThrowAttempt: number of free throw attempts attained by the athlete in the event.
+            successfulFreeThrow: number of successful free throws attained by the athlete in the event.
+
+        Returns:
+            A list containing the response to the database query
+            containing the matching record for the modified basketball
+            event team statistics.
+        """
+        # NEW: will also have to update the team statistics
+        # TODO: update team statistic. simply call the outside dao?
+        cursor = self.conn.cursor()
+        query = """
+                UPDATE basketball_event_team_stats
+                SET points = %s,
+                    rebounds = %s,
+                    assists = %s,
+                    steals = %s,
+                    blocks = %s,
+                    turnovers = %s,
+                    field_goal_attempt = %s,
+                    successful_field_goal = %s,
+                    three_point_attempt = %s,
+                    successful_three_point = %s,
+                    free_throw_attempt = %s,
+                    successful_free_throw = %s,
+                    is_invalid = false
+                WHERE event_id = %s
+                RETURNING
+                    points,
+                    rebounds,
+                    assists,
+                    steals,
+                    blocks,
+                    turnovers,
+                    field_goal_attempt,
+                    successful_field_goal,
+                    three_point_attempt,
+                    successful_three_point,
+                    free_throw_attempt,
+                    successful_free_throw,
+                    get_percentage(successful_field_goal,field_goal_attempt) as field_goal_percentage,
+                    get_percentage(successful_free_throw,free_throw_attempt) as free_throw_percentage,
+                    get_percentage(successful_three_point,three_point_attempt) as three_point_percentage,
+                    basketball_event_team_stats.event_id, basketball_event_team_stats.id as basketball_event_team_stats_id;
+                """
+        cursor.execute(query, (int(points), int(rebounds), int(assists), int(steals), int(blocks), int(turnovers),
+                               int(fieldGoalAttempt), int(successfulFieldGoal), int(
+                                   threePointAttempt), int(successfulThreePoint),
+                               int(freeThrowAttempt), int(successfulFreeThrow), int(eID),))
+        result = cursor.fetchone()
+        if not result:
+            return result
+        # self.commitChanges()
         return result
 
 
-#=============================//DELETE//=======================
-     
-    #TODO: in handler must call update team statistics (auto) after this. 
-    def removeStatistics(self,eID,aID):
+# =============================//DELETE//=======================
+
+    # TODO: in handler must call update team statistics (auto) after this.
+
+    def removeStatistics(self, eID, aID):
         """
         Invalidates a basketball event statistics entry in the database.
 
@@ -761,7 +844,7 @@ class BasketballEventDAO:
         Args:
             eID: The ID of the event for which the statistics will be invalidated.
             aID: The ID of the athlete for which the statistics will be invalidated.
-            
+
         Returns:
             A list containing the response to the database query
             containing the matching record for the modified statistics entry.
@@ -773,15 +856,15 @@ class BasketballEventDAO:
                 WHERE event_id = %s  and athlete_id = %s
                 RETURNING id;
                 """
-        cursor.execute(query,(int(eID),int(aID),))
+        cursor.execute(query, (int(eID), int(aID),))
         result = cursor.fetchone()
         if not result:
             return result
-        #self.commitChanges()
+        # self.commitChanges()
         return result
 
-    #NEW : remove team statistics
-    def removeTeamStatistics(self,eID):
+    # NEW : remove team statistics
+    def removeTeamStatistics(self, eID):
         """
         Invalidates a basketball event team statistics entry in the database.
 
@@ -791,7 +874,7 @@ class BasketballEventDAO:
 
         Args:
             eID: The ID of the event for which the team statistics will be invalidated.
-            
+
         Returns:
             A list containing the response to the database query
             containing the matching record for the modified team 
@@ -804,11 +887,11 @@ class BasketballEventDAO:
                 WHERE event_id = %s
                 RETURNING id;
                 """
-        cursor.execute(query,(int(eID),))
+        cursor.execute(query, (int(eID),))
         result = cursor.fetchone()
         if not result:
             return result
-        #self.commitChanges()
+        # self.commitChanges()
         return result
 
     def commitChanges(self):

@@ -1,5 +1,24 @@
 export default{
+    /**
+     * Getter for loaded athlete state.
+     */
     athlete: state => state.athlete,
+    /**
+     * Getter for loaded athletes state.
+     */
     athletes: state => state.athletes,
-    isLoadingA: state => state.isLoadingA,
+    /**
+     * Getter for loaded athlete sports state.
+     */
+    athlete_sports: state => state.athlete_sports,
+    /**
+     * Getter for loaded athlete statistics per season state.
+     */
+    athlete_stats_per_season: state => state.athlete_stats_per_season,
+    /**
+     * Getter for loaded athlete aggregate statistics per season  state.
+     */
+    athlete_aggregate_stats_per_season: state => state.athlete_aggregate_stats_per_season,
+
+
 }

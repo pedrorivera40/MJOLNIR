@@ -3,7 +3,7 @@
     <v-img
       v-if="img != ''"
       class="black--text"
-      width="300px"
+      width="400px"
       height="300px"
       :src="img"
     >
@@ -20,11 +20,20 @@
      <v-card-text class="text--primary">
       <div>Resumen: {{formatSummary()}} </div>
     </v-card-text>
-    <v-card-actions> 
-      <v-spacer/>      
-      <v-btn color="green darken-1" dark @click="goToEvent" >Ver Detalles</v-btn>      
+    <v-card-actions class="justify-center">
+        <v-btn  @click="goToEvent">
+          <v-icon> mdi-eye-plus-outline </v-icon>            
+        </v-btn>
+
+        <v-btn color="green darken-1" dark @click="editEvent">
+          <v-icon> mdi-pencil </v-icon>            
+        </v-btn>
+        <v-btn color="red darken-1" dark @click="removeEvent">
+          <v-icon> mdi-delete </v-icon>            
+        </v-btn>
+        
     </v-card-actions> 
-    <v-card-actions> 
+    <v-card-actions class="justify-center"> 
       <v-spacer/>
       <v-btn v-if="hasPBP == true">Ver Play-by-Play</v-btn>
       <v-btn v-if="sportName == 'Voleibol' & hasPBP == false">Añadir Play-by-Play</v-btn>
@@ -51,6 +60,12 @@ export default {
   methods:{
     goToEvent(){
       this.$router.push('/evento/'+this.eventID)
+    },
+    editEvent(){
+      this.$router.push('/evento/'+this.eventID+'/editar')
+    },
+    removeEvent(){
+      console.log("Removing event with id:" + this.eventID)
     },
     
     formatSummary(){

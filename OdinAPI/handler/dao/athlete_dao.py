@@ -13,8 +13,39 @@ class AthleteDAO:
 
         self.conn = psycopg2.connect(connection_url)#Establish a connection with the relational database.
 
-
     def getAllAthletes(self):
+        """
+        Returns all the athletes that are valid in the database.
+        Performs a query on the database in order to get all
+        valid atheletes in the database. It returns a list of 
+        the athletes with their information.
+        Returns:
+            A list containing all the valid athletes and 
+            their information.
+        """
+        cursor = self.conn.cursor()
+        query = """select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.year_of_study,A.years_of_participation,A.profile_image_link,S.name as sport_name,B.name,A.sport_id
+                   from athlete as A inner join sport as S on A.sport_id=S.id inner join branch as B on S.branch_id = B.id
+                   where A.is_invalid=false
+                """
+        result = []
+        try:
+            cursor.execute(query)
+            
+            for row in cursor:
+                result.append(row)
+
+            cursor.close()
+        except psycopg2.DatabaseError as e:
+            print(e)
+        finally:
+            if self.conn is not None:
+                self.conn.close()
+
+        return result
+
+
+    def getAllAthletesDetailed(self):
         """
         Returns all the athletes that are valid in the database.
 
@@ -27,51 +58,61 @@ class AthleteDAO:
             their information.
         """
         cursor = self.conn.cursor()
-        query = """select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.year_of_study,A.years_of_participation,A.profile_image_link,S.name as sport_name,B.name
-                   from athlete as A inner join sport as S on A.sport_id=S.id inner join branch as B on S.branch_id = B.id
-                   where A.is_invalid=false
+        query = """select id
+                   from athlete 
+                   where is_invalid=false
                 """
-
+        result = []
         try:
             cursor.execute(query)
-            result = []
+            aids = []#List of the ids of the athletes fetched in the query above.
             for row in cursor:
-                result.append(row)
-            return result
-        except:
-            return [] 
+                aids.append(row[0])#Add the ids of the participant athletes in the sport
+            for aid in aids:
+                result.append(self.getAthleteByID(aid)) #Call this function in order to get the information of the athletes.                                   
+        except psycopg2.DatabaseError as e:
+            print(e)
+        finally:
+            if self.conn is not None:
+                self.conn.close()
+
+        return result
+            
+
 
     
-    def getAthletesBySport(self,sID):
+    def getAthletesBySportAndNotInTeam(self,sID,tID):
         """
         Returns all the athletes that participate in a sport by
-        the id given.
+        the id given and don't belong to the given team.
 
         Performs a query on the database in order to get all
         valid atheletes in the database by using the id of the 
-        sport given. It returns a list of the athletes with their 
+        sport  and team given. It returns a list of the athletes with their 
         information including their positions and categories if
         they have them in the sport being fetched for.
 
         Args:
             sID: The id of the sport that has participant athletes.
+            tID: The id of the team that the athletes will not belong to.
         Returns:
             A list containing all the athletes and their  
             information that participate in the sport given
             identified by the sport's id.
 
         """
-        cursor = self.conn.cursor()
-        if not self.sportExists(cursor,sID):
-            return []
+        cursor = self.conn.cursor()        
 
-        query = """select A.id
-                   from athlete as A inner join sport as S on A.sport_id=S.id
-                   where S.id = %s
-                   and A.is_invalid=false
+        query = """ select A.id
+                    from athlete as A inner join sport as S on A.sport_id=S.id
+                    FULL OUTER JOIN team_members as TM on (A.id = TM.athlete_id and TM.team_id=%s)
+                    where A.id not in(select TM.athlete_id from team_members as TM where TM.team_id=%s and TM.is_invalid = false)
+                    and A.sport_id = %s 
+                    and A.is_invalid=false
+                    GROUP BY A.id
                 """
         try:
-            cursor.execute(query,(sID,))        
+            cursor.execute(query,(tID,tID,sID))        
             result = []#Will hold the list with athlete records.
             aids = []#List of the ids of the athletes fetched in the query above.
             for row in cursor:
@@ -80,7 +121,7 @@ class AthleteDAO:
                 result.append(self.getAthleteByID(aid)) #Call this function in order to get the information of the athletes.                       
             return result
         except:
-            return "A problem ocurred when fetching the athletes of a sport."
+            return "Ocurrió un error, buscando a los atletas de un deporte."
     
     def getAthleteByID(self,aID):
         """
@@ -98,7 +139,7 @@ class AthleteDAO:
         """
 
         cursor = self.conn.cursor()
-        query = """select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.year_of_study,A.years_of_participation,A.profile_image_link,S.name as sport_name,B.name,P.name as position_name,AP.is_invalid,C.name as category_name,AC.is_invalid
+        query = """select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.year_of_study,A.years_of_participation,A.profile_image_link,S.name as sport_name,B.name,A.sport_id,P.name as position_name,AP.is_invalid,C.name as category_name,AC.is_invalid
                    from ((athlete as A inner join sport as S on A.sport_id=S.id inner join branch as B on S.branch_id=B.id) full outer join (athlete_position as AP inner join position as P on AP.position_id=P.id) on AP.athlete_id=A.id) full outer join (athlete_category as AC inner join category as C on AC.category_id=C.id) on A.id=AC.athlete_id
                    where A.id=%s
                    and A.is_invalid=false
@@ -108,29 +149,8 @@ class AthleteDAO:
             result = cursor.fetchall()            
             return result
         except:
-            return "A problem ocurred when fethching the athlete."
-    
-    #This function might not be required and therefore eliminated.
-    def getAthleteByName(self,aFName,aMName,aLName):
-        cursor = self.conn.cursor()
-        query = None
-        if not aMName:        
-            query = "select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.profile_image_link "\
-                    "from athlete as A "\
-                    "where A.first_name = %s "\
-                    "and A.last_names = %s"
-            cursor.execute(query,(aFName,aLName,))
-        else:
-            query = "select A.id,A.first_name,A.middle_name,A.last_names,A.short_bio,A.height_inches,A.study_program,A.date_of_birth,A.school_of_precedence,A.number,A.profile_image_link "\
-                    "from athlete as A "\
-                    "where A.first_name = %s "\
-                    "and A.middle_name = %s"\
-                    "and A.last_names = %s"
-            cursor.execute(query,(aFName,aMName,aLName,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
+            return "Occurrió un error interno tratando de buscar a un atleta por su identificador."    
+  
 
     def addAthlete(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink):
         """
@@ -158,23 +178,27 @@ class AthleteDAO:
             The id of the newly added athlete.
         """
         
-        cursor = self.conn.cursor() 
-        if not self.sportExists(cursor,sID):
-            return 'Sport does not exist'
+        cursor = self.conn.cursor()       
     
         query = "insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,year_of_study,years_of_participation,profile_image_link,sport_id,is_invalid) "\
                 "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;"
+        
+        aID = None
         try:
             cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,sID,))       
             
             aID = cursor.fetchone()[0]
             if not aID:
-                return 'Insert query failed'           
-            
-            self.commitChanges()
-            return aID
+                return 'Occurrió un error interno tratando de añadir a un atleta'         
+           
         except:
-            return "A problem ocurred when inserting the athlete."
+            return "Occurrió un error interno tratando de añadir a un atleta"
+        try:
+            self.commitChanges()                   
+        except:
+            return "Occurrió un error interno tratando de añadir a un atleta"
+
+        return aID
 
     def addAthleteWithPosition(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,aPositions):
         """
@@ -204,52 +228,56 @@ class AthleteDAO:
         Returns:
             The id of the newly added athlete.
         """
-        cursor = self.conn.cursor() 
-        if not self.sportExists(cursor,sID):
-            return 'Sport does not exist'
+        cursor = self.conn.cursor()        
         
         query = """insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,year_of_study,years_of_participation,profile_image_link,sport_id,is_invalid)
                    values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;
                 """
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,sID,))
-        
-        
-        aID = cursor.fetchone()[0]
-        if not aID:
-            return 'The insert query failed'
-        
-        
-        #Get all positions for a given sport.
-        query = """select P.id, P.name
-                    from position as P
-                    where P.sport_id = %s                                          
-                """
-        cursor.execute(query,(sID,))             
-        
 
-        positions = []#List of the positions for a sport         
-        for row in cursor:
-            positions.append(row)
-        if not positions:
-            return 'This sport does not have positions.'
-
-        if len(positions) != len(aPositions):
-            return 'Not all positions for the sport where given.'
-        
         try:
-            #This query is used to insert the athlete position in the database.
-            query = """insert into athlete_position(position_id,athlete_id,is_invalid)
-                        values(%s,%s,%s) returning id
-                        """
-            for position in positions:                                  
-                cursor.execute(query,(position[0],aID,aPositions[position[1]],))
-                apID = cursor.fetchone()[0]
-                if not apID:
-                    return 'Insertion query for athlete position failed.'                
-        except:                
-            return 'The names of the positions given are incorrect.'
+            cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,sID,))
+            
+            
+            aID = cursor.fetchone()[0]
+            if not aID:
+                return 'Occurrió un error interno tratando de añadir a un atleta'
+            
+            
+            #Get all positions for a given sport.
+            query = """select P.id, P.name
+                        from position as P
+                        where P.sport_id = %s                                          
+                    """
+            cursor.execute(query,(sID,))             
+            
 
-        self.commitChanges()
+            positions = []#List of the positions for a sport         
+            for row in cursor:
+                positions.append(row)
+            if not positions:
+                return 'El deporte del atleta no tiene posiciones.'            
+            
+            try:
+                #This query is used to insert the athlete position in the database.
+                query = """insert into athlete_position(position_id,athlete_id,is_invalid)
+                            values(%s,%s,%s) returning id
+                            """
+                for position in positions:   
+                    if position[1] in aPositions:                               
+                        cursor.execute(query,(position[0],aID,aPositions[position[1]],))
+                        apID = cursor.fetchone()[0]
+                        if not apID:
+                            return 'Occurrió un error interno tratando de añadir las posiciones del atleta.'                
+            except:                
+                return 'El nombre de las posiciones dadas son incorrectas.'
+        except:
+            return "Occurrió un error interno tratando de añadir a un atleta"
+
+        try:
+            self.commitChanges()                   
+        except:
+            return "Occurrió un error interno tratando de añadir a un atleta"  
+
         return aID
 
     def addAthleteWithCategory(self,sID,aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,aCategories):
@@ -282,50 +310,54 @@ class AthleteDAO:
         """
 
         cursor = self.conn.cursor() 
-        
-        if not self.sportExists(cursor,sID):
-            return 'Sport does not exist'
-        
+
+        aID = None
+
         query = """insert into athlete(first_name,middle_name,last_names,short_bio,height_inches,study_program,date_of_birth,school_of_precedence,number,year_of_study,years_of_participation,profile_image_link,sport_id,is_invalid) 
                    values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'false') returning id;
-                """   
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,sID,))
-        
-        
-        aID = cursor.fetchone()[0]
-        if not aID:
-            return 'The insert query failed'
-        
-        #Get the categories of a sport
-        query = """select C.id,C.name
-                   from  category as C inner join sport as S on C.sport_id=S.id
-                   where S.id = %s                       
-                """
-        cursor.execute(query,(sID,))            
-        
-        categories = []#List containing the categories of a sport.
-        for row in cursor:
-            categories.append(row)
+                """ 
 
-        if not categories:
-            return 'This sport does not have categories.'
-        
-        if len(categories) != len(aCategories):
-            return "Not all the categories for the sport where given."           
+        try:
+            cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,sID,))            
+           
+            aID = cursor.fetchone()[0]
+            if not aID:
+                return "Occurrió un error interno tratando de añadir a un atleta"
+            
+            #Get the categories of a sport
+            query = """select C.id,C.name
+                    from  category as C inner join sport as S on C.sport_id=S.id
+                    where S.id = %s                       
+                    """
+            cursor.execute(query,(sID,))            
+            
+            categories = []#List containing the categories of a sport.
+            for row in cursor:
+                categories.append(row)
 
-        try:   
-            for category in categories:            
-                query = """insert into athlete_category(athlete_id,category_id,is_invalid)
-                           values(%s,%s,%s) returning id
-                        """
-                cursor.execute(query,(aID,category[0],aCategories[category[1]],))
-                acID = cursor.fetchone()[0]
-                if not acID:
-                    return 'Insert query for the athlete category failed.'                    
+            if not categories:
+                return "El deporte del atleta no tiene categorías."                       
+
+            try:   
+                for category in categories:            
+                    query = """insert into athlete_category(athlete_id,category_id,is_invalid)
+                            values(%s,%s,%s) returning id
+                            """
+                    if category[1] in aCategories:
+                        cursor.execute(query,(aID,category[0],aCategories[category[1]],))
+                        acID = cursor.fetchone()[0]
+                        if not acID:
+                            return 'Occurrió un error interno tratando de añadir las categorías del atleta.'                    
+            except:
+                return 'Los nombres de las categorías dadas son incorrectas para el deporte dado.'
+
         except:
-            return 'The names of the categories given for the sport are incorrect.'
+            return "Occurrió un error interno tratando de añadir a un atleta."
+        try:
+            self.commitChanges()                  
+        except:
+            return "Occurrió un error interno tratando de añadir a un atleta."  
 
-        self.commitChanges()
         return aID
 
 
@@ -391,86 +423,142 @@ class AthleteDAO:
                         profile_image_link,
                         sport_id
                 """
-        cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,aID,))
-        result = cursor.fetchone()
-        if not result:
-            return "Athlete update failed"
+        try:
 
-        #If the positions were given then the positions will be updated.
-        if aPositions and not aCategories:
+            cursor.execute(query,(aFName, aMName, aLName, aBio, aHeight,aStudyProgram,aDateOfBirth, aSchoolOfPrecedence,aNumber,aYearOfStudy,aYearsOfParticipation,aProfilePictureLink,aID,))
+            result = cursor.fetchone()
+            if not result:
+                return "Occurrió un error interno tratando de actualizar la información del atlteta."
 
-            #Get all positions for a given sport.
-            query = """select P.id, P.name
-                        from position as P
-                        where P.sport_id = %s                                          
-                    """
-            cursor.execute(query,(result[12],))             
-            
+            #If the positions were given then the positions will be updated.
+            if aPositions and not aCategories:
 
-            positions = []#List of positions in a sport.            
-            for row in cursor:
-                positions.append(row)
-
-            if not positions:
-                return 'This sport does not have positions.'
-
-            if len(positions) != len(aPositions):
-                return 'Not all positions for the sport where given.'         
-
-            try:            
-                query = """update athlete_position
-                        set is_invalid=%s
-                        where position_id=%s
-                        and athlete_id=%s
-                        returning id
+                #Get all positions for a given sport.
+                query = """select P.id, P.name
+                            from position as P
+                            where P.sport_id = %s                                          
                         """
-                for position in positions:
-                    cursor.execute(query,(aPositions[position[1]],position[0],aID))
-                    apID = cursor.fetchone()[0]
-                if not apID:
-                    return 'Athlete position update failed.' 
-            except:
-                return 'Was given wrong names for the positions.'
+                cursor.execute(query,(result[12],))             
                 
-        #If the categories were given then the categories of the athlete will be udpated.
-        if aCategories and not aPositions:
 
-            #Get all categories of a given sport.
-            query = """select C.id,C.name
-                       from  category as C inner join sport as S on C.sport_id=S.id
-                       where S.id = %s                       
-                    """
-            cursor.execute(query,(result[10],))            
-        
-            categories = []#List containing the categories of a sport
-            for row in cursor:
-                categories.append(row)
+                positions = []#List of positions in a sport.            
+                for row in cursor:
+                    positions.append(row)
 
-            if not categories:
-                return 'This sport does not have categories.'
-            
-            if len(categories) != len(aCategories):
-                return "Not all the categories for the sport where given." 
+                if not positions:
+                    return 'El deporte del atleta no tiene posiciones.'  
+
+                #Get current positions for the athlete
+                current_query = """select position_id,athlete_id
+                                   from athlete_position
+                                   where athlete_id=%s              
+                                """      
+                cursor.execute(current_query,(aID,))
                 
-            try:
-                query = """update athlete_category
-                        set is_invalid=%s
-                        where category_id=%s
-                        and athlete_id=%s
-                        returning id
+                athlete_positions = []
+                for row in cursor:
+                    athlete_positions.append(row)
+
+                try:        
+                        
+                    update_query = """update athlete_position
+                                      set is_invalid=%s
+                                      where position_id=%s
+                                      and athlete_id=%s
+                                      returning id
+                                   """
+                    insert_query = """insert into athlete_position(athlete_id,position_id,is_invalid)
+                                      values(%s,%s,'false') returning id
+                                   """
+                    for position in positions:                        
+                        if position[1] in aPositions:                            
+                            if athlete_positions:
+                                foundMatch = False
+                                for existing_position in athlete_positions:
+                                    if existing_position[0] == position[0] and existing_position[1] == aID:
+                                        cursor.execute(update_query,(aPositions[position[1]],position[0],aID,))
+                                        foundMatch = True
+                                        break
+                                if not foundMatch:
+                                    cursor.execute(insert_query,(aID,position[0],))
+                            else:
+                                cursor.execute(insert_query,(aID,position[0],))
+                    
+                            apID = cursor.fetchone()[0]
+                            if not apID:
+                                return 'Occurrió un error interno tratando de actualizar las posiciones del atleta.' 
+                except Exception as e:
+                    print(e)
+                    return 'El nombre de las posiciones dadas son incorrectas.'
+                    
+            #If the categories were given then the categories of the athlete will be udpated.
+            if aCategories and not aPositions:
+
+                #Get all categories of a given sport.
+                query = """select C.id,C.name
+                        from  category as C inner join sport as S on C.sport_id=S.id
+                        where S.id = %s                       
                         """
-                for category in categories:
-                    print(category[0])
-                    print(aCategories[category[1]])
-                    cursor.execute(query,(aCategories[category[1]],category[0],aID,))
-                    acID = cursor.fetchone()[0]
-                    if not acID:
-                        return "Athlete category update failed."        
-            except:
-                return "The name of the categories given for the sport are incorrect."
+                cursor.execute(query,(result[12],))            
             
+                categories = []#List containing the categories of a sport
+                for row in cursor:
+                    categories.append(row)
+
+                if not categories:
+                    return 'El deporte de este atleta no tiene categorías.'
+                
+                #Get current categories for the athlete.
+                current_query = """select category_id,athlete_id
+                                   from athlete_category
+                                   where athlete_id=%s
+                                """
+                cursor.execute(current_query,(aID,))
+                athlete_categories = []
+                
+                for row in cursor:
+                    athlete_categories.append(row)
+
+                try:
+                    update_query = """update athlete_category
+                                      set is_invalid=%s
+                                      where category_id=%s
+                                      and athlete_id=%s
+                                      returning id
+                                   """
+                                                       
+                    insert_query = """insert into athlete_category(athlete_id,category_id,is_invalid)
+                                      values(%s,%s,'false') returning id 
+                                   """
+                    for category in categories: 
+                        if category[1] in aCategories:
+                            if athlete_categories:
+                                foundMatch = False
+                                for existing_categories in athlete_categories:
+                                    if existing_categories[0] == category[0] and existing_categories[1] == aID:                                
+                                        cursor.execute(update_query,(aCategories[category[1]],category[0],aID,))
+                                        foundMatch = True
+                                        break
+                                if not foundMatch:
+                                    cursor.execute(insert_query,(aID,category[0],))
+                            else:
+                                cursor.execute(insert_query,(aID,category[0],))
+                            
+                            acID = cursor.fetchone()[0]
+                            if not acID:
+                                return "Occurrió un error interno tratando de actualizar las categorías del atleta."        
+                except:                
+                    return "Los nombres de las categorías dadas son incorrectas para el deporte dado."        
+        except Exception as e:
+            print(e)
+            return "Occurrió un error interno tratando de actualizar al atleta."             
         
-        self.commitChanges()
+        
+        try:
+            self.commitChanges()                  
+        except:
+            return "Occurrió un error interno tratando de actualizar al atleta."            
+    
         return aID
                 
     
@@ -487,7 +575,7 @@ class AthleteDAO:
             aID: The id of the athlete to invalidate.
 
         Returns:
-            The id of the updated athlete record
+            The id of the updated athlete record.
         """
         
         cursor = self.conn.cursor()
@@ -496,14 +584,22 @@ class AthleteDAO:
                    where id=%s
                    returning id;
                 """
-        cursor.execute(query,(aID,))
-        aid = cursor.fetchone()[0]
-        if not aid:
-            return aid
-        self.commitChanges()
+
+        aid = None    
+        try:
+            cursor.execute(query,(aID,))
+            aid = cursor.fetchone()[0]
+            self.commitChanges()            
+            cursor.close()
+        except Exception as e:
+            print(e)
+        finally:
+            if self.conn is not None:
+                self.conn.close()            
+        
         return aid
 
-    def sportExists(self,cursor,sID):
+    def sportExists(self,sID):
         """
         Confirms the existance of a sport by the sport id
         given.
@@ -511,8 +607,7 @@ class AthleteDAO:
         Performs a simple fetch query to determine if 
         the sport given exists.
 
-        Args:
-            cursor: Cursor of the connection
+        Args:          
             sID: The id of the sport being confirmed
         Returns:
             True if the sport exists in the database, 
@@ -523,25 +618,82 @@ class AthleteDAO:
                    from sport 
                    where id=%s
                 """
+        cursor = self.conn.cursor()
         try:
             cursor.execute(query,(sID,))
             if not cursor.fetchone():
                 exists = False
-            return exists
-        except:
-            return "A problem ocurred when verifying the sport."
+            cursor.close()
+        except Exception as e:
+           print(e)
+           exists = False        
+        
+        return exists
 
-    #This function migh be used later.
-    def _athleteExists(self,cursor,aID):
+    def teamExists(self,tID):
+        """
+        Confirms the existance of a team by the team id
+        given.
+
+        Performs a simple fetch query to determine if 
+        the team given exists.
+
+        Args:          
+            tID: The id of the team being confirmed
+        Returns:
+            True if the team exists in the database, 
+            false otherwise.
+        """
+        exists = True
+        query = """select id
+                   from team
+                   where id=%s
+                   and is_invalid = false
+                """
+        cursor = self.conn.cursor()
+        try:
+            cursor.execute(query,(tID,))
+            if not cursor.fetchone():
+                exists = False
+            cursor.close()
+        except Exception as e:
+           print(e)
+           exists = False        
+        
+        return exists              
+
+    
+    def athleteExists(self,aID):
+        """
+        Confirms the existance of a an athlete by the athlete id
+        given.
+
+        Performs a simple fetch query to determine if 
+        the athlete given exists.
+
+        Args:           
+            sID: The id of the athlete being confirmed
+
+        Returns:
+            True if the athlete exists in the database, 
+            false otherwise.
+        """
+        cursor = self.conn.cursor()
         exists = True
         query = """select id
                    from athlete
                    where id=%s
                    and is_invalid=false
                 """
-        cursor.execute(query,(aID,))
-        if not cursor.fetchone():
-            exists = False
+        try:
+            cursor.execute(query,(aID,))
+            if not cursor.fetchone():
+                exists = False
+            cursor.close()
+        except Exception as e:
+            print(e)
+            exists = False        
+        
         return exists
     
     def getAthleteSportByID(self,aID):
@@ -564,12 +716,18 @@ class AthleteDAO:
                    where id=%s
                    and is_invalid=false
                 """
+        result = None
         try:
             cursor.execute(query,(aID,))
-            result = cursor.fetchone()
-            return result
+            result = cursor.fetchone()[0]
+            cursor.close()
         except Exception as e:
-            return "Problem ocurred when fetching the sport id of an athlete." + str(e) 
+            print(e)
+        finally:
+            if self.conn is not None:
+                self.conn.close()
+
+        return result
 
     def commitChanges(self):
         """
@@ -582,3 +740,44 @@ class AthleteDAO:
         after insertion and update queries. 
         """
         self.conn.commit()
+
+    def _closeConnection(self):
+        """
+        Closes the connection to the database.
+
+        """
+        if self.conn is not None:
+            self.conn.close()
+
+
+    #NOTE: This will be moved to sport_dao
+    def sportsWithPositionAndCategories(self):
+
+        cursor = self.conn.cursor()
+
+        query = """
+                select S.id, S.name, B.name, P.name as position_name, C.name as category_name
+                from (sport as S inner join branch as B on S.branch_id = B.id)
+                full join position as P on S.id = P.sport_id
+                full join category as C on S.id = C.sport_id;
+                """
+        result = None
+        try:
+            cursor.execute(query)
+            result = []
+            for row in cursor:
+                result.append(row)
+            cursor.close()
+        except Exception as e:
+            print(e)
+            result = None
+        finally:
+            if self.conn is not None:
+                self.conn.close()
+        
+        return result
+            
+            
+
+
+        

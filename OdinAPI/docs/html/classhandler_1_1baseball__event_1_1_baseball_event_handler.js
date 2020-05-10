@@ -1,0 +1,25 @@
+var classhandler_1_1baseball__event_1_1_baseball_event_handler =
+[
+    [ "addAllEventStatistics", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#ad31af1745eed5de470289edf428ac460", null ],
+    [ "addStatistics", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#aa6636546cf97f1303fba6eb4cc3888d1", null ],
+    [ "addTeamStatistics", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a1cd2d0154941bfebabfcd2e5008a5535", null ],
+    [ "addTeamStatisticsAuto", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a9e27b33f6b02e720e23cca07dbfd37d2", null ],
+    [ "editStatistics", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a9fd84dd8bbbab63b021d9c00e3d89eb2", null ],
+    [ "editTeamStatistics", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#af199d1995fcbe5b232ac24ca5191bd5c", null ],
+    [ "getAggregatedAthleteStatisticsPerSeason", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#adb2324b1ab5fd1dab159be82e8760530", null ],
+    [ "getAggregatedTeamStatisticsPerSeason", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a269a527fd885804acde180e292145ed7", null ],
+    [ "getAllAggregatedAthleteStatisticsPerSeason", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#afb792b9f57594ce09c7c712dac3456a5", null ],
+    [ "getAllAthleteStatisticsByEventId", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a79189c942e87b9b2ec03bf567df29303", null ],
+    [ "getAllAthleteStatisticsPerSeason", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a501eccbe7b2294ac4213a8fd53b55216", null ],
+    [ "getAllStatisticsByEventID", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a0fbccaf46efe1a468dcd4ff43359c203", null ],
+    [ "getAllTeamStatisticsByEventId", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#ad49735763de5b2b6be35b8d859c93f87", null ],
+    [ "mapAthleteSeasonAggregate", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a8f02cc05aa2e7804c5060f49947a927d", null ],
+    [ "mapEventAllStatsToDict", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#adfbb55da2465754cd54a216699a59e03", null ],
+    [ "mapEventAthleteStatsToDict", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a16c256552e606e2aef5e754c76477102", null ],
+    [ "mapEventSeasonCollectionToDict", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#af56efc054d9ad5e54184723406924ff0", null ],
+    [ "mapEventTeamStatsToDict", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a6ed61998d55928accfccd91979b19d06", null ],
+    [ "mapEventToDict", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a29f16fb649711c5a15ca015434ec5de9", null ],
+    [ "mapTeamSeasonAggregate", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#ae0d638425edb519540911a23cb88be20", null ],
+    [ "removeStatistics", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#ae6bea47416a487c4e364890221f22b0c", null ],
+    [ "removeTeamStatistics", "classhandler_1_1baseball__event_1_1_baseball_event_handler.html#a41bed9256d81b41d569d888e266d79df", null ]
+];

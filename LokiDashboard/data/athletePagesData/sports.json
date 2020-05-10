@@ -1,0 +1,29 @@
+{
+	"Sports":[
+		{
+			"sport_name": "Baloncesto",
+			"sport_id": 1,
+			"branch_name":"masculino",
+			"positions":[
+					"Base",
+			        "Escolta",
+			        "Alero",
+			        "Ala-Pivot",
+			        "Pivot"
+			],
+			"categories":[]
+		},
+		{
+			"sport_name": "Tenis de Campo",
+	    	"sport_id": 9,
+	    	"branch_name":"masculino",
+			"positions": [],
+		    "categories":[
+		        "Solo",
+		        "Doble"
+	        ]
+		      
+		}
+	
+	]
+}

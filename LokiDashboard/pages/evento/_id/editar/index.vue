@@ -3,30 +3,45 @@
     <v-toolbar color="green darken-1" dark >
       <v-spacer />
       <v-toolbar-title>Editar Evento</v-toolbar-title>
+      <v-progress-linear
+				:active="!ready"
+				indeterminate
+				absolute
+				bottom
+				color = "white"
+			></v-progress-linear>	
       <v-spacer />
     </v-toolbar>
     <v-card-text>            
       
       <v-form v-model="valid" v-if="formated()">
-        <v-container>            
+        <v-container>  
+
+          <v-row>
+            <v-col> 	
+
+              <h2>Equipo de UPRM: {{team}}</h2>
+              
+            </v-col>        
+          </v-row>          
           <v-row>            
-            <v-col
-              cols="1"
-              md="3"
+            <v-col              
+              md="12"
             >	
 
             <h2>Fecha del Evento:</h2>
               
             </v-col>
-
-            <v-col
-              cols="12"              
-            >
+          </v-row>
+          <v-row>
+            <v-col>                        
+            
             <v-date-picker
               v-model="date"
               full-width
               :landscape="$vuetify.breakpoint.smAndUp"
               :show-current="true"
+              color="green darken-1"
               class="mt-4"
               locale="es-419"
             ></v-date-picker>
@@ -34,20 +49,38 @@
             </v-col>
           </v-row>
 
+          <v-row>            
+            <v-col>
+            <h2>Hora del Evento:</h2>
+              
+            </v-col>
+          </v-row>
           <v-row>
-            <v-col
-              cols="1"
-              md="3"
+            <v-col>                  
+            
+             <v-time-picker 
+              v-model="time" 
+              :landscape="$vuetify.breakpoint.mdAndUp"
+              color="green darken-1"
+              ></v-time-picker>
+              
+            </v-col>
+          </v-row>          
+
+          <v-row>
+            <v-col              
+              md="12"
             >	
 
             <h2>Localización:</h2>
             
             </v-col>
-
-            <v-col
-              cols="12"
-              md="3"
-            >            
+          </v-row>
+          <v-row justify="center">
+            <v-col              
+              md="4"
+            > 
+                     
               <v-select
                 v-model="locality"
                 :items="localities"
@@ -56,69 +89,45 @@
                 label ="Localización"              
               ></v-select>            
             </v-col>
+          </v-row>
 
-            <v-col
-              cols="12"
+          <v-row justify="center">
+            <v-col              
               md="4"
             >              
               <v-text-field
                 v-model="venue"                                    
                 label="Lugar del Evento"
                 required
-                :rules="[minLength('Lugar del Evento',5)]"
+                :rules="[alphaSpaces('Lugar del Evento')]"
               ></v-text-field>              
             </v-col>
           </v-row>
 
           <v-row>
-            <v-col
-              cols="1"
-              md="3"
-            >	
-
-            <h2>Equipo de UPRM:</h2>
-              
-            </v-col>
-
-            <v-col
-              cols="1"
-              md="9"
-            >
-              <v-text-field
-                v-model="team"
-                label="Equipo"									
-                readonly                 
-              ></v-text-field>
-            </v-col>
-            
-          </v-row>
-
-          <v-row>
-            <v-col
-              cols="1"
-              md="3"
+            <v-col             
+              md=12
             >	
 
               <h2>Nombre de Oponente:</h2>
               
             </v-col>
-
-            <v-col
-              cols="12"
+          </v-row>
+          <v-row justify="center">
+            <v-col              
               md="4"
             >              
               <v-text-field
                 v-model="opponent_name"                                    
                 label="Oponente"
                 required
-                :rules="[minLength('Nombre de Oponente',2)]"
+                :rules="[generalPhrase('Nombre de Oponente')]"
               ></v-text-field>              
             </v-col>
           </v-row>
 
           <v-row>
-            <v-col
-              cols="1"
+            <v-col              
               md="3"
             >	
 
@@ -126,8 +135,7 @@
               
             </v-col>
 
-            <v-col
-              cols="12"
+            <v-col              
               md="9"
             >                
               <v-textarea
@@ -149,13 +157,13 @@
             <v-col>
               <v-btn 
                 color="green darken-1" 
-                                 
+                class="mr-4"              
                 :disabled="!valid"
                 @click="submit"
               >
                 Someter
               </v-btn>
-              <v-btn @click="clear">Deshacer Cambios</v-btn>
+              <v-btn @click="clear">Borrar</v-btn>
             </v-col>
           </v-row>
           
@@ -174,8 +182,9 @@ export default {
   data: () => ({
     ready:false,
     valid:false,
-    date:'', 
-    locality:'',
+    date:'',     
+    time:'',
+    locality:Boolean,
     localities:[{'text':'Casa','value':true},{'text':'Afuera','value':false}],
     venue:'',
     team:'',		
@@ -190,19 +199,26 @@ export default {
   methods: {
 
     ...mapActions({
-			getEventByID:"events/getEventByID"
+      getEventByID:"events/getEventByID",
+      editEvent:"events/editEvent"
     }),
     
     ...rules,
 
     submit () { 
 
-      let jsonForRequest = {
+    
+      const event_attributes = {}
 
-        'attributes':[this.date,this.locality,this.venue,this.opponent_name,this.eventSummary]
-
-      }
-      console.log(jsonForRequest)
+      event_attributes['event_date'] = this.date + ' ' + this.time
+      event_attributes['is_local'] = this.locality      
+      event_attributes['venue'] = this.venue
+      event_attributes['opponent_name'] = this.opponent_name
+      event_attributes['event_summary'] = this.eventSummary
+      
+      const eventJSON = {'event_id':this.event.id,'attributes':event_attributes}
+      this.editEvent(eventJSON)
+      this.$router.push('/eventos/')
            
      
     },
@@ -213,14 +229,11 @@ export default {
       this.locality = this.event.is_local      
      
       
-      if(this.event.venue)
-        this.venue = this.event.venue      
+      this.venue = this.event.venue      
       
-      if(this.event.opponent_name)
-        this.opponent_name = this.event.opponent_name
-
-      if(this.event.event_summary)
-        this.eventSummary = this.event.event_summary
+      this.opponent_name = this.event.opponent_name
+    
+      this.eventSummary = this.event.event_summary
       
             
     }, 
@@ -230,11 +243,17 @@ export default {
 					return true
 				}
 				else{
-					this.date = new Date(Date.parse(this.event.event_date)).toISOString().substr(0,10)
-            
+          
+          let eventDate = new Date(Date.parse(this.event.event_date))
+          this.date = eventDate.toISOString().substr(0,10)
+          
+          this.time = eventDate.getUTCHours() + ':' + eventDate.getUTCMinutes()
+          
+          console.log(eventDate)
+
           this.locality = this.event.is_local
 				
-					this.team = "Deporte: " + this.event.sport_name + '-' + this.event.branch + " Temporada: " + this.event.team_season_year		
+					this.team = this.event.sport_name + '-' + this.event.branch + '-' + this.event.team_season_year		
 					
           
           if(this.event.venue)

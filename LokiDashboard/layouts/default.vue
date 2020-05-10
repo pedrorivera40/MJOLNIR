@@ -3,15 +3,17 @@
     <v-app-bar app color="primary" dark clipped-left v-if="$auth.loggedIn">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
-      <v-toolbar-title class="headline font-weight-medium">
-        Huella Deportiva Dashboard
-      </v-toolbar-title>
+      <v-toolbar-title class="headline font-weight-medium"
+        >Huella Deportiva Dashboard</v-toolbar-title
+      >
 
       <v-spacer />
 
-      <v-icon class="mr-2" @click="test">mdi-account-circle</v-icon>
+      <v-icon class="mr-2" >mdi-account-circle</v-icon>
 
-      <span class="font-weight-medium" dark v-if="user !== null">{{ user.username }}</span>
+      <span class="font-weight-medium" dark v-if="user !== null">{{
+        user.username
+      }}</span>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn class="ml-2" @click="logout" v-on="on" icon>
@@ -42,6 +44,20 @@
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            v-if="
+              $store.state.userAuth.userPermissions[9]['22'] ||
+              $store.state.userAuth.userPermissions[10]['23'] ||
+              $store.state.userAuth.userPermissions[11]['24']
+            "
+            to="/usuarios"
+            nuxt
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-clipboard-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Manejo de Usuarios</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -79,34 +95,19 @@ export default {
           to: "/dashboard"
         },
         {
-          icon: "mdi-clipboard-account",
-          title: "User Management",
-          to: "/users"
-        },
-        {
           icon: "mdi-account-group",
-          title: "Sports Teams",
-          to: "/teams"
+          title: "Equipos",
+          to: "/deportes"
         },
         {
           icon: "mdi-run",
-          title: "Athletes",
-          to: "/athletes"
+          title: "Atletas",
+          to: "/atletas"
         },
         {
           icon: "mdi-calendar-multiple",
-          title: "Events",
-          to: "/events"
-        },
-        {
-          icon: "mdi-strategy",
-          title: "Play By Play",
-          to: "/play-by-play"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "Inspire",
-          to: "/inspire"
+          title: "Eventos",
+          to: "/eventos"
         }
       ],
       miniVariant: false,
@@ -121,7 +122,7 @@ export default {
       setUser: "userAuth/setUser"
     }),
     test() {
-      console.log(this.$vuetify.breakpoint);
+      console.log(this.$store.state.userAuth.userPermissions[9]["22"]);
     }
   },
   computed: {

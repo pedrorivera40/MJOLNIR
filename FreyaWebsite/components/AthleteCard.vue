@@ -1,33 +1,35 @@
 <template>
 
-<v-card  max-height="400" width="100%" height="100%" outlined>
-    <v-container class="text-center">
-      <v-row justify="center">
-        <v-col align="center">
+<v-card  height="100%" width="100%" outlined>
+    <v-container >
+      <v-row >
+        <v-col  md=3>
           <v-avatar size="100">
-            <v-icon v-if="img == null" height="100"> mdi-account </v-icon>
+            <v-icon v-if="img == null" height="100px"> mdi-account </v-icon>
             <v-img v-else :src="img" height="100px" />
           </v-avatar>
         </v-col>
-      </v-row>
-      <v-row align="center">
-        <v-col align-self="center">
-          <v-card-title class="justify-center"> Nombre: {{firstName}} {{lastNames}}</v-card-title>
+         <v-col md=9>
+          <v-card-title>  Nombre: {{firstName}} <br/> {{lastNames}}</v-card-title>
+          <v-card-subtitle>
+            Deporte: {{sportName}} 
+          </v-card-subtitle>
+          <v-card-actions>
+            <v-tooltip bottom="">
+              <template v-slot:activator="{ on }">
+                <v-btn @click="goToAthlete" v-on="on">
+                  <v-icon> 
+                    mdi-eye-plus-outline 
+                  </v-icon>
+                </v-btn> 
+              </template>           
+              <span> Ver perfil del atleta </span>
+            
+            </v-tooltip>       
+          </v-card-actions>
         </v-col>
-      </v-row>
-      <v-row justify="center">    
-        <v-col align="center">
-          <v-card-text >
-            <h3> Deporte: {{sportName}} </h3>
-          </v-card-text>
-        </v-col>
-      </v-row>
+      </v-row>     
       
-      <v-card-actions class="justify-center">
-        <v-btn  @click="goToAthlete">
-          <v-icon> mdi-eye-plus-outline </v-icon>            
-        </v-btn>       
-      </v-card-actions>
     </v-container>
 
   </v-card>
@@ -44,6 +46,10 @@ export default {
   },
   methods: {
     
+    /**
+     * Redirects to the athlete viewer page using
+     * the id of the athlete already given as a prop.
+     */
     goToAthlete() {
       this.$router.push("/atletas/" + this.athleteID);
     }

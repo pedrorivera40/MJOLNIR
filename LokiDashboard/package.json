@@ -9,13 +9,20 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "test": "jest"
+    "clean:dist": "rm -rf .nuxt/dist",
+    "build:gcloud": "npm run clean:dist && npm run build",
+    "deploy:gcloud": "gcloud app deploy app.yml --project huelladashdev && gcloud app browse",
+    "deploy": "npm run build:gcloud && npm run deploy:gcloud",
+    "test": "jest",
+    "doc": "jsdoc -c jsdoc.json"
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.9.0",
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
+    "cookieparser": "^0.1.0",
     "firebase": "^7.12.0",
+    "js-cookie": "^2.2.1",
     "nuxt": "^2.0.0",
     "vee-validate": "^3.2.5"
   },
@@ -24,6 +31,7 @@
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-jest": "^24.1.0",
     "jest": "^24.1.0",
+    "jsdoc": "^3.6.4",
     "vue-jest": "^4.0.0-0"
   }
 }
