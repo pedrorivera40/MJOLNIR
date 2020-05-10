@@ -180,7 +180,7 @@
               @click="submit"
               :loading="editing"
             >
-              Editar
+              Guardar
             </v-btn>
         </v-card-actions>
       </v-card>

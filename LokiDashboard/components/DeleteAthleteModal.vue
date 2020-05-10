@@ -19,7 +19,7 @@
             :disabled="!terms" 
             text
             :loading="deleting" 
-            @click="deleteAthlete()">Eliminar</v-btn>
+            @click="deleteAthlete()">Borrar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>   

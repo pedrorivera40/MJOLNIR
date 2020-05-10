@@ -198,7 +198,7 @@
               @click="submit"
               :loading="adding"
             >
-              Añadir
+              Guardar
             </v-btn>
         </v-card-actions>
 
