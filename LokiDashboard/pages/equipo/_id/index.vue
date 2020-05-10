@@ -96,7 +96,7 @@
                     </v-col>
                   </v-row>
                 </v-container>
-                <v-container v-else>
+                <v-container v-else-if="!loadingQuery">
                   <v-row align = "center" justify = "center">
                     <v-col justify = "center" align = "center">
                       <h2>No Se Encontro Equipo</h2>
@@ -151,14 +151,14 @@
                 </v-col>
               </v-row>
             </v-container>
-            <v-container v-else>
+            <v-container v-else-if="!loadingQuery">
               <v-row align="center"
               justify="end">
               <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == ''))"
+                <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == ''))"
                   class="white--text" @click="goToAddMembers">Añadir Miembro +</v-btn>
               </v-col>
-            </v-row>
+              </v-row>
               <v-row align = "center" justify = "center">
                 <v-col justify = "center" align = "center">
                   <h2>No Se Encontraron Miembros de Equipo</h2>

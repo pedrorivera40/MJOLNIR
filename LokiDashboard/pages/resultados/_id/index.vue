@@ -44,7 +44,7 @@
                     </v-row>
                   </v-col>
                 </v-row>
-                <v-row v-else justify="center">
+                <v-row v-else-if="!loadingQuery" justify="center">
                   <v-col align="center">
                     <h3>No Hay Puntuación Final Disponible</h3>
                   </v-col>
@@ -188,7 +188,7 @@
                       </v-tooltip>
                     </template>
                   </v-data-table>
-                  <v-container v-else>
+                  <v-container v-else-if="!loadingQuery">
                     <v-row align="center" justify="center">
                       <v-col justify="center" align="center">
                         <h2>No Se Encontraron Resultados</h2>
@@ -213,7 +213,7 @@
                     :loading="loadingQuery"
                   >
                   </v-data-table>
-                  <v-container v-else>
+                  <v-container v-else-if="!loadingQuery">
                     <v-row align="center" justify="center">
                       <v-col justify="center" align="center">
                         <h2>No Se Encontraron Resultados de Equipo</h2>
@@ -275,7 +275,7 @@
       </v-container>
     </div>
   </v-container>
-  <v-container v-else>
+  <v-container v-else-if="!loadingQuery">
     <v-row justify="center">
       <v-col align="center">
         <h3>Evento No Existe</h3>
@@ -361,8 +361,9 @@ export default {
     };
   },
 
-  // created(){
+  created(){this.setQueryLoading();},
   async mounted() {
+    await this.setQueryLoading();
     this.sport_id = null;
     this.ready_for_table = false;
     this.event_id = this.$route.params.id;
@@ -371,7 +372,7 @@ export default {
     this.setNullTeamMembers();
     this.ready_for_stats = true;
     console.log("[1] GOT EVENT ID", this.event_id);
-    await this.setQueryLoading();
+    // await this.setQueryLoading();
     await this.getEventInfo(this.event_id);
     console.log("[2] GOT EVENT INFO", this.event_info);
     console.log("the event info...(before)", this.event_info);
