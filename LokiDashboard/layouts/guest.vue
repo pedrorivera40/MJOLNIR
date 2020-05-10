@@ -25,12 +25,5 @@ export default {
   .main-container {
     height: 100%;
   }
-  .nav-drawer {
-    .nav-links {
-      a {
-        color: $highlight-color;
-      }
-    }
-  }
 }
 </style>

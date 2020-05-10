@@ -47,17 +47,17 @@
               justify="end">
               <v-spacer />
               <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == ''))"
+                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
                   class="white--text" @click="goToEditTeam">Editar Equipo</v-btn>
               </v-col>
               <v-spacer />
               <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == ''))"
+                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[12]['25']"
                   class="white--text" @click="removeTeamLocal">Remover Equipo</v-btn>
               </v-col>
               <v-spacer />
               <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "loadingQuery"
+                <v-btn color="primary_light" :disabled = "loadingQuery || !$store.state.userAuth.userPermissions[13]['26']"
                   class="white--text" @click="goToCreateTeam">Añadir Equipo +</v-btn>
               </v-col>
               <v-spacer />
@@ -112,7 +112,7 @@
               <v-row align="center"
                 justify="end">
                 <v-col md=3 align="end">
-                  <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == ''))"
+                  <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
                   class="white--text" @click="goToAddMembers">Añadir Miembro +</v-btn>
                 </v-col>
               </v-row>

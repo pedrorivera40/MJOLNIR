@@ -1,3 +1,4 @@
+const Cookie = process.client ? require('js-cookie') : undefined 
 export default {
   /**
    * Action  to log a user into the system, and set their data in the store.
@@ -10,7 +11,7 @@ export default {
       const response = await this.$auth.loginWith('local', { data: credentials }) //returns auth data as json.
       const user = await this.$axios.post('users/username/', credentials) //call get user by username to set auth user.
       await this.$auth.setUser(user.data.User) // Set auth user.
-
+      Cookie.set('user', JSON.stringify({username:user.data.User.username}))
       dispatch('getUserPermissions', response.data.auth.token)
       dispatch('notifications/setSnackbar', { text: 'Login Exitoso!' }, { root: true })
       commit("SET_USER_DATA", response.data)
@@ -31,11 +32,9 @@ export default {
    */
   async setUser({ commit }) {
     const user = JSON.parse(localStorage.getItem('user'))
-
-    const permissions = JSON.parse(localStorage.getItem('permissions'))
     await this.$auth.setUser(user)
 
-    commit("SET_USER_DATA_ON_RELOAD", permissions)
+    commit("SET_USER_DATA_ON_RELOAD")
   },
 
   /**
@@ -70,7 +69,9 @@ export default {
     try {
       // Extract permissions from jwt
       const permissions = JSON.parse(atob(token.split('.')[1])).permissions
-      console.log(permissions)
+      
+      Cookie.set('permissions', permissions)
+
       commit("SET_USER_PERMISSIONS", permissions)
     } catch (error) {
       if (!!error.response) {

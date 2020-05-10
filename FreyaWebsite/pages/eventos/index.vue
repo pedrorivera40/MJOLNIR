@@ -33,19 +33,22 @@
             </template>
             <v-date-picker v-model="date" color="green darken-1" no-title scrollable locale="es-419">
               <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
+              <v-btn text color="primary" @click="dateMenu = false">Cancelar</v-btn>
               <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
             </v-date-picker>
           </v-menu>
         </v-list-item>
         <v-list-item>
-          <v-select v-model="sport" :items="sports" label="Deporte"></v-select>
+          <v-autocomplete v-model="sport" :items="sports" label="Deporte"></v-autocomplete>
         </v-list-item>
         <v-list-item>
           <v-select v-model="branch" :items="branches" label="Rama"></v-select>
         </v-list-item>
         <v-list-item>
           <v-select v-model="locality" :items="localities" label="Localizacion"></v-select>
+        </v-list-item>
+        <v-list-item>
+          <v-checkbox v-model="eventHasPBP" label="Eventos con PBP"> </v-checkbox>
         </v-list-item>
 
         <v-list-item>
@@ -108,9 +111,10 @@ export default {
     branch: "",
     locality: "",
     sports: ["Voleibol", "Baloncesto", "Atletismo","Fútbol","Softbol","Pelota"],
-    branches: ["masculino", "femenina", "Otro"],
+    branches: ["Masculino", "Femenino", "Exhibicion"],
     localities: ["Casa", "Afuera"],
-    filteredEvents: ''    
+    filteredEvents: '',//This list is the one presented in the events viewer when filtered.
+    eventHasPBP: false,
   }),
 
   methods: {
@@ -118,13 +122,18 @@ export default {
       getEvents: "events/getEvents"
     }),    
 
+    /**
+     * Clears the filter fields 
+     * and resets the filtered list
+     * if filters have been applied.
+     */
     clearFilters() {
       this.date = "";
       this.sport = "";
       this.branch = "";
       this.locality = "";
-      this.menu = false;
-      
+      this.eventHasPBP = false;
+      this.menu = false;      
       
       if (this.filteredEvents.length != this.events.length) {
         this.filteredEvents = [];
@@ -136,9 +145,12 @@ export default {
     
      
     
-
+    /**
+     * Creates a the filtered list, after 
+     * the user has clicked to filte button,
+     * using the the filters selected.
+     */
     createFilteredList() {
-
       
       this.filteredEvents = [];
       
@@ -178,7 +190,14 @@ export default {
             continue;
           }
         }
+        if(this.eventHasPBP == true){
+          if(!event.hasPBP){
+            this.filteredEvents.splice(i,1);
+            continue
+          }
+        }
       }
+      this.menu = false
     }
   },
 

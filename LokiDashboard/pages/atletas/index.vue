@@ -6,7 +6,12 @@
         <v-card-title>
           <v-row>
             <v-col>
-              <v-btn color="green darken-1" dark @click="addAthlete">
+              <v-btn
+                color="primary_light"
+                class="white--text"
+                @click="addAthlete"
+                :disabled="!$store.state.userAuth.userPermissions[12]['25']"
+              >
                 <v-icon left>mdi-plus</v-icon>Añadir Atleta
               </v-btn>
               <v-spacer />
@@ -43,7 +48,8 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="viewAthlete(item.id)"
-                >mdi-eye-plus</v-icon>
+                  >mdi-eye-plus</v-icon
+                >
               </template>
               <span>Ver Atleta</span>
             </v-tooltip>
@@ -55,7 +61,9 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="editAthlete(item)"
-                >mdi-pencil</v-icon>
+                  :disabled="!$store.state.userAuth.userPermissions[14]['27']"
+                  >mdi-pencil</v-icon
+                >
               </template>
               <span>Editar Atleta</span>
             </v-tooltip>
@@ -66,7 +74,9 @@
                   class="mr-2 table-actions"
                   v-on="on"
                   @click="deleteAthlete(item.id)"
-                >mdi-delete</v-icon>
+                  :disabled="!$store.state.userAuth.userPermissions[13]['26']"
+                  >mdi-delete</v-icon
+                >
               </template>
               <span>Borrar Atleta</span>
             </v-tooltip>
@@ -171,29 +181,55 @@ export default {
       removeAthlete: "athletes/removeAthlete"
     }),
 
-    addAthlete() {
-      this.dialogAdd = true;
-    },
 
-    loadingAthletes() {
-      if (this.athletes.length > 0) {
-        return false;
-      } else {
-        return true;
+    /**
+     * Activates the AddAthleteModal dialog.
+     */
+    addAthlete(){
+      this.dialogAdd = true
+    },
+    /**
+     * Return false if athletes have been loaded,
+     * false otherwise.
+     */
+    loadingAthletes(){
+      if(this.athletes.length > 0){
+        return false
+      }else{
+        return true
       }
     },
-    viewAthlete(athleteID) {
-      this.$router.push("/atleta/" + athleteID);
-    },
-    editAthlete(athlete) {
-      this.editedItem = Object.assign({}, athlete);
-      this.dialogEdit = true;
+
+    /**
+     * Routes user to the athlete view page
+     * using the id given as parameter
+     * @param athleteID id of the athlete to view
+     */
+    viewAthlete(athleteID){
+      this.$router.push('/atleta/'+athleteID)
     },
 
-    deleteAthlete(athleteID) {
-      this.aid = athleteID;
-      this.dialogDelete = true;
-    }
+    /**
+     * Activates the EditAthleteModal and prepares
+     * the athlete to edit using the athlete object given 
+     * as parameter
+     * @param athlete Object containing the information of the athlete to edit.
+     */
+    editAthlete(athlete){
+      this.editedItem = Object.assign({},athlete)
+      this.dialogEdit = true
+    },    
+    /**
+     * Activates the DeleteEventModal using 
+     * the id of the athlete given as parameter.
+     * @param athleteID id of the ahtlete to remove.
+     */
+    deleteAthlete(athleteID){
+      this.aid = athleteID
+      this.dialogDelete = true
+
+    },
+  
   },
 
   computed: {
@@ -208,12 +244,6 @@ export default {
 };
 </script>
 
-<style scoped>
-::v-deep .v-data-table th {
-  font-size: 14px;
-}
-
-::v-deep .v-data-table td {
-  font-size: 18px;
-}
+<style lang="scss" scoped>
+@import "@/assets/tableStyle.scss";
 </style>

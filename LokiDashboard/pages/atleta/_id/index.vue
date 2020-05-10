@@ -229,6 +229,13 @@ export default {
 				getAthleteAggregateSeasonStats:"athletes/getAthleteAggregateSeasonStats"
 			}),
 
+			/**
+			 * Returns true if the contents of
+			 * the athlete view page have been formated
+			 * false otherwise.If the contents are not
+			 * formated it then proceeds to format the
+			 * contents. 
+			 */
 			async formated(){
 				
 				if(this.ready){
@@ -312,7 +319,9 @@ export default {
 
 			},
 
-			
+			/**
+			 * Build season year list for selection
+			 */
 			buildSeasonList(){
         let yearToAdd = 2020
         let currentYear = new Date(2025,8).getFullYear()
@@ -324,7 +333,12 @@ export default {
         }
       },
 		
-
+			/**
+			 * Returns the date of the event given
+			 * formated so that it can be used in the 
+			 * stats table.
+			 * @param event_date Date of the event
+			 */
 			formatedDate(event_date){
 				
 				const date = new Date(event_date).toISOString().substring(0,10)
@@ -333,7 +347,11 @@ export default {
 
 			},
 			
-
+			/**
+			 * Fetches and prepares the season
+			 * data for the athlete statistics
+			 * viewer tab.
+			 */
 			async getSeasonData(){
 				
 				if(this.season !='')
@@ -343,6 +361,8 @@ export default {
 					this.fetchingAthleteStats = true
 					let sport_name = ''
 					
+					//This if and else if statements determine the sport
+					//name to be used for the route to use in the actions
 					if(this.sport.localeCompare("Baloncesto") == 0){
 						sport_name = "basketball"
 					}
@@ -373,12 +393,14 @@ export default {
 
 					const stats_params = {'sport_name':sport_name,'athlete_id':this.athlete.id,'season_year':this.season}
 					
+					//First response is for the athlete season stats
 					const response_1 = await this.getAthleteSeasonStats(stats_params)
+					//Second response is for the aggregate athlete season stats
 					const response_2 = await this.getAthleteAggregateSeasonStats(stats_params)
 
  					if(response_1 !== 'error' && response_2 !== 'error'){	
 					
-
+						//Assigns the correct Objects from the response depending on the sport name
 						if(sport_name.localeCompare("basketball") == 0){
 							for(let i = 0; i < this.athlete_stats_per_season.Basketball_Event_Season_Athlete_Statistics.length; i++){
 								const statsObj =  this.athlete_stats_per_season.Basketball_Event_Season_Athlete_Statistics[i]
@@ -448,6 +470,12 @@ export default {
 				
 			},
 
+			/**
+			 * Builds and assigns the headers to be
+			 * used on both data tables in the stats viewer
+			 * tab depending on the sport_name given as a parameter.
+			 * @param sport_name name of the sport of the athlete
+			 */
 			buildHeadersList(sport_name){
 				if(sport_name.localeCompare("basketball") == 0){
 					this.headers =	[
@@ -636,13 +664,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 ::v-deep .v-data-table th {
-  font-size: 14px;
+  font-size: 1rem;
 }
 
 ::v-deep .v-data-table td {
-  font-size: 18px;
+  font-size: 1rem;
 }
 </style>
 

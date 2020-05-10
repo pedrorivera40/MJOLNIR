@@ -438,7 +438,7 @@ export default {
    
     sportHasNumber:false,
     feet: [3,4,5,6,7],      
-    inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0],
+    inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5],
     yearsOfStudy:[1,2,3,4,5,6,7,8,9,10],
     yearsOfParticipation:[1,2,3,4],
     numbers:[0,1,2,3,4,5,6,7,8,9,10,11,12,
@@ -468,6 +468,12 @@ export default {
       editAthlete:"athletes/editAthlete"
     }),
 
+
+    /**
+     * Function to be called when an athlete is edited
+     * with valid information and the user presses 
+     * the edit button.
+     */
     async submit () {
       
       this.editing = true
@@ -542,11 +548,24 @@ export default {
       
     },    
 
+    /**
+     * Updates the positions of the 
+     * athlete_positions_ object
+     * @param key key of the athlete_positions_ Object
+     * @param value value to be assigned to the position
+     */
     updatePositons(key,value){
       
       this.athlete_positions_[key]=value  
         
     },
+
+    /**
+     * Updates the categories of the 
+     * athlete_categories_ object
+     * @param key key of the athlete_categories_ Object
+     * @param value value to be assigned to the category
+     */
     updateCategories(key,value){
       
       this.athlete_categories_[key]=value       
@@ -554,7 +573,10 @@ export default {
 
 
     
-
+    /**
+     * Formats the content in the edit athlete form
+     * fields.
+     */
     format(){
       if(this.dialog && !this.ready){        
 
@@ -640,7 +662,11 @@ export default {
       }      
            
     },
-   
+
+    /**
+    * Returns true if object is empty, false otherwise
+    * @param obj Javascript Object
+    */
     isEmpty(obj){
       for(let key in obj){
         if(obj.hasOwnProperty(key))
@@ -649,6 +675,12 @@ export default {
       return true
     },
 
+    /**
+     * Determines if the sport of the athlete
+     * has numbers for the athlete and assigns
+     * the value of true or false to th sportHasNumber
+     * flag.
+     */
     sportNumber(){
       const BALONCESTO_M = 1 
       const BALONCESTO_F = 10
@@ -673,11 +705,19 @@ export default {
 
     },
 
+    /**
+     * Resets the date of the date_of_birth_ data variable
+     * to the current date.
+     */
     resetDate(){
       let time_zone_offset = new Date().getTimezoneOffset() * 60000      
       this.date_of_birth_ = new Date(Date.now() - time_zone_offset).toISOString().substring(0,10)
     },
 
+    /**
+     * Closes the EditAthleteModal and resets optional 
+     * fields.
+     */
     close(){
       this.ready = false
       this.terms = false

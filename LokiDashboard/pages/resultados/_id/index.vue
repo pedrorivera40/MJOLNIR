@@ -1,120 +1,119 @@
 <template>
   <v-container class="wrapper" v-if="formated_event_info()">
     <v-container v-if="formated_event_info()">
-        <h1 class="primary_dark--text pl-3">Resultados {{sport_name}} {{branch_name_local}}</h1>
-        <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
-        <h3>Evento de {{event_date}}</h3>
+      <h1 class="primary_dark--text pl-3">
+        Resultados {{ sport_name }} {{ branch_name_local }}
+      </h1>
+      <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
+      <h3>Evento de {{ event_date }}</h3>
     </v-container>
     <div class="content-area pa-4 pt-12">
+      <v-container>
         <v-container>
-            <v-container>
-                <v-row align="center" justify="center">
-                    <v-card width=400 class="mx-lg-auto" outlined>
-                        <v-card-title>
-                            <v-row justify="center">
-                                <h3>Puntuación Final</h3>
-                            </v-row>
-                            </v-card-title>
-                        <v-container>
-                            <v-row v-if="formated_final_score()">
-                                <v-col >
-                                    <v-row justify="center">
-                                        <h1>{{uprm_score}}</h1>
-                                    </v-row>
-                                    <v-row justify="center">
-                                        <h3>UPRM</h3>
-                                    </v-row>
-                                </v-col>
-
-                                <v-col align="center">
-                                    <v-row justify="center">
-                                        <h2>-</h2>
-                                    </v-row>
-                                </v-col>
-
-                                <v-col>
-                                    <v-row justify="center">
-                                        <h1>{{opponent_score}}</h1>
-                                    </v-row>
-                                    <v-row justify="center">
-                                        <h3 v-if="opponent_name">{{opponent_name}}</h3>
-                                        <h3 v-else>Oponente</h3>
-                                    </v-row>
-                                </v-col>
-
-                            </v-row>
-                            <v-row v-else justify="center">
-                                <v-col align="center">
-                                    <h3>No Hay Puntuación Final Disponible</h3>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card>
+          <v-row align="center" justify="center">
+            <v-card width="400" class="mx-lg-auto" outlined>
+              <v-card-title>
+                <v-row justify="center">
+                  <h3>Puntuación Final</h3>
                 </v-row>
-                <v-row justify="center" align="center">
-                    <v-spacer/>
-                    <v-spacer/>
-                    <v-col>
+              </v-card-title>
+              <v-container>
+                <v-row v-if="formated_final_score()">
+                  <v-col>
+                    <v-row justify="center">
+                      <h1>{{ uprm_score }}</h1>
+                    </v-row>
+                    <v-row justify="center">
+                      <h3>UPRM</h3>
+                    </v-row>
+                  </v-col>
+
+                  <v-col align="center">
+                    <v-row justify="center">
+                      <h2>-</h2>
+                    </v-row>
+                  </v-col>
+
+                  <v-col>
+                    <v-row justify="center">
+                      <h1>{{ opponent_score }}</h1>
+                    </v-row>
+                    <v-row justify="center">
+                      <h3 v-if="opponent_name">{{ opponent_name }}</h3>
+                      <h3 v-else>Oponente</h3>
+                    </v-row>
+                  </v-col>
+                </v-row>
+                <v-row v-else justify="center">
+                  <v-col align="center">
+                    <h3>No Hay Puntuación Final Disponible</h3>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card>
+          </v-row>
+          <v-row justify="center" align="center">
+            <v-spacer />
+            <v-spacer />
+            <v-col>
+              <v-btn
+                color="primary_light"
+                class="white--text"
+                @click="addFinalScore()"
+                :disabled="formated_final_score() || !$store.state.userAuth.userPermissions[6]['19']"
+              >
+                <v-icon left>
+                  mdi-plus
+                </v-icon>
+                Añadir Puntuación Final
+              </v-btn>
+            </v-col>
+
+            <v-col>
+              <v-btn
+                color="primary_light"
+                class="white--text"
+                @click="editFinalScore()"
+                :disabled="!formated_final_score() || !$store.state.userAuth.userPermissions[8]['21']"
+              >
+                <v-icon left>
+                  mdi-pencil
+                </v-icon>
+                Editar Puntuación Final
+              </v-btn>
+            </v-col>
+            <v-spacer />
+            <v-spacer />
+          </v-row>
+          <v-container>
+            <v-tabs centered>
+              <v-tabs-slider />
+              <v-tab>
+                POR ATLETA
+              </v-tab>
+
+              <v-tab>
+                POR EQUIPO
+              </v-tab>
+              <v-tab-item>
+                <v-card>
+                  <v-card-title>
+                    <v-row>
+                      <v-col>
                         <v-btn
-                            color="primary_light"
-                            class="white--text"
-                            @click="addFinalScore()"
-                            :disabled="formated_final_score()"
+                          color="primary_light"
+                          class="white--text"
+                          @click="addAthleteStatistics()"
+                          :disabled="!formated_members_fetch() || !$store.state.userAuth.userPermissions[6]['19']"
                         >
-                            <v-icon left>
+                          <v-icon left>
                             mdi-plus
-                            </v-icon>
-                            Añadir Puntuación Final
+                          </v-icon>
+                          Añadir Estadisticas de Atleta
                         </v-btn>
-                    </v-col>
-
-                    <v-col>
-                        <v-btn
-                            color="primary_light"
-                            class="white--text"
-                            @click="editFinalScore()"
-                            :disabled="!formated_final_score()"
-                        >
-                            <v-icon left>
-                            mdi-pencil
-                            </v-icon>
-                            Editar Puntuación Final
-                        </v-btn>
-                    </v-col>
-                    <v-spacer/>
-                    <v-spacer/>
-                </v-row>
-                <v-container>
-                    <v-tabs centered>
-                        <v-tabs-slider/>
-                        <v-tab>
-                            POR ATLETA
-                        </v-tab>
-
-                        <v-tab>
-                            POR EQUIPO
-                        </v-tab>
-                        <v-tab-item>
-                            <v-card>
-
-                                <v-card-title>
-                                <v-row>
-                                    <v-col>
-                                    <v-btn
-                                        color="primary_light"
-                                        class="white--text"
-                                        @click="addAthleteStatistics()"
-                                        :disabled="!formated_members_fetch()"
-                                        
-                                    >
-                                        <v-icon left>
-                                        mdi-plus
-                                        </v-icon>
-                                        Añadir Estadisticas de Atleta
-                                    </v-btn>
-                                    <v-spacer />
-                                    </v-col>
-                                    <!-- <v-col cols="4">
+                        <v-spacer />
+                      </v-col>
+                      <!-- <v-col cols="4">
                                     <v-text-field
                                         append-icon="mdi-magnify"
                                         label="Búsqueda"
@@ -125,39 +124,43 @@
                                         hide-details
                                     />
                                     </v-col> -->
-                                </v-row>
-                                </v-card-title>
-                                <!-- :headers="headers"
+                    </v-row>
+                  </v-card-title>
+                  <!-- :headers="headers"
                                 :items="users"
                                 :search="search"
                                 :loading="isLoadingU" -->
-                                <!-- THE SPORTS STATS TABLE -->
-                                <v-data-table
-                                dense
-                                :headers="headers"
-                                :items="payload_stats.athlete_statistic"
-                                item-key="athlete_statistic"
-                                class="elevation-1"
-                                v-if="formated_member_stats()"
-                                :loading="loadingQuery"
-                                >
-                                <!-- v-if="isBasketballTable" -->
-                                <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
-                                <template v-slot:item.actions="{ item }">
-                                    <v-tooltip bottom>
-                                    <template v-slot:activator="{ on }">
-                                        <v-icon
-                                        small
-                                        class="mr-2 table-actions"
-                                        v-on="on"
-                                        @click.stop="editAthleteStatistics(item)"
-                                        >
-                                        mdi-pencil
-                                        </v-icon>
-                                    </template>
-                                    <span>Editar Estadisticas de Atleta</span>
-                                    </v-tooltip>
-                                    <!-- <v-tooltip bottom>
+                  <!-- THE SPORTS STATS TABLE -->
+                  <v-data-table
+                    dense
+                    :headers="headers"
+                    :items="payload_stats.athlete_statistic"
+                    item-key="athlete_statistic"
+                    class="elevation-1"
+                    v-if="formated_member_stats()"
+                    :loading="loadingQuery"
+                  >
+                    <!-- v-if="isBasketballTable" -->
+                    <template #item.full_name="{ item }"
+                      >{{ item.athlete_info.first_name }}
+                      {{ item.athlete_info.middle_name }}
+                      {{ item.athlete_info.last_names }}</template
+                    >
+                    <template v-slot:item.actions="{ item }">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-icon
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="editAthleteStatistics(item)"
+                            :disabled="!$store.state.userAuth.userPermissions[8]['21']"
+                          >
+                            mdi-pencil
+                          </v-icon>
+                        </template>
+                        <span>Editar Estadisticas de Atleta</span>
+                      </v-tooltip>
+                      <!-- <v-tooltip bottom>
                                     <template v-slot:activator="{ on }">
                                         <v-icon
                                         small
@@ -170,116 +173,113 @@
                                     </template>
                                     <span>Edit User Permissions</span>
                                     </v-tooltip> -->
-                                    <v-tooltip bottom>
-                                    <template v-slot:activator="{ on }">
-                                        <v-icon
-                                        small
-                                        class="mr-2 table-actions"
-                                        v-on="on"
-                                        @click.stop="deleteAthleteStatistics(item)"
-                                        >
-                                        mdi-delete
-                                        </v-icon>
-                                    </template>
-                                    <span>Eliminar Estadisticas De Atleta</span>
-                                    </v-tooltip>
-                                </template>
-                                </v-data-table>
-                                <v-container v-else>
-                                    <v-row align = "center" justify = "center">
-                                    <v-col justify = "center" align = "center">
-                                        <h2>No Se Encontraron Resultados</h2>
-                                    </v-col>
-                                    </v-row>
-                                </v-container>
-
-
-
-                            </v-card>
-                        </v-tab-item>
-                        <v-tab-item>
-                            <v-card>
-                                <!-- :headers="headers"
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-icon
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="deleteAthleteStatistics(item)"
+                            :disabled="!$store.state.userAuth.userPermissions[7]['20']"
+                          >
+                            mdi-delete
+                          </v-icon>
+                        </template>
+                        <span>Eliminar Estadisticas De Atleta</span>
+                      </v-tooltip>
+                    </template>
+                  </v-data-table>
+                  <v-container v-else>
+                    <v-row align="center" justify="center">
+                      <v-col justify="center" align="center">
+                        <h2>No Se Encontraron Resultados</h2>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card>
+                  <!-- :headers="headers"
                                 :items="users"
                                 :search="search"
                                 :loading="isLoadingU" -->
-                                <v-data-table
-                                dense
-                                :headers="team_headers"
-                                :items="team_statistics"
-                                item-key="team_statistics"
-                                class="elevation-1"
-                                v-if="formated_member_stats()"
-                                :loading="loadingQuery"
-                                >
-                                </v-data-table>
-                                <v-container v-else>
-                                    <v-row align = "center" justify = "center">
-                                    <v-col justify = "center" align = "center">
-                                        <h2>No Se Encontraron Resultados de Equipo</h2>
-                                    </v-col>
-                                    </v-row>
-                                </v-container>
-                            </v-card>
-                        </v-tab-item>
-                    </v-tabs>
-                </v-container>
-            </v-container>
-            <AddFinalScoreModal
-                v-if ="dialogAddFinalScore"
-                :dialog.sync="dialogAddFinalScore"
-                :event_id="event_id"
-                :sport_route="sport_route"
-                :uprm_score.sync="uprm_score"
-                :opponent_score.sync="opponent_score"
-            />
-            <UpdateFinalScoreModal
-                v-if ="dialogEditFinalScore"
-                :dialog.sync="dialogEditFinalScore"
-                :event_id="event_id"
-                :sport_route="sport_route"
-                :uprm_score.sync="uprm_score"
-                :opponent_score.sync="opponent_score"
-            />
-            <AddIndividualStatsModal
-                v-if ="dialogAddIndividualStats"
-                :dialog.sync="dialogAddIndividualStats"
-                :event_id="event_id"
-                :sport_route="sport_route"
-                :payload_stats.sync="payload_stats"
-                :sport_id="sport_id"
-                :team_members="team_members_local"
-                :refresh_stats.sync="refresh_stats"
-            />
-            <UpdateIndividualStatsModal
-                v-if ="dialogEditIndividualStats"
-                :dialog.sync="dialogEditIndividualStats"
-                :event_id="event_id"
-                :sport_route="sport_route"
-                :payload_stats.sync="payload_stats"
-                :sport_id="sport_id"
-                :team_members="team_members_local"
-                :refresh_stats.sync="refresh_stats"
-                :athlete_id="edited_athlete_id"
-                :individual_stats="this.current_individual_stats"
-            />
-            <DeleteIndividualStatsModal
-                v-if ="dialogDeleteIndividualStats"
-                :dialog.sync="dialogDeleteIndividualStats"
-                :event_id="event_id"
-                :sport_route="sport_route"
-                :refresh_stats.sync="refresh_stats"
-                :athlete_id="edited_athlete_id"
-                :category_id="current_category_id"
-            />
+                  <v-data-table
+                    dense
+                    :headers="team_headers"
+                    :items="team_statistics"
+                    item-key="team_statistics"
+                    class="elevation-1"
+                    v-if="formated_member_stats()"
+                    :loading="loadingQuery"
+                  >
+                  </v-data-table>
+                  <v-container v-else>
+                    <v-row align="center" justify="center">
+                      <v-col justify="center" align="center">
+                        <h2>No Se Encontraron Resultados de Equipo</h2>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card>
+              </v-tab-item>
+            </v-tabs>
+          </v-container>
         </v-container>
+        <AddFinalScoreModal
+          v-if="dialogAddFinalScore"
+          :dialog.sync="dialogAddFinalScore"
+          :event_id="event_id"
+          :sport_route="sport_route"
+          :uprm_score.sync="uprm_score"
+          :opponent_score.sync="opponent_score"
+        />
+        <UpdateFinalScoreModal
+          v-if="dialogEditFinalScore"
+          :dialog.sync="dialogEditFinalScore"
+          :event_id="event_id"
+          :sport_route="sport_route"
+          :uprm_score.sync="uprm_score"
+          :opponent_score.sync="opponent_score"
+        />
+        <AddIndividualStatsModal
+          v-if="dialogAddIndividualStats"
+          :dialog.sync="dialogAddIndividualStats"
+          :event_id="event_id"
+          :sport_route="sport_route"
+          :payload_stats.sync="payload_stats"
+          :sport_id="sport_id"
+          :team_members="team_members_local"
+          :refresh_stats.sync="refresh_stats"
+        />
+        <UpdateIndividualStatsModal
+          v-if="dialogEditIndividualStats"
+          :dialog.sync="dialogEditIndividualStats"
+          :event_id="event_id"
+          :sport_route="sport_route"
+          :payload_stats.sync="payload_stats"
+          :sport_id="sport_id"
+          :team_members="team_members_local"
+          :refresh_stats.sync="refresh_stats"
+          :athlete_id="edited_athlete_id"
+          :individual_stats="this.current_individual_stats"
+        />
+        <DeleteIndividualStatsModal
+          v-if="dialogDeleteIndividualStats"
+          :dialog.sync="dialogDeleteIndividualStats"
+          :event_id="event_id"
+          :sport_route="sport_route"
+          :refresh_stats.sync="refresh_stats"
+          :athlete_id="edited_athlete_id"
+          :category_id="current_category_id"
+        />
+      </v-container>
     </div>
   </v-container>
   <v-container v-else>
     <v-row justify="center">
-        <v-col align="center">
-            <h3>Evento No Existe</h3>
-        </v-col>
+      <v-col align="center">
+        <h3>Evento No Existe</h3>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -294,17 +294,16 @@ import DeleteIndividualStatsModal from "@/components/DeleteIndividualStatsModal"
 export default {
   data() {
     return {
-
       dialogAddFinalScore: false,
-      dialogEditFinalScore:false,
-      dialogAddIndividualStats:false,
-      dialogEditIndividualStats:false,
-      dialogDeleteIndividualStats:false,
+      dialogEditFinalScore: false,
+      dialogAddIndividualStats: false,
+      dialogEditIndividualStats: false,
+      dialogDeleteIndividualStats: false,
 
       editedItemIndex: -1,
-      editedItem: '',
-      edited_athlete_id:'',
-      edited_category_id:'',
+      editedItem: "",
+      edited_athlete_id: "",
+      edited_category_id: "",
       defaultItem: {
         full_name: "",
         username: "",
@@ -313,21 +312,21 @@ export default {
         id: 0
       },
       //====NEW/MODIFIED STUFF==========
-      headers:[],
-      team_headers:[],
-      statistics_per_season:"",
-      team_statistics:[],
-    //   search_individual: "",
-      sport_id: '',
-      sport_route:'',
-      sport_name: '',
-      event_id:'',
-      event_date:'',
-    //   event_info:'',
-      opponent_score:'',
-      opponent_name:'', //TODO: MAKE THIS VALUE DYNAMIC
-      uprm_score:'',
-      payload_stats:'',
+      headers: [],
+      team_headers: [],
+      statistics_per_season: "",
+      team_statistics: [],
+      //   search_individual: "",
+      sport_id: "",
+      sport_route: "",
+      sport_name: "",
+      event_id: "",
+      event_date: "",
+      //   event_info:'',
+      opponent_score: "",
+      opponent_name: "", //TODO: MAKE THIS VALUE DYNAMIC
+      uprm_score: "",
+      payload_stats: "",
 
       //SPORT IDS
       BASKETBALL_IDM: 1,
@@ -338,238 +337,284 @@ export default {
       SOFTBALL_IDF: 16,
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
-    // OTHER SPORTS (MEDAL BASED)
+      // OTHER SPORTS (MEDAL BASED)
       ATHLETICS_IDM: 8,
       ATHLETICS_IDF: 19,
-    //OTHER SPORTS (MATCH BASED)
+      //OTHER SPORTS (MATCH BASED)
       FIELD_TENNIS_IDM: 9,
       FIELD_TENNIS_IDF: 18,
-      TABLE_TENNIS_IDM:7,
-      TABLE_TENNIS_IDF:15,
+      TABLE_TENNIS_IDM: 7,
+      TABLE_TENNIS_IDF: 15,
       //season:''
 
       //OTHE QUERY RELATED VALUES
-      team_id:'',
-      ready_for_stats:'',
-      team_members_local:'',
-      indiviual_athlete_stats:'',
-      refresh_stats:false,
-      current_individual_stats:'',
+      team_id: "",
+      ready_for_stats: "",
+      team_members_local: "",
+      indiviual_athlete_stats: "",
+      refresh_stats: false,
+      current_individual_stats: "",
       ready_for_table: false,
 
-      branch_name_local:'',
-      current_category_id:'',
+      branch_name_local: "",
+      current_category_id: ""
     };
   },
 
-
   // created(){
-  async mounted(){
-    this.sport_id = null
-    this.ready_for_table = false
-    this.event_id = this.$route.params.id
-    this.clearEventInfo()
-    this.clearAllStats()
-    this.setNullTeamMembers()
-    this.ready_for_stats = true
-    console.log("[1] GOT EVENT ID",this.event_id)
-    await this.setQueryLoading()
-    await this.getEventInfo(this.event_id)
-    console.log("[2] GOT EVENT INFO",this.event_info)
-    console.log("the event info...(before)",this.event_info)
-        if(this.event_info){
-            console.log("GETTING EVENT INFO (from formated method)",this.event_info)
-            this.sport_id =  this.event_info.sport_id
-            this.sport_name = this.event_info.sport_name
-            this.opponent_name = this.event_info.opponent_name
-            this.event_date = this.event_info.event_date
-            this.branch_name_local = this.event_info.branch
-            this.team_id = this.event_info.team_id
-            // if (this.ready_for_stats){
-            await this.setQueryLoading()
-            await this.getTeamMembers(this.team_id)
-            console.log("Trying to get Team Members for:",this.team_id)
-            if (this.team_members){
-                console.log("[TM-Got Team Members]",this.team_members)
-                this.team_members_local = this.team_members.team_members
+  async mounted() {
+    this.sport_id = null;
+    this.ready_for_table = false;
+    this.event_id = this.$route.params.id;
+    this.clearEventInfo();
+    this.clearAllStats();
+    this.setNullTeamMembers();
+    this.ready_for_stats = true;
+    console.log("[1] GOT EVENT ID", this.event_id);
+    await this.setQueryLoading();
+    await this.getEventInfo(this.event_id);
+    console.log("[2] GOT EVENT INFO", this.event_info);
+    console.log("the event info...(before)", this.event_info);
+    if (this.event_info) {
+      console.log("GETTING EVENT INFO (from formated method)", this.event_info);
+      this.sport_id = this.event_info.sport_id;
+      this.sport_name = this.event_info.sport_name;
+      this.opponent_name = this.event_info.opponent_name;
+      this.event_date = this.event_info.event_date;
+      this.branch_name_local = this.event_info.branch;
+      this.team_id = this.event_info.team_id;
+      // if (this.ready_for_stats){
+      await this.setQueryLoading();
+      await this.getTeamMembers(this.team_id);
+      console.log("Trying to get Team Members for:", this.team_id);
+      if (this.team_members) {
+        console.log("[TM-Got Team Members]", this.team_members);
+        this.team_members_local = this.team_members.team_members;
+      }
+      console.log("are we ever getting in there????", this.readyForStats);
+      if (this.ready_for_stats) {
+        this.clearAllStats();
+        this.buildTable();
+        console.log("[3] BUILT TABLE", this.event_info);
+        this.buildDefaultValues();
+        const stat_params = {
+          event_id: String(this.event_id),
+          sport_route: String(this.sport_route)
+        };
+        console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
+        await this.setQueryLoading();
+        await this.getAllEventStatistics(stat_params);
+        this.ready_for_stats = false;
+        if (this.results_payload) {
+          console.log("[4] GOT EVENT STATS", this.results_payload);
+          // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
+          if (
+            this.sport_id == this.BASKETBALL_IDM ||
+            this.sport_id == this.BASKETBALL_IDF
+          ) {
+            this.payload_stats = this.results_payload.Basketball_Event_Statistics;
+            this.team_statistics = [this.payload_stats.team_statistics];
+          } else if (
+            this.sport_id == this.VOLLEYBALL_IDM ||
+            this.sport_id == this.VOLLEYBALL_IDF
+          ) {
+            this.payload_stats = this.results_payload.Volleyball_Event_Statistics;
+            this.team_statistics = [this.payload_stats.team_statistics];
+          } else if (
+            this.sport_id == this.SOCCER_IDM ||
+            this.sport_id == this.SOCCER_IDF
+          ) {
+            this.payload_stats = this.results_payload.Soccer_Event_Statistics;
+            this.team_statistics = [this.payload_stats.team_statistics];
+          } else if (
+            this.sport_id == this.BASEBALL_IDM ||
+            this.sport_id == this.SOFTBALL_IDF
+          ) {
+            this.payload_stats = this.results_payload.Baseball_Event_Statistics;
+            this.team_statistics = [this.payload_stats.team_statistics];
+          } else if (
+            this.sport_id == this.ATHLETICS_IDM ||
+            this.sport_id == this.ATHLETICS_IDF
+          ) {
+            this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
+            this.team_statistics = [];
+            this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics;
+          } else if (
+            this.sport_id == this.FIELD_TENNIS_IDM ||
+            this.sport_id == this.FIELD_TENNIS_IDF ||
+            this.sport_id == this.TABLE_TENNIS_IDM ||
+            this.sport_id == this.TABLE_TENNIS_IDF
+          ) {
+            this.payload_stats = this.results_payload.Match_Based_Event_Statistics;
+            this.team_statistics = [];
+            if (
+              this.results_payload.Match_Based_Event_Statistics.team_statistics
+                .match_based_statistics.Doble
+            ) {
+              this.team_statistics.push({
+                category_name: "Doble",
+                statistics: this.results_payload.Match_Based_Event_Statistics
+                  .team_statistics.match_based_statistics.Doble
+              });
             }
-            console.log("are we ever getting in there????",this.readyForStats)
-            if (this.ready_for_stats){
-                this.clearAllStats()
-                this.buildTable()
-                console.log("[3] BUILT TABLE",this.event_info)
-                this.buildDefaultValues()
-                const stat_params = {
-                    event_id: String(this.event_id),
-                    sport_route: String(this.sport_route)
-                }
-                console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
-                await this.setQueryLoading()
-                await this.getAllEventStatistics(stat_params)
-                this.ready_for_stats = false
-                if(this.results_payload){
-                    console.log("[4] GOT EVENT STATS",this.results_payload)
-                    // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
-                    if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                        this.payload_stats = this.results_payload.Basketball_Event_Statistics
-                        this.team_statistics = [this.payload_stats.team_statistics]
-                    }
-                    else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                        this.payload_stats = this.results_payload.Volleyball_Event_Statistics
-                        this.team_statistics = [this.payload_stats.team_statistics]
-                        }
-                    else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                        this.payload_stats = this.results_payload.Soccer_Event_Statistics
-                        this.team_statistics = [this.payload_stats.team_statistics]
-                    }
-                    else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                        this.payload_stats = this.results_payload.Baseball_Event_Statistics
-                        this.team_statistics = [this.payload_stats.team_statistics]
-                    }
-                    else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
-                        this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
-                        this.team_statistics = []
-                        this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
-                    }
-                    else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
-                        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
-                            this.payload_stats = this.results_payload.Match_Based_Event_Statistics
-                            this.team_statistics = []
-                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble){
-                                this.team_statistics.push({category_name:"Doble",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble})
-                            }
-                            if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo){
-                                this.team_statistics.push({category_name:"Solo",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo})
-                            }
-                    }
-                    else{
-                        return false
-                    }
-                    console.log("[5] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
-                    // this.team_statistics = [this.payload_stats.team_statistics]
-                    this.opponent_score = (this.payload_stats.opponent_score)
-                    this.uprm_score = (this.payload_stats.uprm_score)
-                    return true
-                }
-                // console.log("[4] GOT EVENT STATS",this.results_payload)
-                // this.ready_for_stats = false
-
+            if (
+              this.results_payload.Match_Based_Event_Statistics.team_statistics
+                .match_based_statistics.Solo
+            ) {
+              this.team_statistics.push({
+                category_name: "Solo",
+                statistics: this.results_payload.Match_Based_Event_Statistics
+                  .team_statistics.match_based_statistics.Solo
+              });
             }
-
+          } else {
+            return false;
+          }
+          console.log("[5] WE SHOULD HAVE IT HERE!!!", this.payload_stats);
+          // this.team_statistics = [this.payload_stats.team_statistics]
+          this.opponent_score = this.payload_stats.opponent_score;
+          this.uprm_score = this.payload_stats.uprm_score;
+          return true;
         }
-    },
-  components:{
-      AddFinalScoreModal,
-      UpdateFinalScoreModal,
-      AddIndividualStatsModal,
-      UpdateIndividualStatsModal,
-      DeleteIndividualStatsModal,
+        // console.log("[4] GOT EVENT STATS",this.results_payload)
+        // this.ready_for_stats = false
+      }
+    }
+  },
+  components: {
+    AddFinalScoreModal,
+    UpdateFinalScoreModal,
+    AddIndividualStatsModal,
+    UpdateIndividualStatsModal,
+    DeleteIndividualStatsModal
   },
   methods: {
-
     ...mapActions({
-        getAllEventStatistics:"results/getAllEventStatistics",
-        getEventInfo:"results/getEventInfo",
-        clearEventInfo:"results/clearEventInfo",
-        clearAllStats:"results/clearAllStats",
-        clearIndividualStats:"results/clearIndividualStats",
-        //newish
-        stopGetStats:"results/stopGetStats",
-        getTeamMembers:"results/getTeamMembers",
-        setNullTeamMembers:"results/setNullTeamMembers",
-        setQueryLoading:"results/setQueryLoading",
-        getIndividualStatistics:"results/getIndividualStatistics"
+      getAllEventStatistics: "results/getAllEventStatistics",
+      getEventInfo: "results/getEventInfo",
+      clearEventInfo: "results/clearEventInfo",
+      clearAllStats: "results/clearAllStats",
+      clearIndividualStats: "results/clearIndividualStats",
+      //newish
+      stopGetStats: "results/stopGetStats",
+      getTeamMembers: "results/getTeamMembers",
+      setNullTeamMembers: "results/setNullTeamMembers",
+      setQueryLoading: "results/setQueryLoading",
+      getIndividualStatistics: "results/getIndividualStatistics"
     }),
-    async stat_refresh(){
-        this.clearAllStats()
-        // this.payload_stats = null
-        // this.team_statistics = null
-        const stat_params = {
-            event_id: String(this.event_id),
-            sport_route: String(this.sport_route)
+    async stat_refresh() {
+      this.clearAllStats();
+      // this.payload_stats = null
+      // this.team_statistics = null
+      const stat_params = {
+        event_id: String(this.event_id),
+        sport_route: String(this.sport_route)
+      };
+      console.log("[4Refresh.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
+      await this.setQueryLoading();
+      await this.getAllEventStatistics(stat_params);
+      this.ready_for_stats = false;
+      if (this.results_payload) {
+        console.log("[4Refresh] GOT EVENT STATS", this.results_payload);
+        // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
+        if (
+          this.sport_id == this.BASKETBALL_IDM ||
+          this.sport_id == this.BASKETBALL_IDF
+        ) {
+          this.payload_stats = this.results_payload.Basketball_Event_Statistics;
+          this.team_statistics = [this.payload_stats.team_statistics];
+        } else if (
+          this.sport_id == this.VOLLEYBALL_IDM ||
+          this.sport_id == this.VOLLEYBALL_IDF
+        ) {
+          this.payload_stats = this.results_payload.Volleyball_Event_Statistics;
+          this.team_statistics = [this.payload_stats.team_statistics];
+        } else if (
+          this.sport_id == this.SOCCER_IDM ||
+          this.sport_id == this.SOCCER_IDF
+        ) {
+          this.payload_stats = this.results_payload.Soccer_Event_Statistics;
+          this.team_statistics = [this.payload_stats.team_statistics];
+        } else if (
+          this.sport_id == this.BASEBALL_IDM ||
+          this.sport_id == this.SOFTBALL_IDF
+        ) {
+          this.payload_stats = this.results_payload.Baseball_Event_Statistics;
+          this.team_statistics = [this.payload_stats.team_statistics];
+        } else if (
+          this.sport_id == this.ATHLETICS_IDM ||
+          this.sport_id == this.ATHLETICS_IDF
+        ) {
+          this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
+          this.team_statistics = [];
+          this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics;
+        } else if (
+          this.sport_id == this.FIELD_TENNIS_IDM ||
+          this.sport_id == this.FIELD_TENNIS_IDF ||
+          this.sport_id == this.TABLE_TENNIS_IDM ||
+          this.sport_id == this.TABLE_TENNIS_IDF
+        ) {
+          this.payload_stats = this.results_payload.Match_Based_Event_Statistics;
+          this.team_statistics = [];
+          if (
+            this.results_payload.Match_Based_Event_Statistics.team_statistics
+              .match_based_statistics.Doble
+          ) {
+            this.team_statistics.push({
+              category_name: "Doble",
+              statistics: this.results_payload.Match_Based_Event_Statistics
+                .team_statistics.match_based_statistics.Doble
+            });
+          }
+          if (
+            this.results_payload.Match_Based_Event_Statistics.team_statistics
+              .match_based_statistics.Solo
+          ) {
+            this.team_statistics.push({
+              category_name: "Solo",
+              statistics: this.results_payload.Match_Based_Event_Statistics
+                .team_statistics.match_based_statistics.Solo
+            });
+          }
+        } else {
+          return false;
         }
-        console.log("[4Refresh.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
-        await this.setQueryLoading()
-        await this.getAllEventStatistics(stat_params)
-        this.ready_for_stats = false
-        if(this.results_payload){
-            console.log("[4Refresh] GOT EVENT STATS",this.results_payload)
-            // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.payload_stats = this.results_payload.Basketball_Event_Statistics
-                this.team_statistics = [this.payload_stats.team_statistics]
-            }
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                this.payload_stats = this.results_payload.Volleyball_Event_Statistics
-                this.team_statistics = [this.payload_stats.team_statistics]
-                }
-            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                this.payload_stats = this.results_payload.Soccer_Event_Statistics
-                this.team_statistics = [this.payload_stats.team_statistics]
-            }
-            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                this.payload_stats = this.results_payload.Baseball_Event_Statistics
-                this.team_statistics = [this.payload_stats.team_statistics]
-            }
-            else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
-                this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
-                this.team_statistics = []
-                this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
-            }
-            else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
-                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
-                this.payload_stats = this.results_payload.Match_Based_Event_Statistics
-                this.team_statistics = []
-                if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble){
-                    this.team_statistics.push({category_name:"Doble",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Doble})
-                }
-                if(this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo){
-                    this.team_statistics.push({category_name:"Solo",statistics:this.results_payload.Match_Based_Event_Statistics.team_statistics.match_based_statistics.Solo})
-                }
-            }
-            else{
-                return false
-            }
-            console.log("[5Refresh] WE SHOULD HAVE IT HERE!!!",this.payload_stats)
-            // this.team_statistics = [this.payload_stats.team_statistics]
+        console.log("[5Refresh] WE SHOULD HAVE IT HERE!!!", this.payload_stats);
+        // this.team_statistics = [this.payload_stats.team_statistics]
 
-
-            
-            // this.opponent_score = (this.payload_stats.opponent_score)
-            // this.uprm_score = (this.payload_stats.uprm_score)
-            return true
-        }
+        // this.opponent_score = (this.payload_stats.opponent_score)
+        // this.uprm_score = (this.payload_stats.uprm_score)
+        return true;
+      }
     },
     //confirm why this method was deprecated
-    formated_event_info(){
-        if (this.sport_id != '' && this.sport_id != null){
-            return true
-        }
-        else return false
+    formated_event_info() {
+      if (this.sport_id != "" && this.sport_id != null) {
+        return true;
+      } else return false;
     },
-    formated_member_stats(){
-       if (this.payload_stats != ''){
-           if(this.refresh_stats){
-               console.log("[REF] REFRESHING STATS")
-               this.stat_refresh()
-               this.refresh_stats = false
-           }
-           return true
-       }
-       else return false
-    },
-    formated_final_score(){
-        console.log("[FS] Do we have a final score?",this.uprm_score,this.opponent_score)
-        if(Number.isFinite(this.uprm_score)&&Number.isFinite(this.opponent_score)){
-            return true
+    formated_member_stats() {
+      if (this.payload_stats != "") {
+        if (this.refresh_stats) {
+          console.log("[REF] REFRESHING STATS");
+          this.stat_refresh();
+          this.refresh_stats = false;
         }
-        else return false
+        return true;
+      } else return false;
     },
-    formated_individual_stats(){
-        if (this.team_members_local != '' &&  this.payload_stats != ''){
-            return true
-        }
-        else return false
+    formated_final_score() {
+      console.log(
+        "[FS] Do we have a final score?",
+        this.uprm_score,
+        this.opponent_score
+      );
+      if (
+        Number.isFinite(this.uprm_score) &&
+        Number.isFinite(this.opponent_score)
+      ) {
+        return true;
+      } else return false;
     },
     formated_members_fetch(){
         if (this.team_members_local != '' &&  this.team_members_local != null){
@@ -577,307 +622,473 @@ export default {
         }
         else return false
     },
-    buildDefaultValues(){
-        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_route = "volleyball"}
-        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_route = "soccer"}
-        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_route = "baseball"}
-        else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){this.sport_route = "medalbased"}
-        else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
-                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){this.sport_route ="matchbased"}
-        else{this.sport_route = ''}
+    buildDefaultValues() {
+      if (
+        this.sport_id == this.BASKETBALL_IDM ||
+        this.sport_id == this.BASKETBALL_IDF
+      ) {
+        this.sport_route = "basketball";
+      } else if (
+        this.sport_id == this.VOLLEYBALL_IDM ||
+        this.sport_id == this.VOLLEYBALL_IDF
+      ) {
+        this.sport_route = "volleyball";
+      } else if (
+        this.sport_id == this.SOCCER_IDM ||
+        this.sport_id == this.SOCCER_IDF
+      ) {
+        this.sport_route = "soccer";
+      } else if (
+        this.sport_id == this.BASEBALL_IDM ||
+        this.sport_id == this.SOFTBALL_IDF
+      ) {
+        this.sport_route = "baseball";
+      } else if (
+        this.sport_id == this.ATHLETICS_IDM ||
+        this.sport_id == this.ATHLETICS_IDF
+      ) {
+        this.sport_route = "medalbased";
+      } else if (
+        this.sport_id == this.FIELD_TENNIS_IDM ||
+        this.sport_id == this.FIELD_TENNIS_IDF ||
+        this.sport_id == this.TABLE_TENNIS_IDM ||
+        this.sport_id == this.TABLE_TENNIS_IDF
+      ) {
+        this.sport_route = "matchbased";
+      } else {
+        this.sport_route = "";
+      }
     },
-    buildTable(){
-        // basketball
-        if (this.sport_id!=''){
-            if (this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
-                this.headers =
-                [
-                // {
-                //     text:'Athlete',
-                //     align: 'start',
-                //     sortable: true,
-                //     value: 'athlete_info.first_name'
-                // },
-                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
-                {text: 'Asistencias', value: 'statistics.assists'},
-                {text: 'Bloqueos', value: 'statistics.blocks'},
-                {text: 'Intentos de Tiro de Campo', value: 'statistics.field_goal_attempt'},
-                {text: 'Porcentaje de Tiro de Campo (%)', value: 'statistics.field_goal_percentage'},//.toFixed()
-                {text: 'Intentos de Tiro Libre', value: 'statistics.free_throw_attempt'},
-                {text: 'Porcentaje de Tiro Libre (%)', value: 'statistics.free_throw_percentage'},
-                {text: 'Puntos', value: 'statistics.points'},
-                {text: 'Rebotes', value: 'statistics.rebounds'},
-                {text: 'Robos', value: 'statistics.steals'},
-                {text: 'Tiros de Campo Exitosos', value: 'statistics.successful_field_goal'},
-                {text: 'Tiros Libres Exitosos', value: 'statistics.successful_free_throw'},
-                {text: 'Tiros de Tres Puntos Exitosos', value: 'statistics.successful_three_point'},
-                {text: 'Intentos de Tiro de Tres', value: 'statistics.three_point_attempt'},
-                {text: 'Porcentaje de Tiro de Tres (%)', value: 'statistics.three_point_percentage'},
-                {text: 'Perdidas de Balón', value: 'statistics.turnovers'},
-                { text: "Acciones", value: "actions", sortable: false },
-
-                ]
-                this.team_headers =
-                [
-                {text: 'Asistencias', value: 'basketball_statistics.assists'},
-                {text: 'Bloqueos', value: 'basketball_statistics.blocks'},
-                {text: 'Intentos de Tiro de Campo', value: 'basketball_statistics.field_goal_attempt'},
-                {text: 'Porcentaje de Tiro de Campo (%)', value: 'basketball_statistics.field_goal_percentage'},
-                {text: 'Intentos de Tiro Libre', value: 'basketball_statistics.free_throw_attempt'},
-                {text: 'Porcentaje de Tiro Libre (%)', value: 'basketball_statistics.free_throw_percentage'},
-                {text: 'Puntos', value: 'basketball_statistics.points'},
-                {text: 'Rebotes', value: 'basketball_statistics.rebounds'},
-                {text: 'Robos', value: 'basketball_statistics.steals'},
-                {text: 'Tiros de Campo Exitosos', value: 'basketball_statistics.successful_field_goal'},
-                {text: 'Tiros Libres Exitosos', value: 'basketball_statistics.successful_free_throw'},
-                {text: 'Tiros de Tres Puntos Exitosos', value: 'basketball_statistics.successful_three_point'},
-                {text: 'Intentos de Tiro de Tres', value: 'basketball_statistics.three_point_attempt'},
-                {text: 'Porcentaje de Tiro de Tres (%)', value: 'basketball_statistics.three_point_percentage'},
-                {text: 'Perdidas de Balón', value: 'basketball_statistics.turnovers'},
-               
-
-                ]
+    buildTable() {
+      // basketball
+      if (this.sport_id != "") {
+        if (
+          this.sport_id == this.BASKETBALL_IDM ||
+          this.sport_id == this.BASKETBALL_IDF
+        ) {
+          this.headers = [
+            // {
+            //     text:'Athlete',
+            //     align: 'start',
+            //     sortable: true,
+            //     value: 'athlete_info.first_name'
+            // },
+            {
+              text: "Atleta",
+              align: "start",
+              sortable: true,
+              value: "full_name"
+            },
+            { text: "Asistencias", value: "statistics.assists" },
+            { text: "Bloqueos", value: "statistics.blocks" },
+            {
+              text: "Intentos de Tiro de Campo",
+              value: "statistics.field_goal_attempt"
+            },
+            {
+              text: "Porcentaje de Tiro de Campo (%)",
+              value: "statistics.field_goal_percentage"
+            },
+            {
+              text: "Intentos de Tiro Libre",
+              value: "statistics.free_throw_attempt"
+            },
+            {
+              text: "Porcentaje de Tiro Libre (%)",
+              value: "statistics.free_throw_percentage"
+            },
+            { text: "Puntos", value: "statistics.points" },
+            { text: "Rebotes", value: "statistics.rebounds" },
+            { text: "Robos", value: "statistics.steals" },
+            {
+              text: "Tiros de Campo Exitosos",
+              value: "statistics.successful_field_goal"
+            },
+            {
+              text: "Tiros Libres Exitosos",
+              value: "statistics.successful_free_throw"
+            },
+            {
+              text: "Tiros de Tres Puntos Exitosos",
+              value: "statistics.successful_three_point"
+            },
+            {
+              text: "Intentos de Tiro de Tres",
+              value: "statistics.three_point_attempt"
+            },
+            {
+              text: "Porcentaje de Tiro de Tres (%)",
+              value: "statistics.three_point_percentage"
+            },
+            { text: "Perdidas de Balón", value: "statistics.turnovers" },
+            { text: "Acciones", value: "actions", sortable: false }
+          ];
+          this.team_headers = [
+            { text: "Asistencias", value: "basketball_statistics.assists" },
+            { text: "Bloqueos", value: "basketball_statistics.blocks" },
+            {
+              text: "Intentos de Tiro de Campo",
+              value: "basketball_statistics.field_goal_attempt"
+            },
+            {
+              text: "Porcentaje de Tiro de Campo (%)",
+              value: "basketball_statistics.field_goal_percentage"
+            },
+            {
+              text: "Intentos de Tiro Libre",
+              value: "basketball_statistics.free_throw_attempt"
+            },
+            {
+              text: "Porcentaje de Tiro Libre (%)",
+              value: "basketball_statistics.free_throw_percentage"
+            },
+            { text: "Puntos", value: "basketball_statistics.points" },
+            { text: "Rebotes", value: "basketball_statistics.rebounds" },
+            { text: "Robos", value: "basketball_statistics.steals" },
+            {
+              text: "Tiros de Campo Exitosos",
+              value: "basketball_statistics.successful_field_goal"
+            },
+            {
+              text: "Tiros Libres Exitosos",
+              value: "basketball_statistics.successful_free_throw"
+            },
+            {
+              text: "Tiros de Tres Puntos Exitosos",
+              value: "basketball_statistics.successful_three_point"
+            },
+            {
+              text: "Intentos de Tiro de Tres",
+              value: "basketball_statistics.three_point_attempt"
+            },
+            {
+              text: "Porcentaje de Tiro de Tres (%)",
+              value: "basketball_statistics.three_point_percentage"
+            },
+            {
+              text: "Perdidas de Balón",
+              value: "basketball_statistics.turnovers"
             }
-            else if (this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
-                this.headers =
-                [
-                // {
-                //     text:'Athlete',
-                //     align: 'start',
-                //     sortable: true,
-                //     value: 'athlete_info.first_name'
-                // },
-                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
-                {text: 'Puntos de Ataque', value: 'statistics.kill_points'},
-                {text: 'Errores de Ataque', value: 'statistics.attack_errors'},
-                {text: 'Asistencias', value: 'statistics.assists'},
-                {text: 'Servicio Directo', value: 'statistics.aces'},
-                {text: 'Errores de Servicios', value: 'statistics.service_errors'},
-                {text: 'Recepciones', value: 'statistics.digs'},
-                {text: 'Bloqueo', value: 'statistics.blocks'},
-                {text: 'Errores De Bloqueo', value: 'statistics.blocking_errors'},
-                {text: 'Errores de Recepcion', value: 'statistics.reception_errors'},
-                { text: "Acciones", value: "actions", sortable: false },
-
-                ]
-                this.team_headers =
-                [
-                {text: 'Puntos de Ataque', value: 'volleyball_statistics.kill_points'},
-                {text: 'Errores de Ataque', value: 'volleyball_statistics.attack_errors'},
-                {text: 'Asistencias', value: 'volleyball_statistics.assists'},
-                {text: 'Servicio Directo', value: 'volleyball_statistics.aces'},
-                {text: 'Errores de Servicio', value: 'volleyball_statistics.service_errors'},
-                {text: 'Recepciones', value: 'volleyball_statistics.digs'},
-                {text: 'Bloqueos', value: 'volleyball_statistics.blocks'},
-                {text: 'Errores de Bloqueo', value: 'volleyball_statistics.blocking_errors'},
-                {text: 'Errores de Recepcion', value: 'volleyball_statistics.reception_errors'},
-               
-
-                ]
+          ];
+        } else if (
+          this.sport_id == this.VOLLEYBALL_IDM ||
+          this.sport_id == this.VOLLEYBALL_IDF
+        ) {
+          this.headers = [
+            // {
+            //     text:'Athlete',
+            //     align: 'start',
+            //     sortable: true,
+            //     value: 'athlete_info.first_name'
+            // },
+            {
+              text: "Atleta",
+              align: "start",
+              sortable: true,
+              value: "full_name"
+            },
+            { text: "Puntos de Ataque", value: "statistics.kill_points" },
+            { text: "Errores de Ataque", value: "statistics.attack_errors" },
+            { text: "Asistencias", value: "statistics.assists" },
+            { text: "Servicio Directo", value: "statistics.aces" },
+            {
+              text: "Errores de Servicios",
+              value: "statistics.service_errors"
+            },
+            { text: "Recepciones", value: "statistics.digs" },
+            { text: "Bloqueo", value: "statistics.blocks" },
+            { text: "Errores De Bloqueo", value: "statistics.blocking_errors" },
+            {
+              text: "Errores de Recepcion",
+              value: "statistics.reception_errors"
+            },
+            { text: "Acciones", value: "actions", sortable: false }
+          ];
+          this.team_headers = [
+            {
+              text: "Puntos de Ataque",
+              value: "volleyball_statistics.kill_points"
+            },
+            {
+              text: "Errores de Ataque",
+              value: "volleyball_statistics.attack_errors"
+            },
+            { text: "Asistencias", value: "volleyball_statistics.assists" },
+            { text: "Servicio Directo", value: "volleyball_statistics.aces" },
+            {
+              text: "Errores de Servicio",
+              value: "volleyball_statistics.service_errors"
+            },
+            { text: "Recepciones", value: "volleyball_statistics.digs" },
+            { text: "Bloqueos", value: "volleyball_statistics.blocks" },
+            {
+              text: "Errores de Bloqueo",
+              value: "volleyball_statistics.blocking_errors"
+            },
+            {
+              text: "Errores de Recepcion",
+              value: "volleyball_statistics.reception_errors"
             }
-            else if (this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
-                this.headers =
-                [
-                // {
-                //     text:'Athlete',
-                //     align: 'start',
-                //     sortable: true,
-                //     value: 'athlete_info.first_name'
-                // },
-                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
-                {text: 'Intentos de Gol', value: 'statistics.goal_attempts'},
-                {text: 'Asistencias', value: 'statistics.assists'},
-                {text: 'Faltas', value: 'statistics.fouls'},
-                {text: 'Tarjetas', value: 'statistics.cards'},
-                {text: 'Goles Exitosos', value: 'statistics.successful_goals'},
-                {text: 'Entradas', value: 'statistics.tackles'},
-                { text: "Acciones", value: "actions", sortable: false },
-
-                ]
-                this.team_headers =
-                [
-                {text: 'Intentos de Gol', value: 'soccer_statistics.goal_attempts'},
-                {text: 'Asistencias', value: 'soccer_statistics.assists'},
-                {text: 'Faltas', value: 'soccer_statistics.fouls'},
-                {text: 'Tarjetas', value: 'soccer_statistics.cards'},
-                {text: 'Goles Exitosos', value: 'soccer_statistics.successful_goals'},
-                {text: 'Entradas', value: 'soccer_statistics.tackles'},
-              
-                ]
+          ];
+        } else if (
+          this.sport_id == this.SOCCER_IDM ||
+          this.sport_id == this.SOCCER_IDF
+        ) {
+          this.headers = [
+            // {
+            //     text:'Athlete',
+            //     align: 'start',
+            //     sortable: true,
+            //     value: 'athlete_info.first_name'
+            // },
+            {
+              text: "Atleta",
+              align: "start",
+              sortable: true,
+              value: "full_name"
+            },
+            { text: "Intentos de Gol", value: "statistics.goal_attempts" },
+            { text: "Asistencias", value: "statistics.assists" },
+            { text: "Faltas", value: "statistics.fouls" },
+            { text: "Tarjetas", value: "statistics.cards" },
+            { text: "Goles Exitosos", value: "statistics.successful_goals" },
+            { text: "Entradas", value: "statistics.tackles" },
+            { text: "Acciones", value: "actions", sortable: false }
+          ];
+          this.team_headers = [
+            {
+              text: "Intentos de Gol",
+              value: "soccer_statistics.goal_attempts"
+            },
+            { text: "Asistencias", value: "soccer_statistics.assists" },
+            { text: "Faltas", value: "soccer_statistics.fouls" },
+            { text: "Tarjetas", value: "soccer_statistics.cards" },
+            {
+              text: "Goles Exitosos",
+              value: "soccer_statistics.successful_goals"
+            },
+            { text: "Entradas", value: "soccer_statistics.tackles" }
+          ];
+        } else if (
+          this.sport_id == this.BASEBALL_IDM ||
+          this.sport_id == this.SOFTBALL_IDF
+        ) {
+          this.headers = [
+            // {
+            //     text:'Athlete',
+            //     align: 'start',
+            //     sortable: true,
+            //     value: 'athlete_info.first_name'
+            // },
+            {
+              text: "Atleta",
+              align: "start",
+              sortable: true,
+              value: "full_name"
+            },
+            { text: "At Bats", value: "statistics.at_bats" },
+            { text: "Carreras", value: "statistics.runs" },
+            { text: "Hits", value: "statistics.hits" },
+            { text: "Carreras Empujadas", value: "statistics.runs_batted_in" },
+            { text: "Bases Por Bolas", value: "statistics.base_on_balls" },
+            { text: "Strikeouts", value: "statistics.strikeouts" },
+            { text: "Dejados en Base", value: "statistics.left_on_base" },
+            { text: "Acciones", value: "actions", sortable: false }
+          ];
+          this.team_headers = [
+            { text: "Turnos al Bate", value: "baseball_statistics.at_bats" },
+            { text: "Carreras", value: "baseball_statistics.runs" },
+            { text: "Hits", value: "baseball_statistics.hits" },
+            {
+              text: "Carreras Empujadas",
+              value: "baseball_statistics.runs_batted_in"
+            },
+            {
+              text: "Bases Por Bolas",
+              value: "baseball_statistics.base_on_balls"
+            },
+            { text: "Strikeouts", value: "baseball_statistics.strikeouts" },
+            {
+              text: "Dejados en Base",
+              value: "baseball_statistics.left_on_base"
             }
-            else if (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
-                this.headers =
-                [
-                // {
-                //     text:'Athlete',
-                //     align: 'start',
-                //     sortable: true,
-                //     value: 'athlete_info.first_name'
-                // },
-                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
-                {text: 'At Bats', value: 'statistics.at_bats'},
-                {text: 'Carreras', value: 'statistics.runs'},
-                {text: 'Hits', value: 'statistics.hits'},
-                {text: 'Carreras Empujadas', value: 'statistics.runs_batted_in'},
-                {text: 'Bases Por Bolas', value: 'statistics.base_on_balls'},
-                {text: 'Strikeouts', value: 'statistics.strikeouts'},
-                {text: 'Dejados en Base', value: 'statistics.left_on_base'},
-                { text: "Acciones", value: "actions", sortable: false },
-
-                ]
-                this.team_headers =
-                [
-                {text: 'Turnos al Bate', value: 'baseball_statistics.at_bats'},
-                {text: 'Carreras', value: 'baseball_statistics.runs'},
-                {text: 'Hits', value: 'baseball_statistics.hits'},
-                {text: 'Carreras Empujadas', value: 'baseball_statistics.runs_batted_in'},
-                {text: 'Bases Por Bolas', value: 'baseball_statistics.base_on_balls'},
-                {text: 'Strikeouts', value: 'baseball_statistics.strikeouts'},
-                {text: 'Dejados en Base', value: 'baseball_statistics.left_on_base'},
-               
-
-                ]
-            }
-            // TODO: make it so this happens for MEDAL-BASED events
-            else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
-                this.headers =
-                [
-                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
-                {text: 'Categoria', value: 'statistics.category_name'},
-                {text: 'Tipo de Medalla', value: 'statistics.medal_earned'},
-                { text: "Acciones", value: "actions", sortable: false },
-
-                ]
-                this.team_headers =
-                [
-                {text: 'Categoria', value: 'category_name'},
-                {text: 'Tipo de Medalla', value: 'type_of_medal'},
-                {text: 'Numero de Medallas', value: 'medals_earned'},
-                ]
-            }
-            else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
-                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
-                this.headers =
-                [
-                {text: "Atleta", align:'start', sortable: true, value: "full_name" },
-                {text: 'Categoria', value: 'statistics.category_name'},
-                {text: 'Partidas Jugadas', value: 'statistics.matches_played'},
-                {text: 'Partidas Ganadas', value: 'statistics.matches_won'},
-                { text: "Acciones", value: "actions", sortable: false },
-
-                ]
-                this.team_headers =
-                [
-                {text: 'Categoria', value: 'category_name'},
-                {text: 'Partidas Jugadas', value: 'statistics.matches_played'},
-                {text: 'Partidas Ganadas', value: 'statistics.matches_won'},
-                ]
-            }
-            this.ready_for_table = true
+          ];
         }
-
-
+        // TODO: make it so this happens for MEDAL-BASED events
+        else if (
+          this.sport_id == this.ATHLETICS_IDM ||
+          this.sport_id == this.ATHLETICS_IDF
+        ) {
+          this.headers = [
+            {
+              text: "Atleta",
+              align: "start",
+              sortable: true,
+              value: "full_name"
+            },
+            { text: "Categoria", value: "statistics.category_name" },
+            { text: "Tipo de Medalla", value: "statistics.medal_earned" },
+            { text: "Acciones", value: "actions", sortable: false }
+          ];
+          this.team_headers = [
+            { text: "Categoria", value: "category_name" },
+            { text: "Tipo de Medalla", value: "type_of_medal" },
+            { text: "Numero de Medallas", value: "medals_earned" }
+          ];
+        } else if (
+          this.sport_id == this.FIELD_TENNIS_IDM ||
+          this.sport_id == this.FIELD_TENNIS_IDF ||
+          this.sport_id == this.TABLE_TENNIS_IDM ||
+          this.sport_id == this.TABLE_TENNIS_IDF
+        ) {
+          this.headers = [
+            {
+              text: "Atleta",
+              align: "start",
+              sortable: true,
+              value: "full_name"
+            },
+            { text: "Categoria", value: "statistics.category_name" },
+            { text: "Partidas Jugadas", value: "statistics.matches_played" },
+            { text: "Partidas Ganadas", value: "statistics.matches_won" },
+            { text: "Acciones", value: "actions", sortable: false }
+          ];
+          this.team_headers = [
+            { text: "Categoria", value: "category_name" },
+            { text: "Partidas Jugadas", value: "statistics.matches_played" },
+            { text: "Partidas Ganadas", value: "statistics.matches_won" }
+          ];
+        }
+        this.ready_for_table = true;
+      }
     },
-
-
 
     deleteAthleteStatistics(user) {
-        this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user);
-        this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex];
-        console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM",this.editedItem)
-        console.log("[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
-        this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
-        if((this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)||
-        (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
-        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF)){
-            this.current_category_id = this.editedItem.statistics.category_id;
-        }
-        else{
-             this.current_category_id = null
-        }
-        // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
-        this.dialogDeleteIndividualStats = true;
+      this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user);
+      this.editedItem = this.payload_stats.athlete_statistic[
+        this.editedItemIndex
+      ];
+      console.log(
+        "[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM",
+        this.editedItem
+      );
+      console.log(
+        "[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM INDEX",
+        this.editedItemIndex
+      );
+      this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
+      if (
+        this.sport_id == this.ATHLETICS_IDM ||
+        this.sport_id == this.ATHLETICS_IDF ||
+        this.sport_id == this.FIELD_TENNIS_IDM ||
+          this.sport_id == this.FIELD_TENNIS_IDF ||
+          this.sport_id == this.TABLE_TENNIS_IDM ||
+          this.sport_id == this.TABLE_TENNIS_IDF
+      ) {
+        this.current_category_id = this.editedItem.statistics.category_id;
+      } else {
+        this.current_category_id = null;
+      }
+      // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
+      this.dialogDeleteIndividualStats = true;
     },
     deleteTeamStatistics(user) {
-        this.editedItem = this.payload_stats.event_info
-        //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-        //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
-        console.log(this.editedItem)
-        console.log("Will Remove Team Statistics for Event ID("+(this.editedItem.event_id)+").")
+      this.editedItem = this.payload_stats.event_info;
+      //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+      //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
+      console.log(this.editedItem);
+      console.log(
+        "Will Remove Team Statistics for Event ID(" +
+          this.editedItem.event_id +
+          ")."
+      );
     },
     async editAthleteStatistics(user) {
-    //   this.editedItemIndex = this.users.indexOf(user)
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogEdit = true;
-        this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user);
-        this.editedItem = this.payload_stats.athlete_statistic[this.editedItemIndex];
-        console.log("THIS IS THE EDITED ITEM",this.editedItem)
-        console.log("THIS IS THE EDITED ITEM INDEX",this.editedItemIndex)
-        this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
-        
-        
-        if((this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)||
-        (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
-        || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF)){
-            this.edited_category_id = this.editedItem.statistics.category_id;
-            const param_json_1 = {
-                sport_route: this.sport_route,
-                event_id:this.event_id,
-                athlete_id:this.edited_athlete_id,
-                category_id:this.edited_category_id
-            }
-            console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json_1)
-            this.clearIndividualStats()
-            this.setQueryLoading()
-            await this.getIndividualStatistics(param_json_1)
-        }
-        else{
-            const param_json_2 = {
-                sport_route: this.sport_route,
-                event_id:this.event_id,
-                athlete_id:this.edited_athlete_id
-            }
-            console.log("[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",param_json_2)
-            this.clearIndividualStats()
-            this.setQueryLoading()
-            await this.getIndividualStatistics(param_json_2)
-        }
-        
-        console.log("[EDIT INDIVIDUAL -INDEX] SHOULD HAVE GOTTEN , THEY ARE:",this.individual_stats)
-        // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
-        this.current_individual_stats = this.individual_stats;
-        this.dialogEditIndividualStats = true;
-        // this.$router.push("/resultados/"+this.event_id+"/individual/editar")
+      //   this.editedItemIndex = this.users.indexOf(user)
+      //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+      //   this.dialogEdit = true;
+      this.editedItemIndex = this.payload_stats.athlete_statistic.indexOf(user);
+      this.editedItem = this.payload_stats.athlete_statistic[
+        this.editedItemIndex
+      ];
+      console.log("THIS IS THE EDITED ITEM", this.editedItem);
+      console.log("THIS IS THE EDITED ITEM INDEX", this.editedItemIndex);
+      this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
+
+      if (
+        this.sport_id == this.ATHLETICS_IDM ||
+        this.sport_id == this.ATHLETICS_IDF ||
+        this.sport_id == this.FIELD_TENNIS_IDM ||
+          this.sport_id == this.FIELD_TENNIS_IDF ||
+          this.sport_id == this.TABLE_TENNIS_IDM ||
+          this.sport_id == this.TABLE_TENNIS_IDF
+      ) {
+        this.edited_category_id = this.editedItem.statistics.category_id;
+        const param_json_1 = {
+          sport_route: this.sport_route,
+          event_id: this.event_id,
+          athlete_id: this.edited_athlete_id,
+          category_id: this.edited_category_id
+        };
+        console.log(
+          "[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",
+          param_json_1
+        );
+        this.clearIndividualStats();
+        this.setQueryLoading();
+        await this.getIndividualStatistics(param_json_1);
+      } else {
+        const param_json_2 = {
+          sport_route: this.sport_route,
+          event_id: this.event_id,
+          athlete_id: this.edited_athlete_id
+        };
+        console.log(
+          "[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",
+          param_json_2
+        );
+        this.clearIndividualStats();
+        this.setQueryLoading();
+        await this.getIndividualStatistics(param_json_2);
+      }
+
+      console.log(
+        "[EDIT INDIVIDUAL -INDEX] SHOULD HAVE GOTTEN , THEY ARE:",
+        this.individual_stats
+      );
+      // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
+      this.current_individual_stats = this.individual_stats;
+      this.dialogEditIndividualStats = true;
+      // this.$router.push("/resultados/"+this.event_id+"/individual/editar")
     },
     editTeamStatistics(user) {
-    //   this.editedItemIndex = this.users.indexOf(user)
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogEdit = true;
-        return
+      //   this.editedItemIndex = this.users.indexOf(user)
+      //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+      //   this.dialogEdit = true;
+      return;
     },
     addAthleteStatistics() {
-    //   this.editedItemIndex = this.users.indexOf(user)
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogEdit = true;
-        // this.$router.push("/resultados/"+this.event_id+"/individual/crear")
-        console.log("[TM-ADD_STATS(INDEX)]",this.team_members_local)
-        this.dialogAddIndividualStats = true;
+      //   this.editedItemIndex = this.users.indexOf(user)
+      //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+      //   this.dialogEdit = true;
+      // this.$router.push("/resultados/"+this.event_id+"/individual/crear")
+      console.log("[TM-ADD_STATS(INDEX)]", this.team_members_local);
+      this.dialogAddIndividualStats = true;
     },
     addTeamStatistics(user) {
-    //   this.editedItemIndex = this.users.indexOf(user)
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogEdit = true;
-        return
+      //   this.editedItemIndex = this.users.indexOf(user)
+      //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
+      //   this.dialogEdit = true;
+      return;
     },
     addFinalScore() {
-        // this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
-        this.dialogAddFinalScore = true;
+      // this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
+      this.dialogAddFinalScore = true;
     },
     editFinalScore() {
-        this.dialogEditFinalScore = true;
-        // this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
-    },
+      this.dialogEditFinalScore = true;
+      // this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
+    }
     // editPermissions(user) {
     //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
     //   this.dialogPermissions = true;
@@ -886,24 +1097,21 @@ export default {
     //   console.log('reset')
     // },
     // Herbert Functions
-
   },
   computed: {
     ...mapGetters({
-        results_payload:"results/results_payload",
-        event_info:"results/event_info",
-        team_members:"results/team_members",
-        loadingQuery:"results/loadingQuery",
-        individual_stats:"results/individual_stats",
+      results_payload: "results/results_payload",
+      event_info: "results/event_info",
+      team_members: "results/team_members",
+      loadingQuery: "results/loadingQuery",
+      individual_stats: "results/individual_stats"
     })
-
-
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/variables.scss";
+@import "@/assets/tableStyle.scss";
 .wrapper {
   height: 100%;
 
@@ -911,11 +1119,6 @@ export default {
     height: 100%;
     width: 100%;
 
-    .table-actions {
-      &:hover {
-        color: $primary-color;
-      }
-    }
   }
 }
 </style>
