@@ -13,13 +13,13 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="close()">Cancelar</v-btn>
+          <v-btn text color="grey darken-3" @click="close()">Cancelar</v-btn>
           <v-btn 
-            color="green darken-1" 
+            color="primary darken-1" 
             :disabled="!terms" 
             text
             :loading="deleting" 
-            @click="deleteAthlete()">Eliminar</v-btn>
+            @click="deleteAthlete()">Borrar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>   
