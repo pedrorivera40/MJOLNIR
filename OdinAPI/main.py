@@ -102,7 +102,13 @@ def p_athletes():
         
 
 @app.route("/athletes/", methods=['POST'])
+@token_check
 def athletes():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     handler = AthleteHandler()
     if request.method == 'POST':
         json = request.json
@@ -113,7 +119,13 @@ def athletes():
 
 
 @app.route("/athletes/details/", methods=['GET'])
+@token_check
 def athletesDetailed():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         return AthleteHandler().getAllAthletesDetailed()
 
@@ -123,7 +135,13 @@ def p_athleteByID(aid):
         return AthleteHandler().getAthleteByID(aid)
 
 @app.route("/athletes/<int:aid>/", methods=['PUT', 'DELETE'])
+@token_check
 def athleteByID(aid):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     handler = AthleteHandler()    
     if request.method == 'PUT':
         json = request.json
@@ -141,6 +159,11 @@ def athleteByID(aid):
 ###########################################
 @app.route("/auth/", methods=['POST'])
 def auth():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
@@ -154,7 +177,13 @@ def auth():
         return handler.login(username, password, customSession)
 
 @app.route("/logout", methods=['POST'])
+@token_check
 def logout():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
@@ -162,8 +191,8 @@ def logout():
 
         username = req['username']
         if(customSession.logout(username)):
-            return jsonify(Message='Logout exitoso!'), 200
-        return jsonify(Error='Problemas con el logout.'), 400
+            return jsonify(Message='Se terminó la sesión exitosamente!'), 200
+        return jsonify(Error='Problemas terminando la sesión.'), 400
 
 ###########################################
 #--------- Dashboard User Routes ---------#
@@ -171,21 +200,28 @@ def logout():
 @app.route("/users/", methods=['GET', 'POST'])
 @token_check
 def allUsers():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
     print(loggedUser)
     if(loggedUser == None):
-        return jsonify(Error='No Session Found'), 401
+        return jsonify(Error='No hay una sesión valida.'), 401
         
-    if(not(validateRequestPermissions(token,'22') or
-    validateRequestPermissions(token,'23') or
-    validateRequestPermissions(token,'24'))):
-        return jsonify(Error='User does not have permissions to acces this resource.'), 403
     handler = UserHandler()
     if request.method == 'GET':
+        if(not(validateRequestPermissions(token,'22') or
+        validateRequestPermissions(token,'23') or
+        validateRequestPermissions(token,'24'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token,'22'))): # Permission to add new user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         if request.json == None:
             return jsonify(Error='Bad Request.'), 400
         req = request.json
@@ -198,14 +234,30 @@ def allUsers():
 
 
 @app.route("/users/<int:duid>", methods=['GET', 'PATCH'])
-# @token_check
+@token_check
 def userByID(duid):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    print(loggedUser)
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     handler = UserHandler()
     req = request.json
     if request.method == 'GET':
+        if(not(validateRequestPermissions(token,'22') or
+        validateRequestPermissions(token,'23') or
+        validateRequestPermissions(token,'24'))): # must have any user permission
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # For managing specific users
         return handler.getDashUserByID(duid)
     if request.method == 'PATCH':
+        if(not(validateRequestPermissions(token,'24'))): # Permission to modify
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         if request.json == None:
             return jsonify(Error='Bad Request.'), 400
         # For username change
@@ -217,11 +269,23 @@ def userByID(duid):
 
 
 @app.route("/users/username/", methods=['POST'])
-# @token_check
+@token_check
 def getUserByUsername():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    
+    #Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'22') or
+        validateRequestPermissions(token,'23') or
+        validateRequestPermissions(token,'24'))): # must have any user permission
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         handler = UserHandler()
         req = request.json
         # Check the request contains the right structure.
@@ -232,11 +296,23 @@ def getUserByUsername():
 
 
 @app.route("/users/email/", methods=['POST'])
-# @token_check
+@token_check
 def getUserByEmail():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    
+    #Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'22') or
+        validateRequestPermissions(token,'23') or
+        validateRequestPermissions(token,'24'))): # must have any user permission
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         handler = UserHandler()
         req = request.json
         # Check the request contains the right structure.
@@ -246,13 +322,23 @@ def getUserByEmail():
 
 
 @app.route("/users/<int:duid>/reset", methods=['PATCH'])
-# @token_check
+@token_check
 def passwordReset(duid):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    
+    #Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     handler = UserHandler()
     req = request.json
     if request.method == 'PATCH':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'24'))): # must have permission to modify user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # For password reset
         # Check the request contains the right structure.
         if 'password' not in req:
@@ -261,12 +347,23 @@ def passwordReset(duid):
 
 
 @app.route("/users/activate", methods=['PATCH'])
+@token_check
 def accountUnlock():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    
+    #Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     req = request.json
     handler = UserHandler()
     if request.method == 'PATCH':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'24'))): # must have permission to modify user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # For acount unlock
         # Check the request contains the right structure.
         if 'username' not in req or 'password' not in req or 'new_password' not in req:
@@ -276,30 +373,65 @@ def accountUnlock():
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/toggleActive", methods=['PATCH'])
-# @token_check
+@token_check
 def toggleActive(duid):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    
     handler = UserHandler()
     if request.method == 'PATCH':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'24'))): # must have permission to modify user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+        # For acount unlock
         return handler.toggleDashUserActive(duid)
 
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/remove", methods=['PATCH'])
-# @token_check
+@token_check
 def removeUser(duid):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    
+    #Check for valid request
     handler = UserHandler()
     if request.method == 'PATCH':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'23'))): # must have permissions to delete a user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         return handler.removeDashUser(duid)
 
 
 @app.route("/users/<string:duid>/permissions",  methods=['GET', 'PATCH'])
-# @token_check
+@token_check
 def userPermissions(duid):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
 
     handler = UserHandler()
     if request.method == 'GET':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'22') or
+        validateRequestPermissions(token,'23') or
+        validateRequestPermissions(token,'24'))): # must have any user permission
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         return handler.getUserPermissions(duid, 'request')
     if request.method == 'PATCH':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'24'))): # must have permissions to modify users.
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if request.json == None:
             return jsonify(Error='Bad Request.'), 400
         req = request.json
@@ -314,7 +446,13 @@ def userPermissions(duid):
 
 #--------- Event Routes ---------#
 @app.route("/events/", methods=['GET'])
+@token_check
 def events():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     handler = EventHandler()
     if request.method == 'GET':
         return handler.getAllEvents()
@@ -325,7 +463,13 @@ def p_eventById(eID):
         return EventHandler().getEventByID(eID)
 
 @app.route("/events/<int:eID>/", methods=['PUT', 'DELETE'])
+@token_check
 def eventById(eID):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     handler = EventHandler()    
     if request.method == 'PUT':
         json = request.json
@@ -342,7 +486,13 @@ def p_teamEvents(tID):
 
 
 @app.route("/events/team/<int:tID>/", methods=['POST'])
+@token_check
 def teamEvents(tID):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     handler = EventHandler()    
     if request.method == 'POST':
         json = request.json
@@ -402,7 +552,14 @@ def teamEvents(tID):
 }
 '''
 @app.route("/results/basketball/", methods=['POST'])
+@token_check
+@token_check
 def basketballStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.json
     if json is None:
         return jsonify(Error='Solicitud Incorrecta'), 400
@@ -472,7 +629,13 @@ def getBasketballStatistics():
 }
 '''
 @app.route("/results/basketball/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def basketballAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -544,7 +707,13 @@ def getBasketballAthleteStatistics():
 }
 '''
 @app.route("/results/basketball/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def basketballTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -609,7 +778,13 @@ def getBasketballTeamStatistics():
 }
 '''
 @app.route("/results/basketball/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def basketballFinalScores():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -662,7 +837,13 @@ def getBasketballFinalScores():
 '''
 # TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/basketball/season/athlete_games/", methods=['GET'])
+@token_check
 def basketballSeasonAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -688,7 +869,13 @@ def basketballSeasonAthleteStatistics():
 }
 '''
 @app.route("/results/basketball/season/athlete_aggregate/", methods=['GET'])
+@token_check
 def basketballAggregateAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -713,7 +900,13 @@ def basketballAggregateAthleteStatistics():
 }
 '''
 @app.route("/results/basketball/season/all_athletes_aggregate/", methods=['GET'])
+@token_check
 def basketballAggregateAllAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -738,7 +931,13 @@ def basketballAggregateAllAthleteStatistics():
 }
 '''
 @app.route("/results/basketball/season/team_aggregate/", methods=['GET'])
+@token_check
 def basketballAggregateTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -764,7 +963,13 @@ def basketballAggregateTeamStatistics():
 
 #--------- PBP Routes ---------#
 @app.route("/pbp/<string:sport>", methods=['POST', 'DELETE'])
+@token_check
 def pbp_sequence(sport):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
 
     body = request.get_json()
     args = request.args
@@ -796,7 +1001,13 @@ def pbp_sequence(sport):
 
 
 @app.route("/pbp/<string:sport>/set", methods=['PUT'])
+@token_check
 def volleyball_pbp_set_current_set(sport):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     body = request.get_json()
     args = request.args
     handler = None
@@ -817,7 +1028,13 @@ def volleyball_pbp_set_current_set(sport):
 
 
 @app.route("/pbp/<string:sport>/color", methods=['PUT'])
+@token_check
 def pbp_set_color(sport):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     body = request.get_json()
     args = request.args
     handler = None
@@ -838,7 +1055,13 @@ def pbp_set_color(sport):
 
 
 @app.route("/pbp/<string:sport>/roster", methods=['POST', 'DELETE'])
+@token_check
 def pbp_roster(sport):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
     body = request.get_json()
     args = request.args
@@ -903,7 +1126,13 @@ def pbp_roster(sport):
 
 
 @app.route("/pbp/<string:sport>/actions", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def pbp_actions(sport):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
     body = request.get_json()
     args = request.args
@@ -954,7 +1183,13 @@ def pbp_actions(sport):
 
 
 @app.route("/pbp/<string:sport>/end", methods=['POST'])
+@token_check
 def pbp_end(sport):
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     body = request.get_json()
     args = request.args
     handler = None
@@ -1034,7 +1269,13 @@ def pbp_end(sport):
 }
 '''
 @app.route("/results/volleyball/", methods=['POST'])
+@token_check
 def volleyballStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.json
     if json is None:
         return jsonify(Error='Solicitud Incorrecta'), 400
@@ -1105,7 +1346,13 @@ def getVolleyballStatistics():
 }
 '''
 @app.route("/results/volleyball/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def volleyballAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -1177,7 +1424,13 @@ def getVolleyballAthleteStatistics():
 }
 '''
 @app.route("/results/volleyball/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def volleyballTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -1239,7 +1492,13 @@ def getVolleyballTeamStatistics():
 }
 '''
 @app.route("/results/volleyball/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def volleyballFinalScores():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -1293,7 +1552,13 @@ def getVolleyballFinalScores():
 '''
 # TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/volleyball/season/athlete_games/", methods=['GET'])
+@token_check
 def volleyballSeasonAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -1319,7 +1584,13 @@ def volleyballSeasonAthleteStatistics():
 }
 '''
 @app.route("/results/volleyball/season/athlete_aggregate/", methods=['GET'])
+@token_check
 def volleyballAggregateAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -1345,7 +1616,13 @@ def volleyballAggregateAthleteStatistics():
 }
 '''
 @app.route("/results/volleyball/season/all_athletes_aggregate/", methods=['GET'])
+@token_check
 def volleyballAggregateAllAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -1371,7 +1648,13 @@ def volleyballAggregateAllAthleteStatistics():
 }
 '''
 @app.route("/results/volleyball/season/team_aggregate/", methods=['GET'])
+@token_check
 def volleyballAggregateTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -1446,7 +1729,13 @@ def volleyballAggregateTeamStatistics():
 }
 '''
 @app.route("/results/soccer/", methods=['POST'])
+@token_check
 def soccerStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.json
     if json is None:
         return jsonify(Error='Solicitud Incorrecta'), 400
@@ -1513,7 +1802,13 @@ def getSoccerStatistics():
 }
 '''
 @app.route("/results/soccer/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def soccerAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -1580,7 +1875,13 @@ def getSoccerAthleteStatistics():
 }
 '''
 @app.route("/results/soccer/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def soccerTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -1643,7 +1944,13 @@ def getSoccerTeamStatistics():
 }
 '''
 @app.route("/results/soccer/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def soccerFinalScores():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -1697,7 +2004,13 @@ def getSoccerFinalScores():
 '''
 # TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/soccer/season/athlete_games/", methods=['GET'])
+@token_check
 def soccerSeasonAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -1723,7 +2036,13 @@ def soccerSeasonAthleteStatistics():
 }
 '''
 @app.route("/results/soccer/season/athlete_aggregate/", methods=['GET'])
+@token_check
 def soccerAggregateAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -1749,7 +2068,13 @@ def soccerAggregateAthleteStatistics():
 }
 '''
 @app.route("/results/soccer/season/all_athletes_aggregate/", methods=['GET'])
+@token_check
 def soccerAggregateAllAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -1775,7 +2100,13 @@ def soccerAggregateAllAthleteStatistics():
 }
 '''
 @app.route("/results/soccer/season/team_aggregate/", methods=['GET'])
+@token_check
 def soccerAggregateTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -1854,7 +2185,13 @@ def soccerAggregateTeamStatistics():
 }
 '''
 @app.route("/results/baseball/", methods=['POST'])
+@token_check
 def baseballStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.json
     if json is None:
         return jsonify(Error='Solicitud Incorrecta'), 400
@@ -1923,7 +2260,13 @@ def getBaseballStatistics():
 }
 '''
 @app.route("/results/baseball/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def baseballAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -1994,7 +2337,13 @@ def getBaseballAthleteStatistics():
 }
 '''
 @app.route("/results/baseball/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def baseballTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -2056,7 +2405,13 @@ def getBaseballTeamStatistics():
 }
 '''
 @app.route("/results/baseball/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def baseballFinalScores():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -2110,7 +2465,13 @@ def getBaseballFinalScores():
 '''
 # TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/baseball/season/athlete_games/", methods=['GET'])
+@token_check
 def baseballSeasonAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -2137,7 +2498,13 @@ def baseballSeasonAthleteStatistics():
 }
 '''
 @app.route("/results/baseball/season/athlete_aggregate/", methods=['GET'])
+@token_check
 def baseballAggregateAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -2163,7 +2530,13 @@ def baseballAggregateAthleteStatistics():
 }
 '''
 @app.route("/results/baseball/season/all_athletes_aggregate/", methods=['GET'])
+@token_check
 def baseballAggregateAllAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -2189,7 +2562,13 @@ def baseballAggregateAllAthleteStatistics():
 }
 '''
 @app.route("/results/baseball/season/team_aggregate/", methods=['GET'])
+@token_check
 def baseballAggregateTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         json = request.args
     else:
@@ -2215,7 +2594,13 @@ def baseballAggregateTeamStatistics():
 
 # Launch app.
 @app.route("/sports", methods=['GET'])
+@token_check
 def get_sports():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
 
     if request.method == 'GET':
         body = request.get_json()
@@ -2257,7 +2642,13 @@ def get_sports():
 
 
 @app.route("/sports/details", methods=['GET'])
+@token_check
 def get_sport_info():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         args = request.args
         body = request.get_json()
@@ -2281,7 +2672,13 @@ def get_sport_info():
 }
 '''
 @app.route("/teams/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def teamByYear():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -2338,7 +2735,13 @@ def getTeamByYear():
 }
 '''
 @app.route("/teams/members/", methods=['POST'])
+@token_check
 def teamMembers():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.json
     if json is None:
         return jsonify(Error='Solicitud Incorrecta'), 400
@@ -2380,7 +2783,13 @@ def getTeamMembers():
 '''
 # TODO: (Herbert) Check if need to remove route due to redundancy, wait for front end
 @app.route("/teams/member/", methods=['POST', 'DELETE'])
+@token_check
 def teamMemberByIDs():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'DELETE':
         json = request.args
     else:
@@ -2418,7 +2827,13 @@ def getTeamMemberByIDs():
 
 
 @app.route("/teams/all/", methods=['GET', 'POST', 'DELETE'])
+@token_check
 def getAllTeams():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     handler = TeamHandler()
     if request.method == 'GET':
         return handler.getAllTeams()
@@ -2447,7 +2862,13 @@ def p_matchbasedStatistics():
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 @app.route("/results/matchbased/", methods=['POST'])
+@token_check
 def matchbasedStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.json
 
     if not json or 'event_id' not in json:
@@ -2470,7 +2891,13 @@ def p_matchbasedAthleteStatistics():
 
 
 @app.route("/results/matchbased/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def matchbasedAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
     if request.method == 'DELETE':
         json = request.args
@@ -2518,7 +2945,13 @@ def p_matchbasedTeamStatistics():
 
 
 @app.route("/results/matchbased/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def matchbasedTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
     if request.method == 'DELETE':
         json = request.args
@@ -2559,7 +2992,13 @@ def p_matchbasedFinalScores():
         return handler.getFinalScore(int(json['event_id']))
 
 @app.route("/results/matchbased/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def matchbasedFinalScores():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
     if request.method == 'DELETE':
         json = request.args
@@ -2599,7 +3038,13 @@ def matchbasedFinalScores():
 
 
 @app.route("/results/matchbased/season/athlete_games/", methods=['GET'])
+@token_check
 def matchbasedSeasonAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
         return jsonify(Error = "Argumentos incorrectos fueron dados."), 400
@@ -2612,7 +3057,13 @@ def matchbasedSeasonAthleteStatistics():
 
 
 @app.route("/results/matchbased/season/athlete_aggregate/", methods=['GET'])
+@token_check
 def matchbasedAggregateAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -2625,7 +3076,13 @@ def matchbasedAggregateAthleteStatistics():
 
 
 @app.route("/results/matchbased/season/all_athletes_aggregate/", methods=['GET'])
+@token_check
 def matchbasedAggregateAllAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -2638,7 +3095,13 @@ def matchbasedAggregateAllAthleteStatistics():
 
 
 @app.route("/results/matchbased/season/team_aggregate/", methods=['GET'])
+@token_check
 def matchbasedAggregateTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -2671,7 +3134,13 @@ def p_medalbasedStatistics():
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
             
 @app.route("/results/medalbased/", methods=['POST'])
+@token_check
 def medalbasedStatistics():   
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.json
 
     if not json or 'event_id' not in json:
@@ -2696,7 +3165,13 @@ def p_medalbasedAthleteStatistics():
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 @app.route("/results/medalbased/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def medalbasedAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
     if request.method == 'DELETE':
         json = request.args
@@ -2738,7 +3213,13 @@ def p_medalbasedTeamStatistics():
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 @app.route("/results/medalbased/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def medalbasedTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
     if request.method == "DELETE":
         json = request.args
@@ -2781,7 +3262,13 @@ def p_medalbasedFinalScores():
         return handler.getFinalScore(int(json['event_id']))
 
 @app.route("/results/medalbased/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def medalbasedFinalScores():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
     if request.method == 'DELETE':
         json = request.args
@@ -2817,7 +3304,13 @@ def medalbasedFinalScores():
 
 
 @app.route("/results/medalbased/season/athlete_games/", methods=['GET'])
+@token_check
 def medalbasedSeasonAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
         return jsonify(Error = "Argumentos incorrectos fueron dados."), 400
@@ -2830,7 +3323,13 @@ def medalbasedSeasonAthleteStatistics():
 
 
 @app.route("/results/medalbased/season/athlete_aggregate/", methods=['GET'])
+@token_check
 def medalbasedAggregateAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -2843,7 +3342,13 @@ def medalbasedAggregateAthleteStatistics():
 
 
 @app.route("/results/medalbased/season/all_athletes_aggregate/", methods=['GET'])
+@token_check
 def medalbasedAggregateAllAthleteStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -2856,7 +3361,13 @@ def medalbasedAggregateAllAthleteStatistics():
 
 
 @app.route("/results/medalbased/season/team_aggregate/", methods=['GET'])
+@token_check
 def medalbasedAggregateTeamStatistics():
+    ## Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
