@@ -11,12 +11,12 @@
         <v-spacer />
         <v-toolbar-title>{{sport_name}} - {{branch}}</v-toolbar-title>
         <v-progress-linear
-				:active="loadingQuery"
-				indeterminate
-				absolute
-				bottom
-				color = "white"
-			></v-progress-linear>
+          :active="loadingQuery"
+          indeterminate
+          absolute
+          bottom
+          color = "white"
+        ></v-progress-linear>
         <v-spacer />
       </v-toolbar>
       <v-container>

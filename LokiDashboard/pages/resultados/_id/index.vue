@@ -44,6 +44,21 @@
                     </v-row>
                   </v-col>
                 </v-row>
+                <v-row v-else-if="loadingQuery" justify = center>
+                  <!-- <v-progress-circular
+                    :active="loadingQuery"
+                    indeterminate
+                    :size="50"
+                    color="primary"
+                  ></v-progress-circular> -->
+                  <v-progress-linear
+                    :active="loadingQuery"
+                    indeterminate
+                    absolute
+                    bottom
+                    color = "primary"
+                  ></v-progress-linear>
+                </v-row>
                 <v-row v-else-if="!loadingQuery" justify="center">
                   <v-col align="center">
                     <h3>No Hay Puntuación Final Disponible</h3>
@@ -137,8 +152,9 @@
                     :items="payload_stats.athlete_statistic"
                     item-key="athlete_statistic"
                     class="elevation-1"
-                    v-if="formated_member_stats()"
+                    v-if="formated_event_info()||formated_member_stats()"
                     :loading="loadingQuery"
+                    loading-text="Cargando Estadísticas..."
                   >
                     <!-- v-if="isBasketballTable" -->
                     <template #item.full_name="{ item }"
@@ -209,8 +225,9 @@
                     :items="team_statistics"
                     item-key="team_statistics"
                     class="elevation-1"
-                    v-if="formated_member_stats()"
+                    v-if="formated_event_info()||formated_member_stats()"
                     :loading="loadingQuery"
+                    loading-text="Cargando Estadísticas..."
                   >
                   </v-data-table>
                   <v-container v-else-if="!loadingQuery">
