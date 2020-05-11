@@ -108,13 +108,16 @@ def athletes():
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
     if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
-    handler = AthleteHandler()
+        return jsonify(Error='No hay una sesión valida.'), 401        
+    
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'25'))): # must have permission to write athlete profiles
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         json = request.json
         if not 'sID' in json or not 'attributes' in json:
             return jsonify(Error="Argumentos dados son incorrectos."), 400
-
+        handler = AthleteHandler()
         return handler.addAthlete(json['sID'], json['attributes'])    
 
 
@@ -144,6 +147,10 @@ def athleteByID(aid):
         return jsonify(Error='No hay una sesión valida.'), 401
     handler = AthleteHandler()    
     if request.method == 'PUT':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'27'))): # must have permission to modify athlete profiles
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         json = request.json
         if 'attributes' not in json:
             return jsonify(Error="Argumentos dados son incorrectos."), 400
@@ -151,6 +158,10 @@ def athleteByID(aid):
         return handler.editAthlete(aid, json['attributes'])
 
     elif request.method == 'DELETE':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'26'))): # must have permission to delete athlete profiles.
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         return handler.removeAthlete(aid)
 
 
@@ -441,13 +452,7 @@ def userPermissions(duid):
 
 #--------- Event Routes ---------#
 @app.route("/events/", methods=['GET'])
-@token_check
-def events():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+def events():    
     handler = EventHandler()
     if request.method == 'GET':
         return handler.getAllEvents()
@@ -465,13 +470,20 @@ def eventById(eID):
     loggedUser = customSession.isLoggedIn(token['user'])
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
+
     handler = EventHandler()    
     if request.method == 'PUT':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'15'))): # must have permission to modify events
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         json = request.json
-        if 'attributes' not in json:
+        if not json or 'attributes' not in json:
             return jsonify(Error="Argumentos dados son incorrectos."), 400
         return handler.editEvent(eID, json['attributes'])
     elif request.method == 'DELETE':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'14'))): # must have permission to delete events
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         return handler.removeEvent(eID)
 
 @app.route("/events/team/<int:tID>/public/", methods=['GET'])
@@ -488,11 +500,16 @@ def teamEvents(tID):
     loggedUser = customSession.isLoggedIn(token['user'])
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
-    handler = EventHandler()    
+      
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'13'))): # must have permission to write events
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         json = request.json
         if not json or 'attributes' not in json:
             return jsonify(Error="Argumentos dados son incorrectos."), 400
+        handler = EventHandler()
         return handler.addEvent(tID, json['attributes'])
 
 
@@ -2853,15 +2870,18 @@ def matchbasedStatistics():
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
     if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
-    json = request.json
-
-    if not json or 'event_id' not in json:
-        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
-
-    handler = MatchBasedEventHandler()   
+        return jsonify(Error='No hay una sesión valida.'), 401         
 
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'19'))): # must have permission to write matchbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+        
+        json = request.json
+        if not json or 'event_id' not in json:
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+        handler = MatchBasedEventHandler()
         return handler.addAllEventStatistics(json['event_id'], json)
 
 @app.route("/results/matchbased/individual/public/", methods=['GET'])
@@ -2895,17 +2915,29 @@ def matchbasedAthleteStatistics():
     handler = MatchBasedEventHandler()   
 
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'19'))): # must have permission to write matchbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'attributes' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
         return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'PUT':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'21'))): # must have permission to modify matchbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'attributes' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         return handler.editStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'DELETE':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'20'))): # must have permission to delete matchbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'category_id' not in json:           
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         try:
@@ -2949,17 +2981,29 @@ def matchbasedTeamStatistics():
     handler = MatchBasedEventHandler()    
 
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'19'))): # must have permission to write matchbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'attributes' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         return handler.addTeamStatistics(json['event_id'], json['attributes'])
 
     if request.method == 'PUT':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'21'))): # must have permission to modify matchbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'category_id' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
         return handler.editTeamStatistics(json['event_id'], json['category_id'])
 
     if request.method == 'DELETE':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'20'))): # must have permission to delete matchbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'category_id' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         try:
@@ -2996,6 +3040,9 @@ def matchbasedFinalScores():
     handler = EventResultHandler()
 
     if request.method == 'DELETE':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'20'))): # must have permission to delete matchbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
 
         if 'event_id' not in json:
             return jsonify(Error='Bad Request'), 400
@@ -3015,21 +3062,24 @@ def matchbasedFinalScores():
             return jsonify(Error='Argumentos incorrectos fueron dados.'), 400
         try:
             if request.method == 'POST':
+                # Check for valid permissions
+                if(not(validateRequestPermissions(token,'19'))): # must have permission to write matchbased event stats
+                    return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
                 return handler.addFinalScore(json['event_id'], json['attributes'])
+
             if request.method == 'PUT':
+                # Check for valid permissions
+                if(not(validateRequestPermissions(token,'21'))): # must have permission to modify matchbased event stats
+                    return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
                 return handler.editFinalScore(json['event_id'], json['attributes'])
         except:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/matchbased/season/athlete_games/", methods=['GET'])
-@token_check
-def matchbasedSeasonAthleteStatistics():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+def matchbasedSeasonAthleteStatistics():    
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
         return jsonify(Error = "Argumentos incorrectos fueron dados."), 400
@@ -3042,13 +3092,8 @@ def matchbasedSeasonAthleteStatistics():
 
 
 @app.route("/results/matchbased/season/athlete_aggregate/", methods=['GET'])
-@token_check
 def matchbasedAggregateAthleteStatistics():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+    ## Check user making the reques has a valid session.    
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -3061,13 +3106,7 @@ def matchbasedAggregateAthleteStatistics():
 
 
 @app.route("/results/matchbased/season/all_athletes_aggregate/", methods=['GET'])
-@token_check
-def matchbasedAggregateAllAthleteStatistics():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+def matchbasedAggregateAllAthleteStatistics():   
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -3080,13 +3119,7 @@ def matchbasedAggregateAllAthleteStatistics():
 
 
 @app.route("/results/matchbased/season/team_aggregate/", methods=['GET'])
-@token_check
-def matchbasedAggregateTeamStatistics():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+def matchbasedAggregateTeamStatistics():    
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -3126,6 +3159,10 @@ def medalbasedStatistics():
     loggedUser = customSession.isLoggedIn(token['user'])
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
+    # Check for valid permissions
+    if(not(validateRequestPermissions(token,'19'))): # must have permission to write medalbased event stats
+        return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403        
+
     json = request.json
 
     if not json or 'event_id' not in json:
@@ -3169,17 +3206,29 @@ def medalbasedAthleteStatistics():
     handler = MedalBasedEventHandler()    
 
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'19'))): # must have permission to write medalbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403 
+
         if 'attributes' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
         return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'PUT':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'21'))): # must have permission to modify medalbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403 
+
         if 'attributes' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         return handler.editStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'DELETE':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'20'))): # must have permission to delete medalbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403 
+
         if 'category_id' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         try:
@@ -3217,17 +3266,29 @@ def medalbasedTeamStatistics():
     handler = MedalBasedEventHandler()   
 
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'19'))): # must have permission to write medalbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403 
+
         if 'attributes' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         return handler.addTeamStatistics(json['event_id'], json['attributes'])
 
     if request.method == 'PUT':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'21'))): # must have permission to modify medalbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403 
+
         if 'category_id' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
         return handler.editTeamStatistics(json['event_id'], json['category_id'])
 
     if request.method == 'DELETE':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'20'))): # must have permission to delete medalbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403 
+
         if 'category_id' not in json:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         try:
@@ -3265,7 +3326,10 @@ def medalbasedFinalScores():
 
     handler = EventResultHandler()
 
-    if request.method == 'DELETE':        
+    if request.method == 'DELETE': 
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token,'20'))): # must have permission to delete medalbased event stats
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403        
         try:          
             return handler.removeFinalScore(int(json['event_id']))
         except:
@@ -3281,21 +3345,24 @@ def medalbasedFinalScores():
             return jsonify(Error='Argumentos incorrectos fueron dados.'), 400
         try:
             if request.method == 'POST':
+                # Check for valid permissions
+                if(not(validateRequestPermissions(token,'19'))): # must have permission to write medalbased event stats
+                    return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403 
+
                 return handler.addFinalScore(json['event_id'], json['attributes'])
+
             if request.method == 'PUT':
+                # Check for valid permissions
+                if(not(validateRequestPermissions(token,'21'))): # must have permission to modify medalbased event stats
+                    return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403 
+                    
                 return handler.editFinalScore(json['event_id'], json['attributes'])
         except:
             return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/medalbased/season/athlete_games/", methods=['GET'])
-@token_check
-def medalbasedSeasonAthleteStatistics():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+def medalbasedSeasonAthleteStatistics():    
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
         return jsonify(Error = "Argumentos incorrectos fueron dados."), 400
@@ -3308,13 +3375,7 @@ def medalbasedSeasonAthleteStatistics():
 
 
 @app.route("/results/medalbased/season/athlete_aggregate/", methods=['GET'])
-@token_check
-def medalbasedAggregateAthleteStatistics():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+def medalbasedAggregateAthleteStatistics():    
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -3327,13 +3388,7 @@ def medalbasedAggregateAthleteStatistics():
 
 
 @app.route("/results/medalbased/season/all_athletes_aggregate/", methods=['GET'])
-@token_check
-def medalbasedAggregateAllAthleteStatistics():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+def medalbasedAggregateAllAthleteStatistics():    
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -3346,13 +3401,7 @@ def medalbasedAggregateAllAthleteStatistics():
 
 
 @app.route("/results/medalbased/season/team_aggregate/", methods=['GET'])
-@token_check
-def medalbasedAggregateTeamStatistics():
-    ## Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+def medalbasedAggregateTeamStatistics():    
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
