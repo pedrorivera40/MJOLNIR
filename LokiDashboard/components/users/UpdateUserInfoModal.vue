@@ -48,7 +48,7 @@
                     label="Contraseña*"
                     required
                     :type="showP ? 'text' : 'password'"
-                    :append-icon="showP ? 'mdi-eye-off' : 'mdi-eye'"
+                    :append-icon="showP ? 'mdi-eye' : 'mdi-eye-off'"
                     @click:append="showP = !showP"
                     v-if="nameSelector === -1"
                     :rules="[
@@ -65,7 +65,7 @@
                     label="Confirmar contraseña*"
                     required
                     :type="showC ? 'text' : 'password'"
-                    :append-icon="showC ? 'mdi-eye-off' : 'mdi-eye'"
+                    :append-icon="showC ? 'mdi-eye' : 'mdi-eye-off'"
                     @click:append="showC = !showC"
                     v-if="nameSelector === -1"
                     :rules="[

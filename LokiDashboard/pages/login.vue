@@ -22,7 +22,7 @@
               label="Contraseña"
               name="password"
               prepend-icon="mdi-lock"
-              :append-icon=" show ? 'mdi-eye-off' : 'mdi-eye'"
+              :append-icon=" show ? 'mdi-eye' : 'mdi-eye-off'"
               :type="show ? 'text' : 'password'"
               v-model="password"
               @click:append="show=!show"
