@@ -1,13 +1,20 @@
 <template>
  <v-row justify="center">
-   <v-dialog v-model="dialog" persistent max-width="400">            
+   <v-dialog v-model="dialog" persistent max-width="350">            
       <v-card>
-        <v-card-title class="headline">¿Estás seguro de que quieres eliminar el evento con id:{{id}}?</v-card-title>
+        <v-toolbar flat color="primary_dark">
+          <v-toolbar-title class="headline white--text">
+            Borrar Evento
+          </v-toolbar-title>
+        </v-toolbar>
+        <v-card-title>
+          <p style="word-break: normal;">¿Seguro que quieres eliminar el evento con id:{{id}}?</p>
+        </v-card-title>
         <v-card-text>
-          Esta acción es <strong> irreversible.</strong>
+          <div class="body">Esta acción es <strong> irreversible</strong>.</div>
           <v-checkbox
             v-model="terms"
-            :label="`Yo acepto las consecuencias.`"
+            label="Acepto las consecuencias."
           >
           </v-checkbox>
         </v-card-text>
