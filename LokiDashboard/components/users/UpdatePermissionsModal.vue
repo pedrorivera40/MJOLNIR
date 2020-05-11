@@ -118,7 +118,7 @@
             <v-checkbox v-model="reviewed" label="He revisado mis cambios.">
               <template v-slot:label>
                 <div>
-                  Desea actualizar contraseña de <strong>{{username}}</strong> ?
+                  Desea actualizar los permisos de <strong>{{username}}</strong> ?
                 </div>
               </template>
             </v-checkbox>
