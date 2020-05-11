@@ -36,7 +36,7 @@
                                     <v-row>      
                                         <div>                  
                                         <h2>
-                                            Atleta:
+                                            Atletas:
                                         </h2>
                                         </div> 
                                     </v-row>

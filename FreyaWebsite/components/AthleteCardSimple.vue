@@ -67,7 +67,7 @@ export default {
       athlete_categories:[String],      
       number:Number,
       profile_image_link:String,
-      years_of_participation:String,
+      years_of_participation:Number,
     },//end of data()
     methods:{
         goToAthlete(){
