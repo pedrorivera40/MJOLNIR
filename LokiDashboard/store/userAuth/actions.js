@@ -13,11 +13,14 @@ export default {
       await this.$auth.setUser(user.data.User) // Set auth user.
       Cookie.set('user', JSON.stringify({username:user.data.User.username}))
       dispatch('getUserPermissions', response.data.auth.token)
-      dispatch('notifications/setSnackbar', { text: 'Login Exitoso!' }, { root: true })
+      dispatch('notifications/setSnackbar', { text: 'Se ha iniciado la sessión!' }, { root: true })
       commit("SET_USER_DATA", response.data)
     } catch (error) {
       if (!!error.response) {
         dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+        if(error.response.data.Error === 'La cuenta ha sido desactivada, favor de activarla.'){
+          this.$router.push('/activar')
+        }
         commit("DONE_LOADING")
       } else {
         dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
