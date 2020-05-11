@@ -22,7 +22,10 @@
                 v-model="newPassword"
                 @click:append="showNew = !showNew"
                 :rules="[
-                  required('contraseña', 'Por favor, ingrese una nueva contraseña.'),
+                  required(
+                    'contraseña',
+                    'Por favor, ingrese una nueva contraseña.'
+                  ),
                   minLength('La contraseña', 10),
                   maxLength('La contraseña', 64),
                   passwordFormat()
@@ -30,7 +33,7 @@
               />
               <v-text-field
                 id="confirm-password"
-                label="Comfirm Password"
+                label="Confirmar contraseña"
                 name="confirm-password"
                 prepend-icon="mdi-lock-check"
                 :append-icon="showConf ? 'mdi-eye' : 'mdi-eye-off'"
@@ -38,12 +41,23 @@
                 v-model="repeat"
                 @click:append="showConf = !showConf"
                 :rules="[
-                  required('contraseña', 'Por favor, confirme su nueva contraseña.'),
+                  required(
+                    'contraseña',
+                    'Por favor, confirme su nueva contraseña.'
+                  ),
                   passwordMatch(newPassword)
                 ]"
               />
             </v-form>
-            <v-checkbox v-model="sure" label="Actualizar contraseña?" />
+            <v-checkbox
+              v-model="sure"
+            >
+              <template v-slot:label>
+                <div>
+                  Desea actualizar contraseña de <strong>{{username}}</strong> ?
+                </div>
+              </template>
+            </v-checkbox>
           </v-container>
         </v-card-text>
         <v-card-actions>
