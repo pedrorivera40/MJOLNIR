@@ -13,6 +13,7 @@ export default() =>({
     readyForTeamStats: false,
     loadingQuery:false,
     sport_athletes: null,
+    loadingMembersQuery: false,
 
     //edit team route
 

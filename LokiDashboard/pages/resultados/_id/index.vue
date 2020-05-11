@@ -232,6 +232,8 @@
           :sport_route="sport_route"
           :uprm_score.sync="uprm_score"
           :opponent_score.sync="opponent_score"
+          :sport_name="sport_name"
+          :branch_name="branch_name_local"
         />
         <UpdateFinalScoreModal
           v-if="dialogEditFinalScore"
@@ -240,6 +242,8 @@
           :sport_route="sport_route"
           :uprm_score.sync="uprm_score"
           :opponent_score.sync="opponent_score"
+          :sport_name="sport_name"
+          :branch_name="branch_name_local"
         />
         <AddIndividualStatsModal
           v-if="dialogAddIndividualStats"
@@ -250,6 +254,8 @@
           :sport_id="sport_id"
           :team_members="team_members_local"
           :refresh_stats.sync="refresh_stats"
+          :sport_name="sport_name"
+          :branch_name="branch_name_local"
         />
         <UpdateIndividualStatsModal
           v-if="dialogEditIndividualStats"
@@ -262,6 +268,8 @@
           :refresh_stats.sync="refresh_stats"
           :athlete_id="edited_athlete_id"
           :individual_stats="this.current_individual_stats"
+          :sport_name="sport_name"
+          :branch_name="branch_name_local"
         />
         <DeleteIndividualStatsModal
           v-if="dialogDeleteIndividualStats"
@@ -271,6 +279,8 @@
           :refresh_stats.sync="refresh_stats"
           :athlete_id="edited_athlete_id"
           :category_id="current_category_id"
+          :sport_name="sport_name"
+          :branch_name="branch_name_local"
         />
       </v-container>
     </div>

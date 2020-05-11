@@ -3,7 +3,7 @@
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card width="800" class="elevation-12 mx-auto">
                 <v-toolbar color="green darken-1" dark flat>
-                    <v-toolbar-title>Crear Equipo {{sport_name}} - {{branch}}</v-toolbar-title>
+                    <v-toolbar-title>Crear Equipo {{sport_name}} - {{branch_name}}</v-toolbar-title>
                     <v-spacer />
                 </v-toolbar>
                 <v-card-text>            
@@ -50,6 +50,8 @@
                                         </v-col>
                                     </v-row>    
                                 </v-col>  
+                            </v-row> 
+                            <v-row>
                                 <v-col>
                                     <v-row>
                                         <h2>Imagen de Equipo:</h2>
@@ -61,17 +63,20 @@
                                         <v-col  
                                         >
                                             
-                                            <v-text-field
+                                            <v-textarea
                                                 v-model="team_image_url"                  
                                                 label="Enlace de Imagen de Equipo"
-                                                prepend-icon="mdi-link"
-                                                required
-                                            ></v-text-field>
+                                                auto-grow
+                                                outlined
+                                                rows = "3"
+                                                :counter="1000"
+                                                :rules="[maxSummaryLength('Enlace de Imagen de Equipo',1000)]"
+                                            ></v-textarea>
                                             
                                         </v-col>
                                     </v-row>
                                 </v-col>
-                            </v-row>      
+                            </v-row>     
                             <v-row>
                                 <h2>Sobre el Equipo:</h2>
                             </v-row>
@@ -99,13 +104,13 @@
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
-                                    <v-btn color="grey darken-3" text @click="close()">close</v-btn>
+                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cerrar</v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn color="grey darken-3" text @click="clear">clear</v-btn>
+                                    <v-btn color="grey darken-3" text @click="clear()" :disabled="loadingQuery">borrar</v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn color="primary darken-1" text @click="submit" :loading="loadingQuery">submit</v-btn>
+                                    <v-btn color="primary darken-1" text @click="submit" :loading="loadingQuery" :disabled="!valid">guardar</v-btn>
                                 </v-col>
                             </v-row>   
                         </v-container>
@@ -128,7 +133,9 @@
       props:{
         dialog: Boolean,
         sport_id: Number,
-        season_year_prop: Number
+        season_year_prop: Number,
+        sport_name: String,
+        branch_name: String
         // season_year: Number
         // year_list: Array
       },
@@ -137,12 +144,7 @@
         valid:false,
 
         sport_route:'',
-        // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
-        //USED FOR TEAM SUBMISSION:
-        // sport_id:'',
-        sport_name:'',
-        branch:'Masculino',
-        // TODO: FIX ROUTE PARAMS. TEMPORARILY SELECTED LIKE THIS. NEED TO SOMEHOW GET IT FROM OTHER ROUTE.
+
         season:0,
         team_image_url:'',
         about_team:'',
@@ -185,16 +187,7 @@
             setNullTeamMembers:"teams/setNullTeamMembers",
             getTeamByYear:"teams/getTeamByYear",
         }),
-
-        //TODO: will be removed
-        buildDefaultValues(){
-            this.sport_id = this.$route.params.id
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_name = "Baloncesto", this.sport_route = "basketball"}
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_name = "Voleibol",this.sport_route = "volleyball"}
-            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_name = "Fútbol", this.sport_route = "soccer"}
-            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol", this.sport_route = "baseball"}
-            else{this.sport_name = '', this.sport_route = ''}
-        },
+      
         close() {
             this.$emit("update:dialog", false);
         },
@@ -206,10 +199,7 @@
                 "team_image_url":this.team_image_url,
                 "about_team": this.about_team
             }
-            console.log(Number(this.sport_id))
-            console.log(parseInt(this.sport_id))
-            console.log(this.sport_id)
-            console.log("WHAT ARE THE CURRENT VALUES BEFORE QUERY???",payload_edit)
+            // console.log("WHAT ARE THE CURRENT VALUES BEFORE QUERY???",payload_edit)
             await this.postTeam(payload_edit)
             await this.getSeasonDataPost()
     

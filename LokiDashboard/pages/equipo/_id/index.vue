@@ -29,40 +29,42 @@
         </v-row>
         <v-row align="center"
         justify="center">
-          <v-col md=3>
-            <v-select
-              v-model="season"
-              item-value="season_year" 
-              item-text="season_year"
-              :items="yearList" 
-              label ="Temporada"
-              prepend-icon="mdi-calendar-blank-multiple"
-              :disabled = "loadingQuery"
-              :loading = "loadingQuery"
-              @input="getSeasonData"
-            ></v-select>
-          </v-col>
           <v-col>
             <v-row align="center"
-              justify="end">
+              justify="start">
+              <!-- <v-spacer /> -->
+              <v-col md=3 align="start">
+                <v-btn color="primary_light" :disabled ="loadingQuery || !$store.state.userAuth.userPermissions[13]['26']"
+                  class="white--text" @click="goToCreateTeam"><v-icon left>mdi-plus</v-icon>Añadir Equipo</v-btn>
+              </v-col>
               <v-spacer />
-              <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
+              <v-col md=3 align="start">
+                <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
                   class="white--text" @click="goToEditTeam">Editar Equipo</v-btn>
               </v-col>
               <v-spacer />
-              <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[12]['25']"
+              <v-col md=3 align="start">
+                <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[12]['25']"
                   class="white--text" @click="removeTeamLocal">Remover Equipo</v-btn>
               </v-col>
               <v-spacer />
-              <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "loadingQuery || !$store.state.userAuth.userPermissions[13]['26']"
-                  class="white--text" @click="goToCreateTeam">Añadir Equipo +</v-btn>
+              <v-col md=3>
+                <v-select
+                  v-model="season"
+                  item-value="season_year" 
+                  item-text="season_year"
+                  :items="yearList" 
+                  label ="Temporada"
+                  prepend-icon="mdi-calendar-blank-multiple"
+                  :disabled = "loadingQuery"
+                  :loading = "loadingQuery"
+                  @input="getSeasonData"
+                ></v-select>
               </v-col>
-              <v-spacer />
+              <!-- <v-spacer /> -->
             </v-row>
           </v-col>
+          
         </v-row>
         <v-tabs
             centered
@@ -110,10 +112,10 @@
           <v-tab-item>
             <v-container v-if="formated_members()">
               <v-row align="center"
-                justify="end">
+                justify="start">
                 <v-col md=3 align="end">
-                  <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
-                  class="white--text" @click="goToAddMembers">Añadir Miembro +</v-btn>
+                  <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
+                  class="white--text" @click="goToAddMembers"><v-icon left>mdi-plus</v-icon>Añadir Miembros</v-btn>
                 </v-col>
               </v-row>
               <v-row
@@ -153,10 +155,10 @@
             </v-container>
             <v-container v-else-if="!loadingQuery">
               <v-row align="center"
-              justify="end">
+              justify="start">
               <v-col md=3 align="end">
                 <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == ''))"
-                  class="white--text" @click="goToAddMembers">Añadir Miembro +</v-btn>
+                  class="white--text" @click="goToAddMembers"><v-icon left>mdi-plus</v-icon>Añadir Miembros</v-btn>
               </v-col>
               </v-row>
               <v-row align = "center" justify = "center">
@@ -174,6 +176,8 @@
         :dialog.sync="dialogAddTeam"
         :sport_id="sport_id"
         :season_year_prop.sync="season"
+        :sport_name="sport_name"
+        :branch_name="branch"
       />
       <UpdateTeamModal
         v-if="dialogEditTeam"
@@ -182,6 +186,8 @@
         :season_year="season"
         :about_team="current_team.about_team"
         :team_image_url="current_team.team_image_url"
+        :sport_name="sport_name"
+        :branch_name="branch"
       />
       <AddTeamMembersModal
         v-if="dialogAddTeamMember"
@@ -189,6 +195,8 @@
         :sport_id="sport_id"
         :team_id="current_team_id"
         :season_year="season"
+        :sport_name="sport_name"
+        :branch_name="branch"
       />
       <DeleteTeamMemberModal
         v-if="dialogDeleteTeamMember"
@@ -197,12 +205,16 @@
         :team_id="current_team_id"
         :sport_id="sport_id"
         :season_year="season"
+        :sport_name="sport_name"
+        :branch_name="branch"
       />
       <DeleteTeamModal
         v-if="dialogDeleteTeam"
         :dialog.sync="dialogDeleteTeam"
         :sport_id="sport_id"
         :season_year="season"
+        :sport_name="sport_name"
+        :branch_name="branch"
       />
     </v-card>
     </div>
