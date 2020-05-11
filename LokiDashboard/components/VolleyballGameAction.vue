@@ -41,7 +41,7 @@
           </v-col>
           <v-col cols="12" sm="6" allign="center">
             <v-select
-              v-model="current_team"
+              v-model="current_play"
               :items="plays"
               menu-props="auto"
               label="Jugada"
@@ -71,19 +71,37 @@
           </v-col>
           <v-col cols="12" sm="6">
             <v-select
-              v-model="current_team"
-              :items="getRoster"
+              v-if="current_team === 'UPRM'"
+              v-model="current_athlete"
+              :items="uprmAthletes"
+              :item-text="get_uprm_item_text"
+              item-val="athlete_id"
               menu-props="auto"
-              label="Atleta"
+              label="Debe seleccionar un atleta"
               hide-details
               single-line
+              :rules="[(v) => (v != null) || 'Debe seleccionar un atleta']"
+              required
+            ></v-select>
+            <v-select
+              v-if="current_team === 'Oponente'"
+              v-model="current_athlete"
+              :items="oppAthletes"
+              :item-text="get_opp_item_text"
+              item-val="number"
+              menu-props="auto"
+              label="Debe seleccionar un atleta"
+              hide-details
+              single-line
+              :rules="[(v) => v != null || 'Debe seleccionar un atleta']"
+              required
             ></v-select>
           </v-col>
         </v-row>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="edit_play_dialog = false">Cerrar</v-btn>
-          <v-btn color="primary" text @click.native="editNotification()">Enviar</v-btn>
+          <v-btn color="primary" text @click.native="editPlay()">Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -238,12 +256,14 @@ export default {
     message: String,
     athlete_name: String,
     athlete_number: Number,
+    athlete_id: Number,
     athlete_img: String,
     in_color: String,
     id: String,
     event_id: Number,
     uprmAthletes: [],
-    oppAthletes: []
+    oppAthletes: [],
+    team: String
   },
   data: () => ({
     // Notification keyword.
@@ -354,18 +374,76 @@ export default {
 
     startEditPlay() {
       this.edit_play_dialog = true;
+      this.current_team = this.team;
+      this.current_play = this.game_actions_map[this.action_type];
+
+      // Find current UPRM athlete.
+      if (this.current_team === "UPRM") {
+        let index = -1;
+        for (let i = 0; i < this.uprmAthletes.length; i++) {
+          if (this.uprmAthletes[i].athlete_id === this.athlete_id) {
+            index = i;
+            break;
+          }
+        }
+
+        if (index === -1) {
+          this.current_athlete = {
+            athlete_id: this.athlete_id,
+            number: "?",
+            first_name: "Atleta",
+            middle_name: "",
+            last_names: "Desconocido"
+          };
+        }
+
+        this.current_athlete = this.uprmAthletes[index];
+      }
+
+      // Find current opponent athlete.
+      else {
+        let index = -1;
+        for (let i = 0; i < this.oppAthletes.length; i++) {
+          if (this.oppAthletes[i].number === this.athlete_id) {
+            index = i;
+            break;
+          }
+        }
+
+        if (index === -1) {
+          this.current_athlete = {
+            athlete_id: this.athlete_id,
+            number: "?",
+            first_name: "Atleta",
+            middle_name: "",
+            last_names: "Desconocido"
+          };
+        }
+
+        this.current_athlete = this.oppAthletes[index];
+      }
     },
 
     editPlay() {
+      // Make sure an athlete was selected.
+      console.log(this.current_athlete);
+      if (this.current_athlete == null) {
+        return;
+      }
+
       const payload = {
         event_id: this.event_id,
-        action_id: this.action_id,
+        action_id: this.id,
         data: {
-          action_type: "AttackError",
-          athlete_id: 111,
-          team: this.team
+          action_type: this.game_actions_map[this.current_play],
+          athlete_id:
+            this.current_team === "UPRM"
+              ? this.current_athlete.athlete_id
+              : this.current_athlete.number,
+          team: this.team_map[this.current_team]
         }
       };
+      console.log(payload);
       console.log("NEED TO EDIT ACTION WITH ID = " + this.id);
     },
 
@@ -407,12 +485,65 @@ export default {
         default:
           return "Acción Desconocida";
       }
+    },
+
+    // Given an item (UPRM ATHLETE), return its name.
+    get_uprm_item_text(item) {
+      let index = -1;
+
+      for (let i = 0; i < this.uprmAthletes.length; i++) {
+        if (item.athlete_id === this.uprmAthletes[i].athlete_id) {
+          index = i;
+          break;
+        }
+      }
+
+      if (index === -1) {
+        return null;
+      }
+
+      const athlete = this.uprmAthletes[index];
+
+      if (item.middle_name === "") {
+        return (
+          "#" + athlete.number + " " + item.first_name + " " + item.last_names
+        );
+      }
+      return (
+        "#" +
+        athlete.number +
+        " " +
+        item.first_name +
+        " " +
+        item.middle_name +
+        " " +
+        item.last_names
+      );
+    },
+    get_opp_item_text(item) {
+      let index = -1;
+
+      for (let i = 0; i < this.oppAthletes.length; i++) {
+        if (item.number === this.oppAthletes[i].number) {
+          index = i;
+          break;
+        }
+      }
+
+      if (index === -1) {
+        return null;
+      }
+
+      const athlete = this.oppAthletes[index];
+
+      return "#" + athlete.number + " " + item.name;
     }
   },
   computed: {
     getRoster: function() {
       // UPRM selected.
       if (this.current_team === "UPRM") {
+        console.log(this.uprmAthletes);
         return this.uprmAthletes;
       }
       // Opponent selected.
