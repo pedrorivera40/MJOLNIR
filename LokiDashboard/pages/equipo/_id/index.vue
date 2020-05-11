@@ -44,7 +44,7 @@
               </v-col>
               <v-spacer />
               <v-col md=3 align="start">
-                <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[12]['25']"
+                <v-btn color="primary_light" :disabled ="(formated_members())||(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[12]['25']"
                   class="white--text" @click="removeTeamLocal">Remover Equipo</v-btn>
               </v-col>
               <v-spacer />
@@ -204,16 +204,12 @@
         :team_id="current_team_id"
         :sport_id="sport_id"
         :season_year="season"
-        :sport_name="sport_name"
-        :branch_name="branch"
       />
       <DeleteTeamModal
         v-if="dialogDeleteTeam"
         :dialog.sync="dialogDeleteTeam"
         :sport_id="sport_id"
         :season_year="season"
-        :sport_name="sport_name"
-        :branch_name="branch"
       />
     </v-card>
     </div>

@@ -21,7 +21,7 @@
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" text @click="close()"> Cancelar </v-btn>
           <v-btn
-            color="green darken-1"
+            color="grey darken-3"
             :disabled="!terms"
             :loading="isLoading"
             text

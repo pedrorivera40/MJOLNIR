@@ -57,6 +57,7 @@
                                                 item-value="id"
                                                 multiple
                                                 :rules="[required('Atletas')]"
+                                                :filter="customFilter"
                                                 >
                                                 <template v-slot:selection="data">
                                                     <v-chip
@@ -70,7 +71,7 @@
                                                         <v-icon v-if="data.item.profilePicLink == null" height="100"> mdi-account  </v-icon>
                                                         <v-img v-else :src="data.item.profilePicLink"></v-img>
                                                     </v-avatar>
-                                                    {{ data.item.fName }}
+                                                    {{ data.item.fName }} {{ data.item.mName }} {{ data.item.lName }}
                                                     </v-chip>
                                                 </template>
                                                 <template v-slot:item="data">
@@ -83,7 +84,9 @@
                                                         <v-img v-else :src="data.item.profilePicLink"></v-img>
                                                     </v-list-item-avatar>
                                                     <v-list-item-content>
-                                                        <v-list-item-title v-html="data.item.fName"></v-list-item-title>
+                                                        <!-- <v-list-item-title v-html="data.item.fName"></v-list-item-title> -->
+                                                        <v-list-item-title v-html="data.item.fName+' '+data.item.mName+' '+data.item.lName" v-if="data.item.mName"></v-list-item-title>
+                                                        <v-list-item-title v-html="data.item.fName+' '+data.item.lName" v-else></v-list-item-title>
                                                     </v-list-item-content>
                                                     </template>
                                                 </template>
@@ -106,10 +109,10 @@
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
-                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cerrar</v-btn>
+                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cancelar</v-btn>
                                 </v-col>
                                 <v-col>                                                         
-                                    <v-btn color="primary ligthen-1" text @click="submit" :disabled="!valid||loadingMembersQuery" :loading="(loadingQuery&&formated())" >guardar</v-btn>
+                                    <v-btn color="primary darken-1" text @click="submit" :disabled="!valid||loadingMembersQuery" :loading="(loadingQuery&&formated())" >guardar</v-btn>
                                 </v-col>
                             </v-row>   
                         </v-container>
@@ -175,7 +178,55 @@
             getTeamByYear:"teams/getTeamByYear",
             setMembersQueryLoading:"teams/setMembersQueryLoading"
         }),
-        
+        customFilter (item, queryText, itemText) {
+            const searchText = queryText.toLowerCase()
+            const values = searchText.split(" ");
+            if(item.mName){
+                const textOne = item.fName.toLowerCase()
+                const textTwo = item.mName.toLowerCase()
+                const textThree = item.lName.toLowerCase()
+                
+
+                if(values.length == 1){
+                    return textOne.indexOf(values[0]) > -1 || textTwo.indexOf(values[0]) > -1 || textThree.indexOf(values[0]) > -1
+                }
+                else if(values.length == 2){
+                    return(
+                        ((textOne == values[0]) && (textTwo.indexOf(values[1]) > -1 ))
+                        ||
+                        ((textTwo == values[0]) && (textThree.indexOf(values[1]) > -1 ))
+                        ||
+                        ((textOne == values[0]) && (textThree.indexOf(values[1]) > -1 ))
+                    )
+                }
+                else if(values.length == 3){
+                    return((textOne == values[0]) && (textTwo == values[1]) && (textThree.indexOf(values[2]) > -1 ))
+                }
+                else{
+                    return false
+                }
+ 
+            }
+            else{
+                const textOne = item.fName.toLowerCase()
+                const textTwo = item.lName.toLowerCase()
+                // const searchText = queryText.toLowerCase()
+                // return textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1
+
+
+                if(values.length == 1){
+                    return textOne.indexOf(values[0]) > -1 || textTwo.indexOf(values[0]) > -1
+                }
+                else if(values.length == 2){
+                    return((textOne == values[0]) && (textTwo.indexOf(values[1]) > -1 ))
+                }
+                else{
+                    return false
+                }
+
+
+            }
+        },
         formated(){
             if(this.sport_athletes){
                 // console.log("ready for members status:",this.ready_for_members)

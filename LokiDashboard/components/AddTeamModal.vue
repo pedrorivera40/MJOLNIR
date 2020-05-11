@@ -68,7 +68,7 @@
                                                 label="Enlace de Imagen de Equipo"
                                                 auto-grow
                                                 outlined
-                                                rows = "3"
+                                                rows = "1"
                                                 :counter="1000"
                                                 :rules="[maxSummaryLength('Enlace de Imagen de Equipo',1000)]"
                                             ></v-textarea>
@@ -89,11 +89,11 @@
                                     
                                         <v-textarea
                                             v-model="about_team"                      
-                                            :counter="1000"
                                             label="Breve Descripcion Del Equipo"
                                             auto-grow
-                                            rows = "3"
                                             outlined
+                                            rows = "3"
+                                            :counter="1000"
                                             :rules="[generalPhrase('Breve Descripcion Del Equipo'),maxSummaryLength('Breve Descripcion Del Equipo',1000)]"
                                         ></v-textarea>
                                 
@@ -104,7 +104,7 @@
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
-                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cerrar</v-btn>
+                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cancelar</v-btn>
                                 </v-col>
                                 <v-col>
                                     <v-btn color="grey darken-3" text @click="clear()" :disabled="loadingQuery">borrar</v-btn>

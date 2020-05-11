@@ -279,8 +279,6 @@
           :refresh_stats.sync="refresh_stats"
           :athlete_id="edited_athlete_id"
           :category_id="current_category_id"
-          :sport_name="sport_name"
-          :branch_name="branch_name_local"
         />
       </v-container>
     </div>

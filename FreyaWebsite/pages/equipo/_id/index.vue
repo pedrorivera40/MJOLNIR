@@ -25,7 +25,7 @@
         </v-col>
       </v-row>
       <v-row align="center"
-      justify="start">
+      justify="end">
         <v-col md=3>
           <v-select
             v-model="season"
