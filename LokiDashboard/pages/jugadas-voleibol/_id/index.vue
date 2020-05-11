@@ -132,6 +132,9 @@
               :in_color="oppColor"
               :id="action.key"
               :event_id="event_id"
+              :uprmAthletes="uprmRoster"
+              :oppAthletes="oppRoster"
+              team="Oponente"
             />
             <VolleyballGameAction
               v-else
@@ -145,6 +148,9 @@
               :in_color="uprm_color"
               :id="action.key"
               :event_id="event_id"
+              :uprmAthletes="uprmRoster"
+              :oppAthletes="oppRoster"
+              team="UPRM"
             />
           </v-container>
         </v-tab-item>

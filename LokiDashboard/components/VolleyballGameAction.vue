@@ -24,7 +24,65 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="notification_dialog = false">Cerrar</v-btn>
+          <v-btn color="gray darken-3" text @click="notification_dialog = false">Cerrar</v-btn>
+          <v-btn color="primary" text @click.native="editNotification()">Enviar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="edit_play_dialog" persistent max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Editar Jugada</span>
+        </v-card-title>
+
+        <v-row justify="center">
+          <v-col cols="12" sm="4">
+            <v-card-title class="body-1" style="word-break: normal;">Jugada:</v-card-title>
+          </v-col>
+          <v-col cols="12" sm="6" allign="center">
+            <v-select
+              v-model="current_team"
+              :items="plays"
+              menu-props="auto"
+              label="Jugada"
+              hide-details
+              single-line
+            ></v-select>
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col cols="12" sm="4">
+            <v-card-title class="body-1" style="word-break: normal;">Equipo:</v-card-title>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-select
+              v-model="current_team"
+              :items="teams"
+              menu-props="auto"
+              label="Equipo"
+              hide-details
+              single-line
+            ></v-select>
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col cols="12" sm="4">
+            <v-card-title class="body-1" style="word-break: normal;">Atleta:</v-card-title>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-select
+              v-model="current_team"
+              :items="getRoster"
+              menu-props="auto"
+              label="Atleta"
+              hide-details
+              single-line
+            ></v-select>
+          </v-col>
+        </v-row>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="edit_play_dialog = false">Cerrar</v-btn>
           <v-btn color="primary" text @click.native="editNotification()">Enviar</v-btn>
         </v-card-actions>
       </v-card>
@@ -35,7 +93,7 @@
         <v-card-text>Por favor confirme si desea eliminar la acción de juego seleccionada.</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="delete_dialog = false">No</v-btn>
+          <v-btn color="gray darken-3" text @click="delete_dialog = false">No</v-btn>
           <v-btn color="green darken-1" text @click="deleteGameAction()">Sí</v-btn>
         </v-card-actions>
       </v-card>
@@ -44,7 +102,7 @@
       <v-card v-if="action_type === notification" width="550px" :elevation="hover ? 16 : 2">
         <v-toolbar :color="in_color" dark flat>
           <v-row justify="center" align="center">
-            <v-card-title>{{ map_action(action_type) }}</v-card-title>
+            <v-card-title>{{ game_actions_map[action_type] }}</v-card-title>
           </v-row>
         </v-toolbar>
         <v-row align="center">
@@ -103,7 +161,7 @@
       <v-card v-else width="550px" :elevation="hover ? 16 : 2">
         <v-toolbar :color="in_color" dark flat>
           <v-row justify="center" align="center">
-            <v-card-title>{{ map_action(action_type) }}</v-card-title>
+            <v-card-title>{{ game_actions_map[action_type] }}</v-card-title>
           </v-row>
         </v-toolbar>
         <v-row>
@@ -137,7 +195,7 @@
                     fab
                     small
                     dark
-                    @click.native="edit_action()"
+                    @click.native="startEditPlay()"
                     v-on="on"
                   >
                     <v-icon>mdi-pencil</v-icon>
@@ -183,12 +241,70 @@ export default {
     athlete_img: String,
     in_color: String,
     id: String,
-    event_id: Number
+    event_id: Number,
+    uprmAthletes: [],
+    oppAthletes: []
   },
   data: () => ({
-    notification: "Notification", // ADD ACTION TYPES AND A DICTIONARY TO MAP THEM FROM ENGLISH TO SPANISH...
+    // Notification keyword.
+    notification: "Notification",
+
+    // Dialog flags.
     notification_dialog: false,
     delete_dialog: false,
+    edit_play_dialog: false,
+
+    // Content to be displayed in the Edit Game Action dialog.
+    teams: ["Oponente", "UPRM"],
+
+    team_map: {
+      Oponente: "opponent",
+      UPRM: "uprm"
+    },
+
+    plays: [
+      "Punto de Ataque",
+      "Servicio Directo",
+      "Punto de Bloqueo",
+      "Asistencia",
+      "Bloqueo",
+      "Recepción",
+      "Error de Ataque",
+      "Error de Servicio",
+      "Error de Bloqueo",
+      "Error de Recepción"
+    ],
+
+    current_team: null,
+    current_play: "",
+    current_athlete: null,
+
+    game_actions_map: {
+      Notification: "Notificación",
+      Notificación: "Notification",
+      KillPoint: "Punto de Ataque",
+      "Punto de Ataque": "KillPoint",
+      Ace: "Servicio Directo",
+      "Servicio Directo": "Ace",
+      BlockPoint: "Punto de Bloqueo",
+      "Punto de Bloqueo": "BlockPoint",
+      Assist: "Asistencia",
+      Asistencia: "Assist",
+      Block: "Bloqueo",
+      Bloqueo: "Block",
+      Dig: "Recepción",
+      Recepción: "Dig",
+      AttackError: "Error de Ataque",
+      "Error de Ataque": "AttackError",
+      ServiceError: "Error de Servicio",
+      "Error de Servicio": "ServiceError",
+      BlockingError: "Error de Bloqueo",
+      "Error de Bloqueo": "BlockingError",
+      ReceptionError: "Error de Recepción",
+      "Error de Recepción": "ReceptionError"
+    },
+
+    // Rules and placeholders.
     newMessage: "",
     notification_rules: [
       v =>
@@ -204,6 +320,7 @@ export default {
 
     // Setup v-models for editting a notification.
     startEditNotification() {
+      this.current_team = this.team;
       this.newMessage = this.message;
       this.notification_dialog = true;
     },
@@ -235,7 +352,20 @@ export default {
       this.delete_dialog = false;
     },
 
-    edit_action() {
+    startEditPlay() {
+      this.edit_play_dialog = true;
+    },
+
+    editPlay() {
+      const payload = {
+        event_id: this.event_id,
+        action_id: this.action_id,
+        data: {
+          action_type: "AttackError",
+          athlete_id: 111,
+          team: this.team
+        }
+      };
       console.log("NEED TO EDIT ACTION WITH ID = " + this.id);
     },
 
@@ -277,6 +407,21 @@ export default {
         default:
           return "Acción Desconocida";
       }
+    }
+  },
+  computed: {
+    getRoster: function() {
+      // UPRM selected.
+      if (this.current_team === "UPRM") {
+        return this.uprmAthletes;
+      }
+      // Opponent selected.
+      if (this.current_team === "Oponente") {
+        return this.oppAthletes;
+      }
+
+      // Otherwise, send an empty list.
+      return [];
     }
   }
 };
