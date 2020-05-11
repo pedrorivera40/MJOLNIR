@@ -2890,6 +2890,7 @@ def p_matchbasedAthleteStatistics():
     if not json or 'event_id' not in json or 'athlete_id' not in json or "category_id" not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
     try:
+        handler = MatchBasedEventHandler()
         return handler.getAllAthleteStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
     except:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
@@ -3242,6 +3243,7 @@ def p_medalbasedTeamStatistics():
     if not json or 'event_id' not in json or 'category_id' not in json:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
     try:
+        handler = MedalBasedEventHandler()
         return handler.getAllTeamStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['category_id']))
     except:
         return jsonify(Error="Argumentos incorrectos fueron dados."), 400
