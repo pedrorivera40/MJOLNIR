@@ -62,7 +62,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary darken-1" text @click="close()">
+          <v-btn color="grey darken-3" text @click="close()">
             Cerrar
           </v-btn>
           <v-btn
