@@ -64,7 +64,6 @@
               <!-- <v-spacer /> -->
             </v-row>
           </v-col>
-          
         </v-row>
         <v-tabs
             centered
