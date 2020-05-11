@@ -75,6 +75,7 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
+                  <p style="font-size:1.1rem">Estatus de la cuenta:</p>
                   <v-switch
                     v-model="isActive_"
                     :label="`Cuenta activa`"
