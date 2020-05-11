@@ -2,9 +2,9 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600">
       <v-card>
-        <v-toolbar color="green darken-1" dark >
+        <v-toolbar color="primary_dark" flat >
           <v-spacer />
-          <v-toolbar-title> {{setForm}}</v-toolbar-title>
+          <v-toolbar-title class="headline white--text"> {{setForm}}</v-toolbar-title>
           <v-progress-linear
             :active="loading"
             indeterminate
@@ -31,7 +31,7 @@
                   md="12"
                 >	
 
-                <h2>Fecha del Evento:</h2>
+                <h2>Fecha del Evento:*</h2>
                   
                 </v-col>
               </v-row>
@@ -55,7 +55,7 @@
 
               <v-row>            
                 <v-col>
-                <h2>Hora del Evento:</h2>
+                <h2>Hora del Evento:*</h2>
                   
                 </v-col>
               </v-row>
@@ -90,7 +90,7 @@
                     :items="localities"
                     item-text="text"
                     item-value="value"             
-                    label ="Localización"              
+                    label ="Localización*"              
                   ></v-select>            
                 </v-col>
               </v-row>
@@ -158,13 +158,14 @@
                 <v-col>
                    <v-checkbox
                     v-model="terms"
-                    :label="`Yo quiero editar el evento con id:${id}`"
+                    label="He revisado mis cambios*."
                   >
                   </v-checkbox>
                 </v-col>
               </v-row>
              
             </v-container>
+            <small>*indica campo requerido</small>
           </v-form>
         
         </v-card-text>

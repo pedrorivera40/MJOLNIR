@@ -2,9 +2,9 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600">
       <v-card>
-        <v-toolbar color="green darken-1" dark flat>
+        <v-toolbar color="primary_dark" flat>
           <v-spacer/>
-          <v-toolbar-title>{{setForm}}</v-toolbar-title>
+          <v-toolbar-title class="headline white--text">{{setForm}}</v-toolbar-title>
           <v-progress-linear
             :active="loading"
             indeterminate
@@ -35,7 +35,7 @@
                     v-model="first_name_"          
                     
                     :counter="20"
-                    label="Primer Nombre"
+                    label="Primer Nombre*"
                     required
                     :rules="[required('Primer Nombre'),nameFormat('Primer Nombre'),maxLength('Nombre',20)]"
                   ></v-text-field>              
@@ -63,7 +63,7 @@
                   <v-text-field
                     v-model="last_names_"
                     :counter="40"                
-                    label="Apellidos"
+                    label="Apellidos*"
                     required
                     :rules="[required('Apellidos'),nameFormat('Apellidos'),maxLength('Apellidos',40)]"
                   ></v-text-field>              
@@ -353,13 +353,14 @@
                     <v-col>
                       <v-checkbox
                         v-model="terms"
-                        :label="`Yo quiero editar el atleta con id:${id}`"
+                        label="He revisado mis cambios*."
                       >
                       </v-checkbox>
                     </v-col>
               </v-row>
               
             </v-container>
+            <small>*indica un campo requerido.</small>
           </v-form>      
         </v-card-text>
           <v-card-actions>
