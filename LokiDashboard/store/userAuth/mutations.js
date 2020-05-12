@@ -50,6 +50,9 @@ export default {
   CLEAR_USER_DATA(state) {
     state.isLoading = false;
     this.$auth.logout()
+    Cookie.remove('auth.strategy')
+    Cookie.remove('auth._token.local')
+    Cookie.remove('auth._refresh_token.local')
     Cookie.remove('permissions')
     Cookie.remove('user')
 

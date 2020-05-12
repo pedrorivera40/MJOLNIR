@@ -77,7 +77,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import TheSnackBar from "@/components/TheSnackBar";
+import TheSnackBar from "@/components/notifications/TheSnackBar";
 export default {
   components: {
     TheSnackBar
@@ -121,9 +121,6 @@ export default {
       logout: "userAuth/logout",
       setUser: "userAuth/setUser"
     }),
-    test() {
-      console.log(this.$store.state.userAuth.userPermissions[9]["22"]);
-    }
   },
   computed: {
     ...mapGetters({

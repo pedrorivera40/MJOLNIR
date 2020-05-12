@@ -22,7 +22,7 @@
               label="Contraseña Temporal"
               name="current-password"
               prepend-icon="mdi-lock-clock"
-              :append-icon="showCurr ? 'mdi-eye-off' : 'mdi-eye'"
+              :append-icon="showCurr ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showCurr ? 'text' : 'password'"
               v-model="password"
               @click:append="showCurr = !showCurr"
@@ -105,14 +105,18 @@ export default {
   },
   methods: {
     ...mapActions({
-      activateAccount: "userAuth/activateAccount"
+      activateAccount: "userAuth/activateAccount",
+      clearStorage: "userAuth/logout"
     })
   },
   computed: {
     ...mapGetters({
       isLoading: "userAuth/isLoading"
     })
-  }
+  },
+  mounted() {
+    this.clearStorage()
+  },
 };
 </script>
 

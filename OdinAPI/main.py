@@ -360,23 +360,13 @@ def passwordReset(duid):
 
 
 @app.route("/users/activate", methods=['PATCH'])
-@token_check
 def accountUnlock():
-    # Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
-
-    # Check for valid request
+    #Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     req = request.json
     handler = UserHandler()
     if request.method == 'PATCH':
-        # Check for valid permissions
-        if(not(validateRequestPermissions(token, '24'))):  # must have permission to modify user
-            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # For acount unlock
         # Check the request contains the right structure.
         if 'username' not in req or 'password' not in req or 'new_password' not in req:
