@@ -132,6 +132,23 @@
                 </v-tabs>
             </v-container>
         </v-container>
+        <v-container v-else>
+            <v-row justify = center>
+                <v-progress-circular
+                    :active="loadingQuery"
+                    indeterminate
+                    :size="50"
+                    color="primary"
+                ></v-progress-circular>
+                <!-- <v-progress-linear
+                    :active="loadingQuery"
+                    indeterminate
+                    absolute
+                    bottom
+                    color = "primary"
+                ></v-progress-linear> -->
+            </v-row>
+        </v-container>
     </div>
     
   </v-container>

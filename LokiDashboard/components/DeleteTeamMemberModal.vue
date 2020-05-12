@@ -19,9 +19,9 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="close()"> Cancelar </v-btn>
+          <v-btn color="grey darken-3" text @click="close()"> Cancelar </v-btn>
           <v-btn
-            color="grey darken-3"
+            color="green darken-1"
             :disabled="!terms"
             :loading="isLoading"
             text

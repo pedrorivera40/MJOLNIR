@@ -1,9 +1,7 @@
 <template>
   <v-container class="wrapper" v-if="formated_event_info()">
     <v-container v-if="formated_event_info()">
-      <h1 class="primary_dark--text pl-3">
-        Resultados {{ sport_name }} {{ branch_name_local }}
-      </h1>
+      <h1 class="primary_dark--text pl-3">Resultados {{ sport_name }} {{ branch_name_local }}</h1>
       <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
       <h3>Evento de {{ event_date }}</h3>
     </v-container>
@@ -45,19 +43,19 @@
                   </v-col>
                 </v-row>
                 <v-row v-else-if="loadingQuery" justify = center>
-                  <!-- <v-progress-circular
+                  <v-progress-circular
                     :active="loadingQuery"
                     indeterminate
                     :size="50"
                     color="primary"
-                  ></v-progress-circular> -->
-                  <v-progress-linear
+                  ></v-progress-circular>
+                  <!-- <v-progress-linear
                     :active="loadingQuery"
                     indeterminate
                     absolute
                     bottom
                     color = "primary"
-                  ></v-progress-linear>
+                  ></v-progress-linear> -->
                 </v-row>
                 <v-row v-else-if="!loadingQuery" justify="center">
                   <v-col align="center">
@@ -152,7 +150,7 @@
                     :items="payload_stats.athlete_statistic"
                     item-key="athlete_statistic"
                     class="elevation-1"
-                    v-if="formated_event_info()||formated_member_stats()"
+                    v-if="formated_member_stats()"
                     :loading="loadingQuery"
                     loading-text="Cargando Estadísticas..."
                   >
@@ -204,6 +202,23 @@
                       </v-tooltip>
                     </template>
                   </v-data-table>
+                  <v-container v-else-if="loadingQuery">
+                    <v-row justify = center>
+                      <v-progress-circular
+                        :active="loadingQuery"
+                        indeterminate
+                        :size="50"
+                        color="primary"
+                      ></v-progress-circular>
+                      <!-- <v-progress-linear
+                        :active="loadingQuery"
+                        indeterminate
+                        absolute
+                        bottom
+                        color = "primary"
+                      ></v-progress-linear> -->
+                    </v-row>
+                  </v-container>
                   <v-container v-else-if="!loadingQuery">
                     <v-row align="center" justify="center">
                       <v-col justify="center" align="center">
@@ -225,11 +240,28 @@
                     :items="team_statistics"
                     item-key="team_statistics"
                     class="elevation-1"
-                    v-if="formated_event_info()||formated_member_stats()"
+                    v-if="formated_member_stats()"
                     :loading="loadingQuery"
                     loading-text="Cargando Estadísticas..."
                   >
                   </v-data-table>
+                  <v-container v-else-if="loadingQuery">
+                    <v-row justify = center>
+                      <v-progress-circular
+                        :active="loadingQuery"
+                        indeterminate
+                        :size="50"
+                        color="primary"
+                      ></v-progress-circular>
+                      <!-- <v-progress-linear
+                        :active="loadingQuery"
+                        indeterminate
+                        absolute
+                        bottom
+                        color = "primary"
+                      ></v-progress-linear> -->
+                    </v-row>
+                  </v-container>
                   <v-container v-else-if="!loadingQuery">
                     <v-row align="center" justify="center">
                       <v-col justify="center" align="center">
