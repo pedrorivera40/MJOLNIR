@@ -5,7 +5,7 @@
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card width="800" class="elevation-12 mx-auto">
                 <v-toolbar color="green darken-1" dark flat>
-                    <v-toolbar-title>Editar Estadísticas Atleta {{sport_name}} - {{branch}}</v-toolbar-title>
+                    <v-toolbar-title>Editar Estadísticas Atleta {{sport_name}} - {{branch_name}}</v-toolbar-title>
                     <v-spacer />
                 </v-toolbar>
                 <v-card-text>            
@@ -29,7 +29,7 @@
                                                     label="Atleta Seleccionado"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
                                                     required
                                                     disabled
                                                     >
@@ -43,7 +43,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -56,7 +56,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                            <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -117,8 +119,8 @@
                                           
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.steals"                      
-                                                    :rules="[numeric('Rebotes'),scoreRequired('Rebotes')]"
-                                                    label="Rebotes"
+                                                    :rules="[numeric('Robos'),scoreRequired('Robos')]"
+                                                    label="Robos"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -260,7 +262,7 @@
                                                     label="Atleta Seleccionado"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
                                                     required
                                                     disabled
                                                     >
@@ -274,7 +276,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -287,7 +289,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                            <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -305,8 +309,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.kill_points"                      
-                                                    :rules="[numeric('Puntos de Kill*'),scoreRequired('Puntos de Kill*')]"
-                                                    label="Puntos de Kill*"
+                                                    :rules="[numeric('Puntos de Ataque'),scoreRequired('Puntos de Ataque')]"
+                                                    label="Puntos de Ataque"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -340,8 +344,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.aces"                      
-                                                    :rules="[numeric('Aces'),scoreRequired('Aces')]"
-                                                    label="Aces"
+                                                    :rules="[numeric('Servicio Directo'),scoreRequired('Servicio Directo')]"
+                                                    label="Servicio Directo"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -360,8 +364,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.digs"                      
-                                                    :rules="[numeric('Digs*'),scoreRequired('Digs*')]"
-                                                    label="Digs*"
+                                                    :rules="[numeric('Recepciones'),scoreRequired('Recepciones')]"
+                                                    label="Recepciones"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -395,8 +399,8 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.reception_errors"                      
-                                                    :rules="[numeric('Errores de Recepcion*'),scoreRequired('Errores de Recepcion*')]"
-                                                    label="Errores de Recepcion*"
+                                                    :rules="[numeric('Errores de Recepcion'),scoreRequired('Errores de Recepcion')]"
+                                                    label="Errores de Recepcion"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -421,7 +425,7 @@
                                                     label="Atleta Seleccionado"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
                                                     required
                                                     disabled
                                                     >
@@ -435,7 +439,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -448,7 +452,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                            <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -547,7 +553,7 @@
                                                     label="Atleta Seleccionado"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
                                                     required
                                                     disabled
                                                     >
@@ -561,7 +567,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -574,7 +580,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                            <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -699,7 +707,7 @@
                                                     label="Atleta Seleccionado"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
                                                     required
                                                     disabled
                                                     >
@@ -713,7 +721,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -726,7 +734,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                             <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -753,7 +763,7 @@
                                                     item-text="category_name"
                                                     item-value="category_id"
                                                     required
-                                    
+                                                    :rules="[scoreRequired('Categoria')]"
                                                     >
                                                 </v-autocomplete>
                                         </v-col>
@@ -777,7 +787,7 @@
                                                     item-text="medal_obtained"
                                                     item-value="medal_id"
                                                     required
-                                    
+                                                    :rules="[scoreRequired('Medalla')]"
                                                     >
                                                 </v-autocomplete>
                                         </v-col>
@@ -804,7 +814,7 @@
                                                     label="Atleta Seleccionado"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
                                                     required
                                                     disabled
                                                     >
@@ -818,7 +828,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -831,7 +841,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                             <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -858,7 +870,7 @@
                                                     item-text="category_name"
                                                     item-value="category_id"
                                                     required
-                                    
+                                                    :rules="[scoreRequired('Categoria')]"
                                                     >
                                                 </v-autocomplete>
                                         </v-col>
@@ -903,13 +915,13 @@
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="close()">close</v-btn>
+                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cerrar</v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="submitAthleteStats()" :loading="loadingQuery">submit</v-btn>
+                                    <v-btn color="grey darken-3" text @click="clear()" :disabled="loadingQuery">borrar</v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="clear()">clear</v-btn>
+                                    <v-btn color="primary darken-1" text @click="submitAthleteStats()" :loading="loadingQuery" :disabled="!valid">guardar</v-btn>
                                 </v-col>
                             </v-row>   
                         </v-container>
@@ -936,22 +948,13 @@
         refresh_stats:Boolean,
         athlete_id:Number,
         individual_stats:Object,
+        sport_name:String,
+        branch_name:String
       },
     data: () => ({
         
         valid: false,
-        //WRITTEN TO/PARAMETERS:
-        //Baloncesto
-        
-        // sport_id:'', //comes from route
-        // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
-        sport_name:'',    //would have to fetch using sport ID  
-        // event_id:'',
-        //TODO: Use dynamically refrsh it
-        branch:'Masculino',    //fetch using sport id and branch, or just getSport if it returns the name
-      
-
-
+       
         // season_year:'',        //probably not neccessary, if so would obtain from the Event and its Team
         // event_id: 1, //This will come from route
         
@@ -1017,6 +1020,9 @@
                 },
                 {
                     category_id:7, category_name:"Doble"
+                },
+                {
+                    category_id:9, category_name:	"100 Metros"
                 },
                 {
                     category_id:12, category_name:"400 Metros"
