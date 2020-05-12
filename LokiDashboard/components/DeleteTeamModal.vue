@@ -19,7 +19,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="close()"> Cancelar </v-btn>
+          <v-btn color="grey darken-3" text @click="close()"> Cancelar </v-btn>
           <v-btn
             color="green darken-1"
             :disabled="!terms"
@@ -80,7 +80,7 @@ export default {
         sport_id: Number(this.sport_id),
         season_year: Number(this.season_year)
       };
-      console.log("HEY WE GONNA REMOVE!",payload)
+      // console.log("HEY WE GONNA REMOVE!",payload)
       await this.setQueryLoading();
       await this.removeTeam(payload);
       await this.getSeasonDataPost()

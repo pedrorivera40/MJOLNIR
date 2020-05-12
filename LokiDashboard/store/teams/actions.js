@@ -88,6 +88,18 @@ export default{
             }
         }
     },
+    async setMembersQueryLoading({commit, dispatch}){
+        try{
+            commit("SET_MEMBERS_QUERY_LOADING")
+        }catch(error){
+            console.log("ERROR SETTING STATE VARIABLE FOR LOADING MEMBERS QUERY",error)
+            if(!!error.response.data){
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            }else{
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            }
+        }
+    },
     async setNullTeam({commit, dispatch}){
         try{
             commit("SET_TEAM",null)
@@ -264,12 +276,14 @@ export default{
             console.log("GET ATHLETES",response)
             console.log("GET ATHLETES",response.data)
             commit("SET_SPORT_ATHLETES",response.data.Athletes)
-            commit("SET_QUERY_DONE")
+            // commit("SET_QUERY_DONE")
+            commit("SET_MEMBERS_QUERY_DONE")
             
         }catch(error){
             console.log("ERROR GETTING SPORT ATHLETES",athlete_params,error)
             commit("SET_SPORT_ATHLETES",null)
-            commit("SET_QUERY_DONE")
+            // commit("SET_QUERY_DONE")
+            commit("SET_MEMBERS_QUERY_DONE")
         }
     },
     async setSportAthletesNull({commit, dispatch}){

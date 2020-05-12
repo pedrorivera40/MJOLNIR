@@ -33,6 +33,12 @@ export default{
     SET_QUERY_LOADING(state){
         state.loadingQuery = true
     },
+    SET_MEMBERS_QUERY_LOADING(state){
+        state.loadingMembersQuery = true
+    },
+    SET_MEMBERS_QUERY_DONE(state){
+        state.loadingMembersQuery = false
+    },
     SET_QUERY_DONE(state){
         state.loadingQuery = false
     },
