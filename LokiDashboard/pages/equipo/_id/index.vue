@@ -83,8 +83,8 @@
                 <v-container v-if="formated()">
                   <v-row align = "center" justify = "center">
                     <v-col justify = "center" align = "center">
-                      <v-icon v-if="(current_team.team_image_url == null)||(current_team.team_image_url == '')" height="100"> mdi-account-group  </v-icon>
-                      <v-img v-else :src="current_team.team_image_url" aspect-ratio="2"> 
+                      <v-icon v-if="(current_team.team_image_url == null)||(current_team.team_image_url == '')" height="300"> mdi-account-group  </v-icon>
+                      <v-img v-else :src="current_team.team_image_url" aspect-ratio="2" height="300"> 
                       </v-img>
                     </v-col>
                   </v-row>
