@@ -27,6 +27,14 @@ For the user management module we want to showcase we are able to perform CRUD o
 7. Lock a User's account with 3 erroneous logins [SW-R: 1h, Sec-R: 2e].
 8. Reset a User's Password Using the User Management Page [SW-R: 1j, 1k, Sec-R: 2h].
 
+## Sports Module
+
+This module is divided in two components: View and API Routes. Demonstration for this module will take place as part of the other modules that are integrated with it (Team and Athlete modules). The following segment briefly describes each component of the Sports module.
+
+1. Its view allows users to navigate to the team profile of interest (both Freya and Loki). Presents the user with a list of sport cards which are filtered by the sport branch. When clicked, these redirect to the latest team profile for the desired sport.
+
+2. Its API routes expose information regarding the sports covered by the system such as: list of sports by branch, sport entry given its id or sport name, list categories of a sport given its id, and a list of sport detail entries.
+
 ## Athlete Module
 
 For the Athlete module we want to showcase the creation of at least
@@ -74,6 +82,33 @@ statistics recorded.
 
 5. Select an event with statistics to view and then click on 
 the "see results button" to be redirected to the results page.**[SOFTWARE REQUIREMENTS 2D]**
+
+## PBP Management Module
+This module allows dashboard users to control the PBP sequence as a Volleyball game takes place. Note that this information is also displayed on the Freya website for general fanbase to view. As for this demonstration, the objective is to create a new PBP sequence for an existing Volleyball game, and modify the game sequence by adding the athletes that participate, adding game actions, updating opponent team color, adjusting game score, and changing the current set value. Finally the game will be marked as ended.
+
+1. Go to events management page to see a list of created events. (similar as in the previous demonstration).
+
+2. Find an event in the list that shows the button "Crear PBP" to create a PBP sequence (use pagination if needed) **[SOFTWARE REQUIREMENTS 3K]**.
+
+3. Validate it corresponds to a Volleyball event and press the "Crear PBP" button. **[SOFTWARE REQUIREMENTS 3A]**
+
+4. Move to the "Acciones Generales" section within the PBP page and click in the "Color de Oponente" button.
+
+5. Choose the desired color for opponent game action cards and press "Guardar". **[SOFTWARE REQUIREMENTS 3B]**
+
+6. Move to the "Administrador de Jugadas" section, and on the left side press the button for choosing UPRM athletes who will participate on the event.
+
+7. Click on the checkbox of those athletes that will participate, and then press "Salir" to exit the modal. **[SOFTWARE REQUIREMENTS 3C, 3E]**
+
+8. Move back to the "Administrador de Jugadas" section, and on the right side press the button for managing opponent athletes who will participate on the event.
+
+9. Here we can add, edit, and delete the opponent team participants. **[SOFTWARE REQUIREMENTS 3D, 3F]**
+
+10. At this point we are ready to add, edit, and remove game actions. **[SOFTWARE REQUIREMENTS 3G, 3H, 3I]**
+
+11. Move to the "Acciones Generales" section, and press the "Finalizar" button.
+
+12. Validate the cloud function was triggered and the statistics were synchronized. **[SOFTWARE REQUIREMENTS 3J]**
 
 ## Results Management Module
 
