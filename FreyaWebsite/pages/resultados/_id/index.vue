@@ -42,7 +42,22 @@
                         </v-col>
                         
                     </v-row>
-                    <v-row v-else justify="center">
+                    <v-row v-else-if="loadingQuery" justify = center>
+                        <!-- <v-progress-circular
+                            :active="loadingQuery"
+                            indeterminate
+                            :size="50"
+                            color="primary"
+                        ></v-progress-circular> -->
+                        <v-progress-linear
+                            :active="loadingQuery"
+                            indeterminate
+                            absolute
+                            bottom
+                            color = "primary"
+                        ></v-progress-linear>
+                    </v-row>
+                    <v-row v-else-if="!loadingQuery" justify="center">
                         <v-col align="center">
                             <h3>No Hay Puntuación Final Disponible</h3>
                         </v-col>
@@ -73,12 +88,13 @@
                             :items="payload_stats.athlete_statistic"
                             item-key="payload_stats.athlete_statistic" 
                             class="elevation-1"	
-                            v-if="formated_member_stats()"
-                            :loading="loadingQuery"							
+                            v-if="formated_event_info()||formated_member_stats()"
+                            :loading="loadingQuery"	
+                            loading-text="Cargando Estadísticas..."						
                             >
                             <template #item.full_name="{ item }">{{ item.athlete_info.first_name }} {{item.athlete_info.middle_name}} {{ item.athlete_info.last_names }}</template>
                             </v-data-table>
-                            <v-container v-else>
+                            <v-container v-else-if="!loadingQuery">
                                 <v-row align = "center" justify = "center">
                                 <v-col justify = "center" align = "center">
                                     <h2>No Se Encontraron Resultados</h2>
@@ -99,11 +115,12 @@
                             :items="team_statistics"
                             item-key="team_statistics" 
                             class="elevation-1"	
-                            :loading="loadingQuery"
-                            v-if="formated_member_stats()"							
+                            v-if="formated_event_info()||formated_member_stats()"
+                            :loading="loadingQuery"	
+                            loading-text="Cargando Estadísticas..."							
                             >
                             </v-data-table>
-                            <v-container v-else>
+                            <v-container v-else-if="!loadingQuery">
                                 <v-row align = "center" justify = "center">
                                 <v-col justify = "center" align = "center">
                                     <h2>No Se Encontraron Resultados de Equipo</h2>
@@ -115,10 +132,27 @@
                 </v-tabs>
             </v-container>
         </v-container>
+        <v-container v-else>
+            <v-row justify = center>
+                <v-progress-circular
+                    :active="loadingQuery"
+                    indeterminate
+                    :size="50"
+                    color="primary"
+                ></v-progress-circular>
+                <!-- <v-progress-linear
+                    :active="loadingQuery"
+                    indeterminate
+                    absolute
+                    bottom
+                    color = "primary"
+                ></v-progress-linear> -->
+            </v-row>
+        </v-container>
     </div>
     
   </v-container>
-  <v-container v-else>
+  <v-container v-else-if="!loadingQuery">
     <v-row justify="center">
         <v-col align="center">
             <h3>Evento No Existe</h3>
@@ -195,6 +229,7 @@ export default {
   },
   
 created(){
+    this.setQueryLoading()
     this.clearEventInfo()
     this.clearAllStats()
     this.ready_for_stats=true
@@ -220,6 +255,7 @@ created(){
         getEventInfo:"results/getEventInfo",
         clearEventInfo:"results/clearEventInfo",
         clearAllStats:"results/clearAllStats",
+        setQueryLoading:"results/setQueryLoading",
     }),
     formated_event_info(){
         console.log("the event info...(before)",this.results_payload)
@@ -239,6 +275,7 @@ created(){
                     sport_route: String(this.sport_route)
                 }
                 console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)",stat_params)
+                this.setQueryLoading()
                 this.getAllEventStatistics(stat_params)
                 console.log("[4] GOT EVENT STATS",this.results_payload)
                 this.ready_for_stats = false

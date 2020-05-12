@@ -3,7 +3,7 @@
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card width="800" class="elevation-12 mx-auto">
                 <v-toolbar color="green darken-1" dark flat>
-                    <v-toolbar-title>Editar Equipo {{sport_name}} - {{branch}}</v-toolbar-title>
+                    <v-toolbar-title>Editar Equipo {{sport_name}} - {{branch_name}}</v-toolbar-title>
                     <v-spacer />
                 </v-toolbar>
                 <v-card-text>
@@ -40,6 +40,8 @@
                                         </v-col>
                                     </v-row>
                                 </v-col>
+                            </v-row>
+                            <v-row>
                                 <v-col>
                                     <v-row>
                                         <h2>Imagen de Equipo:</h2>
@@ -49,11 +51,15 @@
                                         justify = "center"
                                         >
                                         <v-col>
-                                            <v-text-field
+                                            <v-textarea
                                                 v-model="team_image_url"
                                                 label="Enlace de Imagen de Equipo"
-                                                prepend-icon="mdi-link"
-                                            ></v-text-field>
+                                                auto-grow
+                                                outlined
+                                                rows = "1"
+                                                :counter="1000"
+                                                :rules="[maxSummaryLength('Enlace de Imagen de Equipo',1000)]"
+                                            ></v-textarea>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -69,10 +75,11 @@
                                 >
                                     <v-textarea
                                         v-model="about_team"
-                                        :counter="1000"
                                         label="Breve Descripcion Del Equipo"
                                         auto-grow
+                                        outlined
                                         rows = "3"
+                                        :counter="1000"
                                         :rules="[generalPhrase('Breve Descripcion Del Equipo'),maxSummaryLength('Breve Descripcion Del Equipo',1000)]"
                                     ></v-textarea>
                                 </v-col>
@@ -82,13 +89,13 @@
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="close()">close</v-btn>
+                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cancelar</v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="submit" :loading="loadingQuery">submit</v-btn>
+                                    <v-btn color="grey darken-3" text @click="clear()" :disabled="loadingQuery">borrar</v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="clear">clear</v-btn>
+                                    <v-btn color="primary darken-1" text @click="submit()" :loading="loadingQuery" :disabled="!valid">guardar</v-btn>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -111,24 +118,15 @@
         season_year: Number,
         about_team: String,
         team_image_url: String,
-
+        sport_name: String,
+        branch_name: String
     },
     data: () => ({
         //For Validation
         valid:false,
 
-
         sport_route:'',
-        // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
-        //USED FOR TEAM SUBMISSION:
-        // sport_id:'',
-        sport_name:'',
-        branch:'Masculino',
-        // TODO: FIX ROUTE PARAMS. TEMPORARILY SELECTED LIKE THIS. NEED TO SOMEHOW GET IT FROM OTHER ROUTE.
-        // season_year:2020,
-        // team_image_url:'',
-        // about_team:'',
-
+        
         //PAYLOAD
         current_team:'',
         current_team_id:'',
@@ -184,14 +182,6 @@
             }
         },
 
-        buildDefaultValues(){
-            this.sport_id = this.$route.params.id
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_name = "Baloncesto", this.sport_route = "basketball"}
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_name = "Voleibol",this.sport_route = "volleyball"}
-            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_name = "Fútbol", this.sport_route = "soccer"}
-            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol", this.sport_route = "baseball"}
-            else{this.sport_name = '', this.sport_route = ''}
-        },
         close() {
             this.$emit("update:dialog", false);
         },

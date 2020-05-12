@@ -3,7 +3,14 @@
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card width="800" class="elevation-12 mx-auto">
                 <v-toolbar color="green darken-1" dark flat>
-                    <v-toolbar-title>Añadir Atleta a Equipo {{sport_name}} - {{branch}}</v-toolbar-title>
+                    <v-toolbar-title>Añadir Atletas al Equipo {{sport_name}} - {{branch_name}}</v-toolbar-title>
+                    <v-progress-linear
+                    :active="loadingMembersQuery"
+                    indeterminate
+                    absolute
+                    bottom
+                    color = "white"
+                ></v-progress-linear>
                     <v-spacer />
                 </v-toolbar>
                 <v-card-text>            
@@ -29,7 +36,7 @@
                                     <v-row>      
                                         <div>                  
                                         <h2>
-                                            Atleta:
+                                            Atletas:
                                         </h2>
                                         </div> 
                                     </v-row>
@@ -49,6 +56,8 @@
                                                 item-text="fName"
                                                 item-value="id"
                                                 multiple
+                                                :rules="[required('Atletas')]"
+                                                :filter="customFilter"
                                                 >
                                                 <template v-slot:selection="data">
                                                     <v-chip
@@ -62,7 +71,7 @@
                                                         <v-icon v-if="data.item.profilePicLink == null" height="100"> mdi-account  </v-icon>
                                                         <v-img v-else :src="data.item.profilePicLink"></v-img>
                                                     </v-avatar>
-                                                    {{ data.item.fName }}
+                                                    {{ data.item.fName }} {{ data.item.mName }} {{ data.item.lName }}
                                                     </v-chip>
                                                 </template>
                                                 <template v-slot:item="data">
@@ -75,7 +84,9 @@
                                                         <v-img v-else :src="data.item.profilePicLink"></v-img>
                                                     </v-list-item-avatar>
                                                     <v-list-item-content>
-                                                        <v-list-item-title v-html="data.item.fName"></v-list-item-title>
+                                                        <!-- <v-list-item-title v-html="data.item.fName"></v-list-item-title> -->
+                                                        <v-list-item-title v-html="data.item.fName+' '+data.item.mName+' '+data.item.lName" v-if="data.item.mName"></v-list-item-title>
+                                                        <v-list-item-title v-html="data.item.fName+' '+data.item.lName" v-else></v-list-item-title>
                                                     </v-list-item-content>
                                                     </template>
                                                 </template>
@@ -84,14 +95,24 @@
                                     </v-row>    
                                 </v-col>  
                             </v-row>      
+                            
+                        </v-container>
+                        <v-container v-else-if="!loadingMembersQuery">
+                            <v-row align = "center" justify = "center">
+                                <v-col justify = "center" align = "center">
+                                <h2>No Se Encontraron Atletas Para Añadir</h2>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                        <v-container>
                             <v-row justify="end">
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="close()">close</v-btn>
+                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cancelar</v-btn>
                                 </v-col>
-                                <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="submit" :loading="loadingQuery">submit</v-btn>
+                                <v-col>                                                         
+                                    <v-btn color="primary darken-1" text @click="submit" :disabled="!valid||loadingMembersQuery" :loading="(loadingQuery&&formated())" >guardar</v-btn>
                                 </v-col>
                             </v-row>   
                         </v-container>
@@ -110,9 +131,11 @@
     export default {
         props:{
             dialog:Boolean,
-            sport_id:Number,
+            sport_id:String,
             team_id:Number,
-            season_year: Number
+            season_year: Number,
+            sport_name: String,
+            branch_name: String
         },
         data: () => ({
             valid:false,
@@ -120,8 +143,8 @@
             sport_route:'',
             // team_id:28,
             // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
-            sport_name:'',  
-            branch:'',    
+            // sport_name:'',  
+            // branch:'',    
             sport_athletes_local:'',
             members_to_add:'',
             members_to_add_formatted:'',
@@ -133,14 +156,13 @@
             this.members_to_add_formatted = []
             this.setSportAthletesNull()
             this.ready_for_members = true
-            // this.buildDefaultValues()
             
             const athlete_params = {
                 sport_id:Number(this.sport_id),
                 team_id:Number(this.team_id)
             }
-            this.setQueryLoading()
-            console.log("THE DAMN PARAMS",athlete_params)
+            this.setMembersQueryLoading()
+            // console.log("THE ATHLETE PARAMS",athlete_params)
             this.getSportAthletes(athlete_params)
         },       
         methods: {
@@ -153,21 +175,63 @@
             setSportAthletesNull:"teams/setSportAthletesNull",
             setNullTeam:"teams/setNullTeam",
             setNullTeamMembers:"teams/setNullTeamMembers",
-            getTeamByYear:"teams/getTeamByYear"
+            getTeamByYear:"teams/getTeamByYear",
+            setMembersQueryLoading:"teams/setMembersQueryLoading"
         }),
-        buildDefaultValues(){
-            this.sport_id = this.$route.params.id
-            if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_name = "Baloncesto", this.sport_route = "basketball"}
-            else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_name = "Voleibol",this.sport_route = "volleyball"}
-            else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_name = "Fútbol", this.sport_route = "soccer"}
-            else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol", this.sport_route = "baseball"}
-            else{this.sport_name = '', this.sport_route = ''}
+        customFilter (item, queryText, itemText) {
+            const searchText = queryText.toLowerCase()
+            const values = searchText.split(" ");
+            if(item.mName){
+                const textOne = item.fName.toLowerCase()
+                const textTwo = item.mName.toLowerCase()
+                const textThree = item.lName.toLowerCase()
+                
+
+                if(values.length == 1){
+                    return textOne.indexOf(values[0]) > -1 || textTwo.indexOf(values[0]) > -1 || textThree.indexOf(values[0]) > -1
+                }
+                else if(values.length == 2){
+                    return(
+                        ((textOne == values[0]) && (textTwo.indexOf(values[1]) > -1 ))
+                        ||
+                        ((textTwo == values[0]) && (textThree.indexOf(values[1]) > -1 ))
+                        ||
+                        ((textOne == values[0]) && (textThree.indexOf(values[1]) > -1 ))
+                    )
+                }
+                else if(values.length == 3){
+                    return((textOne == values[0]) && (textTwo == values[1]) && (textThree.indexOf(values[2]) > -1 ))
+                }
+                else{
+                    return false
+                }
+ 
+            }
+            else{
+                const textOne = item.fName.toLowerCase()
+                const textTwo = item.lName.toLowerCase()
+                // const searchText = queryText.toLowerCase()
+                // return textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1
+
+
+                if(values.length == 1){
+                    return textOne.indexOf(values[0]) > -1 || textTwo.indexOf(values[0]) > -1
+                }
+                else if(values.length == 2){
+                    return((textOne == values[0]) && (textTwo.indexOf(values[1]) > -1 ))
+                }
+                else{
+                    return false
+                }
+
+
+            }
         },
         formated(){
             if(this.sport_athletes){
-                console.log("im out here waddup the ready is",this.ready_for_members)
+                // console.log("ready for members status:",this.ready_for_members)
                 if(this.ready_for_members){
-                    console.log("got in whats up",this.sport_athletes)
+                    // console.log("ready status inside if:",this.sport_athletes)
                     this.sport_athletes_local = this.sport_athletes
                     this.ready_for_members = false
                 }
@@ -178,7 +242,7 @@
             }
         },
         remove_from_select (item) {
-            const index = this.members_to_add.indexOf(item.athlete_id)
+            const index = this.members_to_add.indexOf(item.id)
             if (index >= 0) this.members_to_add.splice(index, 1)
         },
         close() {
@@ -197,7 +261,7 @@
         },
         async submit () {
             var i;
-            console.log("Going to add the members here!",this.members_to_add)
+            // console.log("Going to add the members here!",this.members_to_add)
             this.members_to_add_formatted = []
             for (i = 0; i < this.members_to_add.length; i++) {
                 const array_parameter = {
@@ -210,9 +274,9 @@
                 team_id: Number(this.team_id),
                 team_members: this.members_to_add_formatted
             }
-            console.log("Going to add athletes to team with id "+this.team_id+".")
-            console.log("Yeah yeah params 1",this.members_to_add_formatted)
-            console.log("Yeah yeah params 2",athlete_params)
+            // console.log("Going to add athletes to team with id "+this.team_id+".")
+            // console.log("Yeah yeah params 1",this.members_to_add_formatted)
+            // console.log("Yeah yeah params 2",athlete_params)
             await this.setQueryLoading()
             await this.addMembers(athlete_params)
             await this.getSeasonDataPost()
@@ -226,7 +290,8 @@
     computed: {
 	    ...mapGetters({
             sport_athletes:"teams/sport_athletes",
-            loadingQuery:"teams/loadingQuery"
+            loadingQuery:"teams/loadingQuery",
+            loadingMembersQuery:"teams/loadingMembersQuery"
         })
     }
   }

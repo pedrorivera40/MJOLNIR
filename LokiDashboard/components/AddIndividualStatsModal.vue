@@ -5,7 +5,7 @@
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card width="800" class="elevation-12 mx-auto">
                 <v-toolbar color="green darken-1" dark flat>
-                    <v-toolbar-title>Añadir Estadísticas Atleta {{sport_name}} - {{branch}}</v-toolbar-title>
+                    <v-toolbar-title>Añadir Estadísticas Atleta {{sport_name}} - {{branch_name}}</v-toolbar-title>
                     <v-spacer />
                 </v-toolbar>
                 <v-card-text>            
@@ -32,8 +32,9 @@
                                                     label="Seleccione Atleta"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
                                                     required
+                                                    :filter="customFilter"
                                                     >
                                                     <template v-slot:selection="data">
                                                         <v-chip
@@ -45,7 +46,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -58,7 +59,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                            <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -77,6 +80,7 @@
                                            
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.points"                      
+                                                    type="number" 
                                                     label="Puntos"
                                                     outlined
                                                     required
@@ -89,7 +93,7 @@
                                            
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.rebounds"                      
-                                                    
+                                                    type="number" 
                                                     label="Rebotes"
                                                     outlined
                                                     required
@@ -102,6 +106,7 @@
                                           
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.assists"                      
+                                                    type="number" 
                                                     :rules="[numeric('Asistencias'),scoreRequired('Asistencias')]"
                                                     label="Asistencias"
                                                     outlined
@@ -119,6 +124,7 @@
                                           
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.steals"                      
+                                                    type="number" 
                                                     :rules="[numeric('Robos'),scoreRequired('Robos')]"
                                                     label="Robos"
                                                     required
@@ -131,6 +137,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.blocks"                      
+                                                    type="number" 
                                                     :rules="[numeric('Bloqueos'),scoreRequired('Bloqueos')]"
                                                     label="Bloqueos"
                                                     required
@@ -143,6 +150,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.turnovers"                      
+                                                    type="number" 
                                                     :rules="[numeric('Pérdidas de Balón'),scoreRequired('Pérdidas de Balón')]"
                                                     label="Pérdidas de Balón"
                                                     required
@@ -165,6 +173,7 @@
                                            
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.field_goal_attempt"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro de Campo'),scoreRequired('Tiro de Campo')]"
                                                     label="Tiro de Campo"
                                                     required
@@ -177,6 +186,7 @@
                                            
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.three_point_attempt"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro de Tres Puntos'),scoreRequired('Tiro de Tres Puntos')]"
                                                     label="Tiro de Tres Puntos"
                                                     required
@@ -189,6 +199,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.free_throw_attempt"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro Libre'),scoreRequired('Tiro Libre')]"
                                                     label="Tiro Libre"
                                                     required
@@ -211,6 +222,7 @@
                                            
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_field_goal"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro de Campo'),scoreRequired('Tiro de Campo')]"
                                                     label="Tiro de Campo"
                                                     required
@@ -223,6 +235,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_three_point"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro de Tres Puntos'),scoreRequired('Tiro de Tres Puntos')]"
                                                     label="Tiro de Tres Puntos"
                                                     required
@@ -235,6 +248,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_free_throw"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro Libre'),scoreRequired('Tiro Libre')]"
                                                     label="Tiro Libre"
                                                     required
@@ -262,11 +276,12 @@
                                                     filled
                                                     chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Atleta"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
                                                     required
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
+                                                    :filter="customFilter"
                                                     >
                                                     <template v-slot:selection="data">
                                                         <v-chip
@@ -278,7 +293,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -291,7 +306,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                             <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -309,6 +326,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.kill_points"                      
+                                                    type="number" 
                                                     :rules="[numeric('Puntos de Ataque'),scoreRequired('Puntos de Ataque')]"
                                                     label="Puntos de Ataque"
                                                     outlined
@@ -319,6 +337,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.attack_errors"                      
+                                                    type="number" 
                                                     :rules="[numeric('Errores de Ataque'),scoreRequired('Errores de Ataque')]"
                                                     label="Errores de Ataque"
                                                     outlined
@@ -329,6 +348,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.assists"                      
+                                                    type="number" 
                                                     :rules="[numeric('Asistencias'),scoreRequired('Asistencias')]"
                                                     label="Asistencias"
                                                     outlined
@@ -344,6 +364,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.aces"                      
+                                                    type="number" 
                                                     :rules="[numeric('Servicio Directo'),scoreRequired('Servicio Directo')]"
                                                     label="Servicio Directo"
                                                     required
@@ -354,6 +375,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.service_errors"                      
+                                                    type="number" 
                                                     :rules="[numeric('Errores de Servicio'),scoreRequired('Errores de Servicio')]"
                                                     label="Errores de Servicio"
                                                     required
@@ -364,6 +386,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.digs"                      
+                                                    type="number" 
                                                     :rules="[numeric('Recepciones'),scoreRequired('Recepciones')]"
                                                     label="Recepciones"
                                                     required
@@ -379,6 +402,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.blocks"                      
+                                                    type="number" 
                                                     :rules="[numeric('Bloqueos'),scoreRequired('Bloqueos')]"
                                                     label="Bloqueos"
                                                     required
@@ -389,6 +413,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.blocking_errors"                      
+                                                    type="number" 
                                                     :rules="[numeric('Errores de Bloqueo'),scoreRequired('Errores de Bloqueo')]"
                                                     label="Errores de Bloqueo"
                                                     required
@@ -399,6 +424,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.reception_errors"                      
+                                                    type="number" 
                                                     :rules="[numeric('Errores de Recepcion'),scoreRequired('Errores de Recepcion')]"
                                                     label="Errores de Recepcion"
                                                     required
@@ -425,11 +451,12 @@
                                                     filled
                                                     chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Atleta"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
                                                     required
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
+                                                    :filter="customFilter"
                                                     >
                                                     <template v-slot:selection="data">
                                                         <v-chip
@@ -441,7 +468,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -454,7 +481,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                             <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -472,6 +501,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.goal_attempts"                      
+                                                    type="number" 
                                                     :rules="[numeric('Intentos de Gol'),scoreRequired('Intentos de Gol')]"
                                                     label="Intentos de Gol"
                                                     outlined
@@ -482,6 +512,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.assists"                      
+                                                    type="number" 
                                                     :rules="[numeric('Asistencias'),scoreRequired('Asistencias')]"
                                                     label="Asistencias"
                                                     outlined
@@ -492,6 +523,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.fouls"                      
+                                                    type="number" 
                                                     :rules="[numeric('Faltas'),scoreRequired('Faltas')]"
                                                     label="Faltas"
                                                     outlined
@@ -507,6 +539,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.cards"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tarjetas'),scoreRequired('Tarjetas')]"
                                                     label="Tarjetas"
                                                     required
@@ -517,6 +550,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_goals"                      
+                                                    type="number" 
                                                     :rules="[numeric('Goles Exitosos'),scoreRequired('Goles Exitosos')]"
                                                     label="Goles Exitosos"
                                                     required
@@ -527,6 +561,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.tackles"                      
+                                                    type="number" 
                                                     :rules="[numeric('Atajadas'),scoreRequired('Atajadas')]"
                                                     label="Atajadas"
                                                     required
@@ -553,11 +588,12 @@
                                                     filled
                                                     chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Atleta"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
                                                     required
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
+                                                    :filter="customFilter"
                                                     >
                                                     <template v-slot:selection="data">
                                                         <v-chip
@@ -569,7 +605,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -582,7 +618,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                             <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -600,6 +638,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.at_bats"                      
+                                                    type="number" 
                                                     :rules="[numeric('Turnos al Bate'),scoreRequired('Turnos al Bate')]"
                                                     label="Turnos al Bate"
                                                     outlined
@@ -610,6 +649,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.runs"                      
+                                                    type="number" 
                                                     :rules="[numeric('Carreras'),scoreRequired('Carreras')]"
                                                     label="Carreras"
                                                     outlined
@@ -620,6 +660,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.hits"                      
+                                                    type="number" 
                                                     :rules="[numeric('Hits'),scoreRequired('Hits')]"
                                                     label="Hits"
                                                     outlined
@@ -635,6 +676,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.runs_batted_in"                      
+                                                    type="number" 
                                                     :rules="[numeric('Carreras Empujadas'),scoreRequired('Carreras Empujadas')]"
                                                     label="Carreras Empujadas"
                                                     required
@@ -645,6 +687,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.base_on_balls"                      
+                                                    type="number" 
                                                     :rules="[numeric('Base por Bolas'),scoreRequired('Base por Bolas')]"
                                                     label="Base por Bolas"
                                                     required
@@ -655,6 +698,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.strikeouts"                      
+                                                    type="number" 
                                                     :rules="[numeric('Ponches'),scoreRequired('Ponches')]"
                                                     label="Ponches"
                                                     required
@@ -670,6 +714,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.left_on_base"                      
+                                                    type="number" 
                                                     :rules="[numeric('Dejados en Base'),scoreRequired('Dejados en Base')]"
                                                     label="Dejados en Base"
                                                     required
@@ -704,11 +749,12 @@
                                                     filled
                                                     chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Atleta"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
                                                     required
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
+                                                    :filter="customFilter"
                                                     >
                                                     <template v-slot:selection="data">
                                                         <v-chip
@@ -720,7 +766,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -733,7 +779,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                             <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -753,13 +801,12 @@
                                                     v-model="payload_stats_individual.attributes.category_id"
                                                     :items="sport_categories"
                                                     filled
-                                                    chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Categoria"
                                                     item-text="category_name"
                                                     item-value="category_id"
                                                     required
-                                    
+                                                    :rules="[scoreRequired('Categoria')]"
                                                     >
                                                 </v-autocomplete>
                                         </v-col>
@@ -777,13 +824,12 @@
                                                     v-model="payload_stats_individual.attributes.medal_id"
                                                     :items="medals"
                                                     filled
-                                                    chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Medalla"
                                                     item-text="medal_type"
                                                     item-value="medal_id"
                                                     required
-                                    
+                                                    :rules="[scoreRequired('Medalla')]"
                                                     >
                                                 </v-autocomplete>
                                         </v-col>
@@ -807,11 +853,11 @@
                                                     filled
                                                     chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Atleta"
                                                     item-text="first_name"
                                                     item-value="athlete_id"
                                                     required
-                                                    :rules="[numeric('Atleta'),scoreRequired('Atleta')]"
+                                                    :rules="[scoreRequired('Atleta')]"
                                                     >
                                                     <template v-slot:selection="data">
                                                         <v-chip
@@ -823,7 +869,7 @@
                                                             <v-icon v-if="data.item.profile_image_link == null" height="100"> mdi-account </v-icon>
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-avatar>
-                                                        {{ data.item.first_name }}
+                                                        {{ data.item.first_name }} {{data.item.middle_name}}  {{data.item.last_names}}
                                                         </v-chip>
                                                     </template>
                                                     <template v-slot:item="data">
@@ -836,7 +882,9 @@
                                                             <v-img v-else :src="data.item.profile_image_link"/>
                                                         </v-list-item-avatar>
                                                         <v-list-item-content>
-                                                            <v-list-item-title v-html="data.item.first_name"></v-list-item-title>
+                                                             <!-- <v-list-item-title v-html="data.item.first_name"></v-list-item-title> -->
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.middle_name+' '+data.item.last_names" v-if="data.item.middle_name"></v-list-item-title>
+                                                            <v-list-item-title v-html="data.item.first_name+' '+data.item.last_names" v-else></v-list-item-title>
                                                         </v-list-item-content>
                                                         </template>
                                                     </template>
@@ -856,19 +904,18 @@
                                                     v-model="payload_stats_individual.attributes.category_id"
                                                     :items="sport_categories"
                                                     filled
-                                                    chips
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Categoria"
                                                     item-text="category_name"
                                                     item-value="category_id"
                                                     required
-                                    
+                                                    :rules="[scoreRequired('Categoria')]"
                                                     >
                                                 </v-autocomplete>
                                         </v-col>
                                     </v-row>
                                     <v-row>
-                                        <h2>Medalla Obtenida:</h2>
+                                        <h2>Resultados Partidas:</h2>
                                     </v-row>
                                     <v-row 
                                     align ="center"
@@ -879,10 +926,10 @@
                                                 <v-text-field
                                                     v-model.number="payload_stats_individual.attributes.matches_played"       
                                                     type="number"               
-                                                    label="Matches Played"
+                                                    label="Partidas Jugadas"
                                                     outlined
                                                     required
-                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
+                                                    :rules="[numeric('Partidas Jugadas'),scoreRequired('Partidas Jugadas')]"
                                                 ></v-text-field>
                                         </v-col>
                                         <v-col             
@@ -890,10 +937,10 @@
                                                 <v-text-field
                                                     v-model.number="payload_stats_individual.attributes.matches_won"   
                                                     type="number"                   
-                                                    label="Matches Won"
+                                                    label="Partidas Ganadas"
                                                     outlined
                                                     required
-                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
+                                                    :rules="[numeric('Partidas Ganadas'),scoreRequired('Partidas Ganadas')]"
                                                 ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -903,13 +950,13 @@
                                 <v-spacer/>
                                 <v-spacer/>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="close()">close</v-btn>
+                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cerrar</v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="submitAthleteStats()" :loading="loadingQuery">submit</v-btn>
+                                    <v-btn color="grey darken-3" text @click="clear()" :disabled="loadingQuery">borrar</v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn color="primary ligthen-1" text @click="clear()">clear</v-btn>
+                                    <v-btn color="primary darken-1" text @click="submitAthleteStats()" :loading="loadingQuery" :disabled="!valid">guardar</v-btn>
                                 </v-col>
                             </v-row>   
                         </v-container>
@@ -933,23 +980,13 @@
         payload_stats:Object,
         sport_id:Number,
         team_members:Array,
-        refresh_stats:Boolean 
+        refresh_stats:Boolean,
+        sport_name:String,
+        branch_name:String
       },
     data: () => ({
 
         valid: false,
-        
-        //WRITTEN TO/PARAMETERS:
-        //Baloncesto
-        
-        // sport_id:'', //comes from route
-        // TODO: (Herbert) Verificar como hacer que esto [sport and branch] sea dinamico, pasado por el sport previo
-        sport_name:'',    //would have to fetch using sport ID  
-        // event_id:'',
-        //TODO: Use dynamically refrsh it
-        branch:'Masculino',    //fetch using sport id and branch, or just getSport if it returns the name
-      
-
 
         // season_year:'',        //probably not neccessary, if so would obtain from the Event and its Team
         // event_id: 1, //This will come from route
@@ -980,19 +1017,19 @@
         sport_categories: '',
         medals: [
             {
-                medal_id:0,
+                medal_id:1,
                 medal_type:"Oro"
             },
             {
-                medal_id:1,
+                medal_id:2,
                 medal_type:"Plata"
             },
             {
-                medal_id:2,
+                medal_id:3,
                 medal_type:"Bronce"
             },
             {
-                medal_id:3,
+                medal_id:4,
                 medal_type:"Ninguna"
             },
         ]
@@ -1003,7 +1040,7 @@
     created(){
         this.buildDefaultValues()
         this.initializeSportData()
-        console.log("[TM-ADD_STATS(COMPONENT)]",this.team_members)
+        // console.log("[TM-ADD_STATS(COMPONENT)]",this.team_members)
     },
     methods: {
         ...rules,
@@ -1013,6 +1050,55 @@
             getAllEventStatistics:"results/getAllEventStatistics"
             // getSportCategories:"result/getSportCategories"
         }),
+        customFilter (item, queryText, itemText) {
+            const searchText = queryText.toLowerCase()
+            const values = searchText.split(" ");
+            if(item.middle_name){
+                const textOne = item.first_name.toLowerCase()
+                const textTwo = item.middle_name.toLowerCase()
+                const textThree = item.last_names.toLowerCase()
+                
+
+                if(values.length == 1){
+                    return textOne.indexOf(values[0]) > -1 || textTwo.indexOf(values[0]) > -1 || textThree.indexOf(values[0]) > -1
+                }
+                else if(values.length == 2){
+                    return(
+                        ((textOne == values[0]) && (textTwo.indexOf(values[1]) > -1 ))
+                        ||
+                        ((textTwo == values[0]) && (textThree.indexOf(values[1]) > -1 ))
+                        ||
+                        ((textOne == values[0]) && (textThree.indexOf(values[1]) > -1 ))
+                    )
+                }
+                else if(values.length == 3){
+                    return((textOne == values[0]) && (textTwo == values[1]) && (textThree.indexOf(values[2]) > -1 ))
+                }
+                else{
+                    return false
+                }
+ 
+            }
+            else{
+                const textOne = item.first_name.toLowerCase()
+                const textTwo = item.last_names.toLowerCase()
+                // const searchText = queryText.toLowerCase()
+                // return textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1
+
+
+                if(values.length == 1){
+                    return textOne.indexOf(values[0]) > -1 || textTwo.indexOf(values[0]) > -1
+                }
+                else if(values.length == 2){
+                    return((textOne == values[0]) && (textTwo.indexOf(values[1]) > -1 ))
+                }
+                else{
+                    return false
+                }
+
+
+            }
+        },
         buildDefaultValues(){
             // this.event_id = this.$route.params.id
             // if (this.event_id == 1){
@@ -1154,7 +1240,7 @@
         async submitAthleteStats() {
             this.setQueryLoading()
             if (this.payload_stats_individual.athlete_id != ''){
-                console.log(this.payload_stats_individual)
+                // console.log(this.payload_stats_individual)
                 const stats_params = {
                     sport_route: this.sport_route,
                     statistics: this.payload_stats_individual

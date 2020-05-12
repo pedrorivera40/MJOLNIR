@@ -9,7 +9,7 @@
                             color="grey"
                             size="150"                                                                                                                                                                                    
                     >       
-                            <v-icon v-if="profile_image_link == null" height="100"> mdi-account </v-icon>
+                            <v-icon v-if="((profile_image_link == null)||(profile_image_link == ''))" height="100"> mdi-account </v-icon>
                             <v-img v-else :src="profile_image_link"/>
                                                                                             
                     </v-avatar> 																					
@@ -56,18 +56,18 @@ export default {
     
       //NOTE: Using pre-written data for athlete with id:8,
       //      will need to fetch this data below from the API.
-      athlete_id: String,
+      athlete_id: Number,
       first_name: String,
       middle_name: String,
       last_names:String,
-	  height_inches:String,
+	  height_inches:Number,
       study_program:String,
       school_of_precedence:String,
       athlete_positions:[String],
       athlete_categories:[String],      
-      number:String,
+      number:Number,
       profile_image_link:String,  
-      years_of_participation:String,
+      years_of_participation:Number,
     },//end of data()
     methods:{
         goToAthlete(){
