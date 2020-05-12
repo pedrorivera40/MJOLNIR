@@ -80,7 +80,7 @@ export default {
         sport_id: Number(this.sport_id),
         season_year: Number(this.season_year)
       };
-      console.log("HEY WE GONNA REMOVE!",payload)
+      // console.log("HEY WE GONNA REMOVE!",payload)
       await this.setQueryLoading();
       await this.removeTeam(payload);
       await this.getSeasonDataPost()

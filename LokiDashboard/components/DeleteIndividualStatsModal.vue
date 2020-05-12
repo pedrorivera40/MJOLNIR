@@ -72,7 +72,7 @@ export default {
           event_id: Number(this.event_id),
           category_id: Number(this.category_id)
         };
-        console.log("HEY WE GONNA REMOVE!",param_json1)
+        // console.log("HEY WE GONNA REMOVE!",param_json1)
         await this.setQueryLoading();
         await this.removeIndividualStatistics(param_json1);
       }
@@ -82,7 +82,7 @@ export default {
           athlete_id: Number(this.athlete_id),
           event_id: Number(this.event_id)
         };
-        console.log("HEY WE GONNA REMOVE!",param_json2)
+        // console.log("HEY WE GONNA REMOVE!",param_json2)
         await this.setQueryLoading();
         await this.removeIndividualStatistics(param_json2);
       }

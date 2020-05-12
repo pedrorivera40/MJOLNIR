@@ -1026,7 +1026,7 @@
         // }
         // console.log("[EDIT INDIVIDUAL] TRYING TO GET THE INDIVIDUAL STATS HIII",param_json)
         // this.getIndividualStatistics(param_json)
-        console.log("[EDIT INDIVIDUAL -MODAL] SHOULD HAVE GOTTEN STATS",this.individual_stats)
+        // console.log("[EDIT INDIVIDUAL -MODAL] SHOULD HAVE GOTTEN STATS",this.individual_stats)
         this.buildDefaultValues()
         if(this.individual_stats){
             this.initializeSportDataFilled()
@@ -1034,7 +1034,7 @@
         else{
             this.initializeSportData()
         }
-        console.log("[TM-EDIT_STATS(COMPONENT)]",this.payload_stats_individual)
+        // console.log("[TM-EDIT_STATS(COMPONENT)]",this.payload_stats_individual)
     },
     methods: {
         ...rules,
@@ -1300,7 +1300,7 @@
                 else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
                     || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
                     let current_statistics = this.individual_stats.Match_Based_Event_Athlete_Statistics.event_statistics
-                    console.log("[FROM FIELD TENNIS VALUE SET CURRENT STATISTICS:",current_statistics)
+                    // console.log("[FROM FIELD TENNIS VALUE SET CURRENT STATISTICS:",current_statistics)
                     this.payload_stats_individual = {
                         "event_id":Number(this.event_id),
                         "athlete_id":this.athlete_id,
@@ -1318,7 +1318,7 @@
         async submitAthleteStats() {
             this.setQueryLoading()
             if (this.payload_stats_individual.athlete_id != ''){
-                console.log("[PAYLOAD INDIVIDUAL UPDATE",this.payload_stats_individual)
+                // console.log("[PAYLOAD INDIVIDUAL UPDATE",this.payload_stats_individual)
                 const stats_params = {
                     sport_route: this.sport_route,
                     statistics: this.payload_stats_individual

@@ -1040,7 +1040,7 @@
     created(){
         this.buildDefaultValues()
         this.initializeSportData()
-        console.log("[TM-ADD_STATS(COMPONENT)]",this.team_members)
+        // console.log("[TM-ADD_STATS(COMPONENT)]",this.team_members)
     },
     methods: {
         ...rules,
@@ -1240,7 +1240,7 @@
         async submitAthleteStats() {
             this.setQueryLoading()
             if (this.payload_stats_individual.athlete_id != ''){
-                console.log(this.payload_stats_individual)
+                // console.log(this.payload_stats_individual)
                 const stats_params = {
                     sport_route: this.sport_route,
                     statistics: this.payload_stats_individual
