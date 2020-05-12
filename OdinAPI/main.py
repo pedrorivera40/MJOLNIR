@@ -1006,6 +1006,8 @@ def pbp_sequence(sport):
     # Check user making the reques has a valid session.
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
+
+    # Validate user session.
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
 
@@ -1021,6 +1023,11 @@ def pbp_sequence(sport):
         return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
     if request.method == 'DELETE':
+        # Validate write permissions.
+        # Permission to DELETE in PBP.
+        if(not validateRequestPermissions(token, '17')):
+            return jsonify(Error='El usuario no tiene permiso para eliminar secuencias PBP.'), 403
+
         if len(args) != 1 or "event_id" not in args or len(body) != 0:
             return jsonify(ERROR="Error en la petición. Solo debe proveerse un argumento en el cuerpo."), 400
 
@@ -1033,6 +1040,11 @@ def pbp_sequence(sport):
         event_id = body["event_id"]
 
     if request.method == 'POST':
+        # Validate write permissions.
+        # Permission to WRITE in PBP.
+        if(not validateRequestPermissions(token, '16')):
+            return jsonify(Error='El usuario no tiene permiso para crear secuencias PBP.'), 403
+
         return handler.startPBPSequence(event_id)
 
     return handler.removePBPSequence(event_id)
@@ -1044,8 +1056,15 @@ def volleyball_pbp_set_current_set(sport):
     # Check user making the reques has a valid session.
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
+
+    # Validate logged in user.
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
+
+    # Validate modify permissions.
+    if(not validateRequestPermissions(token, '18')):  # Permission to MODIFY  PBP.
+        return jsonify(Error="El usuario no tiene permiso para modificar en secuencias PBP."), 403
+
     body = request.get_json()
     args = request.args
     handler = None
@@ -1071,8 +1090,15 @@ def pbp_set_color(sport):
     # Check user making the reques has a valid session.
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
+
+    # Validate logged in user.
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
+
+    # Validate modify permissions.
+    if(not validateRequestPermissions(token, '18')):  # Permission to MODIFY  PBP.
+        return jsonify(Error="El usuario no tiene permiso para modificar en secuencias PBP."), 403
+
     body = request.get_json()
     args = request.args
     handler = None
@@ -1099,6 +1125,8 @@ def pbp_roster(sport):
     # Check user making the reques has a valid session.
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
+
+    # Validate logged in user.
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
@@ -1115,6 +1143,11 @@ def pbp_roster(sport):
         return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
     if request.method == 'DELETE':
+        # Validate delete permissions.
+        # Permission to DELETE in  PBP.
+        if(not validateRequestPermissions(token, '17')):
+            return jsonify(Error="El usuario no tiene permiso para eliminar en secuencias PBP."), 403
+
         # Validate team is given within request body.
         if not "team" in args or not "event_id" in args or body:
             return jsonify(ERROR="Error en la solicitud. Se debe enviar ambos ID del evento y nombre de equipo como argumentos."), 400
@@ -1132,6 +1165,11 @@ def pbp_roster(sport):
         event_id = body["event_id"]
 
     if request.method == 'POST':
+        # Validate create permissions.
+        # Permission to CREATE PBP.
+        if(not validateRequestPermissions(token, '16')):
+            return jsonify(Error="El usuario no tiene permiso para añadir en secuencias PBP."), 403
+
         # Validate data is present in body.
         if len(body) != 3 or not "data" in body:
             return jsonify(ERROR="Error en la solicitud. Se debe enviar el ID del evento, nombre de equipo, y data."), 400
@@ -1149,6 +1187,11 @@ def pbp_roster(sport):
         return jsonify(ERROR="Error en la solicitud. Nombre de equipo es invalido."), 400
 
     if request.method == 'PUT':
+        # Validate modify permissions.
+        # Permission to MODIFY  PBP.
+        if(not validateRequestPermissions(token, '18')):
+            return jsonify(Error="El usuario no tiene permiso para modificar en secuencias PBP."), 403
+
         # Validate data is present in body.
         if len(body) != 3 or not "data" in body:
             return jsonify(ERROR="Error en la solicitud. Se debe enviar el ID del evento, nombre de equipo, y data."), 400
@@ -1189,6 +1232,8 @@ def pbp_actions(sport):
     # Check user making the reques has a valid session.
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
+
+    # Validate logged in user.
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
@@ -1198,6 +1243,10 @@ def pbp_actions(sport):
     event_id = None
 
     if request.method == 'DELETE':
+        # Permission to DELETE PBP.
+        if(not validateRequestPermissions(token, '17')):
+            return jsonify(Error="El usuario no tiene permiso para eliminar en secuencias PBP."), 403
+
         # Validate event id is present in args.
         if "event_id" not in args:
             return jsonify(ERROR="Error en la solicitud. No se encontró valor de ID del evento."), 400
@@ -1219,6 +1268,10 @@ def pbp_actions(sport):
         return jsonify(ERROR="El deporte seleccionado no tiene cobertura jugada a jugada."), 400
 
     if request.method == 'POST':
+        # Permission to CREATE PBP.
+        if(not validateRequestPermissions(token, '16')):
+            return jsonify(Error="El usuario no tiene permiso para añadir en secuencias PBP."), 403
+
         # Validate action data is present in request body.
         if len(body) != 2 or "data" not in body:
             return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento y el valor de data en el cuerpo."), 400
@@ -1226,6 +1279,10 @@ def pbp_actions(sport):
         return handler.addPBPAction(event_id, body["data"])
 
     if request.method == 'PUT':
+        # Permission to MODIFY PBP.
+        if(not validateRequestPermissions(token, '18')):
+            return jsonify(Error="El usuario no tiene permiso para modificar en secuencias PBP."), 403
+
         # Validate data and action id are present in request body.
         if len(body) != 3 or "data" not in body or "action_id" not in body or len(args) != 0:
             return jsonify(ERROR="Error en la solicitud. Se deben incluir el ID del evento, ID de la acción y el valor de data en el cuerpo."), 400
@@ -1245,11 +1302,17 @@ def pbp_end(sport):
     # Check user making the reques has a valid session.
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
+
+    # Validate user logged in.
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
     body = request.get_json()
     args = request.args
     handler = None
+
+    # Permission to CREATE PBP.
+    if(not validateRequestPermissions(token, '16')):
+        return jsonify(Error="El usuario no tiene permiso para añadir en secuencias PBP (operación terminar PBP)."), 403
 
     if len(args) != 0:
         return jsonify(ERROR="No se aceptan argumentos en esta ruta."), 400
