@@ -209,9 +209,9 @@ class UserHandler:
         attempts = dao.getLoginAttempts(duid)[0]
 
         # If there are 3 failed login attempts, deactivate account.
-        if attempts == 3 or user[4] == False:
+        if attempts == 2 or user[4] == False:
             dao.deactivateDashUserAccount(duid)
-            return jsonify(Error='La cuenta está desactivada, por favor activarla.'), 401
+            return jsonify(Error='La cuenta ha sido desactivada, favor de activarla.'), 401
 
         fetchedHash = dao.getHashByUsername(username)
         if fetchedHash == None:  # TODO this may be repeated code.

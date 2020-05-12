@@ -116,7 +116,11 @@
               ></v-checkbox>
             </v-row>
             <v-checkbox v-model="reviewed" label="He revisado mis cambios.">
-
+              <template v-slot:label>
+                <div>
+                  Desea actualizar los permisos de <strong>{{username}}</strong> ?
+                </div>
+              </template>
             </v-checkbox>
           </v-container>
           <v-container class="text-center" v-else>
@@ -133,11 +137,11 @@
         </v-card-text>
         <v-card-actions >
           <v-spacer></v-spacer>
-          <v-btn color="primary ligthen-1" text @click="close()">
+          <v-btn color="grey darken-3" text @click="close()">
             Cerrar
           </v-btn>
           <v-btn
-            color="primary ligthen-1"
+            color="primary darken-1"
             text
             @click="save()"
             :loading="isLoading"
