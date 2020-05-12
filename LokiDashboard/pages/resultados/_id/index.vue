@@ -1,9 +1,7 @@
 <template>
   <v-container class="wrapper" v-if="formated_event_info()">
     <v-container v-if="formated_event_info()">
-      <h1 class="primary_dark--text pl-3">
-        Resultados {{ sport_name }} {{ branch_name_local }}
-      </h1>
+      <h1 class="primary_dark--text pl-3">Resultados {{ sport_name }} {{ branch_name_local }}</h1>
       <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
       <h3>Evento de {{ event_date }}</h3>
     </v-container>
@@ -44,7 +42,22 @@
                     </v-row>
                   </v-col>
                 </v-row>
-                <v-row v-else justify="center">
+                <v-row v-else-if="loadingQuery" justify = center>
+                  <v-progress-circular
+                    :active="loadingQuery"
+                    indeterminate
+                    :size="50"
+                    color="primary"
+                  ></v-progress-circular>
+                  <!-- <v-progress-linear
+                    :active="loadingQuery"
+                    indeterminate
+                    absolute
+                    bottom
+                    color = "primary"
+                  ></v-progress-linear> -->
+                </v-row>
+                <v-row v-else-if="!loadingQuery" justify="center">
                   <v-col align="center">
                     <h3>No Hay Puntuación Final Disponible</h3>
                   </v-col>
@@ -139,6 +152,7 @@
                     class="elevation-1"
                     v-if="formated_member_stats()"
                     :loading="loadingQuery"
+                    loading-text="Cargando Estadísticas..."
                   >
                     <!-- v-if="isBasketballTable" -->
                     <template #item.full_name="{ item }"
@@ -188,7 +202,24 @@
                       </v-tooltip>
                     </template>
                   </v-data-table>
-                  <v-container v-else>
+                  <v-container v-else-if="loadingQuery">
+                    <v-row justify = center>
+                      <v-progress-circular
+                        :active="loadingQuery"
+                        indeterminate
+                        :size="50"
+                        color="primary"
+                      ></v-progress-circular>
+                      <!-- <v-progress-linear
+                        :active="loadingQuery"
+                        indeterminate
+                        absolute
+                        bottom
+                        color = "primary"
+                      ></v-progress-linear> -->
+                    </v-row>
+                  </v-container>
+                  <v-container v-else-if="!loadingQuery">
                     <v-row align="center" justify="center">
                       <v-col justify="center" align="center">
                         <h2>No Se Encontraron Resultados</h2>
@@ -211,9 +242,27 @@
                     class="elevation-1"
                     v-if="formated_member_stats()"
                     :loading="loadingQuery"
+                    loading-text="Cargando Estadísticas..."
                   >
                   </v-data-table>
-                  <v-container v-else>
+                  <v-container v-else-if="loadingQuery">
+                    <v-row justify = center>
+                      <v-progress-circular
+                        :active="loadingQuery"
+                        indeterminate
+                        :size="50"
+                        color="primary"
+                      ></v-progress-circular>
+                      <!-- <v-progress-linear
+                        :active="loadingQuery"
+                        indeterminate
+                        absolute
+                        bottom
+                        color = "primary"
+                      ></v-progress-linear> -->
+                    </v-row>
+                  </v-container>
+                  <v-container v-else-if="!loadingQuery">
                     <v-row align="center" justify="center">
                       <v-col justify="center" align="center">
                         <h2>No Se Encontraron Resultados de Equipo</h2>
@@ -232,6 +281,8 @@
           :sport_route="sport_route"
           :uprm_score.sync="uprm_score"
           :opponent_score.sync="opponent_score"
+          :sport_name="sport_name"
+          :branch_name="branch_name_local"
         />
         <UpdateFinalScoreModal
           v-if="dialogEditFinalScore"
@@ -240,6 +291,8 @@
           :sport_route="sport_route"
           :uprm_score.sync="uprm_score"
           :opponent_score.sync="opponent_score"
+          :sport_name="sport_name"
+          :branch_name="branch_name_local"
         />
         <AddIndividualStatsModal
           v-if="dialogAddIndividualStats"
@@ -250,6 +303,8 @@
           :sport_id="sport_id"
           :team_members="team_members_local"
           :refresh_stats.sync="refresh_stats"
+          :sport_name="sport_name"
+          :branch_name="branch_name_local"
         />
         <UpdateIndividualStatsModal
           v-if="dialogEditIndividualStats"
@@ -262,6 +317,8 @@
           :refresh_stats.sync="refresh_stats"
           :athlete_id="edited_athlete_id"
           :individual_stats="this.current_individual_stats"
+          :sport_name="sport_name"
+          :branch_name="branch_name_local"
         />
         <DeleteIndividualStatsModal
           v-if="dialogDeleteIndividualStats"
@@ -275,7 +332,7 @@
       </v-container>
     </div>
   </v-container>
-  <v-container v-else>
+  <v-container v-else-if="!loadingQuery">
     <v-row justify="center">
       <v-col align="center">
         <h3>Evento No Existe</h3>
@@ -361,8 +418,9 @@ export default {
     };
   },
 
-  // created(){
+  created(){this.setQueryLoading();},
   async mounted() {
+    await this.setQueryLoading();
     this.sport_id = null;
     this.ready_for_table = false;
     this.event_id = this.$route.params.id;
@@ -370,13 +428,11 @@ export default {
     this.clearAllStats();
     this.setNullTeamMembers();
     this.ready_for_stats = true;
-    console.log("[1] GOT EVENT ID", this.event_id);
-    await this.setQueryLoading();
+    // console.log("[1] GOT EVENT ID", this.event_id);
+    // await this.setQueryLoading();
     await this.getEventInfo(this.event_id);
-    console.log("[2] GOT EVENT INFO", this.event_info);
-    console.log("the event info...(before)", this.event_info);
+    // console.log("[2] GOT EVENT INFO", this.event_info);
     if (this.event_info) {
-      console.log("GETTING EVENT INFO (from formated method)", this.event_info);
       this.sport_id = this.event_info.sport_id;
       this.sport_name = this.event_info.sport_name;
       this.opponent_name = this.event_info.opponent_name;
@@ -386,28 +442,27 @@ export default {
       // if (this.ready_for_stats){
       await this.setQueryLoading();
       await this.getTeamMembers(this.team_id);
-      console.log("Trying to get Team Members for:", this.team_id);
+      // console.log("Trying to get Team Members for:", this.team_id);
       if (this.team_members) {
-        console.log("[TM-Got Team Members]", this.team_members);
+        // console.log("[TM-Got Team Members]", this.team_members);
         this.team_members_local = this.team_members.team_members;
       }
-      console.log("are we ever getting in there????", this.readyForStats);
+
       if (this.ready_for_stats) {
         this.clearAllStats();
         this.buildTable();
-        console.log("[3] BUILT TABLE", this.event_info);
+        // console.log("[3] BUILT TABLE", this.event_info);
         this.buildDefaultValues();
         const stat_params = {
           event_id: String(this.event_id),
           sport_route: String(this.sport_route)
         };
-        console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
+        // console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
         await this.setQueryLoading();
         await this.getAllEventStatistics(stat_params);
         this.ready_for_stats = false;
         if (this.results_payload) {
-          console.log("[4] GOT EVENT STATS", this.results_payload);
-          // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
+          // console.log("[4] GOT EVENT STATS", this.results_payload);
           if (
             this.sport_id == this.BASKETBALL_IDM ||
             this.sport_id == this.BASKETBALL_IDF
@@ -470,7 +525,7 @@ export default {
           } else {
             return false;
           }
-          console.log("[5] WE SHOULD HAVE IT HERE!!!", this.payload_stats);
+          // console.log("[5] WE SHOULD HAVE PAYLOAD HERE", this.payload_stats);
           // this.team_statistics = [this.payload_stats.team_statistics]
           this.opponent_score = this.payload_stats.opponent_score;
           this.uprm_score = this.payload_stats.uprm_score;
@@ -510,12 +565,12 @@ export default {
         event_id: String(this.event_id),
         sport_route: String(this.sport_route)
       };
-      console.log("[4Refresh.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
+      // console.log("[4Refresh.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
       await this.setQueryLoading();
       await this.getAllEventStatistics(stat_params);
       this.ready_for_stats = false;
       if (this.results_payload) {
-        console.log("[4Refresh] GOT EVENT STATS", this.results_payload);
+        // console.log("[4Refresh] GOT EVENT STATS", this.results_payload);
         // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
         if (
           this.sport_id == this.BASKETBALL_IDM ||
@@ -579,7 +634,7 @@ export default {
         } else {
           return false;
         }
-        console.log("[5Refresh] WE SHOULD HAVE IT HERE!!!", this.payload_stats);
+        // console.log("[5Refresh] WE SHOULD HAVE IT HERE!!!", this.payload_stats);
         // this.team_statistics = [this.payload_stats.team_statistics]
 
         // this.opponent_score = (this.payload_stats.opponent_score)
@@ -596,7 +651,7 @@ export default {
     formated_member_stats() {
       if (this.payload_stats != "") {
         if (this.refresh_stats) {
-          console.log("[REF] REFRESHING STATS");
+          // console.log("[REF] REFRESHING STATS");
           this.stat_refresh();
           this.refresh_stats = false;
         }
@@ -604,11 +659,11 @@ export default {
       } else return false;
     },
     formated_final_score() {
-      console.log(
-        "[FS] Do we have a final score?",
-        this.uprm_score,
-        this.opponent_score
-      );
+      // console.log(
+      //   "[FS] Do we have a final score?",
+      //   this.uprm_score,
+      //   this.opponent_score
+      // );
       if (
         Number.isFinite(this.uprm_score) &&
         Number.isFinite(this.opponent_score)
@@ -968,14 +1023,14 @@ export default {
       this.editedItem = this.payload_stats.athlete_statistic[
         this.editedItemIndex
       ];
-      console.log(
-        "[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM",
-        this.editedItem
-      );
-      console.log(
-        "[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM INDEX",
-        this.editedItemIndex
-      );
+      // console.log(
+      //   "[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM",
+      //   this.editedItem
+      // );
+      // console.log(
+      //   "[DELETE INDIVIDUAL -INDEX] THIS IS THE EDITED ITEM INDEX",
+      //   this.editedItemIndex
+      // );
       this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
       if (
         this.sport_id == this.ATHLETICS_IDM ||
@@ -994,14 +1049,12 @@ export default {
     },
     deleteTeamStatistics(user) {
       this.editedItem = this.payload_stats.event_info;
-      //this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-      //console.log("Will Remove Athlete Statistics for("+this.editedItem+")")
-      console.log(this.editedItem);
-      console.log(
-        "Will Remove Team Statistics for Event ID(" +
-          this.editedItem.event_id +
-          ")."
-      );
+      // console.log(this.editedItem);
+      // console.log(
+      //   "Will Remove Team Statistics for Event ID(" +
+      //     this.editedItem.event_id +
+      //     ")."
+      // );
     },
     async editAthleteStatistics(user) {
       //   this.editedItemIndex = this.users.indexOf(user)
@@ -1011,8 +1064,8 @@ export default {
       this.editedItem = this.payload_stats.athlete_statistic[
         this.editedItemIndex
       ];
-      console.log("THIS IS THE EDITED ITEM", this.editedItem);
-      console.log("THIS IS THE EDITED ITEM INDEX", this.editedItemIndex);
+      // console.log("THIS IS THE EDITED ITEM", this.editedItem);
+      // console.log("THIS IS THE EDITED ITEM INDEX", this.editedItemIndex);
       this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
 
       if (
@@ -1030,10 +1083,10 @@ export default {
           athlete_id: this.edited_athlete_id,
           category_id: this.edited_category_id
         };
-        console.log(
-          "[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",
-          param_json_1
-        );
+        // console.log(
+        //   "[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",
+        //   param_json_1
+        // );
         this.clearIndividualStats();
         this.setQueryLoading();
         await this.getIndividualStatistics(param_json_1);
@@ -1043,44 +1096,30 @@ export default {
           event_id: this.event_id,
           athlete_id: this.edited_athlete_id
         };
-        console.log(
-          "[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",
-          param_json_2
-        );
+        // console.log(
+        //   "[EDIT INDIVIDUAL -INDEX] TRYING TO GET THE INDIVIDUAL, PARAMS ARE:",
+        //   param_json_2
+        // );
         this.clearIndividualStats();
         this.setQueryLoading();
         await this.getIndividualStatistics(param_json_2);
       }
 
-      console.log(
-        "[EDIT INDIVIDUAL -INDEX] SHOULD HAVE GOTTEN , THEY ARE:",
-        this.individual_stats
-      );
+      // console.log(
+      //   "[EDIT INDIVIDUAL -INDEX] SHOULD HAVE GOTTEN , THEY ARE:",
+      //   this.individual_stats
+      // );
       // console.log("Will Remove Athlete Statistics for "+(this.editedItem.athlete_info.first_name)+" of Athlete ID ("+(this.editedItem.athlete_info.athlete_id)+").")
       this.current_individual_stats = this.individual_stats;
       this.dialogEditIndividualStats = true;
       // this.$router.push("/resultados/"+this.event_id+"/individual/editar")
     },
-    editTeamStatistics(user) {
-      //   this.editedItemIndex = this.users.indexOf(user)
-      //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-      //   this.dialogEdit = true;
-      return;
-    },
+    
     addAthleteStatistics() {
-      //   this.editedItemIndex = this.users.indexOf(user)
-      //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-      //   this.dialogEdit = true;
-      // this.$router.push("/resultados/"+this.event_id+"/individual/crear")
-      console.log("[TM-ADD_STATS(INDEX)]", this.team_members_local);
+      // console.log("[TM-ADD_STATS(INDEX)]", this.team_members_local);
       this.dialogAddIndividualStats = true;
     },
-    addTeamStatistics(user) {
-      //   this.editedItemIndex = this.users.indexOf(user)
-      //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-      //   this.dialogEdit = true;
-      return;
-    },
+    
     addFinalScore() {
       // this.$router.push("/resultados/"+this.event_id+"/puntuacion/crear")
       this.dialogAddFinalScore = true;
@@ -1089,14 +1128,6 @@ export default {
       this.dialogEditFinalScore = true;
       // this.$router.push("/resultados/"+this.event_id+"/puntuacion/editar")
     }
-    // editPermissions(user) {
-    //   this.editedItem = Object.assign({}, user); //This hsit is to not mess with vuex state
-    //   this.dialogPermissions = true;
-    //   this.getPermissions(user.id);
-    // }, resetPassword(user) {
-    //   console.log('reset')
-    // },
-    // Herbert Functions
   },
   computed: {
     ...mapGetters({

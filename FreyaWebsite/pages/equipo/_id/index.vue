@@ -6,7 +6,7 @@
 				flat
 		>
 			<v-spacer />
-			<v-toolbar-title>{{sport_name}}</v-toolbar-title>
+			<v-toolbar-title>{{sport_name}} - {{branch}}</v-toolbar-title>
       <v-progress-linear
 				:active="loadingQuery||loadingEventQuery"
 				indeterminate
@@ -21,11 +21,11 @@
       </v-col>
       <v-row align="center">
         <v-col justify="center" align="center">
-          <h1>Tarzanes</h1>
+          <h1>{{branch_mascot}}</h1>
         </v-col>
       </v-row>
       <v-row align="center"
-      justify="start">
+      justify="end">
         <v-col md=3>
           <v-select
             v-model="season"
@@ -66,8 +66,8 @@
 							<v-container v-if="formated()">
                 <v-row align = "center" justify = "center">
                   <v-col justify = "center" align = "center">
-                    <v-icon v-if="current_team.team_image_url == null" height="100"> mdi-account-group  </v-icon>
-                    <v-img v-else :src="current_team.team_image_url" aspect-ratio="2"> 
+                    <v-icon v-if="(current_team.team_image_url == null)||(current_team.team_image_url == '')" height="300"> mdi-account-group  </v-icon>
+                    <v-img v-else :src="current_team.team_image_url" aspect-ratio="2" height="300"> 
                     </v-img>
                   </v-col>
                 </v-row>
@@ -251,7 +251,7 @@ export default {
       ready:false,
       sport_name:'',     
       //TODO: Check remove/change branch to dynamic (if necessary)
-			branch:'Masculino', 
+			branch:'', 
       sport_id:'',
       sport_route:'',
 			season:'',
@@ -282,12 +282,14 @@ export default {
       FIELD_TENNIS_IDF: 18,
       TABLE_TENNIS_IDM:7,
       TABLE_TENNIS_IDF:15,
-      search_individual: '',
+    
 
       current_team:'',
       current_team_id:'',
       events:'',
       ready_for_members: false,
+
+      branch_mascot:'',
 
       }),//end of data()
     
@@ -336,16 +338,20 @@ export default {
         if(this.team){
           this.current_team_id = this.team.team_info.team_id
           this.sport_name = this.team.team_info.sport_name
+          this.branch = this.team.team_info.branch_name
+          if (this.branch == "Masculino"){this.branch_mascot = "Tarzanes"}
+          else if(this.branch == "Femenino"){this.branch_mascot = "Juanas"}
           this.current_team = this.team.team_info
           
           if(this.readyForMembers){
             console.log("INDEX LEVEL LOCAL TEAM",this.current_team)
             console.log("INDEX LEVEL QUERY TEAM",this.team)
             this.getTeamMembers(this.current_team_id)
+            this.stopGetMembers()
             // this.ready_for_members = false
           }
           // this.readyForMembers = false
-          this.stopGetMembers()
+          
           return true
         }
         else{

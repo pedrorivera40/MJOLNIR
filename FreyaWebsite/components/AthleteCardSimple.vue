@@ -9,7 +9,7 @@
                             color="grey"
                             size="150"                                                                                                                                                                                    
                     >       
-                            <v-icon v-if="profile_image_link == null" height="100"> mdi-account </v-icon>
+                            <v-icon v-if="((profile_image_link == null)||(profile_image_link == ''))" height="100"> mdi-account </v-icon>
                             <v-img v-else :src="profile_image_link"/>
                                                                                             
                     </v-avatar> 																					
@@ -67,7 +67,7 @@ export default {
       athlete_categories:[String],      
       number:Number,
       profile_image_link:String,
-      years_of_participation:String,
+      years_of_participation:Number,
     },//end of data()
     methods:{
         goToAthlete(){

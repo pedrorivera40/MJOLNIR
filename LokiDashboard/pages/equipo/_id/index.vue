@@ -9,14 +9,14 @@
           flat
       >
         <v-spacer />
-        <v-toolbar-title>{{sport_name}}</v-toolbar-title>
+        <v-toolbar-title>{{sport_name}} - {{branch}}</v-toolbar-title>
         <v-progress-linear
-				:active="loadingQuery"
-				indeterminate
-				absolute
-				bottom
-				color = "white"
-			></v-progress-linear>
+          :active="loadingQuery"
+          indeterminate
+          absolute
+          bottom
+          color = "white"
+        ></v-progress-linear>
         <v-spacer />
       </v-toolbar>
       <v-container>
@@ -24,43 +24,44 @@
         </v-col>
         <v-row align="center">
           <v-col justify="center" align="center">
-            <h1>Tarzanes</h1>
+            <h1>{{branch_mascot}}</h1>
           </v-col>
         </v-row>
         <v-row align="center"
         justify="center">
-          <v-col md=3>
-            <v-select
-              v-model="season"
-              item-value="season_year" 
-              item-text="season_year"
-              :items="yearList" 
-              label ="Temporada"
-              prepend-icon="mdi-calendar-blank-multiple"
-              :disabled = "loadingQuery"
-              :loading = "loadingQuery"
-              @input="getSeasonData"
-            ></v-select>
-          </v-col>
           <v-col>
             <v-row align="center"
-              justify="end">
+              justify="start">
+              <!-- <v-spacer /> -->
+              <v-col md=3 align="start">
+                <v-btn color="primary_light" :disabled ="loadingQuery || !$store.state.userAuth.userPermissions[13]['26']"
+                  class="white--text" @click="goToCreateTeam"><v-icon left>mdi-plus</v-icon>Añadir Equipo</v-btn>
+              </v-col>
               <v-spacer />
-              <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
+              <v-col md=3 align="start">
+                <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
                   class="white--text" @click="goToEditTeam">Editar Equipo</v-btn>
               </v-col>
               <v-spacer />
-              <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[12]['25']"
+              <v-col md=3 align="start">
+                <v-btn color="primary_light" :disabled ="(formated_members())||(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[12]['25']"
                   class="white--text" @click="removeTeamLocal">Remover Equipo</v-btn>
               </v-col>
               <v-spacer />
-              <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "loadingQuery || !$store.state.userAuth.userPermissions[13]['26']"
-                  class="white--text" @click="goToCreateTeam">Añadir Equipo +</v-btn>
+              <v-col md=3>
+                <v-select
+                  v-model="season"
+                  item-value="season_year" 
+                  item-text="season_year"
+                  :items="yearList" 
+                  label ="Temporada"
+                  prepend-icon="mdi-calendar-blank-multiple"
+                  :disabled = "loadingQuery"
+                  :loading = "loadingQuery"
+                  @input="getSeasonData"
+                ></v-select>
               </v-col>
-              <v-spacer />
+              <!-- <v-spacer /> -->
             </v-row>
           </v-col>
         </v-row>
@@ -82,8 +83,8 @@
                 <v-container v-if="formated()">
                   <v-row align = "center" justify = "center">
                     <v-col justify = "center" align = "center">
-                      <v-icon v-if="(current_team.team_image_url == null)||(current_team.team_image_url == '')" height="100"> mdi-account-group  </v-icon>
-                      <v-img v-else :src="current_team.team_image_url" aspect-ratio="2"> 
+                      <v-icon v-if="(current_team.team_image_url == null)||(current_team.team_image_url == '')" height="300"> mdi-account-group  </v-icon>
+                      <v-img v-else :src="current_team.team_image_url" aspect-ratio="2" height="300"> 
                       </v-img>
                     </v-col>
                   </v-row>
@@ -96,7 +97,7 @@
                     </v-col>
                   </v-row>
                 </v-container>
-                <v-container v-else>
+                <v-container v-else-if="!loadingQuery">
                   <v-row align = "center" justify = "center">
                     <v-col justify = "center" align = "center">
                       <h2>No Se Encontro Equipo</h2>
@@ -110,10 +111,10 @@
           <v-tab-item>
             <v-container v-if="formated_members()">
               <v-row align="center"
-                justify="end">
+                justify="start">
                 <v-col md=3 align="end">
-                  <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
-                  class="white--text" @click="goToAddMembers">Añadir Miembro +</v-btn>
+                  <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
+                  class="white--text" @click="goToAddMembers"><v-icon left>mdi-plus</v-icon>Añadir Miembros</v-btn>
                 </v-col>
               </v-row>
               <v-row
@@ -151,14 +152,14 @@
                 </v-col>
               </v-row>
             </v-container>
-            <v-container v-else>
+            <v-container v-else-if="!loadingQuery">
               <v-row align="center"
-              justify="end">
+              justify="start">
               <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled = "(loadingQuery ||(current_team == null)||(current_team == ''))"
-                  class="white--text" @click="goToAddMembers">Añadir Miembro +</v-btn>
+                <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
+                  class="white--text" @click="goToAddMembers"><v-icon left>mdi-plus</v-icon>Añadir Miembros</v-btn>
               </v-col>
-            </v-row>
+              </v-row>
               <v-row align = "center" justify = "center">
                 <v-col justify = "center" align = "center">
                   <h2>No Se Encontraron Miembros de Equipo</h2>
@@ -174,6 +175,8 @@
         :dialog.sync="dialogAddTeam"
         :sport_id="sport_id"
         :season_year_prop.sync="season"
+        :sport_name="sport_name"
+        :branch_name="branch"
       />
       <UpdateTeamModal
         v-if="dialogEditTeam"
@@ -182,6 +185,8 @@
         :season_year="season"
         :about_team="current_team.about_team"
         :team_image_url="current_team.team_image_url"
+        :sport_name="sport_name"
+        :branch_name="branch"
       />
       <AddTeamMembersModal
         v-if="dialogAddTeamMember"
@@ -189,6 +194,8 @@
         :sport_id="sport_id"
         :team_id="current_team_id"
         :season_year="season"
+        :sport_name="sport_name"
+        :branch_name="branch"
       />
       <DeleteTeamMemberModal
         v-if="dialogDeleteTeamMember"
@@ -246,7 +253,7 @@ export default {
 
       sport_name:'',    
       //TODO: Check remove/change branch to dynamic (if necessary) 
-			branch:'Masculino', 
+			branch:'', 
       sport_id:'',
       sport_route:'',
 			season:'',
@@ -271,11 +278,22 @@ export default {
       SOFTBALL_IDF: 16, 
       SOCCER_IDM: 3,
       SOCCER_IDF: 11,
+      // OTHER SPORTS (MEDAL BASED)
+      ATHLETICS_IDM: 8,
+      ATHLETICS_IDF: 19,
+      //OTHER SPORTS (MATCH BASED)
+      FIELD_TENNIS_IDM: 9,
+      FIELD_TENNIS_IDF: 18,
+      TABLE_TENNIS_IDM:7,
+      TABLE_TENNIS_IDF:15,
 
       current_team:'',
       current_team_id:'',
       events:[],
       ready_for_members: false,
+
+      branch_mascot:'',
+
       }),//end of data()
     
     created(){
@@ -319,11 +337,15 @@ export default {
       formated(){
         if(this.team){
           this.current_team_id = this.team.team_info.team_id
+          this.sport_name = this.team.team_info.sport_name
+          this.branch = this.team.team_info.branch_name
+          if (this.branch == "Masculino"){this.branch_mascot = "Tarzanes"}
+          else if(this.branch == "Femenino"){this.branch_mascot = "Juanas"}
           this.current_team = this.team.team_info
           
           if(this.readyForMembers){
-            console.log("INDEX LEVEL LOCAL TEAM",this.current_team)
-            console.log("INDEX LEVEL QUERY TEAM",this.team)
+            // console.log("INDEX LEVEL LOCAL TEAM",this.current_team)
+            // console.log("INDEX LEVEL QUERY TEAM",this.team)
             this.getTeamMembers(this.current_team_id)
             this.stopGetMembers()
             // this.ready_for_members = false
@@ -361,12 +383,15 @@ export default {
         let currentYear = new Date(2023,8).getFullYear()
         this.defaultSelected.push({'season_year':currentYear})
         this.sport_id = this.$route.params.id
-        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_name = "Baloncesto", this.sport_route = "basketball"}
-        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_name = "Voleibol",this.sport_route = "volleyball"}
-        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_name = "Fútbol", this.sport_route = "soccer"}
-        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_name = "Beisbol", this.sport_route = "baseball"}
-        else{this.sport_name = '', this.sport_route = ''}
-        
+        if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}
+        else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.sport_route = "volleyball"}
+        else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.sport_route = "soccer"}
+        else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){this.sport_route = "baseball"}
+        else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){this.sport_route = "medalbased"}
+        else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
+                || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){this.sport_route ="matchbased"}
+        else{this.sport_route = ''}
+        // console.log("[SPORT ROUTE CONFIRMED]",this.sport_route)
       },
       goToEditTeam(){
         this.dialogEditTeam = true;
