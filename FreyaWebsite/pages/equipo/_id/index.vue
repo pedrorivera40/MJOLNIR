@@ -545,7 +545,7 @@ export default {
             {text: 'Asistencias', value: 'Event_Statistics.assists'},
             {text: 'Faltas', value: 'Event_Statistics.fouls'},
             {text: 'Tarjetas', value: 'Event_Statistics.cards'},
-            {text: 'Goles Exitosos', value: 'Event_Statistics.successful_goals'},
+            {text: 'Goles', value: 'Event_Statistics.successful_goals'},
             {text: 'Atajadas', value: 'Event_Statistics.tackles'},
 
             ]
@@ -555,7 +555,7 @@ export default {
             {text: 'Asistencias', value: 'Event_Statistics.assists'},
             {text: 'Faltas', value: 'Event_Statistics.fouls'},
             {text: 'Tarjetas', value: 'Event_Statistics.cards'},
-            {text: 'Goles Exitosos', value: 'Event_Statistics.successful_goals'},
+            {text: 'Goles', value: 'Event_Statistics.successful_goals'},
             {text: 'Atajadas', value: 'Event_Statistics.tackles'},
             
             ]

@@ -906,7 +906,7 @@ export default {
             { text: "Asistencias", value: "statistics.assists" },
             { text: "Faltas", value: "statistics.fouls" },
             { text: "Tarjetas", value: "statistics.cards" },
-            { text: "Goles Exitosos", value: "statistics.successful_goals" },
+            { text: "Goles", value: "statistics.successful_goals" },
             { text: "Entradas", value: "statistics.tackles" },
             { text: "Acciones", value: "actions", sortable: false }
           ];
@@ -919,7 +919,7 @@ export default {
             { text: "Faltas", value: "soccer_statistics.fouls" },
             { text: "Tarjetas", value: "soccer_statistics.cards" },
             {
-              text: "Goles Exitosos",
+              text: "Goles",
               value: "soccer_statistics.successful_goals"
             },
             { text: "Entradas", value: "soccer_statistics.tackles" }
@@ -941,12 +941,12 @@ export default {
               sortable: true,
               value: "full_name"
             },
-            { text: "At Bats", value: "statistics.at_bats" },
+            { text: "Turnos al Bate", value: "statistics.at_bats" },
             { text: "Carreras", value: "statistics.runs" },
             { text: "Hits", value: "statistics.hits" },
             { text: "Carreras Empujadas", value: "statistics.runs_batted_in" },
             { text: "Bases Por Bolas", value: "statistics.base_on_balls" },
-            { text: "Strikeouts", value: "statistics.strikeouts" },
+            { text: "Ponches", value: "statistics.strikeouts" },
             { text: "Dejados en Base", value: "statistics.left_on_base" },
             { text: "Acciones", value: "actions", sortable: false }
           ];
@@ -962,7 +962,7 @@ export default {
               text: "Bases Por Bolas",
               value: "baseball_statistics.base_on_balls"
             },
-            { text: "Strikeouts", value: "baseball_statistics.strikeouts" },
+            { text: "Ponches", value: "baseball_statistics.strikeouts" },
             {
               text: "Dejados en Base",
               value: "baseball_statistics.left_on_base"

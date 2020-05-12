@@ -542,8 +542,8 @@
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_goals"                      
                                                     type="number" 
-                                                    :rules="[numeric('Goles Exitosos'),scoreRequired('Goles Exitosos')]"
-                                                    label="Goles Exitosos"
+                                                    :rules="[numeric('Goles'),scoreRequired('Goles')]"
+                                                    label="Goles"
                                                     required
                                                     outlined
                                                 ></v-text-field>

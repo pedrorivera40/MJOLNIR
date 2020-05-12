@@ -438,7 +438,7 @@ created(){
                 {text: 'Asistencias', value: 'statistics.assists'},
                 {text: 'Faltas', value: 'statistics.fouls'},
                 {text: 'Tarjetas', value: 'statistics.cards'},
-                {text: 'Goles Exitosos', value: 'statistics.successful_goals'},
+                {text: 'Goles', value: 'statistics.successful_goals'},
                 {text: 'Atajadas', value: 'statistics.tackles'},
 
                 ]
@@ -448,7 +448,7 @@ created(){
                 {text: 'Asistencias', value: 'soccer_statistics.assists'},
                 {text: 'Faltas', value: 'soccer_statistics.fouls'},
                 {text: 'Tarjetas', value: 'soccer_statistics.cards'},
-                {text: 'Goles Exitosos', value: 'soccer_statistics.successful_goals'},
+                {text: 'Goles', value: 'soccer_statistics.successful_goals'},
                 {text: 'Atajadas', value: 'soccer_statistics.tackles'},
 
                 ]
