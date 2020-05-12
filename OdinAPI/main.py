@@ -86,49 +86,76 @@ def validateRequestPermissions(token, permissionNumber):
             '27': 14,
         }[permissionNumber]
     index = switch(permissionNumber)
-    print('index', index)
-    print('Permission Number', permissionNumber)
-    print('All permissions', token['permissions'])
-    print('Permissions being checked',
-          token['permissions'][index][permissionNumber])
-    print('Permission check', token['permissions']
-          [index][permissionNumber] == False)
-    return(token['permissions'][index][permissionNumber] == False)
+    return(token['permissions'][index][permissionNumber])
 
 #--------- Athlete Routes ---------#
-@app.route("/athletes/", methods=['GET', 'POST'])
-def athletes():
-    handler = AthleteHandler()
-    if request.method == 'POST':
-        json = request.json
-        if not 'sID' in json or not 'attributes' in json:
-            return jsonify(Error="Argumentos dados son incorrectos."), 400
-
-        return handler.addAthlete(json['sID'], json['attributes'])
-
-    elif request.method == 'GET':
+@app.route("/athletes/public/", methods=['GET'])
+def p_athletes():
+    if request.method == "GET":
+        handler = AthleteHandler()
         json = request.args
         if not json:
-            return handler.getAllAthletes()
-
+            return AthleteHandler().getAllAthletes()
         if not 'sID' in json or not 'tID' in json:
             return jsonify(Error="Argumentos dados son incorrectos."), 400
 
         return handler.getAthletesBySportAndNotInTeam(json['sID'], json['tID'])
 
 
+@app.route("/athletes/", methods=['POST'])
+@token_check
+def athletes():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+
+    if request.method == 'POST':
+        # Check for valid permissions
+        # must have permission to write athlete profiles
+        if(not(validateRequestPermissions(token, '25'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+        json = request.json
+        if not 'sID' in json or not 'attributes' in json:
+            return jsonify(Error="Argumentos dados son incorrectos."), 400
+        handler = AthleteHandler()
+        return handler.addAthlete(json['sID'], json['attributes'])
+
+
 @app.route("/athletes/details/", methods=['GET'])
+@token_check
 def athletesDetailed():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         return AthleteHandler().getAllAthletesDetailed()
 
 
-@app.route("/athletes/<int:aid>/", methods=['GET', 'PUT', 'DELETE'])
-def athleteByID(aid):
-    handler = AthleteHandler()
+@app.route("/athletes/<int:aid>/public/", methods=['GET'])
+def p_athleteByID(aid):
     if request.method == 'GET':
-        return handler.getAthleteByID(aid)
-    elif request.method == 'PUT':
+        return AthleteHandler().getAthleteByID(aid)
+
+
+@app.route("/athletes/<int:aid>/", methods=['PUT', 'DELETE'])
+@token_check
+def athleteByID(aid):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    handler = AthleteHandler()
+    if request.method == 'PUT':
+        # Check for valid permissions
+        # must have permission to modify athlete profiles
+        if(not(validateRequestPermissions(token, '27'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         json = request.json
         if 'attributes' not in json:
             return jsonify(Error="Argumentos dados son incorrectos."), 400
@@ -136,6 +163,11 @@ def athleteByID(aid):
         return handler.editAthlete(aid, json['attributes'])
 
     elif request.method == 'DELETE':
+        # Check for valid permissions
+        # must have permission to delete athlete profiles.
+        if(not(validateRequestPermissions(token, '26'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         return handler.removeAthlete(aid)
 
 
@@ -158,7 +190,13 @@ def auth():
 
 
 @app.route("/logout", methods=['POST'])
+@token_check
 def logout():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
@@ -166,8 +204,8 @@ def logout():
 
         username = req['username']
         if(customSession.logout(username)):
-            return jsonify(Message='Logout exitoso!'), 200
-        return jsonify(Error='Problemas con el logout.'), 400
+            return jsonify(Message='Se terminó la sesión exitosamente!'), 200
+        return jsonify(Error='Problemas terminando la sesión.'), 400
 
 ###########################################
 #--------- Dashboard User Routes ---------#
@@ -175,21 +213,28 @@ def logout():
 @app.route("/users/", methods=['GET', 'POST'])
 @token_check
 def allUsers():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
     print(loggedUser)
     if(loggedUser == None):
-        return jsonify(Error='Invalid Session'), 401
+        return jsonify(Error='No hay una sesión valida.'), 401
 
-    if(validateRequestPermissions(token, '21') or
-       validateRequestPermissions(token, '22') or
-       validateRequestPermissions(token, '23')):
-        return jsonify(Error='User does not have permissions to acces this resource.'), 403
     handler = UserHandler()
     if request.method == 'GET':
+        if(not(validateRequestPermissions(token, '22') or
+               validateRequestPermissions(token, '23') or
+               validateRequestPermissions(token, '24'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # For user list display
         return handler.getAllDashUsers()
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '22'))):  # Permission to add new user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         if request.json == None:
             return jsonify(Error='Bad Request.'), 400
         req = request.json
@@ -202,14 +247,30 @@ def allUsers():
 
 
 @app.route("/users/<int:duid>", methods=['GET', 'PATCH'])
-# @token_check
+@token_check
 def userByID(duid):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    print(loggedUser)
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     handler = UserHandler()
     req = request.json
     if request.method == 'GET':
+        if(not(validateRequestPermissions(token, '22') or
+               validateRequestPermissions(token, '23') or
+               validateRequestPermissions(token, '24'))):  # must have any user permission
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # For managing specific users
         return handler.getDashUserByID(duid)
     if request.method == 'PATCH':
+        if(not(validateRequestPermissions(token, '24'))):  # Permission to modify
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         if request.json == None:
             return jsonify(Error='Bad Request.'), 400
         # For username change
@@ -221,11 +282,23 @@ def userByID(duid):
 
 
 @app.route("/users/username/", methods=['POST'])
-# @token_check
+@token_check
 def getUserByUsername():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+
+    # Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '22') or
+               validateRequestPermissions(token, '23') or
+               validateRequestPermissions(token, '24'))):  # must have any user permission
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         handler = UserHandler()
         req = request.json
         # Check the request contains the right structure.
@@ -236,11 +309,23 @@ def getUserByUsername():
 
 
 @app.route("/users/email/", methods=['POST'])
-# @token_check
+@token_check
 def getUserByEmail():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+
+    # Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '22') or
+               validateRequestPermissions(token, '23') or
+               validateRequestPermissions(token, '24'))):  # must have any user permission
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         handler = UserHandler()
         req = request.json
         # Check the request contains the right structure.
@@ -250,13 +335,23 @@ def getUserByEmail():
 
 
 @app.route("/users/<int:duid>/reset", methods=['PATCH'])
-# @token_check
+@token_check
 def passwordReset(duid):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+
+    # Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     handler = UserHandler()
     req = request.json
     if request.method == 'PATCH':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '24'))):  # must have permission to modify user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # For password reset
         # Check the request contains the right structure.
         if 'password' not in req:
@@ -265,12 +360,23 @@ def passwordReset(duid):
 
 
 @app.route("/users/activate", methods=['PATCH'])
+@token_check
 def accountUnlock():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+
+    # Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     req = request.json
     handler = UserHandler()
     if request.method == 'PATCH':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '24'))):  # must have permission to modify user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # For acount unlock
         # Check the request contains the right structure.
         if 'username' not in req or 'password' not in req or 'new_password' not in req:
@@ -280,30 +386,66 @@ def accountUnlock():
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/toggleActive", methods=['PATCH'])
-# @token_check
+@token_check
 def toggleActive(duid):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+
     handler = UserHandler()
     if request.method == 'PATCH':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '24'))):  # must have permission to modify user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+        # For acount unlock
         return handler.toggleDashUserActive(duid)
 
 
 # TODO: id's that are sanwdiwch must be converted to string
 @app.route("/users/<string:duid>/remove", methods=['PATCH'])
-# @token_check
+@token_check
 def removeUser(duid):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+
+    # Check for valid request
     handler = UserHandler()
     if request.method == 'PATCH':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '23'))):  # must have permissions to delete a user
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         return handler.removeDashUser(duid)
 
 
 @app.route("/users/<string:duid>/permissions",  methods=['GET', 'PATCH'])
-# @token_check
+@token_check
 def userPermissions(duid):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
 
     handler = UserHandler()
     if request.method == 'GET':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '22') or
+               validateRequestPermissions(token, '23') or
+               validateRequestPermissions(token, '24'))):  # must have any user permission
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         return handler.getUserPermissions(duid, 'request')
     if request.method == 'PATCH':
+        # Check for valid permissions
+        # must have permissions to modify users.
+        if(not(validateRequestPermissions(token, '24'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if request.json == None:
             return jsonify(Error='Bad Request.'), 400
         req = request.json
@@ -324,29 +466,61 @@ def events():
         return handler.getAllEvents()
 
 
-@app.route("/events/<int:eID>/", methods=['GET', 'PUT', 'DELETE'])
-def eventsById(eID):
-    handler = EventHandler()
+@app.route("/events/<int:eID>/public/", methods=['GET'])
+def p_eventById(eID):
     if request.method == 'GET':
-        return handler.getEventByID(eID)
-    elif request.method == 'PUT':
-        json = request.json
-        if 'attributes' not in json:
-            return jsonify(Error="Argumentos dados son incorrectos."), 400
-        return handler.editEvent(eID, json['attributes'])
-    elif request.method == 'DELETE':
-        return handler.removeEvent(eID)
+        return EventHandler().getEventByID(eID)
 
 
-@app.route("/events/team/<int:tID>/", methods=['GET', 'POST'])
-def teamEvents(tID):
+@app.route("/events/<int:eID>/", methods=['PUT', 'DELETE'])
+@token_check
+def eventById(eID):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+
     handler = EventHandler()
-    if request.method == 'GET':
-        return handler.getEventsByTeam(tID)
-    elif request.method == 'POST':
+    if request.method == 'PUT':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '15'))):  # must have permission to modify events
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         json = request.json
         if not json or 'attributes' not in json:
             return jsonify(Error="Argumentos dados son incorrectos."), 400
+        return handler.editEvent(eID, json['attributes'])
+    elif request.method == 'DELETE':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '14'))):  # must have permission to delete events
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+        return handler.removeEvent(eID)
+
+
+@app.route("/events/team/<int:tID>/public/", methods=['GET'])
+def p_teamEvents(tID):
+    if request.method == 'GET':
+        return EventHandler().getEventsByTeam(tID)
+
+
+@app.route("/events/team/<int:tID>/", methods=['POST'])
+@token_check
+def teamEvents(tID):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+
+    if request.method == 'POST':
+        # Check for valid permissions
+        if(not(validateRequestPermissions(token, '13'))):  # must have permission to write events
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
+        json = request.json
+        if not json or 'attributes' not in json:
+            return jsonify(Error="Argumentos dados son incorrectos."), 400
+        handler = EventHandler()
         return handler.addEvent(tID, json['attributes'])
 
 
@@ -365,131 +539,153 @@ def teamEvents(tID):
 # ===================================================================================
 # TODO: (Herbert) verify route naming/division
 # TODO: (Herbert) validate JSON request arguments
-
+'''
 # REQUEST FORMAT FOR ROUTE:
-# { "event_id": 5,
-#   "team_statistics":
-#    { "basketball_statistics":
-#       { "points":500, "rebounds":500, "assists":500, "steals":500, "blocks":500, "turnovers":500, "field_goal_attempt":500,
-# 		"successful_field_goal":500, "three_point_attempt":500, "successful_three_point":500, "free_throw_attempt":500,
-# 		"successful_free_throw":500
-#       }
-#    },
-#   "athlete_statistics":
-#   [
-#   	{"athlete_id":4,
-#   	"statistics":
-# 	  	{"basketball_statistics":
-# 		  	{"points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2,
-#             "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2,
-#             "successful_free_throw":2
-# 		  	}
-# 	  	}
-#   	},
-#   	{"athlete_id":8,
-#   	"statistics":
-# 	  	{"basketball_statistics":
-# 		  	{"points":1, "rebounds":1, "assists":1, "steals":1, "blocks":1, "turnovers":1, "field_goal_attempt":1,
-# 			"successful_field_goal":1, "three_point_attempt":1, "successful_three_point":1, "free_throw_attempt":1,
-# 	        "successful_free_throw":1
-# 		  	}
-# 	  	}
-#   	}
-#   	],
-#   "uprm_score": 0,
-#   "opponent_score": 0
-# }
-@app.route("/results/basketball/", methods=['GET', 'POST'])
+{ "event_id": 5,
+  "team_statistics":
+   { "basketball_statistics":
+      { "points":500, "rebounds":500, "assists":500, "steals":500, "blocks":500, "turnovers":500, "field_goal_attempt":500,
+		"successful_field_goal":500, "three_point_attempt":500, "successful_three_point":500, "free_throw_attempt":500,
+		"successful_free_throw":500
+      }
+   },
+  "athlete_statistics":
+  [
+  	{"athlete_id":4,
+  	"statistics":
+	  	{"basketball_statistics":
+		  	{"points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2,
+            "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2,
+            "successful_free_throw":2
+		  	}
+	  	}
+  	},
+  	{"athlete_id":8,
+  	"statistics":
+	  	{"basketball_statistics":
+		  	{"points":1, "rebounds":1, "assists":1, "steals":1, "blocks":1, "turnovers":1, "field_goal_attempt":1,
+			"successful_field_goal":1, "three_point_attempt":1, "successful_three_point":1, "free_throw_attempt":1,
+	        "successful_free_throw":1
+		  	}
+	  	}
+  	}
+  	],
+  "uprm_score": 0,
+  "opponent_score": 0
+}
+'''
+@app.route("/results/basketball/", methods=['POST'])
+@token_check
 def basketballStatistics():
-    if request.method == 'GET':
-        json = request.args
-    else:
-        json = request.json
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BasketballEventHandler()
-    if request.method == 'GET':
-        # Validate Request for GET
-        if 'event_id' not in json:
-            return jsonify(Error='Bad Request'), 400
-        event_id = request.args.get('event_id', type=int)
-        return handler.getAllStatisticsByEventID(event_id)
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate General IDs for POST
         if ('event_id' not in json or 'team_statistics' not in json or 'athlete_statistics'
                 not in json or 'uprm_score' not in json or 'opponent_score' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Team Statistics Request
         team_statistics = json['team_statistics']
         if ('basketball_statistics' not in team_statistics):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         specific_stats = team_statistics['basketball_statistics']
         if ('points' not in specific_stats or 'rebounds' not in specific_stats or 'assists' not in specific_stats
             or 'steals' not in specific_stats or 'blocks' not in specific_stats or 'turnovers' not in specific_stats
             or 'field_goal_attempt' not in specific_stats or 'successful_field_goal' not in specific_stats
             or 'three_point_attempt' not in specific_stats or 'successful_three_point' not in specific_stats
                 or 'free_throw_attempt' not in specific_stats or 'successful_free_throw' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Each Athlete's Statistics Request
         athlete_statistics = json['athlete_statistics']
         for athlete_json in athlete_statistics:
             if ('statistics' not in athlete_json or 'athlete_id' not in athlete_json):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
             athlete_json_sport = athlete_json['statistics']
             if ('basketball_statistics' not in athlete_json_sport):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
             specific_stats = athlete_json_sport['basketball_statistics']
             if ('points' not in specific_stats or 'rebounds' not in specific_stats or 'assists' not in specific_stats
                 or 'steals' not in specific_stats or 'blocks' not in specific_stats or 'turnovers' not in specific_stats
                 or 'field_goal_attempt' not in specific_stats or 'successful_field_goal' not in specific_stats
                 or 'three_point_attempt' not in specific_stats or 'successful_three_point' not in specific_stats
                     or 'free_throw_attempt' not in specific_stats or 'successful_free_throw' not in specific_stats):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
 
         return handler.addAllEventStatistics(json['event_id'], json)
 
         # return jsonify(json),200
     else:
-        return jsonify("Method not allowed."), 405
+        return jsonify(Error='Metodo no Permitido.'), 405
 
+
+@app.route("/results/basketball/public/", methods=['GET'])
+def getBasketballStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = BasketballEventHandler()
+    if request.method == 'GET':
+        # Validate Request for GET
+        if 'event_id' not in json:
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        event_id = request.args.get('event_id', type=int)
+        return handler.getAllStatisticsByEventID(event_id)
+    else:
+        return jsonify(Error='Metodo no Permitido.'), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# {
-#   "event_id": 2,
-#   "athlete_id":2,
-#   "attributes":
-#   {
-#   "points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2,
-#   "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2,
-#   "successful_free_throw":2
-#   }
-# }
-@app.route("/results/basketball/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{
+  "event_id": 2,
+  "athlete_id":2,
+  "attributes":
+  {
+  "points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2,
+  "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2,
+  "successful_free_throw":2
+  }
+}
+'''
+@app.route("/results/basketball/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def basketballAthleteStatistics():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BasketballEventHandler()
 
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
+        if(not(validateRequestPermissions(token, '20'))):  # Permission to delete statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate GET/REMOVE requests
         if ('event_id' not in json or 'athlete_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            athlete_id = request.args.get('athlete_id', type=int)
-            return handler.getAllAthleteStatisticsByEventId(event_id, athlete_id)
-        if request.method == 'DELETE':
-            return handler.removeStatistics(json['event_id'], json['athlete_id'])
+        return handler.removeStatistics(json['event_id'], json['athlete_id'])
 
     if request.method == 'POST' or request.method == 'PUT':
         # Validate POST/PUT Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'athlete_id' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('points' not in specific_stats or 'rebounds' not in specific_stats or 'assists' not in specific_stats
@@ -497,54 +693,91 @@ def basketballAthleteStatistics():
             or 'field_goal_attempt' not in specific_stats or 'successful_field_goal' not in specific_stats
             or 'three_point_attempt' not in specific_stats or 'successful_three_point' not in specific_stats
                 or 'free_throw_attempt' not in specific_stats or 'successful_free_throw' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             returnable = handler.editStatistics(
                 json['event_id'], json['athlete_id'], json['attributes'])
             return returnable
 
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
 
+
+@app.route("/results/basketball/individual/public/", methods=['GET'])
+def getBasketballAthleteStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = BasketballEventHandler()
+
+    if request.method == 'GET':
+        # Validate GET/REMOVE requests
+        if ('event_id' not in json or 'athlete_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        if request.method == 'GET':
+            event_id = request.args.get('event_id', type=int)
+            athlete_id = request.args.get('athlete_id', type=int)
+            return handler.getAllAthleteStatisticsByEventId(event_id, athlete_id)
+
+    else:
+        return jsonify(Error="Metodo no Permitido."), 405
+
+
+'''      
 # FORMAT FOR REQUEST:
-# {"add_type":"manual",
-# "event_id":1,
-# "attributes":
-#   {
-#   "points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2,
-#   "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2,
-#   "successful_free_throw":2
-#   }
-# }
-@app.route("/results/basketball/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{"add_type":"manual",
+"event_id":1,
+"attributes":
+  {
+  "points":2, "rebounds":2, "assists":2, "steals":2, "blocks":2, "turnovers":2, "field_goal_attempt":2,
+  "successful_field_goal":2, "three_point_attempt":2, "successful_three_point":2, "free_throw_attempt":2,
+  "successful_free_throw":2
+  }
+}
+'''
+@app.route("/results/basketball/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def basketballTeamStatistics():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BasketballEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE' or request.method == 'PUT':
+    if request.method == 'DELETE' or request.method == 'PUT':
         # Validate GET/REMOVE/PUT requests
         if ('event_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            return handler.getAllTeamStatisticsByEventId(event_id)
         if request.method == 'DELETE':
+            if(not(validateRequestPermissions(token, '20'))):  # Permission to delete statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.removeTeamStatistics(json['event_id'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.editTeamStatistics(json['event_id'])
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate POST Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'add_type' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('points' not in specific_stats or 'rebounds' not in specific_stats or 'assists' not in specific_stats
@@ -552,64 +785,112 @@ def basketballTeamStatistics():
             or 'field_goal_attempt' not in specific_stats or 'successful_field_goal' not in specific_stats
             or 'three_point_attempt' not in specific_stats or 'successful_three_point' not in specific_stats
                 or 'free_throw_attempt' not in specific_stats or 'successful_free_throw' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
         if json['add_type'] == 'MANUAL':
             return handler.addTeamStatistics(json['event_id'], json['attributes'])
         else:
-            return jsonify(Error="Bad Request, Must specify valid add_type"), 400
+            return jsonify(Error="Solicitud Incorrecta, necesita especificar \"add_type\" valido."), 400
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
 
+
+@app.route("/results/basketball/team/public/", methods=['GET'])
+def getBasketballTeamStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = BasketballEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE/PUT requests
+        if ('event_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        return handler.getAllTeamStatisticsByEventId(event_id)
+    else:
+        return jsonify(Error="Metodo no Permitido."), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# { "event_id":3,
-#   "attributes":
-#   {
-#   "uprm_score":2, "opponent_score":2
-#   }
-# }
-@app.route("/results/basketball/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{ "event_id":3,
+  "attributes":
+  {
+  "uprm_score":2, "opponent_score":2
+  }
+}
+'''
+@app.route("/results/basketball/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def basketballFinalScores():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BasketballEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
+        if(not(validateRequestPermissions(token, '20'))):  # Permission to delete statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate GET/REMOVE requests
         if ('event_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            return handler.getFinalScore(event_id)
-        if request.method == 'DELETE':
-            return handler.removeFinalScore(json['event_id'])
+        return handler.removeFinalScore(json['event_id'])
     if request.method == 'POST' or request.method == 'PUT':
         # Validate POST/PUT Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('uprm_score' not in specific_stats or 'opponent_score' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addFinalScore(json['event_id'], json['attributes'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.editFinalScore(json['event_id'], json['attributes'])
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
 
-# {
-#     "athlete_id":1,
-#     "season_year":2020
-# }
+
+@app.route("/results/basketball/score/public/", methods=['GET'])
+def getBasketballFinalScores():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = BasketballEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE requests
+        if ('event_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        return handler.getFinalScore(event_id)
+    else:
+        return jsonify(Error="Metodo no Permitido."), 405
+
+
+'''
+{
+    "athlete_id":1,
+    "season_year":2020
+}
+'''
 # TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/basketball/season/athlete_games/", methods=['GET'])
 def basketballSeasonAthleteStatistics():
@@ -618,24 +899,26 @@ def basketballSeasonAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BasketballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('athlete_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         athlete_id = request.args.get('athlete_id', type=int)
         # Carry on with request
         return handler.getAllAthleteStatisticsPerSeason(athlete_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
 
 
-# {
-#     "athlete_id":1,
-#     "season_year":2020
-# }
+'''
+{
+    "athlete_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/basketball/season/athlete_aggregate/", methods=['GET'])
 def basketballAggregateAthleteStatistics():
     if request.method == 'GET':
@@ -643,47 +926,54 @@ def basketballAggregateAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BasketballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('athlete_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         athlete_id = request.args.get('athlete_id', type=int)
         # Carry on with request
         return handler.getAggregatedAthleteStatisticsPerSeason(athlete_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
 
-# {
-#     "sport_id":1,
-#     "season_year":2020
-# }
+
+'''
+{
+    "sport_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/basketball/season/all_athletes_aggregate/", methods=['GET'])
 def basketballAggregateAllAthleteStatistics():
+    # Check user making the reques has a valid session.
     if request.method == 'GET':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BasketballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('sport_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         sport_id = request.args.get('sport_id', type=int)
         # Carry on with request
         return handler.getAllAggregatedAthleteStatisticsPerSeason(sport_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
 
-# {
-#     "sport_id":1,
-#     "season_year":2020
-# }
+
+'''
+{
+    "sport_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/basketball/season/team_aggregate/", methods=['GET'])
 def basketballAggregateTeamStatistics():
     if request.method == 'GET':
@@ -691,18 +981,18 @@ def basketballAggregateTeamStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BasketballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('sport_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         sport_id = request.args.get('sport_id', type=int)
         # Carry on with request
         return handler.getAggregatedTeamStatisticsPerSeason(sport_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
 
 # ===================================================================================
 # ===================//END BASKETBALL RESULTS ROUTES//===============================
@@ -711,7 +1001,13 @@ def basketballAggregateTeamStatistics():
 
 #--------- PBP Routes ---------#
 @app.route("/pbp/<string:sport>", methods=['POST', 'DELETE'])
+@token_check
 def pbp_sequence(sport):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
 
     body = request.get_json()
     args = request.args
@@ -743,7 +1039,13 @@ def pbp_sequence(sport):
 
 
 @app.route("/pbp/<string:sport>/set", methods=['PUT'])
+@token_check
 def volleyball_pbp_set_current_set(sport):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     body = request.get_json()
     args = request.args
     handler = None
@@ -764,7 +1066,13 @@ def volleyball_pbp_set_current_set(sport):
 
 
 @app.route("/pbp/<string:sport>/color", methods=['PUT'])
+@token_check
 def pbp_set_color(sport):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     body = request.get_json()
     args = request.args
     handler = None
@@ -786,7 +1094,13 @@ def pbp_set_color(sport):
 
 
 @app.route("/pbp/<string:sport>/roster", methods=['POST', 'DELETE', 'PUT'])
+@token_check
 def pbp_roster(sport):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     # ADD, REMOVE & EDIT TEAM ROSTERS FOR A PBP SEQUENCE
     body = request.get_json()
     args = request.args
@@ -870,7 +1184,13 @@ def pbp_roster(sport):
 
 
 @app.route("/pbp/<string:sport>/actions", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def pbp_actions(sport):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     # ADD, REMOVE & EDIT GAME ACTIONS FOR A PBP SEQUENCE
     body = request.get_json()
     args = request.args
@@ -920,7 +1240,13 @@ def pbp_actions(sport):
 
 
 @app.route("/pbp/<string:sport>/end", methods=['POST'])
+@token_check
 def pbp_end(sport):
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     body = request.get_json()
     args = request.args
     handler = None
@@ -943,272 +1269,376 @@ def pbp_end(sport):
 # ===================================================================================
 # =======================//VOLLEYBALL RESULTS ROUTES//===============================
 # ===================================================================================
-
+'''
 # REQUEST FORMAT FOR ROUTE:
-# { "event_id": 5,
-#   "team_statistics":
-#    { "volleyball_statistics":
-#       {
-#         "kill_points": 1,
-#         "attack_errors":1,
-#         "assists":1,
-#         "aces":1,
-#         "service_errors":1,
-#         "digs":1,
-#         "blocks":1,
-#         "blocking_errors":1,
-#         "reception_errors":1
-#       }
-#    },
-#   "athlete_statistics":
-#   [
-#   	{"athlete_id":4,
-#   	"statistics":
-# 	  	{"volleyball_statistics":
-# 		  	{
-#             "kill_points": 1,
-#             "attack_errors":1,
-#             "assists":1,
-#             "aces":1,
-#             "service_errors":1,
-#             "digs":1,
-#             "blocks":1,
-#             "blocking_errors":1,
-#             "reception_errors":1
-# 		  	}
-# 	  	}
-#   	},
-#   	{"athlete_id":8,
-#   	"statistics":
-# 	  	{"volleyball_statistics":
-# 		  	{
-#             "kill_points": 1,
-#             "attack_errors":1,
-#             "assists":1,
-#             "aces":1,
-#             "service_errors":1,
-#             "digs":1,
-#             "blocks":1,
-#             "blocking_errors":1,
-#             "reception_errors":1
-# 		  	}
-# 	  	}
-#   	}
-#   	],
-#   "uprm_score": 0,
-#   "opponent_score": 0
-# }
-@app.route("/results/volleyball/", methods=['GET', 'POST'])
+{ "event_id": 5,
+  "team_statistics":
+   { "volleyball_statistics":
+      {
+        "kill_points": 1,
+        "attack_errors":1,
+        "assists":1,
+        "aces":1,
+        "service_errors":1,
+        "digs":1,
+        "blocks":1,
+        "blocking_errors":1,
+        "reception_errors":1
+      }
+   },
+  "athlete_statistics":
+  [
+  	{"athlete_id":4,
+  	"statistics":
+	  	{"volleyball_statistics":
+		  	{
+            "kill_points": 1,
+            "attack_errors":1,
+            "assists":1,
+            "aces":1,
+            "service_errors":1,
+            "digs":1,
+            "blocks":1,
+            "blocking_errors":1,
+            "reception_errors":1
+		  	}
+	  	}
+  	},
+  	{"athlete_id":8,
+  	"statistics":
+	  	{"volleyball_statistics":
+		  	{
+            "kill_points": 1,
+            "attack_errors":1,
+            "assists":1,
+            "aces":1,
+            "service_errors":1,
+            "digs":1,
+            "blocks":1,
+            "blocking_errors":1,
+            "reception_errors":1
+		  	}
+	  	}
+  	}
+  	],
+  "uprm_score": 0,
+  "opponent_score": 0
+}
+'''
+@app.route("/results/volleyball/", methods=['POST'])
+@token_check
 def volleyballStatistics():
-    if request.method == 'GET':
-        json = request.args
-    else:
-        json = request.json
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = VolleyballEventHandler()
-    if request.method == 'GET':
-        # Validate Request for GET
-        if 'event_id' not in json:
-            return jsonify(Error='Bad Request'), 400
-        event_id = request.args.get('event_id', type=int)
-        return handler.getAllStatisticsByEventID(event_id)
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate General IDs for POST
         if ('event_id' not in json or 'team_statistics' not in json or 'athlete_statistics'
                 not in json or 'uprm_score' not in json or 'opponent_score' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Team Statistics Request
         team_statistics = json['team_statistics']
         if ('volleyball_statistics' not in team_statistics):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         specific_stats = team_statistics['volleyball_statistics']
         if ('kill_points' not in specific_stats or 'attack_errors' not in specific_stats or 'assists' not in specific_stats
             or 'aces' not in specific_stats or 'service_errors' not in specific_stats or 'digs' not in specific_stats
                 or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Each Athlete's Statistics Request
         athlete_statistics = json['athlete_statistics']
         for athlete_json in athlete_statistics:
             if ('statistics' not in athlete_json or 'athlete_id' not in athlete_json):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
             athlete_json_sport = athlete_json['statistics']
             if ('volleyball_statistics' not in athlete_json_sport):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
             specific_stats = athlete_json_sport['volleyball_statistics']
             if ('kill_points' not in specific_stats or 'attack_errors' not in specific_stats or 'assists' not in specific_stats
                 or 'aces' not in specific_stats or 'service_errors' not in specific_stats or 'digs' not in specific_stats
                     or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
         return handler.addAllEventStatistics(json['event_id'], json)
         # return jsonify(json),200
     else:
-        return jsonify("Method not allowed."), 405
+        return jsonify("Metodo no permitido."), 405
 
+
+@app.route("/results/volleyball/public/", methods=['GET'])
+def getVolleyballStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = VolleyballEventHandler()
+    if request.method == 'GET':
+        # Validate Request for GET
+        if 'event_id' not in json:
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        event_id = request.args.get('event_id', type=int)
+        return handler.getAllStatisticsByEventID(event_id)
+    else:
+        return jsonify("Metodo no permitido."), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# {
-#   "event_id": 2,
-#   "athlete_id":2,
-#   "attributes":
-#   {
-#     "kill_points": 1,
-#     "attack_errors":1,
-#     "assists":1,
-#     "aces":1,
-#     "service_errors":1,
-#     "digs":1,
-#     "blocks":1,
-#     "blocking_errors":1,
-#     "reception_errors":1
-#   }
-# }
-@app.route("/results/volleyball/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{
+  "event_id": 2,
+  "athlete_id":2,
+  "attributes":
+  {
+    "kill_points": 1,
+    "attack_errors":1,
+    "assists":1,
+    "aces":1,
+    "service_errors":1,
+    "digs":1,
+    "blocks":1,
+    "blocking_errors":1,
+    "reception_errors":1
+  }
+}
+'''
+@app.route("/results/volleyball/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def volleyballAthleteStatistics():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = VolleyballEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
+        if(not(validateRequestPermissions(token, '20'))):  # Permission to remove statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate GET/REMOVE requests
         if ('event_id' not in json or 'athlete_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            athlete_id = request.args.get('athlete_id', type=int)
-            return handler.getAllAthleteStatisticsByEventId(event_id, athlete_id)
-        if request.method == 'DELETE':
-            return handler.removeStatistics(json['event_id'], json['athlete_id'])
+        return handler.removeStatistics(json['event_id'], json['athlete_id'])
     if request.method == 'POST' or request.method == 'PUT':
         # Validate POST/PUT Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'athlete_id' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('kill_points' not in specific_stats or 'attack_errors' not in specific_stats or 'assists' not in specific_stats
             or 'aces' not in specific_stats or 'service_errors' not in specific_stats or 'digs' not in specific_stats
                 or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             returnable = handler.editStatistics(
                 json['event_id'], json['athlete_id'], json['attributes'])
         return returnable
 
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
 
+
+@app.route("/results/volleyball/individual/public/", methods=['GET'])
+def getVolleyballAthleteStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = VolleyballEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE requests
+        if ('event_id' not in json or 'athlete_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        athlete_id = request.args.get('athlete_id', type=int)
+        return handler.getAllAthleteStatisticsByEventId(event_id, athlete_id)
+    else:
+        return jsonify(Error="Metodo no Permitido."), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# {
-# "add_type":"manual",
-# "event_id":1,
-# "attributes":
-#   {
-#     "kill_points": 1,
-#     "attack_errors":1,
-#     "assists":1,
-#     "aces":1,
-#     "service_errors":1,
-#     "digs":1,
-#     "blocks":1,
-#     "blocking_errors":1,
-#     "reception_errors":1
-#   }
-# }
-@app.route("/results/volleyball/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{
+"add_type":"manual",
+"event_id":1,
+"attributes":
+  {
+    "kill_points": 1,
+    "attack_errors":1,
+    "assists":1,
+    "aces":1,
+    "service_errors":1,
+    "digs":1,
+    "blocks":1,
+    "blocking_errors":1,
+    "reception_errors":1
+  }
+}
+'''
+@app.route("/results/volleyball/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def volleyballTeamStatistics():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = VolleyballEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE' or request.method == 'PUT':
-        # Validate GET/REMOVE/PUT requests
+    if request.method == 'DELETE' or request.method == 'PUT':
+        # Validate REMOVE/PUT requests
         if ('event_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            return handler.getAllTeamStatisticsByEventId(event_id)
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.editTeamStatistics(json['event_id'])
         if request.method == 'DELETE':
+            if(not(validateRequestPermissions(token, '20'))):  # Permission to delete statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.removeTeamStatistics(json['event_id'])
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate POST Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'add_type' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('kill_points' not in specific_stats or 'attack_errors' not in specific_stats or 'assists' not in specific_stats
             or 'aces' not in specific_stats or 'service_errors' not in specific_stats or 'digs' not in specific_stats
                 or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
         if json['add_type'] == 'MANUAL':
             return handler.addTeamStatistics(json['event_id'], json['attributes'])
         else:
-            return jsonify(Error="Method not allowed, Must specify valid add_type"), 405
+            return jsonify(Error="Metodo no permitido, debe especificar \"add_type\" valido."), 405
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
+
+
+@app.route("/results/volleyball/team/public/", methods=['GET'])
+def getVolleyballTeamStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = VolleyballEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE/PUT requests
+        if ('event_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        return handler.getAllTeamStatisticsByEventId(event_id)
+    else:
+        return jsonify(Error="Metodo no permitido."), 405
+
 
 # FORMAT FOR REQUEST:
-# { "event_id":3,
-#   "attributes":
-#   {
-#   "uprm_score":2, "opponent_score":2
-#   }
-# }
-@app.route("/results/volleyball/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+'''
+{ "event_id":3,
+  "attributes":
+  {
+  "uprm_score":2, "opponent_score":2
+  }
+}
+'''
+@app.route("/results/volleyball/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def volleyballFinalScores():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = VolleyballEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE':
-        # Validate GET/REMOVE requests
+    if request.method == 'DELETE':
+        if(not(validateRequestPermissions(token, '20'))):  # Permission to remove statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+        # Validate REMOVE requests
         if ('event_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            return handler.getFinalScore(event_id)
-        if request.method == 'DELETE':
-            return handler.removeFinalScore(json['event_id'])
+        return handler.removeFinalScore(json['event_id'])
     if request.method == 'POST' or request.method == 'PUT':
         # Validate POST/PUT Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('uprm_score' not in specific_stats or 'opponent_score' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addFinalScore(json['event_id'], json['attributes'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.editFinalScore(json['event_id'], json['attributes'])
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
-# {
-#     "athlete_id":1,
-#     "season_year":2020
-# }
+
+@app.route("/results/volleyball/score/public/", methods=['GET'])
+def getVolleyballFinalScores():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = VolleyballEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE requests
+        if ('event_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        return handler.getFinalScore(event_id)
+    else:
+        return jsonify(Error="Metodo no permitido."), 405
+
+
+'''
+{
+    "athlete_id":1,
+    "season_year":2020
+}
+'''
 # TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/volleyball/season/athlete_games/", methods=['GET'])
 def volleyballSeasonAthleteStatistics():
@@ -1217,24 +1647,26 @@ def volleyballSeasonAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('athlete_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         athlete_id = request.args.get('athlete_id', type=int)
         # Carry on with request
         return handler.getAllAthleteStatisticsPerSeason(athlete_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
 
-# {
-#     "athlete_id":1,
-#     "season_year":2020
-# }
+'''
+{
+    "athlete_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/volleyball/season/athlete_aggregate/", methods=['GET'])
 def volleyballAggregateAthleteStatistics():
     if request.method == 'GET':
@@ -1242,23 +1674,26 @@ def volleyballAggregateAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('athlete_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         athlete_id = request.args.get('athlete_id', type=int)
         # Carry on with request
         return handler.getAggregatedAthleteStatisticsPerSeason(athlete_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
-# {
-#     "sport_id":1,
-#     "season_year":2020
-# }
+
+'''
+{
+    "sport_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/volleyball/season/all_athletes_aggregate/", methods=['GET'])
 def volleyballAggregateAllAthleteStatistics():
     if request.method == 'GET':
@@ -1266,23 +1701,26 @@ def volleyballAggregateAllAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('sport_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         sport_id = request.args.get('sport_id', type=int)
         # Carry on with request
         return handler.getAllAggregatedAthleteStatisticsPerSeason(sport_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
-# {
-#     "sport_id":1,
-#     "season_year":2020
-# }
+
+'''
+{
+    "sport_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/volleyball/season/team_aggregate/", methods=['GET'])
 def volleyballAggregateTeamStatistics():
     if request.method == 'GET':
@@ -1290,18 +1728,18 @@ def volleyballAggregateTeamStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = VolleyballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('sport_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         sport_id = request.args.get('sport_id', type=int)
         # Carry on with request
         return handler.getAggregatedTeamStatisticsPerSeason(sport_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
 # ===================================================================================
 # ===================//END VOLLEYBALL RESULTS ROUTES//===============================
@@ -1311,252 +1749,358 @@ def volleyballAggregateTeamStatistics():
 # ===================================================================================
 # =======================//SOCCER RESULTS ROUTES//===============================
 # ===================================================================================
-
+'''
 # REQUEST FORMAT FOR ROUTE:
-# { "event_id": 5,
-#   "team_statistics":
-#    { "soccer_statistics":
-#       {
-#         "goal_attempts":1,
-#         "assists":1,
-#         "fouls":1,
-#         "cards":1,
-#         "successful_goals":1,
-#         "tackles":1
-#       }
-#    },
-#   "athlete_statistics":
-#   [
-#   	{"athlete_id":4,
-#   	"statistics":
-# 	  	{"soccer_statistics":
-# 		  	{
-#             "goal_attempts":1,
-#             "assists":1,
-#             "fouls":1,
-#             "cards":1,
-#             "successful_goals":1,
-#             "tackles":1
-# 		  	}
-# 	  	}
-#   	},
-#   	{"athlete_id":8,
-#   	"statistics":
-# 	  	{"soccer_statistics":
-# 		  	{
-#             "goal_attempts":1,
-#             "assists":1,
-#             "fouls":1,
-#             "cards":1,
-#             "successful_goals":1,
-#             "tackles":1
-# 		  	}
-# 	  	}
-#   	}
-#   	],
-#   "uprm_score": 0,
-#   "opponent_score": 0
-# }
-@app.route("/results/soccer/", methods=['GET', 'POST'])
+{ "event_id": 5,
+  "team_statistics":
+   { "soccer_statistics":
+      {
+        "goal_attempts":1,
+        "assists":1,
+        "fouls":1,
+        "cards":1,
+        "successful_goals":1,
+        "tackles":1
+      }
+   },
+  "athlete_statistics":
+  [
+  	{"athlete_id":4,
+  	"statistics":
+	  	{"soccer_statistics":
+		  	{
+            "goal_attempts":1,
+            "assists":1,
+            "fouls":1,
+            "cards":1,
+            "successful_goals":1,
+            "tackles":1
+		  	}
+	  	}
+  	},
+  	{"athlete_id":8,
+  	"statistics":
+	  	{"soccer_statistics":
+		  	{
+            "goal_attempts":1,
+            "assists":1,
+            "fouls":1,
+            "cards":1,
+            "successful_goals":1,
+            "tackles":1
+		  	}
+	  	}
+  	}
+  	],
+  "uprm_score": 0,
+  "opponent_score": 0
+}
+'''
+@app.route("/results/soccer/", methods=['POST'])
+@token_check
 def soccerStatistics():
-    if request.method == 'GET':
-        json = request.args
-    else:
-        json = request.json
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = SoccerEventHandler()
-    if request.method == 'GET':
-        # Validate Request for GET
-        if 'event_id' not in json:
-            return jsonify(Error='Bad Request'), 400
-        event_id = request.args.get('event_id', type=int)
-        return handler.getAllStatisticsByEventID(event_id)
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate General IDs for POST
         if ('event_id' not in json or 'team_statistics' not in json or 'athlete_statistics'
                 not in json or 'uprm_score' not in json or 'opponent_score' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Team Statistics Request
         team_statistics = json['team_statistics']
         if ('soccer_statistics' not in team_statistics):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         specific_stats = team_statistics['soccer_statistics']
         if ('goal_attempts' not in specific_stats or 'assists' not in specific_stats or 'fouls' not in specific_stats
                 or 'cards' not in specific_stats or 'successful_goals' not in specific_stats or 'tackles' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Each Athlete's Statistics Request
         athlete_statistics = json['athlete_statistics']
         for athlete_json in athlete_statistics:
             if ('statistics' not in athlete_json or 'athlete_id' not in athlete_json):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
             athlete_json_sport = athlete_json['statistics']
             if ('soccer_statistics' not in athlete_json_sport):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
             specific_stats = athlete_json_sport['soccer_statistics']
             if ('goal_attempts' not in specific_stats or 'assists' not in specific_stats or 'fouls' not in specific_stats
                     or 'cards' not in specific_stats or 'successful_goals' not in specific_stats or 'tackles' not in specific_stats):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
         return handler.addAllEventStatistics(json['event_id'], json)
         # return jsonify(json),200
     else:
-        return jsonify("Method not allowed."), 405
+        return jsonify("Metodo no permitido."), 405
 
+
+@app.route("/results/soccer/public/", methods=['GET'])
+def getSoccerStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        # Validate Request for GET
+        if 'event_id' not in json:
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        event_id = request.args.get('event_id', type=int)
+        return handler.getAllStatisticsByEventID(event_id)
+    else:
+        return jsonify("Metodo no permitido."), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# {
-#   "event_id": 2,
-#   "athlete_id":2,
-#   "attributes":
-#   {
-#     "goal_attempts":1,
-#     "assists":1,
-#     "fouls":1,
-#     "cards":1,
-#     "successful_goals":1,
-#     "tackles":1
-#   }
-# }
-@app.route("/results/soccer/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{
+  "event_id": 2,
+  "athlete_id":2,
+  "attributes":
+  {
+    "goal_attempts":1,
+    "assists":1,
+    "fouls":1,
+    "cards":1,
+    "successful_goals":1,
+    "tackles":1
+  }
+}
+'''
+@app.route("/results/soccer/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def soccerAthleteStatistics():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = SoccerEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
+        if(not(validateRequestPermissions(token, '20'))):  # Permission to delete statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate GET/REMOVE requests
         if ('event_id' not in json or 'athlete_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            athlete_id = request.args.get('athlete_id', type=int)
-            return handler.getAllAthleteStatisticsByEventId(event_id, athlete_id)
-        if request.method == 'DELETE':
-            return handler.removeStatistics(json['event_id'], json['athlete_id'])
+        return handler.removeStatistics(json['event_id'], json['athlete_id'])
     if request.method == 'POST' or request.method == 'PUT':
         # Validate POST/PUT Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'athlete_id' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('goal_attempts' not in specific_stats or 'assists' not in specific_stats or 'fouls' not in specific_stats
                 or 'cards' not in specific_stats or 'successful_goals' not in specific_stats or 'tackles' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             returnable = handler.editStatistics(
                 json['event_id'], json['athlete_id'], json['attributes'])
             return returnable
 
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
+
+@app.route("/results/soccer/individual/public/", methods=['GET'])
+def getSoccerAthleteStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE requests
+        if ('event_id' not in json or 'athlete_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        athlete_id = request.args.get('athlete_id', type=int)
+        return handler.getAllAthleteStatisticsByEventId(event_id, athlete_id)
+    else:
+        return jsonify(Error="Metodo no permitido."), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# {
-# "add_type":"manual",
-# "event_id":1,
-# "attributes":
-#   {
-#     "goal_attempts":1,
-#     "assists":1,
-#     "fouls":1,
-#     "cards":1,
-#     "successful_goals":1,
-#     "tackles":1
-#   }
-# }
-@app.route("/results/soccer/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{
+"add_type":"manual",
+"event_id":1,
+"attributes":
+  {
+    "goal_attempts":1,
+    "assists":1,
+    "fouls":1,
+    "cards":1,
+    "successful_goals":1,
+    "tackles":1
+  }
+}
+'''
+@app.route("/results/soccer/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def soccerTeamStatistics():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = SoccerEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE' or request.method == 'PUT':
+    if request.method == 'DELETE' or request.method == 'PUT':
         # Validate GET/REMOVE/PUT requests
         if ('event_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            return handler.getAllTeamStatisticsByEventId(event_id)
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.editTeamStatistics(json['event_id'])
         if request.method == 'DELETE':
+            if(not(validateRequestPermissions(token, '20'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.removeTeamStatistics(json['event_id'])
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate POST Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'add_type' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('goal_attempts' not in specific_stats or 'assists' not in specific_stats or 'fouls' not in specific_stats
                 or 'cards' not in specific_stats or 'successful_goals' not in specific_stats or 'tackles' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
         if json['add_type'] == 'MANUAL':
             return handler.addTeamStatistics(json['event_id'], json['attributes'])
         else:
-            return jsonify(Error="Method not allowed, Must specify valid add_type"), 405
+            return jsonify(Error="Metodo no permitido, debe especificar \"add_type\" valido."), 405
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
+
+@app.route("/results/soccer/team/public/", methods=['GET'])
+def getSoccerTeamStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE/PUT requests
+        if ('event_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+
+        event_id = request.args.get('event_id', type=int)
+        return handler.getAllTeamStatisticsByEventId(event_id)
+    else:
+        return jsonify(Error="Metodo no permitido."), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# { "event_id":3,
-#   "attributes":
-#   {
-#   "uprm_score":2, "opponent_score":2
-#   }
-# }
-@app.route("/results/soccer/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{ "event_id":3,
+  "attributes":
+  {
+  "uprm_score":2, "opponent_score":2
+  }
+}
+'''
+@app.route("/results/soccer/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def soccerFinalScores():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = SoccerEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
+        if(not(validateRequestPermissions(token, '20'))):  # Permission to delete statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate GET/REMOVE requests
         if ('event_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            return handler.getFinalScore(event_id)
-        if request.method == 'DELETE':
-            return handler.removeFinalScore(json['event_id'])
+        return handler.removeFinalScore(json['event_id'])
     if request.method == 'POST' or request.method == 'PUT':
         # Validate POST/PUT Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('uprm_score' not in specific_stats or 'opponent_score' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addFinalScore(json['event_id'], json['attributes'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.editFinalScore(json['event_id'], json['attributes'])
     else:
-        return jsonify(Error="Method not allowed."), 405
-# {
-#     "athlete_id":1,
-#     "season_year":2020
-# }
+        return jsonify(Error="Metodo no permitido."), 405
+
+
+@app.route("/results/soccer/score/public/", methods=['GET'])
+def getSoccerFinalScores():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = SoccerEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE requests
+        if ('event_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        return handler.getFinalScore(event_id)
+    else:
+        return jsonify(Error="Metodo no permitido."), 405
+
+
+'''
+{
+    "athlete_id":1,
+    "season_year":2020
+}
+'''
 # TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/soccer/season/athlete_games/", methods=['GET'])
 def soccerSeasonAthleteStatistics():
@@ -1565,23 +2109,26 @@ def soccerSeasonAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = SoccerEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('athlete_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         athlete_id = request.args.get('athlete_id', type=int)
         # Carry on with request
         return handler.getAllAthleteStatisticsPerSeason(athlete_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
-# {
-#     "athlete_id":1,
-#     "season_year":2020
-# }
+
+'''
+{
+    "athlete_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/soccer/season/athlete_aggregate/", methods=['GET'])
 def soccerAggregateAthleteStatistics():
     if request.method == 'GET':
@@ -1589,23 +2136,26 @@ def soccerAggregateAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = SoccerEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('athlete_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         athlete_id = request.args.get('athlete_id', type=int)
         # Carry on with request
         return handler.getAggregatedAthleteStatisticsPerSeason(athlete_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
-# {
-#     "sport_id":1,
-#     "season_year":2020
-# }
+
+'''
+{
+    "sport_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/soccer/season/all_athletes_aggregate/", methods=['GET'])
 def soccerAggregateAllAthleteStatistics():
     if request.method == 'GET':
@@ -1613,23 +2163,26 @@ def soccerAggregateAllAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = SoccerEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('sport_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         sport_id = request.args.get('sport_id', type=int)
         # Carry on with request
         return handler.getAllAggregatedAthleteStatisticsPerSeason(sport_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
-# {
-#     "sport_id":1,
-#     "season_year":2020
-# }
+
+'''
+{
+    "sport_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/soccer/season/team_aggregate/", methods=['GET'])
 def soccerAggregateTeamStatistics():
     if request.method == 'GET':
@@ -1637,18 +2190,18 @@ def soccerAggregateTeamStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = SoccerEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('sport_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         sport_id = request.args.get('sport_id', type=int)
         # Carry on with request
         return handler.getAggregatedTeamStatisticsPerSeason(sport_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
 
 # ===================================================================================
@@ -1660,260 +2213,366 @@ def soccerAggregateTeamStatistics():
 # ===================================================================================
 
 # REQUEST FORMAT FOR ROUTE:
-# { "event_id": 5,
-#   "team_statistics":
-#    { "baseball_statistics":
-#       {
-#         "at_bats":1,
-#         "runs":1,
-#         "hits":1,
-#         "runs_batted_in":1,
-#         "base_on_balls":1,
-#         "strikeouts":1,
-#         "left_on_base":1
-#       }
-#    },
-#   "athlete_statistics":
-#   [
-#   	{"athlete_id":4,
-#   	"statistics":
-# 	  	{"baseball_statistics":
-# 		  	{
-#             "at_bats":1,
-#             "runs":1,
-#             "hits":1,
-#             "runs_batted_in":1,
-#             "base_on_balls":1,
-#             "strikeouts":1,
-#             "left_on_base":1
-# 		  	}
-# 	  	}
-#   	},
-#   	{"athlete_id":8,
-#   	"statistics":
-# 	  	{"baseball_statistics":
-# 		  	{
-#             "at_bats":1,
-#             "runs":1,
-#             "hits":1,
-#             "runs_batted_in":1,
-#             "base_on_balls":1,
-#             "strikeouts":1,
-#             "left_on_base":1
-# 		  	}
-# 	  	}
-#   	}
-#   	],
-#   "uprm_score": 0,
-#   "opponent_score": 0
-# }
-@app.route("/results/baseball/", methods=['GET', 'POST'])
+'''
+{ "event_id": 5,
+  "team_statistics":
+   { "baseball_statistics":
+      {
+        "at_bats":1,
+        "runs":1,
+        "hits":1,
+        "runs_batted_in":1,
+        "base_on_balls":1,
+        "strikeouts":1,
+        "left_on_base":1
+      }
+   },
+  "athlete_statistics":
+  [
+  	{"athlete_id":4,
+  	"statistics":
+	  	{"baseball_statistics":
+		  	{
+            "at_bats":1,
+            "runs":1,
+            "hits":1,
+            "runs_batted_in":1,
+            "base_on_balls":1,
+            "strikeouts":1,
+            "left_on_base":1
+		  	}
+	  	}
+  	},
+  	{"athlete_id":8,
+  	"statistics":
+	  	{"baseball_statistics":
+		  	{
+            "at_bats":1,
+            "runs":1,
+            "hits":1,
+            "runs_batted_in":1,
+            "base_on_balls":1,
+            "strikeouts":1,
+            "left_on_base":1
+		  	}
+	  	}
+  	}
+  	],
+  "uprm_score": 0,
+  "opponent_score": 0
+}
+'''
+@app.route("/results/baseball/", methods=['POST'])
+@token_check
 def baseballStatistics():
-    if request.method == 'GET':
-        json = request.args
-    else:
-        json = request.json
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BaseballEventHandler()
-    if request.method == 'GET':
-        # Validate Request for GET
-        if 'event_id' not in json:
-            return jsonify(Error='Bad Request'), 400
-        event_id = request.args.get('event_id', type=int)
-        return handler.getAllStatisticsByEventID(event_id)
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate General IDs for POST
         if ('event_id' not in json or 'team_statistics' not in json or 'athlete_statistics'
                 not in json or 'uprm_score' not in json or 'opponent_score' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Team Statistics Request
         team_statistics = json['team_statistics']
         if ('baseball_statistics' not in team_statistics):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         specific_stats = team_statistics['baseball_statistics']
         if ('at_bats' not in specific_stats or 'runs' not in specific_stats or 'hits' not in specific_stats
             or 'runs_batted_in' not in specific_stats or 'base_on_balls' not in specific_stats or 'strikeouts' not in specific_stats
                 or 'left_on_base' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Each Athlete's Statistics Request
         athlete_statistics = json['athlete_statistics']
         for athlete_json in athlete_statistics:
             if ('statistics' not in athlete_json or 'athlete_id' not in athlete_json):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
             athlete_json_sport = athlete_json['statistics']
             if ('baseball_statistics' not in athlete_json_sport):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
             specific_stats = athlete_json_sport['baseball_statistics']
             if ('at_bats' not in specific_stats or 'runs' not in specific_stats or 'hits' not in specific_stats
                 or 'runs_batted_in' not in specific_stats or 'base_on_balls' not in specific_stats or 'strikeouts' not in specific_stats
                     or 'left_on_base' not in specific_stats):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
         return handler.addAllEventStatistics(json['event_id'], json)
         # return jsonify(json),200
     else:
-        return jsonify("Method not allowed."), 405
+        return jsonify("Metodo no permitido."), 405
 
+
+@app.route("/results/baseball/public/", methods=['GET'])
+def getBaseballStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        # Validate Request for GET
+        if 'event_id' not in json:
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        event_id = request.args.get('event_id', type=int)
+        return handler.getAllStatisticsByEventID(event_id)
+    else:
+        return jsonify("Metodo no permitido."), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# {
-#   "event_id": 2,
-#   "athlete_id":2,
-#   "attributes":
-#   {
-#     "at_bats":1,
-#     "runs":1,
-#     "hits":1,
-#     "runs_batted_in":1,
-#     "base_on_balls":1,
-#     "strikeouts":1,
-#     "left_on_base":1
-#   }
-# }
-@app.route("/results/baseball/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{
+  "event_id": 2,
+  "athlete_id":2,
+  "attributes":
+  {
+    "at_bats":1,
+    "runs":1,
+    "hits":1,
+    "runs_batted_in":1,
+    "base_on_balls":1,
+    "strikeouts":1,
+    "left_on_base":1
+  }
+}
+'''
+@app.route("/results/baseball/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def baseballAthleteStatistics():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BaseballEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
+        if(not(validateRequestPermissions(token, '20'))):  # Permission to delete statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate GET/REMOVE requests
         if ('event_id' not in json or 'athlete_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            athlete_id = request.args.get('athlete_id', type=int)
-            return handler.getAllAthleteStatisticsByEventId(event_id, athlete_id)
-        if request.method == 'DELETE':
-            return handler.removeStatistics(json['event_id'], json['athlete_id'])
+        return handler.removeStatistics(json['event_id'], json['athlete_id'])
     if request.method == 'POST' or request.method == 'PUT':
         # Validate POST/PUT Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'athlete_id' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('at_bats' not in specific_stats or 'runs' not in specific_stats or 'hits' not in specific_stats
             or 'runs_batted_in' not in specific_stats or 'base_on_balls' not in specific_stats or 'strikeouts' not in specific_stats
                 or 'left_on_base' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             returnable = handler.editStatistics(
                 json['event_id'], json['athlete_id'], json['attributes'])
             return returnable
 
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
+
+@app.route("/results/baseball/individual/public/", methods=['GET'])
+def getBaseballAthleteStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE requests
+        if ('event_id' not in json or 'athlete_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        athlete_id = request.args.get('athlete_id', type=int)
+        return handler.getAllAthleteStatisticsByEventId(event_id, athlete_id)
+
+    else:
+        return jsonify(Error="Metodo no permitido."), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# {
-# "add_type":"manual",
-# "event_id":1,
-# "attributes":
-#   {
-#     "at_bats":1,
-#     "runs":1,
-#     "hits":1,
-#     "runs_batted_in":1,
-#     "base_on_balls":1,
-#     "strikeouts":1,
-#     "left_on_base":1
-#   }
-# }
-@app.route("/results/baseball/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{
+"add_type":"manual",
+"event_id":1,
+"attributes":
+  {
+    "at_bats":1,
+    "runs":1,
+    "hits":1,
+    "runs_batted_in":1,
+    "base_on_balls":1,
+    "strikeouts":1,
+    "left_on_base":1
+  }
+}
+'''
+@app.route("/results/baseball/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def baseballTeamStatistics():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BaseballEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE' or request.method == 'PUT':
+    if request.method == 'DELETE' or request.method == 'PUT':
         # Validate GET/REMOVE/PUT requests
         if ('event_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            return handler.getAllTeamStatisticsByEventId(event_id)
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.editTeamStatistics(json['event_id'])
         if request.method == 'DELETE':
+            if(not(validateRequestPermissions(token, '20'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.removeTeamStatistics(json['event_id'])
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate POST Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'add_type' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('at_bats' not in specific_stats or 'runs' not in specific_stats or 'hits' not in specific_stats
             or 'runs_batted_in' not in specific_stats or 'base_on_balls' not in specific_stats or 'strikeouts' not in specific_stats
                 or 'left_on_base' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])
         if json['add_type'] == 'MANUAL':
             return handler.addTeamStatistics(json['event_id'], json['attributes'])
         else:
-            return jsonify(Error="Method not allowed, Must specify valid add_type"), 405
+            return jsonify(Error="Metodo no permitido, debe especificar \"add_type\" valido."), 405
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
+
+@app.route("/results/baseball/team/public/", methods=['GET'])
+def getBaseballTeamStatistics():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE/PUT requests
+        if ('event_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        return handler.getAllTeamStatisticsByEventId(event_id)
+    else:
+        return jsonify(Error="Metodo no permitido."), 405
+
+
+'''
 # FORMAT FOR REQUEST:
-# { "event_id":3,
-#   "attributes":
-#   {
-#   "uprm_score":2, "opponent_score":2
-#   }
-# }
-@app.route("/results/baseball/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+{ "event_id":3,
+  "attributes":
+  {
+  "uprm_score":2, "opponent_score":2
+  }
+}
+'''
+@app.route("/results/baseball/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def baseballFinalScores():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BaseballEventHandler()
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
+        if(not(validateRequestPermissions(token, '20'))):  # Permission to delete statistics
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate GET/REMOVE requests
         if ('event_id' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry on with request
-        if request.method == 'GET':
-            event_id = request.args.get('event_id', type=int)
-            return handler.getFinalScore(event_id)
-        if request.method == 'DELETE':
-            return handler.removeFinalScore(json['event_id'])
+        return handler.removeFinalScore(json['event_id'])
     if request.method == 'POST' or request.method == 'PUT':
         # Validate POST/PUT Requests
         # Validate Basic IDs
         if ('event_id' not in json or 'attributes' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Specific Statistics
         specific_stats = json['attributes']
         if ('uprm_score' not in specific_stats or 'opponent_score' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '19'))):  # Permission to add new statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addFinalScore(json['event_id'], json['attributes'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '21'))):  # Permission to edit statistics
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.editFinalScore(json['event_id'], json['attributes'])
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
-# {
-#     "athlete_id":1,
-#     "season_year":2020
-# }
+
+@app.route("/results/baseball/score/public/", methods=['GET'])
+def getBaseballFinalScores():
+    json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = BaseballEventHandler()
+    if request.method == 'GET':
+        # Validate GET/REMOVE requests
+        if ('event_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        # Carry on with request
+        event_id = request.args.get('event_id', type=int)
+        return handler.getFinalScore(event_id)
+    else:
+        return jsonify(Error="Metodo no permitido."), 405
+
+
+'''
+{
+    "athlete_id":1,
+    "season_year":2020
+}
+'''
 # TODO: (Herbert) need to prepare a request schema for this one. just aid and seasonYear
 @app.route("/results/baseball/season/athlete_games/", methods=['GET'])
 def baseballSeasonAthleteStatistics():
@@ -1922,24 +2581,26 @@ def baseballSeasonAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BaseballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('athlete_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         athlete_id = request.args.get('athlete_id', type=int)
         # Carry on with request
         return handler.getAllAthleteStatisticsPerSeason(athlete_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
 
-# {
-#     "athlete_id":1,
-#     "season_year":2020
-# }
+'''
+{
+    "athlete_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/baseball/season/athlete_aggregate/", methods=['GET'])
 def baseballAggregateAthleteStatistics():
     if request.method == 'GET':
@@ -1947,23 +2608,26 @@ def baseballAggregateAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BaseballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('athlete_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         athlete_id = request.args.get('athlete_id', type=int)
         # Carry on with request
         return handler.getAggregatedAthleteStatisticsPerSeason(athlete_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
-# {
-#     "sport_id":1,
-#     "season_year":2020
-# }
+
+'''
+{
+    "sport_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/baseball/season/all_athletes_aggregate/", methods=['GET'])
 def baseballAggregateAllAthleteStatistics():
     if request.method == 'GET':
@@ -1971,23 +2635,26 @@ def baseballAggregateAllAthleteStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BaseballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('sport_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         sport_id = request.args.get('sport_id', type=int)
         # Carry on with request
         return handler.getAllAggregatedAthleteStatisticsPerSeason(sport_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
-# {
-#     "sport_id":1,
-#     "season_year":2020
-# }
+
+'''
+{
+    "sport_id":1,
+    "season_year":2020
+}
+'''
 @app.route("/results/baseball/season/team_aggregate/", methods=['GET'])
 def baseballAggregateTeamStatistics():
     if request.method == 'GET':
@@ -1995,18 +2662,18 @@ def baseballAggregateTeamStatistics():
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = BaseballEventHandler()
     if request.method == 'GET':
         # Validate GET requests
         if ('sport_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         season_year = request.args.get('season_year', type=int)
         sport_id = request.args.get('sport_id', type=int)
         # Carry on with request
         return handler.getAggregatedTeamStatisticsPerSeason(sport_id, season_year)
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no permitido."), 405
 
 
 # ===================================================================================
@@ -2015,7 +2682,13 @@ def baseballAggregateTeamStatistics():
 
 # Launch app.
 @app.route("/sports", methods=['GET'])
+@token_check
 def get_sports():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
 
     if request.method == 'GET':
         body = request.get_json()
@@ -2057,7 +2730,13 @@ def get_sports():
 
 
 @app.route("/sports/details", methods=['GET'])
+@token_check
 def get_sport_info():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         args = request.args
         body = request.get_json()
@@ -2072,112 +2751,181 @@ def get_sport_info():
 # ===================================================================================
 # ===================//START TEAM RESULTS ROUTES//===================================
 # ===================================================================================
-# {
-# "sport_id":1,
-# "season_year":"2020",
-# "team_image_url":"www.google.com",
-# "about_team":"hello we are cool"
-# }
-@app.route("/teams/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+'''
+{
+"sport_id":1,
+"season_year":"2020",
+"team_image_url":"www.google.com",
+"about_team":"hello we are cool"
+}
+'''
+@app.route("/teams/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def teamByYear():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = TeamHandler()
-    if (request.method == 'GET' or request.method == 'DELETE'):
-        # Validate GET/DELETE Request Body
+    if (request.method == 'DELETE'):
+        if(not(validateRequestPermissions(token, '26'))):  # Permission to delete profiles
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+        # Validate DELETE Request Body
         if ('sport_id' not in json or 'season_year' not in json):
-            return jsonify(Error='Bad Request'), 400
-        if request.method == 'GET':
-            sport_id = request.args.get('sport_id', type=int)
-            season_year = request.args.get('season_year', type=int)
-            return handler.getTeamByYear(sport_id, season_year)
-        if request.method == 'DELETE':
-            return handler.removeTeamByYear(json['sport_id'], json['season_year'])
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        return handler.removeTeamByYear(json['sport_id'], json['season_year'])
     if (request.method == 'POST' or request.method == 'PUT'):
         # Validate POST/PUT Request Body
         if ('sport_id' not in json or 'season_year' not in json or 'team_image_url' not in json or 'about_team' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '25'))):  # Permission to add new profiles
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addTeam(json['sport_id'], json['season_year'], json['team_image_url'], json['about_team'])
         if request.method == 'PUT':
+            if(not(validateRequestPermissions(token, '27'))):  # Permission to edit profiles
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.editTeamByYear(json['sport_id'], json['season_year'], json['team_image_url'], json['about_team'])
 
     else:
-        return jsonify(Error="Method not allowed."), 405
-
-
-# {
-# "team_id":1,
-# "team_members":[
-#     {
-#         "athlete_id":1
-#     },
-#     {
-#         "athlete_id":2
-#     }
-#     ]
-# }
-@app.route("/teams/members/", methods=['GET', 'POST'])
-def teamMembers():
+        return jsonify(Error="Metodo no Permitido."), 405
+# V2 GET ONLY
+@app.route("/teams/public/", methods=['GET'])
+def getTeamByYear():
     if request.method == 'GET':
         json = request.args
-    else:
-        json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = TeamHandler()
-    if request.method == 'GET':
-        # Validate GET Request Body
-        if ('team_id' not in json):
-            return jsonify(Error='Bad Request'), 400
-        team_id = request.args.get('team_id', type=int)
-        return handler.getTeamMembersByID(team_id)
+    if (request.method == 'GET'):
+        # Validate GET/DELETE Request Body
+        if ('sport_id' not in json or 'season_year' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+
+        sport_id = request.args.get('sport_id', type=int)
+        season_year = request.args.get('season_year', type=int)
+        return handler.getTeamByYear(sport_id, season_year)
+    else:
+        return jsonify(Error="Metodo no Permitido."), 405
+
+
+'''
+{
+"team_id":1,
+"team_members":[
+    {
+        "athlete_id":1
+    },
+    {
+        "athlete_id":2
+    }
+    ]
+}
+'''
+@app.route("/teams/members/", methods=['POST'])
+@token_check
+def teamMembers():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    json = request.json
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = TeamHandler()
     if request.method == 'POST':
+        if(not(validateRequestPermissions(token, '25'))):  # Permission to add new profiles
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         # Validate POST Request Body
         if ('team_id' not in json or 'team_members' not in json):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Solicitud Incorrecta'), 400
         members_to_add = json['team_members']
         # Validate Each Added Member ID
         for member in members_to_add:
             if ('athlete_id' not in member):
-                return jsonify(Error='Bad Request'), 400
+                return jsonify(Error='Solicitud Incorrecta'), 400
         return handler.addTeamMembers(json['team_id'], json['team_members'])
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
+# V2 GET ONLY
+@app.route("/teams/members/public/", methods=['GET'])
+def getTeamMembers():
+    if request.method == 'GET':
+        json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = TeamHandler()
+    if request.method == 'GET':
+        # Validate GET Request Body
+        if ('team_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        team_id = request.args.get('team_id', type=int)
+        return handler.getTeamMembersByID(team_id)
+    else:
+        return jsonify(Error="Metodo no Permitido."), 405
 
 
-# {
-#     "team_id":1,
-#     "athlete_id":1
-# }
+'''
+{
+    "team_id":1,
+    "athlete_id":1
+}
+'''
 # TODO: (Herbert) Check if need to remove route due to redundancy, wait for front end
-@app.route("/teams/member/", methods=['GET', 'POST', 'DELETE'])
+@app.route("/teams/member/", methods=['POST', 'DELETE'])
+@token_check
 def teamMemberByIDs():
-    if request.method == 'GET' or request.method == 'DELETE':
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
     if json is None:
-        return jsonify(Error='Bad Request'), 400
+        return jsonify(Error='Solicitud Incorrecta'), 400
     handler = TeamHandler()
-    if request.method == 'GET' or request.method == 'POST' or request.method == 'DELETE':
-        # Validate GET/POST/DELETE Request Body
+    if request.method == 'POST' or request.method == 'DELETE':
+        # Validate POST/DELETE Request Body
         if ('team_id' not in json or 'athlete_id' not in json):
-            return jsonify(Error='Bad Request'), 400
-        if request.method == 'GET':
-            athlete_id = request.args.get('athlete_id', type=int)
-            team_id = request.args.get('team_id', type=int)
-            return handler.getTeamMemberByIDs(athlete_id, team_id)
+            return jsonify(Error='Solicitud Incorrecta'), 400
         if request.method == 'POST':
+            if(not(validateRequestPermissions(token, '25'))):  # Permission to add new profiles
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.addTeamMember(json['athlete_id'], json['team_id'])
         if request.method == 'DELETE':
+            if(not(validateRequestPermissions(token, '26'))):  # Permission to delete profiles
+                return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
             return handler.removeTeamMember(json['athlete_id'], json['team_id'])
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
+# V2 Get Only
+@app.route("/teams/member/public/", methods=['GET'])
+def getTeamMemberByIDs():
+    if request.method == 'GET':
+        json = request.args
+    if json is None:
+        return jsonify(Error='Solicitud Incorrecta'), 400
+    handler = TeamHandler()
+    if request.method == 'GET':
+        # Validate GET
+        if ('team_id' not in json or 'athlete_id' not in json):
+            return jsonify(Error='Solicitud Incorrecta'), 400
+        athlete_id = request.args.get('athlete_id', type=int)
+        team_id = request.args.get('team_id', type=int)
+        return handler.getTeamMemberByIDs(athlete_id, team_id)
+    else:
+        return jsonify(Error="Metodo no Permitido."), 405
 
 
 @app.route("/teams/all/", methods=['GET', 'POST', 'DELETE'])
@@ -2186,7 +2934,7 @@ def getAllTeams():
     if request.method == 'GET':
         return handler.getAllTeams()
     else:
-        return jsonify(Error="Method not allowed."), 405
+        return jsonify(Error="Metodo no Permitido."), 405
 
 # ===================================================================================
 # ===================//END TEAM RESULTS ROUTES//=====================================
@@ -2197,80 +2945,115 @@ def getAllTeams():
 # ===================================================================================
 
 
-@app.route("/results/matchbased/", methods=['GET', 'POST'])
-def matchbasedStatistics():
-    json = None
-    if request.method == 'GET':
-        json = request.args
-    elif request.method == 'POST':
-        json = request.json
-
+@app.route("/results/matchbased/public/", methods=['GET'])
+def p_matchbasedStatistics():
+    json = request.args
     if not json or 'event_id' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     handler = MatchBasedEventHandler()
     if request.method == 'GET':
         try:
             return handler.getAllStatisticsByEventID(int(json['event_id']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+
+@app.route("/results/matchbased/", methods=['POST'])
+@token_check
+def matchbasedStatistics():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
 
     if request.method == 'POST':
+        # Check for valid permissions
+        # must have permission to write matchbased event stats
+        if(not(validateRequestPermissions(token, '19'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
+        json = request.json
+        if not json or 'event_id' not in json:
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+        handler = MatchBasedEventHandler()
         return handler.addAllEventStatistics(json['event_id'], json)
 
-    else:
-        return jsonify("Method not allowed."), 405
+
+@app.route("/results/matchbased/individual/public/", methods=['GET'])
+def p_matchbasedAthleteStatistics():
+    json = request.args
+    if not json or 'event_id' not in json or 'athlete_id' not in json or "category_id" not in json:
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+    try:
+        handler = MatchBasedEventHandler()
+        return handler.getAllAthleteStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
+    except:
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
-@app.route("/results/matchbased/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route("/results/matchbased/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def matchbasedAthleteStatistics():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
 
     if not json or 'event_id' not in json or 'athlete_id' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     handler = MatchBasedEventHandler()
 
-    if request.method == 'GET':
-        try:
-            return handler.getAllAthleteStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
-        except:
-            return jsonify(Error="Bad arguments"), 400
-
     if request.method == 'POST':
+        # Check for valid permissions
+        # must have permission to write matchbased event stats
+        if(not(validateRequestPermissions(token, '19'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'attributes' not in json:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
         return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'PUT':
+        # Check for valid permissions
+        # must have permission to modify matchbased event stats
+        if(not(validateRequestPermissions(token, '21'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'attributes' not in json:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         return handler.editStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'DELETE':
+        # Check for valid permissions
+        # must have permission to delete matchbased event stats
+        if(not(validateRequestPermissions(token, '20'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'category_id' not in json:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         try:
             return handler.removeStatistics(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
-@app.route("/results/matchbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
-def matchbasedTeamStatistics():
-    json = None
-    if request.method == 'GET' or request.method == 'DELETE':
-        json = request.args
-    else:
-        json = request.json
+@app.route("/results/matchbased/team/public/", methods=['GET'])
+def p_matchbasedTeamStatistics():
+    json = request.args
 
-    if not json or 'event_id' not in json:
-        return jsonify(Error="Bad arguments"), 400
+    if not json or 'event_id' not in json or 'category_id' not in json:
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     handler = MatchBasedEventHandler()
 
@@ -2278,120 +3061,185 @@ def matchbasedTeamStatistics():
         try:
             return handler.getAllTeamStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['category_id']))
         except:
-            return jsonify(Error="Bad arguments"), 400
-
-    if request.method == 'POST':
-        if 'attributes' not in json:
-            return jsonify(Error="Bad arguments"), 400
-        return handler.addTeamStatistics(json['event_id'], json['attributes'])
-
-    if request.method == 'PUT':
-        if 'category_id' not in json:
-            return jsonify(Error="Bad arguments"), 400
-
-        return handler.editTeamStatistics(json['event_id'], json['category_id'])
-
-    if request.method == 'DELETE':
-        if 'category_id' not in json:
-            return jsonify(Error="Bad arguments"), 400
-        try:
-            return handler.removeTeamStatistics(int(json['event_id']), int(json['category_id']))
-        except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
-@app.route("/results/matchbased/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
-def matchbasedFinalScores():
+@app.route("/results/matchbased/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
+def matchbasedTeamStatistics():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
 
-    if json is None:
-        return jsonify(Error='Bad Request'), 400
+    if not json or 'event_id' not in json:
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+    handler = MatchBasedEventHandler()
+
+    if request.method == 'POST':
+        # Check for valid permissions
+        # must have permission to write matchbased event stats
+        if(not(validateRequestPermissions(token, '19'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
+        if 'attributes' not in json:
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+        return handler.addTeamStatistics(json['event_id'], json['attributes'])
+
+    if request.method == 'PUT':
+        # Check for valid permissions
+        # must have permission to modify matchbased event stats
+        if(not(validateRequestPermissions(token, '21'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
+        if 'category_id' not in json:
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+        return handler.editTeamStatistics(json['event_id'], json['category_id'])
+
+    if request.method == 'DELETE':
+        # Check for valid permissions
+        # must have permission to delete matchbased event stats
+        if(not(validateRequestPermissions(token, '20'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
+        if 'category_id' not in json:
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+        try:
+            return handler.removeTeamStatistics(int(json['event_id']), int(json['category_id']))
+        except:
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+
+@app.route("/results/matchbased/score/public/", methods=['GET'])
+def p_matchbasedFinalScores():
+    json = request.args
+    if not json or 'event_id' not in json:
+        return jsonify(Error='Argumentos incorrectos fueron dados'), 400
+    if request.method == 'GET':
+        handler = EventResultHandler()
+        return handler.getFinalScore(int(json['event_id']))
+
+
+@app.route("/results/matchbased/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
+def matchbasedFinalScores():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    json = None
+    if request.method == 'DELETE':
+        json = request.args
+    else:
+        json = request.json
+
+    if not json:
+        return jsonify(Error='Argumentos incorrectos fueron dados.'), 400
 
     handler = EventResultHandler()
 
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
+        # Check for valid permissions
+        # must have permission to delete matchbased event stats
+        if(not(validateRequestPermissions(token, '20'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
 
         if 'event_id' not in json:
             return jsonify(Error='Bad Request'), 400
         try:
-            if request.method == 'GET':
-                return handler.getFinalScore(int(json['event_id']))
-            if request.method == 'DELETE':
-                return handler.removeFinalScore(int(json['event_id']))
+            return handler.removeFinalScore(int(json['event_id']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
     if request.method == 'POST' or request.method == 'PUT':
 
         if 'event_id' not in json or 'attributes' not in json:
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Argumentos incorrectos fueron dados.'), 400
 
         specific_stats = json['attributes']
 
         if ('uprm_score' not in specific_stats or 'opponent_score' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Argumentos incorrectos fueron dados.'), 400
         try:
             if request.method == 'POST':
+                # Check for valid permissions
+                # must have permission to write matchbased event stats
+                if(not(validateRequestPermissions(token, '19'))):
+                    return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
                 return handler.addFinalScore(json['event_id'], json['attributes'])
+
             if request.method == 'PUT':
+                # Check for valid permissions
+                # must have permission to modify matchbased event stats
+                if(not(validateRequestPermissions(token, '21'))):
+                    return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
                 return handler.editFinalScore(json['event_id'], json['attributes'])
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/matchbased/season/athlete_games/", methods=['GET'])
 def matchbasedSeasonAthleteStatistics():
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
-        return jsonify("Error = Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     if request.method == 'GET':
         try:
             return MatchBasedEventHandler().getAllAthleteStatisticsPerSeason(int(json['athlete_id']), int(json['season_year']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/matchbased/season/athlete_aggregate/", methods=['GET'])
 def matchbasedAggregateAthleteStatistics():
+    # Check user making the reques has a valid session.
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     if request.method == 'GET':
         try:
             return MatchBasedEventHandler().getAggregatedAthleteStatisticsPerSeason(int(json['athlete_id']), int(json['season_year']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/matchbased/season/all_athletes_aggregate/", methods=['GET'])
 def matchbasedAggregateAllAthleteStatistics():
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     if request.method == 'GET':
         try:
             return MatchBasedEventHandler().getAllAggregatedAthleteStatisticsPerSeason(int(json['sport_id']), int(json['season_year']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/matchbased/season/team_aggregate/", methods=['GET'])
 def matchbasedAggregateTeamStatistics():
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     if request.method == 'GET':
         try:
             return MatchBasedEventHandler().getAggregatedTeamStatisticsPerSeason(int(json['sport_id']), int(json['season_year']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 # ===================================================================================
@@ -2402,202 +3250,296 @@ def matchbasedAggregateTeamStatistics():
 # ===================================================================================
 # =======================//MEDAL BASED RESULTS ROUTES//===============================
 # ===================================================================================
-
-@app.route("/results/medalbased/", methods=['GET', 'POST'])
-def medalbasedStatistics():
-    json = None
-    if request.method == 'GET':
-        json = request.args
-    elif request.method == 'POST':
-        json = request.json
-
+@app.route("/results/medalbased/public/")
+def p_medalbasedStatistics():
+    json = request.args
     if not json or 'event_id' not in json:
-        return jsonify(Error="Bad arguments"), 400
-
-    handler = MedalBasedEventHandler()
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
     if request.method == 'GET':
+        handler = MedalBasedEventHandler()
         try:
             return handler.getAllStatisticsByEventID(int(json['event_id']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+
+@app.route("/results/medalbased/", methods=['POST'])
+@token_check
+def medalbasedStatistics():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
+    # Check for valid permissions
+    # must have permission to write medalbased event stats
+    if(not(validateRequestPermissions(token, '19'))):
+        return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
+    json = request.json
+
+    if not json or 'event_id' not in json:
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+    handler = MedalBasedEventHandler()
 
     if request.method == 'POST':
         return handler.addAllEventStatistics(json['event_id'], json)
 
-    else:
-        return jsonify("Method not allowed."), 405
+
+@app.route("/results/medalbased/individual/public/", methods=['GET'])
+def p_medalbasedAthleteStatistics():
+    json = request.args
+    if not json or 'event_id' not in json or 'athlete_id' not in json or 'category_id' not in json:
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+    if request.method == 'GET':
+        try:
+            handler = MedalBasedEventHandler()
+            return handler.getAllAthleteStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
+        except:
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
-@app.route("/results/medalbased/individual/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route("/results/medalbased/individual/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def medalbasedAthleteStatistics():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
 
     if not json or 'event_id' not in json or 'athlete_id' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     handler = MedalBasedEventHandler()
 
-    if request.method == 'GET':
-        try:
-            return handler.getAllAthleteStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
-        except:
-            return jsonify(Error="Bad arguments"), 400
-
     if request.method == 'POST':
+        # Check for valid permissions
+        # must have permission to write medalbased event stats
+        if(not(validateRequestPermissions(token, '19'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'attributes' not in json:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
         return handler.addStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'PUT':
+        # Check for valid permissions
+        # must have permission to modify medalbased event stats
+        if(not(validateRequestPermissions(token, '21'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'attributes' not in json:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         return handler.editStatistics(json['event_id'], json['athlete_id'], json['attributes'])
 
     if request.method == 'DELETE':
+        # Check for valid permissions
+        # must have permission to delete medalbased event stats
+        if(not(validateRequestPermissions(token, '20'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'category_id' not in json:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         try:
             return handler.removeStatistics(int(json['event_id']), int(json['athlete_id']), int(json['category_id']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
-@app.route("/results/medalbased/team/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route("/results/medalbased/team/public/", methods=['GET'])
+def p_medalbasedTeamStatistics():
+    json = request.args
+    if not json or 'event_id' not in json or 'category_id' not in json:
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+    try:
+        handler = MedalBasedEventHandler()
+        return handler.getAllTeamStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['category_id']))
+    except:
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
+
+
+@app.route("/results/medalbased/team/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def medalbasedTeamStatistics():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
-    if request.method == 'GET' or request.method == "DELETE":
+    if request.method == "DELETE":
         json = request.args
     else:
         json = request.json
 
     if not json or 'event_id' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     handler = MedalBasedEventHandler()
 
-    if request.method == 'GET':
-        try:
-            return handler.getAllTeamStatisticsByEventIdAndCategoryId(int(json['event_id']), int(json['category_id']))
-        except:
-            return jsonify(Error="Bad arguments"), 400
-
     if request.method == 'POST':
+        # Check for valid permissions
+        # must have permission to write medalbased event stats
+        if(not(validateRequestPermissions(token, '19'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'attributes' not in json:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         return handler.addTeamStatistics(json['event_id'], json['attributes'])
 
     if request.method == 'PUT':
+        # Check for valid permissions
+        # must have permission to modify medalbased event stats
+        if(not(validateRequestPermissions(token, '21'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'category_id' not in json:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
         return handler.editTeamStatistics(json['event_id'], json['category_id'])
 
     if request.method == 'DELETE':
+        # Check for valid permissions
+        # must have permission to delete medalbased event stats
+        if(not(validateRequestPermissions(token, '20'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
         if 'category_id' not in json:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
         try:
             return handler.removeTeamStatistics(int(json['event_id']), int(json['category_id']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
-@app.route("/results/medalbased/score/", methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route("/results/medalbased/score/public/", methods=['GET'])
+def p_medalbasedFinalScores():
+    json = request.args
+
+    if not json or 'event_id' not in json:
+        return jsonify(Error='Argumentos incorrectos fueron dados.'), 400
+
+    if request.method == 'GET':
+        handler = EventResultHandler()
+        return handler.getFinalScore(int(json['event_id']))
+
+
+@app.route("/results/medalbased/score/", methods=['POST', 'PUT', 'DELETE'])
+@token_check
 def medalbasedFinalScores():
+    # Check user making the reques has a valid session.
+    token = extractUserInfoFormToken()
+    loggedUser = customSession.isLoggedIn(token['user'])
+    if(loggedUser == None):
+        return jsonify(Error='No hay una sesión valida.'), 401
     json = None
-    if request.method == 'GET' or request.method == 'DELETE':
+    if request.method == 'DELETE':
         json = request.args
     else:
         json = request.json
 
-    if json is None:
-        return jsonify(Error='Bad Request'), 400
+    if not json or 'event_id' not in json:
+        return jsonify(Error='Argumentos incorrectos fueron dados.'), 400
 
     handler = EventResultHandler()
 
-    if request.method == 'GET' or request.method == 'DELETE':
-
-        if 'event_id' not in json:
-            return jsonify(Error='Bad Request'), 400
+    if request.method == 'DELETE':
+        # Check for valid permissions
+        # must have permission to delete medalbased event stats
+        if(not(validateRequestPermissions(token, '20'))):
+            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         try:
-            if request.method == 'GET':
-                return handler.getFinalScore(int(json['event_id']))
-            if request.method == 'DELETE':
-                return handler.removeFinalScore(int(json['event_id']))
+            return handler.removeFinalScore(int(json['event_id']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
     if request.method == 'POST' or request.method == 'PUT':
 
-        if 'event_id' not in json or 'attributes' not in json:
-            return jsonify(Error='Bad Request'), 400
+        if 'attributes' not in json:
+            return jsonify(Error='Argumentos incorrectos fueron dados.'), 400
 
         specific_stats = json['attributes']
 
         if ('uprm_score' not in specific_stats or 'opponent_score' not in specific_stats):
-            return jsonify(Error='Bad Request'), 400
+            return jsonify(Error='Argumentos incorrectos fueron dados.'), 400
         try:
             if request.method == 'POST':
+                # Check for valid permissions
+                # must have permission to write medalbased event stats
+                if(not(validateRequestPermissions(token, '19'))):
+                    return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
                 return handler.addFinalScore(json['event_id'], json['attributes'])
+
             if request.method == 'PUT':
+                # Check for valid permissions
+                # must have permission to modify medalbased event stats
+                if(not(validateRequestPermissions(token, '21'))):
+                    return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
+
                 return handler.editFinalScore(json['event_id'], json['attributes'])
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/medalbased/season/athlete_games/", methods=['GET'])
 def medalbasedSeasonAthleteStatistics():
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
-        return jsonify("Error = Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     if request.method == 'GET':
         try:
             return MedalBasedEventHandler().getAllAthleteStatisticsPerSeason(int(json['athlete_id']), int(json['season_year']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/medalbased/season/athlete_aggregate/", methods=['GET'])
 def medalbasedAggregateAthleteStatistics():
     json = request.args
     if not json or 'athlete_id' not in json or 'season_year' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     if request.method == 'GET':
         try:
             return MedalBasedEventHandler().getAggregatedAthleteStatisticsPerSeason(int(json['athlete_id']), int(json['season_year']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/medalbased/season/all_athletes_aggregate/", methods=['GET'])
 def medalbasedAggregateAllAthleteStatistics():
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     if request.method == 'GET':
         try:
             return MedalBasedEventHandler().getAllAggregatedAthleteStatisticsPerSeason(int(json['sport_id']), int(json['season_year']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 @app.route("/results/medalbased/season/team_aggregate/", methods=['GET'])
 def medalbasedAggregateTeamStatistics():
     json = request.args
     if not json or 'sport_id' not in json or 'season_year' not in json:
-        return jsonify(Error="Bad arguments"), 400
+        return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
     if request.method == 'GET':
         try:
             return MedalBasedEventHandler().getAggregatedTeamStatisticsPerSeason(int(json['sport_id']), int(json['season_year']))
         except:
-            return jsonify(Error="Bad arguments"), 400
+            return jsonify(Error="Argumentos incorrectos fueron dados."), 400
 
 
 # ===================================================================================

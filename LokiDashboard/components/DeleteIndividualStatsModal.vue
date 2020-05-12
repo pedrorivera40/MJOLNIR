@@ -19,7 +19,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="close()"> Cancelar </v-btn>
+          <v-btn color="grey darken-3" text @click="close()"> Cancelar </v-btn>
           <v-btn
             color="green darken-1"
             :disabled="!terms"
@@ -44,7 +44,8 @@ export default {
     event_id: Number,
     athlete_id: Number,
     refresh_stats: Boolean,
-    sport_route: String
+    sport_route: String,
+    category_id: Number
   },
   data() {
     return {
@@ -62,17 +63,30 @@ export default {
       this.terms = false;
       this.$emit("update:dialog", false);
     },
-    
     async removeIndividualStatsLocal() {
       this.isLoading = true;
-      const param_json = {
-        sport_route: this.sport_route,
-        athlete_id: Number(this.athlete_id),
-        event_id: Number(this.event_id)
-      };
-      console.log("HEY WE GONNA REMOVE!",param_json)
-      await this.setQueryLoading();
-      await this.removeIndividualStatistics(param_json);
+      if (this.category_id != '' && this.category_id != null){
+        const param_json1 = {
+          sport_route: this.sport_route,
+          athlete_id: Number(this.athlete_id),
+          event_id: Number(this.event_id),
+          category_id: Number(this.category_id)
+        };
+        // console.log("HEY WE GONNA REMOVE!",param_json1)
+        await this.setQueryLoading();
+        await this.removeIndividualStatistics(param_json1);
+      }
+      else{
+        const param_json2 = {
+          sport_route: this.sport_route,
+          athlete_id: Number(this.athlete_id),
+          event_id: Number(this.event_id)
+        };
+        // console.log("HEY WE GONNA REMOVE!",param_json2)
+        await this.setQueryLoading();
+        await this.removeIndividualStatistics(param_json2);
+      }
+      
      
       this.terms = false;
       this.$emit("update:refresh_stats",true);

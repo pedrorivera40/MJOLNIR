@@ -8,7 +8,7 @@
                 </v-toolbar>
                 <v-card-text>            
                 
-                    <form>
+                    <v-form v-model="valid">
                         <v-container>  
                             <v-row>
                                 <v-col>
@@ -56,20 +56,20 @@
                                 </v-col>
                             </v-row>      
                             <v-row>
-                    <v-spacer/>
-                    <v-spacer/>
-                    <v-col>
-                        <v-btn color="primary ligthen-1" text @click="close()">close</v-btn>
-                            </v-col>
-                            <v-col>
-                                <v-btn color="primary ligthen-1" text @click="submit()" :loading="loadingQuery">submit</v-btn>
-                            </v-col>
-                            <v-col>
-                                <v-btn color="primary ligthen-1" text @click="clear()">clear</v-btn>
-                            </v-col>
-                        </v-row>   
+                                <v-spacer/>
+                                <v-spacer/>
+                                <v-col>
+                                    <v-btn color="grey darken-3" text @click="close()" :disabled="loadingQuery">cerrar</v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-btn color="grey darken-3" text @click="clear()" :disabled="loadingQuery">borrar</v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-btn color="primary darken-1" text @click="submit()" :loading="loadingQuery" :disabled="!valid">guardar</v-btn>
+                                </v-col>
+                            </v-row>    
                         </v-container>
-                    </form>
+                    </v-form>
           
                 </v-card-text>
             </v-card>

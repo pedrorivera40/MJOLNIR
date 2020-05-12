@@ -2,9 +2,9 @@
   <v-row justify="center">
     <v-dialog  v-model="dialog" persistent max-width="600">
       <v-card>
-        <v-toolbar color="green darken-1" dark flat>
+        <v-toolbar color="primary_dark" flat>
           <v-spacer />
-          <v-toolbar-title>Evento</v-toolbar-title>
+          <v-toolbar-title class="headline white--text">Evento</v-toolbar-title>
           <v-progress-linear
             :active="!ready"
             indeterminate
@@ -30,7 +30,7 @@
                   md="12"
                 >	
 
-                <h2>Fecha del Evento:</h2>
+                <h2>Fecha del Evento:*</h2>
                   
                 </v-col>
               </v-row>
@@ -55,7 +55,7 @@
               <v-row>            
                 <v-col>	
 
-                <h2>Hora del Evento:</h2>
+                <h2>Hora del Evento:*</h2>
                   
                 </v-col>
               </v-row>
@@ -86,7 +86,7 @@
                   <v-select
                     v-model.lazy="locality"
                     :items="localities"                  
-                    label ="Localización"
+                    label ="Localización*"
                     :rules="[required('Localización')]"
                   ></v-select>                
                 </v-col>
@@ -121,7 +121,7 @@
                       v-model="team"
                       :items="teamsList"                
                       name="Equipo"                    
-                      label ="Equipo"
+                      label ="Equipo*"
                       item-text="sportName"
                       item-value="id"                  
                       :rules="[teamRequired('Equipo')]"
@@ -177,28 +177,29 @@
                 <v-col>
                    <v-checkbox
                     v-model="terms"
-                    :label="`Estoy de acuerdo con la información.`"
+                    label="Estoy de acuerdo con la información*."
                   >
                   </v-checkbox>
                 </v-col>
-              </v-row>      
+              </v-row>    
               
             </v-container>
+            <small>*indica un campo requerido.</small>
           </v-form>      
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-            <v-btn  @click="close()">
+            <v-btn text color="grey darken-3" @click="close()">
              Cerrar
             </v-btn>
            <v-btn 
-              color="green darken-1" 
-                        
+              color="primary darken-1" 
+              text      
               :disabled="!(valid & terms)"
               @click="submit"
               :loading="adding"
             >
-              Añadir
+              Guardar
             </v-btn>
         </v-card-actions>
 
@@ -223,6 +224,7 @@
       valid:false,      
       terms:false,
       adding:false,
+      //Here are the fields to be used by the edit form:
       date:'',
       time:'', 
 			locality:'',
@@ -251,9 +253,14 @@
         getEventTeams:"events/getEventTeams"
       }),
 
+      /**
+       * Function to be called after the user 
+       * has entered valid information in the required
+       * field and has agreed to the terms.
+       */
       async submit () {        
         this.adding = true
-        const event_attributes = {}
+        const event_attributes = {}//Temp Object for the attributes of the event.
 
         event_attributes['event_date'] = this.date + ' ' + this.time
 
@@ -266,8 +273,10 @@
         event_attributes['opponent_name'] = this.opponent_name
         event_attributes['event_summary'] = this.eventSummary
         
+        //Contruct Object for the vuex action to be called.        
         const eventJSON = {'team_id':this.team,'attributes':event_attributes}
         
+        //Call vuex action and store response
         const response = await this.addEvent(eventJSON)
         this.adding = false
         if(response !== 'error'){
@@ -276,13 +285,21 @@
         }    
         
       },
-      close () {        
-       
+
+      /**
+       * Closes the AddEventModal
+       */
+      close () {       
         this.ready = false
         this.terms = false
         this.$emit("update:dialog",false);
       
       },
+
+      /**
+       * Builds the team selection list to be used 
+       * in the edit form.
+       */
       buildTeamsList(){
         for(let i = 0; i < this.teams.length; i ++)
         {
@@ -293,6 +310,11 @@
         }
       },
 
+      /**
+       * Indicates whether the event edit form is formated,
+       * if it is not formated then it formats and prepares 
+       * the form.
+       */
       formated(){
         if(this.teams.length > 0){
           if(this.ready){
@@ -308,14 +330,16 @@
             this.eventSummary = null
             this.ready = true
           }
-
         }
         else{
-          this.getEventTeams()
+          this.getEventTeams()//Get the teams from the database and store them in the state
           return false
         }
       },
-      
+      /**
+       * Resets the date field in the form and formats it in 
+       * a way that can be used by the date and time fields.
+       */
       resetDate()
       {
         let time_zone_offset = new Date().getTimezoneOffset() * 60000
@@ -324,10 +348,10 @@
         this.time = newDate.getUTCHours()+':'+newDate.getUTCMinutes()
         
         const dateYear = newDate.getFullYear()
+        //This fields restricts the dates that can be chosen.
         this.min_date = dateYear +'-01-01'
         this.max_date = dateYear+1 +'-12-31'
       }
-
       
     },
 

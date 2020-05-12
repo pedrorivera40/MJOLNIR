@@ -195,38 +195,41 @@ class MatchBasedEventHandler():
 
         #validate parameters given        
         if not isinstance(eID,int) or not isinstance(aID,int) or not self._validateMatchCategory(cID):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
 
         #validate existing event
         try:
             event = EventDAO().eventExists(eID)
             if not event:
-                return jsonify(Error = "Event with id:{} was not found.".format(eID)),404                 
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404                 
     
-        except:
-           return jsonify("Problem ocurred while fetching a match based event."),400
+        except Exception as e:
+            print(e)
+            return jsonify(Error = "Ocurrió un problema interno tratando de buscar un evento de partido."),500
         
         #validate existing athlete 
         try:
-           athlete = AthleteDAO().athleteExists(aID)
-           if not athlete:
-               return jsonify(Error = "Athlete with id:{} not found.".format(aID)),404                
+            athlete = AthleteDAO().athleteExists(aID)
+            if not athlete:
+                return jsonify(Error = "Atleta con id:{} no fue encotrado.".format(aID)),404                
         
-        except:
-           return jsonify("Problem ocurred while fetching a match based event."),400
+        except Exception as e:
+            print(e)
+            return jsonify(Error = "Ocurrió un problema interno tratando de buscar un evento de partido."),500
 
         
         try:
             result = MatchBasedEventDAO().getAllAthleteStatisticsByEventIdAndCategoryId(eID,aID,cID)
             if not result:
-                return jsonify(Error = "No athlete statistics were found."),404
+                return jsonify(Error = "No se encontraron estadísticas para atletas."),404
             
             #print(result)
             mappedResult = self.mapEventAthleteStatsToDict(result)
 
             return jsonify(Match_Based_Event_Athlete_Statistics = mappedResult),200
-        except:            
-            return jsonify(Error = "A problem ocurred while fetching the athlete statistics of a match based event."),400
+        except Exception as e:          
+            print(e)
+            return jsonify(Error = "Ocurrió un problema interno tratando de buscar las estadísticas de atletas para un evento de partido."),500
         
         
        
@@ -251,27 +254,29 @@ class MatchBasedEventHandler():
         #validate parameters given
         try:
             if not isinstance(eID,int) or not self._validateMatchCategory(cID):
-                return jsonify(Error = "Bad arguments"),400
+                return jsonify(Error = "Argumentos incorrectos fueron dados."),400
         except:
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
 
         #validate existing event
         try:
             event = EventDAO().eventExists(eID)
             if not event:
-                return jsonify(Error = "Event with id:{} was not found.".format(eID)),404                 
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404                 
     
-        except:
-           return jsonify("Problem ocurred while fetching a match based event."),400
+        except Exception as e:
+            print(e)
+            return jsonify(Error = "Ocurrió un problema interno tratando de buscar un evento de partido."),500
        
         try:
             dao = MatchBasedEventDAO()
             result = dao.getAllTeamStatisticsByEventIdAndCategoryId(eID,cID)
             if not result:
-                return jsonify(Error = "Match Based Event Team Statistics not found for the event: {}".format(eID)),404
+                return jsonify(Error = "Estadisísticas de equipo pare un evento de partido no fueron encontradas para el evento con id: {}".format(eID)),404
             mappedResult = self.mapEventTeamStatsToDict(result)
         except Exception as e:
-            return jsonify(ERROR="Unable to verify match_based_event_team_stats from DAO." + str(e)), 500
+            print(e)
+            return jsonify(Error="No se pudo verificar las estadísticas de equipo para un evento de partido."), 500
          
         return jsonify(Match_Based_Event_Team_Stats = mappedResult),200
 
@@ -292,29 +297,29 @@ class MatchBasedEventHandler():
         """
 
         if not isinstance(aID,int) or not isinstance(seasonYear,int):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
         
         #validate existing athlete 
         try:
-           athlete = AthleteDAO().athleteExists(aID)
-           if not athlete:
-               return jsonify(Error = "Athlete with id:{} not found.".format(aID)),404                
+            athlete = AthleteDAO().athleteExists(aID)
+            if not athlete:
+                return jsonify(Error = "Atleta con id:{} no fue encotrado.".format(aID)),404                
         
-        except:
-           return jsonify("Problem ocurred while fetching a match based event."),500        
+        except:            
+            return jsonify(Error = "Ocurrió un problema interno tratando de buscar un evento de partido."),500        
         
         
         try:
             dao = MatchBasedEventDAO()
             result = dao.getAllAthleteStatisticsPerSeason(aID,seasonYear)
             if not result:
-                return jsonify(Error = "Match Based Event Statistics not found for the athlete id:{} in season year:{}.".format(aID,seasonYear)),404
+                return jsonify(Error = "Estadísticas de un evento de partido no fueron encontradas para el atleta con id: {} en la temporada: {}.".format(aID,seasonYear)),404
             mappedResult = []
             for athlete_statistics in result:                     
                 mappedResult.append(self.mapEventSeasonCollectionToDict(athlete_statistics))
             
         except:
-            return jsonify(ERROR="Unable to verify match based event from DAO."), 500
+            return jsonify(Error="No se pudo verificar el evento de partido."), 500
          
         return jsonify(Match_Based_Event_Season_Athlete_Statistics = mappedResult), 200
 
@@ -336,7 +341,7 @@ class MatchBasedEventHandler():
         """
 
         if not isinstance(aID,int) or not isinstance(seasonYear,int):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
 
         #validate existing athlete 
         
@@ -344,9 +349,9 @@ class MatchBasedEventHandler():
             a_dao = AthleteDAO() 
             athlete = a_dao.athleteExists(aID)
             if not athlete:
-                return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
+                return jsonify(Error = "El atleta con id:{} no fue encontrado.".format(aID)),404
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar el atleta."), 500
          
         # validate existing match_based_event entries and format returnable
         
@@ -354,11 +359,11 @@ class MatchBasedEventHandler():
             dao = MatchBasedEventDAO()
             result = dao.getAggregatedAthleteStatisticsPerSeason(aID,seasonYear)
             if not result:
-                return jsonify(Error = "Match Based Event Statistics not found for the athlete id:{} in season year:{}.".format(aID,seasonYear)),404
+                return jsonify(Error = "Estadísticas de un evento de partido no fueron encontradas para el atleta con id: {} en la temporada: {}.".format(aID,seasonYear)),404
             mappedResult = self.mapAthleteSeasonAggregate(result)
             #print(mappedResult)
         except:
-            return jsonify(ERROR="Unable to verify match_based event from DAO."), 500
+            return jsonify(Error="No se pudo verificar un evento de partido."), 500
          
         return jsonify(Match_Based_Event_Season_Athlete_Statistics = mappedResult), 200
 
@@ -380,7 +385,7 @@ class MatchBasedEventHandler():
         """
 
         if not isinstance(sID,int) or not isinstance(seasonYear,int):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
    
         # validate existing match_based_event entries and format returnable
         
@@ -388,13 +393,14 @@ class MatchBasedEventHandler():
             dao = MatchBasedEventDAO()
             result = dao.getAllAggregatedAthleteStatisticsPerSeason(sID,seasonYear)
             if not result:
-                return jsonify(Error = "Match Based Event Statistics not found for the sport id:{} in season year:{}.".format(sID,seasonYear)),404
+                return jsonify(Error = "Estadísticas para un evento de partido no fueron encontradas para el deporte con id:{} en la temporada:{}.".format(sID,seasonYear)),404
             mappedResult = []
             for athlete_statistics in result:                     
                 mappedResult.append(self.mapAthleteSeasonAggregate(athlete_statistics))
             #print(mappedResult)
         except Exception as e:
-            return jsonify(ERROR="Unable to verify match_based event from DAO." + str(e)), 500
+            print(e)
+            return jsonify(Error="No se pudo verificar un evento de partido."), 500
          
         return jsonify(Match_Based_Event_Season_Athlete_Statistics = mappedResult), 200
 
@@ -416,7 +422,7 @@ class MatchBasedEventHandler():
             A JSON containing the aggregated team statistics in the system for the specified team and season year.
         """
         if not isinstance(sID,int) or not isinstance(seasonYear,int):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
          
         # validate existing match_based_event entries and format returnable
         
@@ -424,7 +430,7 @@ class MatchBasedEventHandler():
             dao = MatchBasedEventDAO()
             result = dao.getAggregatedTeamStatisticsPerSeason(sID,seasonYear)
             if not result:
-                return jsonify(Error = "Match Based Event Team Statistics not found for sport id:{} in season year:{}.".format(sID,seasonYear)),404
+                return jsonify(Error = "Estadísticas de equipo para un evento de partido no fueron encontradas para el deporte con id:{} en la temporada:{}.".format(sID,seasonYear)),404
             mappedResult = []
             if len(result) == 2:#This has two lists
                 for row in result:
@@ -433,7 +439,8 @@ class MatchBasedEventHandler():
                 mappedResult = self.mapTeamSeasonAggregate(result)
             
         except Exception as e:
-            return jsonify(ERROR="Unable to verify match_based event team stats from DAO." + str(e)), 500
+            print(e)
+            return jsonify(Error="Estadísticas de equipo para un evento de partido no pudieron ser verificadas."), 500
          
         return jsonify(Match_Based_Event_Season_Team_Statistics = mappedResult), 200
 
@@ -457,54 +464,54 @@ class MatchBasedEventHandler():
         
         
         if not isinstance(eID,int):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
        
 
         #validate existing event
         try:
             event = EventDAO().eventExists(eID)
             if not event:
-                return jsonify(Error = "Event with id:{} was not found.".format(eID)),404                 
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404                 
     
         except:
-           return jsonify("Problem ocurred while fetching a match based event."),400
+           return jsonify(Error = "Ocurrió un problema interno tratando de buscar un evento de partido."),500
 
         dao = MatchBasedEventDAO()
 
         try:  
             categoriesPlayed = dao.getCategoriesOfTheEvent(eID)
             if not categoriesPlayed:
-                return jsonify(Error = "Match Based Event Team Statistics not found for the event: {}".format(eID)),404  
+                return jsonify(Error = "Estadisísticas de equipo pare un evento de partido no fueron encontradas para el evento con id: {}".format(eID)),404  
 
             team_results = []
             print(categoriesPlayed)
             for category in categoriesPlayed:
                 team_results.append(dao.getAllTeamStatisticsByEventIdAndCategoryId(eID,category))
             if not team_results:
-                return jsonify(Error = "Match Based Event Team Statistics not found for the event: {}".format(eID)),404
+                return jsonify(Error = "Estadisísticas de equipo pare un evento de partido no fueron encontradas para el evento con id: {}".format(eID)),404
         except Exception as e:
-            return jsonify(ERROR="Unable to verify match based event team stats from DAO." + str(e)), 500
+            print(e)
+            return jsonify(Error="Estadísticas de equipo para un evento de partido no pudieron ser verificadas."), 500
         
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
             if not all_stats_result:            
-                return jsonify(Error = "Match Based Event Statistics not found for the event: {}.".format(eID)),404
+                return jsonify(Error = "No se encontraron estadísticas para un evento de partido para el evento con id:{}.".format(eID)),404
         except Exception as e:
-            return jsonify(ERROR="Unable to verify match based event from DAO." + str(e)), 500
+            print(e)
+            return jsonify(Error="No se pudo verificar el evento de partido."), 500
          
         try:
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:                
-                return jsonify(Error = "Match Based Event Statistics not found for the event: {}.".format(eID)),404
-            print(team_results)
-            print(final_score_result)
-            print(all_stats_result)
+                return jsonify(Error = "No se encontraron estadísticas para un evento de partido  pare el evento con id:{}.".format(eID)),404            
             mappedResult = self.mapEventAllStatsToDict(team_results,all_stats_result, final_score_result)
             return jsonify(Match_Based_Event_Statistics = mappedResult),200
 
         except Exception as e:
-            return jsonify(ERROR="Unable to verify final score from DAO." + str(e)), 500
+            print(e)
+            return jsonify(Error="No se pudo verificar la puntuación final."), 500
          
       
 
@@ -530,7 +537,7 @@ class MatchBasedEventHandler():
         """
 
         if not isinstance(eID,int) or not isinstance(aID,int) or not self.validateAttributes(attributes):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
 
         # Validate Avoid Duplication
         
@@ -538,18 +545,18 @@ class MatchBasedEventHandler():
 
         try:           
             if dao.getMatchBasedEventID(eID,aID,attributes['category_id']):
-                return jsonify(Error = "Match Based Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),403 #TODO: Use 403 for duplicates
+                return jsonify(Error = "Ya existen una entrada de un evento de partido para el evento con id:{} y el atleta con id:{}.".format(eID,aID)),403 
         except:
-            return jsonify(ERROR="Unable to verify match_based_event from DAO."), 500
+            return jsonify(Error="No se puede verificar el evento de partido."), 500
 
         # Validate existing event  
         e_dao = EventDAO()      
         try:            
             event = e_dao.eventExists(eID)
             if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar el evento."), 500
        
         
         # Get Event Team For Validation        
@@ -558,20 +565,20 @@ class MatchBasedEventHandler():
             t_dao = TeamDAO()
             tID = e_dao.getEventTeamByID(eID)
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar el evento."), 500
 
         # Validate that the event belongs to the correct sport and the category is correct.     
         try:
             sID = t_dao.getTeamSportByID(tID)[0] 
             print(sID)
             if sID != TENNIS_IDM and sID != TENNIS_IDF and sID != TABLE_TENNIS_IDM and sID != TABLE_TENNIS_IDF:
-                return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Match Based.".format(eID)),400
+                return jsonify(Error = "El evento con id:{} no es un evento de partido.".format(eID)),400
 
             if not self._validateCategory(sID,attributes['category_id']):
-                return jsonify(Error = "Bad request, category {} does not match the sport of the team.".format(attributes['category_id'])),400        
+                return jsonify(Error = "La categoría con id:{} no le pertenece al deporte del equipo.".format(attributes['category_id'])),400        
             
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar el equipo."), 500
 
         # Validate existing athlete 
         
@@ -579,16 +586,16 @@ class MatchBasedEventHandler():
             a_dao = AthleteDAO()
             athlete = a_dao.athleteExists(aID)
             if not athlete:
-                return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
+                return jsonify(Error = "El atleta con id:{} no fue encontrado.".format(aID)),404
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar el atleta."), 500
 
         # Validate athlete belongs to team playing event        
         try:
             if not t_dao.getTeamMemberByIDs(aID,tID):
-                return jsonify(Error = "Malformed Query, Athlete ID:{} does not belong to Team ID:{} from Event ID:{}.".format(aID,tID,eID)),400
+                return jsonify(Error = "El atleta con id:{} no pertenece al equipo con id:{} del evento con id:{}.".format(aID,tID,eID)),400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar el equipo."), 500
 
         #check if existing invalid, in this case we PUT/update instead of POST/add. sorta. 
         invalid_duplicate = False
@@ -596,7 +603,7 @@ class MatchBasedEventHandler():
             if dao.getMatchBasedEventIDInvalid(eID,aID,attributes['category_id']):
                 invalid_duplicate = True
         except:
-            return jsonify(ERROR="Unable to verify match_based_event from DAO."), 500
+            return jsonify(Error="No se puede verificar el evento de partido."), 500
         
         #the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
@@ -604,18 +611,19 @@ class MatchBasedEventHandler():
                 result = dao.editStatistics(eID,aID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])
                     
                 if not result:
-                    return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
+                    return jsonify(Error = "No se encontraron estadísticas para el atleta con id:{} en el evento con id:{}.".format(aID,eID)),404
                 
             except Exception as e:
-                return jsonify(ERROR="HERE! Unable to verify match based event from DAO." + str(e)), 500
+                print(e)
+                return jsonify(Error="No se pudo verificar el evento de partido."), 500
         else:
             # Create and Validate new Match_Based_Event
             try:
                 result = dao.addStatistics(eID,aID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])                    
                 if not result:
-                    return jsonify(Error = "Problem inserting new statistics record."),500
+                    return jsonify(Error = "Ocurrió un problema interno intentando añadir nuevas estadísticas."),500
             except:
-                return jsonify(ERROR="Unable to verify match based event from DAO."), 500
+                return jsonify(Error="No se pudo verificar el evento de partido."), 500
         
         #update and validate Match Based Event Team Statistic
         # If existing Team Statistics update, else create
@@ -623,20 +631,21 @@ class MatchBasedEventHandler():
             if dao.getMatchBasedEventTeamStatsID(eID,attributes['category_id']) or dao.getMatchBasedEventTeamStatsIDInvalid(eID,attributes['category_id']):
                 team_result = dao.editTeamStatistics(eID,attributes['category_id'])
                 if not team_result:
-                    return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
+                    return jsonify(Error = "Estadísticas de equipo ne fueron encontradas para el evento con id:{}.".format(eID)),404
             else:                           
                 dao.addTeamStatistics(eID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])
         except Exception as e:
-            return jsonify(ERROR="HERE Unable to verify match based event team statistics from DAO." + str(e)), 500       
+            print(e)
+            return jsonify(Error="No se pudo verificar las estadísticas de un equipo para un evento de partido."), 500       
 
         
         if invalid_duplicate:
             
             dao.commitChanges()
-            return jsonify(Match_Based_Event_Athlete_Statistics = "Edited existing match based event statistics for athlete id:{} and event id:{}.".format(aID,eID)),200
+            return jsonify(Match_Based_Event_Athlete_Statistics = "Se editaron las estadísticas de un evento de partido para el atleta con id:{} en el evento con id:{}.".format(aID,eID)),200
         else:
             dao.commitChanges()
-            return jsonify(Match_Based_Event_Athlete_Statistics = "Added new statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),201
+            return jsonify(Match_Based_Event_Athlete_Statistics = "Se añadió una nueva entrada de estadísticas con id:{}  para el atlteta con id:{} en el  evento con id:{}.".format(result,aID,eID)),201
 
     
     def addTeamStatistics(self,eID,attributes): 
@@ -659,44 +668,44 @@ class MatchBasedEventHandler():
         """
 
         if not isinstance(eID,int) or not self.validateAttributes(attributes):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
 
         # Validate Avoid Duplication
         dao = MatchBasedEventDAO()
         try:            
             if dao.getMatchBasedEventTeamStatsID(eID,attributes['category_id']):
-                return jsonify(Error = "Match Based Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
+                return jsonify(Error = "Ya existe una entrada para estadísticas  de equipo  para el evento con id:{}.".format(eID)),500
         except:
-            return jsonify(ERROR="Unable to verify match_based_event_team_stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar las estadísticas de equipo para un evento de partido."), 500
 
         # Validate existing event
         e_dao =EventDAO()        
         try:            
             event = e_dao.eventExists(eID)
             if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar el evento."), 500
 
         # Get Event Team For Validation 
         t_dao = TeamDAO()      
         try:           
             tID = e_dao.getEventTeamByID(eID)
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar el equipo."), 500
 
         # Validate that the event belongs to the correct sport.        
         try:
             sID = t_dao.getTeamSportByID(tID)[0]
             
             if sID != TENNIS_IDM and sID != TENNIS_IDF and sID != TABLE_TENNIS_IDM and sID != TABLE_TENNIS_IDF:                
-                return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Match Based.".format(eID)),400
+                return jsonify(Error = "El evento con id:{} no es un evento de partido.".format(eID)),400
              
             if not self._validateCategory(sID,attributes['category_id']):
-                return jsonify(Error = "Bad request, category {} does not match the sport of the team.".format(attributes['category_id'])),400
+                return jsonify(Error = "La categoría con id:{} no le pertenece al deporte del equipo.".format(attributes['category_id'])),400
             
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar el equipo."), 500
 
         #check if existing invalid, in this case we PUT/update instead of POST/add 
         invalid_duplicate = False
@@ -704,15 +713,15 @@ class MatchBasedEventHandler():
             if dao.getMatchBasedEventTeamStatsIDInvalid(eID,attributes['category_id']):
                 invalid_duplicate = True
         except:
-            return jsonify(ERROR="Unable to verify match_based_event_team_Stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar las estadísticas de equipo."), 500
         #the case of there already existing an entry, but marked as invalid
         if invalid_duplicate:
             try:
                 result = dao.editTeamStatistics(eID,attributes['category_id'])
                 if not result:
-                    return jsonify(Error = "Team statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404  
+                    return jsonify(Error = "No se encontraron estadísticas de equipo para el atleta con id:{} en el evento con id:{}.".format(aID,eID)),404  
             except:
-                return jsonify(ERROR="Unable to verify match based team event from DAO."), 500
+                return jsonify(Error="No se pudo verificar las estadísticas de equipo para un evento de partido."), 500
             
             mappedResult = self.mapEventTeamStatsToDict(result)
             dao.commitChanges()
@@ -723,12 +732,12 @@ class MatchBasedEventHandler():
                 result = dao.addTeamStatistics(eID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])
 
                 if not result:
-                    return jsonify(Error = "Problem inserting new team statistics record."),500
+                    return jsonify(Error = "Ocurrió un problema interno insertando una nueva entrada de estadísticas de equipo."),500
             except:
-                return jsonify(ERROR="Unable to verify match_based_event_team_stats from DAO."), 500
+                return jsonify(Error="No se pudo verificar las estadísticas de equipo para un evento de partido."), 500
            
             dao.commitChanges()
-            return jsonify(Match_Based_Event_Team_Stats = "Added new team statistics record with id:{} for event id:{}.".format(result,eID)),201
+            return jsonify(Match_Based_Event_Team_Stats = "Se insertaron nuevas estadísticas de equipo para el evento con id:{}".format(eID)),201
            
 
     
@@ -763,7 +772,7 @@ class MatchBasedEventHandler():
         
 
         if not isinstance(eID,int) or not self._validateStatisticsAttributes(attributes):
-            return jsonify(Error = "Bad arguments"),400 
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400 
 
         local_score = attributes['uprm_score']     
         opponent_score = attributes['opponent_score']        
@@ -776,18 +785,18 @@ class MatchBasedEventHandler():
         try:
             for categories in team_statistics:     
                 if dao.getMatchBasedEventTeamStatsID(eID,categories['category_id']):
-                    return jsonify(Error = "Match Based Event Team Stats Entry already exists for Event ID:{}".format(eID)),400
+                    return jsonify(Error = "Ya existe una entrada para estadísticas  de equipo  para el evento con id:{}.".format(eID)),400
         except:
-            return jsonify(ERROR="Unable to verify match based event team stats from DAO."), 500
+            return jsonify(Error="Estadísticas de equipo para un evento de partido no pudieron ser verificadas."), 500
          
         # Validate existing event
         e_dao = EventDAO()
         try:           
             event = e_dao.eventExists(eID)
             if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar el evento."), 500
          
         # Get Event Team For Validation
         
@@ -795,20 +804,20 @@ class MatchBasedEventHandler():
         try:            
             tID = e_dao.getEventTeamByID(eID)
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar el equipo."), 500
          
 
         # Validate that the event belongs to the correct sport.        
         try:
             sID = t_dao.getTeamSportByID(tID)[0]
             if sID != TENNIS_IDM and sID != TENNIS_IDF and sID != TABLE_TENNIS_IDM and sID != TABLE_TENNIS_IDF :
-                return jsonify(Error = "Malformed Query, Event ID:{} does not belong to Match Based.".format(eID)),400
+                return jsonify(Error = "El evento con id:{} no es un evento de partido.".format(eID)),400
             
             for categories in team_statistics:   
                 if not self._validateCategory(sID,categories['category_id']):
-                    return jsonify(Error = "Bad request, category {} does not match the sport of the team.".format(attributes['category_id'])),400
+                    return jsonify(Error = "La categoría con id:{} no le pertenece al deporte del equipo.".format(attributes['category_id'])),400
         except:
-            return jsonify(ERROR="Unable to verify team from DAO."), 500
+            return jsonify(Error="No se pudo verificar el equipo."), 500
          
         # Go through every set of athlete to add attributes for. 
         for athlete_attributes in athlete_statistics:
@@ -817,9 +826,9 @@ class MatchBasedEventHandler():
             try:
                 # Validate Avoid Duplication Match Based Event Entry
                 if dao.getMatchBasedEventID(eID,aID,athlete_attributes['statistics']['match_based_statistics']['category_id']):
-                    return jsonify(Error = "Match Based Event Entry already exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),400
+                    return jsonify(Error = "Ya existen una entrada de un evento de partido para el evento con id:{} y el atleta con id:{}.".format(eID,aID)),400
             except:
-                return jsonify(ERROR="Unable to verify match based event from DAO."), 500
+                return jsonify(Error="No se pudo verificar el evento de partido."), 500
          
             # Validate existing athlete 
             statistics = athlete_attributes['statistics']['match_based_statistics']
@@ -828,24 +837,25 @@ class MatchBasedEventHandler():
                 a_dao = AthleteDAO()                
                 athlete = a_dao.athleteExists(aID)
                 if not athlete:
-                    return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
+                    return jsonify(Error = "El atleta con id:{} no fue encontrado.".format(aID)),404
             except Exception as e:
-                return jsonify(ERROR="Unable to verify athlete from DAO." + str(e)), 500
+                print(e)
+                return jsonify(Error="No se pudo verificar el atleta."), 500
          
             # Validate athlete belongs to team playing event           
             try:
                 if not t_dao.getTeamMemberByIDs(aID,tID): 
-                    return jsonify(Error = "Malformed Query, Athlete ID:{} does not belong to Team ID:{} from Event ID:{}.".format(aID,tID,eID)),400
+                    return jsonify(Error = "El atleta con id:{} no pertenece al equipo con id:{} del evento con id:{}.".format(aID,tID,eID)),400
             except:
-                return jsonify(ERROR="Unable to verify team from DAO."), 500
+                return jsonify(Error="No se pudo verificar el equipo."), 500
          
             # Create and Validate new Match_Based_Event
             try:
                 result = dao.addStatistics(eID,aID,statistics['matches_played'],statistics['matches_won'],statistics['category_id'])               
                 if not result:
-                    return jsonify(Error = "Problem inserting new statistics record."),500
+                    return jsonify(Error = "Ocurrió un problema interno intentando añadir nuevas estadísticas."),500
             except:
-                return jsonify(ERROR="Unable to verify match based event from DAO."), 500         
+                return jsonify(Error="No se pudo verificar el evento de partido."), 500         
       
             
         # Create and Validate Final Score entry
@@ -853,9 +863,9 @@ class MatchBasedEventHandler():
             fs_dao = FinalScoreDAO()
             result = fs_dao.addFinalScore(eID,local_score, opponent_score)
             if not result:
-                return jsonify(Error = "Problem inserting new final score record."),500
+                return jsonify(Error = "Ocurrió un problema interno intentando añadir una nueva entrada de puntuación final."),500
         except:
-            return jsonify(ERROR="Unable to verify final score from DAO."), 500
+            return jsonify(Error="No se pudo verificar la puntuación final."), 500
          
 
         # Create and Validate new Match_Based_Event team stats
@@ -864,12 +874,13 @@ class MatchBasedEventHandler():
                 result = dao.addTeamStatistics(eID,teamStats['matches_played'],teamStats['matches_won'],teamStats['category_id'])
                     
                 if not result:
-                    return jsonify(Error = "Problem inserting new team statistics record."),500
+                    return jsonify(Error = "Ocurrió un problema interno insertando una nueva entrada de estadísticas de equipo."),500
         except Exception as e:
-            return jsonify(ERROR="Unable to verify match based event team statistics from DAO." + str(e)), 500
+            print(e)
+            return jsonify(Error="No se pudo verificar las estadísticas de un equipo para un evento de partido."), 500
         fs_dao.commitChanges() 
         dao.commitChanges()
-        return jsonify(Match_Based_Event_Team_Stats = "Added new team statistics record with id:{} and individual statistics for event id:{}.".format(result,eID)),201
+        return jsonify(Match_Based_Event_Team_Stats = "Se insertaron nuevas estadísticas de equipo e individuos para el evento con id:{}.".format(eID)),201
 
 
 
@@ -895,7 +906,7 @@ class MatchBasedEventHandler():
             A JSON containing all the user with the updated entry.
         """
         if not isinstance(eID,int) or not isinstance(aID,int) or not self.validateAttributes(attributes) or not self._validateMatchCategory(attributes['category_id']):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
 
 
         # Validate Exists in order to update
@@ -904,27 +915,27 @@ class MatchBasedEventHandler():
         try:        
            
             if not dao.getMatchBasedEventID(eID,aID,attributes['category_id']):
-                return jsonify(Error = "Match Based Event Entry does not exists for Event ID:{} and Athlete ID:{}".format(eID,aID)),404 
+                return jsonify(Error = "No existe una entrada de un evento de partido  para el evento con id:{} y atleta con id:{}.".format(eID,aID)),404 
         except:
-            return jsonify(ERROR="Unable to verify match_based_event from DAO."), 500
+            return jsonify(Error="No se puede verificar el evento de partido."), 500
 
         # Validate existing event       
         try:
             e_dao = EventDAO()            
             event = e_dao.eventExists(eID)
             if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar el evento."), 500
          
         # Validate existing athlete       
         try:
             a_dao = AthleteDAO()
             athlete = a_dao.athleteExists(aID)
             if not athlete:
-                return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
+                return jsonify(Error = "El atleta con id:{} no fue encontrado.".format(aID)),404
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar el atleta."), 500
          
         
        
@@ -932,20 +943,20 @@ class MatchBasedEventHandler():
         try:            
             result = dao.editStatistics(eID,aID,attributes['matches_played'],attributes['matches_won'],attributes['category_id'])               
             if not result:
-                return jsonify(Error = "Statistics Record not found for athlete id:{} in event id:{}.".format(aID,eID)),404
+                return jsonify(Error = "No se encontraron estadísticas para el atleta con id:{} en el evento con id:{}.".format(aID,eID)),404
         except:
-            return jsonify(ERROR="Unable to verify match based event from DAO."), 500
+            return jsonify(Error="No se pudo verificar el evento de partido."), 500
          
         #update and validate Match Based Event Team Statistic
         try:
             team_result = dao.editTeamStatistics(eID,attributes['category_id'])
             if not team_result:
-                return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404            
+                return jsonify(Error = "Estadísticas de equipo ne fueron encontradas para el evento con id:{}.".format(eID)),404            
         except:
-            return jsonify(ERROR="Unable to verify match based event team statistics from DAO."), 500
+            return jsonify(Error="No se pudo verificar las estadísticas de un equipo para un evento de partido."), 500
          
         dao.commitChanges()
-        return jsonify(Match_Based_Event_Athlete_Statistics = "Edited existing match based statistics for the athlete id:{} and event id:{}".format(aID,eID)),200
+        return jsonify(Match_Based_Event_Athlete_Statistics = "Se editaron las estadísticas de un evento de partido para el atleta con id:{} en el evento con id:{}.".format(aID,eID)),200
 
 
     def editTeamStatistics(self,eID,cID): 
@@ -964,33 +975,33 @@ class MatchBasedEventHandler():
             A JSON containing all the user with the updated entry.
         """
         if not isinstance(eID,int) or not isinstance(cID,int) or not self._validateMatchCategory(cID):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
 
         # Validate exists so can update 
         dao = MatchBasedEventDAO()       
         try:            
             if not dao.getMatchBasedEventTeamStatsID(eID,cID):
-                return jsonify(Error = "Match Based Event Team Stats Entry does not exists for Event ID:{}".format(eID)),400
+                return jsonify(Error = "No existe una entrada de estadísticas de equipo para un evento de medalla para el evento con id:{} y categoría con id:{}.".format(eID,cID)),404
         except:
-            return jsonify(ERROR="Unable to verify match_based_event_team_stats from DAO."), 500
+            return jsonify(Error="No se pudo verificar las estadísticas de equipo para un evento de partido."), 500
 
         # Validate existing event        
         try:
             e_dao = EventDAO()
             event = e_dao.eventExists(eID)
             if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar el evento."), 500
          
         # Update and Validate Match Based event team stats, format returnable        
         try:            
             result = dao.editTeamStatistics(eID,cID)
             if not result:
-                return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
+                return jsonify(Error = "Estadísticas de equipo ne fueron encontradas para el evento con id:{}.".format(eID)),404
             mappedResult = self.mapEventTeamStatsToDict(result)
         except:
-            return jsonify(ERROR="Unable to verify match based event team statistics from DAO."), 500
+            return jsonify(Error="No se pudo verificar las estadísticas de un equipo para un evento de partido."), 500
          
         dao.commitChanges()
         return jsonify(Match_Based_Event_Team_Stats = mappedResult),200
@@ -1013,16 +1024,16 @@ class MatchBasedEventHandler():
             A JSON containing the id of the invalidated record.
         """
         if not isinstance(eID,int) or not isinstance(aID,int) or not isinstance(cID,int) or not self._validateMatchCategory(cID):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
 
         # Validate existing event        
         try:
             e_dao = EventDAO()
             event = e_dao.eventExists(eID)
             if not event:
-                return jsonify(Error = "Event for ID:{} not found.".format(eID)),400
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404
         except:
-            return jsonify(ERROR="Unable to verify event from DAO."), 500
+            return jsonify(Error="No se pudo verificar el evento."), 500
          
         
         # Validate existing athlete 
@@ -1031,9 +1042,9 @@ class MatchBasedEventHandler():
             a_dao = AthleteDAO()
             athlete = a_dao.athleteExists(aID)
             if not athlete:
-                return jsonify(Error = "Athlete for ID:{} not found.".format(aID)),400
+                return jsonify(Error = "El atleta con id:{} no fue encontrado.".format(aID)),404
         except:
-            return jsonify(ERROR="Unable to verify athlete from DAO."), 500
+            return jsonify(Error="No se pudo verificar el atleta."), 500
          
         # Remove Match_Based_Event Statistics and format returnabe
         
@@ -1042,21 +1053,22 @@ class MatchBasedEventHandler():
             dao = MatchBasedEventDAO()            
             result = dao.removeStatistics(eID,aID,cID)
             if not result:
-                return jsonify(Error = "Statistics Record not found with event id:{} for athlete id:{}.".format(eID,aID)),404
+                return jsonify(Error = "No se encontraron estadísticas de un evento de partido para el atleta con id:{} en el evento con id:{}.".format(aID,eID)),404
         except Exception as e:
-            return jsonify(ERROR="Unable to verify match based event from DAO." + str(e)), 500
+            print(e)
+            return jsonify(Error="No se pudo verificar el evento de partido."), 500
          
         #update and validate Match Based Event Team Statistic
         try:
             team_result = dao.editTeamStatistics(eID,cID)
             if not team_result:
-                return jsonify(Error = "Team Statistics Record not found for event id:{}.".format(eID)),404
+                return jsonify(Error = "Estadísticas de equipo no fueron encontradas para el evento con id:{}.".format(eID)),404
             
         except:
-            return jsonify(ERROR="Unable to verify match based event team statistics from DAO."), 500
+            return jsonify(Error="No se pudo verificar las estadísticas de un equipo para un evento de partido."), 500
 
         dao.commitChanges()
-        return jsonify(Match_Based_Event_Athlete_Statistics = "Removed statistics record with id:{} for athlete id:{} in event id:{}.".format(result,aID,eID)),200
+        return jsonify(Match_Based_Event_Athlete_Statistics = "Se removieron las estadísticas de un evento de partido para la entrada con id:{}  para el atleta con id:{} en el evento con id:{}.".format(result,aID,eID)),200
 
     
     def removeTeamStatistics(self,eID,cID): 
@@ -1079,16 +1091,16 @@ class MatchBasedEventHandler():
         
         #validate parameters given
         if not isinstance(eID,int):
-            return jsonify(Error = "Bad arguments"),400
+            return jsonify(Error = "Argumentos incorrectos fueron dados."),400
 
         #validate existing event
         try:
             event = EventDAO().eventExists(eID)
             if not event:
-                return jsonify(Error = "Event with id:{} was not found.".format(eID)),404                 
+                return jsonify(Error = "Evento con id:{} no fue encontrado.".format(eID)),404                 
     
         except:
-           return jsonify("Problem ocurred while fetching a match based event."),400
+           return jsonify(Error = "Ocurrió un problema interno tratando de buscar un evento de partido."),500
          
         # Remove Match_Based_Event Team Statistics and format returnabe
         
@@ -1096,12 +1108,12 @@ class MatchBasedEventHandler():
             dao = MatchBasedEventDAO()
             result = dao.removeTeamStatistics(eID,cID)
             if not result:
-                return jsonify(Error = "Team Statistics Record not found with event id:{}.".format(eID)),404
+                return jsonify(Error = "Una entrada para estadísticas de equipo no fueron encontradas para el evento con id:{}.".format(eID)),404
         except:
-            return jsonify(ERROR="Unable to verify match based event team stats from DAO."), 500
+            return jsonify(Error="Estadísticas de equipo para un evento de partido no pudieron ser verificadas."), 500
          
         dao.commitChanges()
-        return jsonify(Match_Based_Event_Team_Statistics = "Removed team statistics record with id:{} for event id:{}.".format(result,eID)),200
+        return jsonify(Match_Based_Event_Team_Statistics = "Se removieron las estadísticas de equipo de un evento de partido para la entrada con id:{} en el evento con id:{}.".format(result,eID)),200
 
 
 

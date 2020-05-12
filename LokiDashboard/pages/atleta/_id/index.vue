@@ -115,24 +115,14 @@
 									<v-autocomplete
 										v-model="season"
 										:items="seasons"
-										label ="Temporada"								
+										label ="Seleccione Temporada"	
+										v-on:change="getSeasonData()"							
 									></v-autocomplete>
-								</v-col>
-
-								<v-col md=3>
-									<v-btn 
-										class="mr-4" 
-										@click="getSeasonData" 
-										color="green darken-1"
-										dark
-									>
-										Confirmar Temporada
-									</v-btn>
-								</v-col>
+								</v-col>							
 							</v-row>
 
 					
-							<v-row>
+							<v-row v-if="aggregate_statistics_per_season.length>0">
 								<v-col>
 									<v-card-text>
 									 <h2> Estadísticas de la Temporada {{season}}: </h2>
@@ -142,19 +132,42 @@
 										:headers="headers_" 
 										:items="aggregate_statistics_per_season" 										
 										class="elevation-1"
-										loading="fetchinAthleteStats"
-											
-																					
+										loading="fetchingAthleteStats"																					
 										loading-text="Recolectando Data...Por favor espere"
-										no-data-text="No hay estadísticas para esta temporada."
-										v-if="aggregate_statistics_per_season.length>0"
+										no-data-text="No hay estadísticas para esta temporada."										
 									>		
 									</v-data-table>
 								</v-col>
 							</v-row>
 
+							<v-row v-if="aggregate_statistics_per_season.length == 0 && season=='' ">
+								<v-col>
+									<v-card-text>
+										<h2> Tiene que seleccionar una temporada </h2>
+									</v-card-text>
+								</v-col>
+							</v-row>
+							<v-row v-if="aggregate_statistics_per_season.length == 0 && fetchedData && !(season=='')">
+								<v-col>
+									<v-card-text>
+										<h2> No hay estadísticas para la temporada: {{season}}  </h2>
+									</v-card-text>
+								</v-col>
+							</v-row>
 
-							<v-row>
+							<v-row justify="center" v-if="fetchingAthleteStats">
+								<v-col>
+									<div class="text-center">
+										<h2> Buscando estadísticas</h2>
+										<v-progress-circular
+											indeterminate
+											color="primary"
+										></v-progress-circular>
+									</div>
+								</v-col>
+							</v-row>
+
+							<v-row v-if="statistics_per_season.length>0">
 								<v-col>
 									<v-card-text>
 									 <h2> Estadísticas por Evento de la Temporada {{season}}: </h2>
@@ -164,12 +177,19 @@
 										:headers="headers" 
 										:items="statistics_per_season"										 
 										class="elevation-1"
-										loading="fetchinAthleteStats"	
+										loading="fetchingAthleteStats"	
 										no-data-text="No hay estadísticas para esta temporada."															
-										loading-text="Recolectando Data...Por favor espere"	
-										v-if="statistics_per_season.length>0"									
+										loading-text="Recolectando Data...Por favor espere"																			
 									>		
 									</v-data-table>
+								</v-col>
+							</v-row>
+							
+							<v-row v-if="statistics_per_season.length == 0 && fetchedData && !(season=='')">
+								<v-col>
+									<v-card-text>
+										<h2> No hay estadísticas por evento para la temporada: {{season}}  </h2>
+									</v-card-text>
 								</v-col>
 							</v-row>
 
@@ -213,6 +233,7 @@ export default {
 			branch:'',
 			sport_id:'', 
 			fetchingAthleteStats:false,
+			fetchedData:false,
 
 			season:'',
 			seasons:[],
@@ -229,6 +250,13 @@ export default {
 				getAthleteAggregateSeasonStats:"athletes/getAthleteAggregateSeasonStats"
 			}),
 
+			/**
+			 * Returns true if the contents of
+			 * the athlete view page have been formated
+			 * false otherwise.If the contents are not
+			 * formated it then proceeds to format the
+			 * contents. 
+			 */
 			async formated(){
 				
 				if(this.ready){
@@ -312,7 +340,9 @@ export default {
 
 			},
 
-			
+			/**
+			 * Build season year list for selection
+			 */
 			buildSeasonList(){
         let yearToAdd = 2020
         let currentYear = new Date(2025,8).getFullYear()
@@ -324,7 +354,12 @@ export default {
         }
       },
 		
-
+			/**
+			 * Returns the date of the event given
+			 * formated so that it can be used in the 
+			 * stats table.
+			 * @param event_date Date of the event
+			 */
 			formatedDate(event_date){
 				
 				const date = new Date(event_date).toISOString().substring(0,10)
@@ -333,16 +368,23 @@ export default {
 
 			},
 			
-
+			/**
+			 * Fetches and prepares the season
+			 * data for the athlete statistics
+			 * viewer tab.
+			 */
 			async getSeasonData(){
 				
-				if(this.season !='')
+				if(this.season !=='')
 				{
 					this.statistics_per_season = []
 					this.aggregate_statistics_per_season = []
 					this.fetchingAthleteStats = true
+					this.fetchedData =false
 					let sport_name = ''
 					
+					//This if and else if statements determine the sport
+					//name to be used for the route to use in the actions
 					if(this.sport.localeCompare("Baloncesto") == 0){
 						sport_name = "basketball"
 					}
@@ -365,7 +407,8 @@ export default {
 									this.sport.localeCompare("Baile") == 0 || 
 									this.sport.localeCompare("Halterofilia") == 0 || 
 									this.sport.localeCompare("Campo Traviesa") == 0 ||
-									this.sport.localeCompare("Lucha Olimpica") == 0 ||
+									this.sport.localeCompare("Lucha Olímpica") == 0 ||
+									this.sport.localeCompare("Natación") == 0 ||
 									this.sport.localeCompare("Taekwondo") == 0){
 						sport_name = "medalbased"
 					}
@@ -373,12 +416,14 @@ export default {
 
 					const stats_params = {'sport_name':sport_name,'athlete_id':this.athlete.id,'season_year':this.season}
 					
+					//First response is for the athlete season stats
 					const response_1 = await this.getAthleteSeasonStats(stats_params)
+					//Second response is for the aggregate athlete season stats
 					const response_2 = await this.getAthleteAggregateSeasonStats(stats_params)
 
  					if(response_1 !== 'error' && response_2 !== 'error'){	
 					
-
+						//Assigns the correct Objects from the response depending on the sport name
 						if(sport_name.localeCompare("basketball") == 0){
 							for(let i = 0; i < this.athlete_stats_per_season.Basketball_Event_Season_Athlete_Statistics.length; i++){
 								const statsObj =  this.athlete_stats_per_season.Basketball_Event_Season_Athlete_Statistics[i]
@@ -441,13 +486,20 @@ export default {
 							this.buildHeadersList(sport_name)
 						}
 
-						this.fetchingAthleteStats = false
+						
 					}
-
+					this.fetchingAthleteStats = false
+					this.fetchedData = true
 				}
 				
 			},
 
+			/**
+			 * Builds and assigns the headers to be
+			 * used on both data tables in the stats viewer
+			 * tab depending on the sport_name given as a parameter.
+			 * @param sport_name name of the sport of the athlete
+			 */
 			buildHeadersList(sport_name){
 				if(sport_name.localeCompare("basketball") == 0){
 					this.headers =	[
@@ -636,13 +688,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 ::v-deep .v-data-table th {
-  font-size: 14px;
+  font-size: 1rem;
 }
 
 ::v-deep .v-data-table td {
-  font-size: 18px;
+  font-size: 1rem;
 }
 </style>
 

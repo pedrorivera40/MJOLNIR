@@ -35,7 +35,11 @@ const maxLength = (propertyType, maxLength) => {
   return v => v && v.length <= maxLength || `${propertyType} debe ser menor de ${maxLength} caracteres`
 }
 
-
+/**
+ * Validation function to establish the maximum length of a summary text input.
+ * @param {*} propertyType type of the required field.
+ * @param {*} maxSummaryLength maximum length of the summary
+ */
 const maxSummaryLength = (propertyType, maxSummaryLength) => {
   return v => {
     if(!v){ return true; }
@@ -44,14 +48,16 @@ const maxSummaryLength = (propertyType, maxSummaryLength) => {
   }
 }
 
-
+/**
+ * Valitation function that uses regex to establish the format for  a name given as input.
+ */
 const nameFormat = () => {
-  let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,}$/
+  let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/
   return v => regex.test(v) || "El formato del nombre es incorrecto,"
 }
 
 /**
- * Validation fucntion that uses regex to establish the format for password within the syste.
+ * Validation function that uses regex to establish the format for password within the syste.
  */
 const passwordFormat = () => {
   let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{10,64}$/
@@ -75,6 +81,9 @@ const passwordMatch = (password) => {
 
 }
 
+/**
+ * Validation function that uses regex to establish the format for a general phrase given as input.
+ */
 const generalPhrase = (propertyType) =>{
     
     let regex = /^[a-zA-Z0-9- ',.;:!]*$/
@@ -92,11 +101,19 @@ const numeric = (propertyType) =>{
 
 }
 
+/**
+ * Validation function that uses regex to verify that the input given only has alpha or space characters.
+ * @param {*} propertyType type of the required field
+ */
 const alphaSpaces = (propertyType) =>{
   let regex = /^[a-zA-Z ]*$/
   return v => regex.test(v) || `El formato de ${propertyType} es incorrecto.`
 }
 
+/**
+ * Validation function that verifies whether a team has been given as input.
+ * @param {*} propertyType type of the required field
+ */
 const teamRequired = (propertyType) => {
   return v => {
     if(!v){ return `${propertyType} debes ser seleccionado`; }
@@ -134,10 +151,13 @@ const seasonRequired = (propertyType) => {
  */
 const scoreRequired = (propertyType) => {
   return v => {
-    if(!v){ return `${propertyType} es un campo requerido`; }
-    
-    //Will receive the score of the team which will be an integer larger or equal than zero.
-    return v >= 0 || `${propertyType} es un campo requerido`;
+    if (v === 0){
+      //Will receive the score of the team which will be an integer larger or equal than zero.
+      return v >= 0 || `${propertyType} es un campo requerido`;
+    }
+    else{
+      if(!v){ return `${propertyType} es un campo requerido`; }
+    }
   }
 }
 

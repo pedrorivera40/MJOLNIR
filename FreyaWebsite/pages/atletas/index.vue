@@ -97,12 +97,8 @@ export default {
     menu:false,
     name:'',
     sport:'',   
-    sports:['Voleibol','Baloncesto','Atletismo'],     
-    
+    sports:["Voleibol", "Baloncesto", "Atletismo","Fútbol","Softbol","Pelota"], 
     filteredAthletes:'',
-  
-
-    
   }),
 
   
@@ -112,14 +108,16 @@ export default {
       getAthletes: "athletes/getAthletes"
     }),
 
-    
-
+    /**
+     * Clears the filter fields 
+     * and resets the filtered list
+     * if filters have been applied.
+     */
     clearFilters(){
         
         this.name = ''
         this.sport = ''        
-        this.menu=false       
-        
+        this.menu=false 
         
         if(this.filteredAthletes.length != this.athletes.length){
           this.filteredAthletes = []
@@ -130,7 +128,10 @@ export default {
           
     },
     
-
+    /**
+     * Applies the filters to the viewed athletes
+     * list.
+     */
     applyFilters(){
       
       this.filteredAthletes = []
@@ -155,6 +156,10 @@ export default {
         }
       }      
     },
+
+    /**
+     * Returns true if athletes have been loaded, false otherwise.
+     */
     isReady(){
       if(this.athletes){
         return true

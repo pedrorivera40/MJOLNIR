@@ -1,25 +1,32 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="400">            
+    <v-dialog v-model="dialog" persistent max-width="350">            
       <v-card>
-        <v-card-title class="headline">¿Estás seguro de que quieres <wbr> el atleta con id:{{id}}?</v-card-title>
+        <v-toolbar flat color="primary_dark">
+          <v-toolbar-title class="headline white--text">
+            Borrar Atleta
+          </v-toolbar-title>
+        </v-toolbar>
+        <v-card-title>
+          <p style="word-break: normal;">¿Seguro de que quieres el atleta con id:{{id}}?</p>
+        </v-card-title>
         <v-card-text>
           Esta acción es <strong> irreversible.</strong>
           <v-checkbox
             v-model="terms"
-            :label="`Yo acepto las consecuencias.`"
+            label="Acepto las consecuencias."
           >
           </v-checkbox>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="close()">Cancelar</v-btn>
+          <v-btn text color="grey darken-3" @click="close()">Cancelar</v-btn>
           <v-btn 
-            color="green darken-1" 
+            color="primary darken-1" 
             :disabled="!terms" 
             text
             :loading="deleting" 
-            @click="deleteAthlete()">Eliminar</v-btn>
+            @click="deleteAthlete()">Borrar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>   
@@ -46,7 +53,11 @@ export default {
       removeAthlete:"athletes/removeAthlete"
     }),
 
-    
+    /**
+     * Function to be called  after 
+     * the user has agreed to the terms and has 
+     * pressed the remove button.
+     */
     async deleteAthlete(){
       if(this.id > 0 && this.terms) { 
         this.deleting = true 
@@ -58,6 +69,9 @@ export default {
       } 
     },
 
+    /**
+     * Closes the DeleteAthleteModal
+     */
     close(){      
       this.terms = false
       this.$emit("update:dialog",false);

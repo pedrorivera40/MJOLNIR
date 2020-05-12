@@ -57,6 +57,18 @@
             :current_uprm_score="currentUPRMSet"
             :current_opp_score="currentOppSet"
             :event_id="event_id"
+            v-if="$store.state.userAuth.userPermissions[5]['18']"
+          />
+          <VolleyballScoreDisplayOnly
+            :uprm_team="uprm_team_name"
+            :opp_team="opponentName"
+            :uprm_score="uprmScore"
+            :opp_score="oppScore"
+            :current_set="currentSet"
+            :current_uprm_score="currentUPRMSet"
+            :current_opp_score="currentOppSet"
+            :event_id="event_id"
+            v-else
           />
         </v-row>
         <v-row>
@@ -73,77 +85,82 @@
           <v-tab>ESTADÍSTICAS POR ATLETAS</v-tab>
 
           <v-tab-item>
-            <v-row justify="center">
-              <v-card-title>Administrador de Jugadas</v-card-title>
-            </v-row>
-            <v-row>
-              <VolleyballPBPActionsAdder
-                :event_id="event_id"
-                :uprm_team_name="uprm_team_name"
-                :opp_team_name="opponentName"
-                :uprm_roster="uprmRoster"
-                :valid_uprm_roster="validUPRMRoster"
-                :opp_roster="oppRoster"
-                :opp_color="oppColor"
-              />
-            </v-row>
+            <div v-if="$store.state.userAuth.userPermissions[5]['18']">
+              <v-row justify="center">
+                <v-card-title>Administrador de Jugadas</v-card-title>
+              </v-row>
+              <v-row>
+                <VolleyballPBPActionsAdder
+                  :event_id="event_id"
+                  :uprm_team_name="uprm_team_name"
+                  :opp_team_name="opponentName"
+                  :uprm_roster="uprmRoster"
+                  :valid_uprm_roster="validUPRMRoster"
+                  :opp_roster="oppRoster"
+                  :opp_color="oppColor"
+                />
+              </v-row>
+            </div>
             <v-row>
               <v-divider class="mx-4" horizontal></v-divider>
             </v-row>
 
-            <v-row justify="center">
-              <v-card-title>Acciones Generales</v-card-title>
-            </v-row>
+            <div v-if="$store.state.userAuth.userPermissions[5]['18']">
+              <v-row justify="center">
+                <v-card-title>Acciones Generales</v-card-title>
+              </v-row>
 
-            <v-row justify="center">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    class="ma-6"
-                    color="primary"
-                    dark
-                    v-on="on"
-                    width="175"
-                    @click.native="on_notification_pressed()"
-                  >
-                    <v-icon class="mx-1">mdi-android-messages</v-icon>Notificación
-                  </v-btn>
-                </template>
-                <span>Crear notificación de juego</span>
-              </v-tooltip>
+              <v-row justify="center">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      class="ma-6"
+                      color="primary"
+                      dark
+                      v-on="on"
+                      width="175"
+                      @click.native="on_notification_pressed()"
+                    >
+                      <v-icon class="mx-1">mdi-android-messages</v-icon>Notificación
+                    </v-btn>
+                  </template>
+                  <span>Crear notificación de juego</span>
+                </v-tooltip>
 
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    class="ma-6"
-                    color="primary"
-                    dark
-                    v-on="on"
-                    width="225"
-                    @click.native="startChooseColor()"
-                  >
-                    <v-icon class="mx-1">mdi-palette</v-icon>Color de Oponente
-                  </v-btn>
-                </template>
-                <span>Seleccionar color de equipo oponente</span>
-              </v-tooltip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      class="ma-6"
+                      color="primary"
+                      dark
+                      v-on="on"
+                      width="225"
+                      @click.native="startChooseColor()"
+                    >
+                      <v-icon class="mx-1">mdi-palette</v-icon>Color de Oponente
+                    </v-btn>
+                  </template>
+                  <span>Seleccionar color de equipo oponente</span>
+                </v-tooltip>
 
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    class="ma-6"
-                    color="primary"
-                    dark
-                    v-on="on"
-                    width="175"
-                    @click.native="end_pbp_dialog = true"
-                  >
-                    <v-icon class="mx-1">mdi-file-excel-box</v-icon>Finalizar
-                  </v-btn>
-                </template>
-                <span>Finalizar secuencia de jugadas</span>
-              </v-tooltip>
-            </v-row>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      class="ma-6"
+                      color="primary"
+                      dark
+                      v-on="on"
+                      width="175"
+                      @click.native="end_pbp_dialog = true"
+                    >
+                      <v-icon class="mx-1">mdi-file-excel-box</v-icon>Finalizar
+                    </v-btn>
+                  </template>
+                  <span>Finalizar secuencia de jugadas</span>
+                </v-tooltip>
+              </v-row>
+            </div>
+
             <v-row justify="center">
               <v-card-title>Lista de Jugadas</v-card-title>
             </v-row>
@@ -409,15 +426,16 @@
 <script>
 import VolleyballScore from "../../../components/VolleyballScore";
 import VolleyballStatistics from "../../../components/VolleyballStatistics";
+import VolleyballScoreDisplayOnly from "../../../components/VolleyballScoreDisplayOnly";
 import PBPRosterEntry from "../../../components/PBPRosterEntry";
 import VolleyballGameAction from "../../../components/VolleyballGameAction";
 import VolleyballPBPActionsAdder from "../../../components/VolleyballPBPActionsAdder";
 import { mapGetters, mapActions } from "vuex";
-
 export default {
   components: {
     VolleyballScore,
     VolleyballStatistics,
+    VolleyballScoreDisplayOnly,
     PBPRosterEntry,
     VolleyballGameAction,
     VolleyballPBPActionsAdder
@@ -430,13 +448,10 @@ export default {
     invalid_sport_dialog: false,
     dialog: false,
     event_id: Number,
-
     end_pbp_dialog: false,
     color_dialog: false,
     prev_color: null,
-
     button_loading: false,
-
     notification_dialog: false,
     notification_text: "",
     notification_rules: [
@@ -444,7 +459,6 @@ export default {
         (!!v && v.length > 0 && v.length <= 100) ||
         "Las notificaciones deben tener entre 1 y 100 caracteres."
     ],
-
     plays_map: [
       { eng: "kills", esp: "Puntos de Ataque" },
       { eng: "attackErrors", esp: "Errores de Ataque" },
@@ -457,7 +471,6 @@ export default {
       { eng: "digs", esp: "Bompeos" },
       { eng: "receptionErrors", esp: "Errores de Recepción" }
     ],
-
     uprm_color: "primary",
     notification: "Notification",
     uprm_team_name: "uprm",
@@ -484,7 +497,6 @@ export default {
       };
       console.log(payload);
     },
-
     // Functions for init/detach callbacks for maintaining data models based on Firebase updates.
     ...mapActions({
       getEvent: "volleyballPBP/getEvent",
@@ -508,7 +520,6 @@ export default {
       clearPBPState: "volleyballPBP/clearPBPState",
       updateOpponentColor: "volleyballPBP/updateOpponentColor"
     }),
-
     startEndPBPSequence() {
       // Set payload format.
       const payload = {
@@ -518,18 +529,15 @@ export default {
       this.endPBPSequence(payload);
       this.end_pbp_dialog = false;
     },
-
     findAthleteName(athlete_id, team) {
       let athlete_index = -1;
       let roster = [];
-
       // Set the right roster.
       if (team === "uprm") {
         roster = this.uprmRoster;
       } else if (team === "opponent") {
         roster = this.oppRoster;
       }
-
       // Iterate through each element in roster.
       for (let index in roster) {
         if (roster[index].key == athlete_id) {
@@ -537,30 +545,24 @@ export default {
           continue;
         }
       }
-
       if (athlete_index === -1) {
         return "Atleta Desconocido";
       }
-
       // If athlete is opponent, just return its name.
       if (team === "opponent") {
         return roster[athlete_index].name;
       }
-
       // Otherwise, build its name using the structure established by Odin.
       let athlete_name = roster[athlete_index].first_name;
       if (roster[athlete_index].middle_name !== "") {
         athlete_name += " " + roster[athlete_index].middle_name;
       }
       athlete_name += " " + roster[athlete_index].last_names;
-
       return athlete_name;
     },
-
     on_notification_pressed() {
       this.notification_dialog = true;
     },
-
     async send_notification() {
       if (this.$refs.create_form.validate()) {
         const payload = {
@@ -570,7 +572,6 @@ export default {
             action_type: "Notification"
           }
         };
-
         this.button_loading = true;
         if (await this.sendGameAction(payload)) {
           this.$refs.create_form.reset();
@@ -578,12 +579,10 @@ export default {
         this.button_loading = false;
       }
     },
-
     reset_notification() {
       this.notification_dialog = false;
       this.$refs.create_form.reset();
     },
-
     findAthleteNumber(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
@@ -592,14 +591,11 @@ export default {
           continue;
         }
       }
-
       if (athlete_index === -1) {
         return "?";
       }
-
       return roster[athlete_index].number;
     },
-
     findAthleteImg(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
@@ -608,33 +604,27 @@ export default {
           continue;
         }
       }
-
       if (athlete_index === -1) {
         return "";
       }
-
       return roster[athlete_index].profile_image_link;
     },
-
     // Set up variables for color update dialog.
     startChooseColor() {
       this.prev_color = this.color;
       this.color_dialog = true;
     },
-
     // Rollback to previous color in case cancel was pressed.
     cancelColorUpdate() {
       this.color = this.prev_color;
       this.color_dialog = false;
     },
-
     // Send request to Odin.
     async updateColor() {
       const payload = {
         event_id: this.event_id,
         color: this.color.hexa
       };
-
       this.button_loading = true;
       if (await this.updateOpponentColor(payload)) {
         this.color_dialog = false;
@@ -691,24 +681,20 @@ export default {
     } else {
       this.invalid_event_dialog = true;
     }
-
     // Validate the event has PBP functionality.
     if (this.hasPBP === false) {
       this.no_pbp_dialog = true;
     } else {
       this.no_pbp_dialog = false;
     }
-
     // Validate the PBP sequence corresponds to Volleyball.
     if (this.sportName != "Voleibol") {
       this.invalid_sport_dialog = true;
     } else {
       this.invalid_sport_dialog = false;
     }
-
     this.loading = false;
   },
-
   beforeDestroy() {
     this.detachSetScores(this.event_id);
     this.detachCurrentSet(this.event_id);

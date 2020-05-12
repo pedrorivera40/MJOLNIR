@@ -6,7 +6,7 @@ export default{
             let sport_id = team_params.sport_id
             let season_year = team_params.season_year
             //console.log("At the request level we have:",sport_id,season_year)
-            const response = await this.$axios.get('teams/?sport_id='+sport_id+'&season_year='+season_year)
+            const response = await this.$axios.get('/teams/public/?sport_id='+sport_id+'&season_year='+season_year)
             //console.log("GET TEAM",response)
             console.log("GET TEAM",response.data)
             commit("SET_TEAM",response.data.Team)
@@ -23,7 +23,7 @@ export default{
     async getTeamMembers({commit},team_id){
         try{
             //console.log("GET MEMBERS: At actions level we have:",team_id)
-            const response = await this.$axios.get('teams/members/?team_id='+team_id)
+            const response = await this.$axios.get('/teams/members/public/?team_id='+team_id)
             
             //console.log("GET MEMBERS:",response)
             console.log("GET MEMBERS:",response.data)
@@ -136,35 +136,33 @@ export default{
             commit("SET_QUERY_DONE")
         }
     },
-    
 
-
-
-    
-    // async getAthletes( {commit} ){
-    //     try{
-           
-    //         const response = await this.$axios.get('athletes/')
-    //         commit("SET_ATHLETES",response.data.Athletes)
-    //         commit("SET_ATHLETE",null)
-
-    //     }catch(error){
-    //         console.log(error.response.data.Error)
-
-    //         commit("DONE_LOADING",'users')
-    //     }
-    // },
-
-    // async getAthleteByID({commit},aid){
-    //     try{
-            
-    //         const response = await this.$axios.get('athletes/'+aid+'/')
-    //         commit("SET_ATHLETE",response.data.Athlete)
-            
-    //     }catch(error){
-    //         console.log(error.response.data.Error)
-            
-    //     }
-    // }
+    async getTeamEvents({commit},team_id){
+        try{
+            const response = await this.$axios.get('/events/team/'+team_id+'/public/')
+            console.log("GET TEAM EVENTS:",response.data)
+            commit("SET_TEAM_EVENTS",response.data)
+            commit("SET_EVENT_QUERY_DONE")
+        }catch(error){
+            console.log("ERROR GETTING TEAM EVENTS",team_id,error)
+            commit("SET_TEAM_EVENTS",null)
+            // commit("SET_WAITING_TEAM_EVENTS")
+            commit("SET_EVENT_QUERY_DONE")
+        }
+    },
+    async setNullEvents({commit}){
+        try{
+            commit("SET_TEAM_EVENTS",null)
+        }catch(error){
+            console.log("ERROR SETTING NULLIFYING EVENTS",error)
+        }
+    },   
+    async setEventQueryLoading({commit}){
+        try{
+            commit("SET_EVENT_QUERY_LOADING")
+        }catch(error){
+            console.log("ERROR SETTING EVENT QUERY LOADING STATE",error)
+        }
+    },
 }
 

@@ -161,6 +161,7 @@
                     dark
                     @click.native="startEditNotification()"
                     v-on="on"
+                    v-if="$store.state.userAuth.userPermissions[5]['18']"
                   >
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
@@ -179,6 +180,7 @@
                     dark
                     @click.native="delete_dialog = true"
                     v-on="on"
+                    v-if="$store.state.userAuth.userPermissions[4]['17']"
                   >
                     <v-icon>mdi-trash-can</v-icon>
                   </v-btn>
@@ -228,6 +230,7 @@
                     dark
                     @click.native="startEditPlay()"
                     v-on="on"
+                    v-if="$store.state.userAuth.userPermissions[5]['18']"
                   >
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
@@ -246,6 +249,7 @@
                     dark
                     @click.native="delete_dialog = true"
                     v-on="on"
+                    v-if="$store.state.userAuth.userPermissions[4]['17']"
                   >
                     <v-icon>mdi-trash-can</v-icon>
                   </v-btn>
