@@ -90,6 +90,7 @@ export default {
    * @param {*} param0 destructuring of vuex context object
    */
   logout({ commit }) {
+    console.log('in_user_logout')
     commit("CLEAR_USER_DATA")
   }
 }
