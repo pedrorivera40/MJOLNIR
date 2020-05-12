@@ -156,7 +156,7 @@
               <v-row align="center"
               justify="start">
               <v-col md=3 align="end">
-                <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == ''))"
+                <v-btn color="primary_light" :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[14]['27']"
                   class="white--text" @click="goToAddMembers"><v-icon left>mdi-plus</v-icon>Añadir Miembros</v-btn>
               </v-col>
               </v-row>
@@ -344,8 +344,8 @@ export default {
           this.current_team = this.team.team_info
           
           if(this.readyForMembers){
-            console.log("INDEX LEVEL LOCAL TEAM",this.current_team)
-            console.log("INDEX LEVEL QUERY TEAM",this.team)
+            // console.log("INDEX LEVEL LOCAL TEAM",this.current_team)
+            // console.log("INDEX LEVEL QUERY TEAM",this.team)
             this.getTeamMembers(this.current_team_id)
             this.stopGetMembers()
             // this.ready_for_members = false
@@ -391,7 +391,7 @@ export default {
         else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
                 || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){this.sport_route ="matchbased"}
         else{this.sport_route = ''}
-        console.log("[SPORT ROUTE CONFIRMED]",this.sport_route)
+        // console.log("[SPORT ROUTE CONFIRMED]",this.sport_route)
       },
       goToEditTeam(){
         this.dialogEditTeam = true;
