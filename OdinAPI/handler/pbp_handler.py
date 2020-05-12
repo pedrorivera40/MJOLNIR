@@ -591,6 +591,9 @@ class VolleyballPBPHandler:
             if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
+            if color == pbp_dao.get_opponent_color(event_id):
+                return jsonify(MSG="No se encontraron cambios en el color."), 200
+
             pbp_dao.set_opponent_color(event_id, color)
             return jsonify(MSG="El color se ha actualizado."), 200
 
@@ -772,7 +775,7 @@ class VolleyballPBPHandler:
             prev_name = opponent_roster[str(player_info["number"])]["name"]
 
             if player_info["name"] == prev_name:
-                return jsonify(ERROR="No se encontraron cambios en el nombre del atleta."), 400
+                return jsonify(ERROR="No se encontraron cambios en el nombre del atleta."), 200
 
             pbp_dao.set_opponent_athlete(event_id, player_info)
             return jsonify(MSG="La información del atleta se modificado en el sistema."), 200
@@ -975,6 +978,11 @@ class VolleyballPBPHandler:
 
         except Exception as e:
             print(str(e))
+
+            # In case the 'error' is due to no chance in game action, notify the user but don't return as error.
+            if str(e) == "No hubo un cambio en la acción.":
+                return jsonify(MSG=str(e)), 200
+
             return jsonify(ERROR=str(e)), 500
 
     def removePlayPBPAction(self, event_id, game_action_id):
