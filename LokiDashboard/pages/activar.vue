@@ -105,14 +105,18 @@ export default {
   },
   methods: {
     ...mapActions({
-      activateAccount: "userAuth/activateAccount"
+      activateAccount: "userAuth/activateAccount",
+      clearStorage: "userAuth/logout"
     })
   },
   computed: {
     ...mapGetters({
       isLoading: "userAuth/isLoading"
     })
-  }
+  },
+  mounted() {
+    this.clearStorage()
+  },
 };
 </script>
 

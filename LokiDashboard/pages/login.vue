@@ -67,6 +67,7 @@ export default {
   methods: {
     ...mapActions({
       login: "userAuth/login",
+      clearStorage: "userAuth/logout",
       setSnackbar: "notifications/setSnackbar"
     })
   },
@@ -74,7 +75,10 @@ export default {
     ...mapGetters({
       isLoading: "userAuth/isLoading",
     })
-  }
+  }, 
+  mounted() {
+    this.clearStorage()
+  },
 };
 </script>
 
