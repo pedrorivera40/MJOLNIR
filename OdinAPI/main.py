@@ -2682,13 +2682,7 @@ def baseballAggregateTeamStatistics():
 
 # Launch app.
 @app.route("/sports", methods=['GET'])
-@token_check
 def get_sports():
-    # Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
 
     if request.method == 'GET':
         body = request.get_json()
@@ -2730,18 +2724,25 @@ def get_sports():
 
 
 @app.route("/sports/details", methods=['GET'])
-@token_check
 def get_sport_info():
-    # Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
     if request.method == 'GET':
         args = request.args
         body = request.get_json()
         if not body and not args:
             return SportHandler().getSportCategoriesPositions()
+
+        return jsonify(ERROR="Error en la solicitud. No se permiten parámetros."), 400
+
+    return jsonify(ERROR="Método HTTP no autorizado."), 405
+
+
+@app.route("/sports/categories/<int:sportId>", methods=['GET'])
+def get_sport_categories(sportId):
+    if request.method == 'GET':
+        args = request.args
+        body = request.get_json()
+        if not body and not args:
+            return SportHandler().getCategoriesBySportId(sportId)
 
         return jsonify(ERROR="Error en la solicitud. No se permiten parámetros."), 400
 
