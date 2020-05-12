@@ -27,6 +27,25 @@ For the user management module we want to showcase we are able to perform CRUD o
 7. Lock a User's account with 3 erroneous logins [SW-R: 1h, Sec-R: 2e].
 8. Reset a User's Password Using the User Management Page [SW-R: 1j, 1k, Sec-R: 2h].
 
+## Athlete Module
+
+For the Athlete module we want to showcase the creation of at least
+two athletes(one for a sport with positions and another one for a 
+sport with categories) and to show the athle profile viewer page
+where they can see an athletes info including their season stats.
+
+1. Create an athlete that participates in a sport with positions
+assigning the positions to the athlete from the athlete 
+management page.**[SOFTWARE REQUIREMENTS 4D,4E]**
+
+2. Create an athlete that participates in a sport with categories
+assigning the categories to the athlete. from the athlete
+management page.**[SOFTWARE REQUIREMENTS 4F]**
+
+3. Edit an athlete profiles information.**[SOFTWARE REQUIREMENTS 4G]**
+
+4. Delete an existing athlete.**[SOFTWARE REQUIREMENTS 4H]**
+
 ## Team Management Module
 
 For the Team Management module we want to showcase we are able to perform CRUD operations on Team Profiles, and that these operations are propagated to the Database (seen in both dashboard and website views).
@@ -39,6 +58,22 @@ For the Team Management module we want to showcase we are able to perform CRUD o
 6. Select a previously existing team, show team members, team statistics and team event history.
 7. Select a previously existing team from different sport, show difference in team statistics fields.
 
+## Event Module
+
+For the Event module we want to showcase the creation of an event,
+the event viewer page and the results page for an event that has 
+statistics recorded.
+
+1. Go to events management page to see a list of created events.**[SOFTWARE REQUIREMENTS 2B]**
+
+2. Create an event from the event management page.**[SOFTWARE REQUIREMENTS 2A]**
+
+3. Edit the information of an existing event.**[SOFTWARE REQUIREMENTS 2C]**
+
+4. Delete an event.**[SOFTWARE REQUIREMENTS 2E]**
+
+5. Select an event with statistics to view and then click on 
+the "see results button" to be redirected to the results page.**[SOFTWARE REQUIREMENTS 2D]**
 
 ## Results Management Module
 
@@ -70,3 +105,22 @@ For the error handling portion we want to showcase the system's resilience to er
 8. Try changing a user's username to an existing username.
 9. Try changing a user's email to an existing email.
 
+## Error Handling Athlete & Events
+
+For the error handling portion we want to showcase the system's resilience to erroneous inputs. In the front end this can be seen by the UI setting restrictions when erroneous input is entered, and notifications when erroneous actions are performed in the system. In terms of the back end this can be seen by running the tests, outlined in the testing sheet, for the back end's athlete & event management capabilities.
+
+1. Trying to create an athlete without the required fields.
+
+2. Trying to create an athlete with information that does not conform to the
+athlete profile field formats.
+
+3. Trying to edit an athlete with information that does not conform to the
+athlete profile field formats.
+
+4. Trying to create an event without the required fields.
+
+5. Trying to create an event with information that does not conform to the
+athlete profile field formats.
+
+6. Trying to edit an event with information that does not conform to the
+athlete profile field formkats.
