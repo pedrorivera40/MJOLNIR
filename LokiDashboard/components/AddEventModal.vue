@@ -2,9 +2,9 @@
   <v-row justify="center">
     <v-dialog  v-model="dialog" persistent max-width="600">
       <v-card>
-        <v-toolbar color="green darken-1" dark flat>
+        <v-toolbar color="primary_dark" flat>
           <v-spacer />
-          <v-toolbar-title>Evento</v-toolbar-title>
+          <v-toolbar-title class="headline white--text">Evento</v-toolbar-title>
           <v-progress-linear
             :active="!ready"
             indeterminate
@@ -30,7 +30,7 @@
                   md="12"
                 >	
 
-                <h2>Fecha del Evento:</h2>
+                <h2>Fecha del Evento:*</h2>
                   
                 </v-col>
               </v-row>
@@ -55,7 +55,7 @@
               <v-row>            
                 <v-col>	
 
-                <h2>Hora del Evento:</h2>
+                <h2>Hora del Evento:*</h2>
                   
                 </v-col>
               </v-row>
@@ -86,7 +86,7 @@
                   <v-select
                     v-model.lazy="locality"
                     :items="localities"                  
-                    label ="Localización"
+                    label ="Localización*"
                     :rules="[required('Localización')]"
                   ></v-select>                
                 </v-col>
@@ -121,7 +121,7 @@
                       v-model="team"
                       :items="teamsList"                
                       name="Equipo"                    
-                      label ="Equipo"
+                      label ="Equipo*"
                       item-text="sportName"
                       item-value="id"                  
                       :rules="[teamRequired('Equipo')]"
@@ -177,28 +177,29 @@
                 <v-col>
                    <v-checkbox
                     v-model="terms"
-                    :label="`Estoy de acuerdo con la información.`"
+                    label="Estoy de acuerdo con la información*."
                   >
                   </v-checkbox>
                 </v-col>
-              </v-row>      
+              </v-row>    
               
             </v-container>
+            <small>*indica un campo requerido.</small>
           </v-form>      
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-            <v-btn  @click="close()">
+            <v-btn text color="grey darken-3" @click="close()">
              Cerrar
             </v-btn>
            <v-btn 
-              color="green darken-1" 
-                        
+              color="primary darken-1" 
+              text      
               :disabled="!(valid & terms)"
               @click="submit"
               :loading="adding"
             >
-              Añadir
+              Guardar
             </v-btn>
         </v-card-actions>
 
