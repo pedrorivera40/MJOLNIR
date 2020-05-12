@@ -76,7 +76,8 @@
                                         >
                                            
                                                 <v-text-field
-                                                    v-model="payload_stats_individual.attributes.points"                      
+                                                    v-model="payload_stats_individual.attributes.points"  
+                                                    type="number"                     
                                                     label="Puntos"
                                                     outlined
                                                     required
@@ -89,7 +90,7 @@
                                            
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.rebounds"                      
-                                                    
+                                                    type="number" 
                                                     label="Rebotes"
                                                     outlined
                                                     required
@@ -102,6 +103,7 @@
                                           
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.assists"                      
+                                                    type="number" 
                                                     :rules="[numeric('Asistencias'),scoreRequired('Asistencias')]"
                                                     label="Asistencias"
                                                     outlined
@@ -119,6 +121,7 @@
                                           
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.steals"                      
+                                                    type="number" 
                                                     :rules="[numeric('Robos'),scoreRequired('Robos')]"
                                                     label="Robos"
                                                     required
@@ -131,6 +134,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.blocks"                      
+                                                    type="number" 
                                                     :rules="[numeric('Bloqueos'),scoreRequired('Bloqueos')]"
                                                     label="Bloqueos"
                                                     required
@@ -143,6 +147,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.turnovers"                      
+                                                    type="number" 
                                                     :rules="[numeric('Pérdidas de Balón'),scoreRequired('Pérdidas de Balón')]"
                                                     label="Pérdidas de Balón"
                                                     required
@@ -165,6 +170,7 @@
                                            
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.field_goal_attempt"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro de Campo'),scoreRequired('Tiro de Campo')]"
                                                     label="Tiro de Campo"
                                                     required
@@ -177,6 +183,7 @@
                                            
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.three_point_attempt"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro de Tres Puntos'),scoreRequired('Tiro de Tres Puntos')]"
                                                     label="Tiro de Tres Puntos"
                                                     required
@@ -189,6 +196,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.free_throw_attempt"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro Libre'),scoreRequired('Tiro Libre')]"
                                                     label="Tiro Libre"
                                                     required
@@ -211,6 +219,7 @@
                                            
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_field_goal"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro de Campo'),scoreRequired('Tiro de Campo')]"
                                                     label="Tiro de Campo"
                                                     required
@@ -223,6 +232,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_three_point"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro de Tres Puntos'),scoreRequired('Tiro de Tres Puntos')]"
                                                     label="Tiro de Tres Puntos"
                                                     required
@@ -235,6 +245,7 @@
                                             
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_free_throw"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tiro Libre'),scoreRequired('Tiro Libre')]"
                                                     label="Tiro Libre"
                                                     required
@@ -309,6 +320,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.kill_points"                      
+                                                    type="number" 
                                                     :rules="[numeric('Puntos de Ataque'),scoreRequired('Puntos de Ataque')]"
                                                     label="Puntos de Ataque"
                                                     outlined
@@ -319,6 +331,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.attack_errors"                      
+                                                    type="number" 
                                                     :rules="[numeric('Errores de Ataque'),scoreRequired('Errores de Ataque')]"
                                                     label="Errores de Ataque"
                                                     outlined
@@ -329,6 +342,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.assists"                      
+                                                    type="number" 
                                                     :rules="[numeric('Asistencias'),scoreRequired('Asistencias')]"
                                                     label="Asistencias"
                                                     outlined
@@ -344,6 +358,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.aces"                      
+                                                    type="number" 
                                                     :rules="[numeric('Servicio Directo'),scoreRequired('Servicio Directo')]"
                                                     label="Servicio Directo"
                                                     required
@@ -354,6 +369,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.service_errors"                      
+                                                    type="number" 
                                                     :rules="[numeric('Errores de Servicio'),scoreRequired('Errores de Servicio')]"
                                                     label="Errores de Servicio"
                                                     required
@@ -364,6 +380,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.digs"                      
+                                                    type="number" 
                                                     :rules="[numeric('Recepciones'),scoreRequired('Recepciones')]"
                                                     label="Recepciones"
                                                     required
@@ -379,6 +396,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.blocks"                      
+                                                    type="number" 
                                                     :rules="[numeric('Bloqueos'),scoreRequired('Bloqueos')]"
                                                     label="Bloqueos"
                                                     required
@@ -389,6 +407,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.blocking_errors"                      
+                                                    type="number" 
                                                     :rules="[numeric('Errores de Bloqueo'),scoreRequired('Errores de Bloqueo')]"
                                                     label="Errores de Bloqueo"
                                                     required
@@ -399,6 +418,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.reception_errors"                      
+                                                    type="number" 
                                                     :rules="[numeric('Errores de Recepcion'),scoreRequired('Errores de Recepcion')]"
                                                     label="Errores de Recepcion"
                                                     required
@@ -472,8 +492,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.goal_attempts"                      
-                                                    :rules="[numeric('Goal Attempts*'),scoreRequired('Goal Attempts*')]"
-                                                    label="Goal Attempts*"
+                                                    type="number" 
+                                                    :rules="[numeric('Intentos de Gol'),scoreRequired('Intentos de Gol')]"
+                                                    label="Intentos de Gol"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -482,6 +503,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.assists"                      
+                                                    type="number" 
                                                     :rules="[numeric('Asistencias'),scoreRequired('Asistencias')]"
                                                     label="Asistencias"
                                                     outlined
@@ -492,8 +514,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.fouls"                      
-                                                    :rules="[numeric('Fouls*'),scoreRequired('Fouls*')]"
-                                                    label="Fouls*"
+                                                    type="number" 
+                                                    :rules="[numeric('Faltas'),scoreRequired('Faltas')]"
+                                                    label="Faltas"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -507,6 +530,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.cards"                      
+                                                    type="number" 
                                                     :rules="[numeric('Tarjetas'),scoreRequired('Tarjetas')]"
                                                     label="Tarjetas"
                                                     required
@@ -517,8 +541,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_goals"                      
-                                                    :rules="[numeric('Successful Goals*'),scoreRequired('Successful Goals*')]"
-                                                    label="Successful Goals*"
+                                                    type="number" 
+                                                    :rules="[numeric('Goles Exitosos'),scoreRequired('Goles Exitosos')]"
+                                                    label="Goles Exitosos"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -527,8 +552,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.tackles"                      
-                                                    :rules="[numeric('Tackles*'),scoreRequired('Tackles*')]"
-                                                    label="Tackles*"
+                                                    type="number" 
+                                                    :rules="[numeric('Atajadas'),scoreRequired('Atajadas')]"
+                                                    label="Atajadas"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -600,8 +626,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.at_bats"                      
-                                                    :rules="[numeric('At Bats*'),scoreRequired('At Bats*')]"
-                                                    label="At Bats*"
+                                                    type="number" 
+                                                    :rules="[numeric('Turnos al Bate'),scoreRequired('Turnos al Bate')]"
+                                                    label="Turnos al Bate"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -610,6 +637,7 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.runs"                      
+                                                    type="number" 
                                                     :rules="[numeric('Carreras'),scoreRequired('Carreras')]"
                                                     label="Carreras"
                                                     outlined
@@ -620,8 +648,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.hits"                      
-                                                    :rules="[numeric('Hits*'),scoreRequired('Hits*')]"
-                                                    label="Hits*"
+                                                    type="number" 
+                                                    :rules="[numeric('Hits'),scoreRequired('Hits')]"
+                                                    label="Hits"
                                                     outlined
                                                     required
                                                 ></v-text-field>
@@ -635,8 +664,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.runs_batted_in"                      
-                                                    :rules="[numeric('Runs Batted In*'),scoreRequired('Runs Batted In*')]"
-                                                    label="Runs Batted In*"
+                                                    type="number" 
+                                                    :rules="[numeric('Carreras Empujadas'),scoreRequired('Carreras Empujadas')]"
+                                                    label="Carreras Empujadas"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -645,8 +675,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.base_on_balls"                      
-                                                    :rules="[numeric('Base On Balls*'),scoreRequired('Base On Balls*')]"
-                                                    label="Base On Balls*"
+                                                    type="number" 
+                                                    :rules="[numeric('Base por Bolas'),scoreRequired('Base por Bolas')]"
+                                                    label="Base por Bolas"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -655,8 +686,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.strikeouts"                      
-                                                    :rules="[numeric('Strikeouts*'),scoreRequired('Strikeouts*')]"
-                                                    label="Strikeouts*"
+                                                    type="number" 
+                                                    :rules="[numeric('Ponches'),scoreRequired('Ponches')]"
+                                                    label="Ponches"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -670,8 +702,9 @@
                                         >
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.left_on_base"                      
-                                                    :rules="[numeric('Left On Base*'),scoreRequired('Left On Base*')]"
-                                                    label="Left On Base*"
+                                                    type="number" 
+                                                    :rules="[numeric('Dejados en Base'),scoreRequired('Dejados en Base')]"
+                                                    label="Dejados en Base"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -759,7 +792,7 @@
                                                    
                                                     disabled
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Categoria Seleccionada"
                                                     item-text="category_name"
                                                     item-value="category_id"
                                                     required
@@ -783,7 +816,7 @@
                                                     filled
                                                  
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Seleccione Medalla"
                                                     item-text="medal_obtained"
                                                     item-value="medal_id"
                                                     required
@@ -866,7 +899,7 @@
                                                    
                                                     disabled
                                                     color="blue-grey lighten-2"
-                                                    label="Select"
+                                                    label="Categoria Seleccionada"
                                                     item-text="category_name"
                                                     item-value="category_id"
                                                     required
@@ -884,15 +917,13 @@
                                     >
                                         <v-col             
                                         >
-                                                <v-col             
-                                        >
                                                 <v-text-field
                                                     v-model.number="payload_stats_individual.attributes.matches_played"     
                                                     type="number"                 
                                                     label="Partidas Jugadas"
                                                     outlined
                                                     required
-                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
+                                                    :rules="[numeric('Partidas Jugadas'),scoreRequired('Partidas Jugadas')]"
                                                 ></v-text-field>
                                         </v-col>
                                         <v-col             
@@ -903,10 +934,10 @@
                                                     label="Partidas Ganadas"
                                                     outlined
                                                     required
-                                                    :rules="[numeric('Puntos'),scoreRequired('Puntos')]"
+                                                    :rules="[numeric('Partidas Ganadas'),scoreRequired('Partidas Ganadas')]"
                                                 ></v-text-field>
                                         </v-col>
-                                        </v-col>
+                                        
                                     </v-row>
                                 </v-col>
                             </v-row>
