@@ -591,6 +591,9 @@ class VolleyballPBPHandler:
             if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
+            if color == pbp_dao.get_opponent_color(event_id):
+                return jsonify(MSG="No se encontraron cambios en el color."), 200
+
             pbp_dao.set_opponent_color(event_id, color)
             return jsonify(MSG="El color se ha actualizado."), 200
 
@@ -655,7 +658,7 @@ class VolleyballPBPHandler:
                 return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             uprm_roster = pbp_dao.get_uprm_roster(event_id)
-            if athlete_id in uprm_roster:
+            if uprm_roster and athlete_id in uprm_roster:
                 return jsonify(ERROR="El atleta ya existe en el roster de UPRM."), 403
 
             player_info = {
@@ -666,22 +669,24 @@ class VolleyballPBPHandler:
                 "last_names": athlete_info["last_names"],
                 "profile_image_link": athlete_info["profile_image_link"]
             }
+            print(player_info)
 
             pbp_dao.set_uprm_athlete(event_id, player_info)
-            return jsonify(MSG="La información del atleta se ha agragado al sistema."), 200
+            print(player_info)
+            return jsonify(MSG="Se ha actualizado la información de atletas UPRM."), 200
 
         except Exception as e:
             print(str(e))
             return jsonify(ERROR=str(e)), 500
 
-    def setOppPlayer(self, event_id,  player_info):
+    def addOppPlayer(self, event_id, player_info):
         """
-        Add an athlete to opponent roster or updates its value if exists in the system.
+        Add an athlete to opponent roster to the system.
         This function adds an athlete to opponent roster given it's event_id.
-        If the athlete exists, it updates its information.
 
         Args
             event_id: integer corresponding to an event id.
+            player_info: JSON object containing information about the athlete (number and name).
 
         Returns:
             Response containing a MSG in case of success, or ERROR message in case of failure.
@@ -696,6 +701,112 @@ class VolleyballPBPHandler:
                 return jsonify(ERROR="Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
 
             if not isinstance(player_info["name"], str) or not isinstance(player_info["number"], int):
+                print(player_info)
+                return jsonify(ERROR="La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
+
+            pbp_dao = VolleyballPBPDao()
+
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 400
+
+            if pbp_dao.is_game_over(event_id):
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+
+            meta = pbp_dao.get_pbp_meta(event_id)
+            if self._sport_keywords["sport"] != meta["sport"]:
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+
+            # Validate the athlete number has not been used.
+            opponent_roster = pbp_dao.get_opponent_roster(event_id)
+
+            if str(player_info["number"]) in opponent_roster:
+                return jsonify(ERROR="Ya existe un atleta oponente con este número."), 403
+
+            pbp_dao.set_opponent_athlete(event_id, player_info)
+            return jsonify(MSG="La información del atleta se agregado al sistema."), 200
+
+        except Exception as e:
+            return jsonify(ERROR=str(e)), 500
+
+    def updateOppPlayer(self, event_id, player_info):
+        """
+        Updates an athlete within opponent roster.
+        This function edits the name of an athlete from opponent roster given the event_id, and new name.
+
+        Args
+            event_id: integer corresponding to an event id.
+            player_info: JSON object containing information about the athlete (number and new name).
+
+        Returns:
+            Response containing a MSG in case of success, or ERROR message in case of failure.
+        """
+
+        try:
+
+            if not isinstance(event_id, int):
+                return jsonify(ERROR="El valor para ID del evento tiene que ser un entero."), 400
+
+            if not isinstance(player_info, dict) or len(player_info) != 2 or not "name" in player_info or not "number" in player_info:
+                return jsonify(ERROR="Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
+
+            if not isinstance(player_info["name"], str) or not isinstance(player_info["number"], int):
+                print(player_info)
+                return jsonify(ERROR="La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
+
+            pbp_dao = VolleyballPBPDao()
+
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 400
+
+            if pbp_dao.is_game_over(event_id):
+                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+
+            meta = pbp_dao.get_pbp_meta(event_id)
+            if self._sport_keywords["sport"] != meta["sport"]:
+                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+
+            # Validate the athlete number has not been used.
+            opponent_roster = pbp_dao.get_opponent_roster(event_id)
+
+            if str(player_info["number"]) not in opponent_roster:
+                return jsonify(ERROR="El atleta no existe en el sistema."), 403
+
+            # Validate the name changes.
+            prev_name = opponent_roster[str(player_info["number"])]["name"]
+
+            if player_info["name"] == prev_name:
+                return jsonify(ERROR="No se encontraron cambios en el nombre del atleta."), 200
+
+            pbp_dao.set_opponent_athlete(event_id, player_info)
+            return jsonify(MSG="La información del atleta se modificado en el sistema."), 200
+
+        except Exception as e:
+            return jsonify(ERROR=str(e)), 500
+
+    def setOppPlayer(self, event_id,  player_info):
+        """
+        Add an athlete to opponent roster or updates its value if exists in the system.
+        This function adds an athlete to opponent roster given the event_id and athlete information.
+        If the athlete exists, it updates its information.
+
+        Args
+            event_id: integer corresponding to an event id.
+            player_info: JSON object containing information about the athlete (number and name).
+
+        Returns:
+            Response containing a MSG in case of success, or ERROR message in case of failure.
+        """
+
+        try:
+
+            if not isinstance(event_id, int):
+                return jsonify(ERROR="El valor para ID del evento tiene que ser un entero."), 400
+
+            if not isinstance(player_info, dict) or len(player_info) != 2 or not "name" in player_info or not "number" in player_info:
+                return jsonify(ERROR="Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
+
+            if not isinstance(player_info["name"], str) or not isinstance(player_info["number"], int):
+                print(player_info)
                 return jsonify(ERROR="La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
 
             pbp_dao = VolleyballPBPDao()
@@ -744,11 +855,13 @@ class VolleyballPBPHandler:
             if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
 
-            if not str(player_id) in pbp_dao.get_uprm_roster(event_id):
+            opp_roster = pbp_dao.get_uprm_roster(event_id)
+
+            if opp_roster and not str(player_id) in opp_roster:
                 return jsonify(ERROR="El atleta no existe."), 404
 
             pbp_dao.remove_uprm_athlete(event_id, player_id)
-            return jsonify(MSG="La información del atleta se ha removido del sistema."), 200
+            return jsonify(MSG="Se ha actualizado la información de atletas UPRM."), 200
 
         except Exception as e:
             print(str(e))
@@ -865,6 +978,11 @@ class VolleyballPBPHandler:
 
         except Exception as e:
             print(str(e))
+
+            # In case the 'error' is due to no chance in game action, notify the user but don't return as error.
+            if str(e) == "No hubo un cambio en la acción.":
+                return jsonify(MSG=str(e)), 200
+
             return jsonify(ERROR=str(e)), 500
 
     def removePlayPBPAction(self, event_id, game_action_id):

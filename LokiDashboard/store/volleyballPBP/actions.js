@@ -252,24 +252,29 @@ export default {
 
     async getEvent({ commit, dispatch }, event_id) {
         try {
-            const response = await this.$axios.get(`/events/${event_id}/`);
+            const response = await this.$axios.get(`/events/${event_id}/public/`);
             commit("SET_HAS_PBP", response.data.Event.hasPBP);
             commit("SET_TEAM_ID", response.data.Event.team_id);
             commit("SET_BRANCH", response.data.Event.branch);
             commit("SET_OPPONENT_NAME", response.data.Event.opponent_name);
             commit("SET_SPORT_NAME", response.data.Event.sport_name);
+            return true;
         } catch (error) {
-            if (!!error.response) {
+            if (error.response.status) {
+                console.log("Event not found");
+            }
+            else if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
     async getValidUPRMRoster({ commit, dispatch }, team_id) {
         try {
-            const response = await this.$axios.get(`/teams/members/?team_id=${team_id}`);
+            const response = await this.$axios.get(`/teams/members/public/?team_id=${team_id}`);
             commit("SET_VALID_UPRM_ROSTER", response.data.Team.team_members);
         } catch (error) {
             if (!!error.response) {
@@ -299,12 +304,14 @@ export default {
 
             const response = await this.$axios.post(`/pbp/Voleibol/actions`, payload);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
@@ -313,26 +320,29 @@ export default {
 
             const response = await this.$axios.put(`/pbp/Voleibol/actions`, payload);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
     async removeGameAction({ commit, dispatch }, payload) {
         try {
-
             const response = await this.$axios.delete(`/pbp/Voleibol/actions?event_id=${payload.event_id}&action_id=${payload.action_id}`);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
@@ -367,15 +377,65 @@ export default {
     // Update opponent color in the RTDB via Odin.
     async updateOpponentColor({ commit, dispatch }, payload) {
         try {
-            console.log(payload);
             const response = await this.$axios.put(`/pbp/Voleibol/color`, payload);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
+        }
+    },
+
+    // Add PBP player into game roster.
+    async addPBPAthlete({ commit, dispatch }, payload) {
+        try {
+            const response = await this.$axios.post(`/pbp/Voleibol/roster`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+            return false;
+        }
+    },
+
+    // Update opponent PBP player.
+    // Add PBP player into game roster.
+    async updateOppAthlete({ commit, dispatch }, payload) {
+        try {
+            const response = await this.$axios.put(`/pbp/Voleibol/roster`, payload);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+            return false;
+        }
+    },
+
+    // Remove player from game roster.
+    async removeAthlete({ commit, dispatch }, args) {
+        try {
+            const response = await this.$axios.delete(`/pbp/Voleibol/roster?${args}`);
+            dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
+        } catch (error) {
+            if (!!error.response) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+            }
+            return false;
         }
     }
 

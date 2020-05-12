@@ -113,7 +113,7 @@ class TeamHandler():
                 team_members_id=team_member[0],
                 athlete_id=team_member[2],
                 first_name=team_member[3],
-                middle_name=team_member[4],
+                middle_name=team_member[4] if team_member[4] else "",
                 last_names=team_member[5],
                 number=team_member[6],
                 profile_image_link=team_member[7],
@@ -445,7 +445,7 @@ class TeamHandler():
             athlete_sport = a_dao.getAthleteSportByID(aID)
             sID = dao.getTeamSportByID(tID)[0]
             if athlete_sport != sID:
-                return jsonify(Error="Atleta con ID:{} no coincide con el ID de deporte:{} del Equipo, ya que tiene ID de deporte:{}".format(aID, sID,athlete_sport)), 400
+                return jsonify(Error="Atleta con ID:{} no coincide con el ID de deporte:{} del Equipo, ya que tiene ID de deporte:{}".format(aID, sID, athlete_sport)), 400
         except (TypeError, ValueError):
             return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:

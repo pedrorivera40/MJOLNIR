@@ -100,6 +100,60 @@ class SportHandler:
 
         return mapped_records
 
+    def _build_category_dict(self, category_row):
+        '''
+        Internal method for building the list of categories into a list of dictionaries.
+        '''
+
+        category_id = category_row[0]
+        category_name = category_row[1]
+
+        return {
+            "category_id": category_id,
+            "category_name": category_name
+        }
+
+    def _build_categories_list(self, category_rows):
+        '''
+        Internal method for building the list of categories into a list of dictionaries.
+        '''
+
+        result = []
+        for row in category_rows:
+            result.append(self._build_category_dict(row))
+
+        return result
+
+    def getCategoriesBySportId(self, sportId):
+        """
+        Get the categories of a sport given its sport_id.
+        This function fetches the list of categories along 
+        with their id for a particular sport record.
+
+        Args
+            sportId: integer corresponging to the sport_id.
+
+        Returns
+            A JSON object that contains a list of category 
+            entries. Each entry follows the following format:
+            { 
+                "category_id": CATEGORY_ID, 
+                "category_name": CATEGORY_NAME 
+            }
+        """
+
+        try:
+            category_rows = SportDAO().getCategoriesBySportId(sportId)
+            categories = self._build_categories_list(category_rows)
+
+            if len(categories) == 0:
+                return jsonify(ERROR="No se encontró información sobre ese deporte."), 400
+        except Exception as e:
+            print(str(e))
+            return jsonify(ERROR="Problemas internos relacionados al DAO."), 500
+
+        return jsonify(CATEGORIES=categories), 200
+
     def getAllSports(self):
         """
         Gets all sports supported within the system.
@@ -116,7 +170,6 @@ class SportHandler:
                 }
         """
 
-        sports = []
         try:
             sport_rows = SportDAO().getAllSports()
             sports = self._build_sport_dict(sport_rows)
