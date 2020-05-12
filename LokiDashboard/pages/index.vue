@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import Logo from "~/components/Logo.vue";
 
 export default {
@@ -34,8 +35,14 @@ export default {
     proceed() {
       this.visible = false
       return this.$router.push("/login");
-    }
-  }
+    },
+    ...mapActions({
+      clearStorage: 'userAuth/logout'
+    })
+  },
+  mounted() {
+    this.clearStorage()
+  },
 };
 </script>
 

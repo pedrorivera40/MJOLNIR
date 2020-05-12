@@ -8,19 +8,24 @@
           </v-toolbar-title>
         </v-toolbar>
         <v-card-title>
-          <p style="word-break: normal;">¿Seguro que quieres borrar la cuenta de {{ username }}?</p>
+          <p style="word-break: normal;">
+            ¿Seguro que quieres borrar la cuenta de {{ username }}?
+          </p>
         </v-card-title>
         <v-card-text>
           <div class="body">Esta acción es <strong>irreversible</strong>.</div>
-          <v-checkbox
-            v-model="terms"
-            :label="`Acepto las consecuencias.`"
-          ></v-checkbox>
+          <v-checkbox v-model="terms">
+            <template v-slot:label>
+              <div>
+                Aun así desea borrar la cuenta de <strong>{{ username }}</strong> ?
+              </div>
+            </template>
+          </v-checkbox>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="close()"> Cancelar </v-btn>
+          <v-btn color="grey darken-3" text @click="close()"> Cancelar </v-btn>
           <v-btn
             color="green darken-1"
             :disabled="!terms"
@@ -80,7 +85,7 @@ p {
   hyphens: auto;
 }
 
-.body{
+.body {
   font-size: 1.1rem;
 }
 </style>
