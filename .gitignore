@@ -9,7 +9,7 @@ OdinAPI/tests/test_results.out
 RagnarokCloud/.firebaserc
 
 # GCP app engine deployment
-app.yml
+LokiDashboard/app.yml
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template
