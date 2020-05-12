@@ -258,12 +258,17 @@ export default {
             commit("SET_BRANCH", response.data.Event.branch);
             commit("SET_OPPONENT_NAME", response.data.Event.opponent_name);
             commit("SET_SPORT_NAME", response.data.Event.sport_name);
+            return true;
         } catch (error) {
-            if (!!error.response) {
+            if (error.response.status) {
+                console.log("Event not found");
+            }
+            else if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
@@ -299,12 +304,14 @@ export default {
 
             const response = await this.$axios.post(`/pbp/Voleibol/actions`, payload);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
@@ -313,26 +320,29 @@ export default {
 
             const response = await this.$axios.put(`/pbp/Voleibol/actions`, payload);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
     async removeGameAction({ commit, dispatch }, payload) {
         try {
-
             const response = await this.$axios.delete(`/pbp/Voleibol/actions?event_id=${payload.event_id}&action_id=${payload.action_id}`);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
@@ -369,12 +379,14 @@ export default {
         try {
             const response = await this.$axios.put(`/pbp/Voleibol/color`, payload);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
@@ -416,12 +428,14 @@ export default {
         try {
             const response = await this.$axios.delete(`/pbp/Voleibol/roster?${args}`);
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     }
 

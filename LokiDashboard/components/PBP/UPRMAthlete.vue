@@ -4,6 +4,7 @@
       <v-col :cols="1" class="mx-4">
         <v-checkbox
           :disabled="checking"
+          :loading="button_loading"
           v-model="in_game"
           color="primary"
           @change="inGameChanged()"
@@ -58,7 +59,8 @@ export default {
   },
   data: () => ({
     in_game: false,
-    checking: false
+    checking: false,
+    button_loading: false
   }),
 
   mounted() {
@@ -84,10 +86,16 @@ export default {
           data: this.athlete_id,
           team: "uprm"
         };
-        await console.log(this.addPBPAthlete(payload));
+
+        this.button_loading = true;
+        await this.addPBPAthlete(payload);
+        this.button_loading = false;
       } else {
         const params = `event_id=${this.event_id}&athlete_id=${this.athlete_id}&team=uprm`;
+
+        this.button_loading = true;
         await this.removeAthlete(params);
+        this.button_loading = false;
       }
       this.checking = false;
     }

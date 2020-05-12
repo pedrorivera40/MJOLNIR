@@ -25,85 +25,93 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="gray darken-3" text @click="notification_dialog = false">Cerrar</v-btn>
-          <v-btn color="primary" text @click.native="editNotification()">Enviar</v-btn>
+          <v-btn
+            color="primary darken-1"
+            text
+            :loading="button_loading"
+            @click.native="editNotification()"
+          >Guardar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog v-model="edit_play_dialog" persistent max-width="500px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">Editar Jugada</span>
-        </v-card-title>
+      <v-form v-model="valid" ref="edit_form">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Editar Jugada</span>
+          </v-card-title>
 
-        <v-row justify="center">
-          <v-col cols="12" sm="4">
-            <v-card-title class="body-1" style="word-break: normal;">Jugada:</v-card-title>
-          </v-col>
-          <v-col cols="12" sm="6" allign="center">
-            <v-select
-              v-model="current_play"
-              :items="plays"
-              menu-props="auto"
-              label="Jugada"
-              hide-details
-              single-line
-            ></v-select>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="12" sm="4">
-            <v-card-title class="body-1" style="word-break: normal;">Equipo:</v-card-title>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-select
-              v-model="current_team"
-              :items="teams"
-              menu-props="auto"
-              label="Equipo"
-              hide-details
-              single-line
-            ></v-select>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="12" sm="4">
-            <v-card-title class="body-1" style="word-break: normal;">Atleta:</v-card-title>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-select
-              v-if="current_team === 'UPRM'"
-              v-model="current_athlete"
-              :items="uprmAthletes"
-              :item-text="get_uprm_item_text"
-              item-val="athlete_id"
-              menu-props="auto"
-              label="Debe seleccionar un atleta"
-              hide-details
-              single-line
-              :rules="[(v) => (v != null) || 'Debe seleccionar un atleta']"
-              required
-            ></v-select>
-            <v-select
-              v-if="current_team === 'Oponente'"
-              v-model="current_athlete"
-              :items="oppAthletes"
-              :item-text="get_opp_item_text"
-              item-val="number"
-              menu-props="auto"
-              label="Debe seleccionar un atleta"
-              hide-details
-              single-line
-              :rules="[(v) => v != null || 'Debe seleccionar un atleta']"
-              required
-            ></v-select>
-          </v-col>
-        </v-row>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="edit_play_dialog = false">Cerrar</v-btn>
-          <v-btn color="primary" text @click.native="editPlay()">Guardar</v-btn>
-        </v-card-actions>
-      </v-card>
+          <v-row justify="center">
+            <v-col cols="12" sm="4">
+              <v-card-title class="body-1" style="word-break: normal;">Tipo de Jugada</v-card-title>
+            </v-col>
+            <v-col cols="12" sm="6" allign="center">
+              <v-select
+                v-model="current_play"
+                :items="plays"
+                menu-props="auto"
+                label="Jugada *"
+                outlined
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="12" sm="4">
+              <v-card-title class="body-1" style="word-break: normal;">Equipo de Interés</v-card-title>
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-select
+                v-model="current_team"
+                :items="teams"
+                menu-props="auto"
+                label="Equipo *"
+                outlined
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="12" sm="4">
+              <v-card-title class="body-1" style="word-break: normal;">Selccione Atleta</v-card-title>
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-select
+                v-if="current_team === 'UPRM'"
+                v-model="current_athlete"
+                :items="uprmAthletes"
+                :item-text="get_uprm_item_text"
+                item-value="athlete_id"
+                label="Atleta *"
+                :rules="[(v) => (v != null) || 'Debe seleccionar un atleta']"
+                required
+                outlined
+              ></v-select>
+              <v-select
+                v-if="current_team === 'Oponente'"
+                v-model="current_athlete"
+                :items="oppAthletes"
+                :item-text="get_opp_item_text"
+                item-value="number"
+                label="Atleta *"
+                :rules="[(v) => v != null || 'Debe seleccionar un atleta']"
+                required
+                outlined
+              ></v-select>
+            </v-col>
+          </v-row>
+          <small class="mx-12">* Indica que es un valor requerido</small>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="gray darken-3" text @click="edit_play_dialog = false">Cerrar</v-btn>
+            <v-btn
+              color="primary darken-1"
+              text
+              :disabled="(!valid)"
+              :loading="button_loading"
+              @click.native="editPlay()"
+            >Guardar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
     </v-dialog>
     <v-dialog v-model="delete_dialog" persistent max-width="300">
       <v-card>
@@ -112,7 +120,12 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="gray darken-3" text @click="delete_dialog = false">No</v-btn>
-          <v-btn color="green darken-1" text @click="deleteGameAction()">Sí</v-btn>
+          <v-btn
+            color="green darken-1"
+            :loading="button_loading"
+            text
+            @click="deleteGameAction()"
+          >Sí</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -274,6 +287,9 @@ export default {
     delete_dialog: false,
     edit_play_dialog: false,
 
+    valid: false,
+    button_loading: false,
+
     // Content to be displayed in the Edit Game Action dialog.
     teams: ["Oponente", "UPRM"],
 
@@ -346,7 +362,7 @@ export default {
     },
 
     // Edit a notification game action.
-    editNotification() {
+    async editNotification() {
       // Create payload with new message and notification info.
       if (this.newMessage.length >= 1 && this.newMessage.length <= 100) {
         const payload = {
@@ -358,18 +374,25 @@ export default {
           }
         };
         // Update notification.
-        this.updateGameAction(payload);
-        this.notification_dialog = false;
+        this.button_loading = true;
+        if (await this.updateGameAction(payload)) {
+          this.notification_dialog = false;
+        }
+        this.button_loading = false;
       }
     },
 
-    deleteGameAction() {
+    async deleteGameAction() {
       const payload = {
         event_id: this.event_id,
         action_id: this.id
       };
-      this.removeGameAction(payload);
-      this.delete_dialog = false;
+
+      this.button_loading = true;
+      if (await this.removeGameAction(payload)) {
+        this.delete_dialog = false;
+      }
+      this.button_loading = false;
     },
 
     startEditPlay() {
@@ -388,16 +411,10 @@ export default {
         }
 
         if (index === -1) {
-          this.current_athlete = {
-            athlete_id: this.athlete_id,
-            number: "?",
-            first_name: "Atleta",
-            middle_name: "",
-            last_names: "Desconocido"
-          };
+          this.current_athlete = null;
+        } else {
+          this.current_athlete = this.uprmAthletes[index].athlete_id;
         }
-
-        this.current_athlete = this.uprmAthletes[index];
       }
 
       // Find current opponent athlete.
@@ -411,23 +428,45 @@ export default {
         }
 
         if (index === -1) {
-          this.current_athlete = {
-            athlete_id: this.athlete_id,
-            number: "?",
-            first_name: "Atleta",
-            middle_name: "",
-            last_names: "Desconocido"
-          };
+          this.current_athlete = null;
+        } else {
+          this.current_athlete = this.oppAthletes[index].number;
         }
-
-        this.current_athlete = this.oppAthletes[index];
       }
     },
 
-    editPlay() {
+    async editPlay() {
+      // Verify the content in the form is valid.
+      if (!this.$refs.edit_form.validate()) {
+        return;
+      }
+
       // Make sure an athlete was selected.
-      console.log(this.current_athlete);
       if (this.current_athlete == null) {
+        return;
+      }
+
+      // Determine if the athlete was selected.
+      let index = -1;
+      if (this.current_team === "UPRM") {
+        for (let i = 0; i < this.uprmAthletes.length; i++) {
+          if (this.uprmAthletes[i].athlete_id == this.current_athlete) {
+            index = i;
+            break;
+          }
+        }
+      } else {
+        for (let i = 0; i < this.oppAthletes.length; i++) {
+          if (this.oppAthletes[i].number == this.current_athlete) {
+            index = i;
+            break;
+          }
+        }
+      }
+
+      if (index === -1) {
+        this.current_athlete = null;
+        !this.$refs.edit_form.validate();
         return;
       }
 
@@ -436,15 +475,16 @@ export default {
         action_id: this.id,
         data: {
           action_type: this.game_actions_map[this.current_play],
-          athlete_id:
-            this.current_team === "UPRM"
-              ? this.current_athlete.athlete_id
-              : this.current_athlete.number,
+          athlete_id: this.current_athlete,
           team: this.team_map[this.current_team]
         }
       };
-      console.log(payload);
-      console.log("NEED TO EDIT ACTION WITH ID = " + this.id);
+      // Close edit play dialog if request is successful.
+      this.button_loading = true;
+      if (await this.updateGameAction(payload)) {
+        this.edit_play_dialog = false;
+      }
+      this.button_loading = false;
     },
 
     map_action(action_name) {

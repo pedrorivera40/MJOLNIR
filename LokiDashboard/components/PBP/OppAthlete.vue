@@ -69,8 +69,8 @@
         <v-card-text>Por favor confirme si desea eliminar el atleta oponente seleccionado.</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="delete_dialog = false">No</v-btn>
-          <v-btn color="green darken-1" text @click="deleteAthlete()">Sí</v-btn>
+          <v-btn color="gray darken-3" text @click="delete_dialog = false">No</v-btn>
+          <v-btn color="green darken-1" :loading="button_loading" text @click="deleteAthlete()">Sí</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -99,8 +99,13 @@
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="close_edit_dialog()">Cerrar</v-btn>
-          <v-btn color="primary" text @click.native="edit_opp_player()">Enviar</v-btn>
+          <v-btn color="gray darken-3" text @click="close_edit_dialog()">Cerrar</v-btn>
+          <v-btn
+            color="primary darken-1"
+            :loading="button_loading"
+            text
+            @click.native="edit_opp_player()"
+          >Enviar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -128,6 +133,8 @@ export default {
     new_athlete_name: "",
     new_number: 0,
 
+    button_loading: false,
+
     // Validation rules.
     athlete_name_rules: [
       v =>
@@ -151,10 +158,13 @@ export default {
       removeAthlete: "volleyballPBP/removeAthlete"
     }),
 
-    deleteAthlete() {
+    async deleteAthlete() {
       const params = `event_id=${this.event_id}&athlete_id=${this.athlete_number}&team=opponent`;
-      this.removeAthlete(params);
-      this.delete_dialog = false;
+      this.button_loading = true;
+      if (await this.removeAthlete(params)) {
+        this.delete_dialog = false;
+      }
+      this.button_loading = false;
     },
 
     close_edit_dialog() {
@@ -177,12 +187,15 @@ export default {
         },
         team: "opponent"
       };
+
+      this.button_loading = true;
       if (
         this.$refs.edit_opp_form.validate() &&
         (await this.updateOppAthlete(payload))
       ) {
         this.edit_opp_athlete_dialog = false;
       }
+      this.button_loading = false;
     }
   }
 };

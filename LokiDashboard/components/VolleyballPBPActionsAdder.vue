@@ -245,8 +245,13 @@
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="close_add_opp_dialog()">Cerrar</v-btn>
-          <v-btn color="primary" text @click.native="add_opp_player()">Enviar</v-btn>
+          <v-btn color="gray darken-3" text @click="close_add_opp_dialog()">Cerrar</v-btn>
+          <v-btn
+            color="primary darken-1"
+            :loading="button_loading"
+            text
+            @click.native="add_opp_player()"
+          >Enviar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -283,6 +288,7 @@ export default {
 
     athlete_name: "",
     athlete_number: "",
+    button_loading: false,
 
     // Action button pressed flag (denotes if there is an action button pressed?).
     action_buton_pressed: false,
@@ -339,12 +345,15 @@ export default {
         },
         team: "opponent"
       };
+      this.button_loading = true;
       if (
         this.$refs.add_opp_form.validate() &&
         (await this.addPBPAthlete(payload))
       ) {
         this.add_opp_athlete_dialog = false;
+        this.$refs.add_opp_form.reset();
       }
+      this.button_loading = false;
     },
 
     clear_action_buttons() {
