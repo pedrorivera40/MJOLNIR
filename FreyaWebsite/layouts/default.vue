@@ -2,10 +2,15 @@
   <v-app>
     <v-app-bar fixed app dark color="blue-grey darken-4">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <h3
+      v-if="$vuetify.breakpoint.smAndDown"
+      class="headline"
+      >Huella Deportiva Web</h3>
       <v-img
+        v-else
         @click="home"
         src="/logo.png"
-        :max-width="$vuetify.breakpoint.smAndDown ? '80px' : '100px'"
+        max-width="100px"
         class="ml-4 logo"
       />
 
@@ -31,6 +36,15 @@
     >
       <v-list nav>
         <v-list-item-group class="nav-links">
+          <v-list-item
+            to="/"
+            nuxt
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item>
           <v-list-item
             v-for="(item, index) in items"
             :key="index"
