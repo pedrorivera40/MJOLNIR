@@ -5,13 +5,13 @@ from .dao.event_dao import EventDAO
 from .dao.athlete_dao import AthleteDAO
 from .dao.match_based_event_dao import MatchBasedEventDAO
 from .dao.team_dao import TeamDAO
-
+from .sport import SportHandler
 #Constants
 TENNIS_IDM = 9
 TENNIS_IDF = 18
 TABLE_TENNIS_IDM = 7
 TABLE_TENNIS_IDF = 15
-CATEGORIES = dict(TENNIS_IDM=[5,7],TENNIS_IDF=[11,6],TABLE_TENNIS_IDM=[3,8],TABLE_TENNIS_IDF=[4,10])
+SPORTS = [TENNIS_IDM,TENNIS_IDF,TABLE_TENNIS_IDM,TABLE_TENNIS_IDF]
 
 
 class MatchBasedEventHandler():
@@ -1236,24 +1236,30 @@ class MatchBasedEventHandler():
 
     def _validateCategory(self,sID,category_id):
 
-        if sID == TENNIS_IDM:
-            return category_id in CATEGORIES['TENNIS_IDM']                
+        sport_info, resp_code = SportHandler().getCategoriesBySportId(sID)
+        sport_info = sport_info.json 
+        
+        if not sport_info.get("CATEGORIES"):
+            return False
 
-        elif sID == TENNIS_IDF:
-            return category_id in CATEGORIES['TENNIS_IDF']
-              
-        elif sID == TABLE_TENNIS_IDM:
-            return category_id in CATEGORIES['TABLE_TENNIS_IDM']
-                
-        elif sID == TABLE_TENNIS_IDF:
-            return category_id in CATEGORIES['TABLE_TENNIS_IDF']
+        sport_info = sport_info.get("CATEGORIES")
+
+        for categories in sport_info:
+            if category_id == categories['category_id']:
+                return True
+
+        return False
+        
 
     
     def _validateMatchCategory(self,category_id):
-        for sport in CATEGORIES.keys():
-            if category_id in CATEGORIES[sport]:
-                return True
-        return False
+        valid = False
+        for sport in SPORTS:
+            valid = self._validateCategory(sport,category_id)
+            if valid:
+                break  
+
+        return valid
     
 
    

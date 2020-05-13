@@ -4,24 +4,35 @@ from .dao.event_dao import EventDAO
 from .dao.athlete_dao import AthleteDAO
 from .dao.team_dao import TeamDAO
 from .dao.medal_based_event_dao import MedalBasedEventDAO
+from .sport import SportHandler
 
 
 
 #Sport Constants
-
-TENNIS_IDM = 9
-TENNIS_IDF = 18
-TABLE_TENNIS_IDM = 7
-TABLE_TENNIS_IDF = 15
 DANCE = 17
-ATHLETSISM = 8
+CHEER = 30
+ATHLETSISM_M = 8
+ATHLETSISM_F = 19
+CAMP_M = 23
+CAMP_F = 24
+HALT_M = 26
+HALT_F = 27
+WRESTLE = 25
+SWIM_M = 21
+SWIM_F = 22
+TAEK_M = 28
+TAEK_F = 29
+JUDO_M = 6
+JUDO_F = 20
+
 #Category Constants
-M100 = 9
-M400 = 12
+BAILE = 136
+PORRISMO = 137
 
 NO_MEDAL_ID =4
 
-CATEGORIES = dict(ATHLETSISM =[M100,M400])
+SPORTS = [ATHLETSISM_M,ATHLETSISM_F,CHEER,DANCE,CAMP_M,CAMP_F,HALT_M,HALT_F,
+          WRESTLE,SWIM_M,SWIM_F,TAEK_M,TAEK_F,JUDO_M,JUDO_F]
 
 
 class MedalBasedEventHandler():
@@ -557,7 +568,7 @@ class MedalBasedEventHandler():
         dao = MedalBasedEventDAO()
 
         try:
-            if attributes['medal_id'] != NO_MEDAL_ID:
+            if attributes['medal_id'] != NO_MEDAL_ID and attributes['category_id'] != BAILE and attributes['category_id'] != PORRISMO:                
                 if dao.medalExistsInCategoryOfEvent(attributes['medal_id'],attributes['category_id'],eID):
                     return jsonify(Error = "Esa medalla ya fue otorgada para ese evento."), 500           
             if dao.getMedalBasedEventID(eID,aID,attributes['category_id']):
@@ -867,7 +878,7 @@ class MedalBasedEventHandler():
             # Create and Validate new Medal_Based_Event
             try:
                 for medalStats in statistics:
-                    if medalStats['medal_id'] != NO_MEDAL_ID:
+                    if medalStats['medal_id'] != NO_MEDAL_ID and medalStats['category_id'] != BAILE and medalStats['category_id'] != PORRISMO:
                         if dao.medalExistsInCategoryOfEvent(medalStats['medal_id'],medalStats['category_id'],eID):
                             return jsonify(Error = "Esa medalla ya fue otorgada para ese evento."), 500
                     result = dao.addStatistics(eID,aID,medalStats['category_id'],medalStats['medal_id'])               
@@ -930,7 +941,7 @@ class MedalBasedEventHandler():
         
         dao = MedalBasedEventDAO()
         try:
-            if attributes['medal_id'] != NO_MEDAL_ID:
+            if attributes['medal_id'] != NO_MEDAL_ID and attributes['category_id'] != BAILE and attributes['category_id'] != PORRISMO:
                 if dao.medalExistsInCategoryOfEvent(attributes['medal_id'],attributes['category_id'],eID):
                     return jsonify(Error = "Esa medalla ya fue otorgada para ese evento."), 500          
            
@@ -1251,25 +1262,29 @@ class MedalBasedEventHandler():
 
     def _validateCategory(self,sID,category_id):
 
-        if sID == ATHLETSISM:
-            return category_id in CATEGORIES['ATHLETSISM']                
+        sport_info, resp_code = SportHandler().getCategoriesBySportId(sID)
+        sport_info = sport_info.json 
+        
+        if not sport_info.get("CATEGORIES"):
+            return False
 
-        elif sID == TENNIS_IDF:
-            return category_id in CATEGORIES['TENNIS_IDF']
-              
-        elif sID == TABLE_TENNIS_IDM:
-            return category_id in CATEGORIES['TABLE_TENNIS_IDM']
-                
-        elif sID == TABLE_TENNIS_IDF:
-            return category_id in CATEGORIES['TABLE_TENNIS_IDF']
+        sport_info = sport_info.get("CATEGORIES")
+
+        for categories in sport_info:
+            if category_id == categories['category_id']:
+                return True
+
+        return False
 
     
     def _validateMedalCategory(self,category_id):
-        for sport in CATEGORIES.keys():
-            if category_id in CATEGORIES[sport]:
-                return True
-        return False
-    
+        valid = False
+        for sport in SPORTS:
+            valid = self._validateCategory(sport,category_id)
+            if valid:
+                break  
+
+        return valid
 
    
         
