@@ -8,7 +8,7 @@ export default {
             const sports = response.data.SPORTS
             const sportsMasculino = sports.filter(sport => sport.branch_name === "Masculino");
             const sportsFemenino = sports.filter(sport => sport.branch_name === "Femenino");
-            const sportsExhibicion = sports.filter(sport => sport.branch_name === "Exhibicion");
+            const sportsExhibicion = sports.filter(sport => sport.branch_name === "Exhibición");
             commit("SET_SPORTS", sports);
             commit("SET_SPORTS_MASCULINO", sportsMasculino);
             commit("SET_SPORTS_FEMENINO", sportsFemenino);
