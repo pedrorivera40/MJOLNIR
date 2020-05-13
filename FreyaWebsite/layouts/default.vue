@@ -7,7 +7,12 @@
       dark
       color="blue-grey darken-4"
     >
-      <v-img @click="home" src="/logo.png" max-width="100px" class="ml-4 logo" />
+      <v-img
+        @click="home"
+        src="/logo.png"
+        max-width="100px"
+        class="ml-4 logo"
+      />
 
       <v-spacer />
       <nav>
@@ -36,9 +41,9 @@
 
 <script>
 export default {
-  methods:{
-    home(){
-      this.$router.push('/')
+  methods: {
+    home() {
+      this.$router.push("/");
     }
   },
   data() {
@@ -82,21 +87,24 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-  .nav{
-    text-decoration: none;
-    color: whitesmoke;
-    font-weight: 300;
-    font-size: 1.3rem;
-    &:hover {
-      color: #168f09;
-    }
-    
+.nav {
+  text-decoration: none;
+  color: whitesmoke;
+  font-weight: 300;
+  font-size: 1.3rem;
+  &:hover {
+    color: #168f09;
   }
-  .logo {
-    cursor: pointer;
+
+  &:focus {
+    outline: none;
   }
-  .nuxt-link-exact-active {
-      color: #168f09;
-      font-weight: 500;
-    }
+}
+.logo {
+  cursor: pointer;
+}
+.nuxt-link-exact-active {
+  color: #168f09;
+  font-weight: 500;
+}
 </style>
