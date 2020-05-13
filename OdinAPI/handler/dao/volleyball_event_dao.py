@@ -651,7 +651,7 @@ class VolleyballEventDAO:
                 sum(blocking_points) as blocking_points
                 from valid_volleyball_events
                 WHERE event_id = %s)
-                select
+                select * 
                 from aggregate_query
                 where aggregate_query.kill_points is not null;
                 """
