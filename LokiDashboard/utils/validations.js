@@ -55,6 +55,13 @@ const nameFormat = () => {
   let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/
   return v => regex.test(v) || "El formato del nombre es incorrecto,"
 }
+/**
+ * Valitation function that uses regex to establish the format for  a name given as input.
+ */
+const usernameFormat = () => {
+  let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/
+  return v => regex.test(v) || "El formato del nombre es incorrecto,"
+}
 
 /**
  * Validation function that uses regex to establish the format for password within the syste.
@@ -176,6 +183,7 @@ export default {
   passwordDiffFromOld,
   seasonRequired,
   numeric,
-  scoreRequired
+  scoreRequired,
+  usernameFormat
 
 }
