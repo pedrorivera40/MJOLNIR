@@ -1336,7 +1336,8 @@ def pbp_end(sport):
         "digs":1,
         "blocks":1,
         "blocking_errors":1,
-        "reception_errors":1
+        "reception_errors":1,
+        "blocking_points":1
       }
    },
   "athlete_statistics":
@@ -1353,7 +1354,8 @@ def pbp_end(sport):
             "digs":1,
             "blocks":1,
             "blocking_errors":1,
-            "reception_errors":1
+            "reception_errors":1,
+            "blocking_points":1
 		  	}
 	  	}
   	},
@@ -1369,7 +1371,8 @@ def pbp_end(sport):
             "digs":1,
             "blocks":1,
             "blocking_errors":1,
-            "reception_errors":1
+            "reception_errors":1,
+            "blocking_points":1
 		  	}
 	  	}
   	}
@@ -1404,7 +1407,7 @@ def volleyballStatistics():
         specific_stats = team_statistics['volleyball_statistics']
         if ('kill_points' not in specific_stats or 'attack_errors' not in specific_stats or 'assists' not in specific_stats
             or 'aces' not in specific_stats or 'service_errors' not in specific_stats or 'digs' not in specific_stats
-                or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats):
+                or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats or 'blocking_points' not in specific_stats):
             return jsonify(Error='Solicitud Incorrecta'), 400
         # Validate Each Athlete's Statistics Request
         athlete_statistics = json['athlete_statistics']
@@ -1417,7 +1420,7 @@ def volleyballStatistics():
             specific_stats = athlete_json_sport['volleyball_statistics']
             if ('kill_points' not in specific_stats or 'attack_errors' not in specific_stats or 'assists' not in specific_stats
                 or 'aces' not in specific_stats or 'service_errors' not in specific_stats or 'digs' not in specific_stats
-                    or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats):
+                    or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats or 'blocking_points' not in specific_stats):
                 return jsonify(Error='Solicitud Incorrecta'), 400
         return handler.addAllEventStatistics(json['event_id'], json)
         # return jsonify(json),200
@@ -1456,7 +1459,8 @@ def getVolleyballStatistics():
     "digs":1,
     "blocks":1,
     "blocking_errors":1,
-    "reception_errors":1
+    "reception_errors":1,
+    "blocking_points":1
   }
 }
 '''
@@ -1492,7 +1496,7 @@ def volleyballAthleteStatistics():
         specific_stats = json['attributes']
         if ('kill_points' not in specific_stats or 'attack_errors' not in specific_stats or 'assists' not in specific_stats
             or 'aces' not in specific_stats or 'service_errors' not in specific_stats or 'digs' not in specific_stats
-                or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats):
+                or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats or 'blocking_points' not in specific_stats):
             return jsonify(Error='Solicitud Incorrecta'), 400
         # Carry On With Request
         if request.method == 'POST':
@@ -1543,7 +1547,8 @@ def getVolleyballAthleteStatistics():
     "digs":1,
     "blocks":1,
     "blocking_errors":1,
-    "reception_errors":1
+    "reception_errors":1,
+    "blocking_points":1
   }
 }
 '''
@@ -1586,7 +1591,7 @@ def volleyballTeamStatistics():
         specific_stats = json['attributes']
         if ('kill_points' not in specific_stats or 'attack_errors' not in specific_stats or 'assists' not in specific_stats
             or 'aces' not in specific_stats or 'service_errors' not in specific_stats or 'digs' not in specific_stats
-                or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats):
+                or 'blocks' not in specific_stats or 'blocking_errors' not in specific_stats or 'reception_errors' not in specific_stats or 'blocking_points' not in specific_stats):
             return jsonify(Error='Solicitud Incorrecta'), 400
         if json['add_type'] == 'AUTO':
             return handler.addTeamStatisticsAuto(json['event_id'])

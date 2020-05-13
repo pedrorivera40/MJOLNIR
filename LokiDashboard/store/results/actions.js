@@ -35,11 +35,11 @@ export default{
             console.log("ERROR GETTING EVENT INFO",event_id,error)
             commit("SET_EVENT_INFO",null)
             commit("SET_QUERY_DONE")
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-            }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-            }
+            // if(!!error.response.data){
+            //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            // }else{
+            //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            // }
         }
     },
     async clearAllStats({commit, dispatch}){
@@ -169,11 +169,11 @@ export default{
             console.log("ERROR GETTING TEAM MEMBERS",team_id,error)
             commit("SET_TEAM_MEMBERS",null)
             commit("SET_QUERY_DONE")
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-            }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-            }
+            // if(!!error.response.data){
+            //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            // }else{
+            //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            // }
         }
     },
     async setNullTeamMembers({commit, dispatch}){
@@ -252,11 +252,11 @@ export default{
             commit("SET_INDIVIDUAL_STATS",null)
             commit("SET_QUERY_DONE")
             console.log("ERROR GETTING INDIVIDUAL STATS",statsJSON,error)
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-            }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-            }
+            // if(!!error.response.data){
+            //     dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            // }else{
+            //     dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            // }
         }
     },
     async removeIndividualStatistics({commit,dispatch},statsJSON){
@@ -282,6 +282,19 @@ export default{
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
+        }
+    },
+    //GET SPORT CATEGORIES
+    async getSportCategories({commit,dispatch},sport_id){
+        try{
+            const response = await this.$axios.get('/sports/categories/'+sport_id)
+            console.log("GET SPORT CATEGORIES",response.data)
+            commit("SET_SPORT_CATEGORIES",response.data.CATEGORIES)
+            commit("SET_QUERY_DONE")
+        }catch(error){
+            commit("SET_QUERY_DONE")
+            commit("SET_SPORT_CATEGORIES",null)
+            console.log("ERROR GETTING SPORT CATEGORIES",sport_id,error)
         }
     },
 }

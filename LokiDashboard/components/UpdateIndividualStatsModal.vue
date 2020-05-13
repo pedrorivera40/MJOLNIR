@@ -426,6 +426,30 @@
                                                 ></v-text-field>
                                         </v-col>
                                     </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-text-field
+                                                    v-model="payload_stats_individual.attributes.blocking_points"                      
+                                                    type="number" 
+                                                    :rules="[numeric('Puntos de Bloqueo'),scoreRequired('Puntos de Bloqueo')]"
+                                                    label="Puntos de Bloqueo"
+                                                    required
+                                                    outlined
+                                                ></v-text-field>
+                                        </v-col>
+                                        <v-col             
+                                        >
+                                                
+                                        </v-col>
+                                        <v-col             
+                                        >
+                                                
+                                        </v-col>
+                                    </v-row>
                                 </v-col>
                             </v-row>
                             <v-row v-if="isSoccer">
@@ -542,8 +566,8 @@
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_goals"                      
                                                     type="number" 
-                                                    :rules="[numeric('Goles Exitosos'),scoreRequired('Goles Exitosos')]"
-                                                    label="Goles Exitosos"
+                                                    :rules="[numeric('Goles'),scoreRequired('Goles')]"
+                                                    label="Goles"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -980,7 +1004,8 @@
         athlete_id:Number,
         individual_stats:Object,
         sport_name:String,
-        branch_name:String
+        branch_name:String,
+        sport_categories:Array
       },
     data: () => ({
         
@@ -1013,7 +1038,7 @@
 
         //CODE HELPERS:
         statistics_entry: false,
-        sport_categories: '',
+        // sport_categories: '',
         medals: '',
     }),
                  
@@ -1045,41 +1070,6 @@
             // getIndividualStatistics:"results/getIndividualStatistics"
         }),
         buildDefaultValues(){
-            this.sport_categories=[
-                {
-                    category_id:5, category_name:"Solo"
-                },
-                {
-                    category_id:7, category_name:"Doble"
-                },
-                {
-                    category_id:9, category_name:	"100 Metros"
-                },
-                {
-                    category_id:12, category_name:"400 Metros"
-                },
-                {
-                    category_id:14, category_name:	"Lanzamiento Martillo"
-                },
-                {
-                    category_id:16, category_name:	"Lanzamiento Disco"
-                },
-                {
-                    category_id:17, category_name:	"Salto Largo"
-                },
-                {
-                    category_id:18, category_name:	"Salto Pértiga"
-                },
-                {
-                    category_id:21, category_name:	"10,000 Metros"
-                },
-                {
-                    category_id:23, category_name:	"Relevo 4 x 100"
-                },
-                {
-                    category_id:25, category_name:	"400 Metros Vallas"
-                }
-            ]
             this.medals= [
             {
                 medal_id:1,
@@ -1144,7 +1134,8 @@
                         "digs":'',
                         "blocks":'',
                         "blocking_errors":'',
-                        "reception_errors":''
+                        "reception_errors":'',
+                        "blocking_points":''
                     }
                     }
                     
@@ -1246,7 +1237,8 @@
                         "digs":current_statistics.digs,
                         "blocks":current_statistics.blocks,
                         "blocking_errors":current_statistics.blocking_errors,
-                        "reception_errors":current_statistics.reception_errors
+                        "reception_errors":current_statistics.reception_errors,
+                        "blocking_points":current_statistics.blocking_points
                     }
                     }
                     
