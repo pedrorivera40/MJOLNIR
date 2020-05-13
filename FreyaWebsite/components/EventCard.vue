@@ -23,7 +23,7 @@
           <span class="text--secondary"> {{ formatDate() }}</span>
         </v-col>
       </v-row>
-      <v-row class="my-n3">
+      <v-row v-if="(opponentName !== '') | !!opponentName" class="my-n3">
         <v-col>
           <span>Equipos: </span>
           <span class="text--secondary"> UPRM vs {{ opponentName }} </span>
