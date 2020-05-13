@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar fixed app dark color="blue-grey darken-4">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon  v-if="$vuetify.breakpoint.smAndDown" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <h3
       v-if="$vuetify.breakpoint.smAndDown"
       class="headline"
