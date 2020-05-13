@@ -516,7 +516,7 @@ export default {
           ) {
             this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
             this.team_statistics = [];
-            if(this.payload_stats.team_statistics.medal_based_statistics){
+            if(this.payload_stats.team_statistics){
               this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics;
             }
           } else if (
@@ -527,25 +527,30 @@ export default {
           ) {
             this.payload_stats = this.results_payload.Match_Based_Event_Statistics;
             this.team_statistics = [];
-            if (
-              this.results_payload.Match_Based_Event_Statistics.team_statistics
-                .match_based_statistics.Doble
-            ) {
-              this.team_statistics.push({
-                category_name: "Doble",
-                statistics: this.results_payload.Match_Based_Event_Statistics
-                  .team_statistics.match_based_statistics.Doble
-              });
-            }
-            if (
-              this.results_payload.Match_Based_Event_Statistics.team_statistics
-                .match_based_statistics.Solo
-            ) {
-              this.team_statistics.push({
-                category_name: "Solo",
-                statistics: this.results_payload.Match_Based_Event_Statistics
-                  .team_statistics.match_based_statistics.Solo
-              });
+            if (this.payload_stats.team_statistics){
+              if (
+                this.results_payload.Match_Based_Event_Statistics.team_statistics
+                  .match_based_statistics.Doble
+              ) {
+                this.team_statistics.push({
+                  category_name: "Doble",
+                  statistics: this.results_payload.Match_Based_Event_Statistics
+                    .team_statistics.match_based_statistics.Doble
+                });
+              }
+              if (
+                this.results_payload.Match_Based_Event_Statistics.team_statistics
+                  .match_based_statistics.Solo
+              ) {
+                this.team_statistics.push({
+                  category_name: "Solo",
+                  statistics: this.results_payload.Match_Based_Event_Statistics
+                    .team_statistics.match_based_statistics.Solo
+                });
+              }
+              else{
+                this.team_statistics = [];
+              }
             }
             else{
               this.team_statistics = [];
