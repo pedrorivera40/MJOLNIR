@@ -346,9 +346,15 @@ class AthleteHandler:
             if not dao.athleteExists(aID):
                 dao._closeConnection()            
                 return jsonify(Error = "No existe un atleta con el siguiente identificador:{}".format(aID)),404
+            
+            athleteTeams = t_dao.getTeamsByAthleteID(aID)
+            
 
-            if t_dao.getTeamsByAthleteID(aID):
-                return jsonify(Error = "No se puede remover atleta con identificador:{}, el mismo aun pertenece a equipos.".format(aID)),400
+            if athleteTeams:
+                team_years = []
+                for teams in athleteTeams:
+                    team_years.append(teams[2])                
+                return jsonify(Error = "No se puede remover atleta con identificador:{}, el mismo aún pertenece a equipos con las siguientes temporadas:{}".format(aID,team_years)),400
             result = dao.removeAthlete(aID)
             if not result:
                 dao._closeConnection()

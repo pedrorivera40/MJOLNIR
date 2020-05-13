@@ -104,6 +104,16 @@
 				<v-row>
 					<v-spacer/>
 					<v-spacer/>
+					<v-col v-if="!!hasPBP">
+						<v-btn 
+							color="blue-grey darken-4" 
+							dark 
+							class="mr-4" 
+							@click="goToPBPSequence()"
+						>	
+							Ver Play-by-Play
+						</v-btn>
+					</v-col>
 					<v-col>
 						<v-btn 
 							color="green darken-1" 
@@ -149,7 +159,10 @@ export default {
 		venue:'',
 		opponent_name:'',
 		sport_img_url:'',
-		event_summary:'',		
+		event_summary:'',	
+		hasPBP:'',
+		sportName:'',
+		eventID:'',
 		
 	}),
 
@@ -176,6 +189,14 @@ export default {
 			this.$router.push("/resultados/"+this.event.id)
 		},	
 		
+		/**
+     * Routes user to PBP sequence viewer page
+     * for the event with the sport and id given as
+     * props
+     */
+    goToPBPSequence(){
+      this.$router.push('/jugadas-'+this.sportName.toLowerCase()+'/'+this.eventID)
+    },
 		/**
 		 * Returns a string denoting whether an event is local 
 		 * or away.
@@ -208,7 +229,7 @@ export default {
 					this.ready = true
 					return true
 				}
-				
+				console.log(this.event)
 				let eventDate = new Date(Date.parse(this.event.event_date))
 				this.date = eventDate.toISOString().substr(0,10)
 				let hours = eventDate.getUTCHours()
@@ -239,6 +260,9 @@ export default {
 				this.sport_img_url = this.event.sport_img_url
 				this.event_summary = this.event.event_summary						
 				this.ready = true
+				this.hasPBP = this.event.hasPBP
+				this.sportName = this.event.sport_name
+				this.eventID = this.event.id
 				return true
 			}
 		
