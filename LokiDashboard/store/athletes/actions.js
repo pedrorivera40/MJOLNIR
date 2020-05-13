@@ -1,23 +1,24 @@
-export default{
+export default {
 
     /**
      * Action to fetch all athletes from the database with 
      * detailed information like their positions and categories.
      * @param {*} param0  destructuring of vuex context object
      */
-    async getAthletes( {commit,dispatch} ){
-        try{
-           
+    async getAthletes({ commit, dispatch }) {
+        try {
+
             const response = await this.$axios.get('athletes/details/')
-            commit("SET_ATHLETES",response.data.Athletes)            
+            commit("SET_ATHLETES", response.data.Athletes)
+
 
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
                 
             }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-                
+                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})                
+
             }
         }
     },
@@ -27,20 +28,21 @@ export default{
      * @param {*} param0 destructuring of vuex context object
      * @param {*} aid id of the athlete being fetched
      */
-    async getAthleteByID({commit,dispatch},aid){
-        try{
-            
-            const response = await this.$axios.get('athletes/'+aid+'/public/')
-            commit("SET_ATHLETE",response.data.Athlete)
-            
-        }catch(error){            
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+    async getAthleteByID({ commit, dispatch }, aid) {
+        try {
+
+            const response = await this.$axios.get('athletes/' + aid + '/public/')
+            commit("SET_ATHLETE", response.data.Athlete)
+
+        } catch (error) {
+            if (!!error.response.data) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
                 return 'error'
+
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
-                return 'error'
-            }
+
+            } 
         }
     },
 
@@ -49,17 +51,17 @@ export default{
      * from the database.
      * @param {*} param0 destructuring of vuex context object
      */
-    async getAthleteSports( {commit,dispatch} ){
-        try{
-           
-            const response = await this.$axios.get('sports/details')
-            commit("SET_ATHLETE_SPORTS",response.data.SPORTS)           
+    async getAthleteSports({ commit, dispatch }) {
+        try {
 
-        }catch(error){
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
-            }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            const response = await this.$axios.get('sports/details')
+            commit("SET_ATHLETE_SPORTS", response.data.SPORTS)
+
+        } catch (error) {
+            if (!!error.response.data) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
         }
     },
@@ -70,18 +72,18 @@ export default{
      * @param {*} param0 destructuring of vuex context object
      * @param {*} athleteJSON Object containing the information of the athlete to be added.
      */
-    async addAthlete({commit,dispatch},athleteJSON){
-        try{           
-            const response = await this.$axios.post('athletes/',athleteJSON)
-            commit("ADD_ATHLETE",response.data.Athlete)
-            dispatch('notifications/setSnackbar', {text: "Se añadió un nuevo atleta exitosamente", color: 'success'}, {root: true})
-            
-        }catch(error){
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+    async addAthlete({ commit, dispatch }, athleteJSON) {
+        try {
+            const response = await this.$axios.post('athletes/', athleteJSON)
+            commit("ADD_ATHLETE", response.data.Athlete)
+            dispatch('notifications/setSnackbar', { text: "Se añadió un nuevo atleta exitosamente", color: 'success' }, { root: true })
+
+        } catch (error) {
+            if (!!error.response.data) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
                 return 'error'
-            }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
         }
     },
@@ -92,20 +94,20 @@ export default{
      * @param {*} param0 destructuring of vuex context object
      * @param {*} athleteJSON Object containing the information of athlete to be edited.
      */
-    async editAthlete({commit,dispatch},athleteJSON){
-        try{           
-            
-            const response = await this.$axios.put('athletes/'+athleteJSON.athlete_id+'/',athleteJSON)
-            commit("UPDATE_ATHLETE",response.data.Athlete)
-            dispatch('notifications/setSnackbar', {text: `El atleta con identificador:${athleteJSON.athlete_id} ha sido editado.`, color: 'success'}, {root: true})
-            
-        }catch(error){
+    async editAthlete({ commit, dispatch }, athleteJSON) {
+        try {
+
+            const response = await this.$axios.put('athletes/' + athleteJSON.athlete_id + '/', athleteJSON)
+            commit("UPDATE_ATHLETE", response.data.Athlete)
+            dispatch('notifications/setSnackbar', { text: `El atleta con identificador:${athleteJSON.athlete_id} ha sido editado.`, color: 'success' }, { root: true })
+
+        } catch (error) {
             console.log(error)
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            if (!!error.response.data) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
                 'return error'
-            }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
         }
     },
@@ -115,19 +117,19 @@ export default{
      * @param {*} param0 destructuring of vuex context object
      * @param {*} athleteID id of the athlete being removed
      */
-    async removeAthlete({commit,dispatch},athleteID){
-        try{           
-            
-            const response = await this.$axios.delete('athletes/'+athleteID+'/')
-            commit("DELETE_ATHLETE",athleteID)
-            dispatch('notifications/setSnackbar', {text: response.data.Athlete, color: 'success'}, {root: true})
-            
-        }catch(error){
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+    async removeAthlete({ commit, dispatch }, athleteID) {
+        try {
+
+            const response = await this.$axios.delete('athletes/' + athleteID + '/')
+            commit("DELETE_ATHLETE", athleteID)
+            dispatch('notifications/setSnackbar', { text: response.data.Athlete, color: 'success' }, { root: true })
+
+        } catch (error) {
+            if (!!error.response.data) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
                 return 'error'
-            }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
         }
     },
@@ -138,18 +140,18 @@ export default{
      * @param {*} param0 destructring of vuex context object
      * @param {*} stats_params Object containing the route parameters for the request
      */
-    async getAthleteSeasonStats({commit,dispatch},stats_params){
-        try{
-            const response = await this.$axios.get('results/'+stats_params.sport_name+'/season/athlete_games/?athlete_id='+stats_params.athlete_id+'&season_year='+stats_params.season_year)
+    async getAthleteSeasonStats({ commit, dispatch }, stats_params) {
+        try {
+            const response = await this.$axios.get('results/' + stats_params.sport_name + '/season/athlete_games/?athlete_id=' + stats_params.athlete_id + '&season_year=' + stats_params.season_year)
             //console.log(response.data)
-            commit("SET_SEASON_STATS",response.data)            
-        }catch(error){
+            commit("SET_SEASON_STATS", response.data)
+        } catch (error) {
             console.log(error)
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            if (!!error.response.data) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
                 return 'error'
-            }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
         }
 
@@ -161,18 +163,18 @@ export default{
      * @param {*} param0 destructuring of vuex context object
      * @param {*} stats_params Object containing the route parameters for the request
      */
-    async getAthleteAggregateSeasonStats({commit,dispatch},stats_params){
-        try{
-            const response = await this.$axios.get('results/'+stats_params.sport_name+'/season/athlete_aggregate/?athlete_id='+stats_params.athlete_id+'&season_year='+stats_params.season_year)
+    async getAthleteAggregateSeasonStats({ commit, dispatch }, stats_params) {
+        try {
+            const response = await this.$axios.get('results/' + stats_params.sport_name + '/season/athlete_aggregate/?athlete_id=' + stats_params.athlete_id + '&season_year=' + stats_params.season_year)
             //console.log(response.data)
-            commit("SET_AGGREGATE_SEASON_STATS",response.data)            
-        }catch(error){
+            commit("SET_AGGREGATE_SEASON_STATS", response.data)
+        } catch (error) {
             console.log(error)
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+            if (!!error.response.data) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
                 return 'error'
-            }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+            } else {
+                dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
         }
 
