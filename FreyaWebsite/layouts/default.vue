@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="app">
     <v-app-bar fixed app dark color="blue-grey darken-4">
       <v-app-bar-nav-icon  v-if="$vuetify.breakpoint.smAndDown" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <h3
@@ -19,7 +19,7 @@
         <nuxt-link
           v-for="item in items"
           :key="item.title"
-          class="ma-1 nav text-uppercase"
+          class="ma-2 nav text-uppercase"
           class-active="active"
           :to="item.to"
         >
@@ -113,10 +113,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.app{
+  background-color: whitesmoke;
+}
 .nav {
   text-decoration: none;
   color: whitesmoke;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 1.3rem;
   &:hover {
     color: #168f09;
@@ -129,9 +132,8 @@ export default {
 .logo {
   cursor: pointer;
 }
-.nuxt-link-exact-active {
+.nuxt-link-active {
   color: #168f09;
-  font-weight: 500;
 }
 .nav-drawer {
   .nav-links {
