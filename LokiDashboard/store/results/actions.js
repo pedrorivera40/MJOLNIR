@@ -284,5 +284,18 @@ export default{
             }
         }
     },
+    //GET SPORT CATEGORIES
+    async getSportCategories({commit,dispatch},sport_id){
+        try{
+            const response = await this.$axios.get('/sports/categories/'+sport_id)
+            console.log("GET SPORT CATEGORIES",response.data)
+            commit("SET_SPORT_CATEGORIES",response.data.CATEGORIES)
+            commit("SET_QUERY_DONE")
+        }catch(error){
+            commit("SET_QUERY_DONE")
+            commit("SET_SPORT_CATEGORIES",null)
+            console.log("ERROR GETTING SPORT CATEGORIES",sport_id,error)
+        }
+    },
 }
 

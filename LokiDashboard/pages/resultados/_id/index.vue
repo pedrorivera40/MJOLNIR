@@ -305,6 +305,7 @@
           :refresh_stats.sync="refresh_stats"
           :sport_name="sport_name"
           :branch_name="branch_name_local"
+          :sport_categories="sport_categories_local"
         />
         <UpdateIndividualStatsModal
           v-if="dialogEditIndividualStats"
@@ -319,6 +320,7 @@
           :individual_stats="this.current_individual_stats"
           :sport_name="sport_name"
           :branch_name="branch_name_local"
+          :sport_categories="sport_categories_local"
         />
         <DeleteIndividualStatsModal
           v-if="dialogDeleteIndividualStats"
@@ -414,7 +416,8 @@ export default {
       ready_for_table: false,
 
       branch_name_local: "",
-      current_category_id: ""
+      current_category_id: "",
+      sport_categories_local: ""
     };
   },
 
@@ -422,6 +425,7 @@ export default {
   async mounted() {
     await this.setQueryLoading();
     this.sport_id = null;
+    this.sport_categories_local = null;
     this.ready_for_table = false;
     this.event_id = this.$route.params.id;
     this.clearEventInfo();
@@ -440,6 +444,11 @@ export default {
       this.branch_name_local = this.event_info.branch;
       this.team_id = this.event_info.team_id;
       // if (this.ready_for_stats){
+      await this.setQueryLoading();
+      await this.getSportCategories(this.sport_id);
+      if (this.sport_categories){
+        this.sport_categories_local = this.sport_categories
+      }
       await this.setQueryLoading();
       await this.getTeamMembers(this.team_id);
       // console.log("Trying to get Team Members for:", this.team_id);
@@ -555,7 +564,8 @@ export default {
       getTeamMembers: "results/getTeamMembers",
       setNullTeamMembers: "results/setNullTeamMembers",
       setQueryLoading: "results/setQueryLoading",
-      getIndividualStatistics: "results/getIndividualStatistics"
+      getIndividualStatistics: "results/getIndividualStatistics",
+      getSportCategories: "results/getSportCategories",
     }),
     async stat_refresh() {
       this.clearAllStats();
@@ -1135,7 +1145,8 @@ export default {
       event_info: "results/event_info",
       team_members: "results/team_members",
       loadingQuery: "results/loadingQuery",
-      individual_stats: "results/individual_stats"
+      individual_stats: "results/individual_stats",
+      sport_categories: "results/sport_categories"
     })
   }
 };
