@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <h1 class="display-1">{{page_title}}</h1>
+        <h1 class="display-1">{{ page_title }}</h1>
       </v-col>
     </v-row>
     <LoadingScreen v-if="sports.length === 0" nameOfData="Deportes" />
@@ -16,14 +16,23 @@
           max-height="100"
           class="text-center ma-2 black--text"
         >
-          {{error_string}}
-          <v-btn color="rgb(67, 160, 71)" text @click="dialog = false">Cerrar</v-btn>
+          {{ error_string }}
+          <v-btn color="rgb(67, 160, 71)" text @click="dialog = false"
+            >Cerrar</v-btn
+          >
         </v-snackbar>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col v-for="sport in sports" :key="sport.sport_id" cols="12" md="6" lg="3">
+      <v-col
+        v-for="sport in sports"
+        :key="sport.sport_id"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
         <SportCard
           :sport_name="sport.sport_name"
           :img="sport.sport_image_url"
