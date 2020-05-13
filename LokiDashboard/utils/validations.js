@@ -59,7 +59,7 @@ const nameFormat = () => {
  * Valitation function that uses regex to establish the format for  a name given as input.
  */
 const usernameFormat = () => {
-  let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/
+  let regex = /^[^!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/
   return v => regex.test(v) || "El formato del nombre es incorrecto,"
 }
 
