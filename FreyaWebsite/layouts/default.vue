@@ -1,41 +1,20 @@
 <template>
   <v-app>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-      dark
-      color="blue-grey darken-4"
-    >
-      <v-app-bar-nav-icon
-        v-if="$vuetify.breakpoint.smAndDown"
-        @click.stop="drawer = !drawer"
-      ></v-app-bar-nav-icon>
-      <div class="logo">
-        <v-img
-          v-if="$vuetify.breakpoint.smAndDown"
-          @click="home"
-          src="/logo.png"
-          max-width="80px"
-          class="ml-4 logo"
-        />
-        <v-img
-          v-else
-          @click="home"
-          src="/logo.png"
-          max-width="100px"
-          class="ml-4 logo"
-        />
-      </div>
+    <v-app-bar fixed app dark color="blue-grey darken-4">
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-img
+        @click="home"
+        src="/logo.png"
+        :max-width="$vuetify.breakpoint.smAndDown ? '80px' : '100px'"
+        class="ml-4 logo"
+      />
 
       <v-spacer />
-      <nav 
-        v-if="$vuetify.breakpoint.mdAndUp"
-      >
+      <nav v-if="$vuetify.breakpoint.mdAndUp">
         <nuxt-link
           v-for="item in items"
           :key="item.title"
-          class="ma-4 nav text-uppercase"
+          class="ma-1 nav text-uppercase"
           class-active="active"
           :to="item.to"
         >
@@ -44,11 +23,11 @@
       </nav>
     </v-app-bar>
     <v-navigation-drawer
-      v-if="$vuetify.breakpoint.smAndDown"
-      app
-      v-model="drawer"
       class="nav-drawer"
+      v-model="drawer"
+      app
       bottom
+      temporary
     >
       <v-list nav>
         <v-list-item-group class="nav-links">
@@ -66,13 +45,12 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-
     <v-content>
       <v-container>
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer :fixed="fixed" app>
+    <v-footer fixed app>
       <v-spacer></v-spacer>
       <span>MJOLNIR &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
@@ -88,27 +66,25 @@ export default {
   },
   data() {
     return {
-      clipped: false,
       drawer: false,
-      fixed: false,
       items: [
         {
-          icon: "mdi-calendar-multiple",
+          icon: "mdi-apps",
           title: "Eventos",
           to: "/eventos"
         },
         {
-          icon: "mdi-account-group",
+          icon: "mdi-chart-bubble",
           title: "Deportes Masculino",
           to: "/deportes-masculino"
         },
         {
-          icon: "mdi-account-group",
+          icon: "mdi-chart-bubble",
           title: "Deportes Femenino",
           to: "/deportes-femenino"
         },
         {
-          icon: "mdi-account-group",
+          icon: "mdi-chart-bubble",
           title: "Deportes de Exhibición",
           to: "/deportes-exhibicion"
         },
@@ -117,11 +93,7 @@ export default {
           title: "Sobre Nosotros",
           to: "/inspire"
         }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: "Vuetify.js"
+      ]
     };
   }
 };
@@ -132,7 +104,6 @@ export default {
   color: whitesmoke;
   font-weight: 300;
   font-size: 1.3rem;
-  margin: 0 10px;
   &:hover {
     color: #168f09;
   }
@@ -151,7 +122,7 @@ export default {
 .nav-drawer {
   .nav-links {
     a {
-      color: #45b439;
+      color: #168f09;
     }
   }
 }
