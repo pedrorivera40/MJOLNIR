@@ -7,45 +7,40 @@
       dark
       color="blue-grey darken-4"
     >
-      <v-img src="/logo.png" max-width="100px" class="ml-4" />
+      <v-img @click="home" src="/logo.png" max-width="100px" class="ml-4 logo" />
 
       <v-spacer />
-      <v-btn
-        v-for="item in items"
-        :key="item.title"
-        class="ma-1"
-        text
-        nuxt
-        :to="item.to"
-      >
-        {{ item.title }}
-      </v-btn>
+      <nav>
+        <nuxt-link
+          v-for="item in items"
+          :key="item.title"
+          class="ma-1 nav text-uppercase"
+          class-active="active"
+          :to="item.to"
+        >
+          {{ item.title }}
+        </nuxt-link>
+      </nav>
     </v-app-bar>
     <v-content>
       <v-container>
         <nuxt />
       </v-container>
     </v-content>
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
     <v-footer :fixed="fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <v-spacer></v-spacer>
+      <span>MJOLNIR &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
 export default {
+  methods:{
+    home(){
+      this.$router.push('/')
+    }
+  },
   data() {
     return {
       clipped: false,
@@ -55,7 +50,7 @@ export default {
         {
           icon: "mdi-apps",
           title: "Eventos",
-          to: "/"
+          to: "/eventos"
         },
         {
           icon: "mdi-chart-bubble",
@@ -86,3 +81,22 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+  .nav{
+    text-decoration: none;
+    color: whitesmoke;
+    font-weight: 300;
+    font-size: 1.3rem;
+    &:hover {
+      color: #168f09;
+    }
+    
+  }
+  .logo {
+    cursor: pointer;
+  }
+  .nuxt-link-exact-active {
+      color: #168f09;
+      font-weight: 500;
+    }
+</style>
