@@ -153,10 +153,11 @@ const scoreRequired = (propertyType) => {
   return v => {
     if (v === 0){
       //Will receive the score of the team which will be an integer larger or equal than zero.
-      return v >= 0 || `${propertyType} es un campo requerido`;
+      return v >= 0 || `${propertyType} es un campo requerido X`;
     }
     else{
-      if(!v){ return `${propertyType} es un campo requerido`; }
+      if(!v){ return `${propertyType} es un campo requerido Y`; }
+      return v >= 0 || `${propertyType} es un campo requerido X`;
     }
   }
 }
