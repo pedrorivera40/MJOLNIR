@@ -401,11 +401,24 @@ export default {
       // OTHER SPORTS (MEDAL BASED)
       ATHLETICS_IDM: 8,
       ATHLETICS_IDF: 19,
+      BAILE_IDE: 17,
+      CAMPO_TRAVIESA_IDM:23,
+      CAMPO_TRAVIESA_IDF:24,
+      HALTEROFILIA_IDM:26,
+      HALTEROFILIA_IDF:27,
+      JUDO_IDM:6,
+      JUDO_IDF:20,
+      LUCHA_OLIMPICA:25,
+      NATACION_IDM:21,
+      NATACION_IDF:22,
+      PORRISMO_IDE:30,
+      TAEKWONDO_IDM:28,
+      TAEKWONDO_IDF:29,
       //OTHER SPORTS (MATCH BASED)
       FIELD_TENNIS_IDM: 9,
       FIELD_TENNIS_IDF: 18,
-      TABLE_TENNIS_IDM: 7,
-      TABLE_TENNIS_IDF: 15,
+      TABLE_TENNIS_IDM:7,
+      TABLE_TENNIS_IDF:15,
       //season:''
 
       //OTHE QUERY RELATED VALUES
@@ -511,8 +524,14 @@ export default {
             }
             else this.team_statistics = []
           } else if (
-            this.sport_id == this.ATHLETICS_IDM ||
-            this.sport_id == this.ATHLETICS_IDF
+            this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA 
           ) {
             this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
             this.team_statistics = [];
@@ -631,8 +650,14 @@ export default {
           this.payload_stats = this.results_payload.Baseball_Event_Statistics;
           this.team_statistics = [this.payload_stats.team_statistics];
         } else if (
-          this.sport_id == this.ATHLETICS_IDM ||
-          this.sport_id == this.ATHLETICS_IDF
+          this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA 
         ) {
           this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
           this.team_statistics = [];
@@ -744,8 +769,14 @@ export default {
       ) {
         this.sport_route = "baseball";
       } else if (
-        this.sport_id == this.ATHLETICS_IDM ||
-        this.sport_id == this.ATHLETICS_IDF
+        this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA 
       ) {
         this.sport_route = "medalbased";
       } else if (
@@ -1024,8 +1055,14 @@ export default {
         }
         // TODO: make it so this happens for MEDAL-BASED events
         else if (
-          this.sport_id == this.ATHLETICS_IDM ||
-          this.sport_id == this.ATHLETICS_IDF
+          this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA 
         ) {
           this.headers = [
             {
@@ -1086,9 +1123,15 @@ export default {
       // );
       this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
       if (
-        this.sport_id == this.ATHLETICS_IDM ||
-        this.sport_id == this.ATHLETICS_IDF ||
-        this.sport_id == this.FIELD_TENNIS_IDM ||
+        this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA  ||
+          this.sport_id == this.FIELD_TENNIS_IDM ||
           this.sport_id == this.FIELD_TENNIS_IDF ||
           this.sport_id == this.TABLE_TENNIS_IDM ||
           this.sport_id == this.TABLE_TENNIS_IDF
@@ -1122,9 +1165,15 @@ export default {
       this.edited_athlete_id = this.editedItem.athlete_info.athlete_id;
 
       if (
-        this.sport_id == this.ATHLETICS_IDM ||
-        this.sport_id == this.ATHLETICS_IDF ||
-        this.sport_id == this.FIELD_TENNIS_IDM ||
+        this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA  ||
+          this.sport_id == this.FIELD_TENNIS_IDM ||
           this.sport_id == this.FIELD_TENNIS_IDF ||
           this.sport_id == this.TABLE_TENNIS_IDM ||
           this.sport_id == this.TABLE_TENNIS_IDF
