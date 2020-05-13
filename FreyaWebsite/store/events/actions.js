@@ -14,8 +14,10 @@ export default {
             if(!!error.response.data){
                 console.log(error)
                 //dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 console.log(error)
+                return 'error'
                 //dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
 
@@ -35,9 +37,11 @@ export default {
         }catch(error){
             if(!!error.response.data){
                 console.log(error)
+                return 'error'
                 //dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
             }else{
                 console.log(error)
+                return 'error'
                 //dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
         }

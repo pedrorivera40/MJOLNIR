@@ -13,8 +13,10 @@ export default{
         }catch(error){
             if(!!error.response.data){
                 console.log(error.response.data.Error)
+                return 'error'
             }else{
-               console.log(error)
+                console.log(error)
+                return error
             }
         }
     },
@@ -31,10 +33,10 @@ export default{
             commit("SET_ATHLETE",response.data.Athlete)
             
         }catch(error){
-            if(!!error.response.data){
-               
+            if(!!error.response.data){               
                 return 'error'
-            }else{                
+            }else{  
+                return 'error'              
             }
             
         }
@@ -54,11 +56,10 @@ export default{
             //dispatch('notifications/setSnackbar', {text: "Se recolectó exitosamente las estadísticas de la temporada.", color: 'success'}, {root: true})
         }catch(error){
             console.log(error)
-            if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: 'Error', color: 'error'}, {root: true})
+            if(!!error.response.data){                
                 return 'error'
             }else{
-                dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+                return 'error'
             }
         }
 
@@ -83,6 +84,7 @@ export default{
                 return 'error'
             }else{
                 console.log(error)
+                return 'error'
                 //dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }
         }
