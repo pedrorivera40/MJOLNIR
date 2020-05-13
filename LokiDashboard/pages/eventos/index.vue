@@ -226,9 +226,19 @@ export default {
       "Atletismo",
       "Fútbol",
       "Softbol",
-      "Pelota"
+      "Beisbol",
+      "Tenis de Mesa",
+      "Tenis de Campo",
+      "Judo",
+      "Natación",
+      "Baile",
+      "Campo Traviesa",
+      "Halterofilia",
+      "Taekwondo",
+      "Porrismo",
+
     ],
-    branches: ["Masculino", "Femenino", "Exhibicion"],
+    branches: ["Masculino", "Femenino", "Exhibición"],
     localities: ["Casa", "Afuera"],
     filteredEvents:[],//This list is the one presented to the users
     eid: 0,//This is the id of the event to be deleted.
