@@ -5,15 +5,7 @@
         <h1 class="display-1">{{page_title}}</h1>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col>
-        <div v-if="(sports.length === 0) && !dialog">
-          <v-overlay opacity="0.3">
-            <v-progress-circular indeterminate></v-progress-circular>
-          </v-overlay>
-        </div>
-      </v-col>
-    </v-row>
+    <LoadingScreen v-if="sports.length === 0" nameOfData="Deportes" />
 
     <v-row>
       <v-col>
@@ -44,11 +36,13 @@
 
 <script>
 import SportCard from "../../components/SportCard.vue";
+import LoadingScreen from "../../components/general/LoadingScreen";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
-    SportCard
+    SportCard,
+    LoadingScreen
   },
   data() {
     return {
