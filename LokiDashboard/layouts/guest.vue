@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import TheSnackBar from "@/components/TheSnackBar";
+import TheSnackBar from "@/components/notifications/TheSnackBar";
 export default {
   components: {
     TheSnackBar,

@@ -22,8 +22,8 @@ export default {
 
     // Update athlete entry from UPRM roster.
     UPDATE_UPRM_ROSTER(state, athlete) {
-        for (let index in state.oppRoster) {
-            if (state.uprmRoster[index].key === key) {
+        for (let index in state.uprmRoster) {
+            if (state.uprmRoster[index].key == athlete.key) {
                 state.uprmRoster.splice(index, 1, athlete);
                 break;
             }
@@ -32,8 +32,10 @@ export default {
 
     // Remove athlete entry from UPRM roster.
     REMOVE_UPRM_ROSTER(state, key) {
-        for (let index in state.oppRoster) {
-            if (state.uprmRoster[index].key === key) {
+        for (let index in state.uprmRoster) {
+            console.log(key);
+            if (state.uprmRoster[index].key == key) {
+                console.log(state.uprmRoster[index].athlete_id);
                 state.uprmRoster.splice(index, 1);
                 break;
             }
@@ -47,8 +49,9 @@ export default {
 
     // Update athlete entry from opponent roster.
     UPDATE_OPP_ROSTER(state, athlete) {
+        console.log(athlete);
         for (let index in state.oppRoster) {
-            if (state.oppRoster[index].key === key) {
+            if (state.oppRoster[index].key === athlete.key) {
                 state.oppRoster.splice(index, 1, athlete);
                 break;
             }
@@ -105,7 +108,7 @@ export default {
         let result = {
             killPoints: 0,
             aces: 0,
-            blockPoints: 0,
+            blockingPoints: 0,
             assists: 0,
             blocks: 0,
             digs: 0,
@@ -131,7 +134,7 @@ export default {
                     break;
 
                 case "BlockPoint":
-                    result.blockPoints++;
+                    result.blockingPoints++;
                     break;
 
                 case "Assist":
@@ -175,7 +178,7 @@ export default {
         let result = {
             killPoints: 0,
             aces: 0,
-            blockPoints: 0,
+            blockingPoints: 0,
             assists: 0,
             blocks: 0,
             digs: 0,
@@ -201,7 +204,7 @@ export default {
                     break;
 
                 case "BlockPoint":
-                    result.blockPoints++;
+                    result.blockingPoints++;
                     break;
 
                 case "Assist":
@@ -247,7 +250,7 @@ export default {
         for (let athlete in state.uprmRoster) {
             result.push(
                 {
-                    name: state.uprmRoster[athlete].first_name + ' ' + state.uprmRoster[athlete].middle_name + ' ' + state.uprmRoster[athlete].last_names,
+                    name: (state.uprmRoster[athlete].middle_name === '' ? state.uprmRoster[athlete].first_name + ' ' + state.uprmRoster[athlete].middle_name + ' ' + state.uprmRoster[athlete].last_names : state.uprmRoster[athlete].first_name + ' ' + state.uprmRoster[athlete].last_names),
                     number: state.uprmRoster[athlete].number,
                     killPoints: 0,
                     aces: 0,
@@ -271,7 +274,7 @@ export default {
             }
             let athlete_index = -1;
             for (let athlete in state.uprmRoster) {
-                if (state.uprmRoster[athlete].key == currentAction.athlete_id) {
+                if (state.uprmRoster[athlete].athlete_id == currentAction.athlete_id) {
                     athlete_index = athlete;
                     break;
                 }
@@ -291,7 +294,7 @@ export default {
                     break;
 
                 case "BlockPoint":
-                    result[athlete_index].blockPoints++;
+                    result[athlete_index].blockingPoints++;
                     break;
 
                 case "Assist":
@@ -337,7 +340,7 @@ export default {
         for (let athlete in state.oppRoster) {
             result.push(
                 {
-                    name: state.oppRoster[athlete].first_name + ' ' + state.oppRoster[athlete].middle_name + ' ' + state.oppRoster[athlete].last_names,
+                    name: state.oppRoster[athlete].name,
                     number: state.oppRoster[athlete].number,
                     killPoints: 0,
                     aces: 0,
@@ -382,7 +385,7 @@ export default {
                     break;
 
                 case "BlockPoint":
-                    result[athlete_index].blockPoints++;
+                    result[athlete_index].blockingPoints++;
                     break;
 
                 case "Assist":
@@ -465,7 +468,7 @@ export default {
         state.uprmStatistics = {
             killPoints: 0,
             aces: 0,
-            blockPoints: 0,
+            blockingPoints: 0,
             assists: 0,
             blocks: 0,
             digs: 0,
@@ -477,7 +480,7 @@ export default {
         state.oppStatistics = {
             killPoints: 0,
             aces: 0,
-            blockPoints: 0,
+            blockingPoints: 0,
             assists: 0,
             blocks: 0,
             digs: 0,
