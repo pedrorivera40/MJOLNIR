@@ -153,6 +153,7 @@
                     v-if="formated_member_stats()"
                     :loading="loadingQuery"
                     loading-text="Cargando Estadísticas..."
+                    no-data-text="No Se Encontraron Resultados"
                   >
                     <!-- v-if="isBasketballTable" -->
                     <template #item.full_name="{ item }"
@@ -243,6 +244,7 @@
                     v-if="formated_member_stats()"
                     :loading="loadingQuery"
                     loading-text="Cargando Estadísticas..."
+                    no-data-text="No Se Encontraron Resultados de Equipo"
                   >
                   </v-data-table>
                   <v-container v-else-if="loadingQuery">
@@ -477,32 +479,46 @@ export default {
             this.sport_id == this.BASKETBALL_IDF
           ) {
             this.payload_stats = this.results_payload.Basketball_Event_Statistics;
-            this.team_statistics = [this.payload_stats.team_statistics];
+            if(this.payload_stats.team_statistics){
+              this.team_statistics = [this.payload_stats.team_statistics];
+            }
+            else this.team_statistics = []
           } else if (
             this.sport_id == this.VOLLEYBALL_IDM ||
             this.sport_id == this.VOLLEYBALL_IDF
           ) {
             this.payload_stats = this.results_payload.Volleyball_Event_Statistics;
-            this.team_statistics = [this.payload_stats.team_statistics];
+            if(this.payload_stats.team_statistics){
+              this.team_statistics = [this.payload_stats.team_statistics];
+            }
+            else this.team_statistics = []
           } else if (
             this.sport_id == this.SOCCER_IDM ||
             this.sport_id == this.SOCCER_IDF
           ) {
             this.payload_stats = this.results_payload.Soccer_Event_Statistics;
-            this.team_statistics = [this.payload_stats.team_statistics];
+            if(this.payload_stats.team_statistics){
+              this.team_statistics = [this.payload_stats.team_statistics];
+            }
+            else this.team_statistics = []
           } else if (
             this.sport_id == this.BASEBALL_IDM ||
             this.sport_id == this.SOFTBALL_IDF
           ) {
             this.payload_stats = this.results_payload.Baseball_Event_Statistics;
-            this.team_statistics = [this.payload_stats.team_statistics];
+            if(this.payload_stats.team_statistics){
+              this.team_statistics = [this.payload_stats.team_statistics];
+            }
+            else this.team_statistics = []
           } else if (
             this.sport_id == this.ATHLETICS_IDM ||
             this.sport_id == this.ATHLETICS_IDF
           ) {
             this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
             this.team_statistics = [];
-            this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics;
+            if(this.payload_stats.team_statistics.medal_based_statistics){
+              this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics;
+            }
           } else if (
             this.sport_id == this.FIELD_TENNIS_IDM ||
             this.sport_id == this.FIELD_TENNIS_IDF ||
@@ -530,6 +546,9 @@ export default {
                 statistics: this.results_payload.Match_Based_Event_Statistics
                   .team_statistics.match_based_statistics.Solo
               });
+            }
+            else{
+              this.team_statistics = [];
             }
           } else {
             return false;
@@ -659,14 +678,25 @@ export default {
       } else return false;
     },
     formated_member_stats() {
-      if (this.payload_stats != "") {
+      console.log("REFRESH FORMATED: how many times we checking this tho?")
+      if (this.payload_stats != "" && this.payload_stats != null) {
         if (this.refresh_stats) {
-          // console.log("[REF] REFRESHING STATS");
+          console.log("[REF] REFRESHING STATS:",this.payload_stats);
           this.stat_refresh();
           this.refresh_stats = false;
         }
-        return true;
-      } else return false;
+        // return true;
+      } 
+      else if(this.refresh_stats){
+          console.log("[REF] REFRESHING STATS [F/L]:",this.payload_stats);
+          this.stat_refresh();
+          this.refresh_stats = false;
+      }
+      if(this.payload_stats != '' && this.payload_stats != null){
+        console.log("REFRESH FORMATED LVL END, how many times huh?")
+        return true
+      }
+      else return false;
     },
     formated_final_score() {
       // console.log(

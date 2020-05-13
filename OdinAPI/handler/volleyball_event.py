@@ -208,32 +208,35 @@ class VolleyballEventHandler(EventResultHandler):
 
 
     def mapEventAllStatsToDict(self, team_record, athlete_records, final_record):
-        event_info = dict(
-            event_id=team_record[10],
-            volleyball_event_team_stats_id=team_record[11]
-            # event_date = team_record[17]
-        )
-        volleyball_statistics = dict(
-            kill_points=team_record[0],
-            attack_errors=team_record[1],
-            assists=team_record[2],
-            aces=team_record[3],
-            service_errors=team_record[4],
-            digs=team_record[5],
-            blocks=team_record[6],
-            blocking_errors=team_record[7],
-            reception_errors=team_record[8],
-            blocking_points=team_record[9]
-        )
-        team_statistics = dict(volleyball_statistics=volleyball_statistics)
-
+        if team_record:
+            event_info = dict(
+                event_id=team_record[10],
+                volleyball_event_team_stats_id=team_record[11]
+                # event_date = team_record[17]
+            )
+            volleyball_statistics = dict(
+                kill_points=team_record[0],
+                attack_errors=team_record[1],
+                assists=team_record[2],
+                aces=team_record[3],
+                service_errors=team_record[4],
+                digs=team_record[5],
+                blocks=team_record[6],
+                blocking_errors=team_record[7],
+                reception_errors=team_record[8],
+                blocking_points=team_record[9]
+            )
+            team_statistics = dict(volleyball_statistics=volleyball_statistics)
+        else:
+            event_info = dict(event_id=None,volleyball_event_team_stats_id=None)
+            team_statistics = None
+    
         # mappedResult = []
         # for athlete_statistics in result:
         #     mappedResult.append(self.mapEventToDict(athlete_statistics))
         # return jsonify(Volleyball_Event = mappedResult), 200
 
         athlete_statistics = []
-
         for athlete_record in athlete_records:
             athlete_info = dict(
                 athlete_id=athlete_record[0],
@@ -565,19 +568,19 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             dao = VolleyballEventDAO()
             team_result = dao.getAllTeamStatisticsByEventID(eID)
-            if not team_result:
-                return jsonify(Error="Estadisticas de Equipo para Evento de Voleibol  no se encontraron para el Evento con ID:{}.".format(eID)), 404
+            # if not team_result:
+            #     return jsonify(Error="Estadisticas de Equipo para Evento de Voleibol  no se encontraron para el Evento con ID:{}.".format(eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo."), 400
+            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo. (TEAM STATS)"), 400
         except:
             return jsonify(ERROR="No se pudo verificar estadisticas de equipo para eventos de voleibol desde el DAO."), 500
 
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
-            if not all_stats_result:
-                return jsonify(Error="Estadisticas de Evento de Voleibol no se encontro para evento con ID:{}.".format(eID)), 404
+            # if not all_stats_result:
+            #     return jsonify(Error="Estadisticas de Evento de Voleibol no se encontro para evento con ID:{}.".format(eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo."), 400
+            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo. (ALL STATS)"), 400
         except:
             return jsonify(ERROR="No se pudo verificar evento de voleibol desde el DAO."), 500
 
@@ -585,12 +588,12 @@ class VolleyballEventHandler(EventResultHandler):
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:
-                # return jsonify(Error = "Volleyball Event Statistics not found for the event: {}.".format(eID)),404
+            #     return jsonify(Error = "Volleyball Event Statistics not found for the event: {}.".format(eID)),404
                 final_score_result = [None, None]
             mappedResult = self.mapEventAllStatsToDict(
                 team_result, all_stats_result, final_score_result)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo."), 400
+            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo. (FINAL SCORE)"), 400
         except:
             return jsonify(ERROR="No se pudo verificar puntuacion final desde el DAO."), 500
 
