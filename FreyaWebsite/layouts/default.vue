@@ -8,12 +8,12 @@
       color="blue-grey darken-4"
     >
       <v-app-bar-nav-icon
-        v-if="this.$vuetify.breakpoint.smAndDown"
+        v-if="$vuetify.breakpoint.smAndDown"
         @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>
       <div class="logo">
         <v-img
-          v-if="this.$vuetify.breakpoint.smAndDown"
+          v-if="$vuetify.breakpoint.smAndDown"
           @click="home"
           src="/logo.png"
           max-width="80px"
@@ -29,7 +29,9 @@
       </div>
 
       <v-spacer />
-      <nav v-if="this.$vuetify.breakpoint.mdAndUp">
+      <nav 
+        v-if="$vuetify.breakpoint.mdAndUp"
+      >
         <nuxt-link
           v-for="item in items"
           :key="item.title"
@@ -42,16 +44,14 @@
       </nav>
     </v-app-bar>
     <v-navigation-drawer
+      v-if="$vuetify.breakpoint.smAndDown"
       app
       v-model="drawer"
-      v-if="this.$vuetify.breakpoint.smAndDown"
       class="nav-drawer"
       bottom
     >
       <v-list nav>
-        <v-list-item-group
-          class="nav-links"
-        >
+        <v-list-item-group class="nav-links">
           <v-list-item
             v-for="(item, index) in items"
             :key="index"
@@ -149,10 +149,10 @@ export default {
   font-weight: 500;
 }
 .nav-drawer {
-    .nav-links {
-      a {
-        color: #45b439;
-      }
+  .nav-links {
+    a {
+      color: #45b439;
     }
   }
+}
 </style>

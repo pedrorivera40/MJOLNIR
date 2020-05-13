@@ -5,7 +5,7 @@
         <div class="text-center">
           <v-row>
             <v-col>
-              <h1 v-if="this.$vuetify.breakpoint.smAndDown" class="header display-2 my-12">
+              <h1 v-if="$vuetify.breakpoint.smAndDown" class="header display-2 my-12">
                 ¡Bienvenida a Huella Deportiva
                 <span class="highlight">Web</span>!
               </h1>
@@ -14,7 +14,7 @@
                 <span class="highlight">Web</span>!
               </h1>
               <Logo
-                :width="this.$vuetify.breakpoint.smAndDown ? '350px' : ''"
+                :width="$vuetify.breakpoint.smAndDown ? '350px' : ''"
               />
               <h2 class="my-6 headline">¡Orgullo Colegial!</h2>
             </v-col>
