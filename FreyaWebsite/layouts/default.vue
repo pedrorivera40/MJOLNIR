@@ -83,18 +83,18 @@ export default {
       drawer: false,
       items: [
         {
-          icon: "mdi-apps",
+          icon: "mdi-calendar-multiple",
           title: "Eventos",
           to: "/eventos"
         },
         {
-          icon: "mdi-chart-bubble",
-          title: "Deportes Masculino",
+          icon: "mdi-account-group",
+          title: "Deportes: Masculino",
           to: "/deportes-masculino"
         },
         {
-          icon: "mdi-chart-bubble",
-          title: "Deportes Femenino",
+          icon: "mdi-account-group-outline",
+          title: "Deportes: Femenino",
           to: "/deportes-femenino"
         },
         {
@@ -103,7 +103,7 @@ export default {
           to: "/deportes-exhibicion"
         },
         {
-          icon: "mdi-chart-bubble",
+          icon: "mdi-paw",
           title: "Sobre Nosotros",
           to: "/inspire"
         }
