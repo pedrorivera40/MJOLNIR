@@ -396,6 +396,21 @@ class PBPDao:
         }
         self._rtdb.reference().update(update)
 
+    def get_opponent_color(self, event_id):
+        """
+        Gets the opponent color.
+        This function retrieves the opponent color of a particular PBP sequence int he NoSQL database.
+
+        Args
+            event_id: integer corresponding to an event id.
+
+        Returns
+            color: string denoting the opponent team color.
+        """
+        return self._rtdb.reference(self._db_keywords["root"] +
+                                    str(int(event_id)) +
+                                    self._db_keywords["meta"] + self._db_keywords["color"]).get()
+
     def set_opponent_color(self, event_id, color):
         """
         Sets the opponent color.

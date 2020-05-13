@@ -33,6 +33,29 @@ class SportDAO:
             result.append(row)
         return result
 
+    def getCategoriesBySportId(self, sport_id):
+        """
+        Get the categories of a sport given its sport_id.
+        This function fetches the list of categories along 
+        with their id for a particular sport record.
+        This function queries categories from the relational 
+        database.
+
+        Returns:
+            A list of tuples which represent the response to the database query.
+            Each sport tuple follows the following structure:
+                (category_id, category_name).
+        """
+
+        cursor = self.conn.cursor()
+        query = '''
+                select C.id, C.name from sport as S join category as C 
+                on (S.id = C.sport_id) where S.id = %s;
+                '''
+
+        cursor.execute(query, (sport_id,))
+        return self._build_result(cursor)
+
     def getAllSports(self):
         """
         Gets all sports supported within the system.
