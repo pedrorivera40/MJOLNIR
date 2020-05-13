@@ -125,27 +125,29 @@ class MatchBasedEventHandler():
 
 
     def mapEventAllStatsToDict(self,team_records,athlete_records,final_record):
-
-        try:
-            event_info = dict(
-                event_id = team_records[0][3]                           
-            )
-            opponent_name = team_records[0][5]
-        except:
-            event_info = dict(
-                event_id = team_records[3]                
-            )
-            opponent_name = team_records[5]
+        if (team_records):
+            try:
+                event_info = dict(
+                    event_id = team_records[0][3]                           
+                )
+                opponent_name = team_records[0][5]
+            except:
+                event_info = dict(
+                    event_id = team_records[3]                
+                )
+                opponent_name = team_records[5]
+            
+            match_based_statistics = {}
+                                
+            
+            for teamResults in team_records:
+                match_based_statistics[teamResults[2]] = {'match_based_team_stats_id':teamResults[4],'matches_played':teamResults[0],'matches_won':teamResults[1]}
         
-        match_based_statistics = {}
-                               
-        
-        for teamResults in team_records:
-            match_based_statistics[teamResults[2]] = {'match_based_team_stats_id':teamResults[4],'matches_played':teamResults[0],'matches_won':teamResults[1]}
-           
-
-
-        team_statistics = dict(match_based_statistics = match_based_statistics)
+            team_statistics = dict(match_based_statistics = match_based_statistics)
+        else:
+            team_statistics = None
+            opponent_name = None
+            event_info = dict(event_id = None)
        
         athlete_statistics = []
 
@@ -480,23 +482,23 @@ class MatchBasedEventHandler():
 
         try:  
             categoriesPlayed = dao.getCategoriesOfTheEvent(eID)
-            if not categoriesPlayed:
-                return jsonify(Error = "Estadisísticas de equipo pare un evento de partido no fueron encontradas para el evento con id: {}".format(eID)),404  
+            # if not categoriesPlayed:
+            #     return jsonify(Error = "Estadisísticas de equipo pare un evento de partido no fueron encontradas para el evento con id: {}".format(eID)),404  
 
             team_results = []
             print(categoriesPlayed)
             for category in categoriesPlayed:
                 team_results.append(dao.getAllTeamStatisticsByEventIdAndCategoryId(eID,category))
-            if not team_results:
-                return jsonify(Error = "Estadisísticas de equipo pare un evento de partido no fueron encontradas para el evento con id: {}".format(eID)),404
+            # if not team_results:
+            #     return jsonify(Error = "Estadisísticas de equipo pare un evento de partido no fueron encontradas para el evento con id: {}".format(eID)),404
         except Exception as e:
             print(e)
             return jsonify(Error="Estadísticas de equipo para un evento de partido no pudieron ser verificadas."), 500
         
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
-            if not all_stats_result:            
-                return jsonify(Error = "No se encontraron estadísticas para un evento de partido para el evento con id:{}.".format(eID)),404
+            # if not all_stats_result:            
+                # return jsonify(Error = "No se encontraron estadísticas para un evento de partido para el evento con id:{}.".format(eID)),404
         except Exception as e:
             print(e)
             return jsonify(Error="No se pudo verificar el evento de partido."), 500
@@ -505,7 +507,8 @@ class MatchBasedEventHandler():
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:                
-                return jsonify(Error = "No se encontraron estadísticas para un evento de partido  pare el evento con id:{}.".format(eID)),404            
+                # return jsonify(Error = "No se encontraron estadísticas para un evento de partido  pare el evento con id:{}.".format(eID)),404            
+                final_score_result = [None, None]
             mappedResult = self.mapEventAllStatsToDict(team_results,all_stats_result, final_score_result)
             return jsonify(Match_Based_Event_Statistics = mappedResult),200
 

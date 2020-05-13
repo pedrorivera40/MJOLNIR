@@ -144,37 +144,38 @@ class MedalBasedEventHandler():
 
 
     def mapEventAllStatsToDict(self,team_records,athlete_records,final_record):
-        
-        try:
-            opponent_name = athlete_records[0][10]
-            event_info = dict(
-                event_id = athlete_records[0][8],
-            )
-        except:
-            opponent_name = athlete_records[10]
-            event_info = dict(
-                event_id = athlete_records[8],
-            )
-        medal_based_statistics = []
-                               
-        
-        
-        for teamResults in team_records:
+        if (len(athlete_records)>=1):
             try:
-                #print(teamResults)
-                if isinstance(teamResults[1],tuple):
-                    #print(teamResults)                    
-                    for results in teamResults:
-                        #print(results)
-                        medal_based_statistics.append({'category_name':results[2],'medals_earned':results[0],'type_of_medal':results[1],'team_stats_id':results[3]})
-               
-            except:                 
-                medal_based_statistics.append({'category_name':teamResults[0][2],'medals_earned':teamResults[0][0],'type_of_medal':teamResults[0][1],'team_stats_id':teamResults[0][3]})
-        
-        
+                opponent_name = athlete_records[0][10]
+                event_info = dict(
+                    event_id = athlete_records[0][8],
+                )
+            except:
+                opponent_name = athlete_records[10]
+                event_info = dict(
+                    event_id = athlete_records[8],
+                )
+        else:
+            event_info = dict(event_id = None)
+            opponent_name = None
 
-        team_statistics = dict(medal_based_statistics = medal_based_statistics)
-       
+        medal_based_statistics = []                       
+        if (team_records):
+            for teamResults in team_records:
+                try:
+                    #print(teamResults)
+                    if isinstance(teamResults[1],tuple):
+                        #print(teamResults)                    
+                        for results in teamResults:
+                            #print(results)
+                            medal_based_statistics.append({'category_name':results[2],'medals_earned':results[0],'type_of_medal':results[1],'team_stats_id':results[3]})
+                
+                except:                 
+                    medal_based_statistics.append({'category_name':teamResults[0][2],'medals_earned':teamResults[0][0],'type_of_medal':teamResults[0][1],'team_stats_id':teamResults[0][3]})
+            
+            team_statistics = dict(medal_based_statistics = medal_based_statistics)
+        else: 
+            team_statistics = None
         athlete_statistics = []
 
         for athlete_record in athlete_records:            
@@ -504,22 +505,22 @@ class MedalBasedEventHandler():
 
         try:  
             categoriesPlayed = dao.getCategoriesOfTheEvent(eID)
-            if not categoriesPlayed:
-                return jsonify(Error = "Estadisísticas de equipo pare un evento de medalla no fueron encontradas para el evento con id: {}".format(eID)),404  
+            # if not categoriesPlayed:
+            #     return jsonify(Error = "Estadisísticas de equipo pare un evento de medalla no fueron encontradas para el evento con id: {}".format(eID)),404  
 
             team_results = []
             for category in categoriesPlayed:
                 team_results.append(dao.getAllTeamStatisticsByEventIdAndCategoryId(eID,category))
-            if not team_results:
-                return jsonify(Error = "Estadisísticas de equipo pare un evento de medalla no fueron encontradas para el evento con id: {}".format(eID)),404
+            # if not team_results:
+            #     return jsonify(Error = "Estadisísticas de equipo pare un evento de medalla no fueron encontradas para el evento con id: {}".format(eID)),404
         except Exception as e:
             print(e)
             return jsonify(Error="Estadísticas de equipo para un evento de medalla no pudieron ser verificadas."), 500
         
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
-            if not all_stats_result:            
-                return jsonify(Error = "No se encontraron estadísticas para un evento de medalla para el evento con id:{}.".format(eID)),404
+            # if not all_stats_result:            
+                # return jsonify(Error = "No se encontraron estadísticas para un evento de medalla para el evento con id:{}.".format(eID)),404
         except Exception as e: 
             print(e)
             return jsonify(Error="No se pudo verificar el evento de medalla."), 500
@@ -528,7 +529,8 @@ class MedalBasedEventHandler():
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:                
-                return jsonify(Error = "No se encontraron estadísticas para un evento de medalla para el evento con id:{}.".format(eID)),404
+                # return jsonify(Error = "No se encontraron estadísticas para un evento de medalla para el evento con id:{}.".format(eID)),404
+                final_score_result = [None, None]
             #print(team_results)
             mappedResult = self.mapEventAllStatsToDict(team_results,all_stats_result, final_score_result)
             return jsonify(Medal_Based_Event_Statistics = mappedResult),200

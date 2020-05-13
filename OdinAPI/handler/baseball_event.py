@@ -185,21 +185,25 @@ class BaseballEventHandler(EventResultHandler):
 
 
     def mapEventAllStatsToDict(self, team_record, athlete_records, final_record):
-        event_info = dict(
-            event_id=team_record[7],
-            baseball_event_team_stats_id=team_record[8]
-            # event_date = team_record[17]
-        )
-        baseball_statistics = dict(
-            at_bats=team_record[0],
-            runs=team_record[1],
-            hits=team_record[2],
-            runs_batted_in=team_record[3],
-            base_on_balls=team_record[4],
-            strikeouts=team_record[5],
-            left_on_base=team_record[6]
-        )
-        team_statistics = dict(baseball_statistics=baseball_statistics)
+        if team_record:
+            event_info = dict(
+                event_id=team_record[7],
+                baseball_event_team_stats_id=team_record[8]
+                # event_date = team_record[17]
+            )
+            baseball_statistics = dict(
+                at_bats=team_record[0],
+                runs=team_record[1],
+                hits=team_record[2],
+                runs_batted_in=team_record[3],
+                base_on_balls=team_record[4],
+                strikeouts=team_record[5],
+                left_on_base=team_record[6]
+            )
+            team_statistics = dict(baseball_statistics=baseball_statistics)
+        else:
+            event_info = dict(event_id=None,baseball_event_team_stats_id=None)
+            team_statistics = None
 
         # mappedResult = []
         # for athlete_statistics in result:
@@ -536,8 +540,8 @@ class BaseballEventHandler(EventResultHandler):
         try:
             dao = BaseballEventDAO()
             team_result = dao.getAllTeamStatisticsByEventID(eID)
-            if not team_result:
-                return jsonify(Error="Estadisticas de Equipo de Evento de Beisbol no se encontraron para el evento con ID:{}.".format(eID)), 404
+            # if not team_result:
+            #     return jsonify(Error="Estadisticas de Equipo de Evento de Beisbol no se encontraron para el evento con ID:{}.".format(eID)), 404
         except (TypeError, ValueError):
             return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
@@ -545,8 +549,8 @@ class BaseballEventHandler(EventResultHandler):
 
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
-            if not all_stats_result:
-                return jsonify(Error="Estadisticas de Evento de Beisbol no se encontraron para el evento con id:{}.".format(eID)), 404
+            # if not all_stats_result:
+            #     return jsonify(Error="Estadisticas de Evento de Beisbol no se encontraron para el evento con id:{}.".format(eID)), 404
         except (TypeError, ValueError):
             return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:

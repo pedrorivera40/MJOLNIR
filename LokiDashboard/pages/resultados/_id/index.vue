@@ -153,6 +153,7 @@
                     v-if="formated_member_stats()"
                     :loading="loadingQuery"
                     loading-text="Cargando Estadísticas..."
+                    no-data-text="No Se Encontraron Resultados"
                   >
                     <!-- v-if="isBasketballTable" -->
                     <template #item.full_name="{ item }"
@@ -243,6 +244,7 @@
                     v-if="formated_member_stats()"
                     :loading="loadingQuery"
                     loading-text="Cargando Estadísticas..."
+                    no-data-text="No Se Encontraron Resultados de Equipo"
                   >
                   </v-data-table>
                   <v-container v-else-if="loadingQuery">
@@ -305,6 +307,7 @@
           :refresh_stats.sync="refresh_stats"
           :sport_name="sport_name"
           :branch_name="branch_name_local"
+          :sport_categories="sport_categories_local"
         />
         <UpdateIndividualStatsModal
           v-if="dialogEditIndividualStats"
@@ -319,6 +322,7 @@
           :individual_stats="this.current_individual_stats"
           :sport_name="sport_name"
           :branch_name="branch_name_local"
+          :sport_categories="sport_categories_local"
         />
         <DeleteIndividualStatsModal
           v-if="dialogDeleteIndividualStats"
@@ -414,7 +418,8 @@ export default {
       ready_for_table: false,
 
       branch_name_local: "",
-      current_category_id: ""
+      current_category_id: "",
+      sport_categories_local: ""
     };
   },
 
@@ -422,6 +427,7 @@ export default {
   async mounted() {
     await this.setQueryLoading();
     this.sport_id = null;
+    this.sport_categories_local = null;
     this.ready_for_table = false;
     this.event_id = this.$route.params.id;
     this.clearEventInfo();
@@ -440,6 +446,11 @@ export default {
       this.branch_name_local = this.event_info.branch;
       this.team_id = this.event_info.team_id;
       // if (this.ready_for_stats){
+      await this.setQueryLoading();
+      await this.getSportCategories(this.sport_id);
+      if (this.sport_categories){
+        this.sport_categories_local = this.sport_categories
+      }
       await this.setQueryLoading();
       await this.getTeamMembers(this.team_id);
       // console.log("Trying to get Team Members for:", this.team_id);
@@ -468,32 +479,46 @@ export default {
             this.sport_id == this.BASKETBALL_IDF
           ) {
             this.payload_stats = this.results_payload.Basketball_Event_Statistics;
-            this.team_statistics = [this.payload_stats.team_statistics];
+            if(this.payload_stats.team_statistics){
+              this.team_statistics = [this.payload_stats.team_statistics];
+            }
+            else this.team_statistics = []
           } else if (
             this.sport_id == this.VOLLEYBALL_IDM ||
             this.sport_id == this.VOLLEYBALL_IDF
           ) {
             this.payload_stats = this.results_payload.Volleyball_Event_Statistics;
-            this.team_statistics = [this.payload_stats.team_statistics];
+            if(this.payload_stats.team_statistics){
+              this.team_statistics = [this.payload_stats.team_statistics];
+            }
+            else this.team_statistics = []
           } else if (
             this.sport_id == this.SOCCER_IDM ||
             this.sport_id == this.SOCCER_IDF
           ) {
             this.payload_stats = this.results_payload.Soccer_Event_Statistics;
-            this.team_statistics = [this.payload_stats.team_statistics];
+            if(this.payload_stats.team_statistics){
+              this.team_statistics = [this.payload_stats.team_statistics];
+            }
+            else this.team_statistics = []
           } else if (
             this.sport_id == this.BASEBALL_IDM ||
             this.sport_id == this.SOFTBALL_IDF
           ) {
             this.payload_stats = this.results_payload.Baseball_Event_Statistics;
-            this.team_statistics = [this.payload_stats.team_statistics];
+            if(this.payload_stats.team_statistics){
+              this.team_statistics = [this.payload_stats.team_statistics];
+            }
+            else this.team_statistics = []
           } else if (
             this.sport_id == this.ATHLETICS_IDM ||
             this.sport_id == this.ATHLETICS_IDF
           ) {
             this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
             this.team_statistics = [];
-            this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics;
+            if(this.payload_stats.team_statistics){
+              this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics;
+            }
           } else if (
             this.sport_id == this.FIELD_TENNIS_IDM ||
             this.sport_id == this.FIELD_TENNIS_IDF ||
@@ -502,25 +527,33 @@ export default {
           ) {
             this.payload_stats = this.results_payload.Match_Based_Event_Statistics;
             this.team_statistics = [];
-            if (
-              this.results_payload.Match_Based_Event_Statistics.team_statistics
-                .match_based_statistics.Doble
-            ) {
-              this.team_statistics.push({
-                category_name: "Doble",
-                statistics: this.results_payload.Match_Based_Event_Statistics
-                  .team_statistics.match_based_statistics.Doble
-              });
+            if (this.payload_stats.team_statistics){
+              if (
+                this.results_payload.Match_Based_Event_Statistics.team_statistics
+                  .match_based_statistics.Doble
+              ) {
+                this.team_statistics.push({
+                  category_name: "Doble",
+                  statistics: this.results_payload.Match_Based_Event_Statistics
+                    .team_statistics.match_based_statistics.Doble
+                });
+              }
+              if (
+                this.results_payload.Match_Based_Event_Statistics.team_statistics
+                  .match_based_statistics.Solo
+              ) {
+                this.team_statistics.push({
+                  category_name: "Solo",
+                  statistics: this.results_payload.Match_Based_Event_Statistics
+                    .team_statistics.match_based_statistics.Solo
+                });
+              }
+              else{
+                this.team_statistics = [];
+              }
             }
-            if (
-              this.results_payload.Match_Based_Event_Statistics.team_statistics
-                .match_based_statistics.Solo
-            ) {
-              this.team_statistics.push({
-                category_name: "Solo",
-                statistics: this.results_payload.Match_Based_Event_Statistics
-                  .team_statistics.match_based_statistics.Solo
-              });
+            else{
+              this.team_statistics = [];
             }
           } else {
             return false;
@@ -555,7 +588,8 @@ export default {
       getTeamMembers: "results/getTeamMembers",
       setNullTeamMembers: "results/setNullTeamMembers",
       setQueryLoading: "results/setQueryLoading",
-      getIndividualStatistics: "results/getIndividualStatistics"
+      getIndividualStatistics: "results/getIndividualStatistics",
+      getSportCategories: "results/getSportCategories",
     }),
     async stat_refresh() {
       this.clearAllStats();
@@ -649,14 +683,25 @@ export default {
       } else return false;
     },
     formated_member_stats() {
-      if (this.payload_stats != "") {
+      console.log("REFRESH FORMATED: how many times we checking this tho?")
+      if (this.payload_stats != "" && this.payload_stats != null) {
         if (this.refresh_stats) {
-          // console.log("[REF] REFRESHING STATS");
+          console.log("[REF] REFRESHING STATS:",this.payload_stats);
           this.stat_refresh();
           this.refresh_stats = false;
         }
-        return true;
-      } else return false;
+        // return true;
+      } 
+      else if(this.refresh_stats){
+          console.log("[REF] REFRESHING STATS [F/L]:",this.payload_stats);
+          this.stat_refresh();
+          this.refresh_stats = false;
+      }
+      if(this.payload_stats != '' && this.payload_stats != null){
+        console.log("REFRESH FORMATED LVL END, how many times huh?")
+        return true
+      }
+      else return false;
     },
     formated_final_score() {
       // console.log(
@@ -857,6 +902,10 @@ export default {
               text: "Errores de Recepcion",
               value: "statistics.reception_errors"
             },
+            {
+              text: "Puntos de Bloqueo",
+              value: "statistics.blocking_points"
+            },
             { text: "Acciones", value: "actions", sortable: false }
           ];
           this.team_headers = [
@@ -883,6 +932,10 @@ export default {
             {
               text: "Errores de Recepcion",
               value: "volleyball_statistics.reception_errors"
+            },
+            {
+              text: "Puntos de Bloqueo",
+              value: "volleyball_statistics.blocking_points"
             }
           ];
         } else if (
@@ -906,7 +959,7 @@ export default {
             { text: "Asistencias", value: "statistics.assists" },
             { text: "Faltas", value: "statistics.fouls" },
             { text: "Tarjetas", value: "statistics.cards" },
-            { text: "Goles Exitosos", value: "statistics.successful_goals" },
+            { text: "Goles", value: "statistics.successful_goals" },
             { text: "Entradas", value: "statistics.tackles" },
             { text: "Acciones", value: "actions", sortable: false }
           ];
@@ -919,7 +972,7 @@ export default {
             { text: "Faltas", value: "soccer_statistics.fouls" },
             { text: "Tarjetas", value: "soccer_statistics.cards" },
             {
-              text: "Goles Exitosos",
+              text: "Goles",
               value: "soccer_statistics.successful_goals"
             },
             { text: "Entradas", value: "soccer_statistics.tackles" }
@@ -941,12 +994,12 @@ export default {
               sortable: true,
               value: "full_name"
             },
-            { text: "At Bats", value: "statistics.at_bats" },
+            { text: "Turnos al Bate", value: "statistics.at_bats" },
             { text: "Carreras", value: "statistics.runs" },
             { text: "Hits", value: "statistics.hits" },
             { text: "Carreras Empujadas", value: "statistics.runs_batted_in" },
             { text: "Bases Por Bolas", value: "statistics.base_on_balls" },
-            { text: "Strikeouts", value: "statistics.strikeouts" },
+            { text: "Ponches", value: "statistics.strikeouts" },
             { text: "Dejados en Base", value: "statistics.left_on_base" },
             { text: "Acciones", value: "actions", sortable: false }
           ];
@@ -962,7 +1015,7 @@ export default {
               text: "Bases Por Bolas",
               value: "baseball_statistics.base_on_balls"
             },
-            { text: "Strikeouts", value: "baseball_statistics.strikeouts" },
+            { text: "Ponches", value: "baseball_statistics.strikeouts" },
             {
               text: "Dejados en Base",
               value: "baseball_statistics.left_on_base"
@@ -1135,7 +1188,8 @@ export default {
       event_info: "results/event_info",
       team_members: "results/team_members",
       loadingQuery: "results/loadingQuery",
-      individual_stats: "results/individual_stats"
+      individual_stats: "results/individual_stats",
+      sport_categories: "results/sport_categories"
     })
   }
 };
