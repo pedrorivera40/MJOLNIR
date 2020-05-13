@@ -653,7 +653,7 @@ export default {
 						},
 						{text: 'Categoría', value: 'Event.category_name'},
 						{text: 'Partidos Jugados', value: 'Event_Statistics.matches_played'},
-						{text: 'Martidos Ganados', value: 'Event_Statistics.matches_won'}
+						{text: 'Partidos Ganados', value: 'Event_Statistics.matches_won'}
 
 					]
 					this.headers_ = [
