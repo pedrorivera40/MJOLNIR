@@ -432,6 +432,30 @@
                                                 ></v-text-field>
                                         </v-col>
                                     </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-text-field
+                                                    v-model="payload_stats_individual.attributes.blocking_points"                      
+                                                    type="number" 
+                                                    :rules="[numeric('Puntos de Bloqueo'),scoreRequired('Puntos de Bloqueo')]"
+                                                    label="Puntos de Bloqueo"
+                                                    required
+                                                    outlined
+                                                ></v-text-field>
+                                        </v-col>
+                                        <v-col             
+                                        >
+                                                
+                                        </v-col>
+                                        <v-col             
+                                        >
+
+                                        </v-col>
+                                    </v-row>
                                 </v-col>
                             </v-row>
                             <v-row v-if="isSoccer">
@@ -1140,7 +1164,8 @@
                         "digs":'',
                         "blocks":'',
                         "blocking_errors":'',
-                        "reception_errors":''
+                        "reception_errors":'',
+                        "blocking_points":''
                     }
                     }
                     

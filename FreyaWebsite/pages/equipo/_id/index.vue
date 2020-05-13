@@ -515,19 +515,21 @@ export default {
           {text: 'Bloqueo', value: 'Event_Statistics.blocks'},
           {text: 'Errores De Bloqueo', value: 'Event_Statistics.blocking_errors'},
           {text: 'Errores de Recepcion', value: 'Event_Statistics.reception_errors'},
+          {text: 'Puntos de Bloqueo', value: 'Event_Statistics.blocking_points'},
 
           ]
           this.team_headers =
           [
-          {text: 'Puntos de Ataque', value: 'Event_Statistics..kill_points'},
-          {text: 'Errores de Ataque', value: 'Event_Statistics..attack_errors'},
-          {text: 'Asistencias', value: 'Event_Statistics..assists'},
-          {text: 'Servicio Directo', value: 'Event_Statistics..aces'},
-          {text: 'Errores de Servicio', value: 'Event_Statistics..service_errors'},
-          {text: 'Recepciones', value: 'Event_Statistics..digs'},
-          {text: 'Bloqueos', value: 'Event_Statistics..blocks'},
-          {text: 'Errores de Bloqueo', value: 'Event_Statistics..blocking_errors'},
-          {text: 'Errores de Recepcion', value: 'Event_Statistics..reception_errors'},
+          {text: 'Puntos de Ataque', value: 'Event_Statistics.kill_points'},
+          {text: 'Errores de Ataque', value: 'Event_Statistics.attack_errors'},
+          {text: 'Asistencias', value: 'Event_Statistics.assists'},
+          {text: 'Servicio Directo', value: 'Event_Statistics.aces'},
+          {text: 'Errores de Servicio', value: 'Event_Statistics.service_errors'},
+          {text: 'Recepciones', value: 'Event_Statistics.digs'},
+          {text: 'Bloqueos', value: 'Event_Statistics.blocks'},
+          {text: 'Errores de Bloqueo', value: 'Event_Statistics.blocking_errors'},
+          {text: 'Errores de Recepcion', value: 'Event_Statistics.reception_errors'},
+          {text: 'Puntos de Bloqueo', value: 'Event_Statistics.blocking_points'},
     
           ]
         }

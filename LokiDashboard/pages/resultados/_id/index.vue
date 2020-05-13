@@ -867,6 +867,10 @@ export default {
               text: "Errores de Recepcion",
               value: "statistics.reception_errors"
             },
+            {
+              text: "Puntos de Bloqueo",
+              value: "statistics.blocking_points"
+            },
             { text: "Acciones", value: "actions", sortable: false }
           ];
           this.team_headers = [
@@ -893,6 +897,10 @@ export default {
             {
               text: "Errores de Recepcion",
               value: "volleyball_statistics.reception_errors"
+            },
+            {
+              text: "Puntos de Bloqueo",
+              value: "volleyball_statistics.blocking_points"
             }
           ];
         } else if (

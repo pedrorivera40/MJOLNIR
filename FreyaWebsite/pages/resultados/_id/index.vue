@@ -413,6 +413,7 @@ created(){
                 {text: 'Bloqueo', value: 'statistics.blocks'},
                 {text: 'Errores De Bloqueo', value: 'statistics.blocking_errors'},
                 {text: 'Errores de Recepcion', value: 'statistics.reception_errors'},
+                {text: 'Puntos de Bloqueo', value: 'statistics.blocking_points'},
 
                 ]
                 this.team_headers =
@@ -426,6 +427,8 @@ created(){
                 {text: 'Bloqueos', value: 'volleyball_statistics.blocks'},
                 {text: 'Errores de Bloqueo', value: 'volleyball_statistics.blocking_errors'},
                 {text: 'Errores de Recepcion', value: 'volleyball_statistics.reception_errors'},
+                {text: 'Puntos de Bloqueo', value: 'volleyball_statistics.blocking_points'},
+                
 
                 ]
             }
