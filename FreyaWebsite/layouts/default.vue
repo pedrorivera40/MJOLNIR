@@ -7,19 +7,33 @@
       dark
       color="blue-grey darken-4"
     >
-      <v-img
-        @click="home"
-        src="/logo.png"
-        max-width="100px"
-        class="ml-4 logo"
-      />
+      <v-app-bar-nav-icon
+        v-if="this.$vuetify.breakpoint.smAndDown"
+        @click.stop="drawer = !drawer"
+      ></v-app-bar-nav-icon>
+      <div class="logo">
+        <v-img
+          v-if="this.$vuetify.breakpoint.smAndDown"
+          @click="home"
+          src="/logo.png"
+          max-width="80px"
+          class="ml-4 logo"
+        />
+        <v-img
+          v-else
+          @click="home"
+          src="/logo.png"
+          max-width="100px"
+          class="ml-4 logo"
+        />
+      </div>
 
       <v-spacer />
-      <nav>
+      <nav v-if="this.$vuetify.breakpoint.mdAndUp">
         <nuxt-link
           v-for="item in items"
           :key="item.title"
-          class="ma-1 nav text-uppercase"
+          class="ma-4 nav text-uppercase"
           class-active="active"
           :to="item.to"
         >
@@ -27,6 +41,32 @@
         </nuxt-link>
       </nav>
     </v-app-bar>
+    <v-navigation-drawer
+      app
+      v-model="drawer"
+      v-if="this.$vuetify.breakpoint.smAndDown"
+      class="nav-drawer"
+      bottom
+    >
+      <v-list nav>
+        <v-list-item-group
+          class="nav-links"
+        >
+          <v-list-item
+            v-for="(item, index) in items"
+            :key="index"
+            :to="item.to"
+            nuxt
+          >
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+
     <v-content>
       <v-container>
         <nuxt />
@@ -53,22 +93,22 @@ export default {
       fixed: false,
       items: [
         {
-          icon: "mdi-apps",
+          icon: "mdi-calendar-multiple",
           title: "Eventos",
           to: "/eventos"
         },
         {
-          icon: "mdi-chart-bubble",
+          icon: "mdi-account-group",
           title: "Deportes Masculino",
           to: "/deportes-masculino"
         },
         {
-          icon: "mdi-chart-bubble",
+          icon: "mdi-account-group",
           title: "Deportes Femenino",
           to: "/deportes-femenino"
         },
         {
-          icon: "mdi-chart-bubble",
+          icon: "mdi-account-group",
           title: "Deportes de Exhibición",
           to: "/deportes-exhibicion"
         },
@@ -92,6 +132,7 @@ export default {
   color: whitesmoke;
   font-weight: 300;
   font-size: 1.3rem;
+  margin: 0 10px;
   &:hover {
     color: #168f09;
   }
@@ -107,4 +148,11 @@ export default {
   color: #168f09;
   font-weight: 500;
 }
+.nav-drawer {
+    .nav-links {
+      a {
+        color: #45b439;
+      }
+    }
+  }
 </style>
