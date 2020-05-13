@@ -92,7 +92,9 @@
     </v-row>
 
     <v-row v-if="filteredEvents != ''">
-      <v-col v-for="(value, key) in filteredEvents" :key="key" md="3">
+      <v-col v-for="(value, key) in filteredEvents" :key="key" cols="12"
+        sm="6"
+        lg="4">
         <EventCard
           :eventID="value.id"
           :sportName="value.sport_name"
@@ -108,7 +110,9 @@
     </v-row>
 
     <v-row v-else>
-      <v-col v-for="(value, key) in events" :key="key" md="3">
+      <v-col v-for="(value, key) in events" :key="key" cols="12"
+        sm="6"
+        lg="4">
         <EventCard
           :eventID="value.id"
           :sportName="value.sport_name"
