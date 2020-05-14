@@ -1,31 +1,35 @@
 <template>
   <v-app class="app">
     <v-app-bar fixed app dark color="blue-grey darken-4">
-      <v-app-bar-nav-icon  v-if="$vuetify.breakpoint.smAndDown" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <h3
-      v-if="$vuetify.breakpoint.smAndDown"
-      class="headline"
-      >Huella Deportiva Web</h3>
-      <v-img
-        v-else
-        @click="home"
-        src="/logo.png"
-        max-width="100px"
-        class="ml-4 logo"
-      />
+      <client-only>
+        <v-app-bar-nav-icon
+          v-if="smAndDown"
+          @click.stop="drawer = !drawer"
+        ></v-app-bar-nav-icon>
+        <h3 v-if="smAndDown" class="headline">
+          Huella Deportiva Web
+        </h3>
+        <v-img
+          v-else
+          @click="home"
+          src="/logo.png"
+          max-width="100px"
+          class="ml-4 logo"
+        />
 
-      <v-spacer />
-      <nav v-if="$vuetify.breakpoint.mdAndUp">
-        <nuxt-link
-          v-for="item in items"
-          :key="item.title"
-          class="ma-2 nav text-uppercase"
-          class-active="active"
-          :to="item.to"
-        >
-          {{ item.title }}
-        </nuxt-link>
-      </nav>
+        <v-spacer />
+        <nav v-if="mdAndUp">
+          <nuxt-link
+            v-for="item in items"
+            :key="item.title"
+            class="ma-2 nav text-uppercase"
+            class-active="active"
+            :to="item.to"
+          >
+            {{ item.title }}
+          </nuxt-link>
+        </nav>
+      </client-only>
     </v-app-bar>
     <v-navigation-drawer
       class="nav-drawer"
@@ -36,10 +40,7 @@
     >
       <v-list nav>
         <v-list-item-group class="nav-links">
-          <v-list-item
-            to="/"
-            nuxt
-          >
+          <v-list-item to="/" nuxt>
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
@@ -81,6 +82,8 @@ export default {
   data() {
     return {
       drawer: false,
+      mdAndUp: this.$vuetify.breakpoint.mdAndUp,
+      smAndDown: this.$vuetify.breakpoint.smAndDown,
       items: [
         {
           icon: "mdi-calendar-multiple",
@@ -113,7 +116,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.app{
+.app {
   background-color: whitesmoke;
 }
 .nav {
