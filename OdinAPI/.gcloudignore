@@ -19,3 +19,12 @@ __pycache__/
 /setup.cfg
 Pipfile
 Pipfile.lock
+docs
+Doxyfile
+Dockerfile
+*.sh
+tests
+odinAPI.yml
+py_filter
+.vscode
+README.md
