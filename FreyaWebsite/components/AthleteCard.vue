@@ -1,37 +1,27 @@
 <template>
+  <v-card height="100%" width="100%" outlined>
+    <v-container>
+      <v-list-item>
+        <v-list-item-avatar color="accent" size="95">
+          <v-icon v-if="img == null" color="blue-grey" size="50"> mdi-account </v-icon>
+          <v-img v-else :src="img" height="100px" />
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title class="title">
+            Nombre: {{ firstName }} <br />
+            {{ lastNames }}
+          </v-list-item-title>
+          <v-list-item-subtitle>Deporte: {{ sportName }}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
 
-<v-card  height="100%" width="100%" outlined>
-    <v-container >
-      <v-row >
-        <v-col  md=3>
-          <v-avatar size="100">
-            <v-icon v-if="img == null" height="100px"> mdi-account </v-icon>
-            <v-img v-else :src="img" height="100px" />
-          </v-avatar>
-        </v-col>
-         <v-col md=9>
-          <v-card-title>  Nombre: {{firstName}} <br/> {{lastNames}}</v-card-title>
-          <v-card-subtitle>
-            Deporte: {{sportName}} 
-          </v-card-subtitle>
-          <v-card-actions>
-            <v-tooltip bottom="">
-              <template v-slot:activator="{ on }">
-                <v-btn @click="goToAthlete" v-on="on">
-                  <v-icon> 
-                    mdi-eye-plus-outline 
-                  </v-icon>
-                </v-btn> 
-              </template>           
-              <span> Ver perfil del atleta </span>
-            
-            </v-tooltip>       
-          </v-card-actions>
-        </v-col>
-      </v-row>     
-      
     </v-container>
-
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn text color="primary" @click="goToAthlete">
+        ver perfil
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -45,7 +35,6 @@ export default {
     img: String
   },
   methods: {
-    
     /**
      * Redirects to the athlete viewer page using
      * the id of the athlete already given as a prop.

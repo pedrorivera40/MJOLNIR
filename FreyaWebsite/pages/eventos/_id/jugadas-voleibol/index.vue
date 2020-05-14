@@ -1,8 +1,6 @@
 <template>
   <v-container>
-    <v-row v-if="loading" justify="center">
-      <v-progress-circular :active="loading" indeterminate :size="50" :color="uprm_color"></v-progress-circular>
-    </v-row>
+    <LoadingScreen v-if="loading" name-of-data="Play-by-Play" />
     <ErrorCard
       v-if="init_error && !loading"
       :in_color="uprm_color"
@@ -234,11 +232,13 @@
 </template>
 
 <script>
-import VolleyballScore from "../../../components/VolleyballScore";
-import VolleyballStatistics from "../../../components/VolleyballStatistics";
-import PBPRosterEntry from "../../../components/PBPRosterEntry";
-import VolleyballGameAction from "../../../components/VolleyballGameAction";
-import ErrorCard from "../../../components/PBP/ErrorCard";
+import VolleyballScore from "@/components/VolleyballScore";
+import VolleyballStatistics from "@/components/VolleyballStatistics";
+import PBPRosterEntry from "@/components/PBPRosterEntry";
+import VolleyballGameAction from "@/components/VolleyballGameAction";
+import ErrorCard from "@/components/PBP/ErrorCard";
+import LoadingScreen from "@/components/general/LoadingScreen";
+
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -247,7 +247,8 @@ export default {
     VolleyballStatistics,
     PBPRosterEntry,
     VolleyballGameAction,
-    ErrorCard
+    ErrorCard,
+    LoadingScreen
   },
   data: () => ({
     loading: true,
