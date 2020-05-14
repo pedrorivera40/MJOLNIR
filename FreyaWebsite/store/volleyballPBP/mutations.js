@@ -47,18 +47,20 @@ export default {
 
     // Update athlete entry from opponent roster.
     UPDATE_OPP_ROSTER(state, athlete) {
+        console.log("ATHLETE CHANGED " + athlete);
         for (let index in state.oppRoster) {
-            if (state.oppRoster[index].key === key) {
+            if (state.oppRoster[index].number === athlete.number) {
                 state.oppRoster.splice(index, 1, athlete);
                 break;
             }
         }
+        console.log(state);
     },
 
     // Remove athlete entry from opponent roster.
     REMOVE_OPP_ROSTER(state, key) {
         for (let index in state.oppRoster) {
-            if (state.oppRoster[index].key === key) {
+            if (state.oppRoster[index].number === key) {
                 state.oppRoster.splice(index, 1);
                 break;
             }
@@ -77,11 +79,13 @@ export default {
 
     // Insert game action into actions list.
     ADD_GAME_ACTION(state, action) {
+        console.log("ADDING ACCTION " + action);
         state.gameActions.unshift(action);
     },
 
     // Update value of existing action.
     UPDATE_GAME_ACTION(state, action) {
+        console.log("EDITTINGGGGG ACCTION " + action);
         for (let index in state.gameActions) {
             if (state.gameActions[index].key === action.key) {
                 state.gameActions.splice(index, 1, action);
@@ -105,7 +109,7 @@ export default {
         let result = {
             killPoints: 0,
             aces: 0,
-            blockPoints: 0,
+            blockingPoints: 0,
             assists: 0,
             blocks: 0,
             digs: 0,
@@ -130,7 +134,8 @@ export default {
                     break;
 
                 case "BlockPoint":
-                    result.blockPoints++;
+                    result.blockingPoints++;
+                    result.blocks++;
                     break;
 
                 case "Assist":
@@ -174,7 +179,7 @@ export default {
         let result = {
             killPoints: 0,
             aces: 0,
-            blockPoints: 0,
+            blockingPoints: 0,
             assists: 0,
             blocks: 0,
             digs: 0,
@@ -199,7 +204,8 @@ export default {
                     break;
 
                 case "BlockPoint":
-                    result.blockPoints++;
+                    result.blockingPoints++;
+                    result.blocks++;
                     break;
 
                 case "Assist":
@@ -245,7 +251,7 @@ export default {
         for (let athlete in state.uprmRoster) {
             result.push(
                 {
-                    name: state.uprmRoster[athlete].first_name + ' ' + state.uprmRoster[athlete].middle_name + ' ' + state.uprmRoster[athlete].last_names,
+                    name: state.uprmRoster[athlete].middle_name === '' ? state.uprmRoster[athlete].first_name + ' ' + state.uprmRoster[athlete].last_names : state.uprmRoster[athlete].first_name + ' ' + state.uprmRoster[athlete].middle_name + ' ' + state.uprmRoster[athlete].last_names,
                     number: state.uprmRoster[athlete].number,
                     killPoints: 0,
                     aces: 0,
@@ -288,7 +294,8 @@ export default {
                     break;
 
                 case "BlockPoint":
-                    result[athlete_index].blockPoints++;
+                    result[athlete_index].blockingPoints++;
+                    result[athlete_index].blocks++;
                     break;
 
                 case "Assist":
@@ -334,7 +341,7 @@ export default {
         for (let athlete in state.oppRoster) {
             result.push(
                 {
-                    name: state.oppRoster[athlete].first_name + ' ' + state.oppRoster[athlete].middle_name + ' ' + state.oppRoster[athlete].last_names,
+                    name: state.oppRoster[athlete].name,
                     number: state.oppRoster[athlete].number,
                     killPoints: 0,
                     aces: 0,
@@ -378,7 +385,8 @@ export default {
                     break;
 
                 case "BlockPoint":
-                    result[athlete_index].blockPoints++;
+                    result[athlete_index].blockingPoints++;
+                    result[athlete_index].blocks++;
                     break;
 
                 case "Assist":

@@ -12,7 +12,7 @@ export default () => ({
     uprmStatistics: {
         killPoints: 0,
         aces: 0,
-        blockPoints: 0,
+        blockingPoints: 0,
         assists: 0,
         blocks: 0,
         digs: 0,
@@ -24,7 +24,7 @@ export default () => ({
     oppStatistics: {
         killPoints: 0,
         aces: 0,
-        blockPoints: 0,
+        blockingPoints: 0,
         assists: 0,
         blocks: 0,
         digs: 0,

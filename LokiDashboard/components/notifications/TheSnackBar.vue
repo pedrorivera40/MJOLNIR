@@ -7,7 +7,7 @@
       :timeout="snackbar.timeout"
       :color="snackbar.color"
       :multiLine="snackbar.multiline"
-      :style="`bottom: ${(index * 60) + 40}px`"
+      :style="`bottom: ${(index * 60) + 100}px`"
     >
       {{snackbar.text}}
       <v-btn text @click="snackbar.showing = false">Cerrar</v-btn>

@@ -55,6 +55,13 @@ const nameFormat = () => {
   let regex = /^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/
   return v => regex.test(v) || "El formato del nombre es incorrecto,"
 }
+/**
+ * Valitation function that uses regex to establish the format for  a name given as input.
+ */
+const usernameFormat = () => {
+  let regex = /^[^!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{0,}$/
+  return v => regex.test(v) || "El formato del nombre es incorrecto,"
+}
 
 /**
  * Validation function that uses regex to establish the format for password within the syste.
@@ -153,10 +160,11 @@ const scoreRequired = (propertyType) => {
   return v => {
     if (v === 0){
       //Will receive the score of the team which will be an integer larger or equal than zero.
-      return v >= 0 || `${propertyType} es un campo requerido`;
+      return v >= 0 || `${propertyType} es un campo requerido X`;
     }
     else{
-      if(!v){ return `${propertyType} es un campo requerido`; }
+      if(!v){ return `${propertyType} es un campo requerido Y`; }
+      return v >= 0 || `${propertyType} es un campo requerido X`;
     }
   }
 }
@@ -176,6 +184,7 @@ export default {
   passwordDiffFromOld,
   seasonRequired,
   numeric,
-  scoreRequired
+  scoreRequired,
+  usernameFormat
 
 }

@@ -16,7 +16,7 @@
 			></v-progress-linear>
 			<v-spacer />
 		</v-toolbar>
-		<v-container v-if="formated() && ready">
+		<v-container v-if="formated() && ready && athleteExists">
 			<v-tabs
 					centered
 			>
@@ -198,7 +198,14 @@
 				</v-tab-item>
 			
 			</v-tabs>
-		</v-container>        
+		</v-container> 
+		<v-container v-if="!athleteExists">
+				<v-row justify="center">
+					<v-col>
+						<h1> No existe este atleta </h1>
+					</v-col>
+				</v-row>
+		</v-container>       
 			
 	</v-card>
 </template>
@@ -219,6 +226,7 @@ export default {
       short_bio:'',
       height_feet:'',
 			height_inches:'',
+			athleteExists:true,
 
       study_program:'', 
       date_of_birth:'',
@@ -266,6 +274,7 @@ export default {
 
 					const response = await this.getAthleteByID(this.$route.params.id)
 					if(response == 'error'){
+						this.athleteExists = false
 						this.ready = true
 						return true
 					}
@@ -282,7 +291,7 @@ export default {
 					if(this.athlete.bio)
 						this.short_bio = this.athlete.bio
 
-					if(this.athlete.number)
+					if(this.athlete.number !== null && this.athlete.number !== '')
 						this.number = this.athlete.number
 
 					if(this.athlete.height)
@@ -333,7 +342,7 @@ export default {
 					
 					this.buildSeasonList()
 					this.ready = true
-					return false
+					return true
 				}
 			
 				
@@ -409,6 +418,7 @@ export default {
 									this.sport.localeCompare("Campo Traviesa") == 0 ||
 									this.sport.localeCompare("Lucha Olímpica") == 0 ||
 									this.sport.localeCompare("Natación") == 0 ||
+									this.sport.localeCompare("Porrismo") == 0 ||
 									this.sport.localeCompare("Taekwondo") == 0){
 						sport_name = "medalbased"
 					}
@@ -509,39 +519,39 @@ export default {
 								sortable: true,
 								value:'Event.event_date'
 							},
-							{text: 'Assists', value: 'Event_Statistics.assists'},
-							{text: 'Blocks', value: 'Event_Statistics.blocks'},
-							{text: 'Field Goal Attempt', value: 'Event_Statistics.field_goal_attempt'},
-							{text: 'Field Goal Percentage(%)', value: 'Event_Statistics.field_goal_percentage'},
-							{text: 'Free Throw Attempt', value: 'Event_Statistics.free_throw_attempt'},
-							{text: 'Free Throw Percentage(%)', value: 'Event_Statistics.free_throw_percentage'},
-							{text: 'Points', value: 'Event_Statistics.points'},
-							{text: 'Rebounds', value: 'Event_Statistics.rebounds'},
-							{text: 'Steals', value: 'Event_Statistics.steals'},
-							{text: 'Successful Field Goal', value: 'Event_Statistics.successful_field_goal'},
-							{text: 'Successful Free Throw', value: 'Event_Statistics.successful_free_throw'},
-							{text: 'Successful Three Point', value: 'Event_Statistics.successful_three_point'},
-							{text: 'Three Point Attempt', value: 'Event_Statistics.three_point_attempt'},
-							{text: 'Three Point Percentage(%)', value: 'Event_Statistics.three_point_percentage'},
-							{text: 'Turnovers', value: 'Event_Statistics.turnovers'},
+							{text: 'Asistencias', value: 'Event_Statistics.assists'},
+							{text: 'Bloqueos', value: 'Event_Statistics.blocks'},
+							{text: 'Intentos de Tiro de Campo', value: 'Event_Statistics.field_goal_attempt'},
+							{text: 'Porcentaje de Tiro de Campo(%)', value: 'Event_Statistics.field_goal_percentage'},
+							{text: 'Intentos de Tiro Libre', value: 'Event_Statistics.free_throw_attempt'},
+							{text: 'Porcentaje de Tiro Libre(%)', value: 'Event_Statistics.free_throw_percentage'},
+							{text: 'Puntos', value: 'Event_Statistics.points'},
+							{text: 'Rebotes', value: 'Event_Statistics.rebounds'},
+							{text: 'Robos', value: 'Event_Statistics.steals'},
+							{text: 'Tiros de Campo Exitosos', value: 'Event_Statistics.successful_field_goal'},
+							{text: 'Tiros Libres Exitosos', value: 'Event_Statistics.successful_free_throw'},
+							{text: 'Tiros de Tres Puntos Exitosos', value: 'Event_Statistics.successful_three_point'},
+							{text: 'Intentos de Tiro de Tres', value: 'Event_Statistics.three_point_attempt'},
+							{text: 'Porcentaje de Tiro de Tres(%)', value: 'Event_Statistics.three_point_percentage'},
+							{text: 'Perdidas de Balón', value: 'Event_Statistics.turnovers'},
 
 					]
 					this.headers_ = [
-						{text: 'Assists', value: 'Event_Statistics.assists'},
-						{text: 'Blocks', value: 'Event_Statistics.blocks'},
-						{text: 'Field Goal Attempt', value: 'Event_Statistics.field_goal_attempt'},
-						{text: 'Field Goal Percentage(%)', value: 'Event_Statistics.field_goal_percentage'},
-						{text: 'Free Throw Attempt', value: 'Event_Statistics.free_throw_attempt'},
-						{text: 'Free Throw Percentage(%)', value: 'Event_Statistics.free_throw_percentage'},
-						{text: 'Points', value: 'Event_Statistics.points'},
-						{text: 'Rebounds', value: 'Event_Statistics.rebounds'},
-						{text: 'Steals', value: 'Event_Statistics.steals'},
-						{text: 'Successful Field Goal', value: 'Event_Statistics.successful_field_goal'},
-						{text: 'Successful Free Throw', value: 'Event_Statistics.successful_free_throw'},
-						{text: 'Successful Three Point', value: 'Event_Statistics.successful_three_point'},
-						{text: 'Three Point Attempt', value: 'Event_Statistics.three_point_attempt'},
-						{text: 'Three Point Percentage(%)', value: 'Event_Statistics.three_point_percentage'},
-						{text: 'Turnovers', value: 'Event_Statistics.turnovers'},
+						{text: 'Asistencias', value: 'Event_Statistics.assists'},
+						{text: 'Bloqueos', value: 'Event_Statistics.blocks'},
+						{text: 'Intentos de Tiro de Campo', value: 'Event_Statistics.field_goal_attempt'},
+						{text: 'Porcentaje de Tiro de Campo(%)', value: 'Event_Statistics.field_goal_percentage'},
+						{text: 'Intentos de Tiro Libre', value: 'Event_Statistics.free_throw_attempt'},
+						{text: 'Porcentaje de Tiro Libre(%)', value: 'Event_Statistics.free_throw_percentage'},
+						{text: 'Puntos', value: 'Event_Statistics.points'},
+						{text: 'Rebotes', value: 'Event_Statistics.rebounds'},
+						{text: 'Robos', value: 'Event_Statistics.steals'},
+						{text: 'Tiros de Campo Exitosos', value: 'Event_Statistics.successful_field_goal'},
+						{text: 'Tiros Libres Exitosos', value: 'Event_Statistics.successful_free_throw'},
+						{text: 'Tiros de Tres Puntos Exitosos', value: 'Event_Statistics.successful_three_point'},
+						{text: 'Intentos de Tiro de Tres', value: 'Event_Statistics.three_point_attempt'},
+						{text: 'Porcentaje de Tiro de Tres(%)', value: 'Event_Statistics.three_point_percentage'},
+						{text: 'Perdidas de Balón', value: 'Event_Statistics.turnovers'},
 					]
 				}
 				else if(sport_name.localeCompare("volleyball") == 0){
@@ -552,28 +562,30 @@ export default {
 							sortable: true,
 							value:'Event.event_date'
 						},
-						{text: 'Kill Points', value: 'Event_Statistics.kill_points'},
-						{text: 'Attack Errors', value: 'Event_Statistics.attack_errors'},
-						{text: 'Assists', value: 'Event_Statistics.assists'},
-						{text: 'Aces', value: 'Event_Statistics.aces'},
-						{text: 'Service Errors', value: 'Event_Statistics.service_errors'},
-						{text: 'Digs', value: 'Event_Statistics.digs'},
-						{text: 'Blocks', value: 'Event_Statistics.blocks'},
-						{text: 'Blocking Errors', value: 'Event_Statistics.blocking_errors'},
-						{text: 'Reception Errors', value: 'Event_Statistics.reception_errors'}
+						{text: 'Puntos de Ataque', value: 'Event_Statistics.kill_points'},
+						{text: 'Errores de Ataque', value: 'Event_Statistics.attack_errors'},
+						{text: 'Puntos de Bloqueo', value: 'Event_Statistics.blocking_points'},
+						{text: 'Asistencias', value: 'Event_Statistics.assists'},
+						{text: 'Servicio Directo', value: 'Event_Statistics.aces'},
+						{text: 'Errores de Servicio', value: 'Event_Statistics.service_errors'},
+						{text: 'Recepciones', value: 'Event_Statistics.digs'},
+						{text: 'Bloqueo', value: 'Event_Statistics.blocks'},
+						{text: 'Errores de Bloqueo', value: 'Event_Statistics.blocking_errors'},
+						{text: 'Errores de Recepción', value: 'Event_Statistics.reception_errors'}
 							
 
 					]
 					this.headers_ = [
-						{text: 'Kill Points', value: 'Event_Statistics.kill_points'},
-						{text: 'Attack Errors', value: 'Event_Statistics.attack_errors'},
-						{text: 'Assists', value: 'Event_Statistics.assists'},
-						{text: 'Aces', value: 'Event_Statistics.aces'},
-						{text: 'Service Errors', value: 'Event_Statistics.service_errors'},
-						{text: 'Digs', value: 'Event_Statistics.digs'},
-						{text: 'Blocks', value: 'Event_Statistics.blocks'},
-						{text: 'Blocking Errors', value: 'Event_Statistics.blocking_errors'},
-						{text: 'Reception Errors', value: 'Event_Statistics.reception_errors'}
+						{text: 'Puntos de Ataque', value: 'Event_Statistics.kill_points'},
+						{text: 'Errores de Ataque', value: 'Event_Statistics.attack_errors'},
+						{text: 'Puntos de Bloqueo', value: 'Event_Statistics.blocking_points'},
+						{text: 'Asistencias', value: 'Event_Statistics.assists'},
+						{text: 'Servicio Directo', value: 'Event_Statistics.aces'},
+						{text: 'Errores de Servicio', value: 'Event_Statistics.service_errors'},
+						{text: 'Recepciones', value: 'Event_Statistics.digs'},
+						{text: 'Bloqueo', value: 'Event_Statistics.blocks'},
+						{text: 'Errores de Bloqueo', value: 'Event_Statistics.blocking_errors'},
+						{text: 'Errores de Recepción', value: 'Event_Statistics.reception_errors'}							
 						
 					]
 				}
@@ -585,23 +597,22 @@ export default {
 							sortable: true,
 							value:'Event.event_date'
 						},
-						{text: 'Goal Attempts', value: 'Event_Statistics.goal_attempts'},
-						{text: 'Assists', value: 'Event_Statistics.assists'},
-						{text: 'Fouls', value: 'Event_Statistics.fouls'},
-						{text: 'Cards', value: 'Event_Statistics.cards'},
-						{text: 'Successful Goals', value: 'Event_Statistics.successful_goals'},
-						{text: 'Tackles', value: 'Event_Statistics.tackles'}
+						{text: 'Intentos de Gol', value: 'Event_Statistics.goal_attempts'},
+						{text: 'Asistencias', value: 'Event_Statistics.assists'},
+						{text: 'Faltas', value: 'Event_Statistics.fouls'},
+						{text: 'Tarjetas', value: 'Event_Statistics.cards'},
+						{text: 'Goles Exitosos', value: 'Event_Statistics.successful_goals'},
+						{text: 'Entradas', value: 'Event_Statistics.tackles'}
 							
 
 					]
 					this.headers_ = [
-						{text: 'Goal Attempts', value: 'Event_Statistics.goal_attempts'},
-						{text: 'Assists', value: 'Event_Statistics.assists'},
-						{text: 'Fouls', value: 'Event_Statistics.fouls'},
-						{text: 'Cards', value: 'Event_Statistics.cards'},
-						{text: 'Successful Goals', value: 'Event_Statistics.successful_goals'},
-						{text: 'Tackles', value: 'Event_Statistics.tackles'}
-						
+						{text: 'Intentos de Gol', value: 'Event_Statistics.goal_attempts'},
+						{text: 'Asistencias', value: 'Event_Statistics.assists'},
+						{text: 'Faltas', value: 'Event_Statistics.fouls'},
+						{text: 'Tarjetas', value: 'Event_Statistics.cards'},
+						{text: 'Goles Exitosos', value: 'Event_Statistics.successful_goals'},
+						{text: 'Entradas', value: 'Event_Statistics.tackles'}
 					]
 				}
 				else if(sport_name.localeCompare("baseball") == 0){
@@ -612,24 +623,24 @@ export default {
 							sortable: true,
 							value:'Event.event_date'
 						},
-						{text: 'At Bats', value: 'Event_Statistics.at_bats'},
-						{text: 'Runs', value: 'Event_Statistics.runs'},
+						{text: 'Turnos al Bate', value: 'Event_Statistics.at_bats'},
+						{text: 'Carreras', value: 'Event_Statistics.runs'},
 						{text: 'Hits', value: 'Event_Statistics.hits'},
-						{text: 'Runs Batted In', value: 'Event_Statistics.runs_batted_in'},
-						{text: 'Base On Balls', value: 'Event_Statistics.base_on_balls'},
-						{text: 'Strikeouts', value: 'Event_Statistics.strikeouts'},
-						{text: 'Left On Base', value: 'Event_Statistics.left_on_base'}
+						{text: 'Carreras Empujadas', value: 'Event_Statistics.runs_batted_in'},
+						{text: 'Bases Por Bolas', value: 'Event_Statistics.base_on_balls'},
+						{text: 'Ponches', value: 'Event_Statistics.strikeouts'},
+						{text: 'Dejados en Base', value: 'Event_Statistics.left_on_base'}
 							
 
 					]
 					this.headers_ = [
-						{text: 'At Bats', value: 'Event_Statistics.at_bats'},
-						{text: 'Runs', value: 'Event_Statistics.runs'},
+						{text: 'Turnos al Bate', value: 'Event_Statistics.at_bats'},
+						{text: 'Carreras', value: 'Event_Statistics.runs'},
 						{text: 'Hits', value: 'Event_Statistics.hits'},
-						{text: 'Runs Batted In', value: 'Event_Statistics.runs_batted_in'},
-						{text: 'Base On Balls', value: 'Event_Statistics.base_on_balls'},
-						{text: 'Strikeouts', value: 'Event_Statistics.strikeouts'},
-						{text: 'Left On Base', value: 'Event_Statistics.left_on_base'}					
+						{text: 'Carreras Empujadas', value: 'Event_Statistics.runs_batted_in'},
+						{text: 'Bases Por Bolas', value: 'Event_Statistics.base_on_balls'},
+						{text: 'Ponches', value: 'Event_Statistics.strikeouts'},
+						{text: 'Dejados en Base', value: 'Event_Statistics.left_on_base'}				
 					]
 				}
 				else if(sport_name.localeCompare("matchbased") == 0){
@@ -640,15 +651,15 @@ export default {
 							sortable: true,
 							value:'Event.event_date'
 						},
-						{text: 'Category Name', value: 'Event.category_name'},
-						{text: 'Matches Played', value: 'Event_Statistics.matches_played'},
-						{text: 'Matches Won', value: 'Event_Statistics.matches_won'}
+						{text: 'Categoría', value: 'Event.category_name'},
+						{text: 'Partidos Jugados', value: 'Event_Statistics.matches_played'},
+						{text: 'Partidos Ganados', value: 'Event_Statistics.matches_won'}
 
 					]
 					this.headers_ = [
-						{text: 'Category Name', value: 'Event_Statistics.category_name'},
-						{text: 'Matches Played', value: 'Event_Statistics.matches_played'},
-						{text: 'Matches Won', value: 'Event_Statistics.matches_won'}					
+						{text: 'Categoría', value: 'Event_Statistics.category_name'},
+						{text: 'Partidos Jugados', value: 'Event_Statistics.matches_played'},
+						{text: 'Partidos Ganados', value: 'Event_Statistics.matches_won'}					
 					]
 				}
 				else if(sport_name.localeCompare("medalbased") == 0){
@@ -659,15 +670,15 @@ export default {
 							sortable: true,
 							value:'Event.event_date'
 						},
-						{text: 'Category Name', value: 'Event.category_name'},
-						{text: 'Medal Earned', value: 'Event_Statistics.type_of_medal'}
+						{text: 'Categoría', value: 'Event.category_name'},
+						{text: 'Tipo de Medalla', value: 'Event_Statistics.type_of_medal'}
 					
 
 					]
 					this.headers_ = [
-						{text: 'Category Name', value: 'Event_Statistics.category_name'},
-						{text: 'Medal Earned', value: 'Event_Statistics.type_of_medal'},
-						{text: 'Number of Medals', value: 'Event_Statistics.medals_earned'}					
+						{text: 'Categoría', value: 'Event_Statistics.category_name'},
+						{text: 'Tipo de Medalla', value: 'Event_Statistics.type_of_medal'},
+						{text: 'Númbero de Medallas', value: 'Event_Statistics.medals_earned'}					
 					]
 				}
 				

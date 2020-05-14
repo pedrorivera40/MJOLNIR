@@ -14,13 +14,15 @@
         </div>
       </v-col>
     </v-row>
-    <v-tabs v-if="!loading && !dialog" background-color="#f5f5f5" align-with-title centered grow>
+    <v-tabs v-if="!loading && !dialog" align-with-title centered grow>
       <v-tabs-slider />
       <v-tab>Rama Masculina</v-tab>
 
       <v-tab>Rama Femenina</v-tab>
 
       <v-tab>Deportes de Exhibición</v-tab>
+
+      <v-divider></v-divider>
 
       <v-tab-item>
         <SportsView :sports="filter_by_branch(male_branch)" />
@@ -65,7 +67,7 @@ export default {
       page_title: "Deportes",
       male_branch: "Masculino",
       female_branch: "Femenino",
-      exibit_branch: "Exhibicion"
+      exibit_branch: "Exhibición"
     };
   },
   methods: {

@@ -432,6 +432,30 @@
                                                 ></v-text-field>
                                         </v-col>
                                     </v-row>
+                                    <v-row 
+                                    align ="center"
+                                    justify = "center"
+                                    >
+                                        <v-col             
+                                        >
+                                                <v-text-field
+                                                    v-model="payload_stats_individual.attributes.blocking_points"                      
+                                                    type="number" 
+                                                    :rules="[numeric('Puntos de Bloqueo'),scoreRequired('Puntos de Bloqueo')]"
+                                                    label="Puntos de Bloqueo"
+                                                    required
+                                                    outlined
+                                                ></v-text-field>
+                                        </v-col>
+                                        <v-col             
+                                        >
+                                                
+                                        </v-col>
+                                        <v-col             
+                                        >
+
+                                        </v-col>
+                                    </v-row>
                                 </v-col>
                             </v-row>
                             <v-row v-if="isSoccer">
@@ -551,8 +575,8 @@
                                                 <v-text-field
                                                     v-model="payload_stats_individual.attributes.successful_goals"                      
                                                     type="number" 
-                                                    :rules="[numeric('Goles Exitosos'),scoreRequired('Goles Exitosos')]"
-                                                    label="Goles Exitosos"
+                                                    :rules="[numeric('Goles'),scoreRequired('Goles')]"
+                                                    label="Goles"
                                                     required
                                                     outlined
                                                 ></v-text-field>
@@ -946,6 +970,7 @@
                                     </v-row>
                                 </v-col>
                             </v-row>
+                            <small>*todos los campos son requeridos.</small>
                             <v-row>
                                 <v-spacer/>
                                 <v-spacer/>
@@ -982,7 +1007,8 @@
         team_members:Array,
         refresh_stats:Boolean,
         sport_name:String,
-        branch_name:String
+        branch_name:String,
+        sport_categories:Array
       },
     data: () => ({
 
@@ -1003,9 +1029,22 @@
         SOFTBALL_IDF: 16, 
         SOCCER_IDM: 3,
         SOCCER_IDF: 11,
-        // OTHER SPORTS (MEDAL BASED)
+         // OTHER SPORTS (MEDAL BASED)
         ATHLETICS_IDM: 8,
         ATHLETICS_IDF: 19,
+        BAILE_IDE: 17,
+        CAMPO_TRAVIESA_IDM:23,
+        CAMPO_TRAVIESA_IDF:24,
+        HALTEROFILIA_IDM:26,
+        HALTEROFILIA_IDF:27,
+        JUDO_IDM:6,
+        JUDO_IDF:20,
+        LUCHA_OLIMPICA_IDM:25,
+        NATACION_IDM:21,
+        NATACION_IDF:22,
+        PORRISMO_IDE:30,
+        TAEKWONDO_IDM:28,
+        TAEKWONDO_IDF:29,
         //OTHER SPORTS (MATCH BASED)
         FIELD_TENNIS_IDM: 9,
         FIELD_TENNIS_IDF: 18,
@@ -1014,7 +1053,7 @@
 
         //CODE HELPERS:
         statistics_entry: false,
-        sport_categories: '',
+        // sport_categories: '',
         medals: [
             {
                 medal_id:1,
@@ -1038,7 +1077,7 @@
                  
     
     created(){
-        this.buildDefaultValues()
+        // this.buildDefaultValues()
         this.initializeSportData()
         // console.log("[TM-ADD_STATS(COMPONENT)]",this.team_members)
     },
@@ -1047,7 +1086,7 @@
         ...mapActions({
             setQueryLoading:"results/setQueryLoading",
             addIndividualStatistics:"results/addIndividualStatistics",
-            getAllEventStatistics:"results/getAllEventStatistics"
+            // getAllEventStatistics:"results/getAllEventStatistics"
             // getSportCategories:"result/getSportCategories"
         }),
         customFilter (item, queryText, itemText) {
@@ -1099,43 +1138,7 @@
 
             }
         },
-        buildDefaultValues(){
-            // this.event_id = this.$route.params.id
-            // if (this.event_id == 1){
-                //TEMPORARY MOCK CATEGORIES
-            this.sport_categories=[
-                {
-                    category_id:5, category_name:"Solo"
-                },
-                {
-                    category_id:7, category_name:"Doble"
-                },
-                {
-                    category_id:12, category_name:"400 Metros"
-                },
-                {
-                    category_id:14, category_name:	"Lanzamiento Martillo"
-                },
-                {
-                    category_id:16, category_name:	"Lanzamiento Disco"
-                },
-                {
-                    category_id:17, category_name:	"Salto Largo"
-                },
-                {
-                    category_id:18, category_name:	"Salto Pértiga"
-                },
-                {
-                    category_id:21, category_name:	"10,000 Metros"
-                },
-                {
-                    category_id:23, category_name:	"Relevo 4 x 100"
-                },
-                {
-                    category_id:25, category_name:	"400 Metros Vallas"
-                }
-            ]
-        },
+        
         initializeSportData(){
         //console.log(this.season)
             if(this.sport_id!=''){
@@ -1175,7 +1178,8 @@
                         "digs":'',
                         "blocks":'',
                         "blocking_errors":'',
-                        "reception_errors":''
+                        "reception_errors":'',
+                        "blocking_points":''
                     }
                     }
                     
@@ -1211,7 +1215,14 @@
                     }
                     }
                 }
-                else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA ){
                     this.payload_stats_individual = {
                         "event_id":Number(this.event_id),
                         "athlete_id":'',
@@ -1285,7 +1296,14 @@
       return (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF)
     },
     isMedalBased: function () {
-      return (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)
+      return (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA )
     },
     isMatchBased: function (){
         return (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF

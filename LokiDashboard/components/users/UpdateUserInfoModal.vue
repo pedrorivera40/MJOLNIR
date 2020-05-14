@@ -16,14 +16,17 @@
                     label="Nombre completo*"
                     v-model="fullName_"
                     required
+                    counter="80"
                     :rules="[required('Nombre', 'Por favor, ingrese su nombre completo.')]"
                   />
                 </v-col>
                 <v-col cols="12">
+                  <!-- https://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690 email length standard -->
                   <v-text-field
                     v-model="email_"
                     label="Correo electrónico*"
                     required
+                    counter="254"
                     :rules="[
                       required('email', 'Por favor, ingrese su correo electrónico.'),
                       emailFormat()
@@ -35,10 +38,14 @@
                     v-model="username_"
                     label="Nombre de usuario*"
                     required
+                    counter="64"
+                    hint="El nombre puede contener números y guión bajo ('underscore')."
+                    persistent-hint
                     :rules="[
                       required('Nombre de usuario', 'Por favor, ingrese su nombre de usuario.'),
-                      minLength('El nombre de usuario', 3),
-                      maxLength('El nombre de usuario', 20),
+                      minLength('El nombre de usuario', 6),
+                      maxLength('El nombre de usuario', 64),
+                      usernameFormat()
                     ]"
                   ></v-text-field>
                 </v-col>
@@ -47,8 +54,11 @@
                     v-model="password_"
                     label="Contraseña*"
                     required
+                    counter="64"
+                    hint="La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número y 1 caracter especial."
+                    persistent-hint
                     :type="showP ? 'text' : 'password'"
-                    :append-icon="showP ? 'mdi-eye-off' : 'mdi-eye'"
+                    :append-icon="showP ? 'mdi-eye' : 'mdi-eye-off'"
                     @click:append="showP = !showP"
                     v-if="nameSelector === -1"
                     :rules="[
@@ -64,8 +74,9 @@
                     v-model="repeat_"
                     label="Confirmar contraseña*"
                     required
+                    counter="64"
                     :type="showC ? 'text' : 'password'"
-                    :append-icon="showC ? 'mdi-eye-off' : 'mdi-eye'"
+                    :append-icon="showC ? 'mdi-eye' : 'mdi-eye-off'"
                     @click:append="showC = !showC"
                     v-if="nameSelector === -1"
                     :rules="[
@@ -75,6 +86,7 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
+                  <p v-if="nameSelector !== -1" style="font-size:1.1rem">Estatus de la cuenta:</p>
                   <v-switch
                     v-model="isActive_"
                     :label="`Cuenta activa`"
@@ -83,13 +95,13 @@
                 </v-col>
               </v-row>
             </v-form>
-            <v-checkbox v-model="reviewed" label="He revisado mis cambios*." />
+            <v-checkbox v-model="reviewed" label="He revisado la que la información está correcta*." />
           </v-container>
           <small>*indica un campo requerido.</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary darken-1" text @click="close()">
+          <v-btn color="grey darken-3" text @click="close()">
             Cerrar
           </v-btn>
           <v-btn

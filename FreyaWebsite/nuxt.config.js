@@ -20,7 +20,7 @@ export default {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#168f09' },
   /*
   ** Global CSS
   */
@@ -51,7 +51,8 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API
+    baseURL: 'https://white-smile-272204.ue.r.appspot.com/' //Route for the Flask API Hosted
+    // baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API
   },
   /*
   ** vuetify module configuration
@@ -62,9 +63,18 @@ export default {
     theme: {
       dark: false,
       themes: {
+        light: {
+          primary: '#168f09',
+          accent: colors.blueGrey.darken4,
+          secondary: colors.amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3
+        },
         dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
+          primary: '#168f09',
+          accent: colors.blueGrey.darken4,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
           warning: colors.amber.base,
@@ -78,7 +88,7 @@ export default {
    * Development server configuration
    */
   server: {
-    host: "127.0.0.1",
+    host: "0.0.0.0",
     port: "7070"
   },
   /*

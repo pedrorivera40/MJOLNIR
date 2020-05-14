@@ -1,6 +1,7 @@
 from flask import jsonify
 from dateutil.parser import parse
 from .dao.athlete_dao import AthleteDAO
+from .dao.team_dao import TeamDAO
 import re
 
 class AthleteHandler:
@@ -339,11 +340,21 @@ class AthleteHandler:
            return jsonify(Error = "El identificidador del atleta dado es invalido."),400
 
         dao = AthleteDAO()
+        t_dao = TeamDAO()
         try:
                                        
             if not dao.athleteExists(aID):
                 dao._closeConnection()            
                 return jsonify(Error = "No existe un atleta con el siguiente identificador:{}".format(aID)),404
+            
+            athleteTeams = t_dao.getTeamsByAthleteID(aID)
+            
+
+            if athleteTeams:
+                team_years = []
+                for teams in athleteTeams:
+                    team_years.append(teams[2])                
+                return jsonify(Error = "No se puede remover atleta con identificador:{}, el mismo aún pertenece a equipos con las siguientes temporadas:{}".format(aID,team_years)),400
             result = dao.removeAthlete(aID)
             if not result:
                 dao._closeConnection()

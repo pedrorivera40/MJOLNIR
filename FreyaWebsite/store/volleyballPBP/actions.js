@@ -253,11 +253,10 @@ export default {
         }
     },
 
+    // Get information regarding to the event given its id.
     async getEvent({ commit, dispatch }, event_id) {
         try {
-            console.log("PRE QUERY");
-            const response = await this.$axios.get(`/events/${event_id}/`);
-            console.log(response.data);
+            const response = await this.$axios.get(`/events/${event_id}/public/`);
             commit("SET_HAS_PBP", response.data.Event.hasPBP);
             commit("SET_TEAM_ID", response.data.Event.team_id);
             commit("SET_BRANCH", response.data.Event.branch);
@@ -274,7 +273,7 @@ export default {
 
     async getValidUPRMRoster({ commit, dispatch }, team_id) {
         try {
-            const response = await this.$axios.get(`/teams/members/?team_id=${team_id}`);
+            const response = await this.$axios.get(`/teams/members/public/?team_id=${team_id}`);
             commit("SET_VALID_UPRM_ROSTER", response.data.Team.team_members);
         } catch (error) {
             if (!!error.response) {

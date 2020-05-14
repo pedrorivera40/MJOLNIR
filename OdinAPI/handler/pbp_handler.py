@@ -441,13 +441,13 @@ class VolleyballPBPHandler:
             event_id: integer corresponding to an event id.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(Error="El ID de evento es inválido (debe ser un entero)."), 400
 
             event_info, resp_code = EventHandler().getEventByID(event_id)
             event_info = event_info.json
@@ -455,16 +455,16 @@ class VolleyballPBPHandler:
             print(event_info)
 
             if not event_info.get("Event"):
-                return jsonify(ERROR="El evento no existe."), 400
+                return jsonify(Error="El evento no existe."), 400
 
             event_info = event_info.get("Event")
 
             if event_info.get("sport_name") != self._sport_keywords["sport"]:
-                return jsonify(ERROR="El evento seleccionado no es de Voleibol."), 403
+                return jsonify(Error="El evento seleccionado no es de Voleibol."), 403
 
             pbp_dao = VolleyballPBPDao()
             if pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="Ya se había creado una secuencia PBP."), 403
+                return jsonify(Error="Ya se había creado una secuencia PBP."), 403
 
             # At this point, the event exists and does not have a PBP sequence.
             game_metadata = {
@@ -481,7 +481,7 @@ class VolleyballPBPHandler:
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500
 
     def removePBPSequence(self, event_id):
         """
@@ -492,28 +492,28 @@ class VolleyballPBPHandler:
             event_id: integer corresponding to an event id.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(Error="El ID de evento es inválido (debe ser un entero)."), 400
 
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             pbp_dao.remove_pbp_seq(event_id)
             return jsonify(MSG="La secuencia PBP ha sido removida."), 200
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e))
+            return jsonify(Error=str(e))
 
     def adjustCurrentSet(self, event_id, adjust):
         """
@@ -525,35 +525,35 @@ class VolleyballPBPHandler:
             adjust: integer value corresponding to the increment/decrement of the current set.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
         try:
             if not isinstance(event_id, int) and not isinstance(adjust, int):
-                return jsonify(ERROR="Los valores de ID del evento y adjust deben ser enteros."), 400
+                return jsonify(Error="Los valores de ID del evento y adjust deben ser enteros."), 400
 
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 400
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 400
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ya ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ya ha finalizado."), 403
 
             current_set = pbp_dao.get_current_set(event_id)
             potential_set = current_set + adjust
             if potential_set > 5 or potential_set < 1:
-                return jsonify(ERROR="El ajuste es inválido. El valor resultante debe estar entre 1 y 5."), 403
+                return jsonify(Error="El ajuste es inválido. El valor resultante debe estar entre 1 y 5."), 403
 
             pbp_dao.set_current_set(event_id, potential_set)
             return jsonify(MSG="El parcial ha sido actualizado."), 200
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500
 
     def setOpponentColor(self, event_id, color):
         """
@@ -565,38 +565,41 @@ class VolleyballPBPHandler:
             color: string corresponding to a hex-formatted color.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
             if not isinstance(color, str):
-                return jsonify(ERROR="El color debe estar dado como una secuencia de caracteres que representan un valor HEX (# + 8 valores HEX)."), 400
+                return jsonify(Error="El color debe estar dado como una secuencia de caracteres que representan un valor HEX (# + 8 valores HEX)."), 400
 
             # Validate a hex formatted color is provided.
             if not search(self._sport_keywords["color-format"], color):
-                return jsonify(ERROR="El formato de color debe ser HEX."), 400
+                return jsonify(Error="El formato de color debe ser HEX."), 400
 
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(Error="El ID de evento es inválido (debe ser un entero)."), 400
 
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ya ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ya ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
+
+            if color == pbp_dao.get_opponent_color(event_id):
+                return jsonify(MSG="No se encontraron cambios en el color."), 200
 
             pbp_dao.set_opponent_color(event_id, color)
             return jsonify(MSG="El color se ha actualizado."), 200
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500
 
     def setUPRMPlayer(self, event_id, athlete_id):
         """
@@ -608,19 +611,19 @@ class VolleyballPBPHandler:
             athlete_id: integer corresponding to an event id.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
 
             if not isinstance(event_id, int) or not isinstance(athlete_id, int):
-                return jsonify(ERROR="Valores de ID del evento y ID del atleta deben ser enteros."), 400
+                return jsonify(Error="Valores de ID del evento y ID del atleta deben ser enteros."), 400
 
             event_info = EventHandler().getEventByID(event_id)
             event_info = event_info[0].json
 
             if not event_info.get("Event"):
-                return jsonify(ERROR="El evento no existe."), 400
+                return jsonify(Error="El evento no existe."), 400
 
             event_info = event_info.get("Event")
             team_roster = TeamHandler().getTeamMembersByID(
@@ -629,7 +632,7 @@ class VolleyballPBPHandler:
             team_roster = team_roster[0].json
 
             if not team_roster.get("Team") or not team_roster.get("Team").get("team_members"):
-                return jsonify(ERROR="No se encontró información del roster."), 400
+                return jsonify(Error="No se encontró información del roster."), 400
 
             team_roster = team_roster.get("Team").get("team_members")
             athlete_info = None
@@ -640,23 +643,23 @@ class VolleyballPBPHandler:
                     break
 
             if not athlete_info:
-                return jsonify(ERROR="No se encontró información del atleta."), 400
+                return jsonify(Error="No se encontró información del atleta."), 400
 
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 400
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 400
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             uprm_roster = pbp_dao.get_uprm_roster(event_id)
-            if athlete_id in uprm_roster:
-                return jsonify(ERROR="El atleta ya existe en el roster de UPRM."), 403
+            if uprm_roster and athlete_id in uprm_roster:
+                return jsonify(Error="El atleta ya existe en el roster de UPRM."), 403
 
             player_info = {
                 "athlete_id": athlete_id,
@@ -666,56 +669,164 @@ class VolleyballPBPHandler:
                 "last_names": athlete_info["last_names"],
                 "profile_image_link": athlete_info["profile_image_link"]
             }
+            print(player_info)
 
             pbp_dao.set_uprm_athlete(event_id, player_info)
-            return jsonify(MSG="La información del atleta se ha agragado al sistema."), 200
+            print(player_info)
+            return jsonify(MSG="Se ha actualizado la información de atletas UPRM."), 200
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500
 
-    def setOppPlayer(self, event_id,  player_info):
+    def addOppPlayer(self, event_id, player_info):
         """
-        Add an athlete to opponent roster or updates its value if exists in the system.
+        Add an athlete to opponent roster to the system.
         This function adds an athlete to opponent roster given it's event_id.
-        If the athlete exists, it updates its information.
 
         Args
             event_id: integer corresponding to an event id.
+            player_info: JSON object containing information about the athlete (number and name).
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
 
             if not isinstance(event_id, int):
-                return jsonify(ERROR="El valor para ID del evento tiene que ser un entero."), 400
+                return jsonify(Error="El valor para ID del evento tiene que ser un entero."), 400
 
             if not isinstance(player_info, dict) or len(player_info) != 2 or not "name" in player_info or not "number" in player_info:
-                return jsonify(ERROR="Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
+                return jsonify(Error="Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
 
             if not isinstance(player_info["name"], str) or not isinstance(player_info["number"], int):
-                return jsonify(ERROR="La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
+                print(player_info)
+                return jsonify(Error="La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
 
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 400
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 400
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
+
+            # Validate the athlete number has not been used.
+            opponent_roster = pbp_dao.get_opponent_roster(event_id)
+
+            if str(player_info["number"]) in opponent_roster:
+                return jsonify(Error="Ya existe un atleta oponente con este número."), 403
+
+            pbp_dao.set_opponent_athlete(event_id, player_info)
+            return jsonify(MSG="La información del atleta se agregado al sistema."), 200
+
+        except Exception as e:
+            return jsonify(Error=str(e)), 500
+
+    def updateOppPlayer(self, event_id, player_info):
+        """
+        Updates an athlete within opponent roster.
+        This function edits the name of an athlete from opponent roster given the event_id, and new name.
+
+        Args
+            event_id: integer corresponding to an event id.
+            player_info: JSON object containing information about the athlete (number and new name).
+
+        Returns:
+            Response containing a MSG in case of success, or Error message in case of failure.
+        """
+
+        try:
+
+            if not isinstance(event_id, int):
+                return jsonify(Error="El valor para ID del evento tiene que ser un entero."), 400
+
+            if not isinstance(player_info, dict) or len(player_info) != 2 or not "name" in player_info or not "number" in player_info:
+                return jsonify(Error="Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
+
+            if not isinstance(player_info["name"], str) or not isinstance(player_info["number"], int):
+                print(player_info)
+                return jsonify(Error="La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
+
+            pbp_dao = VolleyballPBPDao()
+
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 400
+
+            if pbp_dao.is_game_over(event_id):
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
+
+            meta = pbp_dao.get_pbp_meta(event_id)
+            if self._sport_keywords["sport"] != meta["sport"]:
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
+
+            # Validate the athlete number has not been used.
+            opponent_roster = pbp_dao.get_opponent_roster(event_id)
+
+            if str(player_info["number"]) not in opponent_roster:
+                return jsonify(Error="El atleta no existe en el sistema."), 403
+
+            # Validate the name changes.
+            prev_name = opponent_roster[str(player_info["number"])]["name"]
+
+            if player_info["name"] == prev_name:
+                return jsonify(Error="No se encontraron cambios en el nombre del atleta."), 200
+
+            pbp_dao.set_opponent_athlete(event_id, player_info)
+            return jsonify(MSG="La información del atleta se modificado en el sistema."), 200
+
+        except Exception as e:
+            return jsonify(Error=str(e)), 500
+
+    def setOppPlayer(self, event_id,  player_info):
+        """
+        Add an athlete to opponent roster or updates its value if exists in the system.
+        This function adds an athlete to opponent roster given the event_id and athlete information.
+        If the athlete exists, it updates its information.
+
+        Args
+            event_id: integer corresponding to an event id.
+            player_info: JSON object containing information about the athlete (number and name).
+
+        Returns:
+            Response containing a MSG in case of success, or Error message in case of failure.
+        """
+
+        try:
+
+            if not isinstance(event_id, int):
+                return jsonify(Error="El valor para ID del evento tiene que ser un entero."), 400
+
+            if not isinstance(player_info, dict) or len(player_info) != 2 or not "name" in player_info or not "number" in player_info:
+                return jsonify(Error="Información del atleta oponente debe darse en formato JSON y debe contener el nombre y número del atleta."), 400
+
+            if not isinstance(player_info["name"], str) or not isinstance(player_info["number"], int):
+                print(player_info)
+                return jsonify(Error="La información del oponente debe darse en el siguiente formato: nombre (secuencia de caracteres) y número (entero)."), 400
+
+            pbp_dao = VolleyballPBPDao()
+
+            if not pbp_dao.pbp_exists(event_id):
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 400
+
+            if pbp_dao.is_game_over(event_id):
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
+
+            meta = pbp_dao.get_pbp_meta(event_id)
+            if self._sport_keywords["sport"] != meta["sport"]:
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             pbp_dao.set_opponent_athlete(event_id, player_info)
             return jsonify(MSG="La información mas reciente del atleta se agregado al sistema."), 200
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500
 
     def removeUPRMPlayer(self, event_id,  player_id):
         """
@@ -727,7 +838,7 @@ class VolleyballPBPHandler:
             athlete_id: integer corresponding to the athlete to remove.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
@@ -735,24 +846,26 @@ class VolleyballPBPHandler:
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="El ID del evento es inválido."), 403
+                return jsonify(Error="El ID del evento es inválido."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
 
-            if not str(player_id) in pbp_dao.get_uprm_roster(event_id):
-                return jsonify(ERROR="El atleta no existe."), 404
+            opp_roster = pbp_dao.get_uprm_roster(event_id)
+
+            if opp_roster and not str(player_id) in opp_roster:
+                return jsonify(Error="El atleta no existe."), 404
 
             pbp_dao.remove_uprm_athlete(event_id, player_id)
-            return jsonify(MSG="La información del atleta se ha removido del sistema."), 200
+            return jsonify(MSG="Se ha actualizado la información de atletas UPRM."), 200
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500
 
     def removeOppPlayer(self, event_id,  player_id):
         """
@@ -764,7 +877,7 @@ class VolleyballPBPHandler:
             athlete_id: integer corresponding to the athlete to remove.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
@@ -772,24 +885,24 @@ class VolleyballPBPHandler:
             pbp_dao = VolleyballPBPDao()
 
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="El ID del evento es inválido."), 403
+                return jsonify(Error="El ID del evento es inválido."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             if not str(player_id) in pbp_dao.get_opponent_roster(event_id):
-                return jsonify(ERROR="El atleta no existe."), 404
+                return jsonify(Error="El atleta no existe."), 404
 
             pbp_dao.remove_opponent_athlete(event_id, player_id)
             return jsonify(MSG="La información del atleta se ha removido del sistema."), 200
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500
 
     def addPBPAction(self, event_id, action_data):
         """
@@ -801,32 +914,32 @@ class VolleyballPBPHandler:
             action_data: JSON object containing the new game action's value.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(Error="El ID de evento es inválido (debe ser un entero)."), 400
 
             # Validate action data has proper format. (TODO -> CHECK THIS!!!)
             if not action_data:
-                return jsonify(ERROR="La información referente a data no ha sido especificada."), 403
+                return jsonify(Error="La información referente a data no ha sido especificada."), 403
 
             # Validate event
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
 
             self._handle_pbp_action(event_id, action_data, pbp_dao)
             return jsonify(MSG="La acción se ha añadido al sistema."), 200
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500
 
     def editPBPAction(self, event_id, action_id, new_action):
         """
@@ -840,24 +953,24 @@ class VolleyballPBPHandler:
             new_action: JSON object containing the new game action's value.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit() and str(event_id).isdigit():
-                return jsonify(ERROR="Valores de ID del evento y ID de la acción deben ser enteros."), 400
+                return jsonify(Error="Valores de ID del evento y ID de la acción deben ser enteros."), 400
 
             # Validate action data has proper format. (TODO -> CHECK THIS!!!)
             if not new_action:
-                return jsonify(ERROR="Información sobre la nueva acción debe ser especificada (data)."), 403
+                return jsonify(Error="Información sobre la nueva acción debe ser especificada (data)."), 403
 
             # Validate event
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403.
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 403.
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
 
             self._handle_pbp_edit_action(
                 event_id, action_id, new_action, pbp_dao)
@@ -865,7 +978,12 @@ class VolleyballPBPHandler:
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+
+            # In case the 'error' is due to no chance in game action, notify the user but don't return as error.
+            if str(e) == "No hubo un cambio en la acción.":
+                return jsonify(MSG=str(e)), 200
+
+            return jsonify(Error=str(e)), 500
 
     def removePlayPBPAction(self, event_id, game_action_id):
         """
@@ -876,28 +994,28 @@ class VolleyballPBPHandler:
             event_id: integer corresponding to an event id.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
             # Validate event id is positive integer.
             print("ID", event_id, "action_id", game_action_id)
             if not str(event_id).isdigit() or not str(game_action_id).isdigit():
-                return jsonify(ERROR="Valores para el ID del evento y ID de acción deben ser enteros."), 400
+                return jsonify(Error="Valores para el ID del evento y ID de acción deben ser enteros."), 400
 
             # Validate event
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
 
             self._handle_remove_pbp_action(event_id, game_action_id, pbp_dao)
             return jsonify(MSG="Se ha removido la acción exitosamente."), 200
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500
 
     def setPBPSequenceOver(self, event_id):
         """
@@ -909,28 +1027,28 @@ class VolleyballPBPHandler:
             event_id: integer corresponding to an event id.
 
         Returns:
-            Response containing a MSG in case of success, or ERROR message in case of failure.
+            Response containing a MSG in case of success, or Error message in case of failure.
         """
 
         try:
             # Validate event id is positive integer.
             if not str(event_id).isdigit():
-                return jsonify(ERROR="El ID de evento es inválido (debe ser un entero)."), 400
+                return jsonify(Error="El ID de evento es inválido (debe ser un entero)."), 400
 
             pbp_dao = VolleyballPBPDao()
             if not pbp_dao.pbp_exists(event_id):
-                return jsonify(ERROR="No existe una secuencia PBP para este evento."), 403
+                return jsonify(Error="No existe una secuencia PBP para este evento."), 403
 
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
-                return jsonify(ERROR="Esta secuencia PBP no corresponde a Voleibol."), 403
+                return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
 
             if pbp_dao.is_game_over(event_id):
-                return jsonify(ERROR="El partido de Voleibol ha finalizado."), 403
+                return jsonify(Error="El partido de Voleibol ha finalizado."), 403
 
             pbp_dao.set_pbp_game_over(event_id)
             return jsonify(MSG="Se marcó el partido de Voleibol como finalizado."), 200
 
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR=str(e)), 500
+            return jsonify(Error=str(e)), 500

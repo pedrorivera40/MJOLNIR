@@ -18,8 +18,13 @@
 </template>
 
 <script>
+import TheSnackBar from "@/components/notifications/TheSnackBar";
+
 export default {
   layout: "empty",
+  components: {
+    TheSnackBar
+  },
   props: {
     error: {
       type: Object,

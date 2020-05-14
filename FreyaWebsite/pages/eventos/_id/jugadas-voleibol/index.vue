@@ -1,6 +1,6 @@
 <template>
   <v-card fixed>
-    <v-toolbar color="green darken-1" dark flat>
+    <v-toolbar :color="uprm_color" dark flat>
       <v-spacer />
       <v-toolbar-title class="title">{{sportName}}</v-toolbar-title>
       <v-spacer />
@@ -61,9 +61,9 @@
               :action_type="action.action_type"
               :message="action.text"
               :athlete_number="findAthleteNumber(action.athlete_id, oppRoster)"
-              :athlete_name="findAthleteName(action.athlete_id, oppRoster)"
+              :athlete_name="findAthleteName(action.athlete_id, oppRoster, 'oponente')"
               :athlete_img="action.athlete_img"
-              :in_color="opp_color"
+              :in_color="oppColor"
               :id="action.key"
             />
             <VolleyballGameAction
@@ -73,7 +73,7 @@
               :action_type="action.action_type"
               :message="action.text"
               :athlete_number="findAthleteNumber(action.athlete_id, uprmRoster)"
-              :athlete_name="findAthleteName(action.athlete_id, uprmRoster)"
+              :athlete_name="findAthleteName(action.athlete_id, uprmRoster, 'uprm')"
               :athlete_img="findAthleteImg(action.athlete_id, uprmRoster)"
               :in_color="uprm_color"
               :id="action.key"
@@ -237,10 +237,10 @@
 </template>
 
 <script>
-import VolleyballScore from "../../../components/VolleyballScore";
-import VolleyballStatistics from "../../../components/VolleyballStatistics";
-import PBPRosterEntry from "../../../components/PBPRosterEntry";
-import VolleyballGameAction from "../../../components/VolleyballGameAction";
+import VolleyballScore from "@/components/VolleyballScore";
+import VolleyballStatistics from "@/components/VolleyballStatistics";
+import PBPRosterEntry from "@/components/PBPRosterEntry";
+import VolleyballGameAction from "@/components/VolleyballGameAction";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -268,7 +268,7 @@ export default {
       { eng: "receptionErrors", esp: "Errores de Recepción" }
     ],
 
-    uprm_color: "green",
+    uprm_color: "#168F09",
     opp_color: "red",
     notification: "Notification",
     opp_keyword: "opponent",
@@ -294,7 +294,7 @@ export default {
       detachOppColor: "volleyballPBP/detachOppColor",
       detachGameActions: "volleyballPBP/detachGameActions"
     }),
-    findAthleteName(athlete_id, roster) {
+    findAthleteName(athlete_id, roster, team) {
       let athlete_index = -1;
       for (let index in roster) {
         if (roster[index].key == athlete_id) {
@@ -306,6 +306,13 @@ export default {
       if (athlete_index === -1) {
         return "Atleta Desconocido";
       }
+
+      // If it is opponent athlete, only return the name attribute.
+      if (team === "oponente") {
+        return roster[athlete_index].name;
+      }
+
+      // Otherwise return first, middle, and last names.
       let athlete_name = roster[athlete_index].first_name;
       if (roster[athlete_index].middle_name !== "") {
         athlete_name += " " + roster[athlete_index].middle_name;

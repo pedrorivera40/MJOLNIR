@@ -33,7 +33,7 @@
       </tr>
       <tr>
         <td class="text-center">PUNTOS DE BLOQUEO</td>
-        <td class="text-center">{{ volleyball_stats.blockPoints }}</td>
+        <td class="text-center">{{ volleyball_stats.blockingPoints }}</td>
       </tr>
       <tr>
         <td class="text-center">ERRORES DE BLOQUEO</td>

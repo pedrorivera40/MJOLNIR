@@ -2,7 +2,7 @@ import { postVolleyballResults } from './index';
 
 // Define payload to be sent to the API.
 const payload = <JSON><unknown>{
-    "event_id": 7,
+    "event_id": 78,
     "team_statistics":
     {
         "volleyball_statistics":
@@ -14,7 +14,7 @@ const payload = <JSON><unknown>{
             "service_errors": 1,
             "digs": 1,
             "blocks": 1,
-            "block_points": 1,
+            "blocking_points": 1,
             "blocking_errors": 1,
             "reception_errors": 1
         }
@@ -34,7 +34,7 @@ const payload = <JSON><unknown>{
                         "service_errors": 1,
                         "digs": 1,
                         "blocks": 1,
-                        "block_points": 1,
+                        "blocking_points": 1,
                         "blocking_errors": 1,
                         "reception_errors": 1
                     }
@@ -53,7 +53,7 @@ const payload = <JSON><unknown>{
                         "service_errors": 3,
                         "digs": 3,
                         "blocks": 3,
-                        "block_points": 1,
+                        "blocking_points": 1,
                         "blocking_errors": 3,
                         "reception_errors": 3
                     }
@@ -61,7 +61,7 @@ const payload = <JSON><unknown>{
             }
         ],
     "uprm_score": 500,
-    "opponent_score": 200,
+    "opponent_score": 200
 };
 
 postVolleyballResults(payload);

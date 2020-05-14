@@ -5,7 +5,7 @@ export default {
   */
   head: {
     titleTemplate: '%s - Huella Deportiva Web',
-    title: 'Huella Deportiva Web' || process.env.npm_package_name ,
+    title: 'Huella Deportiva Web' || process.env.npm_package_name,
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -51,8 +51,8 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    // baseURL: 'https://white-smile-272204.ue.r.appspot.com/' //Route for the Flask API Hosted
-    baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API Local
+    baseURL: 'https://white-smile-272204.ue.r.appspot.com/' //Route for the Flask API Hosted
+    // baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API Local
   },
 
   /*
@@ -73,7 +73,7 @@ export default {
           user: false,
           logout: false,
         },
-        // tokenRequired: true,
+        tokenRequired: true,
         tokenType: '',
         autoFetchUser: false,
       }
@@ -124,9 +124,9 @@ export default {
    * Development server configuration
    */
   server: {
-    // host: "0.0.0.0",
-    host: "127.0.0.1",
-    port: 7071
+    host: "0.0.0.0",
+    // host: "127.0.0.1",
+    // port: 7071
   },
   /*
   ** Build configuration
@@ -138,7 +138,7 @@ export default {
     transpile: [
       "vee-validate/dist/rules"
     ],
-    extend (config, ctx) {
+    extend(config, ctx) {
     }
   }
 }
