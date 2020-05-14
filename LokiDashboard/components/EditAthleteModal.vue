@@ -484,10 +484,10 @@ export default {
       athlete_attributes['first_name'] = this.first_name_
       athlete_attributes['middle_name']  = this.middle_name_
       athlete_attributes['last_names'] = this.last_names_
-      athlete_attributes['short_bio'] = this.short_bio_
-      
-      
-      if(this.height_feet_ != '' & this.height_inches_ != '')
+      athlete_attributes['short_bio'] = this.short_bio_    
+    
+     
+      if(!isNaN(this.height_feet_) && this.height_feet_ !== '' && !isNaN(this.height_inches_) && this.height_inches_ !== '')
         athlete_attributes['height'] = this.height_feet_*12.0 + this.height_inches_*1.0
       else
         athlete_attributes['height'] = this.height      
@@ -496,19 +496,19 @@ export default {
       athlete_attributes['date_of_birth'] = this.date_of_birth_
       athlete_attributes['school_of_precedence'] = this.school_of_precedence_
       
-      if(this.number_ != '') 
+      if(this.number_ !== '') 
         athlete_attributes['number'] = this.number_
       else
         athlete_attributes['number'] = this.number
       
       athlete_attributes['profile_picture_link'] = this.profile_image_link_      
 
-      if(this.year_of_study_ != '')
+      if(this.year_of_study_ !== '')
         athlete_attributes['year_of_study'] = this.year_of_study_
       else
         athlete_attributes['year_of_study'] = this.year_of_study
       
-      if(this.years_of_participation_ != '') 
+      if(this.years_of_participation_ !== '') 
         athlete_attributes['years_of_participation'] = this.years_of_participation_
       else
         athlete_attributes['years_of_participation'] = this.years_of_participation
@@ -542,8 +542,8 @@ export default {
       const resonse = await this.editAthlete(athleteJSON)
 
       this.editing = false     
-      
-      if(resonse != 'error')
+          
+      if(resonse !== 'error')
       {
         this.close()        
       } 
@@ -594,7 +594,7 @@ export default {
         if(this.short_bio)
           this.short_bio_ = this.short_bio
 
-        if(this.number){
+        if(this.number !== null && this.number !== ''){
           this.number_ = this.number
           this.sportHasNumber = true
         }
