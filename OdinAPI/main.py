@@ -1386,9 +1386,9 @@ def pbp_end(sport):
 def volleyballStatistics():
     # Check user making the reques has a valid session.
     token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+    # loggedUser = customSession.isLoggedIn(token['user'])
+    # if(loggedUser == None):
+    #     return jsonify(Error='No hay una sesión valida.'), 401
     json = request.json
     if json is None:
         return jsonify(Error='Solicitud Incorrecta'), 400
