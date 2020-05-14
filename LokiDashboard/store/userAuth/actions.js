@@ -89,8 +89,19 @@ export default {
    * Action to logout a user from the system and clear their data.
    * @param {*} param0 destructuring of vuex context object
    */
-  logout({ commit }) {
-    console.log('in_user_logout')
+  async logout({ commit, dispatch }, user) {
+    if(!!user){
+      try {
+        await this.$axios.post(`/logout`, { username: user.username})
+      } catch (error) {
+        if (!!error.response) {
+          dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+        } else {
+          console.log(error)
+          dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+        }
+      }
+    }
     commit("CLEAR_USER_DATA")
   }
 }

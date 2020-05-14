@@ -204,6 +204,7 @@ def logout():
 
         username = req['username']
         if(customSession.logout(username)):
+            print('logout successfuly')
             return jsonify(Message='Se terminó la sesión exitosamente!'), 200
         return jsonify(Error='Problemas terminando la sesión.'), 400
 
