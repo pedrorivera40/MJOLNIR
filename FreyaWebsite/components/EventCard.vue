@@ -70,7 +70,7 @@ export default {
      */
     goToPBPSequence() {
       this.$router.push(
-        "/jugadas-" + this.sportName.toLowerCase() + "/" + this.eventID
+        `/eventos/${this.eventID}/jugadas-${this.sportName.toLowerCase()}/`
       );
     },
     /**

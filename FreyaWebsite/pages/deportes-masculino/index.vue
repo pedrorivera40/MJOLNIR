@@ -65,7 +65,7 @@ export default {
       getAllSports: "sports/getAllSports"
     }),
     redirect(sport_id) {
-      this.$router.push("equipo/" + sport_id);
+      this.$router.push(`deportes-masculino/equipo/${sport_id}`);
     }
   },
   computed: {

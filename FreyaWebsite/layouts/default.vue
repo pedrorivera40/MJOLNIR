@@ -99,9 +99,14 @@ export default {
           to: "/deportes-femenino"
         },
         {
-          icon: "mdi-chart-bubble",
+          icon: "mdi-account-multiple-outline",
           title: "Deportes de Exhibición",
           to: "/deportes-exhibicion"
+        },
+        {
+          icon: "mdi-run-fast",
+          title: "Atletas",
+          to: "/atletas"
         },
         {
           icon: "mdi-paw",

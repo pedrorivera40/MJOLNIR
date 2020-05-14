@@ -254,6 +254,7 @@ export default {
     this.clearAllStats();
     this.ready_for_stats = true;
     this.event_id = this.$route.params.id;
+    console
     console.log("[1] GOT EVENT ID", this.event_id);
     this.getEventInfo(this.event_id);
     console.log("[2] GOT EVENT INFO", this.event_info);
