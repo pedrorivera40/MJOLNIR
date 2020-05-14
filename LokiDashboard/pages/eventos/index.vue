@@ -412,7 +412,8 @@ export default {
      * given as parameter.
      * @param event The event Object containg the information of the event to be edited.
      */
-    editEvent(event){     
+    editEvent(event){ 
+      console.log(event)    
       this.editedItem = Object.assign({},event)
       this.dialogEdit = true      
     },
