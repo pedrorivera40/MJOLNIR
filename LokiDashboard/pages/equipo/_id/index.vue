@@ -147,7 +147,7 @@
                     v-slot:default="{ hover }"
                     close-delay="200"
                   >
-                    <v-icon x-large color="red darken-2" @click="removeTeamMemberLocal(member.athlete_id)">mdi-trash-can-outline </v-icon>
+                    <v-icon x-large color="red darken-2"  :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[13]['26']" @click="removeTeamMemberLocal(member.athlete_id)">mdi-trash-can-outline </v-icon>
                   </v-hover>
                 </v-col>
               </v-row>
