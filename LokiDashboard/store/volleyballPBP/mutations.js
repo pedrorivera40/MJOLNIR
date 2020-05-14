@@ -135,6 +135,7 @@ export default {
 
                 case "BlockPoint":
                     result.blockingPoints++;
+                    result.blocks++;
                     break;
 
                 case "Assist":
@@ -205,6 +206,7 @@ export default {
 
                 case "BlockPoint":
                     result.blockingPoints++;
+                    result.blocks++;
                     break;
 
                 case "Assist":
@@ -295,6 +297,7 @@ export default {
 
                 case "BlockPoint":
                     result[athlete_index].blockingPoints++;
+                    result[athlete_index].blocks++;
                     break;
 
                 case "Assist":
@@ -386,6 +389,7 @@ export default {
 
                 case "BlockPoint":
                     result[athlete_index].blockingPoints++;
+                    result[athlete_index].blocks++;
                     break;
 
                 case "Assist":

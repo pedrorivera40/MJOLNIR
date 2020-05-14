@@ -21,7 +21,7 @@
           </v-card>
         </v-row>
         <v-row justify="center">
-          <h2 class="text-md-center">SET</h2>
+          <h2 class="text-md-center">PARCIAL</h2>
         </v-row>
         <v-row justify="center">
           <v-card class="ma-3 pa-6" outlined tile>
