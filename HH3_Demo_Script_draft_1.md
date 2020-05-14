@@ -6,27 +6,27 @@ This is an overview of the main capabilities to showcase during the Oral Exam's 
 
 For the Authentication module we want to showcase the login process and the token creation as well as token verification.
 
-1. Login with valid credentials [SW-R: 5a Sec-R: 2a, 2b, 2c, 2d, 3a, 3b, 3c, 3d].
-2. Try login in to an inactive account [Sec-R: 2f, 3f].
-3. Verify the token is created and the user is added to the vuex store [Sec-R: 2c].
+1. Login with valid credentials **[SW-R: 5a Sec-R: 2a, 2b, 2c, 2d, 3a, 3b, 3c, 3d]**.
+2. Try login in to an inactive account **[Sec-R: 2f, 3f]**.
+3. Verify the token is created and the user is added to the vuex store **[Sec-R: 2c]**.
 4. Verify requests contain the token for the user.
 5. Verify the token successfully passes the API's token check.
-6. Logout from the session [SW-R: 5b, Sec-R: 3g, 3h]
-7. Lock a User's account with 3 erroneous logins [SW-R: 1h, Sec-R: 2e, 3e].
-8. Try to login to the deactivated user account [Sec-R: 2f, 3f]
-9. Activate a user's account using the temp password [SW-R: 1c, 1i, 1j, 1k, Sec-R: 2g, 2i, 2j].
-10. Login again [Sec-R: 3i].
+6. Logout from the session **[SW-R: 5b, 6a, Sec-R: 3g, 3h]**
+7. Lock a User's account with 3 erroneous logins **[SW-R: 1h, Sec-R: 2e, 3e]**.
+8. Try to login to the deactivated user account **[Sec-R: 2f, 3f]**
+9. Activate a user's account using the temp password **[SW-R: 1c, 1i, 1j, 1k, Sec-R: 2g, 2i, 2j]**.
+10. Login again **[Sec-R: 3i]**.
 
 ## User Management Module
 
 For the user management module we want to showcase we are able to perform CRUD operations on dashboard users. And that these operations are propagated to the Database.
 
-1. Go to 'Manejo de Usuarios' to see all users [SW-R: 1d].
-2. Create a new user from the user management page with a compliant password [SW-R: 1a, 1b ].
-3. Edit a user's information [SW-R: 1e].
-4. Edit a User's Permissions [SW-R: 1g].
-5. Delete a user [SW-R: 1f].
-6. Reset a User's Password Using the User Management Page [SW-R: 1j, 1k, Sec-R: 2h].
+1. Go to 'Manejo de Usuarios' to see all users **[SW-R: 1d]**.
+2. Create a new user from the user management page with a compliant password **[SW-R: 1a, 1b ]**.
+3. Edit a user's information **[SW-R: 1e]**.
+4. Edit a User's Permissions **[SW-R: 1g]**.
+5. Delete a user **[SW-R: 1f]**.
+6. Reset a User's Password Using the User Management Page **[SW-R: 1j, 1k, Sec-R: 2h]**.
 
 ## Sports Module
 
@@ -45,15 +45,15 @@ where they can see an athletes info including their season stats.
 
 1. Create an athlete that participates in a sport with positions
 assigning the positions to the athlete from the athlete 
-management page.**[SOFTWARE REQUIREMENTS 4D,4E]**
+management page.**[SW-R: 4D,4E AMITC-1]**
 
 2. Create an athlete that participates in a sport with categories
 assigning the categories to the athlete. from the athlete
-management page.**[SOFTWARE REQUIREMENTS 4F]**
+management page.**[SW-R: 4F]**
 
-3. Edit an athlete profiles information.**[SOFTWARE REQUIREMENTS 4G]**
+3. Edit an athlete profiles information.**[SW-R: 4G]**
 
-4. Delete an existing athlete.**[SOFTWARE REQUIREMENTS 4H]**
+4. Delete an existing athlete.**[SW-R: 4H]**
 
 ## Team Management Module
 
@@ -73,16 +73,16 @@ For the Event module we want to showcase the creation of an event,
 the event viewer page and the results page for an event that has 
 statistics recorded.
 
-1. Go to events management page to see a list of created events.**[SOFTWARE REQUIREMENTS 2B]**
+1. Go to events management page to see a list of created events.**[SW-R: 2B]**
 
-2. Create an event from the event management page.**[SOFTWARE REQUIREMENTS 2A]**
+2. Create an event from the event management page.**[SW-R: 2A]**
 
-3. Edit the information of an existing event.**[SOFTWARE REQUIREMENTS 2C]**
+3. Edit the information of an existing event.**[SW-R: 2C]**
 
-4. Delete an event.**[SOFTWARE REQUIREMENTS 2E]**
+4. Delete an event.**[SW-R: 2E]**
 
 5. Select an event with statistics to view and then click on 
-the "see results button" to be redirected to the results page.**[SOFTWARE REQUIREMENTS 2D]**
+the "see results button" to be redirected to the results page.**[SW-R: 2D]**
 
 ## PBP Management Module
 This module allows dashboard users to control the PBP sequence as a Volleyball game takes place. Note that this information is also displayed on the Freya website for general fanbase to view. As for this demonstration, the objective is to create a new PBP sequence for an existing Volleyball game, and modify the game sequence by adding the athletes that participate, adding game actions, updating opponent team color, adjusting game score, and changing the current set value. Finally the game will be marked as ended.
@@ -105,7 +105,7 @@ This module allows dashboard users to control the PBP sequence as a Volleyball g
 
 9. Here we can add, edit, and delete the opponent team participants. **[SOFTWARE REQUIREMENTS 3D, 3F]**
 
-10. At this point we are ready to add, edit, and remove game actions. **[SOFTWARE REQUIREMENTS 3G, 3H, 3I]**
+10. At this point we are ready to add, edit, and remove game actions. **[SOFTWARE REQUIREMENTS 3G, 3H, 3I] [PERFORMANCE REQUIREMENT 1, USABILITY REQUIREMENT 1]**
 
 11. Move to the "Acciones Generales" section, and press the "Finalizar" button.
 
