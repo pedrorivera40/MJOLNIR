@@ -141,7 +141,7 @@ export default {
             this.$router.push('/jugadas-voleibol/'+eventJSON.event_id)
         }catch(error){
             if(!!error.response.data){
-                dispatch('notifications/setSnackbar', {text: error.response.data.ERROR, color: 'error'}, {root: true})
+                dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
             }

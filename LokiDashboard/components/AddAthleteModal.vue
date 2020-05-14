@@ -445,8 +445,9 @@
         athlete_attributes['last_names'] = this.last_names
         athlete_attributes['short_bio'] = this.short_bio
 
-        if(this.height_feet != '' && this.height_inches != '')
+        if(!isNaN(this.height_feet) && this.height_feet !== '' && !isNaN(this.height_inches) && this.height_inches !== ''){          
           athlete_attributes['height'] = this.height_feet*12.0 + this.height_inches
+        }
         else
           athlete_attributes['height'] = null
 
@@ -502,7 +503,8 @@
         
         const response =  await this.addAthlete(athleteJSON)
         
-        this.adding = false
+        this.adding = false        
+       
         if(response !== 'error'){
           this.close()          
         }    

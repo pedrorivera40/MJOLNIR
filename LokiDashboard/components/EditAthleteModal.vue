@@ -484,10 +484,10 @@ export default {
       athlete_attributes['first_name'] = this.first_name_
       athlete_attributes['middle_name']  = this.middle_name_
       athlete_attributes['last_names'] = this.last_names_
-      athlete_attributes['short_bio'] = this.short_bio_
-      
-      
-      if(this.height_feet_ != '' & this.height_inches_ != '')
+      athlete_attributes['short_bio'] = this.short_bio_    
+    
+     
+      if(!isNaN(this.height_feet_) && this.height_feet_ !== '' && !isNaN(this.height_inches_) && this.height_inches_ !== '')
         athlete_attributes['height'] = this.height_feet_*12.0 + this.height_inches_*1.0
       else
         athlete_attributes['height'] = this.height      
@@ -542,8 +542,8 @@ export default {
       const resonse = await this.editAthlete(athleteJSON)
 
       this.editing = false     
-      
-      if(resonse != 'error')
+          
+      if(resonse !== 'error')
       {
         this.close()        
       } 
