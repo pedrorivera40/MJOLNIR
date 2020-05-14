@@ -1,3 +1,5 @@
+import sqlite3
+
 class CustomSession(object):
 
     def __init__(self):
