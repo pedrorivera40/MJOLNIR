@@ -3,7 +3,7 @@
     <v-container v-if="formated_event_info()">
         <h1 class="primary_dark--text pl-3">Resultados {{sport_name}} {{branch_name_local}}</h1>
         <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
-        <h3>Evento de {{event_date}}</h3>
+        <h3>Evento de {{date}}, {{time}}</h3>
     </v-container>
     <div class="content-area pa-4 pt-12">
         <v-container  v-if="formated_member_stats()">
@@ -240,6 +240,9 @@ export default {
       ready_for_stats:true,
 
       branch_name_local:'',
+
+      date:'',
+      time:'',
     };
   },
   
@@ -280,6 +283,28 @@ created(){
             this.sport_name = this.event_info.sport_name
             this.opponent_name = this.event_info.opponent_name
             this.event_date = this.event_info.event_date
+            // SET EVENT DATE FORMATED
+            let eventDate = new Date(Date.parse(this.event_date))
+            this.date = eventDate.toISOString().substr(0,10)
+            let hours = eventDate.getUTCHours()
+            let minutes = eventDate.getUTCMinutes()
+            
+            let amPM = null
+            if(hours > 12){
+                amPM = 'PM'
+                hours -= 12
+            }
+            else if(hours < 12)
+                amPM = 'AM'
+
+            if (hours == 0){
+                hours = 12
+            }
+            if(minutes < 10)
+                this.time = hours + ":0"+minutes + amPM
+            else if(minutes >=10)
+                this.time = hours + ":" +minutes + amPM	
+        
             this.branch_name_local = this.event_info.branch
             if (this.ready_for_stats){
                 this.buildTable()
