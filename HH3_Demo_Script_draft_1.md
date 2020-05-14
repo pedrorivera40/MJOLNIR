@@ -49,11 +49,17 @@ management page.**[SW-R: 4D,4E AMITC-1]**
 
 2. Create an athlete that participates in a sport with categories
 assigning the categories to the athlete. from the athlete
-management page.**[SW-R: 4F]**
+management page.**[SW-R: 4F AMITC-2]**
 
-3. Edit an athlete profiles information.**[SW-R: 4G]**
+3. Edit an athlete profiles information.**[SW-R: 4G AMITC-3]**
 
-4. Delete an existing athlete.**[SW-R: 4H]**
+4. Delete an existing athlete.**[SW-R: 4H AMITC-5]**
+
+5. Try to delete an existing athlete that already plays for a
+team.**[ AMITC-6 ]**   
+   
+6. Go to athlete profile page and showcase the statistics for
+a season **[ AMITC-4 ]**
 
 ## Team Management Module
 
