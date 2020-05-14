@@ -68,7 +68,7 @@
                                                     @click:close="remove_from_select(data.item)"
                                                     >
                                                     <v-avatar left>
-                                                        <v-icon v-if="data.item.profilePicLink == null" height="100"> mdi-account  </v-icon>
+                                                        <v-icon v-if="(data.item.profilePicLink == null || data.item.profilePicLink == '')" height="100"> mdi-account  </v-icon>
                                                         <v-img v-else :src="data.item.profilePicLink"></v-img>
                                                     </v-avatar>
                                                     {{ data.item.fName }} {{ data.item.mName }} {{ data.item.lName }}
@@ -80,7 +80,7 @@
                                                     </template>
                                                     <template v-else>
                                                     <v-list-item-avatar>
-                                                        <v-icon v-if="data.item.profilePicLink == null" height="100"> mdi-account  </v-icon>
+                                                        <v-icon v-if="(data.item.profilePicLink == null || data.item.profilePicLink == '')" height="100"> mdi-account  </v-icon>
                                                         <v-img v-else :src="data.item.profilePicLink"></v-img>
                                                     </v-list-item-avatar>
                                                     <v-list-item-content>
@@ -92,7 +92,8 @@
                                                 </template>
                                                 </v-autocomplete>
                                         </v-col>
-                                    </v-row>    
+                                    </v-row> 
+                                    <small>*debe seleccionar un atleta.</small>   
                                 </v-col>  
                             </v-row>      
                             

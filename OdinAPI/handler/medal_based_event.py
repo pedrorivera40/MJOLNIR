@@ -598,7 +598,7 @@ class MedalBasedEventHandler():
         try:
             sID = t_dao.getTeamSportByID(tID)[0] 
             
-            if sID != ATHLETSISM:
+            if not self._sportIsMedalBased(sID):
                 return jsonify(Error = "El evento con id:{} no es un evento de medalla.".format(eID)),400
 
             if not self._validateCategory(sID,attributes['category_id']):
@@ -726,7 +726,7 @@ class MedalBasedEventHandler():
         try:
             sID = t_dao.getTeamSportByID(tID)[0]
             
-            if sID != ATHLETSISM:
+            if not self._sportIsMedalBased(sID):
                 return jsonify(Error = "El evento con id:{} no es un evento de medalla.".format(eID)),400
              
             if not self._validateCategory(sID,attributes['category_id']):
@@ -834,7 +834,7 @@ class MedalBasedEventHandler():
         # Validate that the event belongs to the correct sport.        
         try:
             sID = t_dao.getTeamSportByID(tID)[0]
-            if sID != ATHLETSISM:
+            if not self._sportIsMedalBased(sID):
                 return jsonify(Error = "El evento con id:{} no es un evento de medalla.".format(eID)),400
             
             for categories in team_statistics:   
@@ -1285,6 +1285,14 @@ class MedalBasedEventHandler():
                 break  
 
         return valid
+
+    def _sportIsMedalBased(self,sID):
+        isMedaBased = False
+        for sport in SPORTS:
+            if sID == sport:
+                isMedaBased = True
+                break
+        return isMedaBased
 
    
         
