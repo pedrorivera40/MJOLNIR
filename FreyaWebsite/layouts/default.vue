@@ -154,6 +154,7 @@ export default {
 .nuxt-link-active {
   color: #168f09;
 }
+
 .nav-drawer {
   .nav-links {
     a {
