@@ -496,19 +496,19 @@ export default {
       athlete_attributes['date_of_birth'] = this.date_of_birth_
       athlete_attributes['school_of_precedence'] = this.school_of_precedence_
       
-      if(this.number_ != '') 
+      if(this.number_ !== '') 
         athlete_attributes['number'] = this.number_
       else
         athlete_attributes['number'] = this.number
       
       athlete_attributes['profile_picture_link'] = this.profile_image_link_      
 
-      if(this.year_of_study_ != '')
+      if(this.year_of_study_ !== '')
         athlete_attributes['year_of_study'] = this.year_of_study_
       else
         athlete_attributes['year_of_study'] = this.year_of_study
       
-      if(this.years_of_participation_ != '') 
+      if(this.years_of_participation_ !== '') 
         athlete_attributes['years_of_participation'] = this.years_of_participation_
       else
         athlete_attributes['years_of_participation'] = this.years_of_participation
@@ -594,7 +594,7 @@ export default {
         if(this.short_bio)
           this.short_bio_ = this.short_bio
 
-        if(this.number){
+        if(this.number !== null && this.number !== ''){
           this.number_ = this.number
           this.sportHasNumber = true
         }

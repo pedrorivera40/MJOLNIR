@@ -455,7 +455,7 @@
         athlete_attributes['date_of_birth'] = this.date
         athlete_attributes['school_of_precedence'] = this.school_of_precedence
         
-        if(this.number != '') 
+        if(!isNaN(this.number) && this.number !== '') 
           athlete_attributes['number'] = this.number
         else
           athlete_attributes['number'] = null
@@ -464,15 +464,14 @@
 
         
 
-        if(this.year_of_study != '')
+        if(this.year_of_study !== '')
           athlete_attributes['year_of_study'] = this.year_of_study
         else
           athlete_attributes['year_of_study'] = null
         
-        if(this.years_of_participation != '') 
+        if(this.years_of_participation !== '') 
           athlete_attributes['years_of_participation'] = this.years_of_participation
-
-        else(this.years_of_participation != '') 
+        else
           athlete_attributes['years_of_participation'] = null
 
         
