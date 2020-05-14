@@ -123,7 +123,7 @@ export class VolleyballStatsEntry {
         // Organize output in the following structure:	
         //      { volleyball_statistics : { "stat1" : stat1_val, ... } }	
         return <JSON><unknown>{
-            "volleybal_statistics": {
+            "volleyball_statistics": {
                 "kill_points": this.killPoints,
                 "attack_errors": this.attackErrors,
                 "assists": this.assists,
@@ -248,7 +248,6 @@ export const postVolleyballResults = async function (gameStatistics: JSON) {
     const SECRET_KEY: string = "LALALALALALALA";
 
     let token: string = encode(payload, SECRET_KEY, algorithm);
-    console.log(token);
 
     // Given the token, send statistics to Odin API.	
     await axios({
@@ -441,9 +440,9 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
 
         // Prepare payload.	
         const gameStatistics = <JSON><unknown>{
-            "event_id": gameId,
+            "event_id": gameId.toString(),
             "team_statistics": uprmStats.getJSON(),
-            "athlete_statistics": JSON.stringify(athleteStats),
+            "athlete_statistics": athleteStats,
             "uprm_score": uprmScore,
             "opponent_score": opponentScore
         };

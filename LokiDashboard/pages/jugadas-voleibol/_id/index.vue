@@ -1,46 +1,15 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col>
-        <div v-if="loading === true">
-          <v-overlay opacity="0.3">
-            <v-progress-circular indeterminate></v-progress-circular>
-          </v-overlay>
-        </div>
-      </v-col>
+    <v-row v-if="loading" justify="center">
+      <v-progress-circular :active="loading" indeterminate :size="50" color="primary"></v-progress-circular>
     </v-row>
-    <v-dialog v-model="invalid_event_dialog " persistent max-width="600px">
-      <v-card>
-        <v-card-title>Evento Inválido</v-card-title>
-        <v-card-text>El evento seleccionado no existe en el sistema.</v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog
-      v-if="invalid_event_dialog === false"
-      v-model="no_pbp_dialog"
-      persistent
-      max-width="600px"
-    >
-      <v-card>
-        <v-card-title>Evento Inválido</v-card-title>
-        <v-card-text>El evento seleccionado no tiene la funcionalidad PBP.</v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog
-      v-if="invalid_event_dialog === false && no_pbp_dialog === false"
-      v-model="invalid_sport_dialog"
-      persistent
-      max-width="600px"
-    >
-      <v-card>
-        <v-card-title>Evento Inválido</v-card-title>
-        <v-card-text>El evento seleccionado no corresponde a un partido de Voleibol.</v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-card
-      fixed
-      v-if="!invalid_event_dialog && loading === false && !invalid_sport_dialog && !no_pbp_dialog"
-    >
+    <ErrorCard
+      v-if="init_error && !loading"
+      :in_color="uprm_color"
+      :error_header="error_header"
+      :error_message="error_message"
+    />
+    <v-card fixed v-if="!init_error && !loading">
       <v-toolbar color="green darken-1" dark flat>
         <v-spacer />
         <v-toolbar-title class="title">{{sportName}}</v-toolbar-title>
@@ -430,6 +399,7 @@ import VolleyballScoreDisplayOnly from "../../../components/VolleyballScoreDispl
 import PBPRosterEntry from "../../../components/PBPRosterEntry";
 import VolleyballGameAction from "../../../components/VolleyballGameAction";
 import VolleyballPBPActionsAdder from "../../../components/VolleyballPBPActionsAdder";
+import ErrorCard from "../../../components/PBP/ErrorCard";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
@@ -438,15 +408,22 @@ export default {
     VolleyballScoreDisplayOnly,
     PBPRosterEntry,
     VolleyballGameAction,
-    VolleyballPBPActionsAdder
+    VolleyballPBPActionsAdder,
+    ErrorCard
   },
   data: () => ({
-    error_string: "This emulates an error comming from the database",
     loading: true,
+
     invalid_event_dialog: false,
     no_pbp_dialog: false,
     invalid_sport_dialog: false,
-    dialog: false,
+
+    // Flag for controlling Error Card.
+    init_error: false,
+    // Strings for handling Error Card.
+    error_header: "",
+    error_message: "",
+
     event_id: Number,
     end_pbp_dialog: false,
     color_dialog: false,
@@ -662,6 +639,28 @@ export default {
   },
   async beforeMount() {
     this.loading = true;
+    this.init_error = false;
+    let event_id = this.$route.params.id;
+
+    // Validate ID has been passed.
+    if (!!!event_id) {
+      this.error_header = "Error de Argumento";
+      this.error_message = "No se envió un identificador de evento.";
+      this.init_error = true;
+      this.loading = false;
+      return;
+    }
+
+    // Validate that the passed id is an unsigned integer.
+    if (!!!event_id.match(/^-{0,1}\d+$/) || parseInt(event_id) < 0) {
+      this.error_header = "Argumento Inválido";
+      this.error_message =
+        "El identificador del evento debe ser un entero sin signo.";
+      this.init_error = true;
+      this.loading = false;
+      return;
+    }
+
     this.event_id = parseInt(this.$route.params.id);
     // Validate a valid event_id was provided.
     if (await this.getEvent(this.event_id)) {
@@ -680,20 +679,31 @@ export default {
       }
       this.invalid_event_dialog = false;
     } else {
-      this.invalid_event_dialog = true;
+      this.error_header = "Evento Inválido";
+      this.error_message = "El evento indicado no existe en el sistema.";
+      this.init_error = true;
+      this.loading = false;
+      return;
     }
     // Validate the event has PBP functionality.
     if (this.hasPBP === false) {
-      this.no_pbp_dialog = true;
-    } else {
-      this.no_pbp_dialog = false;
+      this.error_header = "Evento Inválido";
+      this.error_message = "Este evento no tiene funcionalidad Play-by-Play.";
+      this.init_error = true;
+      this.loading = false;
     }
+
     // Validate the PBP sequence corresponds to Volleyball.
     if (this.sportName != "Voleibol") {
-      this.invalid_sport_dialog = true;
-    } else {
-      this.invalid_sport_dialog = false;
+      this.error_header = "Deporte Incorrecto";
+      this.error_message =
+        "Este deporte no está cubierto bajo la funcionalidad de Play-by-Play.";
+      this.init_error = true;
+      this.loading = false;
+      return;
     }
+
+    // All good at this point, so it is just needed to stop to loading animation.
     this.loading = false;
   },
   beforeDestroy() {
