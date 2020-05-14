@@ -1,24 +1,36 @@
 import sqlite3
 
+
 class CustomSession(object):
 
     def __init__(self):
-        self.sessionList = []
+        self.connection = sqlite3.connect('userSessions.db')
+        self.cursor = self.connection.cursor()
+        try:
+            self.cursor.execute('''CREATE TABLE IF NOT EXISTS sessions (user text UNIQUE) ''')
+        except:
+            print('table already exists')
+        
+        self.connection.commit()
+        self.connection.close()
 
-    def setLoggedUser(self, value):
+    def initConnection(self):
+        self.connection = sqlite3.connect('userSessions.db')
+        self.cursor = self.connection.cursor()
+
+    def setLoggedUser(self, username):
         """
         Add logged in user, to the custon session list.
 
         Take in the username for the user that just logged in and added to the custom session list.
 
         Args: 
-            value: The username of the reciently logged in user to be added to the session list.
+            username: The username of the reciently logged in user to be added to the session list.
         """
-        theSession = {}
-        if value == None or value == '':
-            return
-        theSession["username"] = value
-        self.sessionList.append(theSession)
+        self.initConnection()
+        self.cursor.execute("INSERT OR IGNORE INTO sessions VALUES (?)",(username,))
+        self.connection.commit()
+        self.connection.close()
 
     def isLoggedIn(self, username):
         """
@@ -34,8 +46,14 @@ class CustomSession(object):
             Returns a dictionary containing the logged in user is the user has an active session and None
             if there is no active session.
         """
-        loggedUser = next((session for session in self.sessionList if session.get("username", "Invalid Session") == username), None)
-        return loggedUser
+        self.initConnection()
+        self.cursor.execute('SELECT * FROM sessions WHERE user= ? ', (username,))
+        self.connection.commit()
+        loggedUser = self.cursor.fetchone()
+        self.connection.close()
+        if(bool(loggedUser)):
+            return loggedUser[0]
+        return None
 
     def logout(self, username):
         """
@@ -43,6 +61,8 @@ class CustomSession(object):
 
         Deletes the user with the provided username from the active session list.
         """
-        self.sessionList = [session for session in self.sessionList if not (session['username'] == username)]
-        loggedUser = next((session for session in self.sessionList if session.get("username", "Invalid Session") == username),None)
+        self.initConnection()
+        self.cursor.execute('DELETE FROM sessions WHERE user= ? ', (username,))
+        self.connection.commit()
+        loggedUser = self.cursor.fetchone()
         return loggedUser == None
