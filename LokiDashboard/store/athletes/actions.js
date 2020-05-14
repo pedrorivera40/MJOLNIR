@@ -30,7 +30,7 @@ export default {
      */
     async getAthleteByID({ commit, dispatch }, aid) {
         try {
-
+            commit("SET_ATHLETES",[])
             const response = await this.$axios.get('athletes/' + aid + '/public/')
             commit("SET_ATHLETE", response.data.Athlete)
 
