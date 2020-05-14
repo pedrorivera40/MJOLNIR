@@ -5,7 +5,7 @@
         Resultados {{ sport_name }} {{ branch_name_local }}
       </h1>
       <!-- TODO: HOW TO MAKE THIS SIMPLER FORMAT DATE? -->
-      <h3>Evento de {{ event_date }}</h3>
+      <h3>Evento de {{ date }}, {{ time }}</h3>
     </v-container>
     <div class="content-area pa-4 pt-12">
       <v-container v-if="formated_member_stats()">
@@ -92,6 +92,7 @@
                   v-if="formated_event_info() || formated_member_stats()"
                   :loading="loadingQuery"
                   loading-text="Cargando Estadísticas..."
+                  no-data-text="No Se Encontraron Resultados"
                 >
                   <template #item.full_name="{ item }"
                     >{{ item.athlete_info.first_name }}
@@ -123,6 +124,7 @@
                   v-if="formated_event_info() || formated_member_stats()"
                   :loading="loadingQuery"
                   loading-text="Cargando Estadísticas..."
+                  no-data-text="No Se Encontraron Resultados"
                 >
                 </v-data-table>
                 <v-container v-else-if="!loadingQuery">
@@ -218,6 +220,19 @@ export default {
       // OTHER SPORTS (MEDAL BASED)
       ATHLETICS_IDM: 8,
       ATHLETICS_IDF: 19,
+      BAILE_IDE: 17,
+      CAMPO_TRAVIESA_IDM: 23,
+      CAMPO_TRAVIESA_IDF: 24,
+      HALTEROFILIA_IDM: 26,
+      HALTEROFILIA_IDF: 27,
+      JUDO_IDM: 6,
+      JUDO_IDF: 20,
+      LUCHA_OLIMPICA: 25,
+      NATACION_IDM: 21,
+      NATACION_IDF: 22,
+      PORRISMO_IDE: 30,
+      TAEKWONDO_IDM: 28,
+      TAEKWONDO_IDF: 29,
       //OTHER SPORTS (MATCH BASED)
       FIELD_TENNIS_IDM: 9,
       FIELD_TENNIS_IDF: 18,
@@ -227,8 +242,9 @@ export default {
       //INTEGRATION QUERY VARS
       ready_for_event: false,
       ready_for_stats: true,
-
-      branch_name_local: ""
+      branch_name_local: "",
+      date: "",
+      time: ""
     };
   },
 
@@ -241,14 +257,12 @@ export default {
     console.log("[1] GOT EVENT ID", this.event_id);
     this.getEventInfo(this.event_id);
     console.log("[2] GOT EVENT INFO", this.event_info);
-
     // const stat_params = {
     //     event_id: String(this.event_id),
     //     sport_route: String(this.sport_route)
     // }
     // this.getAllEventStatistics(this.stat_params)
     // console.log("[4] GOT EVENT STATS",this.results_payload)
-
     // this.buildTable()
     // console.log("[3] BUILT TABLE",this.results_payload)
   },
@@ -271,6 +285,23 @@ export default {
         this.sport_name = this.event_info.sport_name;
         this.opponent_name = this.event_info.opponent_name;
         this.event_date = this.event_info.event_date;
+        // SET EVENT DATE FORMATED
+        let eventDate = new Date(Date.parse(this.event_date));
+        this.date = eventDate.toISOString().substr(0, 10);
+        let hours = eventDate.getUTCHours();
+        let minutes = eventDate.getUTCMinutes();
+
+        let amPM = null;
+        if (hours > 12) {
+          amPM = "PM";
+          hours -= 12;
+        } else if (hours < 12) amPM = "AM";
+        if (hours == 0) {
+          hours = 12;
+        }
+        if (minutes < 10) this.time = hours + ":0" + minutes + amPM;
+        else if (minutes >= 10) this.time = hours + ":" + minutes + amPM;
+
         this.branch_name_local = this.event_info.branch;
         if (this.ready_for_stats) {
           this.buildTable();
@@ -328,7 +359,20 @@ export default {
           } else this.team_statistics = [];
         } else if (
           this.sport_id == this.ATHLETICS_IDM ||
-          this.sport_id == this.ATHLETICS_IDF
+          this.sport_id == this.ATHLETICS_IDF ||
+          this.sport_id == this.CAMPO_TRAVIESA_IDM ||
+          this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+          this.sport_id == this.HALTEROFILIA_IDM ||
+          this.sport_id == this.HALTEROFILIA_IDF ||
+          this.sport_id == this.JUDO_IDM ||
+          this.sport_id == this.JUDO_IDF ||
+          this.sport_id == this.NATACION_IDM ||
+          this.sport_id == this.NATACION_IDF ||
+          this.sport_id == this.TAEKWONDO_IDM ||
+          this.sport_id == this.TAEKWONDO_IDF ||
+          this.sport_id == this.BAILE_IDE ||
+          this.sport_id == this.PORRISMO_IDE ||
+          this.sport_id == this.LUCHA_OLIMPICA
         ) {
           this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
           this.team_statistics = [];
@@ -412,7 +456,20 @@ export default {
         this.sport_route = "baseball";
       } else if (
         this.sport_id == this.ATHLETICS_IDM ||
-        this.sport_id == this.ATHLETICS_IDF
+        this.sport_id == this.ATHLETICS_IDF ||
+        this.sport_id == this.CAMPO_TRAVIESA_IDM ||
+        this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+        this.sport_id == this.HALTEROFILIA_IDM ||
+        this.sport_id == this.HALTEROFILIA_IDF ||
+        this.sport_id == this.JUDO_IDM ||
+        this.sport_id == this.JUDO_IDF ||
+        this.sport_id == this.NATACION_IDM ||
+        this.sport_id == this.NATACION_IDF ||
+        this.sport_id == this.TAEKWONDO_IDM ||
+        this.sport_id == this.TAEKWONDO_IDF ||
+        this.sport_id == this.BAILE_IDE ||
+        this.sport_id == this.PORRISMO_IDE ||
+        this.sport_id == this.LUCHA_OLIMPICA
       ) {
         this.sport_route = "medalbased";
       } else if (
@@ -426,7 +483,6 @@ export default {
         this.sport_route = "";
       }
     },
-
     buildTable() {
       console.log(this.payload_stats);
 
@@ -667,7 +723,20 @@ export default {
         // TODO: make it so this happens for MEDAL-BASED events
         else if (
           this.sport_id == this.ATHLETICS_IDM ||
-          this.sport_id == this.ATHLETICS_IDF
+          this.sport_id == this.ATHLETICS_IDF ||
+          this.sport_id == this.CAMPO_TRAVIESA_IDM ||
+          this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+          this.sport_id == this.HALTEROFILIA_IDM ||
+          this.sport_id == this.HALTEROFILIA_IDF ||
+          this.sport_id == this.JUDO_IDM ||
+          this.sport_id == this.JUDO_IDF ||
+          this.sport_id == this.NATACION_IDM ||
+          this.sport_id == this.NATACION_IDF ||
+          this.sport_id == this.TAEKWONDO_IDM ||
+          this.sport_id == this.TAEKWONDO_IDF ||
+          this.sport_id == this.BAILE_IDE ||
+          this.sport_id == this.PORRISMO_IDE ||
+          this.sport_id == this.LUCHA_OLIMPICA
         ) {
           this.headers = [
             {
@@ -724,7 +793,6 @@ export default {
 @import "@/assets/variables.scss";
 .wrapper {
   height: 100%;
-
   .content-area {
     height: 100%;
     width: 100%;
