@@ -47,7 +47,7 @@
 
     </v-menu>
     
-  <v-row v-if="filteredAthletes !=''">
+  <v-row v-if="filteredAthletes !==''">
     <v-col v-for="(value,key) in filteredAthletes" :key=key md="3">
    
     <AthleteCard     
@@ -157,7 +157,7 @@ export default {
       
       for(let i = this.filteredAthletes.length-1; i >=0; i--){
         let athlete=this.filteredAthletes[i]
-        if(this.sport!=''){
+        if(this.sport!=''){          
           if(this.sport.localeCompare(athlete['sportName'])!=0){
             this.filteredAthletes.splice(i,1)
             continue
