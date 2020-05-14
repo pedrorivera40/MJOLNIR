@@ -3,10 +3,10 @@
     <v-app-bar fixed app dark color="blue-grey darken-4">
       <client-only>
         <v-app-bar-nav-icon
-          v-if="smAndDown"
+          v-if="this.$vuetify.breakpoint.smAndDown"
           @click.stop="drawer = !drawer"
         ></v-app-bar-nav-icon>
-        <h3 v-if="smAndDown" class="headline">
+        <h3 v-if="this.$vuetify.breakpoint.smAndDown" class="headline">
           Huella Deportiva Web
         </h3>
         <v-img
@@ -18,7 +18,7 @@
         />
 
         <v-spacer />
-        <nav v-if="mdAndUp">
+        <nav v-if="this.$vuetify.breakpoint.mdAndUp">
           <nuxt-link
             v-for="item in items"
             :key="item.title"
@@ -82,8 +82,6 @@ export default {
   data() {
     return {
       drawer: false,
-      mdAndUp: this.$vuetify.breakpoint.mdAndUp,
-      smAndDown: this.$vuetify.breakpoint.smAndDown,
       items: [
         {
           icon: "mdi-calendar-multiple",

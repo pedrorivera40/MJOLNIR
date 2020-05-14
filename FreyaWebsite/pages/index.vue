@@ -9,12 +9,12 @@
                 ¡Bienvenida a Huella Deportiva
                 <span class="highlight">Web</span>!
               </h1>
-              <h1 v-else class="header display-3 my-12">
+              <h1 v-else-if="mdAndUp" class="header display-3 my-12">
                 ¡Bienvenida a Huella Deportiva
                 <span class="highlight">Web</span>!
               </h1>
               <Logo
-                :width="smAndDown ? '350px' : ''"
+                :width="mdAndUp ? '' : '350px'"
               />
               <h2 class="my-6 headline">¡Orgullo Colegial!</h2>
             </v-col>
@@ -33,7 +33,8 @@ export default {
   },
   data(){
     return{
-      smAndDown: this.$vuetify.breakpoint.smAndDown 
+      smAndDown: this.$vuetify.breakpoint.smAndDown, 
+      mdAndUp: this.$vuetify.breakpoint.mdAndUp 
     }
   }
 };
