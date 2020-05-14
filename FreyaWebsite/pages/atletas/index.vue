@@ -4,7 +4,7 @@
       <h1>Atletas:</h1>
     </v-row>
 
-    <div v-if="athletes.length>0">
+    <div v-if="athletes.length > 0">
       <v-row class="text-right">
         <v-col>
           <v-menu
@@ -45,7 +45,7 @@
       </v-row>
 
       <v-row v-if="!!filteredAthletes">
-        <v-col v-for="(value, key) in filteredAthletes" :key="key" md="3">
+        <v-col v-for="(value, key) in filteredAthletes" :key="key" cols="12" md="6" lg="3" >
           <AthleteCard
             :athleteID="value.id"
             :firstName="value.fName"
@@ -57,7 +57,7 @@
       </v-row>
 
       <v-row v-else>
-        <v-col v-for="(value, key) in athletes" :key="key" md="3">
+        <v-col v-for="(value, key) in athletes" :key="key" cols="12"  md="6" lg="3">
           <AthleteCard
             :athleteID="value.id"
             :firstName="value.fName"
