@@ -8,6 +8,8 @@ OdinAPI/handler/dao/config/white-smile-272204-firebase-adminsdk-spbxn-4ca34ac3ff
 OdinAPI/tests/test_results.out
 RagnarokCloud/.firebaserc
 
+# GCP app engine deployment
+LokiDashboard/app.yml
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template

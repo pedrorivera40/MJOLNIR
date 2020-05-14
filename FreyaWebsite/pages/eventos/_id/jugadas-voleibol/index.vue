@@ -237,10 +237,10 @@
 </template>
 
 <script>
-import VolleyballScore from "../../../components/VolleyballScore";
-import VolleyballStatistics from "../../../components/VolleyballStatistics";
-import PBPRosterEntry from "../../../components/PBPRosterEntry";
-import VolleyballGameAction from "../../../components/VolleyballGameAction";
+import VolleyballScore from "@/components/VolleyballScore";
+import VolleyballStatistics from "@/components/VolleyballStatistics";
+import PBPRosterEntry from "@/components/PBPRosterEntry";
+import VolleyballGameAction from "@/components/VolleyballGameAction";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
