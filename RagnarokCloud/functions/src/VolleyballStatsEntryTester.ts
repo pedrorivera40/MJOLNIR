@@ -22,7 +22,7 @@ const expectedOutput = JSON.stringify({
         "service_errors": stats[4],
         "digs": stats[5],
         "blocks": stats[6] + stats[7],
-        "block_points": stats[7],
+        "blocking_points": stats[7],
         "blocking_errors": stats[8],
         "reception_errors": stats[9]
     }

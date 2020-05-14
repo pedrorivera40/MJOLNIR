@@ -1384,11 +1384,9 @@ def pbp_end(sport):
 @app.route("/results/volleyball/", methods=['POST'])
 @token_check
 def volleyballStatistics():
-    # Check user making the reques has a valid session.
+    # Extract token for this request.
     token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
+
     json = request.json
     if json is None:
         return jsonify(Error='Solicitud Incorrecta'), 400
