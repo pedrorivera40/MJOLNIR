@@ -575,6 +575,7 @@ export default {
         this.button_loading = true;
         if (await this.sendGameAction(payload)) {
           this.$refs.create_form.reset();
+          this.notification_dialog = false;
         }
         this.button_loading = false;
       }

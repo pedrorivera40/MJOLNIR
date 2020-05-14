@@ -45,15 +45,21 @@ where they can see an athletes info including their season stats.
 
 1. Create an athlete that participates in a sport with positions
 assigning the positions to the athlete from the athlete 
-management page.**[SOFTWARE REQUIREMENTS 4D,4E]**
+management page.**[SW-R: 4D,4E AMITC-1]**
 
 2. Create an athlete that participates in a sport with categories
 assigning the categories to the athlete. from the athlete
-management page.**[SOFTWARE REQUIREMENTS 4F]**
+management page.**[SW-R: 4F AMITC-2]**
 
-3. Edit an athlete profiles information.**[SOFTWARE REQUIREMENTS 4G]**
+3. Edit an athlete profiles information.**[SW-R: 4G AMITC-3]**
 
-4. Delete an existing athlete.**[SOFTWARE REQUIREMENTS 4H]**
+4. Delete an existing athlete.**[SW-R: 4H AMITC-5]**
+
+5. Try to delete an existing athlete that already plays for a
+team.**[ AMITC-6 ]**   
+   
+6. Go to athlete profile page and showcase the statistics for
+a season **[ AMITC-4 ]**
 
 ## Team Management Module
 
@@ -73,16 +79,16 @@ For the Event module we want to showcase the creation of an event,
 the event viewer page and the results page for an event that has 
 statistics recorded.
 
-1. Go to events management page to see a list of created events.**[SOFTWARE REQUIREMENTS 2B]**
+1. Go to events management page to see a list of created events.**[SW-R: 2B]**
 
-2. Create an event from the event management page.**[SOFTWARE REQUIREMENTS 2A]**
+2. Create an event from the event management page.**[SW-R: 2A]**
 
-3. Edit the information of an existing event.**[SOFTWARE REQUIREMENTS 2C]**
+3. Edit the information of an existing event.**[SW-R: 2C]**
 
-4. Delete an event.**[SOFTWARE REQUIREMENTS 2E]**
+4. Delete an event.**[SW-R: 2E]**
 
 5. Select an event with statistics to view and then click on 
-the "see results button" to be redirected to the results page.**[SOFTWARE REQUIREMENTS 2D]**
+the "see results button" to be redirected to the results page.**[SW-R: 2D]**
 
 ## PBP Management Module
 This module allows dashboard users to control the PBP sequence as a Volleyball game takes place. Note that this information is also displayed on the Freya website for general fanbase to view. As for this demonstration, the objective is to create a new PBP sequence for an existing Volleyball game, and modify the game sequence by adding the athletes that participate, adding game actions, updating opponent team color, adjusting game score, and changing the current set value. Finally the game will be marked as ended.

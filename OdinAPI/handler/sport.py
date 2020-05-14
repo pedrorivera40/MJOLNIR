@@ -147,10 +147,10 @@ class SportHandler:
             categories = self._build_categories_list(category_rows)
 
             if len(categories) == 0:
-                return jsonify(ERROR="No se encontró información sobre ese deporte."), 400
+                return jsonify(Error="No se encontró información sobre ese deporte."), 400
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR="Problemas internos relacionados al DAO."), 500
+            return jsonify(Error="Problemas internos relacionados al DAO."), 500
 
         return jsonify(CATEGORIES=categories), 200
 
@@ -175,10 +175,10 @@ class SportHandler:
             sports = self._build_sport_dict(sport_rows)
 
             if len(sports) == 0:
-                return jsonify(ERROR="No se encontró información sobre ese deporte."), 400
+                return jsonify(Error="No se encontró información sobre ese deporte."), 400
         except Exception as e:
             print(str(e))
-            return jsonify(ERROR="Problemas internos relacionados al DAO."), 500
+            return jsonify(Error="Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORTS=sports), 200
 
@@ -207,10 +207,10 @@ class SportHandler:
             sports = self._build_sport_dict(sport_rows)
 
             if len(sports) == 0:
-                return jsonify(ERROR="No se encontró información sobre ese deporte."), 400
+                return jsonify(Error="No se encontró información sobre ese deporte."), 400
 
         except:
-            return jsonify(ERROR="Problemas internos relacionados al DAO."), 500
+            return jsonify(Error="Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORTS=sports), 200
 
@@ -237,9 +237,9 @@ class SportHandler:
             sport_row = SportDAO().getSportById(sport_id)
             sport = self._build_sport_row_dict(sport_row)
             if len(sport) == 0:
-                return jsonify(ERROR="No se encontró información sobre ese deporte."), 400
+                return jsonify(Error="No se encontró información sobre ese deporte."), 400
         except:
-            return jsonify(ERROR="Problemas internos relacionados al DAO."), 500
+            return jsonify(Error="Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORT=sport), 200
 
@@ -267,9 +267,9 @@ class SportHandler:
             sport_rows = SportDAO().getSportByName(sport_name)
             sports = self._build_sport_dict(sport_rows)
             if len(sports) == 0:
-                return jsonify(ERROR="No se encontró información sobre ese deporte."), 400
+                return jsonify(Error="No se encontró información sobre ese deporte."), 400
         except:
-            return jsonify(ERROR="Problemas internos relacionados al DAO."), 500
+            return jsonify(Error="Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORTS=sports), 200
 
@@ -297,8 +297,8 @@ class SportHandler:
             sport_rows = SportDAO().getSportCategoriesPositions()
             sports = self._build_sport_category_position(sport_rows)
             if len(sports) == 0:
-                return jsonify(ERROR="No se encontró información sobre ese deporte."), 400
+                return jsonify(Error="No se encontró información sobre ese deporte."), 400
         except:
-            return jsonify(ERROR="Problemas internos relacionados al DAO."), 500
+            return jsonify(Error="Problemas internos relacionados al DAO."), 500
 
         return jsonify(SPORTS=sports), 200

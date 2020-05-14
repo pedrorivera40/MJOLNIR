@@ -67,7 +67,7 @@ export default {
       page_title: "Deportes",
       male_branch: "Masculino",
       female_branch: "Femenino",
-      exibit_branch: "Exhibicion"
+      exibit_branch: "Exhibición"
     };
   },
   methods: {

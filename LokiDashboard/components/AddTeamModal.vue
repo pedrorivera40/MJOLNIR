@@ -42,7 +42,7 @@
                                                 item-value="season_year" 
                                                 item-text="season_year"
                                                 :items="yearList"
-                                                label ="Año de Temporada"
+                                                label ="Año de Temporada*"
                                                 prepend-icon="mdi-calendar-blank-multiple"
                                                 :rules="[seasonRequired('Temporada')]"
                                                 
@@ -99,7 +99,7 @@
                                 
                                 </v-col>
                             </v-row>
-
+                            <small>*indica un campo requirido.</small>
                             <v-row>
                                 <v-spacer/>
                                 <v-spacer/>

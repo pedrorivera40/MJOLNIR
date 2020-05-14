@@ -292,7 +292,7 @@ export default {
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -306,9 +306,11 @@ export default {
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
             return true;
         } catch (error) {
-            if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
-            } else {
+            console.log(error.response.data)
+            if (!!error.response.data.Error) {
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+            }
+            else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
             return false;
@@ -323,7 +325,7 @@ export default {
             return true;
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -338,7 +340,7 @@ export default {
             return true;
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -358,7 +360,7 @@ export default {
             dispatch('notifications/setSnackbar', { text: response.data.MSG, color: 'success' }, { root: true })
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -382,7 +384,7 @@ export default {
             return true;
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -398,7 +400,7 @@ export default {
             return true;
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -415,7 +417,7 @@ export default {
             return true;
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -431,7 +433,7 @@ export default {
             return true;
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }

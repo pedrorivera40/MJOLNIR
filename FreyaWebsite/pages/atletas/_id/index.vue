@@ -291,7 +291,7 @@ export default {
 					if(this.athlete.bio)
 						this.short_bio = this.athlete.bio
 
-					if(this.athlete.number)
+					if(this.athlete.number !== null && this.athlete.number !== '')
 						this.number = this.athlete.number
 
 					if(this.athlete.height)

@@ -965,7 +965,7 @@
                                     </v-row>
                                 </v-col>
                             </v-row>
-                            
+                            <small>*todos los campos son requeridos.</small>
                             <v-row>
                                 <v-spacer/>
                                 <v-spacer/>
@@ -1029,6 +1029,19 @@
         // OTHER SPORTS (MEDAL BASED)
         ATHLETICS_IDM: 8,
         ATHLETICS_IDF: 19,
+        BAILE_IDE: 17,
+        CAMPO_TRAVIESA_IDM:23,
+        CAMPO_TRAVIESA_IDF:24,
+        HALTEROFILIA_IDM:26,
+        HALTEROFILIA_IDF:27,
+        JUDO_IDM:6,
+        JUDO_IDF:20,
+        LUCHA_OLIMPICA_IDM:25,
+        NATACION_IDM:21,
+        NATACION_IDF:22,
+        PORRISMO_IDE:30,
+        TAEKWONDO_IDM:28,
+        TAEKWONDO_IDF:29,
         //OTHER SPORTS (MATCH BASED)
         FIELD_TENNIS_IDM: 9,
         FIELD_TENNIS_IDF: 18,
@@ -1171,7 +1184,14 @@
                     }
                     }
                 }
-                 else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                 else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA ){
                     this.payload_stats_individual = {
                         "event_id":Number(this.event_id),
                         "athlete_id":'',
@@ -1276,7 +1296,14 @@
                     }
                     }
                 }
-                else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
+                else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA ){
                     let current_statistics = this.individual_stats.Medal_Based_Event_Athlete_Statistics.event_statistics
                     this.payload_stats_individual = {
                         "event_id":Number(this.event_id),
@@ -1354,7 +1381,14 @@
       return (this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF)
     },
     isMedalBased: function () {
-      return (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF)
+      return (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF ||
+                this.sport_id == this.CAMPO_TRAVIESA_IDM || this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+                this.sport_id == this.HALTEROFILIA_IDM || this.sport_id == this.HALTEROFILIA_IDF ||
+                this.sport_id == this.JUDO_IDM || this.sport_id == this.JUDO_IDF ||
+                this.sport_id == this.NATACION_IDM || this.sport_id == this.NATACION_IDF ||
+                this.sport_id == this.TAEKWONDO_IDM || this.sport_id == this.TAEKWONDO_IDF ||
+                this.sport_id == this.BAILE_IDE || this.sport_id == this.PORRISMO_IDE ||
+                this.sport_id == this.LUCHA_OLIMPICA )
     },
     isMatchBased: function (){
         return (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF

@@ -14,7 +14,7 @@ const expectedAthelete1 = JSON.stringify({
         "service_errors": 0,
         "digs": 0,
         "blocks": 0,
-        "block_points": 0,
+        "blocking_points": 0,
         "blocking_errors": 0,
         "reception_errors": 0
     }
@@ -31,7 +31,7 @@ const expectedTeamAthlete2 = JSON.stringify({
         "service_errors": 0,
         "digs": 0,
         "blocks": 0,
-        "block_points": 0,
+        "blocking_points": 0,
         "blocking_errors": 0,
         "reception_errors": 0
     }

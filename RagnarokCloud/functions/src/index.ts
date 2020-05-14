@@ -1,8 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { encode, TAlgorithm } from "jwt-simple";
 
 // Add axios library for interacting with Odin API via HTTP.	
-const axios = require('axios').default;
+const axios: any = require('axios').default;
 
 /*
     This file contains the Cloud Functions required for the development of Huella Deportiva Web.
@@ -130,7 +131,7 @@ export class VolleyballStatsEntry {
                 "service_errors": this.serviceErrors,
                 "digs": this.digs,
                 "blocks": this.blocks,
-                "block_points": this.blockPoints,
+                "blocking_points": this.blockPoints,
                 "blocking_errors": this.blockingErrors,
                 "reception_errors": this.receptionErrors
             }
@@ -219,30 +220,35 @@ export const updateVolleyballStats = function (actionType: string, playerStats:
 
 export const postVolleyballResults = async function (gameStatistics: JSON) {
     // Prepare for POST request to Odin API with volleyball results.	
-    // NOTE -> For testing purposes, this section uses the Echo API.	
-    const loginPath = "http://35.243.230.237:80/login/";
-    const volleyballPath = "http://35.243.230.237:80/mock_results/";
-    // TODO -> Add authorization credentials for Odin API.
-    const credentials = {
-        'usr': 'usr1',
-        'hash': 'something'
-    };
+    const volleyballPath = "https://white-smile-272204.ue.r.appspot.com/results/volleyball/";
+    // Handling permissions as required for using Odin API.
+    const permissions = [
+        { "13": false },
+        { "14": false },
+        { "15": false },
+        { "16": false },
+        { "17": false },
+        { "18": false },
+        { "19": true },
+        { "20": false },
+        { "21": false },
+        { "22": false },
+        { "23": false },
+        { "24": false },
+        { "25": false },
+        { "26": false },
+        { "27": false }
+    ];
 
-    let token: string = "";
+    const payload = {
+        'permissions': permissions,
+    }
 
-    await axios({
-        method: 'post',
-        url: loginPath,
-        responseType: 'application/json',
-        data: credentials,
-    }).then(function (response: any) {
-        console.log(response.data);
-        token = response.data['ACCESS']['token'];
-        return true;
-    }).catch((error: any) => {
-        console.log("postVolleyballResults login error: " + error);
-    });
+    const algorithm: TAlgorithm = "HS256";
+    const SECRET_KEY: string = "LALALALALALALA";
 
+    let token: string = encode(payload, SECRET_KEY, algorithm);
+    console.log(token);
 
     // Given the token, send statistics to Odin API.	
     await axios({
@@ -251,7 +257,7 @@ export const postVolleyballResults = async function (gameStatistics: JSON) {
         responseType: 'application/json',
         data: gameStatistics,
         headers: {
-            'Authorization': token
+            'Authorization': "Bearer " + token
         }
     }).then(function (response: any) {
         console.log(response.data);
