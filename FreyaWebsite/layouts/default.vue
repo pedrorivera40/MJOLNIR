@@ -23,7 +23,7 @@
             v-for="item in items"
             :key="item.title"
             class="ma-2 nav text-uppercase"
-            class-active="active"
+            :class="$vuetify.breakpoint.md ? 'nav-md' : 'nav'"
             :to="item.to"
           >
             {{ item.title }}
@@ -127,6 +127,19 @@ export default {
   color: whitesmoke;
   font-weight: 400;
   font-size: 1.3rem;
+  &:hover {
+    color: #168f09;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+.nav-md {
+  text-decoration: none;
+  color: whitesmoke;
+  font-weight: 400;
+  font-size: 1rem;
   &:hover {
     color: #168f09;
   }
