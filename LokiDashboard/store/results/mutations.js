@@ -28,6 +28,10 @@ export default{
     //INDIVIDUAL STATS
     SET_INDIVIDUAL_STATS(state,individual_stats){
         state.individual_stats = individual_stats
-    }
+    },
 
+    //SPORT CATEGORIES
+    SET_SPORT_CATEGORIES(state, sport_categories){
+        state.sport_categories = sport_categories
+    }
 }

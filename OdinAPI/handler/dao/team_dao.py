@@ -157,6 +157,31 @@ class TeamDAO:
         cursor.execute(query, (int(tID), int(aID),))
         result = cursor.fetchone()
         return result
+
+    def getTeamsByAthleteID(self,aID):
+        """
+        Checks if a specific athlete belongs to any teams
+
+        Args:
+            aID: The ID of the athlete of which the record needs to be fetched.
+
+        Returns:
+            the response to the database query of the teams the athletes belongs to
+        """
+        cursor = self.conn.cursor()
+        query = """
+                SELECT team_members.id,team_members.team_id,team.season_year,team_members.athlete_id
+                FROM team_members
+                INNER JOIN team on team.id = team_members.team_id
+                WHERE (team_members.athlete_id = %s) AND (team_members.is_invalid=false OR team_members.is_invalid is Null)
+                """
+        cursor.execute(query, (int(aID),))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+
 # =============================//GETS//=======================
 
     def getAllTeams(self):

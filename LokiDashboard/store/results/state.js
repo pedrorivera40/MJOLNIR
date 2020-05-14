@@ -5,4 +5,5 @@ export default() =>({
     loadingQuery:false,
     team_members: null,
     individual_stats: null,
+    sport_categories: null,
 })

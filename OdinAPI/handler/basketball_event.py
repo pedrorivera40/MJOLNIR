@@ -238,29 +238,33 @@ class BasketballEventHandler(EventResultHandler):
 
 
     def mapEventAllStatsToDict(self, team_record, athlete_records, final_record):
-        event_info = dict(
-            event_id=team_record[15],
-            basketball_event_team_stats_id=team_record[16]
-            # event_date = team_record[17]
-        )
-        basketball_statistics = dict(
-            points=team_record[0],
-            rebounds=team_record[1],
-            assists=team_record[2],
-            steals=team_record[3],
-            blocks=team_record[4],
-            turnovers=team_record[5],
-            field_goal_attempt=team_record[6],
-            successful_field_goal=team_record[7],
-            three_point_attempt=team_record[8],
-            successful_three_point=team_record[9],
-            free_throw_attempt=team_record[10],
-            successful_free_throw=team_record[11],
-            field_goal_percentage=float(team_record[12]),
-            free_throw_percentage=float(team_record[13]),
-            three_point_percentage=float(team_record[14]),
-        )
-        team_statistics = dict(basketball_statistics=basketball_statistics)
+        if team_record:
+            event_info = dict(
+                event_id=team_record[15],
+                basketball_event_team_stats_id=team_record[16]
+                # event_date = team_record[17]
+            )
+            basketball_statistics = dict(
+                points=team_record[0],
+                rebounds=team_record[1],
+                assists=team_record[2],
+                steals=team_record[3],
+                blocks=team_record[4],
+                turnovers=team_record[5],
+                field_goal_attempt=team_record[6],
+                successful_field_goal=team_record[7],
+                three_point_attempt=team_record[8],
+                successful_three_point=team_record[9],
+                free_throw_attempt=team_record[10],
+                successful_free_throw=team_record[11],
+                field_goal_percentage=float(team_record[12]),
+                free_throw_percentage=float(team_record[13]),
+                three_point_percentage=float(team_record[14]),
+            )
+            team_statistics = dict(basketball_statistics=basketball_statistics)
+        else:
+            event_info = dict(event_id=None,basketball_event_team_stats_id=None)
+            team_statistics = None
 
         # mappedResult = []
         # for athlete_statistics in result:
@@ -599,8 +603,8 @@ class BasketballEventHandler(EventResultHandler):
         try:
             dao = BasketballEventDAO()
             team_result = dao.getAllTeamStatisticsByEventID(eID)
-            if not team_result:
-                return jsonify(Error="Estadisticas de Equipo de Evento de Baloncesto no se encontraron para el evento: {}".format(eID)), 404
+            # if not team_result:
+            #     return jsonify(Error="Estadisticas de Equipo de Evento de Baloncesto no se encontraron para el evento: {}".format(eID)), 404
         except (TypeError, ValueError):
             return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:
@@ -608,8 +612,8 @@ class BasketballEventHandler(EventResultHandler):
 
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
-            if not all_stats_result:
-                return jsonify(Error="Estadisticas de Evento de Baloncesto no se encontraron para the event: {}.".format(eID)), 404
+            # if not all_stats_result:
+            #     return jsonify(Error="Estadisticas de Evento de Baloncesto no se encontraron para el evento: {}.".format(eID)), 404
         except (TypeError, ValueError):
             return jsonify(Error="Solicitud Incorrecta, Error de Tipo."), 400
         except:

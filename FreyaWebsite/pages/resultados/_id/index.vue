@@ -291,24 +291,38 @@ created(){
             console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED",this.results_payload)
             if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){
                 this.payload_stats = this.results_payload.Basketball_Event_Statistics
-                this.team_statistics = [this.payload_stats.team_statistics]
+                if (this.payload_stats.team_statistics){
+                    this.team_statistics = [this.payload_stats.team_statistics]
+                }
+                else this.team_statistics = []
             }
             else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){
                 this.payload_stats = this.results_payload.Volleyball_Event_Statistics
-                this.team_statistics = [this.payload_stats.team_statistics]
+                if (this.payload_stats.team_statistics){
+                    this.team_statistics = [this.payload_stats.team_statistics]
+                }
+                else this.team_statistics = []
                 }
             else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){
                 this.payload_stats = this.results_payload.Soccer_Event_Statistics
-                this.team_statistics = [this.payload_stats.team_statistics]
+                if (this.payload_stats.team_statistics){
+                    this.team_statistics = [this.payload_stats.team_statistics]
+                }
+                else this.team_statistics = []
             }
             else if(this.sport_id == this.BASEBALL_IDM || this.sport_id == this.SOFTBALL_IDF){
                 this.payload_stats = this.results_payload.Baseball_Event_Statistics
-                this.team_statistics = [this.payload_stats.team_statistics]
+                if (this.payload_stats.team_statistics){
+                    this.team_statistics = [this.payload_stats.team_statistics]
+                }
+                else this.team_statistics = []
             }
             else if (this.sport_id == this.ATHLETICS_IDM || this.sport_id == this.ATHLETICS_IDF){
                 this.payload_stats = this.results_payload.Medal_Based_Event_Statistics
                 this.team_statistics = []
-                this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
+                if(this.payload_stats.team_statistics.medal_based_statistics){
+                    this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics
+                }
             }
             else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
                 || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){
@@ -413,6 +427,7 @@ created(){
                 {text: 'Bloqueo', value: 'statistics.blocks'},
                 {text: 'Errores De Bloqueo', value: 'statistics.blocking_errors'},
                 {text: 'Errores de Recepcion', value: 'statistics.reception_errors'},
+                {text: 'Puntos de Bloqueo', value: 'statistics.blocking_points'},
 
                 ]
                 this.team_headers =
@@ -426,6 +441,8 @@ created(){
                 {text: 'Bloqueos', value: 'volleyball_statistics.blocks'},
                 {text: 'Errores de Bloqueo', value: 'volleyball_statistics.blocking_errors'},
                 {text: 'Errores de Recepcion', value: 'volleyball_statistics.reception_errors'},
+                {text: 'Puntos de Bloqueo', value: 'volleyball_statistics.blocking_points'},
+                
 
                 ]
             }
@@ -438,7 +455,7 @@ created(){
                 {text: 'Asistencias', value: 'statistics.assists'},
                 {text: 'Faltas', value: 'statistics.fouls'},
                 {text: 'Tarjetas', value: 'statistics.cards'},
-                {text: 'Goles Exitosos', value: 'statistics.successful_goals'},
+                {text: 'Goles', value: 'statistics.successful_goals'},
                 {text: 'Atajadas', value: 'statistics.tackles'},
 
                 ]
@@ -448,7 +465,7 @@ created(){
                 {text: 'Asistencias', value: 'soccer_statistics.assists'},
                 {text: 'Faltas', value: 'soccer_statistics.fouls'},
                 {text: 'Tarjetas', value: 'soccer_statistics.cards'},
-                {text: 'Goles Exitosos', value: 'soccer_statistics.successful_goals'},
+                {text: 'Goles', value: 'soccer_statistics.successful_goals'},
                 {text: 'Atajadas', value: 'soccer_statistics.tackles'},
 
                 ]

@@ -148,7 +148,7 @@ class VolleyballEventDAO:
                 athlete.id as athlete_id, athlete.first_name, athlete.middle_name, athlete.last_names, 
                 athlete.number, athlete.profile_image_link,
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
-                reception_errors,
+                reception_errors, blocking_points,
                 volleyball_event.event_id, volleyball_event.id as volleyball_event_id
                 FROM volleyball_event
                 INNER JOIN athlete ON athlete.id = volleyball_event.athlete_id
@@ -184,7 +184,7 @@ class VolleyballEventDAO:
         query = """
                 SELECT
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
-                reception_errors,
+                reception_errors, blocking_points,
                 volleyball_event.event_id, volleyball_event.id as volleyball_event_id, volleyball_event.athlete_id
                 FROM volleyball_event
                 WHERE event_id = %s and athlete_id = %s and 
@@ -216,7 +216,7 @@ class VolleyballEventDAO:
         query = """
                 SELECT
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
-                reception_errors,
+                reception_errors, blocking_points,
                 volleyball_event_team_stats.event_id, volleyball_event_team_stats.id as volleyball_event_team_stats_id
                 FROM volleyball_event_team_stats
                 WHERE event_id = %s  and 
@@ -249,7 +249,7 @@ class VolleyballEventDAO:
                 SELECT
                 event.id as event_id, event.event_date,
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
-                reception_errors,
+                reception_errors, blocking_points,
                 volleyball_event.id as volleyball_event_id,
                 volleyball_event.athlete_id
                 FROM volleyball_event
@@ -290,6 +290,7 @@ class VolleyballEventDAO:
                 sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
                 sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
                 sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors,
+                sum(blocking_points) as blocking_points,
                 volleyball_event.athlete_id
 
                 FROM volleyball_event
@@ -300,7 +301,7 @@ class VolleyballEventDAO:
                 GROUP BY volleyball_Event.athlete_id)
                 select 
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
-                reception_errors,
+                reception_errors, blocking_points,
                 athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
                 INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
@@ -335,6 +336,7 @@ class VolleyballEventDAO:
                 sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
                 sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
                 sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors,
+                sum(blocking_points) as blocking_points,
                 volleyball_event.athlete_id
 
                 FROM volleyball_event
@@ -345,7 +347,7 @@ class VolleyballEventDAO:
                 GROUP BY volleyball_Event.athlete_id)
                 select 
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
-                reception_errors,
+                reception_errors, blocking_points,
                 athlete_id, first_name, middle_name, last_names, number, profile_image_link
                 from aggregate_query
                 INNER JOIN athlete on athlete.id = aggregate_query.athlete_id
@@ -383,6 +385,7 @@ class VolleyballEventDAO:
                 sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
                 sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
                 sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors,
+                sum(blocking_points) as blocking_points,
                 event.team_id
                 FROM volleyball_event_team_stats
                 INNER JOIN event ON event.id = volleyball_event_team_stats.event_id
@@ -392,7 +395,7 @@ class VolleyballEventDAO:
                 GROUP BY event.team_id)
                 select 
                 kill_points, attack_errors, assists, aces, service_errors, digs, blocks, blocking_errors,
-                reception_errors,
+                reception_errors, blocking_points,
                 team_id
                 from aggregate_query
                 ;
@@ -407,7 +410,7 @@ class VolleyballEventDAO:
     # needless to say, a bunch changes since these are more complex statistics...
     # TODO: need to update documentation, substitute percentages for success/attempt.
     def addStatistics(self, eID, aID, kill_points, attack_errors, assists, aces, service_errors,
-                      digs, blocks, blocking_errors, reception_errors):
+                      digs, blocks, blocking_errors, reception_errors, blocking_points):
         """
         Adds a new volleyball event statistics record with the provided information.
 
@@ -427,6 +430,7 @@ class VolleyballEventDAO:
             blocks:
             blocking_errors:
             reception_errors:
+            blocking_points:
 
         Returns:
             A list containing the response to the database query
@@ -436,11 +440,11 @@ class VolleyballEventDAO:
         query = """
                 INSERT INTO volleyball_event(kill_points, attack_errors,
                 assists, aces, service_errors, digs, blocks, blocking_errors,
-                reception_errors,event_id,athlete_id,is_invalid)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
+                reception_errors, blocking_points, event_id,athlete_id,is_invalid)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         cursor.execute(query, (int(kill_points), int(attack_errors), int(assists), int(aces), int(service_errors), int(digs), int(blocks),
-                               int(blocking_errors), int(reception_errors), int(eID), int(aID),))
+                               int(blocking_errors), int(reception_errors), int(blocking_points), int(eID), int(aID),))
         sID = cursor.fetchone()[0]
         if not sID:
             return sID
@@ -449,7 +453,7 @@ class VolleyballEventDAO:
 
     # NEW: add team statistics aggregate passed by parameter
     def addTeamStatistics(self, eID, kill_points, attack_errors, assists, aces, service_errors,
-                          digs, blocks, blocking_errors, reception_errors):
+                          digs, blocks, blocking_errors, reception_errors, blocking_points):
         """
         Adds a new volleyball event team statistics record with the provided information.
 
@@ -468,6 +472,7 @@ class VolleyballEventDAO:
             blocks:
             blocking_errors:
             reception_errors:
+            blocking_points:
 
         Returns:
             A list containing the response to the database query
@@ -477,11 +482,11 @@ class VolleyballEventDAO:
         query = """
                 INSERT INTO volleyball_event_team_stats(kill_points, attack_errors,
                 assists, aces, service_errors, digs, blocks, blocking_errors,
-                reception_errors,event_id,is_invalid)
-                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
+                reception_errors,blocking_points,event_id,is_invalid)
+                VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         cursor.execute(query, (int(kill_points), int(attack_errors), int(assists), int(aces), int(service_errors), int(digs), int(blocks),
-                               int(blocking_errors), int(reception_errors), int(eID),))
+                               int(blocking_errors), int(reception_errors), int(blocking_points), int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
@@ -517,7 +522,8 @@ class VolleyballEventDAO:
                 select 
                 sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
                 sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
-                sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors
+                sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors,
+                sum(blocking_points) as blocking_points
                 from valid_volleyball_events
                 WHERE event_id = %s)
                 select * 
@@ -529,14 +535,14 @@ class VolleyballEventDAO:
 
         query = """
                 INSERT INTO volleyball_event_team_stats(kill_points, attack_errors, assists, aces, service_errors, 
-                digs, blocks, blocking_errors,reception_errors,event_id,is_invalid)
+                digs, blocks, blocking_errors,reception_errors,blocking_points,event_id,is_invalid)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false) returning id;
                 """
         if resultTeam:
             cursor.execute(query, (int(resultTeam[0]), int(resultTeam[1]), int(resultTeam[2]), int(resultTeam[3]),
-                                   int(resultTeam[4]), int(resultTeam[5]), int(resultTeam[6]), int(resultTeam[7]), int(resultTeam[8]), int(eID),))
+                                   int(resultTeam[4]), int(resultTeam[5]), int(resultTeam[6]), int(resultTeam[7]), int(resultTeam[8]),int(resultTeam[9]), int(eID),))
         else:
-            cursor.execute(query, (0, 0, 0, 0, 0, 0, 0, 0, 0, int(eID),))
+            cursor.execute(query, (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, int(eID),))
         tsID = cursor.fetchone()[0]
         if not tsID:
             return tsID
@@ -547,7 +553,7 @@ class VolleyballEventDAO:
 
     # TODO: recal athlete will be validaded by handler
     def editStatistics(self, eID, aID, kill_points, attack_errors, assists, aces, service_errors,
-                       digs, blocks, blocking_errors, reception_errors):
+                       digs, blocks, blocking_errors, reception_errors,blocking_points):
         """
         Updates the statistics for the volleyball event with the given IDs.
 
@@ -567,6 +573,7 @@ class VolleyballEventDAO:
             blocks:
             blocking_errors:
             reception_errors:
+            blocking_points:
 
         Returns:
             A list containing the response to the database query
@@ -587,6 +594,7 @@ class VolleyballEventDAO:
                     blocks = %s,
                     blocking_errors = %s,
                     reception_errors = %s,
+                    blocking_points = %s,
                     is_invalid = false
                 WHERE event_id = %s and athlete_id = %s 
                 RETURNING
@@ -599,11 +607,12 @@ class VolleyballEventDAO:
                     blocks,
                     blocking_errors,
                     reception_errors,
+                    blocking_points,
                     volleyball_event.event_id, volleyball_event.id as volleyball_event_id, volleyball_event.athlete_id;
 
                 """
         cursor.execute(query, (int(kill_points), int(attack_errors), int(assists), int(aces), int(service_errors), int(digs), int(blocks),
-                               int(blocking_errors), int(reception_errors), int(eID), int(aID),))
+                               int(blocking_errors), int(reception_errors), int(blocking_points), int(eID), int(aID),))
         result = cursor.fetchone()
         if not result:
             return result
@@ -638,10 +647,11 @@ class VolleyballEventDAO:
                 select 
                 sum(kill_points) as kill_points,sum(attack_errors) as attack_errors, sum(assists) as assists,sum(aces) as aces,
                 sum(service_errors) as service_errors,sum(digs) as digs,sum(blocks) as blocks,
-                sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors
+                sum(blocking_errors) as blocking_errors,sum(reception_errors) as reception_errors,
+                sum(blocking_points) as blocking_points
                 from valid_volleyball_events
                 WHERE event_id = %s)
-                select
+                select * 
                 from aggregate_query
                 where aggregate_query.kill_points is not null;
                 """
@@ -660,6 +670,7 @@ class VolleyballEventDAO:
                     blocks = %s,
                     blocking_errors = %s,
                     reception_errors = %s,
+                    blocking_points = %s,
                     is_invalid = false
                 WHERE event_id = %s
                 RETURNING
@@ -672,14 +683,15 @@ class VolleyballEventDAO:
                     blocks,
                     blocking_errors,
                     reception_errors,
+                    blocking_points,
                     volleyball_event_team_stats.event_id, volleyball_event_team_stats.id as volleyball_event_team_stats_id;
 
                 """
         if resultTeam:
             cursor.execute(query, (int(resultTeam[0]), int(resultTeam[1]), int(resultTeam[2]), int(resultTeam[3]),
-                                   int(resultTeam[4]), int(resultTeam[5]), int(resultTeam[6]), int(resultTeam[7]), int(resultTeam[8]), int(eID),))
+                                   int(resultTeam[4]), int(resultTeam[5]), int(resultTeam[6]), int(resultTeam[7]), int(resultTeam[8]), int(resultTeam[9]), int(eID),))
         else:
-            cursor.execute(query, (0, 0, 0, 0, 0, 0, 0, 0, 0, int(eID),))
+            cursor.execute(query, (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, int(eID),))
         result = cursor.fetchone()
         if not result:
             return result
@@ -687,7 +699,7 @@ class VolleyballEventDAO:
         return result
 
     def editTeamStatisticsManual(self, eID, kill_points, attack_errors, assists, aces, service_errors,
-                                 digs, blocks, blocking_errors, reception_errors):
+                                 digs, blocks, blocking_errors, reception_errors,blocking_points):
         """
         Updates the team statistics for the volleyball event with the given IDs.
 
@@ -707,6 +719,7 @@ class VolleyballEventDAO:
             blocks:
             blocking_errors:
             reception_errors:
+            blocking_points:
 
         Returns:
             A list containing the response to the database query
@@ -727,6 +740,7 @@ class VolleyballEventDAO:
                     blocks = %s,
                     blocking_errors = %s,
                     reception_errors = %s,
+                    blocking_points = %s,
                     is_invalid = false
                 WHERE event_id = %s 
                 RETURNING
@@ -739,11 +753,12 @@ class VolleyballEventDAO:
                     blocks,
                     blocking_errors,
                     reception_errors,
+                    blocking_points,
                     volleyball_event_team_stats.event_id, volleyball_event_team_stats.id as volleyball_event__team_statsid;
 
                 """
         cursor.execute(query, (int(kill_points), int(attack_errors), int(assists), int(aces), int(service_errors), int(digs), int(blocks),
-                               int(blocking_errors), int(reception_errors), int(eID),))
+                               int(blocking_errors), int(reception_errors), int(blocking_points), int(eID),))
         result = cursor.fetchone()
         if not result:
             return result

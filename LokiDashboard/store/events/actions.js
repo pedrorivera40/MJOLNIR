@@ -6,8 +6,7 @@ export default {
     async getEvents({commit,dispatch}) {
         try {
             const response = await this.$axios.get('events/')
-            commit("SET_EVENTS", response.data.Events)
-            commit("SET_EVENT",null)
+            commit("SET_EVENTS", response.data.Events)           
 
         }catch(error){
             if(!!error.response.data){
@@ -27,13 +26,14 @@ export default {
     async getEventByID({commit,dispatch},eid) {
         try{
             const response = await this.$axios.get('events/'+eid+'/public/')
-            commit("SET_EVENT",response.data.Event)            
-
+            commit("SET_EVENT",response.data.Event)              
         }catch(error){
             if(!!error.response.data){
                 dispatch('notifications/setSnackbar', {text: error.response.data.Error, color: 'error'}, {root: true})
+                return 'error'
             }else{
                 dispatch('notifications/setSnackbar', {text: error.message, color: 'error'}, {root: true})
+                return 'error'
             }
         }
     },

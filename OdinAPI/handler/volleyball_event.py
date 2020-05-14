@@ -39,8 +39,8 @@ class VolleyballEventHandler(EventResultHandler):
         athlete_info['number'] = record[4]
         athlete_info['profile_image_link'] = record[5]
 
-        event_info['event_id'] = record[15]
-        event_info['volleyball_event_id'] = record[16]
+        event_info['event_id'] = record[16]
+        event_info['volleyball_event_id'] = record[17]
 
         stat_info['kill_points'] = record[6]
         stat_info['attack_errors'] = record[7]
@@ -51,6 +51,7 @@ class VolleyballEventHandler(EventResultHandler):
         stat_info['blocks'] = record[12]
         stat_info['blocking_errors'] = record[13]
         stat_info['reception_errors'] = record[14]
+        stat_info['blocking_points'] = record[15]
 
         result = dict(athlete=athlete_info, event_info=event_info,
                       event_statistics=stat_info)
@@ -70,10 +71,11 @@ class VolleyballEventHandler(EventResultHandler):
         stat_info['blocks'] = record[6]
         stat_info['blocking_errors'] = record[7]
         stat_info['reception_errors'] = record[8]
+        stat_info['blocking_points'] = record[9]
 
-        event_info['event_id'] = record[9]
-        event_info['volleyball_event_id'] = record[10]
-        event_info['athlete_id'] = record[11]
+        event_info['event_id'] = record[10]
+        event_info['volleyball_event_id'] = record[11]
+        event_info['athlete_id'] = record[12]
 
         #result = dict(Event_Statistics = stat_info)
         return dict(event_info=event_info, event_statistics=stat_info)
@@ -92,9 +94,10 @@ class VolleyballEventHandler(EventResultHandler):
         stat_info['blocks'] = record[6]
         stat_info['blocking_errors'] = record[7]
         stat_info['reception_errors'] = record[8]
+        stat_info['blocking_points'] = record[9]
 
-        event_info['event_id'] = record[9]
-        event_info['volleyball_event_id'] = record[10]
+        event_info['event_id'] = record[10]
+        event_info['volleyball_event_id'] = record[11]
 
         #result = dict(Event_Statistics = stat_info)
         return dict(event_info=event_info, event_statistics=stat_info)
@@ -118,6 +121,7 @@ class VolleyballEventHandler(EventResultHandler):
         stat_info['blocks'] = record[8]
         stat_info['blocking_errors'] = record[9]
         stat_info['reception_errors'] = record[10]
+        stat_info['blocking_points'] = record[11]
 
         result = dict(Event=event_info, Event_Statistics=stat_info)
         return result
@@ -126,12 +130,12 @@ class VolleyballEventHandler(EventResultHandler):
         athlete_info = {}
         stat_info = {}
 
-        athlete_info['athlete_id'] = record[9]
-        athlete_info['first_name'] = record[10]
-        athlete_info['middle_name'] = record[11]
-        athlete_info['last_names'] = record[12]
-        athlete_info['number'] = record[13]
-        athlete_info['profile_image_link'] = record[14]
+        athlete_info['athlete_id'] = record[10]
+        athlete_info['first_name'] = record[11]
+        athlete_info['middle_name'] = record[12]
+        athlete_info['last_names'] = record[13]
+        athlete_info['number'] = record[14]
+        athlete_info['profile_image_link'] = record[15]
 
         stat_info['kill_points'] = record[0]
         stat_info['attack_errors'] = record[1]
@@ -142,6 +146,7 @@ class VolleyballEventHandler(EventResultHandler):
         stat_info['blocks'] = record[6]
         stat_info['blocking_errors'] = record[7]
         stat_info['reception_errors'] = record[8]
+        stat_info['blocking_points'] = record[9]
 
         result = dict(Athlete=athlete_info, Event_Statistics=stat_info)
         return result
@@ -158,8 +163,10 @@ class VolleyballEventHandler(EventResultHandler):
         stat_info['blocks'] = record[6]
         stat_info['blocking_errors'] = record[7]
         stat_info['reception_errors'] = record[8]
+        stat_info['blocking_points'] = record[9]
+        
 
-        result = dict(team_id=record[9], Event_Statistics=stat_info)
+        result = dict(team_id=record[10], Event_Statistics=stat_info)
         return result
 
 
@@ -175,7 +182,8 @@ class VolleyballEventHandler(EventResultHandler):
 #         "digs":1,
 #         "blocks":1,
 #         "blocking_errors":1,
-#         "reception_errors":1
+#         "reception_errors":1,
+#         "blocking_points":1
 #         }
 #    },
 #   "athlete_statistics":
@@ -192,38 +200,43 @@ class VolleyballEventHandler(EventResultHandler):
 #             "digs":1,
 #             "blocks":1,
 #             "blocking_errors":1,
-#             "reception_errors":1
+#             "reception_errors":1,
+#             "blocking_points":1
 # 		  	}
 # 	  	}
 #   	},
 
 
     def mapEventAllStatsToDict(self, team_record, athlete_records, final_record):
-        event_info = dict(
-            event_id=team_record[9],
-            volleyball_event_team_stats_id=team_record[10]
-            # event_date = team_record[17]
-        )
-        volleyball_statistics = dict(
-            kill_points=team_record[0],
-            attack_errors=team_record[1],
-            assists=team_record[2],
-            aces=team_record[3],
-            service_errors=team_record[4],
-            digs=team_record[5],
-            blocks=team_record[6],
-            blocking_errors=team_record[7],
-            reception_errors=team_record[8]
-        )
-        team_statistics = dict(volleyball_statistics=volleyball_statistics)
-
+        if team_record:
+            event_info = dict(
+                event_id=team_record[10],
+                volleyball_event_team_stats_id=team_record[11]
+                # event_date = team_record[17]
+            )
+            volleyball_statistics = dict(
+                kill_points=team_record[0],
+                attack_errors=team_record[1],
+                assists=team_record[2],
+                aces=team_record[3],
+                service_errors=team_record[4],
+                digs=team_record[5],
+                blocks=team_record[6],
+                blocking_errors=team_record[7],
+                reception_errors=team_record[8],
+                blocking_points=team_record[9]
+            )
+            team_statistics = dict(volleyball_statistics=volleyball_statistics)
+        else:
+            event_info = dict(event_id=None,volleyball_event_team_stats_id=None)
+            team_statistics = None
+    
         # mappedResult = []
         # for athlete_statistics in result:
         #     mappedResult.append(self.mapEventToDict(athlete_statistics))
         # return jsonify(Volleyball_Event = mappedResult), 200
 
         athlete_statistics = []
-
         for athlete_record in athlete_records:
             athlete_info = dict(
                 athlete_id=athlete_record[0],
@@ -232,7 +245,7 @@ class VolleyballEventHandler(EventResultHandler):
                 last_names=athlete_record[3],
                 number=athlete_record[4],
                 profile_image_link=athlete_record[5],
-                volleyball_event_id=athlete_record[16]
+                volleyball_event_id=athlete_record[17]
             )
             statistics = dict(
                 kill_points=athlete_record[6],
@@ -243,7 +256,8 @@ class VolleyballEventHandler(EventResultHandler):
                 digs=athlete_record[11],
                 blocks=athlete_record[12],
                 blocking_errors=athlete_record[13],
-                reception_errors=athlete_record[14]
+                reception_errors=athlete_record[14],
+                blocking_points=athlete_record[15]
             )
 
             athlete_statistics.append(
@@ -554,19 +568,19 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             dao = VolleyballEventDAO()
             team_result = dao.getAllTeamStatisticsByEventID(eID)
-            if not team_result:
-                return jsonify(Error="Estadisticas de Equipo para Evento de Voleibol  no se encontraron para el Evento con ID:{}.".format(eID)), 404
+            # if not team_result:
+            #     return jsonify(Error="Estadisticas de Equipo para Evento de Voleibol  no se encontraron para el Evento con ID:{}.".format(eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo."), 400
+            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo. (TEAM STATS)"), 400
         except:
             return jsonify(ERROR="No se pudo verificar estadisticas de equipo para eventos de voleibol desde el DAO."), 500
 
         try:
             all_stats_result = dao.getAllStatisticsByEventID(eID)
-            if not all_stats_result:
-                return jsonify(Error="Estadisticas de Evento de Voleibol no se encontro para evento con ID:{}.".format(eID)), 404
+            # if not all_stats_result:
+            #     return jsonify(Error="Estadisticas de Evento de Voleibol no se encontro para evento con ID:{}.".format(eID)), 404
         except (TypeError, ValueError):
-            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo."), 400
+            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo. (ALL STATS)"), 400
         except:
             return jsonify(ERROR="No se pudo verificar evento de voleibol desde el DAO."), 500
 
@@ -574,12 +588,12 @@ class VolleyballEventHandler(EventResultHandler):
             fs_dao = FinalScoreDAO()
             final_score_result = fs_dao.getFinalScore(eID)
             if not final_score_result:
-                # return jsonify(Error = "Volleyball Event Statistics not found for the event: {}.".format(eID)),404
+            #     return jsonify(Error = "Volleyball Event Statistics not found for the event: {}.".format(eID)),404
                 final_score_result = [None, None]
             mappedResult = self.mapEventAllStatsToDict(
                 team_result, all_stats_result, final_score_result)
         except (TypeError, ValueError):
-            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo."), 400
+            return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo. (FINAL SCORE)"), 400
         except:
             return jsonify(ERROR="No se pudo verificar puntuacion final desde el DAO."), 500
 
@@ -608,6 +622,7 @@ class VolleyballEventHandler(EventResultHandler):
                 blocks:
                 blocking_errors:
                 reception_errors:
+                blocking_points:
 
         Returns:
             A JSON containing the id for the new Volleyball Event record.
@@ -696,7 +711,7 @@ class VolleyballEventHandler(EventResultHandler):
         if invalid_duplicate:
             try:
                 result = dao.editStatistics(eID, aID, attributes['kill_points'], attributes['attack_errors'], attributes['assists'], attributes['aces'],
-                                            attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'])
+                                            attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'], attributes['blocking_points'])
                 if not result:
                     return jsonify(Error="Record de Estadisticas no se encontro para atleta con ID:{} en evento con id:{}.".format(aID, eID)), 404
 
@@ -708,7 +723,7 @@ class VolleyballEventHandler(EventResultHandler):
             # Create and Validate new Volleyball_Event
             try:
                 result = dao.addStatistics(eID, aID, attributes['kill_points'], attributes['attack_errors'], attributes['assists'], attributes['aces'],
-                                           attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'])
+                                           attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'], attributes['blocking_points'])
                 if not result:
                     return jsonify(Error="Problema insertando nuevo record de estadisticas."), 500
             except (TypeError, ValueError):
@@ -725,7 +740,7 @@ class VolleyballEventHandler(EventResultHandler):
                     return jsonify(Error="Record de Estadisticas de Equipo no se encontro para Evento con ID:{}.".format(eID)), 404
             else:
                 dao.addTeamStatistics(eID, attributes['kill_points'], attributes['attack_errors'], attributes['assists'], attributes['aces'],
-                                      attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'])
+                                      attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'], attributes['blocking_points'])
         except (TypeError, ValueError):
             return jsonify(ERROR="Solicitud Incorrecta, Error de Tipo."), 400
         except:
@@ -761,6 +776,7 @@ class VolleyballEventHandler(EventResultHandler):
                 blocks:
                 blocking_errors:
                 reception_errors:
+                blocking_points:
 
         Returns:
             A JSON containing the id for the new Volleyball Event team statistics record.
@@ -825,7 +841,7 @@ class VolleyballEventHandler(EventResultHandler):
         if invalid_duplicate:
             try:
                 result = dao.editTeamStatisticsManual(eID, attributes['kill_points'], attributes['attack_errors'], attributes['assists'], attributes['aces'],
-                                                      attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'])
+                                                      attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'], attributes['blocking_points'])
                 if not result:
                     return jsonify(Error="Record de Estadisticas de Equipo no se encontro para evento con id:{}.".format(eID)), 404
             except (TypeError, ValueError):
@@ -840,7 +856,7 @@ class VolleyballEventHandler(EventResultHandler):
             # Create and Validate new Volleyball_Event team stats
             try:
                 result = dao.addTeamStatistics(eID, attributes['kill_points'], attributes['attack_errors'], attributes['assists'], attributes['aces'],
-                                               attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'])
+                                               attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'], attributes['blocking_points'])
                 if not result:
                     return jsonify(Error="Problema insertando nuevo record de estadisticas de equipo."), 500
             except (TypeError, ValueError):
@@ -973,6 +989,7 @@ class VolleyballEventHandler(EventResultHandler):
                     blocks:
                     blocking_errors:
                     reception_errors:
+                    blocking_points:
                 team_statistis:
                     kill_points:
                     attack_errors:
@@ -983,6 +1000,7 @@ class VolleyballEventHandler(EventResultHandler):
                     blocks:
                     blocking_errors:
                     reception_errors:
+                    blocking_points:
                 local_score: the final score for the local uprm team
                 opponent_score: the final score for the opponent team
 
@@ -1101,7 +1119,7 @@ class VolleyballEventHandler(EventResultHandler):
             if invalid_duplicate:
                 try:
                     result = dao.editStatistics(eID, aID, statistics['kill_points'], statistics['attack_errors'], statistics['assists'], statistics['aces'],
-                                                statistics['service_errors'], statistics['digs'], statistics['blocks'], statistics['blocking_errors'], statistics['reception_errors'])
+                                                statistics['service_errors'], statistics['digs'], statistics['blocks'], statistics['blocking_errors'], statistics['reception_errors'], statistics['blocking_points'])
                     if not result:
                         return jsonify(Error="Record de Estadisticas no se encontro para atleta con ID:{} en evento con id:{}.".format(aID, eID)), 404
 
@@ -1113,7 +1131,7 @@ class VolleyballEventHandler(EventResultHandler):
                 # Create and Validate new Volleyball_Event
                 try:
                     result = dao.addStatistics(eID, aID, statistics['kill_points'], statistics['attack_errors'], statistics['assists'], statistics['aces'],
-                                               statistics['service_errors'], statistics['digs'], statistics['blocks'], statistics['blocking_errors'], statistics['reception_errors'])
+                                               statistics['service_errors'], statistics['digs'], statistics['blocks'], statistics['blocking_errors'], statistics['reception_errors'], statistics['blocking_points'])
                     if not result:
                         return jsonify(Error="Problema insertando nuevo record de estadisticas."), 500
                 except (TypeError, ValueError):
@@ -1180,7 +1198,7 @@ class VolleyballEventHandler(EventResultHandler):
             # Create and Validate new Volleyball_Event team stats
             try:
                 result = dao.addTeamStatistics(eID, team_statistics['kill_points'], team_statistics['attack_errors'], team_statistics['assists'], team_statistics['aces'],
-                                               team_statistics['service_errors'], team_statistics['digs'], team_statistics['blocks'], team_statistics['blocking_errors'], team_statistics['reception_errors'])
+                                               team_statistics['service_errors'], team_statistics['digs'], team_statistics['blocks'], team_statistics['blocking_errors'], team_statistics['reception_errors'], team_statistics['blocking_points'])
                 if not result:
                     return jsonify(Error="Problema insertando nuevo record de estadisticas de equipo."), 500
             except (TypeError, ValueError):
@@ -1216,6 +1234,7 @@ class VolleyballEventHandler(EventResultHandler):
                 blocks:
                 blocking_errors:
                 reception_errors:
+                blocking_points:
 
         Returns:
             A JSON containing all the user with the updated entry.
@@ -1262,7 +1281,7 @@ class VolleyballEventHandler(EventResultHandler):
         try:
             dao = VolleyballEventDAO()
             result = dao.editStatistics(eID, aID, attributes['kill_points'], attributes['attack_errors'], attributes['assists'], attributes['aces'],
-                                        attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'])
+                                        attributes['service_errors'], attributes['digs'], attributes['blocks'], attributes['blocking_errors'], attributes['reception_errors'], attributes['blocking_points'])
             if not result:
                 return jsonify(Error="Record de Estadisticas no se encontro para atleta con ID:{} en evento con id:{}.".format(aID, eID)), 404
         except (TypeError, ValueError):
