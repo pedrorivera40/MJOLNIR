@@ -8,14 +8,14 @@ export default {
             const sports = response.data.SPORTS
             const sportsMasculino = sports.filter(sport => sport.branch_name === "Masculino");
             const sportsFemenino = sports.filter(sport => sport.branch_name === "Femenino");
-            const sportsExhibicion = sports.filter(sport => sport.branch_name === "Exhibicion");
+            const sportsExhibicion = sports.filter(sport => sport.branch_name === "Exhibición");
             commit("SET_SPORTS", sports);
             commit("SET_SPORTS_MASCULINO", sportsMasculino);
             commit("SET_SPORTS_FEMENINO", sportsFemenino);
             commit("SET_SPORTS_EXHIBICION", sportsExhibicion);
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -30,7 +30,7 @@ export default {
             commit("SET_SPORTS", response.data.SPORTS)
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -44,7 +44,7 @@ export default {
             commit("SET_SPORTS", response.data.SPORTS)
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
@@ -58,7 +58,7 @@ export default {
             commit("SET_SPORTS", response.data.SPORTS)
         } catch (error) {
             if (!!error.response) {
-                dispatch('notifications/setSnackbar', { text: error.response.data.ERROR, color: 'error' }, { root: true })
+                dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
