@@ -220,10 +220,8 @@ export const updateVolleyballStats = function (actionType: string, playerStats:
 
 export const postVolleyballResults = async function (gameStatistics: JSON) {
     // Prepare for POST request to Odin API with volleyball results.	
-    // NOTE -> For testing purposes, this section uses the Echo API.	
-    const loginPath = "http://0.0.0.0:5000/results/volleyball/";
-    const volleyballPath = "http://0.0.0.0:5000/results/volleyball/";
-    // TODO -> Add authorization credentials for Odin API.
+    const volleyballPath = "https://white-smile-272204.ue.r.appspot.com/results/volleyball/";
+    // Handling permissions as required for using Odin API.
     const permissions = [
         { "13": false },
         { "14": false },
