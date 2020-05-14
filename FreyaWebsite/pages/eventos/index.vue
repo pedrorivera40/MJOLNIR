@@ -83,9 +83,9 @@
               </v-list-item>
 
               <v-list-item>
-                <v-btn @click="clearFilters">Borrar</v-btn>
                 <v-spacer />
-                <v-btn @click="createFilteredList">Filtrar</v-btn>
+                <v-btn text color="accent" @click="clearFilters">Borrar</v-btn>
+                <v-btn text color="primary" @click="createFilteredList">Filtrar</v-btn>
               </v-list-item>
             </v-list>
           </v-menu>
