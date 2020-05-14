@@ -54,7 +54,8 @@
                                         </v-col>
                                     </v-row>
                                 </v-col>
-                            </v-row>      
+                            </v-row>    
+                            <small>*todos los campos son requeridos.</small>  
                             <v-row>
                                 <v-spacer/>
                                 <v-spacer/>
