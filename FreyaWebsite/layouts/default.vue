@@ -1,38 +1,71 @@
 <template>
-  <v-app>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-      dark
-      color="blue-grey darken-4"
-    >
-      <v-img
-        @click="home"
-        src="/logo.png"
-        max-width="100px"
-        class="ml-4 logo"
-      />
+  <v-app class="app">
+    <v-app-bar fixed app dark color="blue-grey darken-4">
+      <client-only>
+        <v-app-bar-nav-icon
+          v-if="smAndDown"
+          @click.stop="drawer = !drawer"
+        ></v-app-bar-nav-icon>
+        <h3 v-if="smAndDown" class="headline">
+          Huella Deportiva Web
+        </h3>
+        <v-img
+          v-else
+          @click="home"
+          src="/logo.png"
+          max-width="100px"
+          class="ml-4 logo"
+        />
 
-      <v-spacer />
-      <nav>
-        <nuxt-link
-          v-for="item in items"
-          :key="item.title"
-          class="ma-1 nav text-uppercase"
-          class-active="active"
-          :to="item.to"
-        >
-          {{ item.title }}
-        </nuxt-link>
-      </nav>
+        <v-spacer />
+        <nav v-if="mdAndUp">
+          <nuxt-link
+            v-for="item in items"
+            :key="item.title"
+            class="ma-2 nav text-uppercase"
+            class-active="active"
+            :to="item.to"
+          >
+            {{ item.title }}
+          </nuxt-link>
+        </nav>
+      </client-only>
     </v-app-bar>
+    <v-navigation-drawer
+      class="nav-drawer"
+      v-model="drawer"
+      app
+      bottom
+      temporary
+    >
+      <v-list nav>
+        <v-list-item-group class="nav-links">
+          <v-list-item to="/" nuxt>
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            v-for="(item, index) in items"
+            :key="index"
+            :to="item.to"
+            nuxt
+          >
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
     <v-content>
       <v-container>
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer :fixed="fixed" app>
+    <v-footer fixed app>
       <v-spacer></v-spacer>
       <span>MJOLNIR &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
@@ -48,23 +81,23 @@ export default {
   },
   data() {
     return {
-      clipped: false,
       drawer: false,
-      fixed: false,
+      mdAndUp: this.$vuetify.breakpoint.mdAndUp,
+      smAndDown: this.$vuetify.breakpoint.smAndDown,
       items: [
         {
-          icon: "mdi-apps",
+          icon: "mdi-calendar-multiple",
           title: "Eventos",
           to: "/eventos"
         },
         {
-          icon: "mdi-chart-bubble",
-          title: "Deportes Masculino",
+          icon: "mdi-account-group",
+          title: "Deportes: Masculino",
           to: "/deportes-masculino"
         },
         {
-          icon: "mdi-chart-bubble",
-          title: "Deportes Femenino",
+          icon: "mdi-account-group-outline",
+          title: "Deportes: Femenino",
           to: "/deportes-femenino"
         },
         {
@@ -73,24 +106,23 @@ export default {
           to: "/deportes-exhibicion"
         },
         {
-          icon: "mdi-chart-bubble",
+          icon: "mdi-paw",
           title: "Sobre Nosotros",
           to: "/inspire"
         }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: "Vuetify.js"
+      ]
     };
   }
 };
 </script>
 <style lang="scss" scoped>
+.app {
+  background-color: whitesmoke;
+}
 .nav {
   text-decoration: none;
   color: whitesmoke;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 1.3rem;
   &:hover {
     color: #168f09;
@@ -103,8 +135,14 @@ export default {
 .logo {
   cursor: pointer;
 }
-.nuxt-link-exact-active {
+.nuxt-link-active {
   color: #168f09;
-  font-weight: 500;
+}
+.nav-drawer {
+  .nav-links {
+    a {
+      color: #168f09;
+    }
+  }
 }
 </style>

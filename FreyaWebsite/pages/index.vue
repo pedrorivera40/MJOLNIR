@@ -5,7 +5,7 @@
         <div class="text-center">
           <v-row>
             <v-col>
-              <h1 v-if="$vuetify.breakpoint.smAndDown" class="header display-2 my-12">
+              <h1 v-if="smAndDown" class="header display-2 my-12">
                 ¡Bienvenida a Huella Deportiva
                 <span class="highlight">Web</span>!
               </h1>
@@ -14,7 +14,7 @@
                 <span class="highlight">Web</span>!
               </h1>
               <Logo
-                :width="$vuetify.breakpoint.smAndDown ? '350px' : ''"
+                :width="smAndDown ? '350px' : ''"
               />
               <h2 class="my-6 headline">¡Orgullo Colegial!</h2>
             </v-col>
@@ -30,6 +30,11 @@ import Logo from "~/components/Logo.vue";
 export default {
   components: {
     Logo
+  },
+  data(){
+    return{
+      smAndDown: this.$vuetify.breakpoint.smAndDown 
+    }
   }
 };
 </script>
