@@ -105,7 +105,7 @@ This module allows dashboard users to control the PBP sequence as a Volleyball g
 
 9. Here we can add, edit, and delete the opponent team participants. **[SOFTWARE REQUIREMENTS 3D, 3F]**
 
-10. At this point we are ready to add, edit, and remove game actions. **[SOFTWARE REQUIREMENTS 3G, 3H, 3I]**
+10. At this point we are ready to add, edit, and remove game actions. **[SOFTWARE REQUIREMENTS 3G, 3H, 3I] [PERFORMANCE REQUIREMENT 1, USABILITY REQUIREMENT 1]**
 
 11. Move to the "Acciones Generales" section, and press the "Finalizar" button.
 
