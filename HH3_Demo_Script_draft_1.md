@@ -4,7 +4,7 @@ This is an overview of the main capabilities to showcase during the Oral Exam's 
 
 ## Authentication and User Management Modules
 
-For the Authentication module we want to showcase the login process and the token creation as well as token verification. For the user management module we want to showcase we are able to perform CRUD operations on dashboard users. And that these operations are propagated to the Database.
+For the Authentication module we want to showcase the login process and the token creation as well as token verification. For the user management module we want to showcase we are able to perform CRUD operations on dashboard users. And that these operations are propagated to the Database. Acronyms: Software Requirement (SW-R), Security Requirement (Sec-R), and User Management Integration Test Case(UMI-TC).
 
 1. Login with valid credentials **[SW-R: 5a Sec-R: 2a, 2b, 2c, 2d, 3a, 3b, 3c, 3d] [Tests: UMI-TC1]**.
 2. Verify the token is created and the user is added to the vuex store **[Sec-R: 2c]**.
