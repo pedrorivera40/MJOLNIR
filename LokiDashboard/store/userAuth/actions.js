@@ -16,6 +16,8 @@ export default {
       dispatch('notifications/setSnackbar', { text: 'Se ha iniciado la sessión!' }, { root: true })
       commit("SET_USER_DATA", response.data)
     } catch (error) {
+      console.log(this.$axios.baseURL)
+      console.log(error)
       if (!!error.response) {
         dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
         if(error.response.data.Error === 'La cuenta ha sido desactivada, favor de activarla.'){
@@ -94,6 +96,7 @@ export default {
       try {
         await this.$axios.post(`/logout`, { username: user.username})
       } catch (error) {
+        console.log(error)
         if (!!error.response) {
           dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
         } else {

@@ -1,22 +1,21 @@
-import sqlite3
-
+from handler.dao.config.sqlconfig import db_config
+import psycopg2
 
 class CustomSession(object):
 
     def __init__(self):
-        self.connection = sqlite3.connect('userSessions.db')
-        self.cursor = self.connection.cursor()
-        try:
-            self.cursor.execute('''CREATE TABLE IF NOT EXISTS sessions (user text UNIQUE) ''')
-        except:
-            print('table already exists')
-        
-        self.connection.commit()
-        self.connection.close()
+        self.connection_url = "dbname={} user={} password={} host ={} ".format(
+            db_config['database'],
+            db_config['username'],
+            db_config['password'],
+            db_config['host']
+        )
+        self.conn = None
+        self.cursor = None
 
     def initConnection(self):
-        self.connection = sqlite3.connect('userSessions.db')
-        self.cursor = self.connection.cursor()
+        self.conn = psycopg2.connect(self.connection_url)
+        self.cursor = self.conn.cursor()
 
     def setLoggedUser(self, username):
         """
@@ -28,9 +27,13 @@ class CustomSession(object):
             username: The username of the reciently logged in user to be added to the session list.
         """
         self.initConnection()
-        self.cursor.execute("INSERT OR IGNORE INTO sessions VALUES (?)",(username,))
-        self.connection.commit()
-        self.connection.close()
+        try:
+            self.cursor.execute("INSERT INTO session VALUES (%s)",(username,))
+        except Exception as e:
+            print(e)
+        
+        self.conn.commit()
+        self.conn.close()
 
     def isLoggedIn(self, username):
         """
@@ -47,11 +50,12 @@ class CustomSession(object):
             if there is no active session.
         """
         self.initConnection()
-        self.cursor.execute('SELECT * FROM sessions WHERE user= ? ', (username,))
-        self.connection.commit()
+        self.cursor.execute('SELECT * FROM session WHERE username= %s ', (username,))
+        self.conn.commit()
         loggedUser = self.cursor.fetchone()
-        self.connection.close()
+        self.conn.close()
         if(bool(loggedUser)):
+            
             return loggedUser[0]
         return None
 
@@ -62,7 +66,7 @@ class CustomSession(object):
         Deletes the user with the provided username from the active session list.
         """
         self.initConnection()
-        self.cursor.execute('DELETE FROM sessions WHERE user= ? ', (username,))
-        self.connection.commit()
+        self.cursor.execute('DELETE FROM session WHERE username= %s ', (username,))
+        self.conn.commit()
         loggedUser = self.cursor.fetchone()
         return loggedUser == None
