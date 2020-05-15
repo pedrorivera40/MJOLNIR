@@ -100,11 +100,11 @@ export default {
     })
   },
   async beforeMount() {
+    this.loading = true;
     if (this.sports.length === 0) {
-      this.loading = true;
       await this.getAllSports();
-      this.loading = false;
     }
+    this.loading = false;
   }
 };
 </script>
