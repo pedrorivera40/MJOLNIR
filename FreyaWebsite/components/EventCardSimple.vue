@@ -1,6 +1,7 @@
 <template>
   <v-card height="100%"  width="100%">
-    <v-card-title>Fecha: {{eventDate}}</v-card-title>    
+    <v-card-title>Fecha: {{date}}</v-card-title>   
+    <v-card-subtitle>Hora: {{time}}</v-card-subtitle>    
     <v-card-text class="text--primary" v-if="opponentName !='' | !!opponentName">
       <div>Equipos: UPRM vs {{opponentName}} </div>
     </v-card-text>
@@ -35,6 +36,28 @@ export default {
     opponentScore:Number,
     hasPBP:Boolean,     
   },
+  data: () => ({  
+    date:'',
+    time:'',
+  }),
+  created(){
+    // SET EVENT DATE FORMATED
+    let eventDate2 = new Date(Date.parse(this.eventDate));
+    this.date = eventDate2.toISOString().substr(0, 10);
+    let hours = eventDate2.getUTCHours();
+    let minutes = eventDate2.getUTCMinutes();
+
+    let amPM = null;
+    if (hours > 12) {
+      amPM = "PM";
+      hours -= 12;
+    } else if (hours < 12) amPM = "AM";
+    if (hours == 0) {
+      hours = 12;
+    }
+    if (minutes < 10) this.time = hours + ":0" + minutes + amPM;
+    else if (minutes >= 10) this.time = hours + ":" + minutes + amPM;
+  }, 
   methods:{
     goToEvent(){
       this.$router.push('/eventos/'+this.eventID)
