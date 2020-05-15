@@ -358,17 +358,30 @@
           </v-card>
         </v-form>
       </v-dialog>
-      <v-dialog v-model="end_pbp_dialog" persistent max-width="300">
+      <v-dialog v-model="end_pbp_dialog" persistent max-width="350">
         <v-card>
           <v-card-title
             class="text-center"
             style="word-break: normal;"
           >Terminar Secuencia de Jugadas</v-card-title>
-          <v-card-text>Terminar una secuencia de jugadas es irreversible. ¿Aún que desea terminar la secuencia de jugadas?</v-card-text>
+          <v-card-text
+            class="subtitle-1"
+            style="word-break: normal;"
+          >Terminar una secuencia de jugadas es irreversible. ¿Aún que desea terminar la secuencia de jugadas?</v-card-text>
+          <v-row>
+            <v-col>
+              <v-checkbox
+                v-model="terms"
+                class="mx-2 text-center"
+                style="word-break: normal;"
+                label="He verificado el estado del juego.*"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="gray darken-3" text @click="end_pbp_dialog = false">No</v-btn>
-            <v-btn color="green darken-1" text @click="startEndPBPSequence()">Sí</v-btn>
+            <v-btn color="gray darken-3" text @click="clear_end_pbp()">No</v-btn>
+            <v-btn color="green darken-1" :disabled="!terms" text @click="startEndPBPSequence()">Sí</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -413,6 +426,8 @@ export default {
   },
   data: () => ({
     loading: true,
+
+    terms: false,
 
     invalid_event_dialog: false,
     no_pbp_dialog: false,
@@ -540,6 +555,12 @@ export default {
     on_notification_pressed() {
       this.notification_dialog = true;
     },
+
+    clear_end_pbp() {
+      this.terms = false;
+      this.end_pbp_dialog = false;
+    },
+
     async send_notification() {
       if (this.$refs.create_form.validate()) {
         const payload = {
