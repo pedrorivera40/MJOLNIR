@@ -28,7 +28,7 @@ class CustomSession(object):
             username: The username of the reciently logged in user to be added to the session list.
         """
         self.initConnection()
-        if(self.isLoggedIn(username)):
+        if(self.checkLoggedIn(username)):
             return
         try:
             self.cursor.execute("INSERT INTO session VALUES (%s)",(username,))
@@ -54,9 +54,29 @@ class CustomSession(object):
         """
         self.initConnection()
         self.cursor.execute('SELECT * FROM session WHERE username= %s ', (username,))
-        self.conn.commit()
         loggedUser = self.cursor.fetchone()
-        # self.conn.close()
+        self.conn.close()
+        if(bool(loggedUser)):
+            return loggedUser[0]
+        return None
+
+    def checkLoggedIn(self, username):
+        """
+        Function to check if the user with the given uisername is logged in.
+
+        This fucntion takes in the username to be queried in order to determined wether that user
+        has a valid active session or not.
+
+        Args:
+            username: The username of the user whose session status must be determined
+
+        Returns:
+            Returns a dictionary containing the logged in user is the user has an active session and None
+            if there is no active session.
+        """
+        self.initConnection()
+        self.cursor.execute('SELECT * FROM session WHERE username= %s ', (username,))
+        loggedUser = self.cursor.fetchone()
         if(bool(loggedUser)):
             
             return loggedUser[0]
@@ -71,6 +91,8 @@ class CustomSession(object):
         self.initConnection()
         try:
             self.cursor.execute('DELETE FROM session WHERE username= %s ', (username,))
+            self.conn.commit()
+
         except:
             print('No session in stored.')
-        self.conn.commit()
+        self.conn.close()
