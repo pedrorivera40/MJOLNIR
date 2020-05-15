@@ -32,10 +32,9 @@ class CustomSession(object):
             return
         try:
             self.cursor.execute("INSERT INTO session VALUES (%s)",(username,))
+            self.conn.commit()
         except Exception as e:
             print(e)
-        
-        self.conn.commit()
         self.conn.close()
 
     def isLoggedIn(self, username):
