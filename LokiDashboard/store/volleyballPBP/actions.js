@@ -260,10 +260,7 @@ export default {
             commit("SET_SPORT_NAME", response.data.Event.sport_name);
             return true;
         } catch (error) {
-            if (error.response.status) {
-                console.log("Event not found");
-            }
-            else if (!!error.response) {
+            if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
