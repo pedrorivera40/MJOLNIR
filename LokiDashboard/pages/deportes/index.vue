@@ -5,16 +5,16 @@
         <h1 class="primary_dark--text pl-3">{{page_title}}</h1>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col>
-        <div v-if="(sports.length === 0) && !dialog">
-          <v-overlay opacity="0.3">
-            <v-progress-circular indeterminate></v-progress-circular>
-          </v-overlay>
-        </div>
-      </v-col>
+    <ErrorCard
+      v-if="!loading && sports.length === 0"
+      in_color="primary"
+      error_header="Error de conexión"
+      error_message="Hubo un error de conexión al buscar el listado de deportes."
+    />
+    <v-row v-if="loading" justify="center">
+      <v-progress-circular :active="loading" indeterminate :size="50" color="primary"></v-progress-circular>
     </v-row>
-    <v-tabs v-if="!loading && !dialog" align-with-title centered grow>
+    <v-tabs v-if="!loading && sports.length > 0" align-with-title centered grow>
       <v-tabs-slider />
       <v-tab>Rama Masculina</v-tab>
 
@@ -53,14 +53,18 @@
 
 <script>
 import SportsView from "../../components/SportsView.vue";
+import ErrorCard from "../../components/PBP/ErrorCard.vue";
+
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
-    SportsView
+    SportsView,
+    ErrorCard
   },
   data() {
     return {
+      loading: false,
       error_string: "This emulates an error comming from the database",
       dialog: false,
       error_icon: "mdi-alert-circle-outline",
@@ -95,9 +99,11 @@ export default {
       sports: "sports/sports"
     })
   },
-  beforeMount() {
+  async beforeMount() {
     if (this.sports.length === 0) {
-      this.getAllSports();
+      this.loading = true;
+      await this.getAllSports();
+      this.loading = false;
     }
   }
 };
