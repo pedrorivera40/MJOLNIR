@@ -669,10 +669,8 @@ class VolleyballPBPHandler:
                 "last_names": athlete_info["last_names"],
                 "profile_image_link": athlete_info["profile_image_link"]
             }
-            print(player_info)
 
             pbp_dao.set_uprm_athlete(event_id, player_info)
-            print(player_info)
             return jsonify(MSG="Se ha actualizado la información de atletas UPRM."), 200
 
         except Exception as e:
@@ -691,7 +689,6 @@ class VolleyballPBPHandler:
         Returns:
             Response containing a MSG in case of success, or Error message in case of failure.
         """
-
         try:
 
             if not isinstance(event_id, int):
@@ -719,13 +716,14 @@ class VolleyballPBPHandler:
             # Validate the athlete number has not been used.
             opponent_roster = pbp_dao.get_opponent_roster(event_id)
 
-            if str(player_info["number"]) in opponent_roster:
+            if opponent_roster and str(player_info["number"]) in opponent_roster:
                 return jsonify(Error="Ya existe un atleta oponente con este número."), 403
 
             pbp_dao.set_opponent_athlete(event_id, player_info)
             return jsonify(MSG="La información del atleta se agregado al sistema."), 200
 
         except Exception as e:
+            print(str(e))
             return jsonify(Error=str(e)), 500
 
     def updateOppPlayer(self, event_id, player_info):
@@ -768,7 +766,7 @@ class VolleyballPBPHandler:
             # Validate the athlete number has not been used.
             opponent_roster = pbp_dao.get_opponent_roster(event_id)
 
-            if str(player_info["number"]) not in opponent_roster:
+            if not opponent_roster or str(player_info["number"]) not in opponent_roster:
                 return jsonify(Error="El atleta no existe en el sistema."), 403
 
             # Validate the name changes.
