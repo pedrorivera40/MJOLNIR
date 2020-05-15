@@ -143,12 +143,22 @@
                   </v-hover>
                 </v-col>
                 <v-col align="center" justify="center" sm=1>
-                  <v-hover
-                    v-slot:default="{ hover }"
-                    close-delay="200"
-                  >
-                    <v-icon x-large color="red darken-2"  :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[13]['26']" @click="removeTeamMemberLocal(member.athlete_id)">mdi-trash-can-outline </v-icon>
-                  </v-hover>
+                  <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-icon v-on="on" x-large color="red darken-2"  :disabled ="(loadingQuery ||(current_team == null)||(current_team == '')) || !$store.state.userAuth.userPermissions[13]['26']" @click="removeTeamMemberLocal(member.athlete_id)">mdi-trash-can-outline </v-icon>
+                          <!-- <v-icon
+                            class="mr-2 table-actions"
+                            v-on="on"
+                            @click.stop="editAthleteStatistics(item)"
+                            :disabled="!$store.state.userAuth.userPermissions[8]['21']"
+                          >
+                            mdi-pencil
+                          </v-icon> -->
+                        </template>
+                        <span>Remover Atleta del Equipo</span>
+                      </v-tooltip>
+                  
+                
                 </v-col>
               </v-row>
             </v-container>
