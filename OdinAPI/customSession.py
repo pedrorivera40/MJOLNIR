@@ -4,16 +4,17 @@ import psycopg2
 class CustomSession(object):
 
     def __init__(self):
+        self.connection_url = None
+        self.conn = None
+        self.cursor = None
+
+    def initConnection(self):
         self.connection_url = "dbname={} user={} password={} host ={} ".format(
             db_config['database'],
             db_config['username'],
             db_config['password'],
             db_config['host']
         )
-        self.conn = None
-        self.cursor = None
-
-    def initConnection(self):
         self.conn = psycopg2.connect(self.connection_url)
         self.cursor = self.conn.cursor()
 
@@ -27,6 +28,8 @@ class CustomSession(object):
             username: The username of the reciently logged in user to be added to the session list.
         """
         self.initConnection()
+        if(self.isLoggedIn(username)):
+            return
         try:
             self.cursor.execute("INSERT INTO session VALUES (%s)",(username,))
         except Exception as e:
@@ -53,7 +56,7 @@ class CustomSession(object):
         self.cursor.execute('SELECT * FROM session WHERE username= %s ', (username,))
         self.conn.commit()
         loggedUser = self.cursor.fetchone()
-        self.conn.close()
+        # self.conn.close()
         if(bool(loggedUser)):
             
             return loggedUser[0]
@@ -66,7 +69,8 @@ class CustomSession(object):
         Deletes the user with the provided username from the active session list.
         """
         self.initConnection()
-        self.cursor.execute('DELETE FROM session WHERE username= %s ', (username,))
+        try:
+            self.cursor.execute('DELETE FROM session WHERE username= %s ', (username,))
+        except:
+            print('No session in stored.')
         self.conn.commit()
-        loggedUser = self.cursor.fetchone()
-        return loggedUser == None
