@@ -393,7 +393,7 @@
       years_of_participation:'',
       sport_positions:{},
       sport_categories:{},
-      number:'',
+      number:0,
       profile_image_link:'',
       sport_id:0,
       sport:'',      
@@ -532,7 +532,7 @@
         this.study_program='', 
         this.date_of_birth='',
         this.school_of_precedence='',        
-        this.number='',
+        this.number=0,
         this.profile_image_link='',
         this.sportHasNumber=false         
         this.sport ='' 
