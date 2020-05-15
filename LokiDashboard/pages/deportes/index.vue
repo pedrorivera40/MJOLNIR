@@ -64,7 +64,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: true,
       error_string: "This emulates an error comming from the database",
       dialog: false,
       error_icon: "mdi-alert-circle-outline",
