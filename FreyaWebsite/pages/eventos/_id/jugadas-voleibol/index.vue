@@ -428,8 +428,9 @@ export default {
       }
       this.invalid_event_dialog = false;
     } else {
-      this.error_header = "Evento Inválido";
-      this.error_message = "El evento indicado no existe en el sistema.";
+      this.error_header = "Error en la solicitud";
+      this.error_message =
+        "Esto puede ser debido a problemas de conexión o debido a que el evento provisto no se encuentre en el sistema.";
       this.init_error = true;
       this.loading = false;
       return;

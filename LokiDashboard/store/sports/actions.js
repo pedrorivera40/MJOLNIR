@@ -5,12 +5,14 @@ export default {
             commit("CLEAR_SPORTS")
             const response = await this.$axios.get('sports');
             commit("SET_SPORTS", response.data.SPORTS)
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 
