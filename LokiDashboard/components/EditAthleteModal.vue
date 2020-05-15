@@ -16,7 +16,7 @@
         </v-toolbar>
         <v-card-text>           
           
-          <v-form v-model="valid">
+          <v-form v-model="valid" ref="form">
             <v-container>
               <v-row justify="start">
                 <v-col              
@@ -732,13 +732,14 @@ export default {
       this.height_feet_ = ''
       this.height_inches_ = ''
       this.school_of_precedence_ = ''
+      this.study_program_ = ''
       Object.keys(this.athlete_positions_).forEach(key => this.athlete_positions_[key] = null)
       Object.keys(this.athlete_categories_).forEach(key => this.athlete_categories_[key] = null)
       
       this.profile_image_link_ = ''
       
       this.resetDate()
-      
+      this.$refs.form.resetValidation()
       this.$emit("update:dialog",false);
     }
 

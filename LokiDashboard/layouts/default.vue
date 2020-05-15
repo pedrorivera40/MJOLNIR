@@ -16,7 +16,7 @@
       }}</span>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn class="ml-2" @click="logout" v-on="on" icon>
+          <v-btn class="ml-2" @click="logout(user)" v-on="on" icon>
             <v-icon>mdi-logout</v-icon>
           </v-btn>
         </template>

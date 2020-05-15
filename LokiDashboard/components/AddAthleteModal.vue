@@ -16,7 +16,7 @@
         </v-toolbar>
         <v-card-text>           
           
-          <v-form v-model="valid">
+          <v-form v-model="valid" ref="form">
             <v-container v-if="formated()">
               <v-row justify="start">
               <v-col              
@@ -522,7 +522,7 @@
        * Clears and resets all optional fields in the form.
        */
       clear () {
-        
+        this.$refs.form.resetValidation()
         this.first_name= '',
         this.middle_name= null,
         this.last_names='',

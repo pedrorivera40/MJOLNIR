@@ -186,7 +186,7 @@ export default {
 		 * the event id in the route.
 		 */
 		goToEventStatistics(){
-			this.$router.push(`${this.event.id}/resultados/`)
+			this.$router.push(`/eventos/${this.event.id}/resultados/`)
 		},	
 		
 		/**
@@ -195,7 +195,7 @@ export default {
      * props
      */
     goToPBPSequence(){
-      this.$router.push(`${this.eventID}/jugadas-${this.sportName.toLowerCase()}/`)
+      this.$router.push(`/eventos/${this.eventID}/jugadas-${this.sportName.toLowerCase()}/`)
     },
 		/**
 		 * Returns a string denoting whether an event is local 
