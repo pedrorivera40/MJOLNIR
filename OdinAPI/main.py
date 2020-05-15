@@ -195,17 +195,13 @@ def logout():
     # Check user making the reques has a valid session.
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
+
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
-    if request.json == None:
-        return jsonify(Error='Bad Request.'), 400
-    if request.method == 'POST':
-        req = request.json
 
-        username = req['username']
-        if(customSession.logout(username)):
-            return jsonify(Message='Se terminó la sesión exitosamente!'), 200
-        return jsonify(Error='Problemas terminando la sesión.'), 400
+    customSession.logout(loggedUser)
+    print('logout successfuly')
+    return jsonify(Message='Se terminó la sesión exitosamente!'), 200
 
 ###########################################
 #--------- Dashboard User Routes ---------#
