@@ -45,7 +45,7 @@ where they can see an athletes info including their season stats.
 
 1. Create an athlete that participates in a sport with positions
 assigning the positions to the athlete from the athlete 
-management page.**[SW-R: 4D,4E]** **(TEST:AMITC-1)**
+hhmanagement page.**[SW-R: 4D,4E]** **(TEST:AMITC-1)**
 
 1. Create an athlete that participates in a sport with categories
 assigning the categories to the athlete. from the athlete
