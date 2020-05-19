@@ -93,7 +93,7 @@ const passwordMatch = (password) => {
  */
 const generalPhrase = (propertyType) =>{
     
-    let regex = /^[a-zA-Z0-9- ',.;:!]*$/
+    let regex = /^[^÷#/\\@*{}|~<>]*$/
     return v => regex.test(v) || `El formato de ${propertyType} es incorrecto.`
   
 }
