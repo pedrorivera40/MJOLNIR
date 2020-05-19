@@ -16,7 +16,7 @@
         </v-toolbar>
         <v-card-text>           
           
-          <v-form v-model="valid">
+          <v-form v-model="valid" ref="form">
             <v-container>
               <v-row justify="start">
                 <v-col              
@@ -97,7 +97,7 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker v-model="date_of_birth_" color = "green darken-1" no-title scrollable locale="es-419">
+                    <v-date-picker v-model="date_of_birth_" color = "green darken-1" no-title scrollable locale="es-419" :min="min_date" :max="max_date">
                       <v-spacer></v-spacer>
                       <v-btn text color="primary" @click="menu = false">Cancelar</v-btn>
                       <v-btn text color="primary" @click="$refs.menu.save(date_of_birth_)">OK</v-btn>
@@ -424,6 +424,8 @@ export default {
     middle_name_: null,
     last_names_:'',
     date_of_birth_:'',
+    min_date:'',
+    max_date:'',
     short_bio_:'',
     height_feet_:'',
     height_inches_:'',
@@ -624,11 +626,10 @@ export default {
         if(this.years_of_participation)
           this.years_of_participation_ = this.years_of_participation
         
+        this.resetDate()
+
         if(this.date_of_birth)
-          this.date_of_birth_ = new Date(Date.parse(this.date_of_birth)).toISOString().substr(0,10)
-        else
-          this.resetDate()
-        
+          this.date_of_birth_ = new Date(Date.parse(this.date_of_birth)).toISOString().substr(0,10)        
         
         this.athlete_positions_ = {}
         this.athlete_categories_ = {}
@@ -712,8 +713,16 @@ export default {
      * to the current date.
      */
     resetDate(){
-      let time_zone_offset = new Date().getTimezoneOffset() * 60000      
-      this.date_of_birth_ = new Date(Date.now() - time_zone_offset).toISOString().substring(0,10)
+      let time_zone_offset = new Date().getTimezoneOffset() * 60000  
+      const today = Date.now() - time_zone_offset     
+      this.date_of_birth_ = new Date(today).toISOString().substring(0,10)
+      const currentDate = new Date(today)
+      this.min_date = new Date(currentDate)
+      this.min_date.setMonth(currentDate.getMonth()-12*100)
+      this.max_date = new Date(currentDate)
+      this.max_date.setMonth(currentDate.getMonth()-12*14)
+      this.min_date = this.min_date.toISOString().substring(0,10)
+      this.max_date = this.max_date.toISOString().substring(0,10)
     },
 
     /**
@@ -732,13 +741,14 @@ export default {
       this.height_feet_ = ''
       this.height_inches_ = ''
       this.school_of_precedence_ = ''
+      this.study_program_ = ''
       Object.keys(this.athlete_positions_).forEach(key => this.athlete_positions_[key] = null)
       Object.keys(this.athlete_categories_).forEach(key => this.athlete_categories_[key] = null)
       
       this.profile_image_link_ = ''
       
       this.resetDate()
-      
+      this.$refs.form.resetValidation()
       this.$emit("update:dialog",false);
     }
 

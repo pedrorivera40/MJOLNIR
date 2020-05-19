@@ -8,7 +8,7 @@
           </v-toolbar-title>
         </v-toolbar>
         <v-card-title>
-          <p style="word-break: normal;">¿Seguro de que quieres el atleta con id:{{id}}?</p>
+          <p style="word-break: normal;">¿Seguro que quieres borrar el atleta con id:{{id}}?</p>
         </v-card-title>
         <v-card-text>
           Esta acción es <strong> irreversible.</strong>

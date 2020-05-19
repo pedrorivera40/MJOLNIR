@@ -262,12 +262,14 @@ export default {
             commit("SET_BRANCH", response.data.Event.branch);
             commit("SET_OPPONENT_NAME", response.data.Event.opponent_name);
             commit("SET_SPORT_NAME", response.data.Event.sport_name);
+            return true;
         } catch (error) {
             if (!!error.response) {
                 dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
             } else {
                 dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
             }
+            return false;
         }
     },
 

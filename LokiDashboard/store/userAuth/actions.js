@@ -16,6 +16,8 @@ export default {
       dispatch('notifications/setSnackbar', { text: 'Se ha iniciado la sessión!' }, { root: true })
       commit("SET_USER_DATA", response.data)
     } catch (error) {
+      console.log(this.$axios.baseURL)
+      console.log(error)
       if (!!error.response) {
         dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
         if(error.response.data.Error === 'La cuenta ha sido desactivada, favor de activarla.'){
@@ -89,8 +91,20 @@ export default {
    * Action to logout a user from the system and clear their data.
    * @param {*} param0 destructuring of vuex context object
    */
-  logout({ commit }) {
-    console.log('in_user_logout')
+  async logout({ commit, dispatch }, user) {
+    if(!!user){
+      try {
+        await this.$axios.post(`/logout`, { username: user.username})
+      } catch (error) {
+        console.log(error)
+        if (!!error.response) {
+          dispatch('notifications/setSnackbar', { text: error.response.data.Error, color: 'error' }, { root: true })
+        } else {
+          console.log(error)
+          dispatch('notifications/setSnackbar', { text: error.message, color: 'error' }, { root: true })
+        }
+      }
+    }
     commit("CLEAR_USER_DATA")
   }
 }

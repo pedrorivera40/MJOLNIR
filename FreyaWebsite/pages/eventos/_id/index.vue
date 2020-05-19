@@ -186,7 +186,7 @@ export default {
 		 * the event id in the route.
 		 */
 		goToEventStatistics(){
-			this.$router.push(`${this.event.id}/resultados/`)
+			this.$router.push(`/eventos/${this.event.id}/resultados/`)
 		},	
 		
 		/**
@@ -195,7 +195,7 @@ export default {
      * props
      */
     goToPBPSequence(){
-      this.$router.push(`${this.eventID}/jugadas-${this.sportName.toLowerCase()}/`)
+      this.$router.push(`/eventos/${this.eventID}/jugadas-${this.sportName.toLowerCase()}/`)
     },
 		/**
 		 * Returns a string denoting whether an event is local 
@@ -236,12 +236,16 @@ export default {
 				let minutes = eventDate.getUTCMinutes()
 				
 				let amPM = null
-				if(hours > 12){
+				if(hours >= 12){
 					amPM = 'PM'
 					hours -= 12
 				}
 				else if(hours < 12)
 					amPM = 'AM'
+				
+				if(hours == 0){
+					hours = 12
+				}
 
 				if(minutes < 10)
 					this.time = hours + ":0"+minutes + amPM

@@ -383,7 +383,7 @@ export default {
               sport_route: String(this.sport_route)
             }
             console.log("INDEX LEVEL STAT PARAMS:",this.team_params)
-            this.getMemberStatistics(team_params)
+            // await this.getMemberStatistics(team_params)
           }
           this.stopGetMemberStats()
           return true
@@ -422,7 +422,7 @@ export default {
               sport_route: String(this.sport_route)
             }
             console.log("STRAIGHT FROM MEMBERS= STATS, PARAMS ARE:",this.team.members)
-            this.getTeamStatistics(team_params)
+            // await this.getTeamStatistics(team_params)
           }
           this.stopGetTeamStats()
           return true
@@ -720,6 +720,16 @@ export default {
             console.log("Team Events (INDEX):",this.team_events)
             this.events = this.team_events.Events
           }
+          if (this.sport_id && this.season && this.sport_route){
+            const team_params = {
+                sport_id: String(this.sport_id),
+                season_year: String(this.season),
+                sport_route: String(this.sport_route)
+            }
+            await this.getMemberStatistics(team_params)
+            await this.getTeamStatistics(team_params)
+          }
+          
           // this.getMemberStatistics(team_params)    
           // this.getTeamStatistics(team_params)   
 			}

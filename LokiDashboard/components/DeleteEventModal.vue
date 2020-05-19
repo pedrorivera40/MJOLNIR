@@ -8,7 +8,7 @@
           </v-toolbar-title>
         </v-toolbar>
         <v-card-title>
-          <p style="word-break: normal;">¿Seguro que quieres eliminar el evento con id:{{id}}?</p>
+          <p style="word-break: normal;">¿Seguro que quieres borrar el evento con id:{{id}}?</p>
         </v-card-title>
         <v-card-text>
           <div class="body">Esta acción es <strong> irreversible</strong>.</div>
