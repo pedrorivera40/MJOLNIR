@@ -51,8 +51,8 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    baseURL: 'https://white-smile-272204.ue.r.appspot.com/' //Route for the Flask API Hosted
-    // baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API
+    // baseURL: 'https://white-smile-272204.ue.r.appspot.com/' //Route for the Flask API Hosted
+    baseURL: 'http://127.0.0.1:5000/' //Route for the Flask API
   },
   /*
   ** vuetify module configuration
@@ -101,8 +101,8 @@ export default {
     transpile: [
       "vee-validate/dist/rules"
     ],
-    
-    extend (config, ctx) {
+
+    extend(config, ctx) {
     }
   }
 }
