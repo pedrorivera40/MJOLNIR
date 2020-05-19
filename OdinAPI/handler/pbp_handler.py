@@ -765,6 +765,7 @@ class VolleyballPBPHandler:
 
             # Validate the athlete number has not been used.
             opponent_roster = pbp_dao.get_opponent_roster(event_id)
+            print(opponent_roster)
 
             if not opponent_roster or str(player_info["number"]) not in opponent_roster:
                 return jsonify(Error="El atleta no existe en el sistema."), 403
@@ -891,6 +892,8 @@ class VolleyballPBPHandler:
             meta = pbp_dao.get_pbp_meta(event_id)
             if self._sport_keywords["sport"] != meta["sport"]:
                 return jsonify(Error="Esta secuencia PBP no corresponde a Voleibol."), 403
+
+            print(pbp_dao.get_opponent_roster(event_id))
 
             if not str(player_id) in pbp_dao.get_opponent_roster(event_id):
                 return jsonify(Error="El atleta no existe."), 404
