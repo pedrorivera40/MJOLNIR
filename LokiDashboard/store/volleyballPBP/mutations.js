@@ -35,7 +35,6 @@ export default {
         for (let index in state.uprmRoster) {
             console.log(key);
             if (state.uprmRoster[index].key == key) {
-                console.log(state.uprmRoster[index].athlete_id);
                 state.uprmRoster.splice(index, 1);
                 break;
             }
@@ -276,7 +275,7 @@ export default {
             }
             let athlete_index = -1;
             for (let athlete in state.uprmRoster) {
-                if (state.uprmRoster[athlete].athlete_id == currentAction.athlete_id) {
+                if (state.uprmRoster[athlete].key == "athlete-" + currentAction.athlete_id) {
                     athlete_index = athlete;
                     break;
                 }
@@ -367,7 +366,7 @@ export default {
             }
             let athlete_index = -1;
             for (let athlete in state.oppRoster) {
-                if (state.oppRoster[athlete].key == currentAction.athlete_id) {
+                if (state.oppRoster[athlete].key == "athlete-" + currentAction.athlete_id) {
                     athlete_index = athlete;
                     break;
                 }

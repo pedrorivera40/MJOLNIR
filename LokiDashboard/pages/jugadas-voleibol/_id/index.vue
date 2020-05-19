@@ -256,66 +256,28 @@
                 <v-tab>{{ uprm_team_name }}</v-tab>
                 <v-tab>{{ opponentName }}</v-tab>
                 <v-tab-item>
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <thead>
-                        <tr>
-                          <th class="text-center">Atleta</th>
-                          <th
-                            v-for="(play, idx) in plays_map"
-                            :key="idx + 150"
-                            class="text-center"
-                          >{{ play.esp }}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(athlete, idx) in uprmAthleteStatistics" :key="idx + 50">
-                          <td class="text-left">#{{ athlete.number }}. {{ athlete.name }}</td>
-                          <td class="text-center">{{ athlete.killPoints }}</td>
-                          <td class="text-center">{{ athlete.attackErrors }}</td>
-                          <td class="text-center">{{ athlete.aces }}</td>
-                          <td class="text-center">{{ athlete.serviceErrors }}</td>
-                          <td class="text-center">{{ athlete.blocks }}</td>
-                          <td class="text-center">{{ athlete.blockingPoints }}</td>
-                          <td class="text-center">{{ athlete.blockingErrors }}</td>
-                          <td class="text-center">{{ athlete.assists }}</td>
-                          <td class="text-center">{{ athlete.digs }}</td>
-                          <td class="text-center">{{ athlete.receptionErrors }}</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
+                  <v-data-table
+                    dense
+                    :headers="statistics_headers"
+                    :items="uprmAthleteStatistics"
+                    item-key="12344"
+                    class="elevation-1"
+                    :loading="loading"
+                    loading-text="Cargando Estadísticas..."
+                    no-data-text="No Se Encontraron Resultados"
+                  />
                 </v-tab-item>
                 <v-tab-item>
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <thead>
-                        <tr>
-                          <th class="text-center">Atleta</th>
-                          <th
-                            v-for="(play, idx) in plays_map"
-                            :key="idx + 200"
-                            class="text-center"
-                          >{{ play.esp }}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(athlete, idx) in oppAthleteStatistics" :key="idx + 100">
-                          <td class="text-left">#{{ athlete.number }}. {{ athlete.name }}</td>
-                          <td class="text-center">{{ athlete.killPoints }}</td>
-                          <td class="text-center">{{ athlete.attackErrors }}</td>
-                          <td class="text-center">{{ athlete.aces }}</td>
-                          <td class="text-center">{{ athlete.serviceErrors }}</td>
-                          <td class="text-center">{{ athlete.blocks }}</td>
-                          <td class="text-center">{{ athlete.blockingPoints }}</td>
-                          <td class="text-center">{{ athlete.blockingErrors }}</td>
-                          <td class="text-center">{{ athlete.assists }}</td>
-                          <td class="text-center">{{ athlete.digs }}</td>
-                          <td class="text-center">{{ athlete.receptionErrors }}</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
+                  <v-data-table
+                    dense
+                    :headers="statistics_headers"
+                    :items="oppAthleteStatistics"
+                    item-key="12345"
+                    class="elevation-1"
+                    :loading="loading"
+                    loading-text="Cargando Estadísticas..."
+                    no-data-text="No Se Encontraron Resultados"
+                  />
                 </v-tab-item>
               </v-tabs>
             </v-container>
@@ -438,6 +400,22 @@ export default {
     // Strings for handling Error Card.
     error_header: "",
     error_message: "",
+
+    // Header for statistics table (athletes).
+    statistics_headers: [
+      { text: "Número", value: "number" },
+      { text: "Nombre", value: "name" },
+      { text: "Puntos de Ataque", value: "killPoints" },
+      { text: "Errores de Ataque", value: "attackErrors" },
+      { text: "Servicios Directos", value: "aces" },
+      { text: "Errores de Servicio", value: "serviceErrors" },
+      { text: "Bloqueos", value: "blocks" },
+      { text: "Puntos de Bloqueo", value: "blockingPoints" },
+      { text: "Errores de Bloqueo", value: "blockingErrors" },
+      { text: "Asistencias", value: "assists" },
+      { text: "Bompeos/Recepciones", value: "digs" },
+      { text: "Errores de Recepción", value: "receptionErrors" }
+    ],
 
     event_id: Number,
     end_pbp_dialog: false,
