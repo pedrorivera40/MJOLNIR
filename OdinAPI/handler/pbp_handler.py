@@ -187,9 +187,9 @@ class VolleyballPBPHandler:
             dao.set_score_by_set(event_id, set_path, potential_score)
             return
 
-        is_valid_athlete = (str(action["athlete_id"]) in dao.get_uprm_roster(event_id)
-                            or str(action["athlete_id"]) in dao.get_opponent_roster(event_id))
-
+        is_valid_athlete = (self._sport_keywords["athlete_prefix"] + str(action["athlete_id"]) in dao.get_uprm_roster(event_id)
+                            or (self._sport_keywords["athlete_prefix"] + str(action["athlete_id"])) in dao.get_opponent_roster(event_id))
+        print(is_valid_athlete)
         # Scoring game actions modify athlete statistics and team score.
         if action_type in self._sport_keywords["scoring_actions"]:
 
@@ -293,10 +293,10 @@ class VolleyballPBPHandler:
         if new_team not in self._sport_keywords["teams"]:
             raise Exception("El valor de equipo es inválido.")
 
-        if new_team == self._sport_keywords["teams"][0] and str(int(athlete_id)) not in dao.get_uprm_roster(event_id):
+        if new_team == self._sport_keywords["teams"][0] and (self._sport_keywords["athlete_prefix"] + str(int(athlete_id))) not in dao.get_uprm_roster(event_id):
             raise Exception("Atleta de UPRM no existe en el roster.")
 
-        if new_team == self._sport_keywords["teams"][1] and str(int(athlete_id)) not in dao.get_opponent_roster(event_id):
+        if new_team == self._sport_keywords["teams"][1] and (self._sport_keywords["athlete_prefix"] + str(int(athlete_id))) not in dao.get_opponent_roster(event_id):
             raise Exception("Atleta oponente no está en el roster.")
 
         # *** Case same type of play (scoring action), but a change is present. ***

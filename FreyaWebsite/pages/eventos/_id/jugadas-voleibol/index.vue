@@ -296,12 +296,13 @@ export default {
       detachOPPRoster: "volleyballPBP/detachOPPRoster",
       detachGameOver: "volleyballPBP/detachGameOver",
       detachOppColor: "volleyballPBP/detachOppColor",
-      detachGameActions: "volleyballPBP/detachGameActions"
+      detachGameActions: "volleyballPBP/detachGameActions",
+      clearPBPState: "volleyballPBP/clearPBPState"
     }),
     findAthleteName(athlete_id, roster, team) {
       let athlete_index = -1;
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }
@@ -329,7 +330,7 @@ export default {
     findAthleteNumber(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }
@@ -345,7 +346,7 @@ export default {
     findAthleteImg(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }
@@ -465,6 +466,7 @@ export default {
     this.detachGameOver(this.event_id);
     this.detachOppColor(this.event_id);
     this.detachGameActions(this.event_id);
+    this.clearPBPState();
   }
 };
 </script>

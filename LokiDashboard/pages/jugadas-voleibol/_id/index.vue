@@ -532,7 +532,7 @@ export default {
       }
       // Iterate through each element in roster.
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }
@@ -585,7 +585,7 @@ export default {
     findAthleteNumber(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }
@@ -598,7 +598,7 @@ export default {
     findAthleteImg(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }
@@ -727,6 +727,19 @@ export default {
 
     // All good at this point, so it is just needed to stop to loading animation.
     this.loading = false;
+  },
+
+  watch: {
+    $route(to, from) {
+      this.detachSetScores(this.event_id);
+      this.detachCurrentSet(this.event_id);
+      this.detachUPRMRoster(this.event_id);
+      this.detachOPPRoster(this.event_id);
+      this.detachGameOver(this.event_id);
+      this.detachOppColor(this.event_id);
+      this.detachGameActions(this.event_id);
+      this.clearPBPState();
+    }
   },
   beforeDestroy() {
     this.detachSetScores(this.event_id);

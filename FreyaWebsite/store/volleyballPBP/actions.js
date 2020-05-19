@@ -286,4 +286,13 @@ export default {
         }
     },
 
+    // Clear app state regarding PBP sequence data.
+    clearPBPState({ commit, dispatch }) {
+        try {
+            commit("CLEAR_STATE");
+        } catch (error) {
+            dispatch('notifications/setSnackbar', { text: error, color: 'error' }, { root: true })
+        }
+    },
+
 }

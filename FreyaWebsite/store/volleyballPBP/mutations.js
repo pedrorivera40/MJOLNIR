@@ -452,4 +452,49 @@ export default {
             state.opponentName = name;
         }
     },
+
+    // Clear function to be called before mounting component.
+    CLEAR_STATE(state) {
+        // Set every state attribute to its default value.
+        state.currentSet = 0;
+        state.uprmSets = [0, 0, 0, 0, 0];
+        state.oppSets = [0, 0, 0, 0, 0];
+        state.gameActions = [];
+        state.uprmRoster = [];
+        state.oppRoster = [];
+        state.gameOver = false;
+        state.oppColor = "";
+        state.uprmStatistics = {
+            killPoints: 0,
+            aces: 0,
+            blockingPoints: 0,
+            assists: 0,
+            blocks: 0,
+            digs: 0,
+            attackErrors: 0,
+            serviceErrors: 0,
+            blockingErrors: 0,
+            receptionErrors: 0
+        };
+        state.oppStatistics = {
+            killPoints: 0,
+            aces: 0,
+            blockingPoints: 0,
+            assists: 0,
+            blocks: 0,
+            digs: 0,
+            attackErrors: 0,
+            serviceErrors: 0,
+            blockingErrors: 0,
+            receptionErrors: 0
+        };
+        state.uprmAthleteStatistics = []
+        state.oppAthleteStatistics = [];
+        state.hasPBP = true;
+        state.sportName = "";
+        state.teamId = 0;
+        state.validUPRMRoster = []
+        state.branch = "";
+        state.opponentName = "";
+    }
 }
