@@ -375,7 +375,7 @@ export const volleyballGameSync = functions.database.ref("/v1/{game_id}/game-met
         await admin.database().ref("/v1/" + gameId + "/uprm-roster").once('value').then((snapshot) => {
             // Insert athlete VolleyballStatsEntry into the uprmPlayerStats map.	
             snapshot.forEach((athleteSnap) => {
-                const athleteKey: string = <string>athleteSnap.key;
+                const athleteKey: string = <string>athleteSnap.child("athlete_id").val();
                 uprmPlayerKeys.push(athleteKey);
                 uprmPlayerStats.push(new VolleyballStatsEntry());
             });
