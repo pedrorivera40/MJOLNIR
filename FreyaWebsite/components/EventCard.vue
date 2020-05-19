@@ -2,8 +2,7 @@
   <v-card height="100%" width="100%">
     <v-img
       v-if="img != ''"
-      class="black--text"
-      width="450px"
+      class="black--text"      
       height="300px"
       :src="img"
     >
