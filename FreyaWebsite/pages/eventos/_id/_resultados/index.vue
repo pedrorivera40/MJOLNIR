@@ -241,31 +241,73 @@ export default {
       //season:''
       //INTEGRATION QUERY VARS
       ready_for_event: false,
-      ready_for_stats: true,
+      ready_for_stats: false,
       branch_name_local: "",
       date: "",
-      time: ""
+      time: "",
+      event_info_local: "",
     };
   },
 
-  created() {
+  async created() {
     this.setQueryLoading();
     this.clearEventInfo();
     this.clearAllStats();
     this.ready_for_stats = true;
     this.event_id = this.$route.params.id;
     console
-    console.log("[1] GOT EVENT ID", this.event_id);
-    this.getEventInfo(this.event_id);
-    console.log("[2] GOT EVENT INFO", this.event_info);
-    // const stat_params = {
-    //     event_id: String(this.event_id),
-    //     sport_route: String(this.sport_route)
-    // }
-    // this.getAllEventStatistics(this.stat_params)
-    // console.log("[4] GOT EVENT STATS",this.results_payload)
-    // this.buildTable()
-    // console.log("[3] BUILT TABLE",this.results_payload)
+    // console.log("[1] GOT EVENT ID", this.event_id);
+    await this.getEventInfo(this.event_id);
+    // console.log("[2] GOT EVENT INFO", this.event_info);
+    
+
+    // console.log("the event info...(before)", this.results_payload);
+    if (this.event_info) {
+      // console.log(
+      //   "GETTING EVENT INFO (from formated method)",
+      //   this.event_info
+      // );
+      this.sport_id = this.event_info.sport_id;
+      this.sport_name = this.event_info.sport_name;
+      this.opponent_name = this.event_info.opponent_name;
+      this.event_date = this.event_info.event_date;
+      // SET EVENT DATE FORMATED
+      let eventDate = new Date(Date.parse(this.event_date));
+      this.date = eventDate.toISOString().substr(0, 10);
+      let hours = eventDate.getUTCHours();
+      let minutes = eventDate.getUTCMinutes();
+
+      let amPM = null;
+      if (hours > 12) {
+        amPM = "PM";
+        hours -= 12;
+      } else if (hours < 12) amPM = "AM";
+      if (hours == 0) {
+        hours = 12;
+      }
+      if (minutes < 10) this.time = hours + ":0" + minutes + amPM;
+      else if (minutes >= 10) this.time = hours + ":" + minutes + amPM;
+
+      this.branch_name_local = this.event_info.branch;
+
+      this.event_info_local = this.event_info
+
+      if (this.ready_for_stats) {
+        this.buildTable();
+        // console.log("[3] BUILT TABLE", this.results_payload);
+        this.buildDefaultValues();
+        const stat_params = {
+          event_id: String(this.event_id),
+          sport_route: String(this.sport_route)
+        };
+        // console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
+        this.setQueryLoading();
+        this.getAllEventStatistics(stat_params);
+        // console.log("[4] GOT EVENT STATS", this.results_payload);
+        this.ready_for_stats = false;
+      }
+      
+    } 
   },
   methods: {
     ...mapActions({
@@ -276,56 +318,17 @@ export default {
       setQueryLoading: "results/setQueryLoading"
     }),
     formated_event_info() {
-      console.log("the event info...(before)", this.results_payload);
-      if (this.event_info) {
-        console.log(
-          "GETTING EVENT INFO (from formated method)",
-          this.event_info
-        );
-        this.sport_id = this.event_info.sport_id;
-        this.sport_name = this.event_info.sport_name;
-        this.opponent_name = this.event_info.opponent_name;
-        this.event_date = this.event_info.event_date;
-        // SET EVENT DATE FORMATED
-        let eventDate = new Date(Date.parse(this.event_date));
-        this.date = eventDate.toISOString().substr(0, 10);
-        let hours = eventDate.getUTCHours();
-        let minutes = eventDate.getUTCMinutes();
-
-        let amPM = null;
-        if (hours > 12) {
-          amPM = "PM";
-          hours -= 12;
-        } else if (hours < 12) amPM = "AM";
-        if (hours == 0) {
-          hours = 12;
-        }
-        if (minutes < 10) this.time = hours + ":0" + minutes + amPM;
-        else if (minutes >= 10) this.time = hours + ":" + minutes + amPM;
-
-        this.branch_name_local = this.event_info.branch;
-        if (this.ready_for_stats) {
-          this.buildTable();
-          console.log("[3] BUILT TABLE", this.results_payload);
-          this.buildDefaultValues();
-          const stat_params = {
-            event_id: String(this.event_id),
-            sport_route: String(this.sport_route)
-          };
-          console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
-          this.setQueryLoading();
-          this.getAllEventStatistics(stat_params);
-          console.log("[4] GOT EVENT STATS", this.results_payload);
-          this.ready_for_stats = false;
-        }
+      console.log("I AM OUT", this.sport_id)
+      if (this.event_info_local != "" && this.event_info_local != null) {
+        console.log("I AM IN", this.sport_id)
         return true;
-      } else {
-        return false;
-      }
+      } else return false;
     },
     formated_member_stats() {
+      console.log("MEMBER STATS FORMAT OUT", this.results_payload)
       if (this.results_payload) {
-        console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED", this.results_payload);
+        console.log("MEMBER STATS FORMAT IN", this.results_payload)
+        // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED", this.results_payload);
         if (
           this.sport_id == this.BASKETBALL_IDM ||
           this.sport_id == this.BASKETBALL_IDF
@@ -412,7 +415,7 @@ export default {
           this.payload_stats = null;
           return false;
         }
-        console.log("[5] WE SHOULD HAVE IT HERE!!!", this.payload_stats);
+        // console.log("[5] WE SHOULD HAVE IT HERE!!!", this.payload_stats);
         // this.team_statistics = [this.payload_stats.team_statistics]
         this.opponent_score = this.payload_stats.opponent_score;
         this.uprm_score = this.payload_stats.uprm_score;
@@ -422,11 +425,12 @@ export default {
       }
     },
     formated_final_score() {
-      console.log(
-        "[FS] Do we have a final score?",
-        this.uprm_score,
-        this.opponent_score
-      );
+      console.log("FORMATED FS")
+      // console.log(
+      //   "[FS] Do we have a final score?",
+      //   this.uprm_score,
+      //   this.opponent_score
+      // );
       if (
         Number.isFinite(this.uprm_score) &&
         Number.isFinite(this.opponent_score)
@@ -485,9 +489,9 @@ export default {
       }
     },
     buildTable() {
-      console.log(this.payload_stats);
+      // console.log(this.payload_stats);
 
-      if (this.sport_id != "") {
+      if (this.event_info_local != "" && this.event_info_local != null) {
         //Basketball
         if (
           this.sport_id == this.BASKETBALL_IDM ||
