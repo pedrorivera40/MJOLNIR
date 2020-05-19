@@ -734,22 +734,22 @@ export default {
       } else return false;
     },
     formated_member_stats() {
-      console.log("REFRESH FORMATED: how many times we checking this tho?")
+      // console.log("REFRESH FORMATED: how many times we checking this tho?")
       if (this.payload_stats != "" && this.payload_stats != null) {
         if (this.refresh_stats) {
-          console.log("[REF] REFRESHING STATS:",this.payload_stats);
+          // console.log("[REF] REFRESHING STATS:",this.payload_stats);
           this.stat_refresh();
           this.refresh_stats = false;
         }
         // return true;
       } 
       else if(this.refresh_stats){
-          console.log("[REF] REFRESHING STATS [F/L]:",this.payload_stats);
+          // console.log("[REF] REFRESHING STATS [F/L]:",this.payload_stats);
           this.stat_refresh();
           this.refresh_stats = false;
       }
       if(this.payload_stats != '' && this.payload_stats != null){
-        console.log("REFRESH FORMATED LVL END, how many times huh?")
+        // console.log("REFRESH FORMATED LVL END, how many times huh?")
         return true
       }
       else return false;

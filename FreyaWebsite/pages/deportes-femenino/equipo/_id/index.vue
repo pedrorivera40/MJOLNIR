@@ -357,8 +357,8 @@ export default {
           this.current_team = this.team.team_info
           
           if(this.readyForMembers){
-            console.log("INDEX LEVEL LOCAL TEAM",this.current_team)
-            console.log("INDEX LEVEL QUERY TEAM",this.team)
+            // console.log("INDEX LEVEL LOCAL TEAM",this.current_team)
+            // console.log("INDEX LEVEL QUERY TEAM",this.team)
             this.getTeamMembers(this.current_team_id)
             this.stopGetMembers()
             // this.ready_for_members = false
@@ -376,13 +376,13 @@ export default {
         if(this.team_members){
           this.members = this.team_members.team_members
           if(this.readyForMemberStats){
-            console.log("INDEX LEVEL QUERY MEMBERS:",this.team.members)
+            // console.log("INDEX LEVEL QUERY MEMBERS:",this.team.members)
             const team_params = {
               sport_id: String(this.sport_id),
               season_year: String(this.season),
               sport_route: String(this.sport_route)
             }
-            console.log("INDEX LEVEL STAT PARAMS:",this.team_params)
+            // console.log("INDEX LEVEL STAT PARAMS:",this.team_params)
             // await this.getMemberStatistics(team_params)
           }
           this.stopGetMemberStats()
@@ -415,13 +415,13 @@ export default {
             return false  
           }
           if(this.readyForTeamStats){
-            console.log("INDEX LEVEL QUERY MEMBER STATS:",this.statistics_per_season)
+            // console.log("INDEX LEVEL QUERY MEMBER STATS:",this.statistics_per_season)
             const team_params = {
               sport_id: String(this.sport_id),
               season_year: String(this.season),
               sport_route: String(this.sport_route)
             }
-            console.log("STRAIGHT FROM MEMBERS= STATS, PARAMS ARE:",this.team.members)
+            // console.log("STRAIGHT FROM MEMBERS= STATS, PARAMS ARE:",this.team.members)
             // await this.getTeamStatistics(team_params)
           }
           this.stopGetTeamStats()
@@ -434,7 +434,7 @@ export default {
 
       formated_team_stats(){
         if(this.team_statistics){
-          console.log("Team Statistics:",this.team_statistics)
+          // console.log("Team Statistics:",this.team_statistics)
           if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Basketball_Event_Season_Team_Statistics]}
           else if(this.sport_id == this.VOLLEYBALL_IDM || this.sport_id == this.VOLLEYBALL_IDF){this.team_statistics_per_season = [this.team_statistics.Volleyball_Event_Season_Team_Statistics]}
           else if(this.sport_id == this.SOCCER_IDM || this.sport_id == this.SOCCER_IDF){this.team_statistics_per_season = [this.team_statistics.Soccer_Event_Season_Team_Statistics]}
@@ -456,7 +456,7 @@ export default {
             return false
           }
           // if(this.readyForEvents){
-            console.log("INDEX LEVEL QUERY TEAM STATS:",this.team_statistics_per_season)
+            // console.log("INDEX LEVEL QUERY TEAM STATS:",this.team_statistics_per_season)
           //   // this.getTeamEvents(this.current_team_id)
           // }
           // this.stopGetEvents()
@@ -694,7 +694,7 @@ export default {
         else if (this.sport_id == this.FIELD_TENNIS_IDM || this.sport_id == this.FIELD_TENNIS_IDF
                 || this.sport_id == this.TABLE_TENNIS_IDM || this.sport_id == this.TABLE_TENNIS_IDF){this.sport_route ="matchbased"}
         else{this.sport_route = ''}
-        console.log("[SPORT ROUTE CONFIRMED]",this.sport_route)
+        // console.log("[SPORT ROUTE CONFIRMED]",this.sport_route)
       },
 			async getSeasonData(){
           this.setQueryLoading()
@@ -717,7 +717,7 @@ export default {
           await this.setEventQueryLoading()
           await this.getTeamEvents(this.current_team_id)
           if (this.team_events){
-            console.log("Team Events (INDEX):",this.team_events)
+            // console.log("Team Events (INDEX):",this.team_events)
             this.events = this.team_events.Events
           }
           if (this.sport_id && this.season && this.sport_route){
@@ -763,19 +763,5 @@ export default {
 
 			})
 		}
-
-		// mounted(){
-      
-    
-    //   // // console.log("The request will have:",this.sport_id,this.season)
-    //   // const team_params = {
-    //   //   sport_id: String(this.sport_id),
-    //   //   season_year: String(this.season)
-    //   // }
-    //   // // console.log("At the index level, request params look like",team_params)
-    //   // this.getTeamByYear(team_params)
-      
-    //   // // console.log("WE GOT THE TEAM BOI (from index):",this.team)
-		// }
 }
 </script>
