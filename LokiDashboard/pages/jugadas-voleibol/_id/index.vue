@@ -403,18 +403,30 @@ export default {
 
     // Header for statistics table (athletes).
     statistics_headers: [
-      { text: "Número", value: "number" },
-      { text: "Nombre", value: "name" },
-      { text: "Puntos de Ataque", value: "killPoints" },
-      { text: "Errores de Ataque", value: "attackErrors" },
-      { text: "Servicios Directos", value: "aces" },
-      { text: "Errores de Servicio", value: "serviceErrors" },
-      { text: "Bloqueos", value: "blocks" },
-      { text: "Puntos de Bloqueo", value: "blockingPoints" },
-      { text: "Errores de Bloqueo", value: "blockingErrors" },
-      { text: "Asistencias", value: "assists" },
-      { text: "Bompeos/Recepciones", value: "digs" },
-      { text: "Errores de Recepción", value: "receptionErrors" }
+      { text: "Número", value: "number", align: "center" },
+      { text: "Nombre", value: "name", align: "center" },
+      { text: "Puntos de Ataque", value: "killPoints", align: "center" },
+      { text: "Errores de Ataque", value: "attackErrors", align: "center" },
+      { text: "Servicios Directos", value: "aces", align: "center" },
+      { text: "Errores de Servicio", value: "serviceErrors", align: "center" },
+      { text: "Bloqueos", value: "blocks", align: "center" },
+      { text: "Puntos de Bloqueo", value: "blockingPoints", align: "center" },
+      {
+        text: "Errores de Bloqueo",
+        value: "blockingErrors",
+        align: "center"
+      },
+      { text: "Asistencias", value: "assists", align: "center" },
+      {
+        text: "Bompeos/Recepciones",
+        value: "digs",
+        align: "center"
+      },
+      {
+        text: "Errores de Recepción",
+        value: "receptionErrors",
+        align: "center"
+      }
     ],
 
     event_id: Number,
