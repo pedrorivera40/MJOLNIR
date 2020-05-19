@@ -2,31 +2,27 @@
 
 This is an overview of the main capabilities to showcase during the Oral Exam's presentation for MJölrnir's system. The main capabilities to showcase will be Authorization, User Management, Event Management, Team Management, Athlete Management, and Play by Play Management .  The Authentication module must be able to authenticate users, and provide a token that allows the authenticated user to access protected resources. The User Management module must be able to perform CRUD operations on Dashboard Users. The Event Management Module must be able to perform CRUD operations on Events. The Team and Athlete Modules must be able to perform CRUD operations on Team and Athletes respectively. Finally the PBP module must be able to perform CRUD operations on Volleball PBP events.
 
-## Authentication Module
+## Authentication and User Management Modules
 
-For the Authentication module we want to showcase the login process and the token creation as well as token verification.
+For the Authentication module we want to showcase the login process and the token creation as well as token verification. For the user management module we want to showcase we are able to perform CRUD operations on dashboard users. And that these operations are propagated to the Database. Acronyms: Software Requirement (SW-R), Security Requirement (Sec-R), and User Management Integration Test Case(UMI-TC).
 
-1. Login with valid credentials **[SW-R: 5a Sec-R: 2a, 2b, 2c, 2d, 3a, 3b, 3c, 3d]**.
-2. Try login in to an inactive account **[Sec-R: 2f, 3f]**.
-3. Verify the token is created and the user is added to the vuex store **[Sec-R: 2c]**.
-4. Verify requests contain the token for the user.
-5. Verify the token successfully passes the API's token check.
-6. Logout from the session **[SW-R: 5b, 6a, Sec-R: 3g, 3h]**
-7. Lock a User's account with 3 erroneous logins **[SW-R: 1h, Sec-R: 2e, 3e]**.
-8. Try to login to the deactivated user account **[Sec-R: 2f, 3f]**
-9. Activate a user's account using the temp password **[SW-R: 1c, 1i, 1j, 1k, Sec-R: 2g, 2i, 2j]**.
-10. Login again **[Sec-R: 3i]**.
+1. Login with valid credentials **[SW-R: 5a Sec-R: 2a, 2b, 2c, 2d, 3a, 3b, 3c, 3d] [Tests: UMI-TC1]**.
+2. Verify the token is created and the user is added to the vuex store **[Sec-R: 2c]**.
+2. Go to 'Manejo de Usuarios' to see all users **[SW-R: 1d]**.
+3. Verify requests contain the token for the user.
+4. Verify the token successfully passes the API's token check.
+5. Create a new user from the user management page with a compliant password **[SW-R: 1a, 1b ] [Tests: UMI-TC5]**.
+6. Logout from the session **[SW-R: 5b, 6a, Sec-R: 3g, 3h] [Tests: UMI-TC6]**
+7. Try login in to an inactive account **[Sec-R: 2f, 3f] [Tests: UMI-TC11]**.
+8. Try to login to the deactivated user account **[Sec-R: 2f, 3f] [Tests: UMI-TC11]**
+9.  Activate a user's account using the temp password **[SW-R: 1c, 1i, 1j, 1k, Sec-R: 2g, 2i, 2j] [Tests: UMI-TC7]**.
+10. Login again **[Sec-R: 3i] [Tests: UMI-TC1]**.
+11. Lock a User's account with 3 erroneous logins **[SW-R: 1h, Sec-R: 2e, 3e] [Tests: UMI-TC4]**.
+12. Reset a User's Password Using the User Management Page **[SW-R: 1j, 1k, Sec-R: 2h] [Tests: UMI-TC10]**.
+13. Edit a user's information **[SW-R: 1e] [Tests: UMI-TC9]**.
+14. Edit a User's Permissions **[SW-R: 1g] [Tests: UMI-TC8]**.
+15. Delete a user **[SW-R: 1f] [Tests: UMI-TC12]**.
 
-## User Management Module
-
-For the user management module we want to showcase we are able to perform CRUD operations on dashboard users. And that these operations are propagated to the Database.
-
-1. Go to 'Manejo de Usuarios' to see all users **[SW-R: 1d]**.
-2. Create a new user from the user management page with a compliant password **[SW-R: 1a, 1b ]**.
-3. Edit a user's information **[SW-R: 1e]**.
-4. Edit a User's Permissions **[SW-R: 1g]**.
-5. Delete a user **[SW-R: 1f]**.
-6. Reset a User's Password Using the User Management Page **[SW-R: 1j, 1k, Sec-R: 2h]**.
 
 ## Sports Module
 
@@ -45,21 +41,23 @@ where they can see an athletes info including their season stats.
 
 1. Create an athlete that participates in a sport with positions
 assigning the positions to the athlete from the athlete 
-management page.**[SW-R: 4D,4E AMITC-1]**
+hhmanagement page.**[SW-R: 4D,4E]** **(TEST:AMITC-1)**
 
-2. Create an athlete that participates in a sport with categories
+1. Create an athlete that participates in a sport with categories
 assigning the categories to the athlete. from the athlete
-management page.**[SW-R: 4F AMITC-2]**
+management page.**[SW-R: 4F]** **(TEST:AMITC-2)**
 
-3. Edit an athlete profiles information.**[SW-R: 4G AMITC-3]**
+1. Edit an athlete profiles information.**[SW-R: 4G]**  
+   **(TEST: AMITC-3)**
 
-4. Delete an existing athlete.**[SW-R: 4H AMITC-5]**
+2. Delete an existing athlete.**[SW-R: 4H]**
+   **(TEST: AMITC-5)**
 
-5. Try to delete an existing athlete that already plays for a
-team.**[ AMITC-6 ]**   
+3. Try to delete an existing athlete that already plays for a
+team.**(TEST:AMITC-6)**  
    
 6. Go to athlete profile page and showcase the statistics for
-a season **[ AMITC-4 ]**
+a season **(TEST: AMITC-4)**
 
 ## Team Management Module
 
@@ -79,16 +77,18 @@ For the Event module we want to showcase the creation of an event,
 the event viewer page and the results page for an event that has 
 statistics recorded.
 
-1. Go to events management page to see a list of created events.**[SW-R: 2B]**
+1. Go to events management page to see a list of created events.**[SW-R: 2B]** **(TEST:EMITC-1)**
 
 2. Create an event from the event management page.**[SW-R: 2A]**
+   **(TEST:EMITC-1)**
 
 3. Edit the information of an existing event.**[SW-R: 2C]**
+   **(TEST:EMITC-2)**
 
-4. Delete an event.**[SW-R: 2E]**
+4. Delete an event.**[SW-R: 2E]** **(TEST:EMITC-3)**
 
 5. Select an event with statistics to view and then click on 
-the "see results button" to be redirected to the results page.**[SW-R: 2D]**
+the "see results button" to be redirected to the results page.**[SW-R: 2D]** **(TEST:EMITC-4)**
 
 ## PBP Management Module
 This module allows dashboard users to control the PBP sequence as a Volleyball game takes place. Note that this information is also displayed on the Freya website for general fanbase to view. As for this demonstration, the objective is to create a new PBP sequence for an existing Volleyball game, and modify the game sequence by adding the athletes that participate, adding game actions, updating opponent team color, adjusting game score, and changing the current set value. Finally the game will be marked as ended.

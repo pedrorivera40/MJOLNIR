@@ -16,7 +16,7 @@
         </v-toolbar>
         <v-card-text>            
           
-          <v-form v-model="valid" v-if="formated()">
+          <v-form v-model="valid" v-if="formated()" ref="form">
             <v-container>
 
               <v-row justify="start">
@@ -292,6 +292,7 @@
       close () {       
         this.ready = false
         this.terms = false
+        this.$refs.form.resetValidation()
         this.$emit("update:dialog",false);
       
       },

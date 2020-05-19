@@ -16,7 +16,7 @@
         </v-toolbar>
         <v-card-text>            
           
-          <v-form v-model="valid">
+          <v-form v-model="valid" ref="form">
             <v-container>  
 
               <v-row>
@@ -285,8 +285,8 @@ export default {
         this.min_date = dateYear +'-01-01'
         this.max_date = dateYear+1 +'-12-31'
 
-        this.time_ = this.time        
-
+        this.time_ = this.time     
+        
         this.locality_ = this.locality
       
         this.team_ = this.sport_name + '-' + this.branch + '-' + this.team_season_year		        
@@ -314,6 +314,7 @@ export default {
       this.ready = false
       this.terms = false
       this.loading = true
+      this.$refs.form.resetValidation()
       this.venue_ = ''
       this.opponent_name_ = ''
       this.eventSummary_ = ''

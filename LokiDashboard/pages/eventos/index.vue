@@ -326,8 +326,8 @@ export default {
             this.filteredEvents.push(this.events[i]);
             const parsedDate = new Date(Date.parse(this.events[i].event_date));
             const eDate = parsedDate.toISOString().substring(0, 10);
-            const time =
-              parsedDate.getUTCHours() + ":" + parsedDate.getMinutes();
+            const time = parsedDate.getUTCHours() + ":" + parsedDate.getMinutes();
+            
             this.filteredEvents[i].event_date = eDate;
             this.filteredEvents[i].time = time;
           }
@@ -412,7 +412,8 @@ export default {
      * given as parameter.
      * @param event The event Object containg the information of the event to be edited.
      */
-    editEvent(event){     
+    editEvent(event){ 
+      console.log(event)    
       this.editedItem = Object.assign({},event)
       this.dialogEdit = true      
     },

@@ -7,7 +7,7 @@
           <v-card-text>
             <div class="welcome">¡Bienvenidos!</div>
             <p class="display-1 text--primary">
-              Plataforma de Administracion para Huella Deportiva Web
+              Plataforma de Administración para Huella Deportiva Web
             </p>
             <p>Version 1.0</p>
             <div class="text--primary">

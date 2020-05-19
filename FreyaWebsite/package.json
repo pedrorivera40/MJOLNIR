@@ -9,6 +9,10 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
+    "clean:dist": "rm -rf .nuxt/dist",
+    "build:gcloud": "npm run clean:dist && npm run build",
+    "deploy:gcloud": "gcloud app deploy app.yml --project huella-deportiva-web && gcloud app browse --project=huella-deportiva-web",
+    "deploy": "npm run build:gcloud && npm run deploy:gcloud",
     "test": "jest"
   },
   "dependencies": {

@@ -195,17 +195,13 @@ def logout():
     # Check user making the reques has a valid session.
     token = extractUserInfoFormToken()
     loggedUser = customSession.isLoggedIn(token['user'])
+
     if(loggedUser == None):
         return jsonify(Error='No hay una sesión valida.'), 401
-    if request.json == None:
-        return jsonify(Error='Bad Request.'), 400
-    if request.method == 'POST':
-        req = request.json
 
-        username = req['username']
-        if(customSession.logout(username)):
-            return jsonify(Message='Se terminó la sesión exitosamente!'), 200
-        return jsonify(Error='Problemas terminando la sesión.'), 400
+    customSession.logout(loggedUser)
+    print('logout successfuly')
+    return jsonify(Message='Se terminó la sesión exitosamente!'), 200
 
 ###########################################
 #--------- Dashboard User Routes ---------#
@@ -282,23 +278,11 @@ def userByID(duid):
 
 
 @app.route("/users/username/", methods=['POST'])
-@token_check
 def getUserByUsername():
-    # Check user making the reques has a valid session.
-    token = extractUserInfoFormToken()
-    loggedUser = customSession.isLoggedIn(token['user'])
-    if(loggedUser == None):
-        return jsonify(Error='No hay una sesión valida.'), 401
-
     # Check for valid request
     if request.json == None:
         return jsonify(Error='Bad Request.'), 400
     if request.method == 'POST':
-        # Check for valid permissions
-        if(not(validateRequestPermissions(token, '22') or
-               validateRequestPermissions(token, '23') or
-               validateRequestPermissions(token, '24'))):  # must have any user permission
-            return jsonify(Error='El usuario no tiene permiso para acceder a estos recursos.'), 403
         handler = UserHandler()
         req = request.json
         # Check the request contains the right structure.

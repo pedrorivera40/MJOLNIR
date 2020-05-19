@@ -16,7 +16,7 @@
         </v-toolbar>
         <v-card-text>           
           
-          <v-form v-model="valid">
+          <v-form v-model="valid" ref="form">
             <v-container v-if="formated()">
               <v-row justify="start">
               <v-col              
@@ -95,7 +95,7 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker v-model="date" color = "green darken-1" no-title scrollable locale="es-419">
+                    <v-date-picker v-model="date" color = "green darken-1" no-title scrollable locale="es-419" :min="min_date" :max="max_date">
                       <v-spacer></v-spacer>
                       <v-btn text color="primary" @click="menu = false">Cancelar</v-btn>
                       <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
@@ -393,12 +393,14 @@
       years_of_participation:'',
       sport_positions:{},
       sport_categories:{},
-      number:'',
+      number:0,
       profile_image_link:'',
       sport_id:0,
       sport:'',      
       sportsList:[],     
-      sportHasNumber:false,     
+      sportHasNumber:false,
+      min_date:'',
+      max_date:'',
       feet: [3,4,5,6,7],      
       inches:[0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5],
       yearsOfStudy:[1,2,3,4,5,6,7,8,9,10],
@@ -522,7 +524,7 @@
        * Clears and resets all optional fields in the form.
        */
       clear () {
-        
+        this.$refs.form.resetValidation()
         this.first_name= '',
         this.middle_name= null,
         this.last_names='',
@@ -532,7 +534,7 @@
         this.study_program='', 
         this.date_of_birth='',
         this.school_of_precedence='',        
-        this.number='',
+        this.number=0,
         this.profile_image_link='',
         this.sportHasNumber=false         
         this.sport ='' 
@@ -672,8 +674,16 @@
        * to the current date.
        */
       resetDate(){
-        let time_zone_offset = new Date().getTimezoneOffset() * 60000      
-        this.date = new Date(Date.now() - time_zone_offset).toISOString().substring(0,10)
+        let time_zone_offset = new Date().getTimezoneOffset() * 60000 
+        const today = Date.now() - time_zone_offset     
+        this.date = new Date(today).toISOString().substring(0,10)
+        const currentDate = new Date(today)
+        this.min_date = new Date(currentDate)
+        this.min_date.setMonth(currentDate.getMonth()-12*100)
+        this.max_date = new Date(currentDate)
+        this.max_date.setMonth(currentDate.getMonth()-12*14)
+        this.min_date = this.min_date.toISOString().substring(0,10)
+        this.max_date = this.max_date.toISOString().substring(0,10)
       }
 
       
