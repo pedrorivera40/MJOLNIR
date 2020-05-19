@@ -215,12 +215,16 @@ export default {
 				let minutes = eventDate.getUTCMinutes()
 				
 				let amPM = null
-				if(hours > 12){
+				if(hours >= 12){
 					amPM = 'PM'
 					hours -= 12
 				}
 				else if(hours < 12)
 					amPM = 'AM'
+				
+				if(hours == 0){
+					hours = 12
+				}
 
 				if(minutes < 10)
 					this.time = hours + ":0"+minutes + amPM

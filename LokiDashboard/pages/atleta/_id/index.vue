@@ -514,7 +514,7 @@ export default {
 				if(sport_name.localeCompare("basketball") == 0){
 					this.headers =	[
 							{
-								text:'Event Date',
+								text:'Fecha del Evento',
 								align: 'start',
 								sortable: true,
 								value:'Event.event_date'
@@ -557,7 +557,7 @@ export default {
 				else if(sport_name.localeCompare("volleyball") == 0){
 					this.headers =	[
 						{
-							text:'Event Date',
+							text:'Fecha del Evento',
 							align: 'start',
 							sortable: true,
 							value:'Event.event_date'
@@ -592,7 +592,7 @@ export default {
 				else if(sport_name.localeCompare("soccer") == 0){
 					this.headers =	[
 						{
-							text:'Event Date',
+							text:'Fecha del Evento',
 							align: 'start',
 							sortable: true,
 							value:'Event.event_date'
@@ -618,7 +618,7 @@ export default {
 				else if(sport_name.localeCompare("baseball") == 0){
 					this.headers =	[
 						{
-							text:'Event Date',
+							text:'Fecha del Evento',
 							align: 'start',
 							sortable: true,
 							value:'Event.event_date'
@@ -646,26 +646,26 @@ export default {
 				else if(sport_name.localeCompare("matchbased") == 0){
 					this.headers =	[
 						{
-							text:'Event Date',
+							text:'Fecha del Evento',
 							align: 'start',
 							sortable: true,
 							value:'Event.event_date'
 						},
 						{text: 'Categoría', value: 'Event.category_name'},
-						{text: 'Partidos Jugados', value: 'Event_Statistics.matches_played'},
-						{text: 'Partidos Ganados', value: 'Event_Statistics.matches_won'}
+						{text: 'Partidas Jugadas', value: 'Event_Statistics.matches_played'},
+						{text: 'Partidas Ganadas', value: 'Event_Statistics.matches_won'}
 
 					]
 					this.headers_ = [
 						{text: 'Categoría', value: 'Event_Statistics.category_name'},
-						{text: 'Partidos Jugados', value: 'Event_Statistics.matches_played'},
-						{text: 'Partidos Ganados', value: 'Event_Statistics.matches_won'}					
+						{text: 'Partidas Jugadas', value: 'Event_Statistics.matches_played'},
+						{text: 'Partidas Ganadas', value: 'Event_Statistics.matches_won'}					
 					]
 				}
 				else if(sport_name.localeCompare("medalbased") == 0){
 					this.headers =	[
 						{
-							text:'Event Date',
+							text:'Fecha del Evento',
 							align: 'start',
 							sortable: true,
 							value:'Event.event_date'
