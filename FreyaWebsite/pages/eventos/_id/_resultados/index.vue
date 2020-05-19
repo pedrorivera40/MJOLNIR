@@ -208,7 +208,7 @@ export default {
       opponent_score: "",
       opponent_name: "", //TODO: MAKE THIS VALUE DYNAMIC
       uprm_score: "",
-      payload_stats: "",
+      payload_stats: null,
       BASKETBALL_IDM: 1,
       BASKETBALL_IDF: 10,
       VOLLEYBALL_IDM: 2,
@@ -241,31 +241,182 @@ export default {
       //season:''
       //INTEGRATION QUERY VARS
       ready_for_event: false,
-      ready_for_stats: true,
+      ready_for_stats: false,
       branch_name_local: "",
       date: "",
-      time: ""
+      time: "",
+      event_info_local: null,
     };
   },
 
-  created() {
+  async created() {
+    /*
+      INITIAL CLEANUP
+    */
     this.setQueryLoading();
     this.clearEventInfo();
     this.clearAllStats();
     this.ready_for_stats = true;
     this.event_id = this.$route.params.id;
-    console
-    console.log("[1] GOT EVENT ID", this.event_id);
-    this.getEventInfo(this.event_id);
-    console.log("[2] GOT EVENT INFO", this.event_info);
-    // const stat_params = {
-    //     event_id: String(this.event_id),
-    //     sport_route: String(this.sport_route)
-    // }
-    // this.getAllEventStatistics(this.stat_params)
-    // console.log("[4] GOT EVENT STATS",this.results_payload)
-    // this.buildTable()
-    // console.log("[3] BUILT TABLE",this.results_payload)
+    /*
+      GET EVENT INFO QUERY CALL
+    */
+    // console.log("[1] GOT EVENT ID", this.event_id);
+    await this.getEventInfo(this.event_id);
+    // console.log("[2] GOT EVENT INFO", this.event_info);
+    
+    /*
+      FORMAT THE EVENT INFO IF QUERY SUCCESSFUL
+    */
+    // console.log("the event info...(before)", this.results_payload);
+    if (this.event_info) {
+      // console.log(
+      //   "GETTING EVENT INFO (from formated method)",
+      //   this.event_info
+      // );
+      this.sport_id = this.event_info.sport_id;
+      this.sport_name = this.event_info.sport_name;
+      this.opponent_name = this.event_info.opponent_name;
+      this.event_date = this.event_info.event_date;
+      // SET EVENT DATE FORMATED
+      let eventDate = new Date(Date.parse(this.event_date));
+      this.date = eventDate.toISOString().substr(0, 10);
+      let hours = eventDate.getUTCHours();
+      let minutes = eventDate.getUTCMinutes();
+
+      let amPM = null;
+      if (hours > 12) {
+        amPM = "PM";
+        hours -= 12;
+      } else if (hours < 12) amPM = "AM";
+      if (hours == 0) {
+        hours = 12;
+      }
+      if (minutes < 10) this.time = hours + ":0" + minutes + amPM;
+      else if (minutes >= 10) this.time = hours + ":" + minutes + amPM;
+
+      this.branch_name_local = this.event_info.branch;
+
+      this.event_info_local = this.event_info
+
+      /*
+        PREPARE AND GET MEMBER STATS
+      */
+      if (this.ready_for_stats) {
+        this.buildTable();
+        // console.log("[3] BUILT TABLE", this.results_payload);
+        this.buildDefaultValues();
+        const stat_params = {
+          event_id: String(this.event_id),
+          sport_route: String(this.sport_route)
+        };
+        // console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
+        this.setQueryLoading();
+        await this.getAllEventStatistics(stat_params);
+       
+        /*
+          FORMAT THE MEMBER STATS
+        */
+        if (this.results_payload) {
+          // console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED", this.results_payload);
+          if (
+            this.sport_id == this.BASKETBALL_IDM ||
+            this.sport_id == this.BASKETBALL_IDF
+          ) {
+            this.payload_stats = this.results_payload.Basketball_Event_Statistics;
+            if (this.payload_stats.team_statistics) {
+              this.team_statistics = [this.payload_stats.team_statistics];
+            } else this.team_statistics = [];
+          } else if (
+            this.sport_id == this.VOLLEYBALL_IDM ||
+            this.sport_id == this.VOLLEYBALL_IDF
+          ) {
+            this.payload_stats = this.results_payload.Volleyball_Event_Statistics;
+            if (this.payload_stats.team_statistics) {
+              this.team_statistics = [this.payload_stats.team_statistics];
+            } else this.team_statistics = [];
+          } else if (
+            this.sport_id == this.SOCCER_IDM ||
+            this.sport_id == this.SOCCER_IDF
+          ) {
+            this.payload_stats = this.results_payload.Soccer_Event_Statistics;
+            if (this.payload_stats.team_statistics) {
+              this.team_statistics = [this.payload_stats.team_statistics];
+            } else this.team_statistics = [];
+          } else if (
+            this.sport_id == this.BASEBALL_IDM ||
+            this.sport_id == this.SOFTBALL_IDF
+          ) {
+            this.payload_stats = this.results_payload.Baseball_Event_Statistics;
+            if (this.payload_stats.team_statistics) {
+              this.team_statistics = [this.payload_stats.team_statistics];
+            } else this.team_statistics = [];
+          } else if (
+            this.sport_id == this.ATHLETICS_IDM ||
+            this.sport_id == this.ATHLETICS_IDF ||
+            this.sport_id == this.CAMPO_TRAVIESA_IDM ||
+            this.sport_id == this.CAMPO_TRAVIESA_IDF ||
+            this.sport_id == this.HALTEROFILIA_IDM ||
+            this.sport_id == this.HALTEROFILIA_IDF ||
+            this.sport_id == this.JUDO_IDM ||
+            this.sport_id == this.JUDO_IDF ||
+            this.sport_id == this.NATACION_IDM ||
+            this.sport_id == this.NATACION_IDF ||
+            this.sport_id == this.TAEKWONDO_IDM ||
+            this.sport_id == this.TAEKWONDO_IDF ||
+            this.sport_id == this.BAILE_IDE ||
+            this.sport_id == this.PORRISMO_IDE ||
+            this.sport_id == this.LUCHA_OLIMPICA
+          ) {
+            this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
+            this.team_statistics = [];
+            if (this.payload_stats.team_statistics.medal_based_statistics) {
+              this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics;
+            }
+          } else if (
+            this.sport_id == this.FIELD_TENNIS_IDM ||
+            this.sport_id == this.FIELD_TENNIS_IDF ||
+            this.sport_id == this.TABLE_TENNIS_IDM ||
+            this.sport_id == this.TABLE_TENNIS_IDF
+          ) {
+            this.payload_stats = this.results_payload.Match_Based_Event_Statistics;
+            this.team_statistics = [];
+            if (
+              this.results_payload.Match_Based_Event_Statistics.team_statistics
+                .match_based_statistics.Doble
+            ) {
+              this.team_statistics.push({
+                category_name: "Doble",
+                statistics: this.results_payload.Match_Based_Event_Statistics
+                  .team_statistics.match_based_statistics.Doble
+              });
+            }
+            if (
+              this.results_payload.Match_Based_Event_Statistics.team_statistics
+                .match_based_statistics.Solo
+            ) {
+              this.team_statistics.push({
+                category_name: "Solo",
+                statistics: this.results_payload.Match_Based_Event_Statistics
+                  .team_statistics.match_based_statistics.Solo
+              });
+            }
+          } else {
+            this.payload_stats = null;
+          }
+          // console.log("[5] WE SHOULD HAVE IT HERE!!!", this.payload_stats);
+          // this.team_statistics = [this.payload_stats.team_statistics]
+          if (this.payload_stats != null){
+            this.opponent_score = this.payload_stats.opponent_score;
+            this.uprm_score = this.payload_stats.uprm_score;
+          }
+          
+        } 
+        // console.log("[4] GOT EVENT STATS", this.results_payload);
+        this.ready_for_stats = false;
+      }
+      
+    } 
   },
   methods: {
     ...mapActions({
@@ -276,157 +427,27 @@ export default {
       setQueryLoading: "results/setQueryLoading"
     }),
     formated_event_info() {
-      console.log("the event info...(before)", this.results_payload);
-      if (this.event_info) {
-        console.log(
-          "GETTING EVENT INFO (from formated method)",
-          this.event_info
-        );
-        this.sport_id = this.event_info.sport_id;
-        this.sport_name = this.event_info.sport_name;
-        this.opponent_name = this.event_info.opponent_name;
-        this.event_date = this.event_info.event_date;
-        // SET EVENT DATE FORMATED
-        let eventDate = new Date(Date.parse(this.event_date));
-        this.date = eventDate.toISOString().substr(0, 10);
-        let hours = eventDate.getUTCHours();
-        let minutes = eventDate.getUTCMinutes();
-
-        let amPM = null;
-        if (hours > 12) {
-          amPM = "PM";
-          hours -= 12;
-        } else if (hours < 12) amPM = "AM";
-        if (hours == 0) {
-          hours = 12;
-        }
-        if (minutes < 10) this.time = hours + ":0" + minutes + amPM;
-        else if (minutes >= 10) this.time = hours + ":" + minutes + amPM;
-
-        this.branch_name_local = this.event_info.branch;
-        if (this.ready_for_stats) {
-          this.buildTable();
-          console.log("[3] BUILT TABLE", this.results_payload);
-          this.buildDefaultValues();
-          const stat_params = {
-            event_id: String(this.event_id),
-            sport_route: String(this.sport_route)
-          };
-          console.log("[4.(-1)] STAT PARAMS ARE (INDEX LEVEL)", stat_params);
-          this.setQueryLoading();
-          this.getAllEventStatistics(stat_params);
-          console.log("[4] GOT EVENT STATS", this.results_payload);
-          this.ready_for_stats = false;
-        }
+      // console.log("I AM OUT", this.sport_id)
+      if (this.event_info_local != "" && this.event_info_local != null) {
+        // console.log("I AM IN", this.sport_id)
         return true;
-      } else {
-        return false;
-      }
+      } else return false;
     },
     formated_member_stats() {
-      if (this.results_payload) {
-        console.log(" [5.(-1)] RESULTS PAYLOAD RECEIVED", this.results_payload);
-        if (
-          this.sport_id == this.BASKETBALL_IDM ||
-          this.sport_id == this.BASKETBALL_IDF
-        ) {
-          this.payload_stats = this.results_payload.Basketball_Event_Statistics;
-          if (this.payload_stats.team_statistics) {
-            this.team_statistics = [this.payload_stats.team_statistics];
-          } else this.team_statistics = [];
-        } else if (
-          this.sport_id == this.VOLLEYBALL_IDM ||
-          this.sport_id == this.VOLLEYBALL_IDF
-        ) {
-          this.payload_stats = this.results_payload.Volleyball_Event_Statistics;
-          if (this.payload_stats.team_statistics) {
-            this.team_statistics = [this.payload_stats.team_statistics];
-          } else this.team_statistics = [];
-        } else if (
-          this.sport_id == this.SOCCER_IDM ||
-          this.sport_id == this.SOCCER_IDF
-        ) {
-          this.payload_stats = this.results_payload.Soccer_Event_Statistics;
-          if (this.payload_stats.team_statistics) {
-            this.team_statistics = [this.payload_stats.team_statistics];
-          } else this.team_statistics = [];
-        } else if (
-          this.sport_id == this.BASEBALL_IDM ||
-          this.sport_id == this.SOFTBALL_IDF
-        ) {
-          this.payload_stats = this.results_payload.Baseball_Event_Statistics;
-          if (this.payload_stats.team_statistics) {
-            this.team_statistics = [this.payload_stats.team_statistics];
-          } else this.team_statistics = [];
-        } else if (
-          this.sport_id == this.ATHLETICS_IDM ||
-          this.sport_id == this.ATHLETICS_IDF ||
-          this.sport_id == this.CAMPO_TRAVIESA_IDM ||
-          this.sport_id == this.CAMPO_TRAVIESA_IDF ||
-          this.sport_id == this.HALTEROFILIA_IDM ||
-          this.sport_id == this.HALTEROFILIA_IDF ||
-          this.sport_id == this.JUDO_IDM ||
-          this.sport_id == this.JUDO_IDF ||
-          this.sport_id == this.NATACION_IDM ||
-          this.sport_id == this.NATACION_IDF ||
-          this.sport_id == this.TAEKWONDO_IDM ||
-          this.sport_id == this.TAEKWONDO_IDF ||
-          this.sport_id == this.BAILE_IDE ||
-          this.sport_id == this.PORRISMO_IDE ||
-          this.sport_id == this.LUCHA_OLIMPICA
-        ) {
-          this.payload_stats = this.results_payload.Medal_Based_Event_Statistics;
-          this.team_statistics = [];
-          if (this.payload_stats.team_statistics.medal_based_statistics) {
-            this.team_statistics = this.payload_stats.team_statistics.medal_based_statistics;
-          }
-        } else if (
-          this.sport_id == this.FIELD_TENNIS_IDM ||
-          this.sport_id == this.FIELD_TENNIS_IDF ||
-          this.sport_id == this.TABLE_TENNIS_IDM ||
-          this.sport_id == this.TABLE_TENNIS_IDF
-        ) {
-          this.payload_stats = this.results_payload.Match_Based_Event_Statistics;
-          this.team_statistics = [];
-          if (
-            this.results_payload.Match_Based_Event_Statistics.team_statistics
-              .match_based_statistics.Doble
-          ) {
-            this.team_statistics.push({
-              category_name: "Doble",
-              statistics: this.results_payload.Match_Based_Event_Statistics
-                .team_statistics.match_based_statistics.Doble
-            });
-          }
-          if (
-            this.results_payload.Match_Based_Event_Statistics.team_statistics
-              .match_based_statistics.Solo
-          ) {
-            this.team_statistics.push({
-              category_name: "Solo",
-              statistics: this.results_payload.Match_Based_Event_Statistics
-                .team_statistics.match_based_statistics.Solo
-            });
-          }
-        } else {
-          this.payload_stats = null;
-          return false;
-        }
-        console.log("[5] WE SHOULD HAVE IT HERE!!!", this.payload_stats);
-        // this.team_statistics = [this.payload_stats.team_statistics]
-        this.opponent_score = this.payload_stats.opponent_score;
-        this.uprm_score = this.payload_stats.uprm_score;
-        return true;
-      } else {
-        return false;
+      // console.log("FORMAT STATS OUT",this.payload_stats)
+      if (this.payload_stats != "" && this.payload_stats != null){
+        // console.log("FORMAT STATS IN",this.payload_stats)
+        return true
       }
+      else return false
     },
     formated_final_score() {
-      console.log(
-        "[FS] Do we have a final score?",
-        this.uprm_score,
-        this.opponent_score
-      );
+      // console.log("FORMATED FS")
+      // console.log(
+      //   "[FS] Do we have a final score?",
+      //   this.uprm_score,
+      //   this.opponent_score
+      // );
       if (
         Number.isFinite(this.uprm_score) &&
         Number.isFinite(this.opponent_score)
@@ -485,9 +506,9 @@ export default {
       }
     },
     buildTable() {
-      console.log(this.payload_stats);
+      // console.log(this.payload_stats);
 
-      if (this.sport_id != "") {
+      if (this.event_info_local != "" && this.event_info_local != null) {
         //Basketball
         if (
           this.sport_id == this.BASKETBALL_IDM ||
