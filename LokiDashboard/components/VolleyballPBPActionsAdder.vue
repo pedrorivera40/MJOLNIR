@@ -407,7 +407,7 @@ export default {
     findAthleteName(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }

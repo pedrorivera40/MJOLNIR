@@ -47,20 +47,18 @@ export default {
 
     // Update athlete entry from opponent roster.
     UPDATE_OPP_ROSTER(state, athlete) {
-        console.log("ATHLETE CHANGED " + athlete);
         for (let index in state.oppRoster) {
-            if (state.oppRoster[index].number === athlete.number) {
+            if (state.oppRoster[index].key === athlete.key) {
                 state.oppRoster.splice(index, 1, athlete);
                 break;
             }
         }
-        console.log(state);
     },
 
     // Remove athlete entry from opponent roster.
     REMOVE_OPP_ROSTER(state, key) {
         for (let index in state.oppRoster) {
-            if (state.oppRoster[index].number === key) {
+            if (state.oppRoster[index].key === key) {
                 state.oppRoster.splice(index, 1);
                 break;
             }
@@ -79,13 +77,11 @@ export default {
 
     // Insert game action into actions list.
     ADD_GAME_ACTION(state, action) {
-        console.log("ADDING ACCTION " + action);
         state.gameActions.unshift(action);
     },
 
     // Update value of existing action.
     UPDATE_GAME_ACTION(state, action) {
-        console.log("EDITTINGGGGG ACCTION " + action);
         for (let index in state.gameActions) {
             if (state.gameActions[index].key === action.key) {
                 state.gameActions.splice(index, 1, action);
@@ -274,7 +270,7 @@ export default {
             }
             let athlete_index = -1;
             for (let athlete in state.uprmRoster) {
-                if (state.uprmRoster[athlete].key == currentAction.athlete_id) {
+                if (state.uprmRoster[athlete].key == "athlete-" + currentAction.athlete_id) {
                     athlete_index = athlete;
                     break;
                 }
@@ -364,7 +360,7 @@ export default {
             }
             let athlete_index = -1;
             for (let athlete in state.oppRoster) {
-                if (state.oppRoster[athlete].key == currentAction.athlete_id) {
+                if (state.oppRoster[athlete].key == "athlete-" + currentAction.athlete_id) {
                     athlete_index = athlete;
                     break;
                 }
@@ -452,4 +448,49 @@ export default {
             state.opponentName = name;
         }
     },
+
+    // Clear function to be called before mounting component.
+    CLEAR_STATE(state) {
+        // Set every state attribute to its default value.
+        state.currentSet = 0;
+        state.uprmSets = [0, 0, 0, 0, 0];
+        state.oppSets = [0, 0, 0, 0, 0];
+        state.gameActions = [];
+        state.uprmRoster = [];
+        state.oppRoster = [];
+        state.gameOver = false;
+        state.oppColor = "";
+        state.uprmStatistics = {
+            killPoints: 0,
+            aces: 0,
+            blockingPoints: 0,
+            assists: 0,
+            blocks: 0,
+            digs: 0,
+            attackErrors: 0,
+            serviceErrors: 0,
+            blockingErrors: 0,
+            receptionErrors: 0
+        };
+        state.oppStatistics = {
+            killPoints: 0,
+            aces: 0,
+            blockingPoints: 0,
+            assists: 0,
+            blocks: 0,
+            digs: 0,
+            attackErrors: 0,
+            serviceErrors: 0,
+            blockingErrors: 0,
+            receptionErrors: 0
+        };
+        state.uprmAthleteStatistics = []
+        state.oppAthleteStatistics = [];
+        state.hasPBP = true;
+        state.sportName = "";
+        state.teamId = 0;
+        state.validUPRMRoster = []
+        state.branch = "";
+        state.opponentName = "";
+    }
 }

@@ -22,7 +22,7 @@
           </div>
         </v-col>
       </v-row>
-      <v-container v-if="!loading && !dialog">
+      <v-container v-if="!loading && !init_error">
         <v-row align="center" justify="center">
           <VolleyballScore
             :uprm_team="uprm_team_name"
@@ -161,66 +161,28 @@
                 <v-tab>{{ uprm_team_name }}</v-tab>
                 <v-tab>{{ opponentName }}</v-tab>
                 <v-tab-item>
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <thead>
-                        <tr>
-                          <th class="text-center">Atleta</th>
-                          <th
-                            v-for="(play, idx) in plays_map"
-                            :key="idx + 150"
-                            class="text-center"
-                          >{{ play.esp }}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(athlete, idx) in uprmAthleteStatistics" :key="idx + 50">
-                          <td class="text-left">#{{ athlete.number }}. {{ athlete.name }}</td>
-                          <td class="text-center">{{ athlete.killPoints }}</td>
-                          <td class="text-center">{{ athlete.attackErrors }}</td>
-                          <td class="text-center">{{ athlete.aces }}</td>
-                          <td class="text-center">{{ athlete.serviceErrors }}</td>
-                          <td class="text-center">{{ athlete.blocks }}</td>
-                          <td class="text-center">{{ athlete.blockingPoints }}</td>
-                          <td class="text-center">{{ athlete.blockingErrors }}</td>
-                          <td class="text-center">{{ athlete.assists }}</td>
-                          <td class="text-center">{{ athlete.digs }}</td>
-                          <td class="text-center">{{ athlete.receptionErrors }}</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
+                  <v-data-table
+                    dense
+                    :headers="statistics_headers"
+                    :items="uprmAthleteStatistics"
+                    item-key="12344"
+                    class="elevation-1"
+                    :loading="loading"
+                    loading-text="Cargando Estadísticas..."
+                    no-data-text="No Se Encontraron Resultados"
+                  />
                 </v-tab-item>
                 <v-tab-item>
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <thead>
-                        <tr>
-                          <th class="text-center">Atleta</th>
-                          <th
-                            v-for="(play, idx) in plays_map"
-                            :key="idx + 200"
-                            class="text-center"
-                          >{{ play.esp }}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(athlete, idx) in oppAthleteStatistics" :key="idx + 100">
-                          <td class="text-left">#{{ athlete.number }}. {{ athlete.name }}</td>
-                          <td class="text-center">{{ athlete.killPoints }}</td>
-                          <td class="text-center">{{ athlete.attackErrors }}</td>
-                          <td class="text-center">{{ athlete.aces }}</td>
-                          <td class="text-center">{{ athlete.serviceErrors }}</td>
-                          <td class="text-center">{{ athlete.blocks }}</td>
-                          <td class="text-center">{{ athlete.blockingPoints }}</td>
-                          <td class="text-center">{{ athlete.blockingErrors }}</td>
-                          <td class="text-center">{{ athlete.assists }}</td>
-                          <td class="text-center">{{ athlete.digs }}</td>
-                          <td class="text-center">{{ athlete.receptionErrors }}</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
+                  <v-data-table
+                    dense
+                    :headers="statistics_headers"
+                    :items="oppAthleteStatistics"
+                    item-key="12345"
+                    class="elevation-1"
+                    :loading="loading"
+                    loading-text="Cargando Estadísticas..."
+                    no-data-text="No Se Encontraron Resultados"
+                  />
                 </v-tab-item>
               </v-tabs>
             </v-container>
@@ -273,6 +235,22 @@ export default {
       { eng: "receptionErrors", esp: "Errores de Recepción" }
     ],
 
+    // Header for statistics table (athletes).
+    statistics_headers: [
+      { text: "Número", value: "number" },
+      { text: "Nombre", value: "name" },
+      { text: "Puntos de Ataque", value: "killPoints" },
+      { text: "Errores de Ataque", value: "attackErrors" },
+      { text: "Servicios Directos", value: "aces" },
+      { text: "Errores de Servicio", value: "serviceErrors" },
+      { text: "Bloqueos", value: "blocks" },
+      { text: "Puntos de Bloqueo", value: "blockingPoints" },
+      { text: "Errores de Bloqueo", value: "blockingErrors" },
+      { text: "Asistencias", value: "assists" },
+      { text: "Bompeos/Recepciones", value: "digs" },
+      { text: "Errores de Recepción", value: "receptionErrors" }
+    ],
+
     uprm_color: "#168F09",
     notification: "Notification",
     opp_keyword: "opponent",
@@ -296,12 +274,13 @@ export default {
       detachOPPRoster: "volleyballPBP/detachOPPRoster",
       detachGameOver: "volleyballPBP/detachGameOver",
       detachOppColor: "volleyballPBP/detachOppColor",
-      detachGameActions: "volleyballPBP/detachGameActions"
+      detachGameActions: "volleyballPBP/detachGameActions",
+      clearPBPState: "volleyballPBP/clearPBPState"
     }),
     findAthleteName(athlete_id, roster, team) {
       let athlete_index = -1;
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }
@@ -329,7 +308,7 @@ export default {
     findAthleteNumber(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }
@@ -345,7 +324,7 @@ export default {
     findAthleteImg(athlete_id, roster) {
       let athlete_index = -1;
       for (let index in roster) {
-        if (roster[index].key == athlete_id) {
+        if (roster[index].key == "athlete-" + athlete_id) {
           athlete_index = index;
           continue;
         }
@@ -384,6 +363,30 @@ export default {
       branch: "volleyballPBP/branch",
       opponentName: "volleyballPBP/opponentName"
     })
+
+    // opponent_stats_items: function() {
+    //   let result = [];
+
+    //   for (let i = 0; i < this.oppAthleteStatistics.length; i++) {
+    //     const athlete = this.oppAthleteStatistics[i];
+    //     const entry = [
+    //       "#" + athlete.number + ". " + athlete.name,
+    //       athlete.killPoints,
+    //       athlete.attackErrors,
+    //       athlete.aces,
+    //       athlete.serviceErrors,
+    //       athlete.blocks,
+    //       athlete.blockingPoints,
+    //       athlete.blockingErrors,
+    //       athlete.assists,
+    //       athlete.digs,
+    //       athlete.receptionErrors
+    //     ];
+    //     result.push(entry);
+    //   }
+
+    //   return result;
+    // }
   },
 
   async beforeMount() {
@@ -465,6 +468,7 @@ export default {
     this.detachGameOver(this.event_id);
     this.detachOppColor(this.event_id);
     this.detachGameActions(this.event_id);
+    this.clearPBPState();
   }
 };
 </script>
