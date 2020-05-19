@@ -32,7 +32,8 @@ class PBPDao:
             "score-key": "score",
             "over": "/game-over/answer",
             "answer": "/answer",
-            "color": "/opp-color"
+            "color": "/opp-color",
+            "athlete_prefix": "athlete-"
         }
 
     def create_pbp_seq(self, event_id, game_metadata, score_val):
@@ -89,7 +90,8 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["uprm-roster"] + \
-            "/" + str(int(athlete_entry["athlete_id"]))
+            "/" + self._db_keywords["athlete_prefix"] + \
+            str(int(athlete_entry["athlete_id"]))
         self._rtdb.reference(path).set(athlete_entry)
 
     def set_opponent_athlete(self, event_id, athlete_entry):
@@ -109,7 +111,8 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["opp-roster"] + \
-            "/" + str(int(athlete_entry["number"]))
+            "/" + self._db_keywords["athlete_prefix"] + \
+            str(int(athlete_entry["number"]))
         self._rtdb.reference(path).set(athlete_entry)
 
     def remove_uprm_athlete(self, event_id, athlete_id):
@@ -128,7 +131,8 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["uprm-roster"] + \
-            "/" + str(int(athlete_id))
+            "/" + self._db_keywords["athlete_prefix"] + \
+            str(int(athlete_id))
         self._rtdb.reference(path).delete()
 
     def remove_opponent_athlete(self, event_id, athlete_id):
@@ -147,7 +151,8 @@ class PBPDao:
         path = self._db_keywords["root"] + \
             str(int(event_id)) + \
             self._db_keywords["opp-roster"] + \
-            "/" + str(int(athlete_id))
+            "/" + self._db_keywords["athlete_prefix"] + \
+            str(int(athlete_id))
         self._rtdb.reference(path).delete()
 
     def get_uprm_roster(self, event_id):
