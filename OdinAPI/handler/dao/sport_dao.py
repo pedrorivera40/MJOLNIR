@@ -69,7 +69,7 @@ class SportDAO:
         cursor = self.conn.cursor()
         query = '''
                 select S.id, S.name, S.sport_image_url, B.name
-                from sport as S inner join branch as B on S.branch_id = B.id;
+                from sport as S inner join branch as B on S.branch_id = B.id order by S.name;
                 '''
         cursor.execute(query)
         return self._build_result(cursor)
@@ -92,7 +92,7 @@ class SportDAO:
         query = '''
                 select S.id, S.name, S.sport_image_url, B.name
                 from (sport as S inner join branch as B on S.branch_id = B.id)
-                where B.name = %s;
+                where B.name = %s order by S.name;
                 '''
 
         cursor.execute(query, (branch,))
@@ -115,7 +115,7 @@ class SportDAO:
         query = '''
                 select S.id, S.name, S.sport_image_url, B.name
                 from sport as S inner join branch as B on S.branch_id = B.id
-                where S.id = %s;
+                where S.id = %s order by S.name;
                 '''
 
         cursor.execute(query, (sport_id,))
@@ -162,7 +162,7 @@ class SportDAO:
                 select S.id, S.name, B.name, P.name as position_name, C.name as category_name
                 from (sport as S inner join branch as B on S.branch_id = B.id)
                 full join position as P on S.id = P.sport_id
-                full join category as C on S.id = C.sport_id;
+                full join category as C on S.id = C.sport_id order by S.name;
                 '''
 
         cursor.execute(query)

@@ -21,7 +21,7 @@ class TestGetAllSports(unittest.TestCase):
                                    content_type='application/json', follow_redirects=True)
         expected_msg = "Error en la solicitud. Debe proveerse un valor (rama deportiva o nombre del deporte) como argumento."
         self.assertEqual(response.status_code, 400)
-        self.assertMultiLineEqual(expected_msg, response.json["ERROR"])
+        self.assertMultiLineEqual(expected_msg, response.json["Error"])
         print(response.json)
 
     def test_get_all_sports_by_branch(self):
