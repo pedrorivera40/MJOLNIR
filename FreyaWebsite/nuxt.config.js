@@ -99,8 +99,8 @@ export default {
     transpile: [
       "vee-validate/dist/rules"
     ],
-    
-    extend (config, ctx) {
+
+    extend(config, ctx) {
     }
   }
 }
