@@ -6,16 +6,8 @@
           v-if="this.$vuetify.breakpoint.smAndDown"
           @click.stop="drawer = !drawer"
         ></v-app-bar-nav-icon>
-        <h3 v-if="this.$vuetify.breakpoint.smAndDown" class="headline">
-          Huella Deportiva Web
-        </h3>
-        <v-img
-          v-else
-          @click="home"
-          src="/logo.png"
-          max-width="100px"
-          class="ml-4 logo"
-        />
+        <h3 v-if="this.$vuetify.breakpoint.smAndDown" class="headline">Huella Deportiva Web</h3>
+        <v-img v-else @click="home" src="/logo.png" max-width="100px" class="ml-4 logo" />
 
         <v-spacer />
         <nav v-if="this.$vuetify.breakpoint.mdAndUp">
@@ -25,19 +17,11 @@
             class="ma-2 nav text-uppercase"
             :class="$vuetify.breakpoint.md ? 'nav-md' : 'nav'"
             :to="item.to"
-          >
-            {{ item.title }}
-          </nuxt-link>
+          >{{ item.title }}</nuxt-link>
         </nav>
       </client-only>
     </v-app-bar>
-    <v-navigation-drawer
-      class="nav-drawer"
-      v-model="drawer"
-      app
-      bottom
-      temporary
-    >
+    <v-navigation-drawer class="nav-drawer" v-model="drawer" app bottom temporary>
       <v-list nav>
         <v-list-item-group class="nav-links">
           <v-list-item to="/" nuxt>
@@ -46,12 +30,7 @@
             </v-list-item-icon>
             <v-list-item-title>Home</v-list-item-title>
           </v-list-item>
-          <v-list-item
-            v-for="(item, index) in items"
-            :key="index"
-            :to="item.to"
-            nuxt
-          >
+          <v-list-item v-for="(item, index) in items" :key="index" :to="item.to" nuxt>
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -111,7 +90,7 @@ export default {
         {
           icon: "mdi-paw",
           title: "Sobre Nosotros",
-          to: "/inspire"
+          to: "/info"
         }
       ]
     };

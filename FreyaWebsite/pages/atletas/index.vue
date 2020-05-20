@@ -1,7 +1,7 @@
 <template>
   <v-container grid-list-sm v-if="isReady()">
     <v-row>
-      <h1>Atletas:</h1>
+      <h1>Atletas</h1>
     </v-row>
 
     <div v-if="athletes.length > 0">
@@ -16,18 +16,13 @@
           >
             <template v-slot:activator="{ on }">
               <v-btn color="green darken-1" dark v-on="on">
-                <v-icon left>mdi-filter-variant</v-icon>
-                Filtros
+                <v-icon left>mdi-filter-variant</v-icon>Filtros
               </v-btn>
             </template>
 
             <v-list>
               <v-list-item>
-                <v-select
-                  v-model="sport"
-                  :items="sports"
-                  label="Deporte"
-                ></v-select>
+                <v-select v-model="sport" :items="sports" label="Deporte"></v-select>
               </v-list-item>
               <v-list-item>
                 <v-text-field v-model="name" label="Nombre"></v-text-field>
@@ -35,9 +30,7 @@
               <v-list-item>
                 <v-spacer />
                 <v-btn text color="accent" @click="clearFilters">Borrar</v-btn>
-                <v-btn text color="green darken-1" @click="applyFilters"
-                  >Filtrar</v-btn
-                >
+                <v-btn text color="green darken-1" @click="applyFilters">Filtrar</v-btn>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -45,7 +38,7 @@
       </v-row>
 
       <v-row v-if="!!filteredAthletes">
-        <v-col v-for="(value, key) in filteredAthletes" :key="key" cols="12" md="6" lg="3" >
+        <v-col v-for="(value, key) in filteredAthletes" :key="key" cols="12" md="6" lg="3">
           <AthleteCard
             :athleteID="value.id"
             :firstName="value.fName"
@@ -57,7 +50,7 @@
       </v-row>
 
       <v-row v-else>
-        <v-col v-for="(value, key) in athletes" :key="key" cols="12"  md="6" lg="3">
+        <v-col v-for="(value, key) in athletes" :key="key" cols="12" md="6" lg="3">
           <AthleteCard
             :athleteID="value.id"
             :firstName="value.fName"
@@ -139,13 +132,13 @@ export default {
       for (let i = 0; i < this.athletes.length; i++) {
         this.filteredAthletes.push(this.athletes[i]);
       }
-      
-      for(let i = this.filteredAthletes.length-1; i >=0; i--){
-        let athlete=this.filteredAthletes[i]
-        if(this.sport!=''){          
-          if(this.sport.localeCompare(athlete['sportName'])!=0){
-            this.filteredAthletes.splice(i,1)
-            continue
+
+      for (let i = this.filteredAthletes.length - 1; i >= 0; i--) {
+        let athlete = this.filteredAthletes[i];
+        if (this.sport != "") {
+          if (this.sport.localeCompare(athlete["sportName"]) != 0) {
+            this.filteredAthletes.splice(i, 1);
+            continue;
           }
         }
         if (this.name != "") {
