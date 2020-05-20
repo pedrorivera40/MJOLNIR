@@ -1,9 +1,9 @@
 <template>
   <v-container grid-list-sm>
     <v-row>
-      <h1>Eventos:</h1>
+      <h1>Eventos</h1>
     </v-row>
- 
+
     <div v-if="events.length>0">
       <v-row class="text-right">
         <v-col align="end">
@@ -32,12 +32,7 @@
                   min-width="290px"
                 >
                   <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="date"
-                      label="Fecha del Evento"
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
+                    <v-text-field v-model="date" label="Fecha del Evento" readonly v-on="on"></v-text-field>
                   </template>
                   <v-date-picker
                     v-model="date"
@@ -47,39 +42,22 @@
                     locale="es-419"
                   >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="dateMenu = false"
-                      >Cancelar</v-btn
-                    >
-                    <v-btn text color="primary" @click="$refs.menu.save(date)"
-                      >OK</v-btn
-                    >
+                    <v-btn text color="primary" @click="dateMenu = false">Cancelar</v-btn>
+                    <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                   </v-date-picker>
                 </v-menu>
               </v-list-item>
               <v-list-item>
-                <v-autocomplete
-                  v-model="sport"
-                  :items="sports"
-                  label="Deporte"
-                ></v-autocomplete>
+                <v-autocomplete v-model="sport" :items="sports" label="Deporte"></v-autocomplete>
               </v-list-item>
               <v-list-item>
-                <v-select
-                  v-model="branch"
-                  :items="branches"
-                  label="Rama"
-                ></v-select>
+                <v-select v-model="branch" :items="branches" label="Rama"></v-select>
               </v-list-item>
               <v-list-item>
-                <v-select
-                  v-model="locality"
-                  :items="localities"
-                  label="Localizacion"
-                ></v-select>
+                <v-select v-model="locality" :items="localities" label="Localizacion"></v-select>
               </v-list-item>
               <v-list-item>
-                <v-checkbox v-model="eventHasPBP" label="Eventos con PBP">
-                </v-checkbox>
+                <v-checkbox v-model="eventHasPBP" label="Eventos con PBP"></v-checkbox>
               </v-list-item>
 
               <v-list-item>
@@ -93,13 +71,7 @@
       </v-row>
 
       <v-row v-if="!!filteredEvents">
-        <v-col
-          v-for="(value, key) in filteredEvents"
-          :key="key"
-          cols="12"
-          sm="6"
-          lg="4"
-        >
+        <v-col v-for="(value, key) in filteredEvents" :key="key" cols="12" sm="6" lg="4">
           <EventCard
             :eventID="value.id"
             :sportName="value.sport_name"
@@ -115,13 +87,7 @@
       </v-row>
 
       <v-row v-else>
-        <v-col
-          v-for="(value, key) in events"
-          :key="key"
-          cols="12"
-          sm="6"
-          lg="4"
-        >
+        <v-col v-for="(value, key) in events" :key="key" cols="12" sm="6" lg="4">
           <EventCard
             :eventID="value.id"
             :sportName="value.sport_name"
