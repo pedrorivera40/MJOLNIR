@@ -3,7 +3,7 @@
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card width="800" class="elevation-12 mx-auto">
                 <v-toolbar color="green darken-1" dark flat>
-                    <v-toolbar-title>Crear Puntuacion Final</v-toolbar-title>
+                    <v-toolbar-title>Editar Puntuacion Final</v-toolbar-title>
                     <v-spacer />
                 </v-toolbar>
                 <v-card-text>            
