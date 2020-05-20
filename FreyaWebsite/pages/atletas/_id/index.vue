@@ -354,8 +354,7 @@ export default {
 			 */
 			buildSeasonList(){
         let yearToAdd = 2020
-        let currentYear = new Date(2025,8).getFullYear()
-        
+        let currentYear = new Date(Date.now()).getFullYear()        
         
         while(yearToAdd <= currentYear)
         {
