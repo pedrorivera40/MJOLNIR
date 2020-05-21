@@ -394,7 +394,7 @@ export default {
       
       buildYearList(){
         let yearToAdd = 2020
-        let currentYear = new Date(2023,8).getFullYear()
+        let currentYear = new Date(Date.now()).getFullYear()
         this.season = currentYear
         
         while(yearToAdd <= currentYear)
@@ -403,7 +403,7 @@ export default {
         }
       },
       buildDefaultValues(){
-        let currentYear = new Date(2023,8).getFullYear()
+        let currentYear = new Date(Date.now()).getFullYear()
         this.defaultSelected.push({'season_year':currentYear})
         this.sport_id = this.$route.params.id
         if(this.sport_id == this.BASKETBALL_IDM || this.sport_id == this.BASKETBALL_IDF){this.sport_route = "basketball"}

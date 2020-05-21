@@ -52,9 +52,13 @@ export default {
       amPM = "PM";
       hours -= 12;
     } else if (hours < 12) amPM = "AM";
+    if (hours == 12){
+      amPM = "PM"
+    }
     if (hours == 0) {
       hours = 12;
     }
+    
     if (minutes < 10) this.time = hours + ":0" + minutes + amPM;
     else if (minutes >= 10) this.time = hours + ":" + minutes + amPM;
   }, 
