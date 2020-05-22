@@ -80,6 +80,7 @@
                       !$store.state.userAuth.userPermissions[11]['24']
                   "
                   @click.stop="editUser(item)"
+                  v-if="!(item.username === $store.state.userAuth.user.username)"
                 >
                   mdi-pencil
                 </v-icon>
@@ -97,11 +98,12 @@
                       !$store.state.userAuth.userPermissions[11]['24']
                   "
                   @click="editPermissions(item)"
+                  v-if="!(item.username === $store.state.userAuth.user.username)"
                 >
                   mdi-shield-lock
                 </v-icon>
               </template>
-              <span>Edit Permisos</span>
+              <span>Editar Permisos</span>
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
@@ -113,6 +115,7 @@
                       !$store.state.userAuth.userPermissions[10]['23']
                   "
                   @click.stop="deleteUser(item)"
+                  v-if="!(item.username === $store.state.userAuth.user.username)"
                 >
                   mdi-delete
                 </v-icon>

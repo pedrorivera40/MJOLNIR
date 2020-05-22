@@ -17,7 +17,7 @@
                     v-model="fullName_"
                     required
                     counter="80"
-                    :rules="[required('Nombre', 'Por favor, ingrese su nombre completo.')]"
+                    :rules="[required('Nombre', 'Por favor, ingrese su nombre completo.'), nameFormat()]"
                   />
                 </v-col>
                 <v-col cols="12">
@@ -200,13 +200,13 @@ export default {
   computed: {
     setFormTitle() {
       if (this.nameSelector === -1) {
-        return "New User";
+        return "Nuevo Usuario";
       }
       this.fullName_ = this.fullName;
       this.email_ = this.email;
       this.username_ = this.username;
       this.isActive_ = this.isActive;
-      return "Edit User";
+      return "Editar Usuario";
     }
   }
 };
