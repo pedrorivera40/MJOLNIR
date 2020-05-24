@@ -170,7 +170,7 @@
         //TODO: will be removed
         buildYearList(){
             let yearToAdd = 2020
-            let currentYear = new Date(2023,8).getFullYear()
+            let currentYear = new Date(Date.now()).getFullYear()
             this.season = currentYear
             this.season_year = this.season_year_prop
             while(yearToAdd <= currentYear)
