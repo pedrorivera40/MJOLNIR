@@ -109,8 +109,8 @@
                     :height_inches="member.height_inches"
                     :study_program="member.study_program"
                     :school_of_precedence="member.school_of_precedence"
-                    :athlete_positions="member.athlete_positions"
-                    :athlete_categories="member.athlete_categories"   
+                    :athlete_positions="member.positions"
+                    :athlete_categories="member.categories"   
                     :number="member.number"
                     :profile_image_link="member.profile_image_link"
                     :athlete_id="member.athlete_id"
@@ -374,6 +374,7 @@ export default {
       },
       formated_members(){
         if(this.team_members){
+          console.log("WHAT THE FUCK 3",this.team_members)
           this.members = this.team_members.team_members
           if(this.readyForMemberStats){
             // console.log("INDEX LEVEL QUERY MEMBERS:",this.team.members)

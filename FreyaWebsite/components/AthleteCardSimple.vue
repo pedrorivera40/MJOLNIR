@@ -31,14 +31,17 @@
                             <v-spacer/>
                             <span class="text"><b>Numero:</b> {{number}}</span>
                             <v-spacer/>
-                            <h4> Posiciones: </h4>
+                            <h4 v-if="athlete_positions!=null&&athlete_positions!=''"> Posiciones: </h4>
                                 
                             <div v-for="position in athlete_positions" v-bind:key="position.id">
                                 <span class="text">{{position}}</span>
-                            
-
                             </div>
 
+                            <h4 v-if="athlete_categories!=null&&athlete_categories!=''"> Categorias: </h4>
+                                
+                            <div v-for="category in athlete_categories" v-bind:key="category.id">
+                                <span class="text">{{category}}</span>
+                            </div>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -63,8 +66,8 @@ export default {
 	  height_inches:Number,
       study_program:String,
       school_of_precedence:String,
-      athlete_positions:[String],
-      athlete_categories:[String],      
+      athlete_positions:Array,
+      athlete_categories:Array,      
       number:Number,
       profile_image_link:String,
       years_of_participation:Number,
