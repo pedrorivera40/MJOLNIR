@@ -20,7 +20,7 @@
             <v-icon>mdi-logout</v-icon>
           </v-btn>
         </template>
-        <span>Logout</span>
+        <span>Cerrar Sesión</span>
       </v-tooltip>
     </v-app-bar>
 
