@@ -20,6 +20,54 @@
         />
       </v-col>
     </v-row>
+    <v-spacer></v-spacer>
+    <v-row>
+      <v-col align="center">
+        <h1 class="my-4 display-1">Síguenos en nuestras redes sociales</h1>
+      </v-col>
+    </v-row>
+    <v-row class="my-4">
+      <v-col align="center">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn color="#3b5998" fab x-large dark href="ENTER_URL" target="_blank" v-on="on">
+              <v-icon>mdi-facebook</v-icon>
+            </v-btn>
+          </template>
+          <span>Síguenos en Facebook</span>
+        </v-tooltip>
+      </v-col>
+      <v-col align="center">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn color="#00acee" fab x-large dark href="ENTER_URL" target="_blank" v-on="on">
+              <v-icon>mdi-twitter</v-icon>
+            </v-btn>
+          </template>
+          <span>Síguenos en Twitter</span>
+        </v-tooltip>
+      </v-col>
+      <v-col align="center">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn color="#C13584" fab x-large dark href="ENTER_URL" target="_blank" v-on="on">
+              <v-icon>mdi-instagram</v-icon>
+            </v-btn>
+          </template>
+          <span>Síguenos en Instagram</span>
+        </v-tooltip>
+      </v-col>
+      <v-col align="center">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn color="#2867B2" fab x-large dark href="ENTER_URL" target="_blank" v-on="on">
+              <v-icon>mdi-linkedin</v-icon>
+            </v-btn>
+          </template>
+          <span>Síguenos en LinkedIn</span>
+        </v-tooltip>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
