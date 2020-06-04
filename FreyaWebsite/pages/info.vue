@@ -30,7 +30,7 @@
       <v-col align="center">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn color="#3b5998" fab x-large dark href="ENTER_URL" target="_blank" v-on="on">
+            <v-btn color="#3b5998" fab x-large dark href="https://www.facebook.com/DeportivaHuella/" target="_blank" v-on="on">
               <v-icon>mdi-facebook</v-icon>
             </v-btn>
           </template>
@@ -40,7 +40,7 @@
       <v-col align="center">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn color="#00acee" fab x-large dark href="ENTER_URL" target="_blank" v-on="on">
+            <v-btn color="#00acee" fab x-large dark href="https://twitter.com/deportivahuella" target="_blank" v-on="on">
               <v-icon>mdi-twitter</v-icon>
             </v-btn>
           </template>
@@ -50,7 +50,7 @@
       <v-col align="center">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn color="#C13584" fab x-large dark href="ENTER_URL" target="_blank" v-on="on">
+            <v-btn color="#C13584" fab x-large dark href="https://www.instagram.com/deportivahuella/" target="_blank" v-on="on">
               <v-icon>mdi-instagram</v-icon>
             </v-btn>
           </template>
@@ -60,7 +60,17 @@
       <v-col align="center">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn color="#2867B2" fab x-large dark href="ENTER_URL" target="_blank" v-on="on">
+            <v-btn color="#C4302B " fab x-large dark href="https://www.youtube.com/c/HuellaDeportiva" target="_blank" v-on="on">
+              <v-icon>mdi-linkedin</v-icon>
+            </v-btn>
+          </template>
+          <span>Síguenos en YouTube</span>
+        </v-tooltip>
+      </v-col>
+      <v-col align="center">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn color="#2867B2" fab x-large dark href="https://www.linkedin.com/company/deportivahuella/" target="_blank" v-on="on">
               <v-icon>mdi-linkedin</v-icon>
             </v-btn>
           </template>
