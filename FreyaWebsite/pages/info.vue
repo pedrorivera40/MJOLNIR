@@ -61,7 +61,7 @@
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
             <v-btn color="#C4302B " fab x-large dark href="https://www.youtube.com/c/HuellaDeportiva" target="_blank" v-on="on">
-              <v-icon>mdi-linkedin</v-icon>
+              <v-icon>mdi-youtube</v-icon>
             </v-btn>
           </template>
           <span>Síguenos en YouTube</span>
