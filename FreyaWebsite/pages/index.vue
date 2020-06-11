@@ -7,11 +7,11 @@
             <client-only>
               <v-col>
                 <h1 v-if="smAndDown" class="header display-2 my-12">
-                  ¡Bienvenida a Huella Deportiva
+                  ¡Bienvenido a Huella Deportiva
                   <span class="highlight">Web</span>!
                 </h1>
                 <h1 v-else-if="mdAndUp" class="header display-3 my-12">
-                  ¡Bienvenida a Huella Deportiva
+                  ¡Bienvenido a Huella Deportiva
                   <span class="highlight">Web</span>!
                 </h1>
                 <Logo :width="mdAndUp ? '' : '350px'" />
